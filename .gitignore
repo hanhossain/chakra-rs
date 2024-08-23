@@ -44,6 +44,7 @@ buildchk.*
 buildfre.*
 out/
 _DROP/
+cmake-build
 
 # Generated Files
 *.bc
