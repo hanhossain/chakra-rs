@@ -29,8 +29,10 @@ jobs:
         include:
         - os: macos-latest
           deps: brew install ninja
+          cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
+          cmake-flags: ''
 
 
     steps:
@@ -50,6 +52,7 @@ jobs:
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        ${{ matrix.cmake-flags}}
         -G Ninja
         -S ${{ github.workspace }}
 
