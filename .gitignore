@@ -44,7 +44,6 @@ buildchk.*
 buildfre.*
 out/
 _DROP/
-cmake-build
 
 # Generated Files
 *.bc
@@ -110,3 +109,7 @@ cc-toolchain/
 Build/VcBuild
 Build/VcBuild.NoJIT
 Build/VcBuild.SWB
+
+# IntelliJ
+cmake-build*
+.idea
