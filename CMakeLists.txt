@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.27)
 project (CHAKRACORE)
 
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
