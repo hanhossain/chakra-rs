@@ -28,9 +28,9 @@ jobs:
         - ubuntu-latest
         include:
         - os: macos-latest
-          deps: brew install ninja
+          deps: brew install ninja icu4c
           cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
-          run-tests: false
+          run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
           cmake-flags: ''
