@@ -113,3 +113,7 @@ Build/VcBuild.SWB
 # IntelliJ
 cmake-build*
 .idea
+
+# Added by cargo
+
+/target
