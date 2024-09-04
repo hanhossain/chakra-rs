@@ -114,5 +114,6 @@ Build/VcBuild.SWB
 cmake-build*
 .idea
 
-# Rust
-target
+# Added by cargo
+
+/target
