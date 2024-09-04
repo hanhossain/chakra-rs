@@ -44,7 +44,7 @@ jobs:
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=${{ github.workspace }}/cmake-build" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/chakracore-cxx/cmake-build" >> "$GITHUB_OUTPUT"
 
     - name: Install dependencies
       run: ${{ matrix.deps }}
@@ -54,7 +54,7 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -G Ninja ${{ github.workspace }}
+      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -G Ninja ${{ github.workspace }}/chakracore-cxx
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
