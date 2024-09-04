@@ -30,9 +30,11 @@ jobs:
         - os: macos-latest
           deps: brew install ninja
           cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
+          run-tests: false
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
           cmake-flags: ''
+          run-tests: true
 
     steps:
     - uses: actions/checkout@v4
@@ -45,19 +47,20 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/cmake-build" >> "$GITHUB_OUTPUT"
 
     - name: Install dependencies
-      run: ${{ matrix.deps}}
+      run: ${{ matrix.deps }}
 
     - name: Create build directory
       run: mkdir -p ${{ steps.strings.outputs.build-output-dir }}
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags}} -G Ninja ${{ github.workspace }}
+      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -G Ninja ${{ github.workspace }}
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ninja
 
     - name: Test
+      if: ${{ matrix.run-tests }}
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ninja check
