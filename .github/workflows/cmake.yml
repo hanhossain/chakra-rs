@@ -30,11 +30,11 @@ jobs:
         include:
         - os: macos-latest
           deps: brew install ninja icu4c
-          cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
+          cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include
           run-tests: false
         - os: macos-13
           deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include -DSTATIC_LIBRARY=ON
           run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
