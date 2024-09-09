@@ -12,8 +12,6 @@ concurrency:
 
 env:
   BUILD_TYPE: RelWithDebInfo
-  CC: clang
-  CXX: clang++
 
 jobs:
   build:
@@ -26,15 +24,20 @@ jobs:
         os:
         - macos-latest
         - macos-12
+        - macos-13
         - ubuntu-latest
         include:
         - os: macos-latest
           deps: brew install ninja icu4c
-          cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include
-          run-tests: false
+          cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include
+          run-tests: true
         - os: macos-12
           deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include -DSTATIC_LIBRARY=ON
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
+          run-tests: true
+        - os: macos-13
+          deps: brew install ninja icu4c
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
           run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
@@ -59,7 +62,7 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -G Ninja ${{ github.workspace }}/chakracore-cxx
+      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
