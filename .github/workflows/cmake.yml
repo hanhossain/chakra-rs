@@ -21,16 +21,21 @@ jobs:
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
-      fail-fast: false
+      fail-fast: true
       matrix:
         os:
         - macos-latest
+        - macos-13
         - ubuntu-latest
         include:
         - os: macos-latest
           deps: brew install ninja
           cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
           run-tests: false
+        - os: macos-13
+          deps: brew install ninja
+          cmake-flags: ''
+          run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
           cmake-flags: ''
