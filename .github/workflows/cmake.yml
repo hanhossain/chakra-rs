@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 env:
-  BUILD_TYPE: Debug
+  BUILD_TYPE: RelWithDebInfo
   CC: clang
   CXX: clang++
 
@@ -25,16 +25,16 @@ jobs:
       matrix:
         os:
         - macos-latest
-        - macos-13
+        - macos-12
         - ubuntu-latest
         include:
         - os: macos-latest
           deps: brew install ninja icu4c
           cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include
           run-tests: false
-        - os: macos-13
+        - os: macos-12
           deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include -DSTATIC_LIBRARY=ON
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
           run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
