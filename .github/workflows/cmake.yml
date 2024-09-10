@@ -23,17 +23,12 @@ jobs:
       matrix:
         os:
         - macos-latest
-        - macos-12
         - macos-13
         - ubuntu-latest
         include:
         - os: macos-latest
           deps: brew install ninja icu4c
           cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
-          run-tests: true
-        - os: macos-12
-          deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
           run-tests: true
         - os: macos-13
           deps: brew install ninja icu4c
