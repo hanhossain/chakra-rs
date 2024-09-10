@@ -29,7 +29,7 @@ jobs:
         include:
         - os: macos-latest
           deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include
+          cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
           run-tests: true
         - os: macos-12
           deps: brew install ninja icu4c
