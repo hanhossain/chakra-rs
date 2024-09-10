@@ -37,7 +37,7 @@ jobs:
           run-tests: true
         - os: macos-13
           deps: brew install ninja icu4c
-          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include -DSTATIC_LIBRARY=ON
           run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
