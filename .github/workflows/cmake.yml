@@ -11,9 +11,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 env:
-  BUILD_TYPE: Debug
-  CC: clang
-  CXX: clang++
+  BUILD_TYPE: RelWithDebInfo
 
 jobs:
   build:
@@ -25,12 +23,17 @@ jobs:
       matrix:
         os:
         - macos-latest
+        - macos-13
         - ubuntu-latest
         include:
         - os: macos-latest
-          deps: brew install ninja
-          cmake-flags: -DDISABLE_JIT=1 -DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include
-          run-tests: false
+          deps: brew install ninja icu4c
+          cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
+          run-tests: true
+        - os: macos-13
+          deps: brew install ninja icu4c
+          cmake-flags: -DICU_INCLUDE_PATH=/usr/local/opt/icu4c/include -DDISABLE_JIT=ON
+          run-tests: true
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build
           cmake-flags: ''
@@ -54,7 +57,7 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -G Ninja ${{ github.workspace }}/chakracore-cxx
+      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}

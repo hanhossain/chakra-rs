@@ -21,6 +21,7 @@ jobs:
       matrix:
         os:
         - macos-latest
+        - macos-13
         - ubuntu-latest
     steps:
     - uses: actions/checkout@v4
