@@ -13,6 +13,7 @@ concurrency:
 jobs:
   build-cmake:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
@@ -67,6 +68,7 @@ jobs:
 
   build-msvc:
     runs-on: windows-latest
+    timeout-minutes: 120
 
     steps:
     - uses: actions/checkout@v4
@@ -78,3 +80,7 @@ jobs:
     - name: Test
       working-directory: ${{ github.workspace }}/chakracore-cxx
       run: test\ci.testone.cmd x64 test
+
+    - name: Slow Tests
+      working-directory: ${{ github.workspace }}/chakracore-cxx
+      run: test\ci.testone.cmd x64 test --only-slow
