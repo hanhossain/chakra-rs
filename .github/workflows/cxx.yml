@@ -10,11 +10,8 @@ concurrency:
   group: cxx-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
-env:
-  BUILD_TYPE: RelWithDebInfo
-
 jobs:
-  build:
+  build-cmake:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -57,7 +54,7 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
+      run: cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
@@ -67,3 +64,17 @@ jobs:
       if: ${{ matrix.run-tests }}
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ninja check
+
+  build-msvc:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      working-directory: ${{ github.workspace }}/chakracore-cxx
+      run: test\ci.buildone.cmd x64 test
+
+    - name: Test
+      working-directory: ${{ github.workspace }}/chakracore-cxx
+      run: test\ci.testone.cmd x64 test
