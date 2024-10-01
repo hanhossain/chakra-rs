@@ -4,3 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+
+[build-dependencies]
+cmake = "0.1.51"
+
+[profile.dev]
+opt-level = 3
+
+[profile.test]
+opt-level = 3
