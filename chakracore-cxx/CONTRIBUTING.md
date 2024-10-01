@@ -42,7 +42,7 @@ The unit tests can be run offline with following these steps:
 ### a) Windows
 
 * Build `Chakra.Core.sln` for the version of ChakraCore you wish to test e.g. x64 Debug.
-  * Specifically, running tests requires that `rl.exe`, `ch.exe`, and `ChakraCore.dll` be built.
+  * Specifically, running tests requires that `ch.exe`, and `ChakraCore.dll` be built.
 * Call `test\runtests.cmd` and specify the build config
 
 e.g.  `test\runtests.cmd -x64debug`
