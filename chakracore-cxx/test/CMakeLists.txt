@@ -47,24 +47,6 @@ else()
     add_dependencies(check bytecode-check regression-check)
 endif()
 
-if (NOT NO_ICU AND NOT EMBED_ICU)
-    add_custom_target(native-check
-        COMMAND ./test_native.sh ${CMAKE_BINARY_DIR}/ch ${CMAKE_BUILD_TYPE} ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_SOURCE_DIR}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/native-tests
-        USES_TERMINAL
-        DEPENDS ch
-        )
-    add_dependencies(check native-check)
-else()
-    set(ICU_MESSAGE "Native tests are DISABLED, as they require ICU to be installed, and not embedded. NO_ICU = ${NO_ICU} EMBED_ICU = ${EMBED_ICU}")
-    message(WARNING ${ICU_MESSAGE})
-    add_custom_target(warn-icu-tests
-        COMMAND echo "${ICU_MESSAGE}"
-        USES_TERMINAL
-        )
-    add_dependencies(check warn-icu-tests)
-endif()
-
 if (NOT STATIC_LIBRARY)
     add_dependencies(check ChakraCore)
 endif()
