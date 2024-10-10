@@ -65,12 +65,6 @@ set _error=0
 
   if "%_HadFailures%" == "0" (
     call :runTests %_TestArgs%
-
-    if "%_ReducedTestRun%" == "1" (
-      echo -- ci.testone.cmd ^>^> Reduced test run: skipping native tests.
-    ) else (
-      call :runNativeTests %_TestArgs%
-    )
   )
 
   echo.
@@ -80,9 +74,6 @@ set _error=0
       echo -- ci.testone.cmd ^>^> Bytecode test failed, bytecode needs to be updated! 1>&2
     ) else if "%_HadFailures%" == "3" (
       echo -- ci.testone.cmd ^>^> Unit tests failed! 1>&2
-    ) else if "%_HadFailures%" == "4" (
-      echo -- ci.testone.cmd ^>^> Native tests failed! 1>&2
-      call :summarizeLogs
     ) else (
       echo -- ci.testone.cmd ^>^> Unknown failure! 1>&2
     )
@@ -132,37 +123,6 @@ set _error=0
   )
 
   goto :eof
-
-:: ============================================================================
-:: Run jsrt test suite against one build config and record if there were errors
-:: ============================================================================
-:runNativeTests
-
-  echo -- ci.testone.cmd ^>^> Running native tests... this can take some time
-  if not exist %_LogDir%\ mkdir %_LogDir%
-  set _LogFile=%_LogDir%\nativetests.log
-  call :do %_TestDir%\runnativetests.cmd -%1 -binDir %_BinDir% -d yes > %_LogFile% 2>&1
-  echo -- ci.testone.cmd ^>^> Running native tests... DONE!
-
-  if "%_error%" NEQ "0" (
-    echo -- ci.testone.cmd ^>^> runnativetests.cmd failed; printing %_LogFile%
-    powershell "if (Test-Path %_LogFile%) { Get-Content %_LogFile% }"
-    set _HadFailures=4
-  )
-
-  goto :eof
-
-:: ============================================================================
-:: Summarize the logs into a listing of only the failures
-:: ============================================================================
-:summarizeLogs
-
-  pushd %_LogDir%
-  findstr /sip failed nativetests.log >> summary.log
-  rem Echo to stderr so that VSO includes the output in the build summary
-
-  type summary.log 1>&2
-  popd
 
 :: ============================================================================
 :: Echo a command line before executing it

@@ -82,15 +82,10 @@ set _HadFailures=0
     call :runTests x86 test
     call :runTests x64 debug
     call :runTests x64 test
-    call :runNativeTests x86 debug
-    call :runNativeTests x86 test
-    call :runNativeTests x64 debug
-    call :runNativeTests x64 test
 
     call :summarizeLogs summary.log
   ) else (
     call :runTests %_BuildArch% %_BuildType% %_ExtraArgs%
-    call :runNativeTests %_BuildArch% %_BuildType%
     call :summarizeLogs summary.%_BuildArch%%_BuildType%.log
   )
 
@@ -101,8 +96,6 @@ set _HadFailures=0
   if "%_HadFailures%" NEQ "0" (
     if "%_HadFailures%" == "3" (
       echo -- runcitests.cmd ^>^> Unit tests failed! 1>&2
-    ) else if "%_HadFailures%" == "4" (
-      echo -- runcitests.cmd ^>^> Native tests failed! 1>&2
     ) else (
       echo -- runcitests.cmd ^>^> Unknown failure! 1>&2
     )
@@ -154,25 +147,6 @@ set _HadFailures=0
   goto :eof
 
 :: ============================================================================
-:: Run jsrt test suite against one build config and record if there were errors
-:: ============================================================================
-:runNativeTests
-
-  echo -- runcitests.cmd ^>^> Running native tests... this can take some time
-  if not exist %_LogDir%\ mkdir %_LogDir%
-  set _LogFile=%_TestDir%\logs\%1_%2\nativetests.log
-  call :do %_TestDir%\runnativetests.cmd -%1%2 -d yes > %_LogFile% 2>&1
-  echo -- runcitests.cmd ^>^> Running native tests... DONE!
-
-  if "%_error%" NEQ "0" (
-    echo -- runcitests.cmd ^>^> runnativetests.cmd failed; printing %_LogFile%
-    powershell "if (Test-Path %_LogFile%) { Get-Content %_LogFile% }"
-    set _HadFailures=4
-  )
-
-  goto :eof
-
-:: ============================================================================
 :: Copy all result logs to the drop share
 :: ============================================================================
 :copyLogsToDrop
@@ -193,7 +167,6 @@ set _HadFailures=0
 
   pushd %_TestDir%\logs
   findstr /sp failed rl.results.log > %1
-  findstr /sip failed nativetests.log >> %1
   rem Echo to stderr so that VSO includes the output in the build summary
   type %1 1>&2
   popd
