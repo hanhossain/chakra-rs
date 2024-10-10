@@ -24,8 +24,17 @@ jobs:
         - macos-13
         - ubuntu-latest
         - windows-latest
+        include:
+        - os: macos-latest
+          deps: brew install ninja
+        - os: macos-13
+          deps: brew install ninja
+        - os: ubuntu-latest
+          deps: sudo apt-get install -y ninja-build
     steps:
     - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: ${{ matrix.deps }}
     - name: Build
       run: cargo build --verbose
     - name: Run tests
