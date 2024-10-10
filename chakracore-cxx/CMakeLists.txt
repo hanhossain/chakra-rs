@@ -528,37 +528,6 @@ if(CC_TARGETS_ARM64)
     endif()
 endif()
 
-################# Write-barrier check/analyze ##################
-if (WB_CHECK_SH OR WB_ANALYZE_SH)
-    add_definitions(
-        -Xclang -load
-        -Xclang ${CMAKE_CURRENT_SOURCE_DIR}/tools/RecyclerChecker/Build/libclangRecyclerChecker.${DYN_LIB_EXT}
-    )
-endif()
-if (WB_CHECK_SH)
-    unset(WB_CHECK_SH CACHE)    # don't cache
-    add_definitions(
-        -Xclang -add-plugin
-        -Xclang check-recycler
-    )
-endif()
-if (WB_ANALYZE_SH)
-    unset(WB_ANALYZE_SH CACHE)  # don't cache
-    add_definitions(
-        -Xclang -analyze
-        -Xclang -analyzer-checker=chakra.RecyclerChecker
-    )
-endif()
-if (WB_ARGS_SH)
-    foreach(wb_arg IN LISTS WB_ARGS_SH)
-        add_definitions(
-            -Xclang -plugin-arg-check-recycler
-            -Xclang ${wb_arg}
-        )
-    endforeach(wb_arg)
-    unset(WB_ARGS_SH CACHE)  # don't cache
-endif()
-
 include_directories(
     .
     lib/Common

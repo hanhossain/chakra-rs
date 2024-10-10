@@ -557,58 +557,6 @@ echo "Build path: ${BUILD_DIRECTORY}"
 BUILD_RELATIVE_DIRECTORY=$("$PYTHON_BINARY" -c "from __future__ import print_function; import os.path;\
     print(os.path.relpath('${CHAKRACORE_DIR}', '$BUILD_DIRECTORY'))")
 
-################# Write-barrier check/analyze run #################
-WB_FLAG=
-WB_TARGET=
-
-if [[ $WB_CHECK || $WB_ANALYZE ]]; then
-    # build software write barrier checker clang plugin
-    $CHAKRACORE_DIR/tools/RecyclerChecker/build.sh --cxx=$_CXX || exit 1
-
-    if [[ $WB_CHECK && $WB_ANALYZE ]]; then
-        echo "Please run only one of --wb-check or --wb-analyze" && exit 1
-    fi
-    if [[ $WB_CHECK ]]; then
-        WB_FLAG="-DWB_CHECK_SH=1"
-        WB_FILE=$WB_CHECK
-    fi
-    if [[ $WB_ANALYZE ]]; then
-        WB_FLAG="-DWB_ANALYZE_SH=1"
-        WB_FILE=$WB_ANALYZE
-    fi
-
-    if [[ $WB_ARGS ]]; then
-        if [[ $WB_ARGS =~ "-fix" ]]; then
-            MULTICORE_BUILD="-j 1"  # 1 job only if doing write barrier fix
-        fi
-        WB_ARGS="-DWB_ARGS_SH=$WB_ARGS"
-    fi
-
-    # support --wb-check ONE_CPP_FILE
-    if [[ $WB_FILE != "*" ]]; then
-        if [[ $MAKE != 'ninja' ]]; then
-            echo "--wb-check/wb-analyze ONE_FILE only works with --ninja" && exit 1
-        fi
-
-        if [[ -f $CHAKRACORE_DIR/$WB_FILE ]]; then
-            touch $CHAKRACORE_DIR/$WB_FILE
-        else
-            echo "$CHAKRACORE_DIR/$WB_FILE not found. Please use full git path for $WB_FILE." && exit 1
-        fi
-
-        WB_FILE_DIR=`dirname $WB_FILE`
-        WB_FILE_BASE=`basename $WB_FILE`
-
-        WB_FILE_CMAKELISTS="$CHAKRACORE_DIR/$WB_FILE_DIR/CMakeLists.txt"
-        if [[ -f $WB_FILE_CMAKELISTS ]]; then
-            SUBDIR=$(grep -i add_library $WB_FILE_CMAKELISTS | sed "s/.*(\([^ ]*\) .*/\1/")
-        else
-            echo "$WB_FILE_CMAKELISTS not found." && exit 1
-        fi
-        WB_TARGET="$WB_FILE_DIR/CMakeFiles/$SUBDIR.dir/$WB_FILE_BASE.o"
-    fi
-fi
-
 if [ ! -d "$BUILD_DIRECTORY" ]; then
     SAFE_RUN `mkdir -p $BUILD_DIRECTORY`
 fi
