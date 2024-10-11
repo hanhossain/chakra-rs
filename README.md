@@ -19,8 +19,8 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu
 ```
 
 Visualize graph
-
 ```sh
+brew install graphviz
 dot -Tsvg -o graph.svg graph.dot
 open graph.svg
 ```
