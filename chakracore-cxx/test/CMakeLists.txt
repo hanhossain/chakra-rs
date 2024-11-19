@@ -46,8 +46,3 @@ else()
         )
     add_dependencies(check bytecode-check regression-check)
 endif()
-
-if (NOT STATIC_LIBRARY)
-    add_dependencies(check ChakraCore)
-endif()
-

@@ -106,7 +106,6 @@ NO_JIT=
 CMAKE_ICU="-DICU_SETTINGS_RESET=1"
 CMAKE_INTL="-DINTL_ICU_SH=1" # default to enabling intl
 USE_LOCAL_ICU=0 # default to using system version of ICU
-STATIC_LIBRARY="-DSHARED_LIBRARY_SH=1"
 SANITIZE=
 WITHOUT_FEATURES=""
 CREATE_DEB=0
@@ -295,10 +294,6 @@ while [[ $# -gt 0 ]]; do
     --create-deb=*)
         CREATE_DEB=$1
         CREATE_DEB="${CREATE_DEB:13}"
-        ;;
-
-    --static)
-        STATIC_LIBRARY="-DSTATIC_LIBRARY_SH=1"
         ;;
 
     --sanitize=*)
@@ -582,7 +577,7 @@ fi
 echo Generating $BUILD_TYPE build
 echo $EXTRA_DEFINES
 cmake $CMAKE_GEN -DCHAKRACORE_BUILD_SH=ON $CC_PREFIX $CMAKE_ICU $LTO $LTTNG \
-    $STATIC_LIBRARY $ARCH $TARGET_OS \ $ENABLE_CC_XPLAT_TRACE $EXTRA_DEFINES \
+    $ARCH $TARGET_OS \ $ENABLE_CC_XPLAT_TRACE $EXTRA_DEFINES \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE $SANITIZE $NO_JIT $CMAKE_INTL \
     $WITHOUT_FEATURES $WB_FLAG $WB_ARGS $CMAKE_EXPORT_COMPILE_COMMANDS \
     $LIBS_ONLY_BUILD $VALGRIND $BUILD_RELATIVE_DIRECTORY $CCACHE_NAME
@@ -617,9 +612,6 @@ else
         mkdir -p $DEB_FOLDER/usr/local/bin
         mkdir -p $DEB_FOLDER/DEBIAN
         cp $DEB_FOLDER/../ch $DEB_FOLDER/usr/local/bin/
-        if [[ $STATIC_LIBRARY == "-DSHARED_LIBRARY_SH=1" ]]; then
-            cp $DEB_FOLDER/../*.so $DEB_FOLDER/usr/local/bin/
-        fi
         echo -e "Package: ChakraCore"\
             "\nVersion: ${CREATE_DEB}"\
             "\nSection: base"\

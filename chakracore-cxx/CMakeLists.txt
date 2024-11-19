@@ -23,16 +23,7 @@ else(NOT CHAKRACORE_BUILD_SH)
     # todo: create a sub cmake file to take care of _SH uncaching...
     if(SHARED_LIBRARY_SH)
     unset(SHARED_LIBRARY_SH CACHE)
-    unset(STATIC_LIBRARY_SH CACHE)
-        unset(STATIC_LIBRARY CACHE)
         set(SHARED_LIBRARY 1)
-    endif()
-
-    if(STATIC_LIBRARY_SH)
-        unset(SHARED_LIBRARY_SH CACHE)
-        unset(STATIC_LIBRARY_SH CACHE)
-        unset(SHARED_LIBRARY CACHE)
-        set(STATIC_LIBRARY 1)
     endif()
 
     if(LIBS_ONLY_BUILD_SH)
@@ -135,9 +126,6 @@ if (ENABLE_CC_XPLAT_TRACE_SH)
     add_compile_options(-finstrument-functions)
     add_compile_options(-g)
     add_compile_options(-ggdb)
-    if(NOT STATIC_LIBRARY)
-        message(FATAL_ERROR "Trace option is available only for --static builds")
-    endif()
 endif()
 
 if(ICU_INCLUDE_PATH_SH)
@@ -342,9 +330,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     add_definitions("-fdiagnostics-color=always")
 endif()
 
-if(STATIC_LIBRARY)
-    add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
-endif()
+# TODO (hanhossain): don't use add_definition for this, just use the CMake variable
+add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
 
 if(CLR_CMAKE_PLATFORM_XPLAT)
     add_definitions(-D_CHAKRACOREBUILD)
@@ -441,9 +428,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
     # Also disable RTTI when building a shared library
     # TODO: why does the shared library break with rtti disabled?
     if(CMAKE_BUILD_TYPE STREQUAL Release)
-        if(STATIC_LIBRARY)
-            add_compile_options(-fno-rtti)
-        endif()
+        add_compile_options(-fno-rtti)
     endif()
 endif(CLR_CMAKE_PLATFORM_XPLAT)
 
