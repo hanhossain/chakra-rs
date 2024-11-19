@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <BuildLocalICU>false</BuildLocalICU>
-    <BuildLocalICU Condition="'$(ChakraICU)'=='static' OR '$(ChakraICU)'=='shared'">true</BuildLocalICU>
+    <BuildLocalICU Condition="'$(ChakraICU)'=='static'">true</BuildLocalICU>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -16,7 +16,7 @@
       <!-- Common.Build.props sets the calling convention to stdcall for x86 and chpe, while ICU just wants the default -->
       <CallingConvention></CallingConvention>
 
-      <PreprocessorDefinitions Condition="'$(ChakraICU)'!='shared'">
+      <PreprocessorDefinitions>
         U_STATIC_IMPLEMENTATION=1;
         %(PreprocessorDefinitions)
       </PreprocessorDefinitions>

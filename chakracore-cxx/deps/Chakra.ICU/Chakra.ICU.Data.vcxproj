@@ -9,7 +9,7 @@
     <ProjectName>Chakra.ICU.Data</ProjectName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <ConfigurationType Condition="'$(ChakraICU)'!='shared'">StaticLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(BuildConfigPropsPath)Chakra.Build.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -19,12 +19,6 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
-  <ItemDefinitionGroup>
-    <Link Condition="'$(ChakraICU)'=='shared'">
-      <SubSystem>Console</SubSystem>
-      <NoEntryPoint>true</NoEntryPoint>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup Condition="'$(BuildChakraICUData)'=='true'">
     <!-- TODO(jahorto): allow the data file to be trimmed or allow an alternate data file to be supplied -->
     <CustomBuild Include="$(MSBuildThisFileDirectory)source\data\in\icudt$(IcuVersionMajor)l.dat">

@@ -28,7 +28,7 @@
 
     <ChakraICU Condition="'$(ChakraICU)'==''">false</ChakraICU>
 
-    <BuildChakraICUData Condition="'$(BuildChakraICUData)'=='' AND ('$(ChakraICU)'=='static' OR '$(ChakraICU)'=='shared')">true</BuildChakraICUData>
+    <BuildChakraICUData Condition="'$(BuildChakraICUData)'=='' AND '$(ChakraICU)'=='static'">true</BuildChakraICUData>
 
     <IcuLibraryDependencies Condition="'$(ChakraICU)'=='windows'">icuuc.lib;icuin.lib</IcuLibraryDependencies>
   </PropertyGroup>

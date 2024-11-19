@@ -9,7 +9,7 @@
     <ProjectName>Chakra.ICU.Common</ProjectName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <ConfigurationType Condition="'$(ChakraICU)'!='shared'">StaticLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(BuildConfigPropsPath)Chakra.Build.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -26,14 +26,6 @@
         U_COMMON_IMPLEMENTATION=1
       </PreprocessorDefinitions>
     </ClCompile>
-    <Link Condition="'$(ChakraICU)'=='shared'">
-      <SubSystem>Console</SubSystem>
-      <!-- Unsure why InitializeSecurityDescriptor, SetSecurityDescriptorDacl, and others require this only for ARM -->
-      <AdditionalDependencies Condition="'$(Platform)'=='ARM'">
-        advapi32.lib;
-        %(AdditionalDependencies)
-      </AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup Condition="'$(BuildLocalICU)'=='true'">
     <ClCompile Include="$(IcuCommonSources)" />
