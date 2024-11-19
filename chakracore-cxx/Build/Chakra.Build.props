@@ -73,8 +73,7 @@
         4800;     <!-- 'type' : forcing value to bool 'true' or 'false' (performance warning) [always off in 2017 by default, but warns in 2015] -->
       </DisableSpecificWarnings>
       <!-- Use the debug CRT in debug build -->
-      <RuntimeLibrary Condition="'$(Configuration)'=='Debug' AND '$(RuntimeLib)'!='static_library'">MultiThreadedDebugDLL</RuntimeLibrary>
-      <RuntimeLibrary Condition="'$(Configuration)'=='Debug' AND '$(RuntimeLib)'=='static_library'">MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)\lib\common\placeholder;
         $(IntDir)..\CoreManifests;
