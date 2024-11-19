@@ -249,9 +249,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     add_definitions("-fdiagnostics-color=always")
 endif()
 
-# TODO (hanhossain): don't use add_definition for this, just use the CMake variable
-add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
-
 if(CLR_CMAKE_PLATFORM_XPLAT)
     add_definitions(-D_CHAKRACOREBUILD)
     add_definitions(-DFEATURE_PAL)

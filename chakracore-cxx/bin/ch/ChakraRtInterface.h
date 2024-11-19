@@ -375,11 +375,7 @@ public:
             m_testHooks.pfnNotifyUnhandledException(exceptionInfo);
         }
     }
-#ifdef CHAKRA_STATIC_LIBRARY
 #define HOOK_JS_API(x) ::Js##x
-#else
-#define HOOK_JS_API(x) m_jsApiHooks.pfJsrt##x
-#endif
 
     static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return HOOK_JS_API(CreateRuntime(attributes, threadService, runtime)); }
     static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return HOOK_JS_API(CreateContext(runtime, newContext)); }

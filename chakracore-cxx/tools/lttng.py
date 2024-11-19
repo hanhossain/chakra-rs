@@ -524,9 +524,6 @@ def generateLttngTracepointProvider(providerName, lttngHeader, templates, events
     providerLines = [];
 
     providerLines.append("#define TRACEPOINT_DEFINE")
-    providerLines.append("#ifndef CHAKRA_STATIC_LIBRARY")
-    providerLines.append("#define TRACEPOINT_PROBE_DYNAMIC_LINKAGE")
-    providerLines.append("#endif")
     providerLines.append("#include \"stdlib.h\"")
     providerLines.append("#include \"Common.h\"")
     providerLines.append("#include \"Codex/Utf8Helper.h\"")
