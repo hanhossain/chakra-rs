@@ -20,12 +20,6 @@ else(NOT CHAKRACORE_BUILD_SH)
     # option. Otherwise, CMake fails to update cached
     # references
 
-    # todo: create a sub cmake file to take care of _SH uncaching...
-    if(SHARED_LIBRARY_SH)
-    unset(SHARED_LIBRARY_SH CACHE)
-        set(SHARED_LIBRARY 1)
-    endif()
-
     if(LIBS_ONLY_BUILD_SH)
         unset(LIBS_ONLY_BUILD_SH CACHE)
         set(CC_LIBS_ONLY_BUILD 1)
