@@ -37,7 +37,7 @@
            TODO: Code review STDMETHOD and separate out API that can throw and those that can't -->
       <PreprocessorDefinitions>%(PreprocessorDefinitions);COM_STDMETHOD_CAN_THROW</PreprocessorDefinitions>
 
-      <PreprocessorDefinitions Condition="'$(RuntimeLib)'=='static_library'">%(PreprocessorDefinitions);USE_STATIC_RUNTIMELIB</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);USE_STATIC_RUNTIMELIB</PreprocessorDefinitions>
 
       <!-- Add any preprocessor definitions passed using msbuild environment -->
       <PreprocessorDefinitions Condition="'$(AdditionalPreprocessorDefinitions)'!=''">%(PreprocessorDefinitions);$(AdditionalPreprocessorDefinitions)</PreprocessorDefinitions>
@@ -69,8 +69,7 @@
       <!-- /guard:cf -->
       <StringPooling>true</StringPooling>
       <!-- /MD -->
-      <RuntimeLibrary Condition="'$(RuntimeLib)'!='static_library'">MultiThreadedDLL</RuntimeLibrary>
-      <RuntimeLibrary Condition="'$(RuntimeLib)'=='static_library'">MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 
       <!-- We don't use any metadata -->
       <AdditionalUsingDirectories />
