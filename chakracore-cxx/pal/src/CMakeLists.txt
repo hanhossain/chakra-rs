@@ -185,26 +185,3 @@ add_library(Chakra.Pal
 if(EMBED_ICU)
   add_dependencies(Chakra.Pal ${EMBEDDED_ICU_TARGET})
 endif()
-
-if (NOT STATIC_LIBRARY)
-  add_library(Chakra.Pal.Singular
-    STATIC
-    $<TARGET_OBJECTS:Chakra.Pal>
-  )
-
-  if(CC_TARGET_OS_OSX)
-    target_link_libraries(Chakra.Pal.Singular
-      "-framework CoreFoundation"
-      "-framework Security"
-      )
-  endif()
-
-  if (NOT CC_TARGET_OS_ANDROID)
-    set(PTHREAD pthread)
-  endif()
-
-  target_link_libraries(Chakra.Pal.Singular
-    ${PTHREAD}
-    dl
-    )
-endif()

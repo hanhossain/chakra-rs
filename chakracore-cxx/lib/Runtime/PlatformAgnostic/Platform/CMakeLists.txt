@@ -43,10 +43,3 @@ add_library (Chakra.Runtime.PlatformAgnostic OBJECT
 target_include_directories (
   Chakra.Runtime.PlatformAgnostic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
   )
-
-if(NOT STATIC_LIBRARY)
-  # CH has a direct dependency to this project
-  add_library (Chakra.Runtime.PlatformAgnostic.Singular STATIC
-    $<TARGET_OBJECTS:Chakra.Runtime.PlatformAgnostic>
-    )
-endif()
