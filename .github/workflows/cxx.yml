@@ -55,7 +55,7 @@ jobs:
 
     - name: Configure CMake
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
+      run: cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ${{ matrix.cmake-flags }} -GNinja -DSTATIC_LIBRARY=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
 
     - name: Build
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
