@@ -176,7 +176,7 @@
       <LinkTimeCodeGeneration Condition="'$(Platform)' != 'chpe'">true</LinkTimeCodeGeneration>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup Condition="'$(ConfigurationType)'=='DynamicLibrary' OR '$(ConfigurationType)'=='Application'">
+  <ItemGroup Condition="'$(ConfigurationType)'=='Application'">
     <Clean Include="$(OutDir)$(TargetName).lib" />
     <Clean Include="$(OutDir)$(TargetName).exp" />
     <Clean Include="$(OutDir)$(TargetName).ipdb" />

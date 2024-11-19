@@ -9,6 +9,7 @@
     <TargetName>ChakraCore</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
+    <!-- TODO (hanhossain): remove this project entirely -->
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(BuildConfigPropsPath)Chakra.Build.Default.props" />
