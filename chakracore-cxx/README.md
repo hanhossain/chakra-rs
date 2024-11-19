@@ -50,7 +50,7 @@ Alternatively, see [Getting ChakraCore binaries](https://github.com/Microsoft/Ch
 ### macOS
 
 - docs say to build with `./build.sh --static --icu=/usr/local/opt/icu4c/include --test-build -j=2`
-- install icu4c `brew install icu4c`, then set in cmake with `-DICU_INCLUDE_PATH_SH=/opt/homebrew/opt/icu4c/include`
+- install icu4c `brew install icu4c`, then set in cmake with `-DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include`
 - disable jit on arm64 as it's only functional on windows `-DDISABLE_JIT=1`
 
 ## Using ChakraCore
