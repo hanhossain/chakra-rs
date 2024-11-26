@@ -43,7 +43,6 @@ endif()
 
 # common link deps
 set(lib_target "${lib_target}"
-  -Wl,-undefined,error
   ${LINKER_START_GROUP}
   ChakraCoreStatic
   ${ICU_LIBRARIES}
