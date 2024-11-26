@@ -37,6 +37,7 @@
            TODO: Code review STDMETHOD and separate out API that can throw and those that can't -->
       <PreprocessorDefinitions>%(PreprocessorDefinitions);COM_STDMETHOD_CAN_THROW</PreprocessorDefinitions>
 
+      <!-- TODO (hanhossain): remove USE_STATIC_RUNTIMELIB -->
       <PreprocessorDefinitions>%(PreprocessorDefinitions);USE_STATIC_RUNTIMELIB</PreprocessorDefinitions>
 
       <!-- Add any preprocessor definitions passed using msbuild environment -->
