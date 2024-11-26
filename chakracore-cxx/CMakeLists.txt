@@ -232,7 +232,7 @@ elseif(CC_TARGET_OS_OSX)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
           -mmacosx-version-min=10.9 -std=gnu99")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-          -mmacosx-version-min=10.9 -std=gnu++17")
+          -mmacosx-version-min=10.9")
       else()
         set(OSX_DEPLOYMENT_TARGET "$ENV{MACOSX_DEPLOYMENT_TARGET}")
         message(WARNING "-- !! macOS Deployment Target was set to $ENV{MACOSX_DEPLOYMENT_TARGET}. Using it as is.")
@@ -241,6 +241,8 @@ elseif(CC_TARGET_OS_OSX)
 else()
     message(FATAL_ERROR "Unsupported OS: ${CMAKE_SYSTEM_NAME}")
 endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_FXX_FLAGS} -std=c++17")
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     OR CMAKE_CXX_COMPILER_ID STREQUAL Clang
