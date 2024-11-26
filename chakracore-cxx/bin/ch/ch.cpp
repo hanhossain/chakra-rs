@@ -1067,10 +1067,6 @@ unsigned int WINAPI StaticThreadProc(void *lpParam)
 static char16** argv = nullptr;
 int main(int argc, char** c_argv)
 {
-#ifndef CHAKRA_STATIC_LIBRARY
-// xplat-todo: PAL free CH ?
-    PAL_InitializeChakraCore();
-#endif
     int origargc = argc; // store for clean-up later
     argv = new char16*[argc];
     for (int i = 0; i < argc; i++)
@@ -1226,7 +1222,7 @@ int _cdecl wmain(int argc, __in_ecount(argc) LPWSTR argv[])
     argInfo = { argc, argv, PrintUsage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
 
-#if defined(CHAKRA_STATIC_LIBRARY) && !defined(NDEBUG)
+#if !defined(NDEBUG)
     // handle command line flags
     OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
 #endif
