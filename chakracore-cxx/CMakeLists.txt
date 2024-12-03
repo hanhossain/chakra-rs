@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 project (CHAKRACORE)
 
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
@@ -280,8 +281,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -D_SAFECRT_USE_CPP_OVERLOADS=1
         -D__STDC_WANT_LIB_EXT1__=1
         )
-
-    set(CMAKE_CXX_STANDARD 17)
 
     # todo: fix general visibility of the interface
     # do not set to `fvisibility=hidden` as it is going to
