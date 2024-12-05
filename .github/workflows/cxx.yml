@@ -64,7 +64,7 @@ jobs:
     - name: Slow Tests
       if: ${{ matrix.run-tests }}
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ninja check-slow
+      run: ninja slow-check
 
   build-msvc:
     runs-on: windows-latest
