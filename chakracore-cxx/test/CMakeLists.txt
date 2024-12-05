@@ -45,4 +45,11 @@ else()
         DEPENDS ch
         )
     add_dependencies(check bytecode-check regression-check)
+
+    add_custom_target(slow-check
+        COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/runtests.py ${TEST_BUILD_TYPE} ${TEST_ICU} ${TEST_VARIANT} --only-slow --binary=${CMAKE_BINARY_DIR}/ch
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        USES_TERMINAL
+        DEPENDS ch
+        )
 endif()

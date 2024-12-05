@@ -61,6 +61,11 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ninja check
 
+    - name: Slow Tests
+      if: ${{ matrix.run-tests }}
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ninja slow-check
+
   build-msvc:
     runs-on: windows-latest
     timeout-minutes: 120
