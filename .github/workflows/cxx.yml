@@ -74,7 +74,7 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
         dot -Tsvg -o graph.svg graph.dot
-        cat graph.svg > $GITHUB_STEP_SUMMARY
+        python3 exportsvg.py $GITHUB_STEP_SUMMARY
 
   build-msvc:
     runs-on: windows-latest
