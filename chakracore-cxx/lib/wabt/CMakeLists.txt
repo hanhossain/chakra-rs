@@ -45,13 +45,6 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
-if (MINGW)
-  message(WARNING "marked for cleanup")
-  # Mingw won't define format (e.g. PRIu64) or limit (e.g. UINT32_MAX) macros
-  # in C++ without these.
-  add_definitions(-D__STDC_LIMIT_MACROS=1 -D__STDC_FORMAT_MACROS=1)
-endif ()
-
 if (COMPILER_IS_GNU)
   message(WARNING "marked for cleanup")
   # disable -Wclobbered: it seems to be guessing incorrectly about a local
