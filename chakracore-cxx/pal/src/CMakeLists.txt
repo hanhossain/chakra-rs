@@ -12,9 +12,6 @@ include_directories(include)
 # Compile options
 if(CC_TARGETS_AMD64)
     add_definitions(-D_AMD64_)
-elseif(CC_TARGETS_X86)
-    message(WARNING "marked for cleanup")
-    add_definitions(-D__i686__)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64)
     message(WARNING "marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
@@ -39,9 +36,6 @@ add_definitions(-D_FILE_OFFSET_BITS=64)
 if(CC_TARGETS_AMD64)
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
-elseif(CC_TARGETS_X86)
-  message(WARNING "marked for cleanup")
-  add_definitions(-DBIT32=1)
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
@@ -60,13 +54,7 @@ if(CC_TARGET_OS_OSX)
   )
 endif()
 
-if(CC_TARGETS_AMD64 OR CC_TARGETS_X86)
-  if(CC_TARGET_OS_OSX)
-    message(WARNING "marked for cleanup")
-    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
-      arch/i386/dispatchexceptionwrapper.S
-    )
-  endif()
+if(CC_TARGETS_AMD64)
   set(ARCH_SOURCES
     arch/i386/context2.S
     arch/i386/debugbreak.S

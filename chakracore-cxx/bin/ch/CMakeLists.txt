@@ -88,11 +88,6 @@ if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
     ${LINKER_REDUCED_MEMORY}
     )
-elseif(CC_TARGET_OS_OSX)
-  if(CC_TARGETS_X86)
-    message(WARNING "marked for cleanup")
-    set(lib_target "${lib_target} -arch i386")
-  endif()
 endif()
 
 target_link_libraries (ch
