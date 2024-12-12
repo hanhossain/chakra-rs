@@ -1,3 +1,4 @@
+message(WARNING "TODO (hanhossain): marked for cleanup")
 add_library (ChakraCore SHARED
   ChakraCoreShared.cpp
   ConfigParserExternals.cpp
@@ -26,6 +27,7 @@ target_include_directories (
 #  dl: For shared library loading related functions
 #
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   set(LINKER_START_GROUP
     -fPIC
     -Wl,--start-group
@@ -38,6 +40,7 @@ if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
     -static-libstdc++
     )
 elseif(CC_TARGET_OS_OSX)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   set(LINKER_START_GROUP -Wl,-force_load,)
 endif()
 
@@ -52,14 +55,18 @@ set(lib_target "${lib_target}"
   )
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   set(lib_target "${lib_target}"
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/libChakraCoreLib.version
     ${LINKER_REDUCED_MEMORY}
     )
 elseif(CC_TARGET_OS_OSX)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   if(CC_TARGETS_X86)
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(lib_target "${lib_target} -arch i386")
   elseif(CC_TARGETS_ARM)
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(lib_target "${lib_target} -arch arm")
   endif()
 endif()
@@ -70,6 +77,7 @@ target_link_libraries (ChakraCore
   )
 
 if(NOT CC_XCODE_PROJECT)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   # Post build step to copy the built shared library
   # to out/{BUILD_TYPE}/ (or whatever the CMakeBuildDir is)
   add_custom_command(TARGET ChakraCore POST_BUILD

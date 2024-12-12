@@ -130,6 +130,7 @@ if(CC_TARGETS_AMD64)
         amd64/JavascriptFunctionA.S
     )
 elseif(CC_TARGETS_ARM)
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         arm/arm_JavascriptFunctionA.S
     )

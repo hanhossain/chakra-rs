@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 cmake_minimum_required(VERSION 3.30)
 project(WABT)
 
@@ -31,6 +30,7 @@ check_symbol_exists(sysconf "unistd.h" HAVE_SYSCONF)
 check_symbol_exists(strcasecmp "strings.h" HAVE_STRCASECMP)
 
 if (WIN32)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   check_symbol_exists(ENABLE_VIRTUAL_TERMINAL_PROCESSING "windows.h" HAVE_WIN32_VT100)
 endif ()
 
@@ -50,12 +50,14 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
 if (MINGW)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   # Mingw won't define format (e.g. PRIu64) or limit (e.g. UINT32_MAX) macros
   # in C++ without these.
   add_definitions(-D__STDC_LIMIT_MACROS=1 -D__STDC_FORMAT_MACROS=1)
 endif ()
 
 if (COMPILER_IS_GNU)
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   # disable -Wclobbered: it seems to be guessing incorrectly about a local
   # variable being clobbered by longjmp.
   add_definitions(-Wno-clobbered)

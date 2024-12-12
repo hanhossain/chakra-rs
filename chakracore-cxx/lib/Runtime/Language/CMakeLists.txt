@@ -74,6 +74,7 @@ if(CC_TARGETS_AMD64)
         amd64/amd64_Thunks.S
     )
 elseif(CC_TARGETS_X86)
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         i386/AsmJsJitTemplate.cpp
         i386/StackFrame.cpp
@@ -85,6 +86,7 @@ elseif(CC_TARGETS_ARM64)
         arm64/arm64_CallEhFrame.S
     )
 elseif(CC_TARGETS_ARM)
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         arm/StackFrame.cpp
         arm/arm_Thunks.S
