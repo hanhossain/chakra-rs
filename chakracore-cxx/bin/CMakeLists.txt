@@ -1,3 +1,1 @@
-if(NOT CC_LIBS_ONLY_BUILD)
-    add_subdirectory (ch)
-endif()
+add_subdirectory (ch)
