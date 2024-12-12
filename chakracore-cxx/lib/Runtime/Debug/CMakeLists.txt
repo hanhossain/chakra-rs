@@ -1,4 +1,4 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 add_library (Chakra.Runtime.Debug OBJECT
     BreakpointProbe.cpp
     DebugContext.cpp

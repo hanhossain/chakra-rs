@@ -1,4 +1,4 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 project(CHAKRA_PLATFORM_AGNOSTIC)
 
 set(PL_SOURCE_FILES
@@ -13,11 +13,13 @@ set(PL_SOURCE_FILES
   )
 
 if(NO_ICU)
+  message(FATAL_ERROR "marked for cleanup")
   set(PL_SOURCE_FILES
     ${PL_SOURCE_FILES}
     POSIX/UnicodeText.cpp
   )
 else()
+  message(FATAL_ERROR "marked for cleanup")
   set(PL_SOURCE_FILES
     ${PL_SOURCE_FILES}
     Common/UnicodeText.ICU.cpp
@@ -25,11 +27,13 @@ else()
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+  message(FATAL_ERROR "marked for cleanup")
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
     Linux/SystemInfo.cpp
     Linux/PerfTrace.cpp
     )
 elseif(CC_TARGET_OS_OSX)
+  message(FATAL_ERROR "marked for cleanup")
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
     Unix/AssemblyCommon.cpp
     Unix/SystemInfo.cpp

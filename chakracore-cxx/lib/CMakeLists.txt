@@ -1,21 +1,25 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 add_compile_options(-fPIC)
 
 if(BuildJIT)
+    message(FATAL_ERROR "marked for cleanup")
     set(chakra_backend_objects $<TARGET_OBJECTS:Chakra.Backend>)
 endif()
 
 if(CC_TARGETS_AMD64)
+    message(FATAL_ERROR "marked for cleanup")
     set(wasm_objects $<TARGET_OBJECTS:Chakra.WasmReader>)
     set(wasm_includes ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader)
 endif()
 
 if(CAN_BUILD_WABT)
+    message(FATAL_ERROR "marked for cleanup")
     set(wabt_objects $<TARGET_OBJECTS:libwabt>)
     set(wabt_includes ${CHAKRACORE_SOURCE_DIR}/lib/wabt)
 endif()
 
 if (USE_LTTNG)
+    message(FATAL_ERROR "marked for cleanup")
     set(lttng_objects $<TARGET_OBJECTS:Chakra.LTTng>)
 endif()
 
@@ -48,6 +52,7 @@ add_library (ChakraCoreStatic STATIC
 )
 
 if(USE_LTTNG)
+    message(FATAL_ERROR "marked for cleanup")
     target_link_libraries(ChakraCoreStatic
       -llttng-ust
       -ldl
@@ -55,12 +60,15 @@ if(USE_LTTNG)
 endif()
 
 if(CC_TARGET_OS_OSX)
+  message(FATAL_ERROR "marked for cleanup")
   target_link_libraries(ChakraCoreStatic
     "-framework CoreFoundation"
     "-framework Security"
     )
 else()
+  message(FATAL_ERROR "marked for cleanup")
   if (NOT CC_TARGET_OS_ANDROID)
+    message(FATAL_ERROR "marked for cleanup")
     set(PTHREAD "pthread")
   endif()
 
@@ -85,6 +93,7 @@ target_include_directories (
   )
 
 if(BuildJIT)
+    message(FATAL_ERROR "marked for cleanup")
     add_subdirectory (Backend)
 endif()
 
@@ -94,6 +103,7 @@ add_subdirectory (SCACore)
 add_subdirectory (Runtime)
 add_subdirectory (Jsrt)
 if (CC_TARGETS_AMD64)
+    message(FATAL_ERROR "marked for cleanup")
     add_subdirectory (WasmReader)
     set(BUILD_TESTS OFF)
     set(RUN_BISON OFF)
@@ -101,10 +111,12 @@ if (CC_TARGETS_AMD64)
 endif()
 
 if(CAN_BUILD_WABT)
+    message(FATAL_ERROR "marked for cleanup")
     add_subdirectory (wabt)
 endif()
 
 if(NOT CC_XCODE_PROJECT)
+    message(FATAL_ERROR "marked for cleanup")
     add_custom_command(TARGET ChakraCoreStatic POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/include"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -123,6 +135,7 @@ if(NOT CC_XCODE_PROJECT)
 endif(NOT CC_XCODE_PROJECT)
 
 if (EMBED_ICU)
+  message(FATAL_ERROR "marked for cleanup")
   # Declare ICU dependencies in bulk.
   # TODO Not the most idiomatic solution, need to understand if all of those
   # libraries needed to depend on it
@@ -139,8 +152,10 @@ if (EMBED_ICU)
   add_dependencies(Chakra.Runtime.Types ${EMBEDDED_ICU_TARGET})
   add_dependencies(Chakra.SCACore ${EMBEDDED_ICU_TARGET})
   if (BuildJIT)
+    message(FATAL_ERROR "marked for cleanup")
     add_dependencies(Chakra.Backend ${EMBEDDED_ICU_TARGET})
     if (CC_TARGETS_AMD64)
+      message(FATAL_ERROR "marked for cleanup")
       add_dependencies(Chakra.WasmReader ${EMBEDDED_ICU_TARGET})
     endif()
   endif()

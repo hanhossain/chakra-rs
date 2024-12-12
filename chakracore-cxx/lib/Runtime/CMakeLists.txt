@@ -1,4 +1,4 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 project(CHAKRA_RUNTIME)
 
 include_directories(

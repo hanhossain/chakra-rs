@@ -1,4 +1,4 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 project(CHAKRA_COMMON)
 
 include_directories(${CHAKRA_COMMON_SOURCE_DIR})

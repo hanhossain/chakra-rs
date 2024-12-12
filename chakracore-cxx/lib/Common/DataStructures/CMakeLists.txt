@@ -1,4 +1,4 @@
-# TODO (hanhossain): cleanup
+message(FATAL_ERROR "marked for cleanup")
 add_library (Chakra.Common.DataStructures OBJECT
     BigUInt.cpp
     BufferBuilder.cpp
