@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 project(CHAKRA_PLATFORM_AGNOSTIC)
 
 set(PL_SOURCE_FILES
@@ -19,7 +18,6 @@ if(NO_ICU)
     POSIX/UnicodeText.cpp
   )
 else()
-  message(WARNING "marked for cleanup")
   set(PL_SOURCE_FILES
     ${PL_SOURCE_FILES}
     Common/UnicodeText.ICU.cpp
@@ -33,7 +31,6 @@ if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
     Linux/PerfTrace.cpp
     )
 elseif(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
     Unix/AssemblyCommon.cpp
     Unix/SystemInfo.cpp

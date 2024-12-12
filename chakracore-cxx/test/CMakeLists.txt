@@ -1,8 +1,6 @@
-message(WARNING "marked for cleanup")
 find_package (Python COMPONENTS Interpreter)
 
 if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
-    message(WARNING "marked for cleanup")
     set(TEST_BUILD_TYPE --test)
 elseif (CMAKE_BUILD_TYPE STREQUAL Debug)
     message(WARNING "marked for cleanup")
@@ -13,7 +11,6 @@ if (NO_ICU)
     message(WARNING "marked for cleanup")
     set(TEST_ICU --not-tag exclude_noicu)
 elseif (NOT EMBED_ICU)
-    message(WARNING "marked for cleanup")
     set(TEST_ICU --not-tag exclude_icu62AndAboveTestFailures)
 endif()
 
@@ -21,7 +18,6 @@ if (BuildJIT)
     message(WARNING "marked for cleanup")
     set(VARIANT --jit)
 else ()
-    message(WARNING "marked for cleanup")
     set(TEST_VARIANT --variants=disable_jit)
     set(VARIANT --noJit)
 endif()
@@ -40,7 +36,6 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
         )
     add_dependencies(check smoke-check)
 else()
-    message(WARNING "marked for cleanup")
     add_custom_target(bytecode-check
         COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/regenByteCode.py ${VARIANT} --verify --binary=${CMAKE_BINARY_DIR}/ch
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

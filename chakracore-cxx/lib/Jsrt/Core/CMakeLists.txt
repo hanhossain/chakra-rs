@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 add_library (Chakra.Jsrt.Core OBJECT
     JsrtContextCore.cpp
     JsrtCore.cpp

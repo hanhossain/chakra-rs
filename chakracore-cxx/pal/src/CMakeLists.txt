@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 cmake_minimum_required(VERSION 3.30)
 
 project(chakrapal)
@@ -25,7 +24,6 @@ elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64)
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL arm64)
-    message(WARNING "marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 else()
@@ -51,7 +49,6 @@ elseif(CC_TARGETS_ARM OR CC_TARGETS_X86)
   message(WARNING "marked for cleanup")
   add_definitions(-DBIT32=1)
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
-  message(WARNING "marked for cleanup")
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
 endif()
@@ -63,7 +60,6 @@ add_compile_options(-fno-builtin)
 add_compile_options(-fPIC)
 
 if(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   set(PLATFORM_SOURCES
     exception/machexception.cpp
     exception/machmessage.cpp
@@ -85,7 +81,6 @@ if(CC_TARGETS_AMD64 OR CC_TARGETS_X86)
     arch/i386/asmhelpers.S
     )
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
-  message(WARNING "marked for cleanup")
   set(ARCH_SOURCES
     arch/arm64/dispatchexceptionwrapper.S
     arch/arm64/context2.S

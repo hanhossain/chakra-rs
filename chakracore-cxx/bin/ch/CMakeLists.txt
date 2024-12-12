@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 find_package (Python COMPONENTS Interpreter)
 add_custom_target(dbg_controller_h
   COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/jstoc.py ${CMAKE_CURRENT_SOURCE_DIR}/DbgController.js controllerScript
@@ -57,12 +56,10 @@ if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
     set(LINKER_END_GROUP "${LINKER_END_GROUP} -llog")
   endif()
 elseif(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   set(LINKER_START_GROUP -Wl,-force_load,)
 endif()
 
 if (NOT CC_TARGET_OS_ANDROID)
-  message(WARNING "marked for cleanup")
   set(LINKER_END_GROUP
       "${LINKER_END_GROUP}"
       pthread
@@ -79,7 +76,6 @@ set(lib_target "${lib_target}"
   )
 
 if(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     "-framework CoreFoundation"
     "-framework Security"
@@ -98,7 +94,6 @@ if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
     ${LINKER_REDUCED_MEMORY}
     )
 elseif(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   if(CC_TARGETS_X86)
     message(WARNING "marked for cleanup")
     set(lib_target "${lib_target} -arch i386")
@@ -117,7 +112,6 @@ if(NOT CC_XCODE_PROJECT)
   # Add a post build event to the ch target
   # which executes a command to copy ch to
   # out/{BUILD_TYPE}/ for convenience
-  message(WARNING "marked for cleanup")
   add_custom_command(TARGET ch POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CHAKRACORE_BINARY_DIR}/bin/ch/ch"

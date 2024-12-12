@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 add_library (Chakra.Common.Codex OBJECT
     Utf8Codex.cpp)
 

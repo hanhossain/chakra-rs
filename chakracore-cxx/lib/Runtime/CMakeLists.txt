@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 project(CHAKRA_RUNTIME)
 
 include_directories(

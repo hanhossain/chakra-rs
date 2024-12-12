@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 if(BuildJIT)
     message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
@@ -83,7 +82,6 @@ elseif(CC_TARGETS_X86)
         i386/StackFrame.cpp
     )
 elseif(CC_TARGETS_ARM64)
-    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         arm64/StackFrame.cpp
         arm64/arm64_Thunks.S

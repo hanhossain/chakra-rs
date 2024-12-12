@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 add_compile_options(-fPIC)
 
 if(BuildJIT)
@@ -60,7 +59,6 @@ if(USE_LTTNG)
 endif()
 
 if(CC_TARGET_OS_OSX)
-  message(WARNING "marked for cleanup")
   target_link_libraries(ChakraCoreStatic
     "-framework CoreFoundation"
     "-framework Security"
@@ -116,7 +114,6 @@ if(CAN_BUILD_WABT)
 endif()
 
 if(NOT CC_XCODE_PROJECT)
-    message(WARNING "marked for cleanup")
     add_custom_command(TARGET ChakraCoreStatic POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/include"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different

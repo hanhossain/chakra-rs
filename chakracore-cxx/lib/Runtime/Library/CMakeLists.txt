@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 if(BuildJIT)
     message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
@@ -140,7 +139,6 @@ elseif(CC_TARGETS_ARM)
         arm/arm_JavascriptFunctionA.S
     )
 elseif(CC_TARGETS_ARM64)
-    message(WARNING "marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         arm64/arm64_CallFunction.S
         arm64/arm64_DeferredDeserializeThunk.S

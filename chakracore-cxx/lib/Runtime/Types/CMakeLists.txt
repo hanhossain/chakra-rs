@@ -1,4 +1,3 @@
-message(WARNING "marked for cleanup")
 add_library (Chakra.Runtime.Types OBJECT
     ActivationObject.cpp
     ArrayObject.cpp
