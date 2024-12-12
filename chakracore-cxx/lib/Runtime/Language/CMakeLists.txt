@@ -1,5 +1,4 @@
 if(BuildJIT)
-    message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
 endif()
 
@@ -68,7 +67,6 @@ set(CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
     )
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         amd64/AsmJsJitTemplate.cpp
         amd64/StackFrame.SystemV.cpp

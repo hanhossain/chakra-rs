@@ -1,10 +1,8 @@
 if(BuildJIT)
-    message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
 endif()
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set(Wasm_dep
     WasmLibrary.cpp
     WebAssembly.cpp
@@ -18,7 +16,6 @@ if(CC_TARGETS_AMD64)
 endif()
 
 if(CAN_BUILD_WABT)
-    message(WARNING "marked for cleanup")
     include_directories(
     ../../wabt/chakra
     )
@@ -129,7 +126,6 @@ set(CRLIB_SOURCE_CODES
     )
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         amd64/JavascriptFunctionA.S
     )

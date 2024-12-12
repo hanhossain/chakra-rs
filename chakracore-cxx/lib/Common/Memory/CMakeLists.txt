@@ -41,7 +41,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     )
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
         amd64/XDataAllocator.cpp
         amd64/amd64_SAVE_REGISTERS.S

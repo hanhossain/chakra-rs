@@ -25,7 +25,6 @@ else()
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(WARNING "marked for cleanup")
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
     Linux/SystemInfo.cpp
     Linux/PerfTrace.cpp

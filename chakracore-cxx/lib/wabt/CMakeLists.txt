@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-message(WARNING "marked for cleanup")
 cmake_minimum_required(VERSION 3.30)
 project(WABT)
 
@@ -65,7 +64,6 @@ if (COMPILER_IS_GNU)
 endif ()
 
 if (COMPILER_IS_CLANG)
-  message(WARNING "marked for cleanup")
   add_definitions(-fcolor-diagnostics)
 endif ()
 
@@ -73,7 +71,6 @@ endif ()
 include_directories(src/prebuilt)
 
 if (COMPILER_IS_CLANG OR COMPILER_IS_GNU)
-  message(WARNING "marked for cleanup")
   # yyerror passes a non-string-literal to a printf-like function, which is a
   # warning.
   set_source_files_properties(

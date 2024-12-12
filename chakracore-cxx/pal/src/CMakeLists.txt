@@ -11,7 +11,6 @@ include_directories(include)
 
 # Compile options
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     add_definitions(-D_AMD64_)
 elseif(CC_TARGETS_X86)
     message(WARNING "marked for cleanup")
@@ -32,7 +31,6 @@ else()
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(WARNING "marked for cleanup")
   add_definitions(-D__LINUX__=1)
 endif()
 
@@ -42,7 +40,6 @@ add_definitions(-DFEATURE_PAL=1)
 add_definitions(-DPIC=1)
 add_definitions(-D_FILE_OFFSET_BITS=64)
 if(CC_TARGETS_AMD64)
-  message(WARNING "marked for cleanup")
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
 elseif(CC_TARGETS_ARM OR CC_TARGETS_X86)
@@ -67,7 +64,6 @@ if(CC_TARGET_OS_OSX)
 endif()
 
 if(CC_TARGETS_AMD64 OR CC_TARGETS_X86)
-  message(WARNING "marked for cleanup")
   if(CC_TARGET_OS_OSX)
     message(WARNING "marked for cleanup")
     set(PLATFORM_SOURCES ${PLATFORM_SOURCES}

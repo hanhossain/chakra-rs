@@ -1,18 +1,15 @@
 add_compile_options(-fPIC)
 
 if(BuildJIT)
-    message(WARNING "marked for cleanup")
     set(chakra_backend_objects $<TARGET_OBJECTS:Chakra.Backend>)
 endif()
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set(wasm_objects $<TARGET_OBJECTS:Chakra.WasmReader>)
     set(wasm_includes ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader)
 endif()
 
 if(CAN_BUILD_WABT)
-    message(WARNING "marked for cleanup")
     set(wabt_objects $<TARGET_OBJECTS:libwabt>)
     set(wabt_includes ${CHAKRACORE_SOURCE_DIR}/lib/wabt)
 endif()
@@ -64,9 +61,7 @@ if(CC_TARGET_OS_OSX)
     "-framework Security"
     )
 else()
-  message(WARNING "marked for cleanup")
   if (NOT CC_TARGET_OS_ANDROID)
-    message(WARNING "marked for cleanup")
     set(PTHREAD "pthread")
   endif()
 
@@ -91,7 +86,6 @@ target_include_directories (
   )
 
 if(BuildJIT)
-    message(WARNING "marked for cleanup")
     add_subdirectory (Backend)
 endif()
 
@@ -101,7 +95,6 @@ add_subdirectory (SCACore)
 add_subdirectory (Runtime)
 add_subdirectory (Jsrt)
 if (CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     add_subdirectory (WasmReader)
     set(BUILD_TESTS OFF)
     set(RUN_BISON OFF)
@@ -109,7 +102,6 @@ if (CC_TARGETS_AMD64)
 endif()
 
 if(CAN_BUILD_WABT)
-    message(WARNING "marked for cleanup")
     add_subdirectory (wabt)
 endif()
 

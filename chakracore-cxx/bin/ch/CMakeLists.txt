@@ -29,7 +29,6 @@ set_target_properties(ch
 include_directories(..)
 
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
@@ -45,11 +44,9 @@ target_include_directories (ch
   )
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(WARNING "marked for cleanup")
   set(LINKER_START_GROUP -pie -Wl,--start-group)
   set(LINKER_END_GROUP -Wl,--end-group)
   if (CC_TARGET_OS_LINUX) # do not embed libstdc++ statically on Android
-    message(WARNING "marked for cleanup")
     set(LINKER_END_GROUP "${LINKER_END_GROUP} -static-libstdc++")
   else()
     message(WARNING "marked for cleanup")
@@ -81,14 +78,12 @@ if(CC_TARGET_OS_OSX)
     "-framework Security"
     )
 elseif (NOT CC_TARGET_OS_ANDROID)
-  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     "pthread"
     )
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
     ${LINKER_REDUCED_MEMORY}

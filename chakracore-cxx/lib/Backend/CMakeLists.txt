@@ -1,6 +1,4 @@
-message(WARNING "marked for cleanup")
 if(CC_TARGETS_AMD64)
-    message(WARNING "marked for cleanup")
     set (CC_BACKEND_ARCH_FOLDER amd64)
     set (CC_BACKEND_ARCH_FILES
         amd64/EncoderMD.cpp

@@ -15,7 +15,6 @@ elseif (NOT EMBED_ICU)
 endif()
 
 if (BuildJIT)
-    message(WARNING "marked for cleanup")
     set(VARIANT --jit)
 else ()
     set(TEST_VARIANT --variants=disable_jit)
