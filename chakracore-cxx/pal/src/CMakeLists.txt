@@ -15,9 +15,6 @@ if(CC_TARGETS_AMD64)
 elseif(CC_TARGETS_X86)
     message(WARNING "marked for cleanup")
     add_definitions(-D__i686__)
-elseif(CC_TARGETS_ARM)
-    message(WARNING "marked for cleanup")
-    add_definitions(-D_ARM_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64)
     message(WARNING "marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
@@ -42,7 +39,7 @@ add_definitions(-D_FILE_OFFSET_BITS=64)
 if(CC_TARGETS_AMD64)
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
-elseif(CC_TARGETS_ARM OR CC_TARGETS_X86)
+elseif(CC_TARGETS_X86)
   message(WARNING "marked for cleanup")
   add_definitions(-DBIT32=1)
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
@@ -82,15 +79,6 @@ elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
     arch/arm64/context2.S
     arch/arm64/debugbreak.S
   )
-
-elseif(CC_TARGETS_ARM)
-  message(WARNING "marked for cleanup")
-  set(ARCH_SOURCES
-    arch/arm/context2.S
-    arch/arm/debugbreak.S
-    arch/arm/processor.cpp
-    arch/arm/asmhelpers.S
-    )
 endif()
 
 set(SOURCES

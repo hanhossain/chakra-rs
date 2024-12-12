@@ -41,19 +41,6 @@ elseif(CC_TARGETS_ARM64)
         arm64/Thunks.S
         arm64/UnwindInfoManager.cpp
     )
-elseif(CC_TARGETS_ARM)
-    message(WARNING "marked for cleanup")
-    set (CC_BACKEND_ARCH_FOLDER arm)
-    set (CC_BACKEND_ARCH_FILES
-        arm/EncoderMD.cpp
-        arm/LegalizeMD.cpp
-        arm/LinearScanMD.cpp
-        arm/LinearScanMdA.asm
-        arm/LowerMD.cpp
-        arm/PeepsMD.cpp
-        arm/Thunks.asm
-        arm/UnwindInfoManager.cpp
-    )
 endif()
 
 add_library (Chakra.Backend OBJECT
