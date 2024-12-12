@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (ChakraCore SHARED
   ChakraCoreShared.cpp
   ConfigParserExternals.cpp

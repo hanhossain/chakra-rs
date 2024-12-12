@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 if(CC_TARGETS_ARM)
     set(ARCH_SOURCES arm/arm_GET_CURRENT_FRAME.S)
 elseif(CC_TARGETS_ARM64)

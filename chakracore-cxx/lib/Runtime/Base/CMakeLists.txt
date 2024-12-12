@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Runtime.Base OBJECT
     CallInfo.cpp
     CharStringCache.cpp

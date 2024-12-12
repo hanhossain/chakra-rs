@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Runtime.Math OBJECT
     AsmJsMath.cpp
     RuntimeMathPch.cpp

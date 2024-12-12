@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Runtime.Types OBJECT
     ActivationObject.cpp
     ArrayObject.cpp

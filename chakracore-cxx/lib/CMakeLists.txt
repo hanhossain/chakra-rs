@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_compile_options(-fPIC)
 
 if(BuildJIT)

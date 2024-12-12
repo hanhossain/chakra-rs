@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Jsrt.Core OBJECT
     JsrtContextCore.cpp
     JsrtCore.cpp

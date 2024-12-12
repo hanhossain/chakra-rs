@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 if(CC_TARGETS_AMD64)
     set (CC_BACKEND_ARCH_FOLDER amd64)
     set (CC_BACKEND_ARCH_FILES

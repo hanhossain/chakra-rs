@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 if(BuildJIT)
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
 endif()

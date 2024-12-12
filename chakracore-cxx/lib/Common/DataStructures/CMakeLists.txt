@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Common.DataStructures OBJECT
     BigUInt.cpp
     BufferBuilder.cpp

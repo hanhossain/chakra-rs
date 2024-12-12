@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.WasmReader OBJECT
     WasmParseTree.cpp
     WasmBinaryReader.cpp

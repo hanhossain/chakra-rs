@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Parser OBJECT
     Alloc.cpp
     BackgroundParser.cpp

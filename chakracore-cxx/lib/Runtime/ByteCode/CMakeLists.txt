@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.Runtime.ByteCode OBJECT
     AsmJsByteCodeDumper.cpp
     AsmJsByteCodeWriter.cpp

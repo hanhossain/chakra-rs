@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 add_library (Chakra.SCACore OBJECT
     SCACore.cpp
     SCACorePch.cpp

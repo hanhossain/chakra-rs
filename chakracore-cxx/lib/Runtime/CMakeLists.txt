@@ -1,3 +1,4 @@
+# TODO (hanhossain): cleanup
 project(CHAKRA_RUNTIME)
 
 include_directories(
