@@ -1,6 +1,6 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 if(BuildJIT)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
 endif()
 
@@ -69,7 +69,7 @@ set(CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
     )
 
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         amd64/AsmJsJitTemplate.cpp
         amd64/StackFrame.SystemV.cpp
@@ -77,20 +77,20 @@ if(CC_TARGETS_AMD64)
         amd64/amd64_Thunks.S
     )
 elseif(CC_TARGETS_X86)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         i386/AsmJsJitTemplate.cpp
         i386/StackFrame.cpp
     )
 elseif(CC_TARGETS_ARM64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         arm64/StackFrame.cpp
         arm64/arm64_Thunks.S
         arm64/arm64_CallEhFrame.S
     )
 elseif(CC_TARGETS_ARM)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
         arm/StackFrame.cpp
         arm/arm_Thunks.S

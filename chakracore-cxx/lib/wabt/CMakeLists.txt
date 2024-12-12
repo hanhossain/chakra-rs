@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 cmake_minimum_required(VERSION 3.30)
 project(WABT)
 
@@ -31,7 +31,7 @@ check_symbol_exists(sysconf "unistd.h" HAVE_SYSCONF)
 check_symbol_exists(strcasecmp "strings.h" HAVE_STRCASECMP)
 
 if (WIN32)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   check_symbol_exists(ENABLE_VIRTUAL_TERMINAL_PROCESSING "windows.h" HAVE_WIN32_VT100)
 endif ()
 
@@ -51,21 +51,21 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
 if (MINGW)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   # Mingw won't define format (e.g. PRIu64) or limit (e.g. UINT32_MAX) macros
   # in C++ without these.
   add_definitions(-D__STDC_LIMIT_MACROS=1 -D__STDC_FORMAT_MACROS=1)
 endif ()
 
 if (COMPILER_IS_GNU)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   # disable -Wclobbered: it seems to be guessing incorrectly about a local
   # variable being clobbered by longjmp.
   add_definitions(-Wno-clobbered)
 endif ()
 
 if (COMPILER_IS_CLANG)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_definitions(-fcolor-diagnostics)
 endif ()
 
@@ -73,7 +73,7 @@ endif ()
 include_directories(src/prebuilt)
 
 if (COMPILER_IS_CLANG OR COMPILER_IS_GNU)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   # yyerror passes a non-string-literal to a printf-like function, which is a
   # warning.
   set_source_files_properties(

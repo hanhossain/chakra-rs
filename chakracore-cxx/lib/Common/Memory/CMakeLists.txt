@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     Allocator.cpp
     ArenaAllocator.cpp
@@ -42,19 +42,19 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     )
 
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
         amd64/XDataAllocator.cpp
         amd64/amd64_SAVE_REGISTERS.S
     )
 elseif(CC_TARGETS_ARM64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
         arm64/XDataAllocator.cpp
         arm64/arm64_SAVE_REGISTERS.S
     )
 elseif(CC_TARGETS_ARM)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
   set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
       arm/XDataAllocator.cpp
       arm/arm_SAVE_REGISTERS.S

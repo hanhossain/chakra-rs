@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 add_library (Chakra.SCACore OBJECT
     SCACore.cpp
     SCACorePch.cpp

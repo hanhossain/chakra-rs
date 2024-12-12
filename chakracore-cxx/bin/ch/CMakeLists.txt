@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 find_package (Python COMPONENTS Interpreter)
 add_custom_target(dbg_controller_h
   COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/jstoc.py ${CMAKE_CURRENT_SOURCE_DIR}/DbgController.js controllerScript
@@ -30,7 +30,7 @@ set_target_properties(ch
 include_directories(..)
 
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
@@ -46,23 +46,23 @@ target_include_directories (ch
   )
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(LINKER_START_GROUP -pie -Wl,--start-group)
   set(LINKER_END_GROUP -Wl,--end-group)
   if (CC_TARGET_OS_LINUX) # do not embed libstdc++ statically on Android
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(LINKER_END_GROUP "${LINKER_END_GROUP} -static-libstdc++")
   else()
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(LINKER_END_GROUP "${LINKER_END_GROUP} -llog")
   endif()
 elseif(CC_TARGET_OS_OSX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(LINKER_START_GROUP -Wl,-force_load,)
 endif()
 
 if (NOT CC_TARGET_OS_ANDROID)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(LINKER_END_GROUP
       "${LINKER_END_GROUP}"
       pthread
@@ -79,31 +79,31 @@ set(lib_target "${lib_target}"
   )
 
 if(CC_TARGET_OS_OSX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     "-framework CoreFoundation"
     "-framework Security"
     )
 elseif (NOT CC_TARGET_OS_ANDROID)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     "pthread"
     )
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(lib_target "${lib_target}"
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
     ${LINKER_REDUCED_MEMORY}
     )
 elseif(CC_TARGET_OS_OSX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   if(CC_TARGETS_X86)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(lib_target "${lib_target} -arch i386")
   elseif(CC_TARGETS_ARM)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(lib_target "${lib_target} -arch arm")
   endif()
 endif()
@@ -117,7 +117,7 @@ if(NOT CC_XCODE_PROJECT)
   # Add a post build event to the ch target
   # which executes a command to copy ch to
   # out/{BUILD_TYPE}/ for convenience
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_custom_command(TARGET ch POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CHAKRACORE_BINARY_DIR}/bin/ch/ch"

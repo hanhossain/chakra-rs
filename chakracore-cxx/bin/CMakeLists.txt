@@ -1,5 +1,5 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 if(NOT CC_LIBS_ONLY_BUILD)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_subdirectory (ch)
 endif()

@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 cmake_minimum_required(VERSION 3.30)
 
 project(chakrapal)
@@ -12,29 +12,29 @@ include_directories(include)
 
 # Compile options
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_definitions(-D_AMD64_)
 elseif(CC_TARGETS_X86)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_definitions(-D__i686__)
 elseif(CC_TARGETS_ARM)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_definitions(-D_ARM_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL arm64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 else()
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     clr_unknown_arch()
 endif()
 
 if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_definitions(-D__LINUX__=1)
 endif()
 
@@ -44,14 +44,14 @@ add_definitions(-DFEATURE_PAL=1)
 add_definitions(-DPIC=1)
 add_definitions(-D_FILE_OFFSET_BITS=64)
 if(CC_TARGETS_AMD64)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
 elseif(CC_TARGETS_ARM OR CC_TARGETS_X86)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_definitions(-DBIT32=1)
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_definitions(-DBIT64=1)
   add_definitions(-D_WIN64=1)
 endif()
@@ -63,7 +63,7 @@ add_compile_options(-fno-builtin)
 add_compile_options(-fPIC)
 
 if(CC_TARGET_OS_OSX)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(PLATFORM_SOURCES
     exception/machexception.cpp
     exception/machmessage.cpp
@@ -71,9 +71,9 @@ if(CC_TARGET_OS_OSX)
 endif()
 
 if(CC_TARGETS_AMD64 OR CC_TARGETS_X86)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   if(CC_TARGET_OS_OSX)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
       arch/i386/dispatchexceptionwrapper.S
     )
@@ -85,7 +85,7 @@ if(CC_TARGETS_AMD64 OR CC_TARGETS_X86)
     arch/i386/asmhelpers.S
     )
 elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(ARCH_SOURCES
     arch/arm64/dispatchexceptionwrapper.S
     arch/arm64/context2.S
@@ -93,7 +93,7 @@ elseif(PAL_CMAKE_PLATFORM_ARCH_ARM64)
   )
 
 elseif(CC_TARGETS_ARM)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   set(ARCH_SOURCES
     arch/arm/context2.S
     arch/arm/debugbreak.S
@@ -199,6 +199,6 @@ add_library(Chakra.Pal
 )
 
 if(EMBED_ICU)
-  message(FATAL_ERROR "marked for cleanup")
+  message(WARNING "marked for cleanup")
   add_dependencies(Chakra.Pal ${EMBEDDED_ICU_TARGET})
 endif()

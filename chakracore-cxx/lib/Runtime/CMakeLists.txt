@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 project(CHAKRA_RUNTIME)
 
 include_directories(

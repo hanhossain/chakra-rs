@@ -1,11 +1,11 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 if(BuildJIT)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     add_definitions(-D_ENABLE_DYNAMIC_THUNKS=1)
 endif()
 
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set(Wasm_dep
     WasmLibrary.cpp
     WebAssembly.cpp
@@ -19,7 +19,7 @@ if(CC_TARGETS_AMD64)
 endif()
 
 if(CAN_BUILD_WABT)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     include_directories(
     ../../wabt/chakra
     )
@@ -130,17 +130,17 @@ set(CRLIB_SOURCE_CODES
     )
 
 if(CC_TARGETS_AMD64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         amd64/JavascriptFunctionA.S
     )
 elseif(CC_TARGETS_ARM)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         arm/arm_JavascriptFunctionA.S
     )
 elseif(CC_TARGETS_ARM64)
-    message(FATAL_ERROR "marked for cleanup")
+    message(WARNING "marked for cleanup")
     set (CRLIB_SOURCE_CODES ${CRLIB_SOURCE_CODES}
         arm64/arm64_CallFunction.S
         arm64/arm64_DeferredDeserializeThunk.S

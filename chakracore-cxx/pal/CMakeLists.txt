@@ -1,4 +1,4 @@
-message(FATAL_ERROR "marked for cleanup")
+message(WARNING "marked for cleanup")
 cmake_minimum_required(VERSION 3.30)
 
 project(COREPAL)
