@@ -37,15 +37,6 @@ if(CCACHE_PROGRAM_NAME)
   endif()
 endif()
 
-if(ENABLE_VALGRIND)
-    message(WARNING "marked for cleanup")
-    if(NOT CC_TARGETS_X86)
-        message(WARNING "marked for cleanup")
-        # Enable Valgrind is not needed for x86 builds. Already <= 32Gb address space
-        add_definitions(-DENABLE_VALGRIND=1)
-    endif()
-endif()
-
 if(CC_TARGET_OS_ANDROID)
     message(WARNING "marked for cleanup")
     set(CC_TARGET_OS_ANDROID 1)
