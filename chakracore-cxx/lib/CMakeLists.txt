@@ -15,7 +15,7 @@ if(CAN_BUILD_WABT)
 endif()
 
 if (USE_LTTNG)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(lttng_objects $<TARGET_OBJECTS:Chakra.LTTng>)
 endif()
 
@@ -48,7 +48,7 @@ add_library (ChakraCoreStatic STATIC
 )
 
 if(USE_LTTNG)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     target_link_libraries(ChakraCoreStatic
       -llttng-ust
       -ldl
@@ -124,7 +124,7 @@ if(NOT CC_XCODE_PROJECT)
 endif(NOT CC_XCODE_PROJECT)
 
 if (EMBED_ICU)
-  message(WARNING "marked for cleanup")
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   # Declare ICU dependencies in bulk.
   # TODO Not the most idiomatic solution, need to understand if all of those
   # libraries needed to depend on it
@@ -141,10 +141,10 @@ if (EMBED_ICU)
   add_dependencies(Chakra.Runtime.Types ${EMBEDDED_ICU_TARGET})
   add_dependencies(Chakra.SCACore ${EMBEDDED_ICU_TARGET})
   if (BuildJIT)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     add_dependencies(Chakra.Backend ${EMBEDDED_ICU_TARGET})
     if (CC_TARGETS_AMD64)
-      message(WARNING "marked for cleanup")
+      message(WARNING "TODO (hanhossain): marked for cleanup")
       add_dependencies(Chakra.WasmReader ${EMBEDDED_ICU_TARGET})
     endif()
   endif()

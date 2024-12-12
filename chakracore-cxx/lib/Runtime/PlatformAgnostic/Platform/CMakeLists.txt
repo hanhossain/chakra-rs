@@ -12,7 +12,7 @@ set(PL_SOURCE_FILES
   )
 
 if(NO_ICU)
-  message(WARNING "marked for cleanup")
+  message(WARNING "TODO (hanhossain): marked for cleanup")
   set(PL_SOURCE_FILES
     ${PL_SOURCE_FILES}
     POSIX/UnicodeText.cpp

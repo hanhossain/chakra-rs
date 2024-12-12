@@ -15,7 +15,7 @@ if(CC_TARGETS_AMD64)
         PrologEncoder.cpp
     )
 elseif(CC_TARGETS_X86)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CC_BACKEND_ARCH_FOLDER i386)
     set (CC_BACKEND_ARCH_FILES
         i386/EncoderMD.cpp
@@ -27,7 +27,7 @@ elseif(CC_TARGETS_X86)
         LowerMDSharedSimd128.cpp
     )
 elseif(CC_TARGETS_ARM64)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CC_BACKEND_ARCH_FOLDER arm64)
     set (CC_BACKEND_ARCH_FILES
         arm64/ARM64LogicalImmediates.cpp
@@ -42,7 +42,7 @@ elseif(CC_TARGETS_ARM64)
         arm64/UnwindInfoManager.cpp
     )
 elseif(CC_TARGETS_ARM)
-    message(WARNING "marked for cleanup")
+    message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CC_BACKEND_ARCH_FOLDER arm)
     set (CC_BACKEND_ARCH_FILES
         arm/EncoderMD.cpp
