@@ -24,7 +24,6 @@ elseif(CC_TARGETS_X86)
     message(WARNING "marked for cleanup")
     set(CMAKE_SYSTEM_PROCESSOR "i386")
 else()
-    message(WARNING "marked for cleanup")
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
@@ -79,7 +78,6 @@ if (ENABLE_CC_XPLAT_TRACE)
 endif()
 
 if(EMBED_ICU AND ICU_INCLUDE_PATH)
-    message(WARNING "marked for cleanup")
     message(FATAL_ERROR "Embedded ICU and ICU include path cannot be set at the same time")
 endif()
 
