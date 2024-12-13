@@ -17,7 +17,6 @@ cmake_minimum_required(VERSION 3.30)
 project(WABT)
 
 set(COMPILER_IS_CLANG 1)
-set(COMPILER_IS_GNU 0)
 
 include(CheckIncludeFile)
 include(CheckSymbolExists)
@@ -43,13 +42,6 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
-if (COMPILER_IS_GNU)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  # disable -Wclobbered: it seems to be guessing incorrectly about a local
-  # variable being clobbered by longjmp.
-  add_definitions(-Wno-clobbered)
-endif ()
-
 if (COMPILER_IS_CLANG)
   add_definitions(-fcolor-diagnostics)
 endif ()
@@ -57,7 +49,7 @@ endif ()
 
 include_directories(src/prebuilt)
 
-if (COMPILER_IS_CLANG OR COMPILER_IS_GNU)
+if (COMPILER_IS_CLANG)
   # yyerror passes a non-string-literal to a printf-like function, which is a
   # warning.
   set_source_files_properties(
