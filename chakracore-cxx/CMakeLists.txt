@@ -59,17 +59,7 @@ if(ENABLE_VALGRIND)
     endif()
 endif()
 
-if(CC_TARGET_OS_ANDROID)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(CC_TARGET_OS_ANDROID 1)
-    set(CMAKE_SYSTEM_NAME Android)
-    set(ANDROID_NDK "android-toolchain-arm/")
-    set(ANDROID_ABI armeabi-v7a)
-    set(CMAKE_SYSTEM_VERSION 21)
-    set(CMAKE_ANDROID_ARCH_ABI armeabi)
-    set(ANDROID_TOOLCHAIN_NAME arm-linux-androideabi-clang3.8)
-    set(ANDROID_STL "c++_static")
-elseif(CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)
 elseif(CMAKE_SYSTEM_NAME STREQUAL Darwin)
     set(CC_TARGET_OS_OSX 1)
@@ -77,13 +67,7 @@ endif()
 
 if (ENABLE_CC_XPLAT_TRACE)
     message(WARNING "TODO (hanhossain): marked for cleanup")
-    if (CC_TARGET_OS_ANDROID)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
-        add_definitions(-DTRACE_OUTPUT_TO_LOGCAT=1)
-    else()
-        message(WARNING "TODO (hanhossain): marked for cleanup")
-        add_definitions(-DTRACE_OUTPUT_TARGET_FILE=1)
-    endif()
+    add_definitions(-DTRACE_OUTPUT_TARGET_FILE=1)
     add_definitions(-DENABLE_CC_XPLAT_TRACE=1)
     add_compile_options(-finstrument-functions)
     add_compile_options(-g)
@@ -160,7 +144,7 @@ elseif(ICU_INCLUDE_PATH)
     endif()
 endif()
 
-if(CC_TARGET_OS_LINUX OR CC_TARGET_OS_ANDROID)
+if(CC_TARGET_OS_LINUX)
     if(SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH AND NOT NO_ICU))
         set(ICU_LIBRARIES "icuuc")
         if(INTL_ICU)
@@ -230,17 +214,15 @@ if(CAN_BUILD_WABT)
     add_definitions(-DCAN_BUILD_WABT)
 endif()
 
-if(CC_TARGET_OS_LINUX OR CC_TARGET_OS_ANDROID)
+if(CC_TARGET_OS_LINUX)
     set(CLR_CMAKE_PLATFORM_LINUX 1)
     # OSX 10.12 Clang deprecates libstdc++ [See GH #1599]
     # So, -Werror is linux only for now
     # + Android ARM ABI shows ld warnings
     # xplat-todo: Do we need this ?
-    if (NOT CC_TARGET_OS_ANDROID)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-          -Werror"
-          )
-    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        -Werror"
+        )
 elseif(CC_TARGET_OS_OSX)
     add_definitions(
         -DPLATFORM_UNIX

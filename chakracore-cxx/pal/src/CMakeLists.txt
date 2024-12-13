@@ -30,7 +30,7 @@ else()
     clr_unknown_arch()
 endif()
 
-if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+if(CC_TARGET_OS_LINUX)
   add_definitions(-D__LINUX__=1)
 endif()
 

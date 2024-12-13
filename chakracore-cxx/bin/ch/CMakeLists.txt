@@ -43,25 +43,18 @@ target_include_directories (ch
   ${Wasm_dep}
   )
 
-if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+if(CC_TARGET_OS_LINUX)
   set(LINKER_START_GROUP -pie -Wl,--start-group)
   set(LINKER_END_GROUP -Wl,--end-group)
-  if (CC_TARGET_OS_LINUX) # do not embed libstdc++ statically on Android
-    set(LINKER_END_GROUP "${LINKER_END_GROUP} -static-libstdc++")
-  else()
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(LINKER_END_GROUP "${LINKER_END_GROUP} -llog")
-  endif()
+  set(LINKER_END_GROUP "${LINKER_END_GROUP} -static-libstdc++")
 elseif(CC_TARGET_OS_OSX)
   set(LINKER_START_GROUP -Wl,-force_load,)
 endif()
 
-if (NOT CC_TARGET_OS_ANDROID)
-  set(LINKER_END_GROUP
-      "${LINKER_END_GROUP}"
-      pthread
-      )
-endif()
+set(LINKER_END_GROUP
+  "${LINKER_END_GROUP}"
+  pthread
+  )
 
 # common link deps
 set(lib_target "${lib_target}"
@@ -77,13 +70,13 @@ if(CC_TARGET_OS_OSX)
     "-framework CoreFoundation"
     "-framework Security"
     )
-elseif (NOT CC_TARGET_OS_ANDROID)
+else()
   set(lib_target "${lib_target}"
     "pthread"
     )
 endif()
 
-if(CC_TARGET_OS_ANDROID OR CC_TARGET_OS_LINUX)
+if(CC_TARGET_OS_LINUX)
   set(lib_target "${lib_target}"
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
     ${LINKER_REDUCED_MEMORY}
