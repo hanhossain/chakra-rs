@@ -61,9 +61,7 @@ if(CC_TARGET_OS_OSX)
     "-framework Security"
     )
 else()
-  if (NOT CC_TARGET_OS_ANDROID)
-    set(PTHREAD "pthread")
-  endif()
+  set(PTHREAD "pthread")
 
   target_link_libraries(ChakraCoreStatic
     ${PTHREAD}
