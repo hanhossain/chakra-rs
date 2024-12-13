@@ -27,12 +27,12 @@ jobs:
           deps: brew install ninja icu4c@74 graphviz
           cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c@74/include -DDISABLE_JIT=ON
           run-tests: false
-          run-graphviz: base64 -w 0 graph.svg
+          run-graphviz: base64 -b 0 graph.svg
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build graphviz
           cmake-flags: ''
           run-tests: false
-          run-graphviz: base64 graph.svg
+          run-graphviz: base64 -w 0 graph.svg
 
     steps:
     - uses: actions/checkout@v4
