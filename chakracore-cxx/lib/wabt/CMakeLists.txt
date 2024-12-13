@@ -42,22 +42,17 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
-if (COMPILER_IS_CLANG)
-  add_definitions(-fcolor-diagnostics)
-endif ()
-
+add_definitions(-fcolor-diagnostics)
 
 include_directories(src/prebuilt)
 
-if (COMPILER_IS_CLANG)
-  # yyerror passes a non-string-literal to a printf-like function, which is a
-  # warning.
-  set_source_files_properties(
-    ${AST_PARSER_GEN_C}
-    PROPERTIES
-    COMPILE_FLAGS "-Wno-format-security -Wno-old-style-cast"
-  )
-endif ()
+# yyerror passes a non-string-literal to a printf-like function, which is a
+# warning.
+set_source_files_properties(
+  ${AST_PARSER_GEN_C}
+  PROPERTIES
+  COMPILE_FLAGS "-Wno-format-security -Wno-old-style-cast"
+)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${WABT_SOURCE_DIR}/cmake)
 set(WAST_LEXER_GEN_CC src/prebuilt/wast-lexer-gen.cc)
