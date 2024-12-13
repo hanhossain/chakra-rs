@@ -538,10 +538,7 @@ if [ ! -d "$BUILD_DIRECTORY" ]; then
 fi
 pushd $BUILD_DIRECTORY > /dev/null
 
-if [[ $ARCH =~ "x86" ]]; then
-    ARCH="-DCC_TARGETS_X86_SH=1"
-    echo "Compile Target : x86"
-elif [[ $ARCH =~ "arm" ]]; then
+if [[ $ARCH =~ "arm" ]]; then
     ARCH="-DCC_TARGETS_ARM_SH=1"
     echo "Compile Target : arm"
 elif [[ $ARCH =~ "arm64" ]]; then
