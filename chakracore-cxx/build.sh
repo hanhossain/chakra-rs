@@ -280,12 +280,6 @@ while [[ $# -gt 0 ]]; do
         CMAKE_INTL="-DINTL_ICU_SH=0"
         ;;
 
-    --xcode)
-        CMAKE_GEN="-G Xcode -DCC_XCODE_PROJECT=1"
-        CMAKE_EXPORT_COMPILE_COMMANDS=""
-        MAKE=0
-        ;;
-
     --create-deb=*)
         CREATE_DEB=$1
         CREATE_DEB="${CREATE_DEB:13}"
