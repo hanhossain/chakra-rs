@@ -76,7 +76,7 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
         echo "### Generated Graphviz Diagram" >> $GITHUB_STEP_SUMMARY
-        echo '<img src="data:image/svg+xml;base64,'$(base64 -w 0 graph.svg)'" />' >> $GITHUB_STEP_SUMMARY
+        echo '<img src="data:image/svg+xml;base64,'$(base64 graph.svg)'" />' >> $GITHUB_STEP_SUMMARY
 
   build-msvc:
     runs-on: windows-latest
