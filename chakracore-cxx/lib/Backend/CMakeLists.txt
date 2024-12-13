@@ -14,18 +14,6 @@ if(CC_TARGETS_AMD64)
         LowerMDSharedSimd128.cpp
         PrologEncoder.cpp
     )
-elseif(CC_TARGETS_X86)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set (CC_BACKEND_ARCH_FOLDER i386)
-    set (CC_BACKEND_ARCH_FILES
-        i386/EncoderMD.cpp
-        i386/LinearScanMD.cpp
-        i386/LowererMDArch.cpp
-        i386/PeepsMD.cpp
-        AgenPeeps.cpp
-        LowerMDShared.cpp
-        LowerMDSharedSimd128.cpp
-    )
 elseif(CC_TARGETS_ARM64)
     message(WARNING "TODO (hanhossain): marked for cleanup")
     set (CC_BACKEND_ARCH_FOLDER arm64)
