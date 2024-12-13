@@ -18,7 +18,6 @@ project(WABT)
 
 set(COMPILER_IS_CLANG 1)
 set(COMPILER_IS_GNU 0)
-set(COMPILER_IS_MSVC 0)
 
 include(CheckIncludeFile)
 include(CheckSymbolExists)
