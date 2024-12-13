@@ -41,7 +41,6 @@
 #define HAVE_WIN32_VT100 0
 
 #define COMPILER_IS_CLANG 0
-#define COMPILER_IS_GNU 0
 #define COMPILER_IS_MSVC 1
 
 #define WITH_EXCEPTIONS 0
@@ -61,7 +60,7 @@
 #error no alloca
 #endif
 
-#if COMPILER_IS_CLANG || COMPILER_IS_GNU
+#if COMPILER_IS_CLANG
 
 #define WABT_UNUSED __attribute__ ((unused))
 #define WABT_WARN_UNUSED __attribute__ ((warn_unused_result))
@@ -120,7 +119,7 @@
 namespace wabt
 {
 
-#if COMPILER_IS_CLANG || COMPILER_IS_GNU
+#if COMPILER_IS_CLANG
 
 inline int Clz(unsigned x) { return x ? __builtin_clz(x) : sizeof(x) * 8; }
 inline int Clz(unsigned long x) { return x ? __builtin_clzl(x) : sizeof(x) * 8; }
@@ -263,7 +262,7 @@ inline int Popcount(unsigned __int64 value)
 #error "weird sizeof size_t"
 #endif
 
-#elif COMPILER_IS_CLANG || COMPILER_IS_GNU
+#elif COMPILER_IS_CLANG
 
   /* print format specifier for size_t */
 #define PRIzd "zd"

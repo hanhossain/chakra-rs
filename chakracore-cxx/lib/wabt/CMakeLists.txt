@@ -17,8 +17,6 @@ cmake_minimum_required(VERSION 3.30)
 project(WABT)
 
 set(COMPILER_IS_CLANG 1)
-set(COMPILER_IS_GNU 0)
-set(COMPILER_IS_MSVC 0)
 
 include(CheckIncludeFile)
 include(CheckSymbolExists)
@@ -28,11 +26,6 @@ check_include_file("unistd.h" HAVE_UNISTD_H)
 check_symbol_exists(snprintf "stdio.h" HAVE_SNPRINTF)
 check_symbol_exists(sysconf "unistd.h" HAVE_SYSCONF)
 check_symbol_exists(strcasecmp "strings.h" HAVE_STRCASECMP)
-
-if (WIN32)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  check_symbol_exists(ENABLE_VIRTUAL_TERMINAL_PROCESSING "windows.h" HAVE_WIN32_VT100)
-endif ()
 
 include(CheckTypeSize)
 check_type_size(ssize_t SSIZE_T)
@@ -49,36 +42,17 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
-if (MINGW)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  # Mingw won't define format (e.g. PRIu64) or limit (e.g. UINT32_MAX) macros
-  # in C++ without these.
-  add_definitions(-D__STDC_LIMIT_MACROS=1 -D__STDC_FORMAT_MACROS=1)
-endif ()
-
-if (COMPILER_IS_GNU)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  # disable -Wclobbered: it seems to be guessing incorrectly about a local
-  # variable being clobbered by longjmp.
-  add_definitions(-Wno-clobbered)
-endif ()
-
-if (COMPILER_IS_CLANG)
-  add_definitions(-fcolor-diagnostics)
-endif ()
-
+add_definitions(-fcolor-diagnostics)
 
 include_directories(src/prebuilt)
 
-if (COMPILER_IS_CLANG OR COMPILER_IS_GNU)
-  # yyerror passes a non-string-literal to a printf-like function, which is a
-  # warning.
-  set_source_files_properties(
-    ${AST_PARSER_GEN_C}
-    PROPERTIES
-    COMPILE_FLAGS "-Wno-format-security -Wno-old-style-cast"
-  )
-endif ()
+# yyerror passes a non-string-literal to a printf-like function, which is a
+# warning.
+set_source_files_properties(
+  ${AST_PARSER_GEN_C}
+  PROPERTIES
+  COMPILE_FLAGS "-Wno-format-security -Wno-old-style-cast"
+)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${WABT_SOURCE_DIR}/cmake)
 set(WAST_LEXER_GEN_CC src/prebuilt/wast-lexer-gen.cc)
