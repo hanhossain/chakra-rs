@@ -113,10 +113,10 @@
 #include <wchar.h>
 #include <math.h>
 #include <time.h>
-#if defined(_AMD64_) || defined(__i686__)
+#if defined(_AMD64_)
 #include <smmintrin.h>
 #include <xmmintrin.h>
-#endif // defined(_AMD64_) || defined(__i686__)
+#endif // defined(_AMD64_)
 #endif
 
 #include "inc/pal.h"
@@ -135,7 +135,7 @@ typedef GUID UUID;
 #define FILE PAL_FILE
 #endif
 
-#if defined(_AMD64_) || defined(__i686__)
+#if defined(_AMD64_)
 // xplat-todo: verify below is correct
 #include <cpuid.h>
 inline int get_cpuid(int cpuInfo[4], int function_id)

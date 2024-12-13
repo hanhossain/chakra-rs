@@ -392,8 +392,6 @@ inline static DWORD64 CONTEXTGetPC(LPCONTEXT pContext)
 {
 #if defined(_AMD64_)
     return pContext->Rip;
-#elif defined(__i686__)
-    return pContext->Eip;
 #elif defined(_ARM64_) || defined(_ARM_)
     return pContext->Pc;
 #else
@@ -405,8 +403,6 @@ inline static void CONTEXTSetPC(LPCONTEXT pContext, DWORD64 pc)
 {
 #if defined(_AMD64_)
     pContext->Rip = pc;
-#elif defined(__i686__)
-    pContext->Eip = pc;
 #elif defined(_ARM64_) || defined(_ARM_)
     pContext->Pc = pc;
 #else

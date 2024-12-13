@@ -121,9 +121,7 @@ extern "C" {
 
 #ifndef _MSC_VER
 
-#if defined(__i686__) && !defined(_M_IX86)
-#define _M_IX86 600
-#elif defined(__i586__) && !defined(_M_IX86)
+#if defined(__i586__) && !defined(_M_IX86)
 #define _M_IX86 500
 #elif defined(__i486__) && !defined(_M_IX86)
 #define _M_IX86 400

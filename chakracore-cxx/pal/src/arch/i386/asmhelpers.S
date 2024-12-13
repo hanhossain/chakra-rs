@@ -15,20 +15,6 @@
 #include "unixasmmacros.inc"
 #include "asmconstants.h"
 
-#ifdef __i686__
-//
-// UINT_PTR __stdcall GetCurrentIP(void);
-LEAF_ENTRY GetCurrentIP, _TEXT
-    mov     eax, [esp]
-    ret
-LEAF_END GetCurrentIP, _TEXT
-
-// LPVOID __stdcall GetCurrentSP(void);
-LEAF_ENTRY GetCurrentSP, _TEXT
-    mov     eax, esp
-    ret
-LEAF_END GetCurrentSP, _TEXT
-#else
 LEAF_ENTRY GetCurrentSP, _TEXT
         mov rax, rsp
         add rax, 8
@@ -39,4 +25,3 @@ LEAF_ENTRY GetCurrentIP, _TEXT
         mov rax, [rsp]
         ret
 LEAF_END GetCurrentIP, _TEXT
-#endif

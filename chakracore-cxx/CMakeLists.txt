@@ -191,7 +191,7 @@ elseif(CC_TARGETS_ARM64)
     endif()
 else()
     message(WARNING "TODO (hanhossain): marked for cleanup")
-    message(FATAL_ERROR "Only AMD64, ARM, ARM64 and I386 are supported")
+    message(FATAL_ERROR "Only AMD64, ARM, and ARM64 are supported")
 endif()
 
 if(CAN_BUILD_WABT)
