@@ -27,10 +27,12 @@ jobs:
           deps: brew install ninja icu4c@74 graphviz
           cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c@74/include -DDISABLE_JIT=ON
           run-tests: false
+          run-graphviz: base64 -w 0 graph.svg
         - os: ubuntu-latest
           deps: sudo apt-get install -y ninja-build graphviz
           cmake-flags: ''
           run-tests: false
+          run-graphviz: base64 graph.svg
 
     steps:
     - uses: actions/checkout@v4
@@ -77,7 +79,7 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
         echo "### Generated Graphviz Diagram" >> $GITHUB_STEP_SUMMARY
-        echo '<img src="data:image/svg+xml;base64,'$(base64 graph.svg)'" />' >> $GITHUB_STEP_SUMMARY
+        echo '<img src="data:image/svg+xml;base64,'$(${{ matrix.run-graphviz }})'" />' >> $GITHUB_STEP_SUMMARY
 
   build-msvc:
     runs-on: windows-latest
