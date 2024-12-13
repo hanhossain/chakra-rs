@@ -7,11 +7,6 @@ option(DISABLE_JIT "Disable JIT compilation" OFF)
 option(INTL_ICU "Enable Intl" ON)
 option(EMBED_ICU "Build ICU within ChakraCore build" OFF)
 
-if(LIBS_ONLY_BUILD)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(CC_LIBS_ONLY_BUILD 1)
-endif()
-
 if(CC_USES_SYSTEM_ARCH OR NOT CHAKRACORE_BUILD)
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         set(CC_TARGETS_AMD64 1)
