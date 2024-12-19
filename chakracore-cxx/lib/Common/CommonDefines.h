@@ -170,15 +170,10 @@
 
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
-#ifndef ENABLE_VALGRIND
 #define ENABLE_CONCURRENT_GC 1
 #ifdef _WIN32
 #define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 1 // Only takes effect when ENABLE_CONCURRENT_GC is enabled.
 #else
-#define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
-#endif
-#else
-#define ENABLE_CONCURRENT_GC 0
 #define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
 #endif
 

@@ -25,12 +25,6 @@ else()
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-if(ENABLE_VALGRIND)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    # Enable Valgrind is not needed for x86 builds. Already <= 32Gb address space
-    add_definitions(-DENABLE_VALGRIND=1)
-endif()
-
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)
 elseif(CMAKE_SYSTEM_NAME STREQUAL Darwin)
