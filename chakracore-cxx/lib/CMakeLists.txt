@@ -14,11 +14,6 @@ if(CAN_BUILD_WABT)
     set(wabt_includes ${CHAKRACORE_SOURCE_DIR}/lib/wabt)
 endif()
 
-if (USE_LTTNG)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(lttng_objects $<TARGET_OBJECTS:Chakra.LTTng>)
-endif()
-
 add_library (ChakraCoreStatic STATIC
   ChakraCoreStatic.cpp
   $<TARGET_OBJECTS:Chakra.Pal>
@@ -46,14 +41,6 @@ add_library (ChakraCoreStatic STATIC
   ${wabt_objects}
   ${lttng_objects}
 )
-
-if(USE_LTTNG)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    target_link_libraries(ChakraCoreStatic
-      -llttng-ust
-      -ldl
-    )
-endif()
 
 if(CC_TARGET_OS_OSX)
   target_link_libraries(ChakraCoreStatic

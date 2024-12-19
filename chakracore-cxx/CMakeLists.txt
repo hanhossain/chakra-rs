@@ -451,7 +451,6 @@ if (ENABLE_JS_LTTNG)
       -DENABLE_JS_ETW
       -DENABLE_JS_LTTNG
     )
-    set(USE_LTTNG "1")
 endif()
 
 add_subdirectory (lib)
