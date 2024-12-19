@@ -343,10 +343,6 @@ while [[ $# -gt 0 ]]; do
         WB_ARGS=${WB_ARGS// /;}  # replace space with ; to generate a cmake list
         ;;
 
-    --valgrind)
-        VALGRIND="-DENABLE_VALGRIND_SH=1"
-        ;;
-
     -y | -Y)
         ALWAYS_YES=-y
         ;;
