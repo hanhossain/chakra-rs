@@ -84,7 +84,6 @@ endif()
 
 target_link_libraries (ch
   ${lib_target}
-  ${CC_LTO_ENABLED}
   )
 
 # Add a post build event to the ch target

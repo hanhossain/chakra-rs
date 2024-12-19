@@ -251,16 +251,6 @@ while [[ $# -gt 0 ]]; do
         USE_LOCAL_ICU=0
         ;;
 
-    --lto)
-        LTO="-DENABLE_FULL_LTO_SH=1"
-        HAS_LTO=1
-        ;;
-
-    --lto-thin)
-        LTO="-DENABLE_THIN_LTO_SH=1"
-        HAS_LTO=1
-        ;;
-
     --lttng)
         LTTNG="-DENABLE_JS_LTTNG_SH=1"
         HAS_LTTNG=1
