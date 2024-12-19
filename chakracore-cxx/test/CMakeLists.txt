@@ -8,7 +8,6 @@ elseif (CMAKE_BUILD_TYPE STREQUAL Debug)
 endif ()
 
 if (NO_ICU)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(TEST_ICU --not-tag exclude_noicu)
 else()
     set(TEST_ICU --not-tag exclude_icu62AndAboveTestFailures)

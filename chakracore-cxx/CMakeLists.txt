@@ -80,9 +80,8 @@ elseif(CC_TARGET_OS_OSX)
     # in case ICU path was given but it doesn't exist, build script will fail.
     # so, fallback only if ICU path wasn't given
     if(NOT ICU_INCLUDE_PATH)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         set(NO_ICU 1)
-        message("-- Couldn't find ICU. Falling back to --no-icu build")
+        message("-- Couldn't find ICU. Falling back to NO_ICU build")
     endif()
 endif()
 
