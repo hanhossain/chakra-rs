@@ -235,11 +235,6 @@ while [[ $# -gt 0 ]]; do
         USE_LOCAL_ICU=0
         ;;
 
-    --lttng)
-        LTTNG="-DENABLE_JS_LTTNG_SH=1"
-        HAS_LTTNG=1
-        ;;
-    
     -n | --ninja)
         CMAKE_GEN="-G Ninja"
         MAKE=ninja
