@@ -3,7 +3,6 @@ find_package (Python COMPONENTS Interpreter)
 if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
     set(TEST_BUILD_TYPE --test)
 elseif (CMAKE_BUILD_TYPE STREQUAL Debug)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(TEST_BUILD_TYPE --debug)
 endif ()
 
@@ -24,7 +23,6 @@ endif()
 add_custom_target(check)
 
 if (CMAKE_BUILD_TYPE STREQUAL Release)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     add_custom_target(smoke-check
         COMMAND echo "Running Hello World test"
         COMMAND ${CMAKE_BINARY_DIR}/ch ${CMAKE_CURRENT_SOURCE_DIR}/Basics/hello.js
