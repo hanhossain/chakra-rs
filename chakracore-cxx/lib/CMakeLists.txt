@@ -104,30 +104,3 @@ add_custom_command(TARGET ChakraCoreStatic POST_BUILD
         "${CMAKE_CURRENT_SOURCE_DIR}/Common/ChakraCoreVersion.h"
         "${CMAKE_BINARY_DIR}/include"
 )
-
-if (EMBED_ICU)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  # Declare ICU dependencies in bulk.
-  # TODO Not the most idiomatic solution, need to understand if all of those
-  # libraries needed to depend on it
-  add_dependencies(Chakra.Jsrt ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Jsrt.Core ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Parser ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Base ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.ByteCode ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Debug ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Library ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Math ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Language ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.PlatformAgnostic ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.Runtime.Types ${EMBEDDED_ICU_TARGET})
-  add_dependencies(Chakra.SCACore ${EMBEDDED_ICU_TARGET})
-  if (BuildJIT)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    add_dependencies(Chakra.Backend ${EMBEDDED_ICU_TARGET})
-    if (CC_TARGETS_AMD64)
-      message(WARNING "TODO (hanhossain): marked for cleanup")
-      add_dependencies(Chakra.WasmReader ${EMBEDDED_ICU_TARGET})
-    endif()
-  endif()
-endif()
