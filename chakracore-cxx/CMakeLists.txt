@@ -322,11 +322,6 @@ else()
     set(BuildJIT 1)
 endif()
 
-if(EXTRA_DEFINES)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    add_definitions(${EXTRA_DEFINES})
-endif(EXTRA_DEFINES)
-
 enable_language(ASM)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
