@@ -10,7 +10,7 @@ endif ()
 if (NO_ICU)
     message(WARNING "TODO (hanhossain): marked for cleanup")
     set(TEST_ICU --not-tag exclude_noicu)
-else
+else()
     set(TEST_ICU --not-tag exclude_icu62AndAboveTestFailures)
 endif()
 
