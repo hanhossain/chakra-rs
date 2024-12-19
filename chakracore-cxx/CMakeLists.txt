@@ -25,16 +25,6 @@ else()
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-if(CCACHE_PROGRAM_NAME)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  find_program(CCACHE_PROGRAM ${CCACHE_PROGRAM_NAME})
-  if (CCACHE_PROGRAM)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
-    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
-  endif()
-endif()
-
 if(ENABLE_VALGRIND)
     message(WARNING "TODO (hanhossain): marked for cleanup")
     # Enable Valgrind is not needed for x86 builds. Already <= 32Gb address space

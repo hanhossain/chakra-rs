@@ -305,16 +305,6 @@ while [[ $# -gt 0 ]]; do
         TARGET_PATH=${TARGET_PATH:14}
         ;;
 
-    --ccache=*)
-        CCACHE_NAME="$1"
-        CCACHE_NAME=${CCACHE_NAME:9}
-        CCACHE_NAME="-DCCACHE_PROGRAM_NAME_SH=${CCACHE_NAME}"
-        ;;
-
-    --ccache)
-        CCACHE_NAME="-DCCACHE_PROGRAM_NAME_SH=ccache"
-        ;;
-
     --without=*)
         FEATURES=$1
         FEATURES=${FEATURES:10}    # value after --without=
