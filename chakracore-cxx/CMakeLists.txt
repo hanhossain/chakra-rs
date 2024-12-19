@@ -322,16 +322,6 @@ else()
     set(BuildJIT 1)
 endif()
 
-if(WITHOUT_FEATURES)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    add_definitions(${WITHOUT_FEATURES})
-endif(WITHOUT_FEATURES)
-
-if(EXTRA_DEFINES)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    add_definitions(${EXTRA_DEFINES})
-endif(EXTRA_DEFINES)
-
 enable_language(ASM)
 
 if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
@@ -371,14 +361,6 @@ endif()
 # detect features
 include_directories(SYSTEM /usr/local/include)
 include(pal/src/configure.cmake)
-
-# Clang sanitizer support, this should be after `detect feature` to not to
-# affect feature detection
-if (CLANG_SANITIZE)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=${CLANG_SANITIZE}")
-    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -fsanitize=${CLANG_SANITIZE}")
-endif()
 
 add_subdirectory (pal)
 
