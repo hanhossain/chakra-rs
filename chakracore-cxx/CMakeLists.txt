@@ -242,13 +242,11 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
     # Also disable RTTI when building a shared library
     # TODO: why does the shared library break with rtti disabled?
     if(CMAKE_BUILD_TYPE STREQUAL Release)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         add_compile_options(-fno-rtti)
     endif()
 endif(CLR_CMAKE_PLATFORM_XPLAT)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     add_definitions(
         -DDBG=1
         -DDEBUG=1
