@@ -449,7 +449,7 @@ Return:
   An error code, if it failed
 
 --*/
-#if defined(ENABLE_CC_XPLAT_TRACE) || defined(DEBUG)
+#if defined(DEBUG)
 bool PAL_InitializeChakraCoreCalled = false;
 #endif
 
@@ -460,7 +460,7 @@ PAL_InitializeChakraCore()
     // this is not thread safe but PAL_InitializeChakraCore is per process
     // besides, calling Jsrt initializer function is thread safe
     if (init_count > 0) return ERROR_SUCCESS;
-#if defined(ENABLE_CC_XPLAT_TRACE) || defined(DEBUG)
+#if defined(DEBUG)
     PAL_InitializeChakraCoreCalled = true;
 #endif
 

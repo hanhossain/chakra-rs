@@ -222,9 +222,6 @@ extern BOOL g_Dbg_asserts_enabled;
 extern Volatile<BOOL> dbg_master_switch ;
 
 
-/* conditionnal compilation for other debug messages */
-#ifndef ENABLE_CC_XPLAT_TRACE
-
 /* compile out these trace levels; see the definition of NOTRACE */
 #if !defined(DEBUG)
 #define TRACE     NOTRACE
@@ -247,71 +244,6 @@ extern Volatile<BOOL> dbg_master_switch ;
 
 #define SET_DEFAULT_DEBUG_CHANNEL(x)
 #define DBG_ENABLED(level, channel) (false)
-
-#else /* _ENABLE_DEBUG_MESSAGES_ */
-
-/* output macros */
-
-#define SET_DEFAULT_DEBUG_CHANNEL(x) \
-    static const DBG_CHANNEL_ID defdbgchan = DCI_##x
-
-/* Is debug output enabled for the given level and channel? */
-#define DBG_ENABLED(level, channel) (true)
-
-#define TRACE \
-    DBG_PRINTF(DLI_TRACE,defdbgchan,TRUE)
-
-#define TRACE_(x) \
-    DBG_PRINTF(DLI_TRACE,DCI_##x,TRUE)
-
-#define WARN \
-    DBG_PRINTF(DLI_WARN,defdbgchan,TRUE)
-
-#define WARN_(x) \
-    DBG_PRINTF(DLI_WARN,DCI_##x,TRUE)
-
-#define ENTRY_EXTERNAL \
-    DBG_PRINTF(DLI_ENTRY, defdbgchan,TRUE)
-
-#define ENTRY \
-    DBG_PRINTF(DLI_ENTRY, defdbgchan,TRUE)
-
-#define ENTRY_(x) \
-    DBG_PRINTF(DLI_ENTRY, DCI_##x,TRUE)
-
-#define LOGEXIT \
-    DBG_PRINTF(DLI_EXIT, defdbgchan,TRUE)
-
-#define LOGEXIT_(x) \
-    DBG_PRINTF(DLI_EXIT, DCI_##x,TRUE)
-
-#define DBGOUT \
-    DBG_PRINTF(DLI_TRACE,defdbgchan,FALSE)
-
-#define DBGOUT_(x) \
-    DBG_PRINTF(DLI_TRACE,DCI_##x,FALSE)
-
-/*Added this  code here to stop error messages
- *from appearing in retail build*/
-#define ERROR \
-    DBG_PRINTF(DLI_ERROR,defdbgchan,TRUE)
-
-#define ERROR_(x) \
-    DBG_PRINTF(DLI_ERROR,DCI_##x,TRUE)
-
-#define DBG_PRINTF(level, channel, bHeader) \
-{\
-    if( DBG_ENABLED(level, channel) ) {         \
-        DBG_PRINTF2
-
-#define DBG_PRINTF2(...)\
-        if (!PAL_InitializeChakraCoreCalled) abort(); \
-        PRINT_ERROR("] %s %s:%d",__FUNCTION__,__FILE__,\
-                       __LINE__);\
-        PRINT_ERROR(__VA_ARGS__);\
-    }\
-}
-#endif /* _ENABLE_DEBUG_MESSAGES_ */
 
 /* Use GNU C-specific features if available : __FUNCTION__ pseudo-macro,
    variable-argument macros */

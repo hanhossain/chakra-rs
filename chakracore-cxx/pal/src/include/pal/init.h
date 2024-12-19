@@ -48,7 +48,7 @@ Utility function to prepare for shutdown.
 void PALCommonCleanup();
 
 extern Volatile<INT> init_count;
-#if defined(ENABLE_CC_XPLAT_TRACE) || defined(DEBUG)
+#if defined(DEBUG)
 extern bool PAL_InitializeChakraCoreCalled;
 #endif
 
