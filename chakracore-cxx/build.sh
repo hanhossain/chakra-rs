@@ -307,10 +307,6 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-if [[ $USE_LOCAL_ICU == 1 ]]; then
-    CMAKE_ICU="-DEMBED_ICU_SH=ON"
-fi
-
 if [[ "$MAKE" == "ninja" ]]; then
     if [[ "$VERBOSE" == "1" ]]; then
         VERBOSE="-v"

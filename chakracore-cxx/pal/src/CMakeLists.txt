@@ -170,8 +170,3 @@ add_library(Chakra.Pal
   ${PLATFORM_SOURCES}
   ${ARCH_SOURCES}
 )
-
-if(EMBED_ICU)
-  message(WARNING "TODO (hanhossain): marked for cleanup")
-  add_dependencies(Chakra.Pal ${EMBEDDED_ICU_TARGET})
-endif()
