@@ -322,11 +322,6 @@ else()
     set(BuildJIT 1)
 endif()
 
-if(WITHOUT_FEATURES)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    add_definitions(${WITHOUT_FEATURES})
-endif(WITHOUT_FEATURES)
-
 if(EXTRA_DEFINES)
     message(WARNING "TODO (hanhossain): marked for cleanup")
     add_definitions(${EXTRA_DEFINES})

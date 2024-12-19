@@ -107,7 +107,6 @@ CMAKE_ICU="-DICU_SETTINGS_RESET=1"
 CMAKE_INTL="-DINTL_ICU_SH=1" # default to enabling intl
 USE_LOCAL_ICU=0 # default to using system version of ICU
 SANITIZE=
-WITHOUT_FEATURES=""
 CREATE_DEB=0
 ARCH="-DCC_USES_SYSTEM_ARCH_SH=1"
 OS_LINUX=0
@@ -288,20 +287,6 @@ while [[ $# -gt 0 ]]; do
     --target-path=*)
         TARGET_PATH=$1
         TARGET_PATH=${TARGET_PATH:14}
-        ;;
-
-    --without=*)
-        FEATURES=$1
-        FEATURES=${FEATURES:10}    # value after --without=
-        for x in ${FEATURES//,/ }  # replace comma with space then split
-        do
-            if [[ "$WITHOUT_FEATURES" == "" ]]; then
-                WITHOUT_FEATURES="-DWITHOUT_FEATURES_SH="
-            else
-                WITHOUT_FEATURES="$WITHOUT_FEATURES;"
-            fi
-            WITHOUT_FEATURES="${WITHOUT_FEATURES}-DCOMPILE_DISABLE_${x}=1"
-        done
         ;;
 
     --wb-check)
@@ -517,7 +502,7 @@ echo $EXTRA_DEFINES
 cmake $CMAKE_GEN -DCHAKRACORE_BUILD_SH=ON $CC_PREFIX $CMAKE_ICU $LTO $LTTNG \
     $ARCH $TARGET_OS \ $EXTRA_DEFINES \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE $SANITIZE $NO_JIT $CMAKE_INTL \
-    $WITHOUT_FEATURES $WB_FLAG $WB_ARGS $CMAKE_EXPORT_COMPILE_COMMANDS \
+    $WB_FLAG $WB_ARGS $CMAKE_EXPORT_COMPILE_COMMANDS \
     $VALGRIND $BUILD_RELATIVE_DIRECTORY $CCACHE_NAME
 
 _RET=$?
