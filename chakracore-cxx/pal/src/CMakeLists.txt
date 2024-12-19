@@ -53,12 +53,6 @@ if(CC_TARGET_OS_OSX)
 endif()
 
 if(CC_TARGETS_AMD64)
-  if(CC_TARGET_OS_OSX)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
-      arch/i386/dispatchexceptionwrapper.S
-    )
-  endif()
   set(ARCH_SOURCES
     arch/i386/context2.S
     arch/i386/debugbreak.S
