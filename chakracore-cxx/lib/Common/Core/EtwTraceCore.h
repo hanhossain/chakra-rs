@@ -47,10 +47,6 @@
 #define JS_ETW(s) s
 #define IS_JS_ETW(s) s
 
-#ifdef ENABLE_JS_LTTNG
-#include "jscriptEtw.h"
-
-#else
 // C-style callback
 extern "C" {
     void EtwCallback(
@@ -97,7 +93,6 @@ public:
 
     static bool s_registered;
 };
-#endif // ENABLE_JS_LTTNG
 
 #else
 #define GCETW(e, ...)

@@ -6382,7 +6382,7 @@ Recycler::ThreadProc()
     }
 #endif
 
-#if defined(ENABLE_JS_ETW) && ! defined(ENABLE_JS_LTTNG)
+#if defined(ENABLE_JS_ETW)
     // LTTng has no concept of EventActivityIdControl
     // Create an ETW ActivityId for this thread, to help tools correlate ETW events we generate
     GUID activityId = { 0 };
@@ -7022,7 +7022,7 @@ RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
             dllHandle = NULL;
         }
 #endif
-#if defined(ENABLE_JS_ETW) && ! defined(ENABLE_JS_LTTNG)
+#if defined(ENABLE_JS_ETW)
         // LTTng has no concept of EventActivityIdControl
         // Create an ETW ActivityId for this thread, to help tools correlate ETW events we generate
         GUID activityId = { 0 };

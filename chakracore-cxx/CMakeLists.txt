@@ -370,20 +370,6 @@ add_definitions(
     -DPAL_STDCPP_COMPAT
     )
 
-if (ENABLE_JS_LTTNG)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    unset(ENABLE_JS_LTTNG CACHE)
-    include_directories (
-      ${CMAKE_CURRENT_SOURCE_DIR}/out/lttng
-    )
-    add_subdirectory ($ENV{TARGET_PATH}/lttng ${CMAKE_CURRENT_BINARY_DIR}/lttng)
-
-    add_definitions(
-      -DENABLE_JS_ETW
-      -DENABLE_JS_LTTNG
-    )
-endif()
-
 add_subdirectory (lib)
 
 add_subdirectory (bin)
