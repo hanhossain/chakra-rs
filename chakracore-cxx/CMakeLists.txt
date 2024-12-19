@@ -362,14 +362,6 @@ endif()
 include_directories(SYSTEM /usr/local/include)
 include(pal/src/configure.cmake)
 
-# Clang sanitizer support, this should be after `detect feature` to not to
-# affect feature detection
-if (CLANG_SANITIZE)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=${CLANG_SANITIZE}")
-    set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -fsanitize=${CLANG_SANITIZE}")
-endif()
-
 add_subdirectory (pal)
 
 # build the rest with NO_PAL_MINMAX and PAL_STDCPP_COMPAT
