@@ -290,20 +290,6 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
     endif()
 endif(CLR_CMAKE_PLATFORM_XPLAT)
 
-if (ENABLE_FULL_LTO OR ENABLE_THIN_LTO)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    if (CC_TARGET_OS_LINUX)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
-    endif()
-
-    if (ENABLE_FULL_LTO)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
-    elseif (ENABLE_THIN_LTO)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
-        add_compile_options(-flto=thin)
-    endif()
-endif()
-
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     message(WARNING "TODO (hanhossain): marked for cleanup")
     add_definitions(
