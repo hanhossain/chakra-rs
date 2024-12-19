@@ -50,12 +50,6 @@ elseif(CC_TARGETS_ARM64)
         arm64/XDataAllocator.cpp
         arm64/arm64_SAVE_REGISTERS.S
     )
-elseif(CC_TARGETS_ARM)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-  set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
-      arm/XDataAllocator.cpp
-      arm/arm_SAVE_REGISTERS.S
-  )
 endif()
 
 add_library (Chakra.Common.Memory OBJECT
