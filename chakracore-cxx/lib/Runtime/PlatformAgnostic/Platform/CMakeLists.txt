@@ -7,7 +7,6 @@ set(PL_SOURCE_FILES
   Linux/NumbersUtility.cpp
   POSIX/ArraysUtility.cpp
   Common/Thread.cpp
-  Common/Trace.cpp
   Common/SystemInfo.Common.cpp
   )
 
