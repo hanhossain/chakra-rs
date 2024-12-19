@@ -256,11 +256,6 @@ X64WriteBarrierCardTableManager::Initialize()
         // of a reservation can be approximated as 2KB per MB of reserved size. In our case, we take
         // an overhead of 96KB for our card table.
 
-#if defined(ENABLE_VALGRIND)
-        // this will fail (cardTable) due to stack ptr > 32GB
-#error  "Not supported. Disable concurrent GC and try again"
-#endif
-
         // xplat: GetRLimit AS / RSS for ``the maximum size of the process's virtual memory``
         size_t memoryLimit;
         if (!PlatformAgnostic::SystemInfo::GetMaxVirtualMemory(&memoryLimit))
