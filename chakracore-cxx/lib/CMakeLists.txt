@@ -39,7 +39,6 @@ add_library (ChakraCoreStatic STATIC
   $<TARGET_OBJECTS:Chakra.SCACore>
   ${wasm_objects}
   ${wabt_objects}
-  ${lttng_objects}
 )
 
 if(CC_TARGET_OS_OSX)
