@@ -15,7 +15,7 @@ if(CC_TARGETS_AMD64)
         PrologEncoder.cpp
     )
 elseif(CC_TARGETS_ARM64)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
+    # JIT isn't currently supported on ARM64 linux/macos
     set (CC_BACKEND_ARCH_FOLDER arm64)
     set (CC_BACKEND_ARCH_FILES
         arm64/ARM64LogicalImmediates.cpp
