@@ -81,11 +81,6 @@ if(CC_TARGET_OS_LINUX)
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/ch.version
     ${LINKER_REDUCED_MEMORY}
     )
-elseif(CC_TARGET_OS_OSX)
-  if(CC_TARGETS_ARM)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(lib_target "${lib_target} -arch arm")
-  endif()
 endif()
 
 target_link_libraries (ch

@@ -79,12 +79,6 @@ elseif(CC_TARGETS_ARM64)
         arm64/arm64_Thunks.S
         arm64/arm64_CallEhFrame.S
     )
-elseif(CC_TARGETS_ARM)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set (CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
-        arm/StackFrame.cpp
-        arm/arm_Thunks.S
-    )
 endif()
 
 add_library (Chakra.Runtime.Language OBJECT ${CRL_SOURCE_FILES})
