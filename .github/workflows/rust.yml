@@ -23,6 +23,11 @@ jobs:
         - macos-latest
         - ubuntu-latest
         - windows-latest
+        include:
+        - os: macos-latest
+          deps: brew install ninja
+        - os: ubuntu-latest
+          deps: sudo apt-get install -y ninja-build
     steps:
     - uses: actions/checkout@v4
     - uses: dtolnay/rust-toolchain@stable
