@@ -13,14 +13,12 @@ include_directories(include)
 if(CC_TARGETS_AMD64)
     add_definitions(-D_AMD64_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL arm64)
     set(PAL_CMAKE_PLATFORM_ARCH_ARM64 1)
     add_definitions(-D_ARM64_)
 else()
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     clr_unknown_arch()
 endif()
 
@@ -55,12 +53,6 @@ if(CC_TARGET_OS_OSX)
 endif()
 
 if(CC_TARGETS_AMD64)
-  if(CC_TARGET_OS_OSX)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    set(PLATFORM_SOURCES ${PLATFORM_SOURCES}
-      arch/i386/dispatchexceptionwrapper.S
-    )
-  endif()
   set(ARCH_SOURCES
     arch/i386/context2.S
     arch/i386/debugbreak.S

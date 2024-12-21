@@ -20,7 +20,6 @@ elseif(CC_TARGETS_ARM64)
     add_definitions(-D__arm64__=1)
     set(CMAKE_SYSTEM_PROCESSOr "arm64")
 else()
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
@@ -52,7 +51,6 @@ if(ICU_INCLUDE_PATH)
         message("-- found ICU libs: ${ICU_LIBRARY_PATH}")
         find_library(ICUDATA icudata PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
         if (NOT ICUDATA)
-            message(WARNING "TODO (hanhossain): marked for cleanup")
             set(ICUDATA "")
         endif()
         set(ICU_LIBRARIES
@@ -80,9 +78,8 @@ elseif(CC_TARGET_OS_OSX)
     # in case ICU path was given but it doesn't exist, build script will fail.
     # so, fallback only if ICU path wasn't given
     if(NOT ICU_INCLUDE_PATH)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         set(NO_ICU 1)
-        message("-- Couldn't find ICU. Falling back to --no-icu build")
+        message("-- Couldn't find ICU. Falling back to NO_ICU build")
     endif()
 endif()
 
@@ -102,7 +99,6 @@ elseif(CC_TARGETS_ARM64)
         add_compile_options(-arch arm64)
     endif()
 else()
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     message(FATAL_ERROR "Only AMD64, ARM, and ARM64 are supported")
 endif()
 
@@ -133,12 +129,10 @@ elseif(CC_TARGET_OS_OSX)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
             -mmacosx-version-min=10.9 -std=gnu++11")
     else()
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         set(OSX_DEPLOYMENT_TARGET "$ENV{MACOSX_DEPLOYMENT_TARGET}")
         message(WARNING "-- !! macOS Deployment Target was set to $ENV{MACOSX_DEPLOYMENT_TARGET}. Using it as is.")
     endif()
 else()
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     message(FATAL_ERROR "Unsupported OS: ${CMAKE_SYSTEM_NAME}")
 endif()
 
@@ -247,13 +241,11 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
     # Also disable RTTI when building a shared library
     # TODO: why does the shared library break with rtti disabled?
     if(CMAKE_BUILD_TYPE STREQUAL Release)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         add_compile_options(-fno-rtti)
     endif()
 endif(CLR_CMAKE_PLATFORM_XPLAT)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
     add_definitions(
         -DDBG=1
         -DDEBUG=1
@@ -273,11 +265,7 @@ if(IS_64BIT_BUILD)
     )
 endif(IS_64BIT_BUILD)
 
-if(NO_JIT)
-    message(WARNING "TODO (hanhossain): marked for cleanup")
-    unset(BuildJIT CACHE)       # also clear it just in case
-    add_definitions(-DDISABLE_JIT=1)
-elseif(DISABLE_JIT)
+if(DISABLE_JIT)
     set(BuildJIT 0)
     add_definitions(-DDISABLE_JIT=1)
 else()
@@ -294,11 +282,9 @@ endif()
 
 if(CC_TARGETS_ARM64)
     if(CC_TARGET_OS_LINUX)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         message(WARNING "ARM64 linux build has not yet been tested, this build is unsupported.")
     endif()
     if(BuildJIT)
-        message(WARNING "TODO (hanhossain): marked for cleanup")
         message(WARNING "ARM64 Jit not yet functional on platforms other than windows.")
         message(WARNING "For use rather than development please build with Jit disabled --no-jit with ./build.sh or -DDISABLE_JIT=1 if using CMake directly")
     endif()
