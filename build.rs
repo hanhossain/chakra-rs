@@ -26,17 +26,10 @@ fn build_cmake() {
 }
 
 fn build_msvc() {
-    let mut msbuild = std::process::Command::new("msbuild");
-    let sln = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
-        .join("chakracore-cxx/Build/Chakra.Core.sln");
-    let status = msbuild
-        .arg("/p:Configuration=Test")
-        .arg("/p:Platform=x64")
-        .arg("/m")
-        .arg(sln)
-        .status()
-        .unwrap();
-
+    let build = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
+        .join("chakracore-cxx/test/ci.buildone.cmd");
+    let mut build = std::process::Command::new(build);
+    let status = build.args(["x64", "test"]).status().unwrap();
     if !status.success() {
         panic!("Failed to build ChakraCore. Status: {status}");
     }
