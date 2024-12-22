@@ -25,7 +25,7 @@ jobs:
           - windows-latest
         include:
           - os: macos-latest
-            deps: brew install ninja
+            deps: brew install ninja icu4c@74
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
     steps:
