@@ -31,11 +31,11 @@ fn build_msvc() {
     let mut msbuild = std::process::Command::new("msbuild");
     let sln = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
         .join("chakracore-cxx/Build/Chakra.Core.sln");
-    let out_dir = std::env::var("OUT_DIR").unwrap();
+    let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("build/");
     let status = msbuild
         .arg("/p:Configuration=Test")
         .arg("/p:Platform=x64")
-        .arg(format!("/p:OutDir={out_dir}"))
+        .arg(format!("/p:OutDir={}", out_dir.display()))
         .arg("/m")
         .arg(sln)
         .status()
