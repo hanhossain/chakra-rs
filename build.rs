@@ -1,4 +1,15 @@
+use std::path::PathBuf;
+
 fn main() {
+    let target = std::env::var("TARGET").unwrap();
+    if target.contains("windows") {
+        build_msvc();
+    } else {
+        build_cmake();
+    }
+}
+
+fn build_cmake() {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
         cc_config.compiler("clang");
@@ -12,4 +23,21 @@ fn main() {
         .define("CMAKE_C_COMPILER", "clang")
         .build_target("ch")
         .build();
+}
+
+fn build_msvc() {
+    let mut msbuild = std::process::Command::new("msbuild");
+    let sln = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
+        .join("chakracore-cxx/Build/Chakra.Core.sln");
+    let status = msbuild
+        .arg("/p:Configuration=Test")
+        .arg("/p:Platform=x64")
+        .arg("/m")
+        .arg(sln)
+        .status()
+        .unwrap();
+
+    if !status.success() {
+        panic!("Failed to build ChakraCore. Status: {status}");
+    }
 }
