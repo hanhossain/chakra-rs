@@ -197,13 +197,6 @@
       <compile-flags>-MaxinterpretCount:0 -MaxSimpleJITRunCount:1</compile-flags>
     </default>
   </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>With2.js</files>
-      <baseline>With2.baseline</baseline>
-    </default>
-  </test>
   <test>
     <default>
       <files>witheval.js</files>
@@ -231,60 +224,11 @@
       <files>DeleteAndReAddNonExtensible.js</files>
     </default>
   </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>DefProp.js</files>
-      <baseline>DefProp.baseline</baseline>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>scopedaccessors.js</files>
-      <baseline>scopedaccessors.baseline</baseline>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>flags.js</files>
-      <baseline>flagsES5.baseline</baseline>
-    </default>
-  </test>
   <test>
     <default>
       <files>Branching.js</files>
       <baseline>Branching.baseline</baseline>
       <compile-flags>-Intl-</compile-flags>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>inlinecache.js</files>
-      <baseline>inlinecache.baseline</baseline>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>scan.js</files>
-      <baseline>scan.baseline</baseline>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>enum.js</files>
-      <baseline>enum.baseline</baseline>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>with3.js</files>
-      <baseline>with3.baseline</baseline>
     </default>
   </test>
   <!-- TODO (hanhossain): migrate -->

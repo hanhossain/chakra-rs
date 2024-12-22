@@ -20,10 +20,20 @@ pub fn run_test(test: &Test) {
     let output = ch.output().unwrap();
     let out = String::from_utf8_lossy(&output.stdout);
 
-    let actual = out.lines().collect::<Vec<_>>();
+    let actual = out
+        .lines()
+        .map(|s| trim_carriage_return(s))
+        .collect::<Vec<_>>();
     let expected = read_to_string(baseline).unwrap();
-    let expected = expected.lines().collect::<Vec<_>>();
+    let expected = expected
+        .lines()
+        .map(|s| trim_carriage_return(s))
+        .collect::<Vec<_>>();
     assert_eq!(actual, expected);
     assert_eq!(output.stderr, b"");
     assert!(output.status.success());
+}
+
+fn trim_carriage_return(s: &str) -> &str {
+    s.trim_end_matches('\r')
 }
