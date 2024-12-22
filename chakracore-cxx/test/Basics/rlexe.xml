@@ -172,6 +172,7 @@
       <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>With.js</files>
@@ -203,6 +204,7 @@
       <compile-flags>-MaxinterpretCount:0 -MaxSimpleJITRunCount:1</compile-flags>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>With2.js</files>
@@ -230,29 +232,34 @@
       <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>DeleteAndReAddNonExtensible.js</files>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>Accessors.js</files>
       <baseline>Accessors.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>DefProp.js</files>
       <baseline>DefProp.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>scopedaccessors.js</files>
       <baseline>scopedaccessors.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>flags.js</files>
@@ -266,35 +273,41 @@
       <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>inlinecache.js</files>
       <baseline>inlinecache.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>scan.js</files>
       <baseline>scan.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>enum.js</files>
       <baseline>enum.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>with3.js</files>
       <baseline>with3.baseline</baseline>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>cross_site_accessor_main.js</files>
     </default>
   </test>
+<!-- TODO (hanhossain): migrate -->
   <test>
     <default>
       <files>bug650104.js</files>
