@@ -17,14 +17,20 @@ fn build_cmake() {
         cc_config.compiler("clang");
     }
 
-    cmake::Config::new("chakracore-cxx")
+    let mut config = cmake::Config::new("chakracore-cxx");
+    config
         .init_c_cfg(cc_config)
         .generator("Ninja")
-        .define("DISABLE_JIT", "ON")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
-        .build_target("ch")
-        .build();
+        .build_target("ch");
+
+    let target = std::env::var("TARGET").unwrap();
+    if target.contains("darwin") {
+        config.define("DISABLE_JIT", "ON");
+    }
+
+    config.build();
 }
 
 fn build_msvc() {
