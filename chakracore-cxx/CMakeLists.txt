@@ -119,19 +119,6 @@ elseif(CC_TARGET_OS_OSX)
     add_definitions(
         -DPLATFORM_UNIX
     )
-
-    set(OSX_DEPLOYMENT_TARGET "$ENV{MACOSX_DEPLOYMENT_TARGET} CC")
-    if (${OSX_DEPLOYMENT_TARGET} STREQUAL " CC")
-        set(OSX_DEPLOYMENT_TARGET "10.9")
-        add_compile_options(-mmacosx-version-min=10.9)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
-            -mmacosx-version-min=10.9 -std=gnu99")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-            -mmacosx-version-min=10.9 -std=gnu++11")
-    else()
-        set(OSX_DEPLOYMENT_TARGET "$ENV{MACOSX_DEPLOYMENT_TARGET}")
-        message(WARNING "-- !! macOS Deployment Target was set to $ENV{MACOSX_DEPLOYMENT_TARGET}. Using it as is.")
-    endif()
 else()
     message(FATAL_ERROR "Unsupported OS: ${CMAKE_SYSTEM_NAME}")
 endif()
