@@ -241,13 +241,6 @@
 <!-- TODO (hanhossain): migrate -->
   <test>
     <default>
-      <files>Accessors.js</files>
-      <baseline>Accessors.baseline</baseline>
-    </default>
-  </test>
-<!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
       <files>DefProp.js</files>
       <baseline>DefProp.baseline</baseline>
     </default>
