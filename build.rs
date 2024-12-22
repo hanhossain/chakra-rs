@@ -27,7 +27,9 @@ fn build_cmake() {
 
     let target = std::env::var("TARGET").unwrap();
     if target.contains("darwin") {
-        config.define("DISABLE_JIT", "ON");
+        config
+            .define("DISABLE_JIT", "ON")
+            .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c@74/include");
     }
 
     config.build();
