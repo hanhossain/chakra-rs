@@ -5,10 +5,12 @@ fn main() {
     if target.contains("windows") {
         build_msvc();
     } else {
+        #[cfg(unix)]
         build_cmake();
     }
 }
 
+#[cfg(unix)]
 fn build_cmake() {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
