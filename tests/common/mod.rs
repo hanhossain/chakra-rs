@@ -41,8 +41,15 @@ pub fn run_test(test: &Test) {
 
         assert_eq!(actual, expected);
     } else {
-        let expected = vec!["pass"; actual.len()];
-        assert_eq!(actual, expected);
+        for line in &actual {
+            let lower = line.to_lowercase();
+            if lower != "pass" && lower != "passed" {
+                panic!(
+                    "Test can only print `pass` or `passed`. Actual: {:?}",
+                    actual
+                );
+            }
+        }
     }
 
     assert!(output.status.success());

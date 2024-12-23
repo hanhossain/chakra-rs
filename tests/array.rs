@@ -30,21 +30,25 @@ fn array_flat_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_findlast.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_findlast_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_findlast.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_findlastindex.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_findlastindex_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_findlastindex.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_sort_order_js() {
@@ -83,21 +87,31 @@ fn array_sort_order_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-forcearraybtree -off:nativearray -args summary -endargs</compile-flags>
-//     <files>sliceArrayForceBtreeBug616623.js</files>
-//   </default>
-// </test>
+#[test]
+fn slice_array_force_btree_bug616623_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/sliceArrayForceBtreeBug616623.js",
+        compile_flags: vec![
+            "-forcearraybtree",
+            "-off:nativearray",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceArrayBTree</compile-flags>
-//     <files>bug945376SegLeftPlusSizeGreaterThanMaxArrayLen.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug945376_seg_left_plus_size_greater_than_max_array_len_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug945376SegLeftPlusSizeGreaterThanMaxArrayLen.js",
+        compile_flags: vec!["-ForceArrayBTree"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug1062870_js() {
@@ -126,62 +140,88 @@ fn bug1065362_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug4916987.js</files>
-//     <compile-flags>-mic:1 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug4916987_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug4916987.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug6268659.js</files>
-//     <compile-flags>-mic:1 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug6268659_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug6268659.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceArrayBTree</compile-flags>
-//     <files>ArrayBtreeBadCodeGen.js</files>
-//     <baseline>ArrayBtreeBadCodeGen.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn array_btree_bad_code_gen_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/ArrayBtreeBadCodeGen.js",
+        baseline_path: Some("chakracore-cxx/test/Array/ArrayBtreeBadCodeGen.baseline"),
+        compile_flags: vec!["-ForceArrayBTree"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>SliceandConcatAlterOriginalArrayBug.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn slice_and_concat_alter_original_array_bug_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/SliceandConcatAlterOriginalArrayBug.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceArrayBTree -maxinterpretcount:1 -maxsimplejitruncount:2</compile-flags>
-//     <files>rawLastUsedSegmentBugInFloatArray.js</files>
-//   </default>
-// </test>
+#[test]
+fn raw_last_used_segment_bug_in_float_array_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/rawLastUsedSegmentBugInFloatArray.js",
+        compile_flags: vec![
+            "-ForceArrayBTree",
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:1 -force:rejit -ForceArrayBTree</compile-flags>
-//     <files>ArrayElementMissingValueSetToZero.js</files>
-//   </default>
-// </test>
+#[test]
+fn array_element_missing_value_set_to_zero_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/ArrayElementMissingValueSetToZero.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-force:rejit",
+            "-ForceArrayBTree",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags> -forcejitloopbody -ForceArrayBTree -off:ArrayCheckHoist</compile-flags>
-//     <files>TryGrowHeadSegmentBug.js</files>
-//   </default>
-// </test>
+#[test]
+fn try_grow_head_segment_bug_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/TryGrowHeadSegmentBug.js",
+        compile_flags: vec![
+            "-forcejitloopbody",
+            "-ForceArrayBTree",
+            "-off:ArrayCheckHoist",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_init2_js() {
@@ -279,21 +319,33 @@ fn ldindex_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>SegmentMapFlagResetInJSArrayConstructor.js</files>
-//     <compile-flags> -maxinterpretcount:1 -maxsimplejitruncount:2  -ForceArrayBTree</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn segment_map_flag_reset_in_jsarray_constructor_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/SegmentMapFlagResetInJSArrayConstructor.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+            "-ForceArrayBTree",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>LastUsedSegmentHasNULLElement.js</files>
-//     <compile-flags> -maxinterpretcount:1 -maxsimplejitruncount:2  -ForceArrayBTree</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn last_used_segment_has_null_element_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/LastUsedSegmentHasNULLElement.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+            "-ForceArrayBTree",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_length_js() {
@@ -383,22 +435,25 @@ fn push1_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>push2.js</files>
-//     <compile-flags>-es6toLength</compile-flags>
-//     <baseline>push2.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn push2_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/push2.js",
+        baseline_path: Some("chakracore-cxx/test/Array/push2.baseline"),
+        compile_flags: vec!["-es6toLength"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>push3.js</files>
-//     <compile-flags>-off:nativearray -ForceES5Array</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn push3_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/push3.js",
+        compile_flags: vec!["-off:nativearray", "-ForceES5Array"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn push4_traps_js() {
@@ -498,21 +553,25 @@ fn array_slice2_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_sort.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_sort_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_sort.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_includes.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_includes_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_includes.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_splice_js() {
@@ -614,23 +673,25 @@ fn array_index_of_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_indexOf.js</files>
-//     <compile-flags>-ForceArrayBTree</compile-flags>
-//     <baseline>array_indexOf.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn array_index_of_js_force_array_btree() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_indexOf.js",
+        baseline_path: Some("chakracore-cxx/test/Array/array_indexOf.baseline"),
+        compile_flags: vec!["-ForceArrayBTree"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_indexOf.js</files>
-//     <compile-flags>-JsBuiltIn-</compile-flags>
-//     <baseline>array_indexOf.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn array_index_of_js_force_array_jsbuiltin() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_indexOf.js",
+        baseline_path: Some("chakracore-cxx/test/Array/array_indexOf.baseline"),
+        compile_flags: vec!["-JsBuiltIn-"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_index_of_sparse_js() {
@@ -740,13 +801,15 @@ fn nativearray_gen5_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen6.js</files>
-//     <compile-flags>-loopinterpretcount:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen6_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativearray_gen6.js",
+        compile_flags: vec!["-loopinterpretcount:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn nativearray_gen7_js() {
@@ -758,13 +821,15 @@ fn nativearray_gen7_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen8.js</files>
-//     <compile-flags>-force:jitloopbody</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen8_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativearray_gen8.js",
+        compile_flags: vec!["-force:jitloopbody"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn arrlit_js() {
@@ -816,14 +881,19 @@ fn array_apply_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativeArrayPushInlining.js</files>
-//     <baseline>nativeArrayPushInlining.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:arraycheckhoist -off:fixedmethods</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn native_array_push_inlining_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativeArrayPushInlining.js",
+        baseline_path: Some("chakracore-cxx/test/Array/nativeArrayPushInlining.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:arraycheckhoist",
+            "-off:fixedmethods",
+        ],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn reverse_native_js() {
@@ -855,49 +925,70 @@ fn native_float_array_sort_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>missingItemFastPathCheck.js</files>
-//     <baseline>missingItemFastPathCheck.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn missing_item_fast_path_check_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/missingItemFastPathCheck.js",
+        baseline_path: Some("chakracore-cxx/test/Array/missingItemFastPathCheck.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_opts.js</files>
-//     <compile-flags>-maxinterpretcount:1</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_opts_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_opts.js",
+        compile_flags: vec!["-maxinterpretcount:1"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativeIntPop.js</files>
-//     <baseline>nativeIntPop.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:fixedmethods -off:Arraycheckhoist</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn native_int_pop_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativeIntPop.js",
+        baseline_path: Some("chakracore-cxx/test/Array/nativeIntPop.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:fixedmethods",
+            "-off:Arraycheckhoist",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativeFloatPop.js</files>
-//     <baseline>nativeFloatPop.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:fixedmethods -off:Arraycheckhoist</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn native_float_pop_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativeFloatPop.js",
+        baseline_path: Some("chakracore-cxx/test/Array/nativeFloatPop.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:fixedmethods",
+            "-off:Arraycheckhoist",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>popImplicitCall.js</files>
-//     <baseline>popImplicitCall.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:fixedmethods -off:Arraycheckhoist</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn pop_implicit_call_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/popImplicitCall.js",
+        baseline_path: Some("chakracore-cxx/test/Array/popImplicitCall.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:fixedmethods",
+            "-off:Arraycheckhoist",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_splice_515632_js() {
@@ -909,22 +1000,25 @@ fn array_splice_515632_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>InlineArrayPopWithIntConstSrc.js</files>
-//     <baseline>InlineArrayPopWithIntConstSrc.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn inline_array_pop_with_int_const_src_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/InlineArrayPopWithIntConstSrc.js",
+        baseline_path: Some("chakracore-cxx/test/Array/InlineArrayPopWithIntConstSrc.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FailToSetLength.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn fail_to_set_length_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/FailToSetLength.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn foreach_nativearray_change_js() {
@@ -946,13 +1040,15 @@ fn newfromargs_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceArrayBTree</compile-flags>
-//     <files>bug945376SizeBoundStartSeg.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug945376size_bound_start_seg_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug945376SizeBoundStartSeg.js",
+        compile_flags: vec!["-ForceArrayBTree"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -974,21 +1070,31 @@ fn newfromargs_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_lifetime_bug.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_lifetime_bug_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_lifetime_bug.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memset.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -off:JITLoopBody -off:inline -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memset_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memset.js",
+        compile_flags: vec![
+            "-mic:1",
+            "-off:simplejit",
+            "-off:JITLoopBody",
+            "-off:inline",
+            "-mmoc:0",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1003,127 +1109,185 @@ fn newfromargs_js() {
 // TODO fix and re-enable, or remove this test (disabled in 91e0e9128)
 // Microsoft/ChakraCore#2977
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memset_simd.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0 -off:JITLoopBody -simdjs -simd128typespec</compile-flags>
-//   </default>
-// </test>
-// -->
+#[test]
+fn memset_simd_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memset_simd.js",
+        compile_flags: vec![
+            "-mic:1",
+            "-off:simplejit",
+            "-mmoc:0",
+            "-off:JITLoopBody",
+            "-simdjs",
+            "-simd128typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memset2.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -off:JITLoopBody -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memset2_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memset2.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memcopy.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -off:JITLoopBody -off:inline -off:globopt:1.18-1.30 -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memcopy_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memcopy.js",
+        compile_flags: vec![
+            "-mic:1",
+            "-off:simplejit",
+            "-off:JITLoopBody",
+            "-off:inline",
+            "-off:globopt:1.18-1.30",
+            "-mmoc:0",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memcopy.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -off:JITLoopBody -off:inline -off:globopt:1.18-1.30 -mmoc:0 -args float -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memcopy_js_float() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memcopy.js",
+        compile_flags: vec![
+            "-mic:1",
+            "-off:simplejit",
+            "-off:JITLoopBody",
+            "-off:inline",
+            "-off:globopt:1.18-1.30",
+            "-mmoc:0",
+            "-args",
+            "float",
+            "-endargs",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memcopy_length_bug.js</files>
-//     <compile-flags>-bgjit- -lic:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memcopy_length_bug_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memcopy_length_bug.js",
+        compile_flags: vec!["-bgjit-", "-lic:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memcopy_missing_values.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -bgjit- -lic:1</compile-flags>
-//     <baseline>memcopy_missing_values.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn memcopy_missing_values_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memcopy_missing_values.js",
+        baseline_path: Some("chakracore-cxx/test/Array/memcopy_missing_values.baseline"),
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-", "-lic:1"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_alias.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -off:jitloopbody -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_alias_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_alias.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-off:jitloopbody", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_field.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_field_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_field.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_slot.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_slot_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_slot.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_bounds_check.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_bounds_check_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_bounds_check.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memop_missingValues.js</files>
-//     <compile-flags>-mmoc:0</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn memop_missing_values_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/memop_missingValues.js",
+        compile_flags: vec!["-mmoc:0"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug4587739.js</files>
-//     <compile-flags>-mic:1 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug4587739_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug4587739.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug8159763.js</files>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0 -off:bailonnoprofile</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug8159763_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug8159763.js",
+        compile_flags: vec![
+            "-mic:1",
+            "-off:simplejit",
+            "-mmoc:0",
+            "-off:bailonnoprofile",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Array_TypeConfusion_bugs.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_type_confusion_bugs_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/Array_TypeConfusion_bugs.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Array_TypeConfusion_bugs.js</files>
-//     <compile-flags>-ForceArrayBTree -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn array_type_confusion_bugs_js_force_array_btree() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/Array_TypeConfusion_bugs.js",
+        compile_flags: vec!["-ForceArrayBTree", "-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_9575461_js() {
@@ -1134,13 +1298,15 @@ fn bug_9575461_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_12044876.js</files>
-//     <compile-flags>-forcearraybtree</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug_12044876_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug_12044876.js",
+        compile_flags: vec!["-forcearraybtree"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_conv_src_js() {
