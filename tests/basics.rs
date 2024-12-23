@@ -98,3 +98,21 @@ fn bug650104_js() {
     };
     common::run_test(&test);
 }
+
+#[test]
+fn delete_and_re_add_non_extensible_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/DeleteAndReAddNonExtensible.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn cross_site_accessor_main_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/cross_site_accessor_main.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}

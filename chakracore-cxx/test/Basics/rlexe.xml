@@ -218,23 +218,11 @@
       <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>DeleteAndReAddNonExtensible.js</files>
-    </default>
-  </test>
   <test>
     <default>
       <files>Branching.js</files>
       <baseline>Branching.baseline</baseline>
       <compile-flags>-Intl-</compile-flags>
-    </default>
-  </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>cross_site_accessor_main.js</files>
     </default>
   </test>
   <test>

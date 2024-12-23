@@ -39,7 +39,7 @@ pub fn run_test(test: &Test) {
 
         assert_eq!(actual, expected);
     } else {
-        let expected = vec!["pass"];
+        let expected = vec!["pass"; actual.len()];
         assert_eq!(actual, expected);
     }
 
