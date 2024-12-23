@@ -237,13 +237,6 @@
       <files>cross_site_accessor_main.js</files>
     </default>
   </test>
-  <!-- TODO (hanhossain): migrate -->
-  <test>
-    <default>
-      <files>bug650104.js</files>
-      <baseline>bug650104.baseline</baseline>
-    </default>
-  </test>
   <test>
     <default>
       <files>SpecialSymbolCapture.js</files>

@@ -89,3 +89,12 @@ fn with3_js() {
     };
     common::run_test(&test);
 }
+
+#[test]
+fn bug650104_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/bug650104.js",
+        baseline_path: "chakracore-cxx/test/Basics/bug650104.baseline",
+    };
+    common::run_test(&test);
+}
