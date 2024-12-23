@@ -108,4 +108,4 @@ try {
         "Throw-Catch Outside");
 } catch (e) { /* no. this shouldn't crash! */ }
 
-WScript.Echo("PASS");
+WScript.Echo("pass");

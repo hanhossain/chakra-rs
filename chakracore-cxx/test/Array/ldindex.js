@@ -10,15 +10,14 @@ var A = new Array(100);
 A[10] = 100;
 Array.prototype[5] = 50;
 
-function foo(arr, i)
-{
+function foo(arr, i) {
     i = arr[i];
     if (i != 50)
-    WScript.Echo("FAILED");
+        WScript.Echo("FAILED");
     return i;
 }
 
 for (var i = 0; i < 1000; i++)
     foo(A, 5);
 
-if (foo(A, 5) == 50) WScript.Echo("Passed");
+if (foo(A, 5) == 50) WScript.Echo("pass");

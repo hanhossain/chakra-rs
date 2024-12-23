@@ -10,9 +10,9 @@ class dummy {
 }
 
 var handler = {
-    get: function(oTarget, sKey) {
-        if (sKey.toString()=="constructor") {
-            return { [Symbol.species] : dummy };
+    get: function (oTarget, sKey) {
+        if (sKey.toString() == "constructor") {
+            return { [Symbol.species]: dummy };
         } else {
             return 4;
         }
@@ -26,18 +26,15 @@ var handler = {
 var array = [1];
 var proxy = new Proxy(array, handler);
 
-try
-{
+try {
     // By spec, Array.prototype.filter (and other built-ins) adds configurable properties to a new array, created from ArraySpeciesCreate. 
     // If the constructed array is a TypedArray, setting of index properties should throw a type error because they cannot be configurable.
     var boundFilter = Array.prototype.filter.bind(proxy);
-    boundFilter(function() { return true; });
+    boundFilter(function () { return true; });
     WScript.Echo("TypeError expected. TypedArray indicies should be non-configurable.");
 }
-catch (e)
-{
-    if (e == "TypeError: Cannot redefine property '0'")
-    {
-        WScript.Echo("passed");
+catch (e) {
+    if (e == "TypeError: Cannot redefine property '0'") {
+        WScript.Echo("pass");
     }
 }

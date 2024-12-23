@@ -60,4 +60,4 @@ test0();
 
 //////////////////////////
 
-WScript.Echo('PASS');
+WScript.Echo('pass');

@@ -46,12 +46,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_sort_order.js</files>
-//   </default>
-// </test>
+#[test]
+fn array_sort_order_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_sort_order.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -97,19 +99,23 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug1062870.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug1062870_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug1062870.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug1065362.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug1065362_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug1065362.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -203,12 +209,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arr_bailout.js</files>
-//   </default>
-// </test>
+#[test]
+fn arr_bailout_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/arr_bailout.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -226,12 +234,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delete.js</files>
-//   </default>
-// </test>
+#[test]
+fn delete_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/delete.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -241,12 +251,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ldindex.js</files>
-//   </default>
-// </test>
+#[test]
+fn ldindex_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/ldindex.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -321,19 +333,23 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>pop4.js</files>
-//   </default>
-// </test>
+#[test]
+fn pop4_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/pop4.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>pop5.js</files>
-//   </default>
-// </test>
+#[test]
+fn pop5_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/pop5.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -360,12 +376,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>push4_traps.js</files>
-//   </default>
-// </test>
+#[test]
+fn push4_traps_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/push4_traps.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -621,19 +639,23 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen2.js</files>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen2_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativearray_gen2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen3.js</files>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen3_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativearray_gen3.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -643,12 +665,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen5.js</files>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen5_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/nativearray_gen5.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1011,12 +1035,14 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_9575461.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug_9575461_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug_9575461.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1026,40 +1052,50 @@ fn array_flat_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_conv_src.js</files>
-//   </default>
-// </test>
+#[test]
+fn array_conv_src_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/array_conv_src.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug12340575.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug12340575_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug12340575.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>constructor_fastpath.js</files>
-//   </default>
-// </test>
+#[test]
+fn constructor_fastpath_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/constructor_fastpath.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug16717501.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug16717501_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/bug16717501.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FilterWithTypedArray.js</files>
-//   </default>
-// </test>
+#[test]
+fn filter_with_typed_array_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Array/FilterWithTypedArray.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
