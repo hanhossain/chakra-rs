@@ -39,7 +39,8 @@ pub fn run_test(test: &Test) {
 
         assert_eq!(actual, expected);
     } else {
-        todo!()
+        let expected = vec!["pass"];
+        assert_eq!(actual, expected);
     }
 
     assert!(output.status.success());
