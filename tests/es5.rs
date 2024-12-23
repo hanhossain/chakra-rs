@@ -10,13 +10,15 @@ fn reserved_words_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ES6Unicode-</compile-flags>
-//     <files>Lex_u3.js</files>
-//     <baseline>Lex_u3.baseline</baseline>
-//   </default>
+#[test]
+fn lex_u3_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/es5/Lex_u3.js",
+        baseline_path: Some("chakracore-cxx/test/es5/Lex_u3.baseline"),
+        compile_flags: vec!["-ES6Unicode-"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_every_js() {
