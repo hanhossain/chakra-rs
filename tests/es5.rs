@@ -17,7 +17,6 @@ fn reserved_words_js() {
 //     <files>Lex_u3.js</files>
 //     <baseline>Lex_u3.baseline</baseline>
 //   </default>
-// </test>
 
 #[test]
 fn array_every_js() {
@@ -370,21 +369,25 @@ fn valueof_override_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceStringKeyedSimpleDictionaryTypeHandler</compile-flags>
-//     <files>tostring_override.js</files>
-//   </default>
-// </test>
+#[test]
+fn tostring_override_js_force_string_keyed_simple_dictionary_type_handler() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/es5/tostring_override.js",
+        compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceStringKeyedSimpleDictionaryTypeHandler</compile-flags>
-//     <files>valueof_override.js</files>
-//   </default>
-// </test>
+#[test]
+fn valueof_override_js_force_string_keyed_simple_dictionary_type_handler() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/es5/valueof_override.js",
+        compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn type_conversions_js() {
