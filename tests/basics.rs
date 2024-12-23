@@ -4,7 +4,7 @@ mod common;
 fn accessors_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/Accessors.js",
-        baseline_path: "chakracore-cxx/test/Basics/Accessors.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/Accessors.baseline"),
     };
     common::run_test(&test);
 }
@@ -13,7 +13,7 @@ fn accessors_js() {
 fn with_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/With.js",
-        baseline_path: "chakracore-cxx/test/Basics/With.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/With.baseline"),
     };
     common::run_test(&test);
 }
@@ -22,7 +22,7 @@ fn with_js() {
 fn with2_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/With2.js",
-        baseline_path: "chakracore-cxx/test/Basics/With2.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/With2.baseline"),
     };
     common::run_test(&test);
 }
@@ -31,7 +31,7 @@ fn with2_js() {
 fn defprop_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/DefProp.js",
-        baseline_path: "chakracore-cxx/test/Basics/DefProp.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/DefProp.baseline"),
     };
     common::run_test(&test);
 }
@@ -40,7 +40,7 @@ fn defprop_js() {
 fn scopedaccessors_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/scopedaccessors.js",
-        baseline_path: "chakracore-cxx/test/Basics/scopedaccessors.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/scopedaccessors.baseline"),
     };
     common::run_test(&test);
 }
@@ -49,7 +49,7 @@ fn scopedaccessors_js() {
 fn flags_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/flags.js",
-        baseline_path: "chakracore-cxx/test/Basics/flagsES5.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/flagsES5.baseline"),
     };
     common::run_test(&test);
 }
@@ -58,7 +58,7 @@ fn flags_js() {
 fn inlinecache_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/inlinecache.js",
-        baseline_path: "chakracore-cxx/test/Basics/inlinecache.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/inlinecache.baseline"),
     };
     common::run_test(&test);
 }
@@ -67,7 +67,7 @@ fn inlinecache_js() {
 fn scan_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/scan.js",
-        baseline_path: "chakracore-cxx/test/Basics/scan.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/scan.baseline"),
     };
     common::run_test(&test);
 }
@@ -76,7 +76,7 @@ fn scan_js() {
 fn enum_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/enum.js",
-        baseline_path: "chakracore-cxx/test/Basics/enum.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/enum.baseline"),
     };
     common::run_test(&test);
 }
@@ -85,7 +85,7 @@ fn enum_js() {
 fn with3_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/with3.js",
-        baseline_path: "chakracore-cxx/test/Basics/with3.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/with3.baseline"),
     };
     common::run_test(&test);
 }
@@ -94,7 +94,7 @@ fn with3_js() {
 fn bug650104_js() {
     let test = common::Test {
         source_path: "chakracore-cxx/test/Basics/bug650104.js",
-        baseline_path: "chakracore-cxx/test/Basics/bug650104.baseline",
+        baseline_path: Some("chakracore-cxx/test/Basics/bug650104.baseline"),
     };
     common::run_test(&test);
 }
