@@ -7,7 +7,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>UnitTestFramework</files>
   </default>
@@ -19,7 +18,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Basics</files>
   </default>
