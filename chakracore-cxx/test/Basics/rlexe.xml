@@ -2,9 +2,43 @@
 <regress-exe>
   <test>
     <default>
+      <files>Array.js</files>
+      <baseline>Array.baseline</baseline>
+      <compile-flags>-Intl-</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>ScriptFunctionToStrings.js</files>
+      <compile-flags>-args summary -endargs</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
       <files>DomProperties.js</files>
       <compile-flags>-Intl-</compile-flags>
       <tags>Slow</tags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>ArrayConcat.js</files>
+      <baseline>ArrayConcat.baseline</baseline>
+      <compile-flags>-Intl-</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>arrayinit.js</files>
+      <baseline>arrayinit.baseline</baseline>
+      <compile-flags>-Intl-</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>IdsWithEscapes.js</files>
+      <baseline>IdsWithEscapes.baseline</baseline>
+      <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
   <test>
@@ -142,6 +176,12 @@
     <default>
       <files>With.js</files>
       <baseline>With.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>With.js</files>
+      <baseline>With.baseline</baseline>
       <compile-flags>-force:deferparse</compile-flags>
     </default>
   </test>
@@ -161,6 +201,12 @@
     <default>
       <files>withBug940841_2.js</files>
       <compile-flags>-MaxinterpretCount:0 -MaxSimpleJITRunCount:1</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>With2.js</files>
+      <baseline>With2.baseline</baseline>
     </default>
   </test>
   <test>
@@ -186,9 +232,73 @@
   </test>
   <test>
     <default>
+      <files>DeleteAndReAddNonExtensible.js</files>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>Accessors.js</files>
+      <baseline>Accessors.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>DefProp.js</files>
+      <baseline>DefProp.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>scopedaccessors.js</files>
+      <baseline>scopedaccessors.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>flags.js</files>
+      <baseline>flagsES5.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
       <files>Branching.js</files>
       <baseline>Branching.baseline</baseline>
       <compile-flags>-Intl-</compile-flags>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>inlinecache.js</files>
+      <baseline>inlinecache.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>scan.js</files>
+      <baseline>scan.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>enum.js</files>
+      <baseline>enum.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>with3.js</files>
+      <baseline>with3.baseline</baseline>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>cross_site_accessor_main.js</files>
+    </default>
+  </test>
+  <test>
+    <default>
+      <files>bug650104.js</files>
+      <baseline>bug650104.baseline</baseline>
     </default>
   </test>
   <test>
