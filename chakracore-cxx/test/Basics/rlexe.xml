@@ -2,36 +2,9 @@
 <regress-exe>
   <test>
     <default>
-      <files>ScriptFunctionToStrings.js</files>
-      <compile-flags>-args summary -endargs</compile-flags>
-    </default>
-  </test>
-  <test>
-    <default>
       <files>DomProperties.js</files>
       <compile-flags>-Intl-</compile-flags>
       <tags>Slow</tags>
-    </default>
-  </test>
-  <test>
-    <default>
-      <files>ArrayConcat.js</files>
-      <baseline>ArrayConcat.baseline</baseline>
-      <compile-flags>-Intl-</compile-flags>
-    </default>
-  </test>
-  <test>
-    <default>
-      <files>arrayinit.js</files>
-      <baseline>arrayinit.baseline</baseline>
-      <compile-flags>-Intl-</compile-flags>
-    </default>
-  </test>
-  <test>
-    <default>
-      <files>IdsWithEscapes.js</files>
-      <baseline>IdsWithEscapes.baseline</baseline>
-      <compile-flags>-Intl-</compile-flags>
     </default>
   </test>
   <test>

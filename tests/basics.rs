@@ -137,3 +137,43 @@ fn array_js() {
     };
     common::run_test(&test);
 }
+
+#[test]
+fn script_function_to_strings_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/ScriptFunctionToStrings.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn array_concat_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/ArrayConcat.js",
+        baseline_path: Some("chakracore-cxx/test/Basics/ArrayConcat.baseline"),
+        compile_flags: vec!["-Intl-"],
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn arrayinit_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/arrayinit.js",
+        baseline_path: Some("chakracore-cxx/test/Basics/arrayinit.baseline"),
+        compile_flags: vec!["-Intl-"],
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn ids_with_escapes_js() {
+    let test = common::Test {
+        source_path: "chakracore-cxx/test/Basics/IdsWithEscapes.js",
+        baseline_path: Some("chakracore-cxx/test/Basics/IdsWithEscapes.baseline"),
+        compile_flags: vec!["-Intl-"],
+    };
+    common::run_test(&test);
+}
