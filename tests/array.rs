@@ -1105,26 +1105,6 @@ fn memset_js() {
 //     <timeout>300</timeout>
 //   </default>
 // </test>
-// <!--
-// TODO fix and re-enable, or remove this test (disabled in 91e0e9128)
-// Microsoft/ChakraCore#2977
-
-#[test]
-fn memset_simd_js() {
-    let test = common::Test {
-        source_path: "chakracore-cxx/test/Array/memset_simd.js",
-        compile_flags: vec![
-            "-mic:1",
-            "-off:simplejit",
-            "-mmoc:0",
-            "-off:JITLoopBody",
-            "-simdjs",
-            "-simd128typespec",
-        ],
-        ..Default::default()
-    };
-    common::run_test(&test);
-}
 
 #[test]
 fn memset2_js() {

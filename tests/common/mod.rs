@@ -20,6 +20,8 @@ pub fn run_test(test: &Test) {
         .arg("-ExtendedErrorStackForTestHost")
         .arg("-BaselineMode")
         .args(&test.compile_flags);
+
+    println!("Running command: {ch:#?}");
     let output = ch.output().unwrap();
 
     let mut out = String::from_utf8(output.stdout).unwrap();
