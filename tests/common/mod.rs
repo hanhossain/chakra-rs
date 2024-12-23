@@ -15,7 +15,9 @@ pub fn run_test(test: &Test) {
 
     let out_dir = PathBuf::from(env!("OUT_DIR"));
     let mut ch = Command::new(out_dir.join("build/ch"));
-    ch.arg(source);
+    ch.arg(source)
+        .arg("-ExtendedErrorStackForTestHost")
+        .arg("-BaselineMode");
 
     let output = ch.output().unwrap();
     let out = String::from_utf8_lossy(&output.stdout);
