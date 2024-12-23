@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-Object.defineProperty(Array.prototype, 2, { get: function () { } });
+Object.defineProperty(Array.prototype, 2, {get: function () { } });
 
 var arr = {};
 arr[0] = {};
@@ -13,4 +13,4 @@ Object.defineProperty(protoObj, 10, {});
 arr.__proto__ = protoObj;
 
 Array.prototype.sort.call(arr);
-print('pass');
+print('Pass');
