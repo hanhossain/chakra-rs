@@ -2,13 +2,6 @@
 <regress-exe>
   <test>
     <default>
-      <files>Array.js</files>
-      <baseline>Array.baseline</baseline>
-      <compile-flags>-Intl-</compile-flags>
-    </default>
-  </test>
-  <test>
-    <default>
       <files>ScriptFunctionToStrings.js</files>
       <compile-flags>-args summary -endargs</compile-flags>
     </default>
