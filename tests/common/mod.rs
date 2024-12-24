@@ -43,15 +43,19 @@ pub fn run_test(test: &Test) {
 
         assert_eq!(actual, expected);
     } else {
+        let mut passed = false;
         for line in &actual {
             let lower = line.to_lowercase();
-            if lower != "pass" && lower != "passed" {
+            if lower != "pass" && lower != "passed" && !lower.is_empty() {
                 panic!(
                     "Test can only print `pass` or `passed`. Actual: {:?}",
                     actual
                 );
+            } else {
+                passed = true;
             }
         }
+        assert!(passed);
     }
 
     assert!(output.status.success());
