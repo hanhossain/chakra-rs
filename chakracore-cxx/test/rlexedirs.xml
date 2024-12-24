@@ -43,7 +43,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>LetConst</files>
   </default>
