@@ -22,6 +22,7 @@ pub fn run_test(test: &Test) {
     ch.arg(source)
         .arg("-ExtendedErrorStackForTestHost")
         .arg("-BaselineMode")
+        .arg("-WERExceptionSupport")
         .args(&test.compile_flags);
 
     println!("Running command: {ch:#?}");

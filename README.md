@@ -35,7 +35,8 @@ open graph.svg
 #[test]
 fn $1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/EH/$1.js",
+        directory: DIRECTORY,
+        source_path: "$1.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -51,8 +52,9 @@ fn $1_js() {
 #[test]
 fn $1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/EH/$1.js",
-        baseline_path: Some("chakracore-cxx/test/EH/$2"),
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
         ..Default::default()
     };
     common::run_test(&test);
