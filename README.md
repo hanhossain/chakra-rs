@@ -60,3 +60,14 @@ fn $1_js() {
     common::run_test(&test);
 }
 ```
+
+### add todo
+```rust
+// <test>
+```
+
+```rust
+
+// TODO (hanhossain): migrate
+// <test>
+```
