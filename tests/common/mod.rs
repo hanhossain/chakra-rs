@@ -43,6 +43,7 @@ pub fn run_test(test: &Test) {
 
         assert_eq!(actual, expected);
     } else {
+        println!("Actual output: {:#?}", actual);
         let mut passed = false;
         for line in &actual {
             let lower = line.to_lowercase();
