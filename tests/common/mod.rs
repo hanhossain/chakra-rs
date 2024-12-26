@@ -13,6 +13,8 @@ pub fn run_test(test: &Test) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let source = manifest_dir.join(test.source_path);
 
+    assert!(source.exists());
+
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
     let mut ch = Command::new(out_dir.join("build/ch"));

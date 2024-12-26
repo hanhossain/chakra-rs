@@ -131,7 +131,7 @@ fn obj_lit_get_set_js() {
 #[test]
 fn obj_lit_get_set2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/ObjLitGetSet2.js",
+        source_path: "chakracore-cxx/test/es5/objlitgetset2.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -140,7 +140,7 @@ fn obj_lit_get_set2_js() {
 #[test]
 fn obj_lit_get_set3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/ObjLitGetSet3.js",
+        source_path: "chakracore-cxx/test/es5/objlitgetset3.js",
         ..Default::default()
     };
     common::run_test(&test);
