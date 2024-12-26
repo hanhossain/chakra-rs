@@ -1,10 +1,12 @@
 mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/Closures";
 
 #[test]
 fn cachedscope_1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/cachedscope_1.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/cachedscope_1.baseline"),
+        directory: DIRECTORY,
+        source_path: "cachedscope_1.js",
+        baseline_path: Some("cachedscope_1.baseline"),
         compile_flags: vec!["-force:cachedscope"],
     };
     common::run_test(&test);
@@ -13,7 +15,8 @@ fn cachedscope_1_js() {
 #[test]
 fn cachedscope_2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/cachedscope_2.js",
+        directory: DIRECTORY,
+        source_path: "cachedscope_2.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -22,8 +25,9 @@ fn cachedscope_2_js() {
 #[test]
 fn closure_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure.js",
+        baseline_path: Some("closure.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -32,8 +36,9 @@ fn closure_js() {
 #[test]
 fn closure_callback_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure-callback.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure-callback.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure-callback.js",
+        baseline_path: Some("closure-callback.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -42,8 +47,9 @@ fn closure_callback_js() {
 #[test]
 fn closure_multiple_1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_multiple_1.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure_multiple_1.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure_multiple_1.js",
+        baseline_path: Some("closure_multiple_1.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -52,8 +58,9 @@ fn closure_multiple_1_js() {
 #[test]
 fn closure_multiple_2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_multiple_2.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure_multiple_2.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure_multiple_2.js",
+        baseline_path: Some("closure_multiple_2.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -62,8 +69,9 @@ fn closure_multiple_2_js() {
 #[test]
 fn closure_binding_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_binding.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure_binding.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure_binding.js",
+        baseline_path: Some("closure_binding.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -72,8 +80,9 @@ fn closure_binding_js() {
 #[test]
 fn closure_binding_2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_binding_2.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure_binding_2.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure_binding_2.js",
+        baseline_path: Some("closure_binding_2.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -82,8 +91,9 @@ fn closure_binding_2_js() {
 #[test]
 fn closure_funcexpr_eval_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure-funcexpr-eval.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure-funcexpr-eval-3.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure-funcexpr-eval.js",
+        baseline_path: Some("closure-funcexpr-eval-3.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -92,8 +102,9 @@ fn closure_funcexpr_eval_js() {
 #[test]
 fn closure_qmark_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure-qmark.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/closure-qmark.baseline"),
+        directory: DIRECTORY,
+        source_path: "closure-qmark.js",
+        baseline_path: Some("closure-qmark.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -102,7 +113,8 @@ fn closure_qmark_js() {
 #[test]
 fn closure_ole_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_ole.js",
+        directory: DIRECTORY,
+        source_path: "closure_ole.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -111,7 +123,8 @@ fn closure_ole_js() {
 #[test]
 fn closure_ole_js_defer_parse() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/closure_ole.js",
+        directory: DIRECTORY,
+        source_path: "closure_ole.js",
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
@@ -149,8 +162,9 @@ fn closure_ole_js_defer_parse() {
 #[test]
 fn initcachedscope_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/initcachedscope.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/initcachedscope.baseline"),
+        directory: DIRECTORY,
+        source_path: "initcachedscope.js",
+        baseline_path: Some("initcachedscope.baseline"),
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
@@ -160,8 +174,9 @@ fn initcachedscope_js() {
 #[test]
 fn invalcachedscope_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/invalcachedscope.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/invalcachedscope.baseline"),
+        directory: DIRECTORY,
+        source_path: "invalcachedscope.js",
+        baseline_path: Some("invalcachedscope.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -190,8 +205,9 @@ fn invalcachedscope_js() {
 #[test]
 fn invalcachedscope_caller_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/invalcachedscope-caller.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/invalcachedscope-caller.baseline"),
+        directory: DIRECTORY,
+        source_path: "invalcachedscope-caller.js",
+        baseline_path: Some("invalcachedscope-caller.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -200,8 +216,9 @@ fn invalcachedscope_caller_js() {
 #[test]
 fn bug_os_2299723_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/bug_OS_2299723.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/bug_OS_2299723.baseline"),
+        directory: DIRECTORY,
+        source_path: "bug_OS_2299723.js",
+        baseline_path: Some("bug_OS_2299723.baseline"),
         compile_flags: vec!["-force:cachedscope"],
     };
     common::run_test(&test);
@@ -210,7 +227,8 @@ fn bug_os_2299723_js() {
 #[test]
 fn bug_os_2671095_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/bug_OS_2671095.js",
+        directory: DIRECTORY,
+        source_path: "bug_OS_2671095.js",
         compile_flags: vec!["-forcedeferparse", "-force:cachedscope"],
         ..Default::default()
     };
@@ -220,7 +238,8 @@ fn bug_os_2671095_js() {
 #[test]
 fn bug_os_2903083_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/bug_OS_2903083.js",
+        directory: DIRECTORY,
+        source_path: "bug_OS_2903083.js",
         compile_flags: vec!["-force:cachedscope"],
         ..Default::default()
     };
@@ -230,7 +249,8 @@ fn bug_os_2903083_js() {
 #[test]
 fn bug_os_9781249_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/bug_OS_9781249.js",
+        directory: DIRECTORY,
+        source_path: "bug_OS_9781249.js",
         compile_flags: vec!["-forcejitloopbody", "-force:inline", "-force:rejit"],
         ..Default::default()
     };
@@ -248,7 +268,8 @@ fn bug_os_9781249_js() {
 #[test]
 fn bug_os_10735999_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/bug_OS_10735999.js",
+        directory: DIRECTORY,
+        source_path: "bug_OS_10735999.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -265,8 +286,9 @@ fn bug_os_10735999_js() {
 #[test]
 fn copy_prop_stack_slot_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/copy-prop-stack-slot.js",
-        baseline_path: Some("chakracore-cxx/test/Closures/copy-prop-stack-slot.baseline"),
+        directory: DIRECTORY,
+        source_path: "copy-prop-stack-slot.js",
+        baseline_path: Some("copy-prop-stack-slot.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -283,7 +305,8 @@ fn copy_prop_stack_slot_js() {
 #[test]
 fn update_funcexpr_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Closures/update-funcexpr.js",
+        directory: DIRECTORY,
+        source_path: "update-funcexpr.js",
         ..Default::default()
     };
     common::run_test(&test);

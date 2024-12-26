@@ -1,10 +1,12 @@
 mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/es5";
 
 #[test]
 fn reserved_words_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/reservedWords.js",
-        baseline_path: Some("chakracore-cxx/test/es5/reservedWords.baseline"),
+        directory: DIRECTORY,
+        source_path: "reservedWords.js",
+        baseline_path: Some("reservedWords.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -13,8 +15,9 @@ fn reserved_words_js() {
 #[test]
 fn lex_u3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/Lex_u3.js",
-        baseline_path: Some("chakracore-cxx/test/es5/Lex_u3.baseline"),
+        directory: DIRECTORY,
+        source_path: "Lex_u3.js",
+        baseline_path: Some("Lex_u3.baseline"),
         compile_flags: vec!["-ES6Unicode-"],
     };
     common::run_test(&test);
@@ -23,8 +26,9 @@ fn lex_u3_js() {
 #[test]
 fn array_every_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_every.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_every.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_every.js",
+        baseline_path: Some("array_every.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -33,8 +37,9 @@ fn array_every_js() {
 #[test]
 fn array_some_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_some.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_some.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_some.js",
+        baseline_path: Some("array_some.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -43,8 +48,9 @@ fn array_some_js() {
 #[test]
 fn array_for_each_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_forEach.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_forEach.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_forEach.js",
+        baseline_path: Some("array_forEach.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -53,7 +59,8 @@ fn array_for_each_js() {
 #[test]
 fn array_map_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_map.js",
+        directory: DIRECTORY,
+        source_path: "array_map.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -62,7 +69,8 @@ fn array_map_js() {
 #[test]
 fn array_filter_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_filter.js",
+        directory: DIRECTORY,
+        source_path: "array_filter.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -71,8 +79,9 @@ fn array_filter_js() {
 #[test]
 fn array_reduce_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_reduce.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_reduce.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_reduce.js",
+        baseline_path: Some("array_reduce.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -81,8 +90,9 @@ fn array_reduce_js() {
 #[test]
 fn array_reduceright_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_reduceright.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_reduceright.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_reduceright.js",
+        baseline_path: Some("array_reduceright.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -91,8 +101,9 @@ fn array_reduceright_js() {
 #[test]
 fn date_get_set9_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/DateGetSet9.js",
-        baseline_path: Some("chakracore-cxx/test/es5/DateGetSet9.baseline"),
+        directory: DIRECTORY,
+        source_path: "DateGetSet9.js",
+        baseline_path: Some("DateGetSet9.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -101,8 +112,9 @@ fn date_get_set9_js() {
 #[test]
 fn semicolon_after_block_es5_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/SemicolonAfterBlockEs5.js",
-        baseline_path: Some("chakracore-cxx/test/es5/SemicolonAfterBlockEs5.baseline"),
+        directory: DIRECTORY,
+        source_path: "SemicolonAfterBlockEs5.js",
+        baseline_path: Some("SemicolonAfterBlockEs5.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -111,8 +123,9 @@ fn semicolon_after_block_es5_js() {
 #[test]
 fn exceptions_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/exceptions.js",
-        baseline_path: Some("chakracore-cxx/test/es5/exceptions3.baseline"),
+        directory: DIRECTORY,
+        source_path: "exceptions.js",
+        baseline_path: Some("exceptions3.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -121,8 +134,9 @@ fn exceptions_js() {
 #[test]
 fn obj_lit_get_set_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/ObjLitGetSet.js",
-        baseline_path: Some("chakracore-cxx/test/es5/ObjLitGetSet.baseline"),
+        directory: DIRECTORY,
+        source_path: "ObjLitGetSet.js",
+        baseline_path: Some("ObjLitGetSet.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -131,7 +145,8 @@ fn obj_lit_get_set_js() {
 #[test]
 fn obj_lit_get_set2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/objlitgetset2.js",
+        directory: DIRECTORY,
+        source_path: "objlitgetset2.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -140,7 +155,8 @@ fn obj_lit_get_set2_js() {
 #[test]
 fn obj_lit_get_set3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/objlitgetset3.js",
+        directory: DIRECTORY,
+        source_path: "objlitgetset3.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -149,8 +165,9 @@ fn obj_lit_get_set3_js() {
 #[test]
 fn obj_lit_get_set_parse_only_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/ObjLitGetSetParseOnly.js",
-        baseline_path: Some("chakracore-cxx/test/es5/ObjLitGetSetParseOnly.baseline"),
+        directory: DIRECTORY,
+        source_path: "ObjLitGetSetParseOnly.js",
+        baseline_path: Some("ObjLitGetSetParseOnly.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -169,8 +186,9 @@ fn obj_lit_get_set_parse_only_js() {
 #[test]
 fn obj_lit_init_fld_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/ObjLitInitFld.js",
-        baseline_path: Some("chakracore-cxx/test/es5/ObjLitInitFld.baseline"),
+        directory: DIRECTORY,
+        source_path: "ObjLitInitFld.js",
+        baseline_path: Some("ObjLitInitFld.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -179,7 +197,8 @@ fn obj_lit_init_fld_js() {
 #[test]
 fn seal_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/seal.js",
+        directory: DIRECTORY,
+        source_path: "seal.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -188,7 +207,8 @@ fn seal_js() {
 #[test]
 fn freeze_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/freeze.js",
+        directory: DIRECTORY,
+        source_path: "freeze.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -197,8 +217,9 @@ fn freeze_js() {
 #[test]
 fn extensible_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/extensible.js",
-        baseline_path: Some("chakracore-cxx/test/es5/extensible.baseline"),
+        directory: DIRECTORY,
+        source_path: "extensible.js",
+        baseline_path: Some("extensible.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -207,8 +228,9 @@ fn extensible_js() {
 #[test]
 fn array_length_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/array_length.js",
-        baseline_path: Some("chakracore-cxx/test/es5/array_length.baseline"),
+        directory: DIRECTORY,
+        source_path: "array_length.js",
+        baseline_path: Some("array_length.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -236,8 +258,9 @@ fn array_length_js() {
 #[test]
 fn createdp_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/createdp.js",
-        baseline_path: Some("chakracore-cxx/test/es5/createdp.baseline"),
+        directory: DIRECTORY,
+        source_path: "createdp.js",
+        baseline_path: Some("createdp.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -246,8 +269,9 @@ fn createdp_js() {
 #[test]
 fn define_property_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/defineProperty.js",
-        baseline_path: Some("chakracore-cxx/test/es5/defineProperty.baseline"),
+        directory: DIRECTORY,
+        source_path: "defineProperty.js",
+        baseline_path: Some("defineProperty.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -266,8 +290,9 @@ fn define_property_js() {
 #[test]
 fn define_index_property_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/defineIndexProperty.js",
-        baseline_path: Some("chakracore-cxx/test/es5/defineIndexProperty.baseline"),
+        directory: DIRECTORY,
+        source_path: "defineIndexProperty.js",
+        baseline_path: Some("defineIndexProperty.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -286,8 +311,9 @@ fn define_index_property_js() {
 #[test]
 fn enumerable_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/enumerable.js",
-        baseline_path: Some("chakracore-cxx/test/es5/enumerable.baseline"),
+        directory: DIRECTORY,
+        source_path: "enumerable.js",
+        baseline_path: Some("enumerable.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -296,8 +322,9 @@ fn enumerable_js() {
 #[test]
 fn has_item_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/hasItem.js",
-        baseline_path: Some("chakracore-cxx/test/es5/hasItem.baseline"),
+        directory: DIRECTORY,
+        source_path: "hasItem.js",
+        baseline_path: Some("hasItem.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -306,8 +333,9 @@ fn has_item_js() {
 #[test]
 fn regex_space_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/regexSpace.js",
-        baseline_path: Some("chakracore-cxx/test/es5/regexSpace.baseline"),
+        directory: DIRECTORY,
+        source_path: "regexSpace.js",
+        baseline_path: Some("regexSpace.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -316,8 +344,9 @@ fn regex_space_js() {
 #[test]
 fn enumerating_with_es5_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/EnumeratingWithES5.js",
-        baseline_path: Some("chakracore-cxx/test/es5/EnumeratingWithES5.baseline"),
+        directory: DIRECTORY,
+        source_path: "EnumeratingWithES5.js",
+        baseline_path: Some("EnumeratingWithES5.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -326,8 +355,9 @@ fn enumerating_with_es5_js() {
 #[test]
 fn insufficient_arguments_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/InsufficientArguments.js",
-        baseline_path: Some("chakracore-cxx/test/es5/InsufficientArguments.baseline"),
+        directory: DIRECTORY,
+        source_path: "InsufficientArguments.js",
+        baseline_path: Some("InsufficientArguments.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -336,8 +366,9 @@ fn insufficient_arguments_js() {
 #[test]
 fn recursivesetter_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/recursivesetter.js",
-        baseline_path: Some("chakracore-cxx/test/es5/recursivesetter.baseline"),
+        directory: DIRECTORY,
+        source_path: "recursivesetter.js",
+        baseline_path: Some("recursivesetter.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -346,8 +377,9 @@ fn recursivesetter_js() {
 #[test]
 fn valueof_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/valueof.js",
-        baseline_path: Some("chakracore-cxx/test/es5/valueof5.baseline"),
+        directory: DIRECTORY,
+        source_path: "valueof.js",
+        baseline_path: Some("valueof5.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -356,7 +388,8 @@ fn valueof_js() {
 #[test]
 fn tostring_override_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/tostring_override.js",
+        directory: DIRECTORY,
+        source_path: "tostring_override.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -365,7 +398,8 @@ fn tostring_override_js() {
 #[test]
 fn valueof_override_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/valueof_override.js",
+        directory: DIRECTORY,
+        source_path: "valueof_override.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -374,7 +408,8 @@ fn valueof_override_js() {
 #[test]
 fn tostring_override_js_force_string_keyed_simple_dictionary_type_handler() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/tostring_override.js",
+        directory: DIRECTORY,
+        source_path: "tostring_override.js",
         compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
         ..Default::default()
     };
@@ -384,7 +419,8 @@ fn tostring_override_js_force_string_keyed_simple_dictionary_type_handler() {
 #[test]
 fn valueof_override_js_force_string_keyed_simple_dictionary_type_handler() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/valueof_override.js",
+        directory: DIRECTORY,
+        source_path: "valueof_override.js",
         compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
         ..Default::default()
     };
@@ -394,8 +430,9 @@ fn valueof_override_js_force_string_keyed_simple_dictionary_type_handler() {
 #[test]
 fn type_conversions_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/TypeConversions.js",
-        baseline_path: Some("chakracore-cxx/test/es5/TypeConversions.baseline"),
+        directory: DIRECTORY,
+        source_path: "TypeConversions.js",
+        baseline_path: Some("TypeConversions.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -404,8 +441,9 @@ fn type_conversions_js() {
 #[test]
 fn reg_exp_strict_delete_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/RegExpStrictDelete.js",
-        baseline_path: Some("chakracore-cxx/test/es5/RegExpStrictDelete.baseline"),
+        directory: DIRECTORY,
+        source_path: "RegExpStrictDelete.js",
+        baseline_path: Some("RegExpStrictDelete.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -414,8 +452,9 @@ fn reg_exp_strict_delete_js() {
 #[test]
 fn setters_arguments_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/settersArguments.js",
-        baseline_path: Some("chakracore-cxx/test/es5/settersArguments.baseline"),
+        directory: DIRECTORY,
+        source_path: "settersArguments.js",
+        baseline_path: Some("settersArguments.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -434,8 +473,9 @@ fn setters_arguments_js() {
 #[test]
 fn augment_primitive_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/augmentPrimitive.js",
-        baseline_path: Some("chakracore-cxx/test/es5/augmentPrimitive.baseline"),
+        directory: DIRECTORY,
+        source_path: "augmentPrimitive.js",
+        baseline_path: Some("augmentPrimitive.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -444,8 +484,9 @@ fn augment_primitive_js() {
 #[test]
 fn setget_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/setget.js",
-        baseline_path: Some("chakracore-cxx/test/es5/setget.baseline"),
+        directory: DIRECTORY,
+        source_path: "setget.js",
+        baseline_path: Some("setget.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -454,8 +495,9 @@ fn setget_js() {
 #[test]
 fn es5array_objproto_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_objproto.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_objproto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_objproto.js",
+        baseline_path: Some("es5array_objproto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -464,7 +506,8 @@ fn es5array_objproto_js() {
 #[test]
 fn es5array_objproto_builtin_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_objproto_builtin.js",
+        directory: DIRECTORY,
+        source_path: "es5array_objproto_builtin.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -473,8 +516,9 @@ fn es5array_objproto_builtin_js() {
 #[test]
 fn es5array_arrayproto_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_arrayproto.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_arrayproto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_arrayproto.js",
+        baseline_path: Some("es5array_arrayproto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -483,8 +527,9 @@ fn es5array_arrayproto_js() {
 #[test]
 fn es5array_arrayproto_opt_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_arrayproto_opt.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_arrayproto_opt.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_arrayproto_opt.js",
+        baseline_path: Some("es5array_arrayproto_opt.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -493,8 +538,9 @@ fn es5array_arrayproto_opt_js() {
 #[test]
 fn es5array_arrayproto_crosssite_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_arrayproto_crosssite.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_arrayproto_crosssite.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_arrayproto_crosssite.js",
+        baseline_path: Some("es5array_arrayproto_crosssite.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -503,8 +549,9 @@ fn es5array_arrayproto_crosssite_js() {
 #[test]
 fn es5array_protoarr_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_protoarr.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_proto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_protoarr.js",
+        baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -513,8 +560,9 @@ fn es5array_protoarr_js() {
 #[test]
 fn es5array_protoobj_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_protoobj.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_proto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_protoobj.js",
+        baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -523,8 +571,9 @@ fn es5array_protoobj_js() {
 #[test]
 fn es5array_protoobj_crosssite_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_protoobj_crosssite.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_protoobj_crosssite.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_protoobj_crosssite.js",
+        baseline_path: Some("es5array_protoobj_crosssite.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -533,8 +582,9 @@ fn es5array_protoobj_crosssite_js() {
 #[test]
 fn es5array_replaceprotoarr_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_replaceprotoarr.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_proto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_replaceprotoarr.js",
+        baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -543,8 +593,9 @@ fn es5array_replaceprotoarr_js() {
 #[test]
 fn es5array_replaceprotoobj_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_replaceprotoobj.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_proto.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_replaceprotoobj.js",
+        baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -553,7 +604,8 @@ fn es5array_replaceprotoobj_js() {
 #[test]
 fn resetproperty_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/resetproperty.js",
+        directory: DIRECTORY,
+        source_path: "resetproperty.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -562,8 +614,9 @@ fn resetproperty_js() {
 #[test]
 fn es5array_enum_edit_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5array_enum_edit.js",
-        baseline_path: Some("chakracore-cxx/test/es5/es5array_enum_edit.baseline"),
+        directory: DIRECTORY,
+        source_path: "es5array_enum_edit.js",
+        baseline_path: Some("es5array_enum_edit.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -572,7 +625,8 @@ fn es5array_enum_edit_js() {
 #[test]
 fn es5_define_property_array_length_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/es5_defineProperty_arrayLength.js",
+        directory: DIRECTORY,
+        source_path: "es5_defineProperty_arrayLength.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -581,7 +635,8 @@ fn es5_define_property_array_length_js() {
 #[test]
 fn strictdefaultsetter_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/es5/strictdefaultsetter.js",
+        directory: DIRECTORY,
+        source_path: "strictdefaultsetter.js",
         ..Default::default()
     };
     common::run_test(&test);
