@@ -4,6 +4,7 @@ use std::process::Command;
 
 #[derive(Debug, Default)]
 pub struct Test {
+    pub directory: &'static str,
     pub source_path: &'static str,
     pub baseline_path: Option<&'static str>,
     pub compile_flags: Vec<&'static str>,
@@ -11,7 +12,7 @@ pub struct Test {
 
 pub fn run_test(test: &Test) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let source = manifest_dir.join(test.source_path);
+    let source = manifest_dir.join(test.directory).join(test.source_path);
 
     assert!(source.exists());
 
@@ -21,6 +22,7 @@ pub fn run_test(test: &Test) {
     ch.arg(source)
         .arg("-ExtendedErrorStackForTestHost")
         .arg("-BaselineMode")
+        .arg("-WERExceptionSupport")
         .args(&test.compile_flags);
 
     println!("Running command: {ch:#?}");
@@ -36,7 +38,7 @@ pub fn run_test(test: &Test) {
         .collect::<Vec<_>>();
 
     if let Some(baseline_path) = test.baseline_path {
-        let baseline = manifest_dir.join(baseline_path);
+        let baseline = manifest_dir.join(test.directory).join(baseline_path);
         let expected = read_to_string(baseline).unwrap();
         let expected = expected
             .lines()

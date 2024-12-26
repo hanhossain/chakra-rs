@@ -1,10 +1,12 @@
 mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/Basics";
 
 #[test]
 fn array_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Array.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Array.baseline"),
+        directory: DIRECTORY,
+        source_path: "Array.js",
+        baseline_path: Some("Array.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -13,7 +15,8 @@ fn array_js() {
 #[test]
 fn script_function_to_strings_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/ScriptFunctionToStrings.js",
+        directory: DIRECTORY,
+        source_path: "ScriptFunctionToStrings.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
@@ -32,8 +35,9 @@ fn script_function_to_strings_js() {
 #[test]
 fn array_concat_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/ArrayConcat.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/ArrayConcat.baseline"),
+        directory: DIRECTORY,
+        source_path: "ArrayConcat.js",
+        baseline_path: Some("ArrayConcat.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -42,8 +46,9 @@ fn array_concat_js() {
 #[test]
 fn arrayinit_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/arrayinit.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/arrayinit.baseline"),
+        directory: DIRECTORY,
+        source_path: "arrayinit.js",
+        baseline_path: Some("arrayinit.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -52,8 +57,9 @@ fn arrayinit_js() {
 #[test]
 fn ids_with_escapes_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/IdsWithEscapes.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/IdsWithEscapes.baseline"),
+        directory: DIRECTORY,
+        source_path: "IdsWithEscapes.js",
+        baseline_path: Some("IdsWithEscapes.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -62,8 +68,9 @@ fn ids_with_escapes_js() {
 #[test]
 fn array_resize_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/ArrayResize.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/ArrayResize.baseline"),
+        directory: DIRECTORY,
+        source_path: "ArrayResize.js",
+        baseline_path: Some("ArrayResize.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -72,8 +79,9 @@ fn array_resize_js() {
 #[test]
 fn direct_call_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/DirectCall.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/DirectCall.baseline"),
+        directory: DIRECTORY,
+        source_path: "DirectCall.js",
+        baseline_path: Some("DirectCall.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -82,8 +90,9 @@ fn direct_call_js() {
 #[test]
 fn equal_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/equal.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/equal.baseline"),
+        directory: DIRECTORY,
+        source_path: "equal.js",
+        baseline_path: Some("equal.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -92,8 +101,9 @@ fn equal_js() {
 #[test]
 fn equal_object_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/equal_object.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/equal_object.baseline"),
+        directory: DIRECTORY,
+        source_path: "equal_object.js",
+        baseline_path: Some("equal_object.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -102,7 +112,8 @@ fn equal_object_js() {
 #[test]
 fn labels_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Labels.js",
+        directory: DIRECTORY,
+        source_path: "Labels.js",
         compile_flags: vec!["-MuteHostErrorMsg", "-args", "summary", "-endargs"],
         ..Default::default()
     };
@@ -112,8 +123,9 @@ fn labels_js() {
 #[test]
 fn length_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Length.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Length.baseline"),
+        directory: DIRECTORY,
+        source_path: "Length.js",
+        baseline_path: Some("Length.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -122,8 +134,9 @@ fn length_js() {
 #[test]
 fn logical_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Logical.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Logical.baseline"),
+        directory: DIRECTORY,
+        source_path: "Logical.js",
+        baseline_path: Some("Logical.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -132,8 +145,9 @@ fn logical_js() {
 #[test]
 fn parameter_order_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/ParameterOrder.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/ParameterOrder.baseline"),
+        directory: DIRECTORY,
+        source_path: "ParameterOrder.js",
+        baseline_path: Some("ParameterOrder.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -142,8 +156,9 @@ fn parameter_order_js() {
 #[test]
 fn parameters_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Parameters.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Parameters.baseline"),
+        directory: DIRECTORY,
+        source_path: "Parameters.js",
+        baseline_path: Some("Parameters.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -152,8 +167,9 @@ fn parameters_js() {
 #[test]
 fn string_char_code_at_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/StringCharCodeAt.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/StringCharCodeAt.baseline"),
+        directory: DIRECTORY,
+        source_path: "StringCharCodeAt.js",
+        baseline_path: Some("StringCharCodeAt.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -162,8 +178,9 @@ fn string_char_code_at_js() {
 #[test]
 fn string_field_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/StringField.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/StringField.baseline"),
+        directory: DIRECTORY,
+        source_path: "StringField.js",
+        baseline_path: Some("StringField.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -172,8 +189,9 @@ fn string_field_js() {
 #[test]
 fn string_from_char_code_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/StringFromCharCode.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/StringFromCharCode.baseline"),
+        directory: DIRECTORY,
+        source_path: "StringFromCharCode.js",
+        baseline_path: Some("StringFromCharCode.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -182,8 +200,9 @@ fn string_from_char_code_js() {
 #[test]
 fn string_substring_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/StringSubstring.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/StringSubstring.baseline"),
+        directory: DIRECTORY,
+        source_path: "StringSubstring.js",
+        baseline_path: Some("StringSubstring.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -192,8 +211,9 @@ fn string_substring_js() {
 #[test]
 fn switch_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/switch.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/switch.baseline"),
+        directory: DIRECTORY,
+        source_path: "switch.js",
+        baseline_path: Some("switch.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -202,8 +222,9 @@ fn switch_js() {
 #[test]
 fn switch2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Switch2.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/switch2.baseline"),
+        directory: DIRECTORY,
+        source_path: "Switch2.js",
+        baseline_path: Some("switch2.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -212,7 +233,8 @@ fn switch2_js() {
 #[test]
 fn typeof_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/typeof.js",
+        directory: DIRECTORY,
+        source_path: "typeof.js",
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
@@ -222,8 +244,9 @@ fn typeof_js() {
 #[test]
 fn typeofcombi_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/typeofcombi.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/typeofcombi.baseline"),
+        directory: DIRECTORY,
+        source_path: "typeofcombi.js",
+        baseline_path: Some("typeofcombi.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -232,8 +255,9 @@ fn typeofcombi_js() {
 #[test]
 fn type_promotion_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/TypePromotion.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/TypePromotion.baseline"),
+        directory: DIRECTORY,
+        source_path: "TypePromotion.js",
+        baseline_path: Some("TypePromotion.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -242,8 +266,9 @@ fn type_promotion_js() {
 #[test]
 fn undefined_vs_null_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/UndefinedVsNull.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/UndefinedVsNull.baseline"),
+        directory: DIRECTORY,
+        source_path: "UndefinedVsNull.js",
+        baseline_path: Some("UndefinedVsNull.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -252,8 +277,9 @@ fn undefined_vs_null_js() {
 #[test]
 fn with_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/With.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/With.baseline"),
+        directory: DIRECTORY,
+        source_path: "With.js",
+        baseline_path: Some("With.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -262,8 +288,9 @@ fn with_js() {
 #[test]
 fn with_js_defer_parse() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/With.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/With.baseline"),
+        directory: DIRECTORY,
+        source_path: "With.js",
+        baseline_path: Some("With.baseline"),
         compile_flags: vec!["-force:deferparse"],
     };
     common::run_test(&test);
@@ -272,7 +299,8 @@ fn with_js_defer_parse() {
 #[test]
 fn with_defer_block_scope_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/With-defer-block-scope.js",
+        directory: DIRECTORY,
+        source_path: "With-defer-block-scope.js",
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
@@ -282,7 +310,8 @@ fn with_defer_block_scope_js() {
 #[test]
 fn with_bug940841_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/withBug940841.js",
+        directory: DIRECTORY,
+        source_path: "withBug940841.js",
         compile_flags: vec!["-MaxinterpretCount:1", "-MaxSimpleJITRunCount:1"],
         ..Default::default()
     };
@@ -292,7 +321,8 @@ fn with_bug940841_js() {
 #[test]
 fn with_bug940841_2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/withBug940841_2.js",
+        directory: DIRECTORY,
+        source_path: "withBug940841_2.js",
         compile_flags: vec!["-MaxinterpretCount:0", "-MaxSimpleJITRunCount:1"],
         ..Default::default()
     };
@@ -302,8 +332,9 @@ fn with_bug940841_2_js() {
 #[test]
 fn with2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/With2.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/With2.baseline"),
+        directory: DIRECTORY,
+        source_path: "With2.js",
+        baseline_path: Some("With2.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -312,8 +343,9 @@ fn with2_js() {
 #[test]
 fn witheval_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/witheval.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/witheval.baseline"),
+        directory: DIRECTORY,
+        source_path: "witheval.js",
+        baseline_path: Some("witheval.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -322,8 +354,9 @@ fn witheval_js() {
 #[test]
 fn ternary_operator_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/TernaryOperator.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/TernaryOperator.baseline"),
+        directory: DIRECTORY,
+        source_path: "TernaryOperator.js",
+        baseline_path: Some("TernaryOperator.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -332,8 +365,9 @@ fn ternary_operator_js() {
 #[test]
 fn delete_property1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/DeleteProperty1.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/DeleteProperty1.baseline"),
+        directory: DIRECTORY,
+        source_path: "DeleteProperty1.js",
+        baseline_path: Some("DeleteProperty1.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -342,7 +376,8 @@ fn delete_property1_js() {
 #[test]
 fn delete_and_re_add_non_extensible_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/DeleteAndReAddNonExtensible.js",
+        directory: DIRECTORY,
+        source_path: "DeleteAndReAddNonExtensible.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -351,8 +386,9 @@ fn delete_and_re_add_non_extensible_js() {
 #[test]
 fn accessors_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Accessors.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Accessors.baseline"),
+        directory: DIRECTORY,
+        source_path: "Accessors.js",
+        baseline_path: Some("Accessors.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -361,8 +397,9 @@ fn accessors_js() {
 #[test]
 fn defprop_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/DefProp.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/DefProp.baseline"),
+        directory: DIRECTORY,
+        source_path: "DefProp.js",
+        baseline_path: Some("DefProp.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -371,8 +408,9 @@ fn defprop_js() {
 #[test]
 fn scopedaccessors_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/scopedaccessors.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/scopedaccessors.baseline"),
+        directory: DIRECTORY,
+        source_path: "scopedaccessors.js",
+        baseline_path: Some("scopedaccessors.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -381,8 +419,9 @@ fn scopedaccessors_js() {
 #[test]
 fn flags_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/flags.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/flagsES5.baseline"),
+        directory: DIRECTORY,
+        source_path: "flags.js",
+        baseline_path: Some("flagsES5.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -391,8 +430,9 @@ fn flags_js() {
 #[test]
 fn branching_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/Branching.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/Branching.baseline"),
+        directory: DIRECTORY,
+        source_path: "Branching.js",
+        baseline_path: Some("Branching.baseline"),
         compile_flags: vec!["-Intl-"],
     };
     common::run_test(&test);
@@ -401,8 +441,9 @@ fn branching_js() {
 #[test]
 fn inlinecache_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/inlinecache.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/inlinecache.baseline"),
+        directory: DIRECTORY,
+        source_path: "inlinecache.js",
+        baseline_path: Some("inlinecache.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -411,8 +452,9 @@ fn inlinecache_js() {
 #[test]
 fn scan_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/scan.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/scan.baseline"),
+        directory: DIRECTORY,
+        source_path: "scan.js",
+        baseline_path: Some("scan.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -421,8 +463,9 @@ fn scan_js() {
 #[test]
 fn enum_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/enum.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/enum.baseline"),
+        directory: DIRECTORY,
+        source_path: "enum.js",
+        baseline_path: Some("enum.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -431,8 +474,9 @@ fn enum_js() {
 #[test]
 fn with3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/with3.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/with3.baseline"),
+        directory: DIRECTORY,
+        source_path: "with3.js",
+        baseline_path: Some("with3.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -441,7 +485,8 @@ fn with3_js() {
 #[test]
 fn cross_site_accessor_main_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/cross_site_accessor_main.js",
+        directory: DIRECTORY,
+        source_path: "cross_site_accessor_main.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -450,8 +495,9 @@ fn cross_site_accessor_main_js() {
 #[test]
 fn bug650104_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/bug650104.js",
-        baseline_path: Some("chakracore-cxx/test/Basics/bug650104.baseline"),
+        directory: DIRECTORY,
+        source_path: "bug650104.js",
+        baseline_path: Some("bug650104.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -460,7 +506,8 @@ fn bug650104_js() {
 #[test]
 fn special_symbol_capture_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/SpecialSymbolCapture.js",
+        directory: DIRECTORY,
+        source_path: "SpecialSymbolCapture.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
@@ -508,7 +555,8 @@ fn special_symbol_capture_js() {
 #[test]
 fn float_comparison_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/Basics/FloatComparison.js",
+        directory: DIRECTORY,
+        source_path: "FloatComparison.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
