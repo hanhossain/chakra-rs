@@ -165,7 +165,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>GlobalFunctions</files>
   </default>
