@@ -25,6 +25,17 @@ dot -Tsvg -o graph.svg graph.dot
 open graph.svg
 ```
 
+### add todo
+```rust
+// <test>
+```
+
+```rust
+
+// TODO (hanhossain): migrate
+// <test>
+```
+
 ## Migrate tests
 ### files only
 ```re
@@ -95,15 +106,4 @@ fn $1_js() {
     };
     common::run_test(&test);
 }
-```
-
-### add todo
-```rust
-// <test>
-```
-
-```rust
-
-// TODO (hanhossain): migrate
-// <test>
 ```
