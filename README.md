@@ -25,6 +25,7 @@ dot -Tsvg -o graph.svg graph.dot
 open graph.svg
 ```
 
+## Migrate tests
 ### add todo
 ```rust
 // <test>
@@ -36,7 +37,6 @@ open graph.svg
 // <test>
 ```
 
-## Migrate tests
 ### files only
 ```re
 // TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*</default>\n.*</test>
@@ -106,4 +106,23 @@ fn $1_js() {
     };
     common::run_test(&test);
 }
+```
+
+
+### replace compile flags todos with spaces (until done)
+```re
+todo!\("(\S+) 
+```
+
+```rust
+"$1",todo!("
+```
+
+### replace compile flags todos with no spaces
+```re
+todo!\(("\S+")\)
+```
+
+```rust
+$1
 ```
