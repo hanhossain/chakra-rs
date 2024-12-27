@@ -210,7 +210,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>UnifiedRegex</files>
   </default>
