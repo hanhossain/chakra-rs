@@ -26,6 +26,17 @@ open graph.svg
 ```
 
 ## Migrate tests
+### add todo
+```rust
+// <test>
+```
+
+```rust
+
+// TODO (hanhossain): migrate
+// <test>
+```
+
 ### files only
 ```re
 // TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*</default>\n.*</test>
@@ -61,17 +72,57 @@ fn $1_js() {
 }
 ```
 
-### add todo
-```rust
-
-// TODO (hanhossain): migrate
-// <test>
+### files and compile flags
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<compile-flags>(.*)</compile-flags>\n.*</default>\n.*</test>
 ```
 
 ```rust
+#[test]
+fn $1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec![todo!("$2")],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+```
 
-// TODO (hanhossain): migrate
+### files, baseline, and compile flags
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<baseline>(.*)</baseline>\n.*<compile-flags>(.*)</compile-flags>\n.*</default>\n.*</test>
+```
 
-// TODO (hanhossain): migrate
-// <test>
+```rust
+#[test]
+fn $1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
+        compile_flags: vec![todo!("$3")],
+    };
+    common::run_test(&test);
+}
+```
+
+
+### replace compile flags todos with spaces (until done)
+```re
+todo!\("(\S+) 
+```
+
+```rust
+"$1",todo!("
+```
+
+### replace compile flags todos with no spaces
+```re
+todo!\(("\S+")\)
+```
+
+```rust
+$1
 ```

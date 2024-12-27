@@ -13,6 +13,7 @@ pub struct Test {
 pub fn run_test(test: &Test) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let source = manifest_dir.join(test.directory).join(test.source_path);
+    println!("source_path: {:?}", source);
 
     assert!(source.exists());
 
