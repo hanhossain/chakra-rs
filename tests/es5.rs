@@ -19,6 +19,7 @@ fn lex_u3_js() {
         source_path: "Lex_u3.js",
         baseline_path: Some("Lex_u3.baseline"),
         compile_flags: vec!["-ES6Unicode-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

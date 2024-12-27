@@ -245,6 +245,7 @@ fn newsideeffect_js_defer_parse() {
         source_path: "newsideeffect.js",
         baseline_path: Some("newsideeffect.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -278,6 +279,7 @@ fn defernested_js_defer_parse() {
         source_path: "defernested.js",
         baseline_path: Some("defernested.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -289,6 +291,7 @@ fn jit_loop_body_js() {
         source_path: "jitLoopBody.js",
         baseline_path: Some("jitLoopBody.baseline"),
         compile_flags: vec!["-force:jitLoopBody"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -455,6 +458,7 @@ fn to_string_all_js_defer_parse() {
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
         compile_flags: vec!["-force:DeferParse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -466,6 +470,7 @@ fn to_string_all_js_defer_parse_force_serialized() {
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
         compile_flags: vec!["-force:DeferParse", "-ForceSerialized"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -481,6 +486,7 @@ fn to_string_all_js_defer_parse_parser_state_cache() {
             "-UseParserStateCache",
             "-ParserStateCache",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -514,6 +520,7 @@ fn more_func_expr_js_force_undo_defer() {
         source_path: "moreFuncExpr.js",
         baseline_path: Some("moreFuncExpr3.baseline"),
         compile_flags: vec!["-forceundodefer"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -601,6 +608,7 @@ fn func_body_bug227901_js() {
         source_path: "FuncBody.bug227901.js",
         baseline_path: Some("FuncBody.bug227901.baseline"),
         compile_flags: vec!["-off:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -612,6 +620,7 @@ fn func_body_bug232281_js() {
         source_path: "FuncBody.bug232281.js",
         baseline_path: Some("FuncBody.bug232281.baseline"),
         compile_flags: vec!["-off:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

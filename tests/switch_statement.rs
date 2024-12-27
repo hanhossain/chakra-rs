@@ -134,6 +134,7 @@ fn implicit_call_switch_expr_js() {
             "-bgjit-",
             "-loopinterpretcount:0",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -145,6 +146,7 @@ fn simple_switch_js() {
         source_path: "simpleSwitch.js",
         baseline_path: Some("simpleSwitch.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -169,6 +171,7 @@ fn amd64jscript_number_regression_js() {
             "-off:simpleJit",
             "-off:aggressiveinttypespec",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -195,6 +198,7 @@ fn string_dictionary_bail_on_no_profile_bug_js() {
             "-off:simplejit",
             "-MaxLinearStringCaseCount:2",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -211,6 +215,7 @@ fn jmp_table_test1_js() {
             "-MinSwitchJumpTableSize:2",
             "-MaxLinearIntCaseCount:1",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -238,6 +243,7 @@ fn jmp_table_test2_js() {
             "-MinSwitchJumpTableSize:1",
             "-MaxLinearIntCaseCount:1",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }

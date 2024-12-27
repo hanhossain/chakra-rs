@@ -328,6 +328,7 @@ fn prototype_inheritance2_js() {
         source_path: "prototypeInheritance2.js",
         baseline_path: Some("prototypeInheritance2.baseline"),
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

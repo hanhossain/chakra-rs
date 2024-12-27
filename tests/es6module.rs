@@ -269,6 +269,7 @@ fn bug_os18460517_js() {
             "-maxsimplejitruncount:2",
             "-force:rejit",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }

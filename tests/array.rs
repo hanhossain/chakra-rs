@@ -180,6 +180,7 @@ fn array_btree_bad_code_gen_js() {
         source_path: "ArrayBtreeBadCodeGen.js",
         baseline_path: Some("ArrayBtreeBadCodeGen.baseline"),
         compile_flags: vec!["-ForceArrayBTree"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -479,6 +480,7 @@ fn push2_js() {
         source_path: "push2.js",
         baseline_path: Some("push2.baseline"),
         compile_flags: vec!["-es6toLength"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -737,6 +739,7 @@ fn array_index_of_js_force_array_btree() {
         source_path: "array_indexOf.js",
         baseline_path: Some("array_indexOf.baseline"),
         compile_flags: vec!["-ForceArrayBTree"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -748,6 +751,7 @@ fn array_index_of_js_force_array_jsbuiltin() {
         source_path: "array_indexOf.js",
         baseline_path: Some("array_indexOf.baseline"),
         compile_flags: vec!["-JsBuiltIn-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -968,6 +972,7 @@ fn native_array_push_inlining_js() {
             "-off:arraycheckhoist",
             "-off:fixedmethods",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1012,6 +1017,7 @@ fn missing_item_fast_path_check_js() {
         source_path: "missingItemFastPathCheck.js",
         baseline_path: Some("missingItemFastPathCheck.baseline"),
         compile_flags: vec!["-maxinterpretcount:1"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1093,6 +1099,7 @@ fn inline_array_pop_with_int_const_src_js() {
         source_path: "InlineArrayPopWithIntConstSrc.js",
         baseline_path: Some("InlineArrayPopWithIntConstSrc.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

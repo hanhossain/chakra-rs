@@ -8,6 +8,7 @@ fn has_only_writable_data_properties_cache_js() {
         source_path: "HasOnlyWritableDataPropertiesCache.js",
         baseline_path: Some("HasOnlyWritableDataPropertiesCache.baseline"),
         compile_flags: vec!["-CollectGarbage"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

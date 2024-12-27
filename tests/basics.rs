@@ -8,6 +8,7 @@ fn array_js() {
         source_path: "Array.js",
         baseline_path: Some("Array.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -39,6 +40,7 @@ fn array_concat_js() {
         source_path: "ArrayConcat.js",
         baseline_path: Some("ArrayConcat.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -50,6 +52,7 @@ fn arrayinit_js() {
         source_path: "arrayinit.js",
         baseline_path: Some("arrayinit.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -61,6 +64,7 @@ fn ids_with_escapes_js() {
         source_path: "IdsWithEscapes.js",
         baseline_path: Some("IdsWithEscapes.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -72,6 +76,7 @@ fn array_resize_js() {
         source_path: "ArrayResize.js",
         baseline_path: Some("ArrayResize.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -83,6 +88,7 @@ fn direct_call_js() {
         source_path: "DirectCall.js",
         baseline_path: Some("DirectCall.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -94,6 +100,7 @@ fn equal_js() {
         source_path: "equal.js",
         baseline_path: Some("equal.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -105,6 +112,7 @@ fn equal_object_js() {
         source_path: "equal_object.js",
         baseline_path: Some("equal_object.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -127,6 +135,7 @@ fn length_js() {
         source_path: "Length.js",
         baseline_path: Some("Length.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -138,6 +147,7 @@ fn logical_js() {
         source_path: "Logical.js",
         baseline_path: Some("Logical.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -149,6 +159,7 @@ fn parameter_order_js() {
         source_path: "ParameterOrder.js",
         baseline_path: Some("ParameterOrder.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -160,6 +171,7 @@ fn parameters_js() {
         source_path: "Parameters.js",
         baseline_path: Some("Parameters.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -171,6 +183,7 @@ fn string_char_code_at_js() {
         source_path: "StringCharCodeAt.js",
         baseline_path: Some("StringCharCodeAt.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -182,6 +195,7 @@ fn string_field_js() {
         source_path: "StringField.js",
         baseline_path: Some("StringField.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -193,6 +207,7 @@ fn string_from_char_code_js() {
         source_path: "StringFromCharCode.js",
         baseline_path: Some("StringFromCharCode.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -204,6 +219,7 @@ fn string_substring_js() {
         source_path: "StringSubstring.js",
         baseline_path: Some("StringSubstring.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -215,6 +231,7 @@ fn switch_js() {
         source_path: "switch.js",
         baseline_path: Some("switch.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -226,6 +243,7 @@ fn switch2_js() {
         source_path: "Switch2.js",
         baseline_path: Some("switch2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -248,6 +266,7 @@ fn typeofcombi_js() {
         source_path: "typeofcombi.js",
         baseline_path: Some("typeofcombi.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -259,6 +278,7 @@ fn type_promotion_js() {
         source_path: "TypePromotion.js",
         baseline_path: Some("TypePromotion.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -270,6 +290,7 @@ fn undefined_vs_null_js() {
         source_path: "UndefinedVsNull.js",
         baseline_path: Some("UndefinedVsNull.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -292,6 +313,7 @@ fn with_js_defer_parse() {
         source_path: "With.js",
         baseline_path: Some("With.baseline"),
         compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -347,6 +369,7 @@ fn witheval_js() {
         source_path: "witheval.js",
         baseline_path: Some("witheval.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -358,6 +381,7 @@ fn ternary_operator_js() {
         source_path: "TernaryOperator.js",
         baseline_path: Some("TernaryOperator.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -369,6 +393,7 @@ fn delete_property1_js() {
         source_path: "DeleteProperty1.js",
         baseline_path: Some("DeleteProperty1.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -434,6 +459,7 @@ fn branching_js() {
         source_path: "Branching.js",
         baseline_path: Some("Branching.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

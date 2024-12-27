@@ -364,6 +364,7 @@ fn for_in_error_js() {
         source_path: "forIn.error.js",
         baseline_path: Some("forIn.error.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -499,6 +500,7 @@ fn object_header_inlining_other_instrs_js() {
         source_path: "ObjectHeaderInlining_otherInstrs.js",
         baseline_path: Some("ObjectHeaderInlining_otherInstrs.baseline"),
         compile_flags: vec!["-off:simplejit", "-mic:2"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -510,6 +512,7 @@ fn object_header_inlining_js() {
         source_path: "ObjectHeaderInlining.js",
         baseline_path: Some("ObjectHeaderInlining.baseline"),
         compile_flags: vec!["-off:simplejit", "-mic:2"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -570,6 +573,7 @@ fn object_header_inlining_obj_array_fast_path_js() {
         source_path: "ObjectHeaderInlining_objArrayFastPath.js",
         baseline_path: Some("ObjectHeaderInlining_objArrayFastPath.baseline"),
         compile_flags: vec!["-mic:2", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -581,6 +585,7 @@ fn object_header_inlining_st_fld_opt_js() {
         source_path: "ObjectHeaderInlining_StFldOpt.js",
         baseline_path: Some("ObjectHeaderInlining_StFldOpt.baseline"),
         compile_flags: vec!["-mic:2", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -637,6 +642,7 @@ fn for_in_inline_js() {
         source_path: "ForInInline.js",
         baseline_path: Some("ForInInline.baseline"),
         compile_flags: vec!["-loopinterpretcount:1", "-force:inline", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -656,6 +662,7 @@ fn assign_js() {
         source_path: "assign.js",
         baseline_path: Some("assign.baseline"),
         compile_flags: vec!["-args", "summary", "-endargs", "-trace:ObjectCopy"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

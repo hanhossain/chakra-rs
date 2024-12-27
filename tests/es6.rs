@@ -407,6 +407,7 @@ fn blockscope_deferred_js_deferparse() {
         source_path: "blockscope-deferred.js",
         baseline_path: Some("blockscope-deferred.baseline"),
         compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -429,6 +430,7 @@ fn blockscope_functionbinding_js_deferparse() {
         source_path: "blockscope-functionbinding.js",
         baseline_path: Some("blockscope-functionbinding.baseline"),
         compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -537,6 +539,7 @@ fn letconst_eval_redecl_js_forcestrictmode() {
         source_path: "letconst_eval_redecl.js",
         baseline_path: Some("letconst_eval_redecl.strictmode.baseline"),
         compile_flags: vec!["-forcestrictmode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -708,6 +711,7 @@ fn es6subclassable_async_js() {
         source_path: "ES6SubclassableAsync.js",
         baseline_path: Some("ES6SubclassableAsync.baseline"),
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Off:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -719,6 +723,7 @@ fn es6subclassable_async_js_force_defer_parse() {
         source_path: "ES6SubclassableAsync.js",
         baseline_path: Some("ES6SubclassableAsync.baseline"),
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -780,6 +785,7 @@ fn code_point_at_js() {
         source_path: "codePointAt.js",
         baseline_path: Some("codePointAt.baseline"),
         compile_flags: vec!["-ES6Unicode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -913,6 +919,7 @@ fn es6promise_async_js() {
         source_path: "ES6PromiseAsync.js",
         baseline_path: Some("ES6PromiseAsync.baseline"),
         compile_flags: vec!["-ES6"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -945,6 +952,7 @@ fn unicode_escape_sequences_js() {
         source_path: "unicode_escape_sequences.js",
         baseline_path: Some("unicode_escape_sequences.baseline"),
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -966,6 +974,7 @@ fn unicode_regex_surrogate_atoms_js() {
         source_path: "unicode_regex_surrogate_atoms.js",
         baseline_path: Some("unicode_regex_surrogate_atoms.baseline"),
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1180,6 +1189,7 @@ fn unicode_blue_533163_utf8_js() {
         source_path: "unicode_blue_533163_utf8.js",
         baseline_path: Some("unicode_blue_533163_utf8.baseline"),
         compile_flags: vec!["-ES6Unicode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1728,6 +1738,7 @@ fn generator_strict_error_js() {
         source_path: "generator-strict-error.js",
         baseline_path: Some("generator-strict-error.baseline"),
         compile_flags: vec!["-ES6Generators", "-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1958,6 +1969,7 @@ fn stickyflag_js() {
             "summary",
             "-endargs",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -2410,6 +2422,7 @@ fn bug_issue_1496_js() {
         source_path: "bug_issue_1496.js",
         baseline_path: Some("bug_issue_1496.baseline"),
         compile_flags: vec!["-mic:1", "-maxsimplejitruncount:2"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -2712,6 +2725,7 @@ fn bug_issue_5994_js() {
         source_path: "bug_issue_5994.js",
         baseline_path: Some("bug_issue_5994.baseline"),
         compile_flags: vec!["-MuteHostErrorMsg"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -2723,6 +2737,7 @@ fn bug_19225364_js() {
         source_path: "bug_19225364.js",
         baseline_path: Some("bug_19225364.baseline"),
         compile_flags: vec!["-bgjit-", "-loopinterpretcount:1"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

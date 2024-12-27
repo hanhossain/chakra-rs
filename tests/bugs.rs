@@ -100,6 +100,7 @@ fn randombug_js() {
             "-ExtendedErrorStackForTestHost",
             "-off:earlyreferenceerrors",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -230,6 +231,7 @@ fn bug215238_shrua_js() {
             "-force:ScriptFunctionWithInlineCache",
             "-force:fixdataprops",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -252,6 +254,7 @@ fn bug215238_shrua_2_js() {
             "-force:fixdataprops",
             "-ForceArrayBTree",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -384,6 +387,7 @@ fn blue_1096569_js() {
             "-force:Inline",
             "-off:insertnops",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -402,6 +406,7 @@ fn blue_1086262_js() {
             "-force:fieldcopyprop",
             "-off:aggressiveinttypespec",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -565,6 +570,7 @@ fn bug8554038_js() {
         source_path: "bug8554038.js",
         baseline_path: Some("bug8554038.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -676,6 +682,7 @@ fn bug10026875_js() {
         source_path: "bug10026875.js",
         baseline_path: Some("bug10026875.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -786,6 +793,7 @@ fn bug13383062_js() {
             "-off:lossyinttypespec",
             "-bgjit-",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }

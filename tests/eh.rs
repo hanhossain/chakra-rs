@@ -19,6 +19,7 @@ fn capture_js_defer_parse() {
         source_path: "capture.js",
         baseline_path: Some("capture.baseline"),
         compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

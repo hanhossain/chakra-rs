@@ -8,6 +8,7 @@ fn cachedscope_1_js() {
         source_path: "cachedscope_1.js",
         baseline_path: Some("cachedscope_1.baseline"),
         compile_flags: vec!["-force:cachedscope"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -29,6 +30,7 @@ fn closure_js() {
         source_path: "closure.js",
         baseline_path: Some("closure.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -51,6 +53,7 @@ fn closure_multiple_1_js() {
         source_path: "closure_multiple_1.js",
         baseline_path: Some("closure_multiple_1.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -62,6 +65,7 @@ fn closure_multiple_2_js() {
         source_path: "closure_multiple_2.js",
         baseline_path: Some("closure_multiple_2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -84,6 +88,7 @@ fn closure_binding_2_js() {
         source_path: "closure_binding_2.js",
         baseline_path: Some("closure_binding_2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -106,6 +111,7 @@ fn closure_qmark_js() {
         source_path: "closure-qmark.js",
         baseline_path: Some("closure-qmark.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -220,6 +226,7 @@ fn bug_os_2299723_js() {
         source_path: "bug_OS_2299723.js",
         baseline_path: Some("bug_OS_2299723.baseline"),
         compile_flags: vec!["-force:cachedscope"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

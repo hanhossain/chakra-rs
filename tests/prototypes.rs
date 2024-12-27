@@ -52,6 +52,7 @@ fn change_prototype_js() {
         source_path: "ChangePrototype.js",
         baseline_path: Some("ChangePrototype.baseline"),
         compile_flags: vec!["-trace:TypeShareForChangePrototype", "-JsBuiltIn-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

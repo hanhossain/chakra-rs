@@ -30,6 +30,7 @@ fn asyncawait_functionality_js() {
         source_path: "asyncawait-functionality.js",
         baseline_path: Some("asyncawait-functionality.baseline"),
         compile_flags: vec!["-nodeferparse", "-args", "summary", "-endargs"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -47,6 +48,7 @@ fn asyncawait_functionality_js_force_defer_parse() {
             "summary",
             "-endargs",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -58,6 +60,7 @@ fn asyncawait_undodefer_js() {
         source_path: "asyncawait-undodefer.js",
         baseline_path: Some("asyncawait-undodefer.baseline"),
         compile_flags: vec!["-forceundodefer"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

@@ -96,6 +96,7 @@ fn for_in_misc_js() {
         source_path: "forInMisc.js",
         baseline_path: Some("forInMisc.baseline"),
         compile_flags: vec!["-CollectGarbage"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

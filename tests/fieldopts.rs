@@ -40,6 +40,7 @@ fn equiv_mismatch_js() {
         source_path: "equiv-mismatch.js",
         baseline_path: Some("equiv-mismatch.baseline"),
         compile_flags: vec!["-CollectGarbage", "-maxsimplejitruncount:2"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -117,6 +118,7 @@ fn fieldcopyprop_delete_js() {
         source_path: "fieldcopyprop_delete.js",
         baseline_path: Some("fieldcopyprop_delete.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -150,6 +152,7 @@ fn fieldhoist4_js() {
         source_path: "fieldhoist4.js",
         baseline_path: Some("fieldhoist4.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -256,6 +259,7 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec() {
         source_path: "fieldhoist_typespec.js",
         baseline_path: Some("fieldhoist_typespec.baseline"),
         compile_flags: vec!["-off:aggressiveIntTypeSpec"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -267,6 +271,7 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline() {
         source_path: "fieldhoist_typespec.js",
         baseline_path: Some("fieldhoist_typespec.baseline"),
         compile_flags: vec!["-off:aggressiveIntTypeSpec", "-off:inline"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -350,6 +355,7 @@ fn fieldcopyprop_nonwritable_js() {
         source_path: "fieldcopyprop_nonwritable.js",
         baseline_path: Some("fieldcopyprop_nonwritable.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -361,6 +367,7 @@ fn fieldcopyprop_primitive_js() {
         source_path: "fieldcopyprop_primitive.js",
         baseline_path: Some("fieldcopyprop_primitive.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -372,6 +379,7 @@ fn fieldcopyprop_preventextensions_js() {
         source_path: "fieldcopyprop_preventextensions.js",
         baseline_path: Some("fieldcopyprop_preventextensions.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -383,6 +391,7 @@ fn fieldcopyprop_freeze_js() {
         source_path: "fieldcopyprop_freeze.js",
         baseline_path: Some("fieldcopyprop_freeze.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -488,6 +497,7 @@ fn check_this_js() {
         source_path: "CheckThis.js",
         baseline_path: Some("CheckThis.baseline"),
         compile_flags: vec!["-force:inline", "-force:checkthis"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -520,6 +530,7 @@ fn fieldcopyprop_typespec_js() {
         source_path: "fieldcopyprop_typespec.js",
         baseline_path: Some("fieldcopyprop_typespec.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1090,6 +1101,7 @@ fn finaltypebug_js() {
         source_path: "finaltypebug.js",
         baseline_path: Some("finaltypebug.baseline"),
         compile_flags: vec!["-MaxSimpleJITRunCount:1", "-MaxinterpretCount:1"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1165,6 +1177,7 @@ fn fieldhoist_accessorinlining2_js() {
         source_path: "fieldhoist_accessorinlining2.js",
         baseline_path: Some("fieldhoist_accessorinlining2.baseline"),
         compile_flags: vec!["-off:inlinegetters", "-off:fixedmethods"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
