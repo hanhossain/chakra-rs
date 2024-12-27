@@ -1,5 +1,5 @@
 mod common;
-const DIRECTORY: &str = "chakracore-cxx/test/Loop";
+const DIRECTORY: &str = "chakracore-cxx/test/loop";
 
 #[test]
 fn bail_out_of_mem_op_js() {
