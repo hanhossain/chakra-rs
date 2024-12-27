@@ -289,7 +289,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>switchStatement</files>
   </default>

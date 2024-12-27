@@ -152,7 +152,7 @@ $1
 
 ### replace dashes and periods in function name
 ```re
-(fn.*)(-|\.)
+^(fn.*)(-|\.)
 ```
 
 ```rust
