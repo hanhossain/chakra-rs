@@ -242,7 +242,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>fieldopts</files>
   </default>
