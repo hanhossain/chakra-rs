@@ -26,6 +26,12 @@ open graph.svg
 ```
 
 ## Migrate tests
+### Header
+```rust
+mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/{}";
+```
+
 ### add todo
 ```rust
 // <test>
@@ -108,6 +114,23 @@ fn $1_js() {
 }
 ```
 
+### files, compile flags, and baseline
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<compile-flags>(.*)</compile-flags>\n.*<baseline>(.*)</baseline>\n.*</default>\n.*</test>
+```
+
+```rust
+#[test]
+fn $1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$3"),
+        compile_flags: vec![todo!("$2")],
+    };
+    common::run_test(&test);
+}
+```
 
 ### replace compile flags todos with spaces (until done)
 ```re
@@ -125,4 +148,13 @@ todo!\(("\S+")\)
 
 ```rust
 $1
+```
+
+### replace dashes and periods in function name
+```re
+^(fn.*)(-|\.)
+```
+
+```rust
+$1_
 ```

@@ -1,0 +1,182 @@
+mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/StackTrace";
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>SimpleThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -errorStackTrace- -args runTest -endargs</compile-flags>
+//     <baseline>simpleThrow.js.stackTraceDisabled.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>PropertyValidation.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//     <baseline>PropertyValidation.nostrict.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>PropertyValidation.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -forceStrictMode</compile-flags>
+//     <baseline>PropertyValidation.nostrict.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>SimpleThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest -endargs</compile-flags>
+//     <baseline>SimpleThrow.js.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>LongCallStackThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 5 -endargs</compile-flags>
+//     <baseline>LongCallStackThrow.js.Args5.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>LongCallStackThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 6 -endargs</compile-flags>
+//     <baseline>LongCallStackThrow.js.Args6.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>LongCallStackThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 7 -endargs</compile-flags>
+//     <baseline>LongCallStackThrow.js.Args7.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>LongCallStackThrow.js</files>
+//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 30 -endargs</compile-flags>
+//     <baseline>LongCallStackThrow.js.Args30.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>StackTraceLimit.js</files>
+//     <baseline>StackTraceLimit.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace,xplat_verifymark_slow</tags>
+//     <files>StackTraceLimitOOS.js</files>
+//     <baseline>StackTraceLimitOOS.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+// </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace,xplat_verifymark_slow</tags>
+//     <files>StackTraceLimitOOS.js</files>
+//     <baseline>StackTraceLimitOOS.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost -on:interruptprobe</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>dynamic.js</files>
+//     <baseline>dynamic.js.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>ErrorPrototype.js</files>
+//     <baseline>ErrorPrototype.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>ErrorDotStackAlreadyExists.js</files>
+//     <baseline>ErrorDotStackAlreadyExists.baseline</baseline>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <tags>StackTrace</tags>
+//     <files>FunctionName.js</files>
+//     <baseline>FunctionName.js.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <files>x64StackWalk.js</files>
+//     <tags>exclude_x86,exclude_arm,exclude_dynapogo</tags>
+//     <baseline>x64StackWalk.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//   </default>
+// </test>
+
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <files>x64StackWalkLoopBody.js</files>
+//     <tags>exclude_x86,exclude_arm,exclude_dynapogo</tags>
+//     <baseline>x64StackWalkLoopBody.baseline</baseline>
+//     <compile-flags>-ExtendedErrorStackForTestHost -loopinterpretcount:1</compile-flags>
+//   </default>
+// </test>
+
+#[test]
+fn dot_chain_name_hint_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dotChainNameHint.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
