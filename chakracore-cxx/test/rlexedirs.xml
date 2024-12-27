@@ -155,7 +155,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Prototypes</files>
   </default>
