@@ -159,76 +159,6 @@ fn to_locale_string2_js() {
 //       <tags>Intl,exclude_sanitize_address</tags>
 //   </default>
 // </test>
-// <!-- Disabled until we can resolve failures on Windows Server 2012 R2 (Microsoft/ChakraCore#3030)
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString.js</files>
-//       <baseline>toLocaleString.v4.baseline</baseline>
-//       <compile-flags>-version:4</compile-flags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString.js</files>
-//       <baseline>toLocaleString.arm.baseline</baseline>
-//       <compile-flags>-Intl</compile-flags>
-//       <tags>exclude_x86,exclude_x64</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString.js</files>
-//       <baseline>toLocaleString.baseline</baseline>
-//       <compile-flags>-Intl</compile-flags>
-//       <tags>exclude_arm,exclude_drt</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString.js</files>
-//       <baseline>toLocaleString.winBlue.baseline</baseline>
-//       <compile-flags>-Intl</compile-flags>
-//       <tags>exclude_arm,exclude_snap,exclude_win7,exclude_win8</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString1.js</files>
-//       <baseline>toLocaleString1.v4.baseline</baseline>
-//       <compile-flags>-version:4</compile-flags>
-//       <tags>exclude_win7,exclude_snap</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString1.js</files>
-//       <baseline>toLocaleString1.win7.v4.baseline</baseline>
-//       <compile-flags>-version:4</compile-flags>
-//       <tags>exclude_win8,exclude_winBlue</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString1.js</files>
-//       <baseline>toLocaleString1.baseline</baseline>
-//       <compile-flags>-Intl</compile-flags>
-//   </default>
-// </test>
-// !-->
 
 #[test]
 fn to_string1_js() {
@@ -427,14 +357,16 @@ fn forinfastpath_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>forIn.error.js</files>
-//     <baseline>forIn.error.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn for_in_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "forIn.error.js",
+        baseline_path: Some("forIn.error.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn hash_table_js() {
@@ -560,23 +492,27 @@ fn object_create_null_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_otherInstrs.js</files>
-//     <baseline>ObjectHeaderInlining_otherInstrs.baseline</baseline>
-//     <compile-flags>-off:simplejit -mic:2</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_other_instrs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_otherInstrs.js",
+        baseline_path: Some("ObjectHeaderInlining_otherInstrs.baseline"),
+        compile_flags: vec!["-off:simplejit", "-mic:2"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining.js</files>
-//     <baseline>ObjectHeaderInlining.baseline</baseline>
-//     <compile-flags>-off:simplejit -mic:2</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining.js",
+        baseline_path: Some("ObjectHeaderInlining.baseline"),
+        compile_flags: vec!["-off:simplejit", "-mic:2"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -627,23 +563,27 @@ fn object_create_null_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_objArrayFastPath.js</files>
-//     <baseline>ObjectHeaderInlining_objArrayFastPath.baseline</baseline>
-//     <compile-flags>-mic:2 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_obj_array_fast_path_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_objArrayFastPath.js",
+        baseline_path: Some("ObjectHeaderInlining_objArrayFastPath.baseline"),
+        compile_flags: vec!["-mic:2", "-off:simplejit"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_StFldOpt.js</files>
-//     <baseline>ObjectHeaderInlining_StFldOpt.baseline</baseline>
-//     <compile-flags>-mic:2 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_st_fld_opt_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_StFldOpt.js",
+        baseline_path: Some("ObjectHeaderInlining_StFldOpt.baseline"),
+        compile_flags: vec!["-mic:2", "-off:simplejit"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -690,14 +630,16 @@ fn object_create_null_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ForInInline.js</files>
-//     <baseline>ForInInline.baseline</baseline>
-//     <compile-flags>-loopinterpretcount:1 -force:inline -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn for_in_inline_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ForInInline.js",
+        baseline_path: Some("ForInInline.baseline"),
+        compile_flags: vec!["-loopinterpretcount:1", "-force:inline", "-off:simplejit"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -707,14 +649,16 @@ fn object_create_null_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>assign.js</files>
-//     <compile-flags>-args summary -endargs -trace:ObjectCopy</compile-flags>
-//     <baseline>assign.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn assign_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "assign.js",
+        baseline_path: Some("assign.baseline"),
+        compile_flags: vec!["-args", "summary", "-endargs", "-trace:ObjectCopy"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn object_spread_simple_js() {

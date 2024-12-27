@@ -90,8 +90,8 @@ fn $1_js() {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
-        compile_flags: vec![todo!("$2")],
-        ..Default::default()
+        baseline_path: Some("$2"),
+        compile_flags: vec![todo!("$3")],
     };
     common::run_test(&test);
 }
