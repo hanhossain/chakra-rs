@@ -116,29 +116,38 @@ fn null_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>propertyDescriptorNonObject.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn property_descriptor_non_object_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "propertyDescriptorNonObject.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>propertyRecordLargeHeapBlock.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn property_record_large_heap_block_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "propertyRecordLargeHeapBlock.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleString2.js</files>
-//       <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn to_locale_string2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toLocaleString2.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -336,13 +345,21 @@ fn get_own_property_descriptor_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>getOwnPropertyDescriptors.js</files>
-//     <compile-flags>-args summary -endargs -ESObjectGetOwnPropertyDescriptors</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn get_own_property_descriptors_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "getOwnPropertyDescriptors.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-ESObjectGetOwnPropertyDescriptors",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn object_creation_optimizations_js() {
@@ -366,13 +383,16 @@ fn multivardecl_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>propertyStrings.js</files>
-//     <compile-flags>-CollectGarbage</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn property_strings_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "propertyStrings.js",
+        compile_flags: vec!["-CollectGarbage"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn forinenumcache_js() {
@@ -385,13 +405,16 @@ fn forinenumcache_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>forinnonenumerableshadowing.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn forinnonenumerableshadowing_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "forinnonenumerableshadowing.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn forinfastpath_js() {
@@ -434,13 +457,23 @@ fn type_snapshot_enumeration_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>TypeSnapshotEnumerationCachedType.js</files>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:1 -off:ArrayCheckHoist -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn type_snapshot_enumeration_cached_type_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "TypeSnapshotEnumerationCachedType.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-off:ArrayCheckHoist",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn new_sc_object_inline_slot_capacity_locking_js() {
@@ -463,13 +496,16 @@ fn objlit_type_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>PathTypeDeleteLastProperty.js</files>
-//     <compile-flags>-mic:1 -msjrc:1</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn path_type_delete_last_property_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "PathTypeDeleteLastProperty.js",
+        compile_flags: vec!["-mic:1", "-msjrc:1"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn stackobject_js() {
@@ -493,13 +529,16 @@ fn stackobject_escape_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>LargeAuxArray.js</files>
-//     <compile-flags>-BigDictionaryTypeHandlerThreshold:20</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn large_aux_array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LargeAuxArray.js",
+        compile_flags: vec!["-BigDictionaryTypeHandlerThreshold:20"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -510,13 +549,16 @@ fn stackobject_escape_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objectCreateNull.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_create_null_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objectCreateNull.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -674,53 +716,110 @@ fn stackobject_escape_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectSpread_Simple.js</files>
-//     <compile-flags>-args summary -endargs -NoNative -ES2018ObjectRestSpread</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_spread_simple_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectSpread_Simple.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-NoNative",
+            "-ES2018ObjectRestSpread",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectSpread_JIT.js</files>
-//     <compile-flags>-args summary -endargs -ES2018ObjectRestSpread -bgjit- -maxinterpretcount:1 -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_spread_jit_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectSpread_JIT.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-ES2018ObjectRestSpread",
+            "-bgjit-",
+            "-maxinterpretcount:1",
+            "-off:simplejit",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectSpread_Limits.js</files>
-//     <compile-flags>-args summary -endargs -ES2018ObjectRestSpread</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_spread_limits_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectSpread_Limits.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-NoNative",
+            "-ES2018ObjectRestSpread",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectRest_Simple.js</files>
-//     <compile-flags>-args summary -endargs -NoNative -ES2018ObjectRestSpread -forceserialized</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_rest_simple_js_force_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectRest_Simple.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-NoNative",
+            "-ES2018ObjectRestSpread",
+            "-forceserialized",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectRest_Simple.js</files>
-//     <compile-flags>-args summary -endargs -NoNative -ES2018ObjectRestSpread</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_rest_simple_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectRest_Simple.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-NoNative",
+            "-ES2018ObjectRestSpread",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectRest_JIT.js</files>
-//     <compile-flags>-args summary -endargs -ES2018ObjectRestSpread -off:simplejit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_rest_jit_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectRest_JIT.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-ES2018ObjectRestSpread",
+            "-off:simplejit",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn to_string_with_global_object_js() {

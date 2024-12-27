@@ -61,6 +61,42 @@ fn $1_js() {
 }
 ```
 
+### files and compile flags
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<compile-flags>(.*)</compile-flags>\n.*</default>\n.*</test>
+```
+
+```rust
+#[test]
+fn $1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec![todo!("$2")],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+```
+
+### files, baseline, and compile flags
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<baseline>(.*)</baseline>\n.*<compile-flags>(.*)</compile-flags>\n.*</default>\n.*</test>
+```
+
+```rust
+#[test]
+fn $1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec![todo!("$2")],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+```
+
 ### add todo
 ```rust
 // <test>
