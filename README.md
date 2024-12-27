@@ -26,6 +26,12 @@ open graph.svg
 ```
 
 ## Migrate tests
+### Header
+```rust
+mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/{}";
+```
+
 ### add todo
 ```rust
 // <test>
