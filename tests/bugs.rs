@@ -189,72 +189,148 @@ fn blue_245702_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:2  -MaxLinearStringCaseCount:2 -MaxLinearIntCaseCount:2 -forceserialized -MinSwitchJumpTableSize:3 -bgjit- -loopinterpretcount:1 -force:polymorphicinlinecache -force:fieldcopyprop -sse:2 -force:interpreterautoprofile</compile-flags>
-//     <files>bug215238.mul-53-ovf.js</files>
-//     <baseline>bug215238.mul-53-ovf.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn bug215238_mul_53_ovf_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug215238.mul-53-ovf.js",
+        baseline_path: Some("bug215238.mul-53-ovf.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+            "-MaxLinearStringCaseCount:2",
+            "-MaxLinearIntCaseCount:2",
+            "-forceserialized",
+            "-MinSwitchJumpTableSize:3",
+            "-bgjit-",
+            "-loopinterpretcount:1",
+            "-force:polymorphicinlinecache",
+            "-force:fieldcopyprop",
+            "-sse:2",
+            "-force:interpreterautoprofile",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:1  -MinSwitchJumpTableSize:3 -bgjit- -loopinterpretcount:1 -force:rejit -force:ScriptFunctionWithInlineCache -force:fixdataprops</compile-flags>
-//     <files>bug215238-shrua.js</files>
-//     <baseline>bug215238-shrua.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn bug215238_shrua_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug215238-shrua.js",
+        baseline_path: Some("bug215238-shrua.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-MinSwitchJumpTableSize:3",
+            "-bgjit-",
+            "-loopinterpretcount:1",
+            "-force:rejit",
+            "-force:ScriptFunctionWithInlineCache",
+            "-force:fixdataprops",
+        ],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:1  -force:polymorphicinlinecache -MinSwitchJumpTableSize:2 -force:rejit -force:ScriptFunctionWithInlineCache -force:atom -off:ArrayCheckHoist -force:fixdataprops -ForceArrayBTree</compile-flags>
-//     <files>bug215238.shrua-2.js</files>
-//     <baseline>bug215238.shrua-2.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn bug215238_shrua_2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug215238.shrua-2.js",
+        baseline_path: Some("bug215238.shrua-2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-force:polymorphicinlinecache",
+            "-MinSwitchJumpTableSize:2",
+            "-force:rejit",
+            "-force:ScriptFunctionWithInlineCache",
+            "-force:atom",
+            "-off:ArrayCheckHoist",
+            "-force:fixdataprops",
+            "-ForceArrayBTree",
+        ],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//     <files>bug435809.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug435809_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug435809.js",
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -off:simplejit -force:fixdataprops</compile-flags>
-//     <files>bug594298.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug594298_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug594298.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simplejit",
+            "-force:fixdataprops",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-loopinterpretcount:1 -bgjit- -maxsimplejitruncount:1 -maxinterpretcount:1 -force:inline</compile-flags>
-//     <files>bug661952.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug661952_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug661952.js",
+        compile_flags: vec![
+            "-loopinterpretcount:1",
+            "-bgjit-",
+            "-maxsimplejitruncount:1",
+            "-maxinterpretcount:1",
+            "-force:inline",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-loopinterpretcount:1 -bgjit- -maxsimplejitruncount:1 -maxinterpretcount:1 -force:deferparse -force:inline</compile-flags>
-//     <files>bug724121.js</files>
-//   </default>
-// </test>
+#[test]
+fn bug724121_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug724121.js",
+        compile_flags: vec![
+            "-loopinterpretcount:1",
+            "-bgjit-",
+            "-maxsimplejitruncount:1",
+            "-maxinterpretcount:1",
+            "-force:deferparse",
+            "-force:inline",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:1 -force:fieldcopyprop -forceserialized</compile-flags>
-//     <files>deserializationbug339404.js</files>
-//   </default>
-// </test>
+#[test]
+fn deserializationbug339404_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deserializationbug339404.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-force:fieldcopyprop",
+            "-forceserialized",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug843670_js() {
@@ -285,7 +361,6 @@ fn vso_os_1091425_js() {
     common::run_test(&test);
 }
 
-// this
 #[test]
 fn bug1092916_js() {
     let test = common::Test {
@@ -297,23 +372,39 @@ fn bug1092916_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>blue_1096569.js</files>
-//     <compile-flags>-MaxinterpretCount:2 -off:simplejit -force:Inline -off:insertnops</compile-flags>
-//     <baseline>blue_1096569.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn blue_1096569_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blue_1096569.js",
+        baseline_path: Some("blue_1096569.baseline"),
+        compile_flags: vec![
+            "-MaxinterpretCount:2",
+            "-off:simplejit",
+            "-force:Inline",
+            "-off:insertnops",
+        ],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>blue_1086262.js</files>
-//     <compile-flags>-off:insertnops -bgjit- -fja:2 -off:simplejit -force:fieldcopyprop -off:aggressiveinttypespec</compile-flags>
-//     <baseline>blue_1086262.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn blue_1086262_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blue_1086262.js",
+        baseline_path: Some("blue_1086262.baseline"),
+        compile_flags: vec![
+            "-off:insertnops",
+            "-bgjit-",
+            "-fja:2",
+            "-off:simplejit",
+            "-force:fieldcopyprop",
+            "-off:aggressiveinttypespec",
+        ],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug1288931_js() {
@@ -683,14 +774,21 @@ fn os11907290_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug13383062.js</files>
-//     <compile-flags>-maxinterpretcount:2 -off:simplejit -off:lossyinttypespec -bgjit-</compile-flags>
-//     <baseline>bug13383062.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn bug13383062_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug13383062.js",
+        baseline_path: Some("bug13383062.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:simplejit",
+            "-off:lossyinttypespec",
+            "-bgjit-",
+        ],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn profiled_args_js() {
