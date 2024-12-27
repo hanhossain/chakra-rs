@@ -150,7 +150,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Regex</files>
   </default>
