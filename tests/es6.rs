@@ -2519,14 +2519,17 @@ fn bug_issue_1496_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate, don't know why thisis failing
-// <test>
-//   <default>
-//     <files>bug_issue_3247.js</files>
-//     <baseline>bug_issue_3247.baseline</baseline>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_issue_3247_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_issue_3247.js",
+        baseline_path: Some("bug_issue_3247.baseline"),
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn typedarray_bugs_js() {
@@ -2629,6 +2632,18 @@ fn bug_issue_4635_js() {
         directory: DIRECTORY,
         source_path: "bug_issue_4635.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn bug_OS13976524_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS13976524.js",
+        compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
+        tags: vec!["BugFix"],
         ..Default::default()
     };
     common::run_test(&test);
