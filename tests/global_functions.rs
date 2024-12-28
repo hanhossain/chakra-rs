@@ -52,6 +52,7 @@ fn eval_deferred_js() {
         source_path: "evalDeferred.js",
         baseline_path: Some("evalDeferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

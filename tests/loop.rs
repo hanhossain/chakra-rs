@@ -8,6 +8,7 @@ fn bail_out_of_mem_op_js() {
         source_path: "bailOutOfMemOp.js",
         baseline_path: Some("bailOutOfMemOp.baseline"),
         compile_flags: vec!["-bgjit-", "-mic:1", "-off:simplejit", "-minmemopcount:0"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -19,6 +20,7 @@ fn loop_js() {
         source_path: "loop.js",
         baseline_path: Some("loop.baseline"),
         compile_flags: vec!["-forcejitloopbody", "-off:earlyreferenceerrors"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -34,6 +36,7 @@ fn loop_js_interrupt_probe() {
             "-on:interruptprobe",
             "-off:earlyreferenceerrors",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -45,6 +48,7 @@ fn loopinversion_js_defer_parse() {
         source_path: "loopinversion.js",
         baseline_path: Some("loopinversion.baseline"),
         compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -56,6 +60,7 @@ fn loopinversion_js_interrupt_probe() {
         source_path: "loopinversion.js",
         baseline_path: Some("loopinversion.baseline"),
         compile_flags: vec!["-on:interruptprobe"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -88,6 +93,7 @@ fn mem_op_js_simple_jit_off() {
         source_path: "MemOp.js",
         baseline_path: Some("MemOp.baseline"),
         compile_flags: vec!["-off:simplejit", "-mic:1", "-bgjit-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

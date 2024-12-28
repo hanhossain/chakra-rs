@@ -8,23 +8,64 @@ pub struct Test {
     pub source_path: &'static str,
     pub baseline_path: Option<&'static str>,
     pub compile_flags: Vec<&'static str>,
+    pub tags: Vec<&'static str>,
+}
+
+enum Variant {
+    DisableJit,
+}
+
+struct VariantConfig {
+    compile_flags: Vec<&'static str>,
+    excluded_tags: Vec<&'static str>,
 }
 
 pub fn run_test(test: &Test) {
+    run_test_variant(test, Variant::DisableJit);
+}
+
+fn run_test_variant(test: &Test, variant: Variant) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let source = manifest_dir.join(test.directory).join(test.source_path);
+
+    assert_ne!(test.directory, "");
+
+    let test_dir = manifest_dir.join(test.directory);
+    let source = test_dir.join(test.source_path);
     println!("source_path: {:?}", source);
 
     assert!(source.exists());
 
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
+    let variant_config = match variant {
+        Variant::DisableJit => VariantConfig {
+            compile_flags: vec!["-nonative"],
+            excluded_tags: vec![
+                "exclude_disable_jit",
+                "exclude_interpreted",
+                "fails_interpreted",
+                "require_backend",
+            ],
+        },
+    };
+
+    if variant_config
+        .excluded_tags
+        .iter()
+        .any(|tag| test.tags.contains(tag))
+    {
+        println!("Skipping test because it is excluded for this variant");
+        return;
+    }
+
     let mut ch = Command::new(out_dir.join("build/ch"));
-    ch.arg(source)
+    ch.current_dir(test_dir)
+        .arg(source)
         .arg("-ExtendedErrorStackForTestHost")
         .arg("-BaselineMode")
         .arg("-WERExceptionSupport")
-        .args(&test.compile_flags);
+        .args(&test.compile_flags)
+        .args(&variant_config.compile_flags);
 
     println!("Running command: {ch:#?}");
     let output = ch.output().unwrap();
@@ -61,7 +102,7 @@ pub fn run_test(test: &Test) {
                 passed = true;
             }
         }
-        assert!(passed);
+        assert!(passed, "Test did not print 'pass' or 'passed'");
     }
 
     assert!(output.status.success());

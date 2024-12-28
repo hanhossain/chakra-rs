@@ -25,15 +25,18 @@ fn negative_na_n_js_no_native() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toString.js</files>
-//     <baseline>toString_3.baseline</baseline>
-//     <!--TODO Investigate and re-enable this test on ARM64 macOS-->
-//     <tags>exclude_mac</tags>
-//   </default>
-// </test>
+// TODO Investigate and re-enable this test on ARM64 macOS
+#[cfg(not(target_os = "macos"))]
+#[test]
+fn to_string_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toString.js",
+        baseline_path: Some("toString_3.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn floatcmp_js() {
@@ -66,15 +69,17 @@ fn integer_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toUint16.js</files>
-//     <baseline>toUint16.baseline</baseline>
-//     <!-- OS:15856443 [RS4] Disabled failing core unit test toUint16.js DRT. Needs further investigation. -->
-//     <tags>exclude_drt</tags>
-//   </default>
-// </test>
+#[test]
+fn to_uint16_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toUint16.js",
+        baseline_path: Some("toUint16.baseline"),
+        tags: vec!["exclude_drt"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn boundaries_js() {

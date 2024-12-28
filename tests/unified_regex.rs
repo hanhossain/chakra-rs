@@ -230,6 +230,7 @@ fn property_string_js() {
         source_path: "propertyString.js",
         baseline_path: Some("propertyString.baseline"),
         compile_flags: vec!["-CollectGarbage"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -262,6 +263,7 @@ fn mru_js() {
         source_path: "mru.js",
         baseline_path: Some("mru.baseline"),
         compile_flags: vec!["-CollectGarbage"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

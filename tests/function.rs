@@ -119,15 +119,17 @@ fn arguments_resolution_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>argumentsLimits.js</files>
-//     <baseline>argumentsLimits.baseline</baseline>
-//     <compile-flags>-EnableFatalErrorOnOOM-</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn arguments_limits_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argumentsLimits.js",
+        baseline_path: Some("argumentsLimits.baseline"),
+        compile_flags: vec!["-EnableFatalErrorOnOOM-"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn some_more_arguments_js() {
@@ -245,6 +247,7 @@ fn newsideeffect_js_defer_parse() {
         source_path: "newsideeffect.js",
         baseline_path: Some("newsideeffect.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -278,6 +281,7 @@ fn defernested_js_defer_parse() {
         source_path: "defernested.js",
         baseline_path: Some("defernested.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -289,6 +293,7 @@ fn jit_loop_body_js() {
         source_path: "jitLoopBody.js",
         baseline_path: Some("jitLoopBody.baseline"),
         compile_flags: vec!["-force:jitLoopBody"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -297,8 +302,8 @@ fn jit_loop_body_js() {
 // <test>
 //   <default>
 //     <files>deferredParsing.js</files>
-//     <compile-flags>-force:deferparse</compile-flags>
 //     <baseline>deferredParsing_3.baseline</baseline>
+//     <compile-flags>-force:deferparse</compile-flags>
 //     <tags>exclude_test</tags>
 //   </default>
 // </test>
@@ -307,8 +312,8 @@ fn jit_loop_body_js() {
 // <test>
 //   <default>
 //     <files>deferredParsing.js</files>
-//     <compile-flags>-forceUndoDefer</compile-flags>
 //     <baseline>deferredParsing_3.baseline</baseline>
+//     <compile-flags>-forceUndoDefer</compile-flags>
 //     <tags>exclude_test</tags>
 //   </default>
 // </test>
@@ -317,30 +322,35 @@ fn jit_loop_body_js() {
 // <test>
 //   <default>
 //     <files>deferredGetterSetter.js</files>
-//     <compile-flags>-force:deferparse</compile-flags>
 //     <baseline>deferredGetterSetter.baseline</baseline>
+//     <compile-flags>-force:deferparse</compile-flags>
 //     <tags>exclude_test</tags>
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredBadContinue.js</files>
-//     <baseline>deferredBadContinue.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn deferred_bad_continue_js1() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredBadContinue.js",
+        baseline_path: Some("deferredBadContinue.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredBadContinue.js</files>
-//     <baseline>deferredBadContinue.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn deferred_bad_continue_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredBadContinue.js",
+        baseline_path: Some("deferredBadContinue.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn deferredstuboob_js() {
@@ -357,8 +367,8 @@ fn deferredstuboob_js() {
 // <test>
 //   <default>
 //     <files>deferredWith.js</files>
-//     <compile-flags>-Force:Deferparse</compile-flags>
 //     <baseline>deferredWith.v4.baseline</baseline>
+//     <compile-flags>-Force:Deferparse</compile-flags>
 //     <tags>exclude_test</tags>
 //   </default>
 // </test>
@@ -367,8 +377,8 @@ fn deferredstuboob_js() {
 // <test>
 //   <default>
 //     <files>deferredWith2.js</files>
-//     <compile-flags>-Force:Deferparse</compile-flags>
 //     <baseline>deferredWith2.baseline</baseline>
+//     <compile-flags>-Force:Deferparse</compile-flags>
 //     <tags>exclude_test</tags>
 //   </default>
 // </test>
@@ -455,6 +465,7 @@ fn to_string_all_js_defer_parse() {
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
         compile_flags: vec!["-force:DeferParse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -466,6 +477,7 @@ fn to_string_all_js_defer_parse_force_serialized() {
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
         compile_flags: vec!["-force:DeferParse", "-ForceSerialized"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -481,6 +493,7 @@ fn to_string_all_js_defer_parse_parser_state_cache() {
             "-UseParserStateCache",
             "-ParserStateCache",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -514,6 +527,7 @@ fn more_func_expr_js_force_undo_defer() {
         source_path: "moreFuncExpr.js",
         baseline_path: Some("moreFuncExpr3.baseline"),
         compile_flags: vec!["-forceundodefer"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -601,6 +615,7 @@ fn func_body_bug227901_js() {
         source_path: "FuncBody.bug227901.js",
         baseline_path: Some("FuncBody.bug227901.baseline"),
         compile_flags: vec!["-off:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -612,6 +627,7 @@ fn func_body_bug232281_js() {
         source_path: "FuncBody.bug232281.js",
         baseline_path: Some("FuncBody.bug232281.baseline"),
         compile_flags: vec!["-off:deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -735,14 +751,21 @@ fn stack_args_with_formals_js_force_defer_parse() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>StackArgs_MaxInterpret.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn stack_args_max_interpret_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "StackArgs_MaxInterpret.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>

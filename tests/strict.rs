@@ -30,6 +30,7 @@ fn basics_function_in_sm_js_defer_parse() {
         source_path: "basics_function_in_SM.js",
         baseline_path: Some("basics_function_in_SM.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -41,6 +42,7 @@ fn caller_or_args_no_access_js() {
         source_path: "callerOrArgsNoAccess.js",
         baseline_path: Some("callerOrArgsNoAccess.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -240,6 +242,7 @@ fn test01_octal_js_force_strict_mode() {
         source_path: "01.octal.js",
         baseline_path: Some("01.octal_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -273,6 +276,7 @@ fn test03_assign_js_force_strict_mode() {
         source_path: "03.assign.js",
         baseline_path: Some("03.assign_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -344,6 +348,7 @@ fn test05_arguments_js_force_strict_mode() {
         source_path: "05.arguments.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -417,6 +422,7 @@ fn test06_arguments_js_force_strict_mode() {
         source_path: "06.arguments.js",
         baseline_path: Some("06.arguments_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -512,6 +518,7 @@ fn test08_object_literal_js_force_strict_mode() {
         source_path: "08.ObjectLiteral.js",
         baseline_path: Some("08.ObjectLiteral_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -545,6 +552,7 @@ fn test09_object_literal_js_force_strict_mode() {
         source_path: "09.ObjectLiteral.js",
         baseline_path: Some("09.ObjectLiteral_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -600,6 +608,7 @@ fn test11_this_js_force_strict_mode() {
         source_path: "11.this.js",
         baseline_path: Some("11.this_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -643,6 +652,7 @@ fn test12_delete_js_force_strict_mode() {
         source_path: "12.delete.js",
         baseline_path: Some("12.delete_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -665,6 +675,7 @@ fn test13_delete_js() {
         source_path: "13.delete.js",
         baseline_path: Some("13.delete.baseline"),
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -698,6 +709,7 @@ fn test14_var_js_force_strict_mode() {
         source_path: "14.var.js",
         baseline_path: Some("14.var_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -731,6 +743,7 @@ fn test15_with_js_force_strict_mode() {
         source_path: "15.with.js",
         baseline_path: Some("15.with_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -764,6 +777,7 @@ fn test16_catch_js_force_strict_mode() {
         source_path: "16.catch.js",
         baseline_path: Some("16.catch_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -797,6 +811,7 @@ fn test17_formal_sm_js_force_strict_mode() {
         source_path: "17.formal_sm.js",
         baseline_path: Some("17.formal_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -830,6 +845,7 @@ fn test18_formal_js_force_strict_mode() {
         source_path: "18.formal.js",
         baseline_path: Some("18.formal_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -885,6 +901,7 @@ fn test20_function_js_force_strict_mode() {
         source_path: "20.function.js",
         baseline_path: Some("20.function_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -918,6 +935,7 @@ fn test21_function_declaration_js_force_strict_mode() {
         source_path: "21.functionDeclaration.js",
         baseline_path: Some("21.functionDeclaration_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -995,6 +1013,7 @@ fn test24_properties_js_force_strict_mode() {
         source_path: "24.properties.js",
         baseline_path: Some("24.properties_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1047,6 +1066,7 @@ fn comma_bug219390_js() {
         source_path: "comma_bug219390.js",
         baseline_path: Some("comma_bug219390.baseline"),
         compile_flags: vec!["-Off:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1058,6 +1078,7 @@ fn nestedfnnameargs_js() {
         source_path: "nestedfnnameargs.js",
         baseline_path: Some("nestedfnnameargs.baseline"),
         compile_flags: vec!["-Off:Deferparse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

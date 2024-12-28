@@ -63,6 +63,7 @@ fn configurable_test_js() {
         source_path: "configurableTest.js",
         baseline_path: Some("configurableTest.baseline"),
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -258,23 +259,17 @@ fn bol_eol_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>crossContext.js</files>
-//     <baseline>crossContext.baseline</baseline>
-//     <tags>exclude_native</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>crossContext.js</files>
-//     <baseline>crossContext.baseline</baseline>
-//     <tags>exclude_native</tags>
-//   </default>
-// </test>
+#[test]
+fn cross_context_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "crossContext.js",
+        baseline_path: Some("crossContext.baseline"),
+        tags: vec!["exclude_native"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn properties_js() {
@@ -283,6 +278,7 @@ fn properties_js() {
         source_path: "properties.js",
         baseline_path: Some("properties.baseline"),
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -348,6 +344,7 @@ fn blue_102584_1_js() {
         source_path: "blue_102584_1.js",
         baseline_path: Some("blue_102584_1.baseline"),
         compile_flags: vec!["-MaxinterpretCount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -359,6 +356,7 @@ fn blue_102584_2_js() {
         source_path: "blue_102584_2.js",
         baseline_path: Some("blue_102584_2.baseline"),
         compile_flags: vec!["-MaxinterpretCount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

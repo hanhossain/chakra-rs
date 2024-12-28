@@ -196,15 +196,17 @@ fn two_digit_years_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>parseToStringResults.js</files>
-//     <!-- xplat tz info for BC != Windows tz info for BC -->
-//     <tags>exclude_xplat</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[test]
+fn parse_to_string_results_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "parseToStringResults.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn parse_to_utcstring_and_to_isostring_results_js() {

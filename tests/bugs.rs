@@ -45,16 +45,18 @@ fn win8_486977_branch_strict_equal_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Win8_459638.js</files>
-//     <baseline>Win8_459638.baseline</baseline>
-//     <tags>exclude_x86,exclude_x64</tags>
-//     <!-- The bug is related to ARM only -->
-//     <compile-flags>-forceNative -off:simpleJit</compile-flags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "x86_64"))]
+#[test]
+fn win8_459638_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Win8_459638.js",
+        baseline_path: Some("Win8_459638.baseline"),
+        compile_flags: vec!["-forceNative", "-off:simpleJit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_os_1197716_js() {
@@ -100,6 +102,7 @@ fn randombug_js() {
             "-ExtendedErrorStackForTestHost",
             "-off:earlyreferenceerrors",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -180,14 +183,21 @@ fn blue_245702_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretcount:2 -maxsimplejitruncount:5  -off:inline</compile-flags>
-//     <files>bug547302.js</files>
-//     <tags>exclude_shp</tags>
-//   </default>
-// </test>
+#[test]
+fn bug547302_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug547302.js",
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-maxsimplejitruncount:5",
+            "-off:inline",
+        ],
+        tags: vec!["exclude_shp"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug215238_mul_53_ovf_js() {
@@ -230,6 +240,7 @@ fn bug215238_shrua_js() {
             "-force:ScriptFunctionWithInlineCache",
             "-force:fixdataprops",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -252,6 +263,7 @@ fn bug215238_shrua_2_js() {
             "-force:fixdataprops",
             "-ForceArrayBTree",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -342,14 +354,17 @@ fn bug843670_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug934443.js</files>
-//     <compile-flags>-force:fieldcopyprop -off:dynamicprofile</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug934443_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug934443.js",
+        compile_flags: vec!["-force:fieldcopyprop", "-off:dynamicprofile"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn vso_os_1091425_js() {
@@ -384,6 +399,7 @@ fn blue_1096569_js() {
             "-force:Inline",
             "-off:insertnops",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -402,6 +418,7 @@ fn blue_1086262_js() {
             "-force:fieldcopyprop",
             "-off:aggressiveinttypespec",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -428,33 +445,49 @@ fn os_1362136_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_4683246.js</files>
-//     <tags>exclude_dynapogo</tags>
-//     <compile-flags>-loopinterpretcount:0 -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug_os_4683246_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_4683246.js",
+        compile_flags: vec!["-loopinterpretcount:0", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fabs1.js</files>
-//     <tags>exclude_dynapogo,require_backend,require_asmjs</tags>
-//     <compile-flags>-off:backend -asmjs -testtrace:asmjs</compile-flags>
-//     <baseline>fabs1.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn fabs1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fabs1.js",
+        baseline_path: Some("fabs1.baseline"),
+        compile_flags: vec!["-off:backend", "-asmjs", "-testtrace:asmjs"],
+        tags: vec!["exclude_dynapogo", "require_backend", "require_asmjs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>OS_5248645.js</files>
-//     <tags>exclude_dynapogo</tags>
-//     <compile-flags>-maxinterpretCount:2 -off:simplejit -off:dynamicProfile -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn os_5248645_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_5248645.js",
+        compile_flags: vec![
+            "-maxinterpretCount:2",
+            "-off:simplejit",
+            "-off:dynamicProfile",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn os_5553123_js() {
@@ -565,17 +598,21 @@ fn bug8554038_js() {
         source_path: "bug8554038.js",
         baseline_path: Some("bug8554038.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>invertloop_bug.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn invertloop_bug_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invertloop_bug.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn typespec_bug_js() {
@@ -599,14 +636,17 @@ fn deletenonconfig_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>misc_bugs.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//     <tags>exclude_windows</tags>
-//   </default>
-// </test>
+#[cfg(not(windows))]
+#[test]
+fn misc_bugs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "misc_bugs.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn cross_context_test_js() {
@@ -676,6 +716,7 @@ fn bug10026875_js() {
         source_path: "bug10026875.js",
         baseline_path: Some("bug10026875.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -712,14 +753,17 @@ fn bug11026788_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug11576900.js</files>
-//     <compile-flags>-lic:1 -bgjit-</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug11576900_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug11576900.js",
+        compile_flags: vec!["-lic:1", "-bgjit-"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug12628506_js() {
@@ -786,6 +830,7 @@ fn bug13383062_js() {
             "-off:lossyinttypespec",
             "-bgjit-",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }

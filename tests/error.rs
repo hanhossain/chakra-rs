@@ -98,6 +98,7 @@ fn error_ctor_js() {
         source_path: "errorCtor.js",
         baseline_path: Some("errorCtor_v4.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -113,15 +114,17 @@ fn error_num_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>CallNonFunction.js</files>
-//     <baseline>CallNonFunction_3.baseline</baseline>
-//     <tags>exclude_native,exclude_dynapogo</tags>
-//     <!-- one of the error is different in JIT'ed code (Microsoft/ChakraCore#3011) -->
-//   </default>
-// </test>
+#[test]
+fn call_non_function_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CallNonFunction.js",
+        baseline_path: Some("CallNonFunction_3.baseline"),
+        tags: vec!["exclude_native", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn source_info_00_js() {
@@ -130,6 +133,7 @@ fn source_info_00_js() {
         source_path: "sourceInfo_00.js",
         baseline_path: Some("sourceInfo_00.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -141,6 +145,7 @@ fn source_info_01_js() {
         source_path: "sourceInfo_01.js",
         baseline_path: Some("sourceInfo_01.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -152,6 +157,7 @@ fn source_info_10_js() {
         source_path: "sourceInfo_10.js",
         baseline_path: Some("sourceInfo_10.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -163,6 +169,7 @@ fn source_info_11_js() {
         source_path: "sourceInfo_11.js",
         baseline_path: Some("sourceInfo_11.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -174,6 +181,7 @@ fn source_info_12_js() {
         source_path: "sourceInfo_12.js",
         baseline_path: Some("sourceInfo_12.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -185,6 +193,7 @@ fn source_info_13_js() {
         source_path: "sourceInfo_13.js",
         baseline_path: Some("sourceInfo_13.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -196,6 +205,7 @@ fn source_info_20_js() {
         source_path: "sourceInfo_20.js",
         baseline_path: Some("sourceInfo_20.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -211,14 +221,18 @@ fn various_errors_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>RuntimeCompileStackOverflow.js</files>
-//     <baseline>RuntimeCompileStackOverflow.baseline</baseline>
-//     <tags>exclude_forceundodefer,exclude_arm,exclude_xplat</tags>
-//   </default>
-// </test>
+#[cfg(all(windows, not(target_arch = "aarch64")))]
+#[test]
+fn runtime_compile_stack_overflow_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "RuntimeCompileStackOverflow.js",
+        baseline_path: Some("RuntimeCompileStackOverflow.baseline"),
+        tags: vec!["exclude_forceundodefer"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -261,6 +275,7 @@ fn inline_same_func_js() {
             "-maxinterpretcount:1",
             "-off:simpleJit",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -277,6 +292,7 @@ fn part_init_stack_frame_js() {
             "-InjectPartiallyInitializedInterpreterFrameError:3",
             "-InjectPartiallyInitializedInterpreterFrameErrorType:1",
         ],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -288,6 +304,7 @@ fn validate_line_column_js() {
         source_path: "validate_line_column.js",
         baseline_path: Some("validate_line_column.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -299,6 +316,7 @@ fn validate_line_column_js_defer_parse() {
         source_path: "validate_line_column.js",
         baseline_path: Some("validate_line_column.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-force:DeferParse"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

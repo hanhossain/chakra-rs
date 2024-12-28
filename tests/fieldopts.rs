@@ -40,6 +40,7 @@ fn equiv_mismatch_js() {
         source_path: "equiv-mismatch.js",
         baseline_path: Some("equiv-mismatch.baseline"),
         compile_flags: vec!["-CollectGarbage", "-maxsimplejitruncount:2"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -117,6 +118,7 @@ fn fieldcopyprop_delete_js() {
         source_path: "fieldcopyprop_delete.js",
         baseline_path: Some("fieldcopyprop_delete.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -150,6 +152,7 @@ fn fieldhoist4_js() {
         source_path: "fieldhoist4.js",
         baseline_path: Some("fieldhoist4.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -207,15 +210,17 @@ fn fieldhoist8_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_nullfieldhoist.js</files>
-//     <compile-flags></compile-flags>
-//     <baseline>fieldhoist_nullfieldhoist.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_nullfieldhoist_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_nullfieldhoist.js",
+        baseline_path: Some("fieldhoist_nullfieldhoist.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist9_js() {
@@ -256,6 +261,7 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec() {
         source_path: "fieldhoist_typespec.js",
         baseline_path: Some("fieldhoist_typespec.baseline"),
         compile_flags: vec!["-off:aggressiveIntTypeSpec"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -267,27 +273,34 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline() {
         source_path: "fieldhoist_typespec.js",
         baseline_path: Some("fieldhoist_typespec.baseline"),
         compile_flags: vec!["-off:aggressiveIntTypeSpec", "-off:inline"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_typespec2.js</files>
-//     <compile-flags>-force:jitLoopBody -off:aggressiveIntTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_typespec2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_typespec2.js",
+        compile_flags: vec!["-force:jitLoopBody", "-off:aggressiveIntTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_typespec3.js</files>
-//     <baseline>fieldhoist_typespec3.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_typespec3_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_typespec3.js",
+        baseline_path: Some("fieldhoist_typespec3.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist_undefined_global_js() {
@@ -311,15 +324,17 @@ fn fieldhoist_negzero_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_negzero.js</files>
-//     <compile-flags>-Serialized</compile-flags>
-//     <baseline>fieldhoist_negzero.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_negzero_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_negzero.js",
+        baseline_path: Some("fieldhoist_negzero.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist_typeof_js() {
@@ -350,6 +365,7 @@ fn fieldcopyprop_nonwritable_js() {
         source_path: "fieldcopyprop_nonwritable.js",
         baseline_path: Some("fieldcopyprop_nonwritable.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -361,6 +377,7 @@ fn fieldcopyprop_primitive_js() {
         source_path: "fieldcopyprop_primitive.js",
         baseline_path: Some("fieldcopyprop_primitive.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -372,6 +389,7 @@ fn fieldcopyprop_preventextensions_js() {
         source_path: "fieldcopyprop_preventextensions.js",
         baseline_path: Some("fieldcopyprop_preventextensions.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -383,6 +401,7 @@ fn fieldcopyprop_freeze_js() {
         source_path: "fieldcopyprop_freeze.js",
         baseline_path: Some("fieldcopyprop_freeze.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -488,6 +507,7 @@ fn check_this_js() {
         source_path: "CheckThis.js",
         baseline_path: Some("CheckThis.baseline"),
         compile_flags: vec!["-force:inline", "-force:checkthis"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -520,6 +540,7 @@ fn fieldcopyprop_typespec_js() {
         source_path: "fieldcopyprop_typespec.js",
         baseline_path: Some("fieldcopyprop_typespec.baseline"),
         compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -582,484 +603,642 @@ fn fieldhoist_number_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec1.js</files>
-//     <baseline>objtypespec1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec1.js",
+        baseline_path: Some("objtypespec1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec2.js</files>
-//     <baseline>objtypespec2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec2.js",
+        baseline_path: Some("objtypespec2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec3.js</files>
-//     <baseline>objtypespec3.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec3_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec3.js",
+        baseline_path: Some("objtypespec3.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-fieldhoist.js</files>
-//     <baseline>objtypespec-fieldhoist.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit -bgjit- -loopinterpretcount:0 </compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_fieldhoist_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-fieldhoist.js",
+        baseline_path: Some("objtypespec-fieldhoist.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-bgjit-",
+            "-loopinterpretcount:0",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-fieldhoist.2.js</files>
-//     <baseline>objtypespec-fieldhoist.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_fieldhoist_2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-fieldhoist.2.js",
+        baseline_path: Some("objtypespec-fieldhoist.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec_proto.js</files>
-//     <baseline>objtypespec_proto.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_proto_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec_proto.js",
+        baseline_path: Some("objtypespec_proto.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-add.js</files>
-//     <baseline>objtypespec-add.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_add_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-add.js",
+        baseline_path: Some("objtypespec-add.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-add-2.js</files>
-//     <baseline>objtypespec-add-2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -loopInterpretCount:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_add_2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-add-2.js",
+        baseline_path: Some("objtypespec-add-2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-loopInterpretCount:1"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-add-4.js</files>
-//     <baseline>objtypespec-add-4.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_add_4_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-add-4.js",
+        baseline_path: Some("objtypespec-add-4.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:globOpt</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_glob_opt() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:inline</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_inline() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_obj_type_spec() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_fixed_new_obj() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:fixedMethods</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_fixed_methods() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2 -off:fixedMethods"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.1.js</files>
-//     <baseline>objtypespec-newobj.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.1.js",
+        baseline_path: Some("objtypespec-newobj.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:globOpt</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_glob_opt() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:inline</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_inline() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_obj_type_spec() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_fixed_new_obj() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:fixedMethods</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_fixed_methods() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:fixedMethods"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj.2.js</files>
-//     <baseline>objtypespec-newobj.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj.2.js",
+        baseline_path: Some("objtypespec-newobj.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js1() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:globOpt</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:inline</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js3() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js4() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js5() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js6() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js7() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js8() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.1.js</files>
-//     <baseline>objtypespec-newobj-invalidation.1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj-off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_1_js9() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.1.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js1() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:globOpt</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:inline</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js3() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js4() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js5() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js6() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js7() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js8() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-newobj-invalidation.2.js</files>
-//     <baseline>objtypespec-newobj-invalidation.2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:2 -off:objTypeSpecNewObj -off:fixedNewObj-off:splitNewScObject</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_newobj_invalidation_2_js9() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-newobj-invalidation.2.js",
+        baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:2",
+            "-off:objTypeSpecNewObj",
+            "-off:fixedNewObj",
+            "-off:splitNewScObject",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FieldHoist_MaxInterpret.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn field_hoist_max_interpret_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FieldHoist_MaxInterpret.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn mark_temp_js() {
@@ -1090,6 +1269,7 @@ fn finaltypebug_js() {
         source_path: "finaltypebug.js",
         baseline_path: Some("finaltypebug.baseline"),
         compile_flags: vec!["-MaxSimpleJITRunCount:1", "-MaxinterpretCount:1"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -1165,6 +1345,7 @@ fn fieldhoist_accessorinlining2_js() {
         source_path: "fieldhoist_accessorinlining2.js",
         baseline_path: Some("fieldhoist_accessorinlining2.baseline"),
         compile_flags: vec!["-off:inlinegetters", "-off:fixedmethods"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

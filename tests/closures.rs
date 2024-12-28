@@ -8,6 +8,7 @@ fn cachedscope_1_js() {
         source_path: "cachedscope_1.js",
         baseline_path: Some("cachedscope_1.baseline"),
         compile_flags: vec!["-force:cachedscope"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -29,6 +30,7 @@ fn closure_js() {
         source_path: "closure.js",
         baseline_path: Some("closure.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -51,6 +53,7 @@ fn closure_multiple_1_js() {
         source_path: "closure_multiple_1.js",
         baseline_path: Some("closure_multiple_1.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -62,6 +65,7 @@ fn closure_multiple_2_js() {
         source_path: "closure_multiple_2.js",
         baseline_path: Some("closure_multiple_2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -84,6 +88,7 @@ fn closure_binding_2_js() {
         source_path: "closure_binding_2.js",
         baseline_path: Some("closure_binding_2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -106,6 +111,7 @@ fn closure_qmark_js() {
         source_path: "closure-qmark.js",
         baseline_path: Some("closure-qmark.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -182,15 +188,17 @@ fn invalcachedscope_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Serialized</compile-flags>
-//     <files>invalcachedscope.js</files>
-//     <baseline>invalcachedscope.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn invalcachedscope_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalcachedscope.js",
+        baseline_path: Some("invalcachedscope.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -220,6 +228,7 @@ fn bug_os_2299723_js() {
         source_path: "bug_OS_2299723.js",
         baseline_path: Some("bug_OS_2299723.baseline"),
         compile_flags: vec!["-force:cachedscope"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -257,13 +266,16 @@ fn bug_os_9781249_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_9008744.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_os_9008744_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_9008744.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_os_10735999_js() {
@@ -275,13 +287,16 @@ fn bug_os_10735999_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_13412380.js</files>
-//     <tags>BugFix,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_os_13412380_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_13412380.js",
+        tags: vec!["BugFix", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn copy_prop_stack_slot_js() {
@@ -293,14 +308,6 @@ fn copy_prop_stack_slot_js() {
     };
     common::run_test(&test);
 }
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_13412380.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
 
 #[test]
 fn update_funcexpr_js() {

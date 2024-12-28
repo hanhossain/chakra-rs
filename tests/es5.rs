@@ -19,6 +19,7 @@ fn lex_u3_js() {
         source_path: "Lex_u3.js",
         baseline_path: Some("Lex_u3.baseline"),
         compile_flags: vec!["-ES6Unicode-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -277,15 +278,17 @@ fn define_property_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Serialized</compile-flags>
-//     <files>defineProperty.js</files>
-//     <baseline>defineProperty.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn define_property_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defineProperty.js",
+        baseline_path: Some("defineProperty.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn define_index_property_js() {
@@ -298,15 +301,17 @@ fn define_index_property_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Serialized</compile-flags>
-//     <files>defineIndexProperty.js</files>
-//     <baseline>defineIndexProperty.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn define_index_property_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defineIndexProperty.js",
+        baseline_path: Some("defineIndexProperty.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn enumerable_js() {

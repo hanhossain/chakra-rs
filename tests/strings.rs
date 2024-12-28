@@ -62,6 +62,7 @@ fn concat1_js() {
         source_path: "concat1.js",
         baseline_path: Some("concat1.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -73,6 +74,7 @@ fn concat2_js() {
         source_path: "concat2.js",
         baseline_path: Some("concat2.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -106,6 +108,7 @@ fn concat5_js() {
         source_path: "concat5.js",
         baseline_path: Some("concat5.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -138,6 +141,7 @@ fn concat_empty_js() {
         source_path: "concat_empty.js",
         baseline_path: Some("concat_empty.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -160,6 +164,7 @@ fn split1_js() {
         source_path: "split1.js",
         baseline_path: Some("split1_v3.baseline"),
         compile_flags: vec!["-ES6ToLength"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -192,6 +197,7 @@ fn string_replace_js() {
         source_path: "string_replace.js",
         baseline_path: Some("string_replace.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -289,6 +295,7 @@ fn substring_js() {
         source_path: "substring.js",
         baseline_path: Some("substring.baseline"),
         compile_flags: vec!["-CollectGarbage", "-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -300,6 +307,7 @@ fn html_helpers_js() {
         source_path: "HTMLHelpers.js",
         baseline_path: Some("HTMLHelpers.baseline"),
         compile_flags: vec!["-Intl-", "-ES6StringPrototypeFixes"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -322,6 +330,7 @@ fn length_js() {
         source_path: "length.js",
         baseline_path: Some("length.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -333,6 +342,7 @@ fn stringtypespec_js() {
         source_path: "stringtypespec.js",
         baseline_path: Some("stringtypespec.baseline"),
         compile_flags: vec!["-Intl-"],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -409,6 +419,7 @@ fn string_tag_functions_js() {
         source_path: "StringTagFunctions.js",
         baseline_path: Some("StringTagFunctions.baseline"),
         compile_flags: vec!["-ES6StringPrototypeFixes"],
+        ..Default::default()
     };
     common::run_test(&test);
 }

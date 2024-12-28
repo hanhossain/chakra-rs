@@ -1,10 +1,12 @@
 mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/InlineCaches";
 
 #[test]
 fn t0_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t0.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t0.baseline"),
+        directory: DIRECTORY,
+        source_path: "t0.js",
+        baseline_path: Some("t0.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -13,8 +15,9 @@ fn t0_js() {
 #[test]
 fn t1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t1.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t1.baseline"),
+        directory: DIRECTORY,
+        source_path: "t1.js",
+        baseline_path: Some("t1.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -23,8 +26,9 @@ fn t1_js() {
 #[test]
 fn t2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t2.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t2.baseline"),
+        directory: DIRECTORY,
+        source_path: "t2.js",
+        baseline_path: Some("t2.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -33,8 +37,9 @@ fn t2_js() {
 #[test]
 fn t3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t3.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t3.baseline"),
+        directory: DIRECTORY,
+        source_path: "t3.js",
+        baseline_path: Some("t3.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -43,8 +48,9 @@ fn t3_js() {
 #[test]
 fn t4_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t4.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t4.baseline"),
+        directory: DIRECTORY,
+        source_path: "t4.js",
+        baseline_path: Some("t4.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -53,8 +59,9 @@ fn t4_js() {
 #[test]
 fn t5_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/t5.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/t5.baseline"),
+        directory: DIRECTORY,
+        source_path: "t5.js",
+        baseline_path: Some("t5.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -63,26 +70,31 @@ fn t5_js() {
 #[test]
 fn test6_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/test6.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/test6.baseline"),
+        directory: DIRECTORY,
+        source_path: "test6.js",
+        baseline_path: Some("test6.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>TypePropertyCache_CrossContext.js</files>
-//     <baseline>TypePropertyCache_CrossContext.baseline</baseline>
-//     <tags>exclude_jsrt</tags>
-//   </default>
-// </test>
+#[test]
+fn type_property_cache_cross_context_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "TypePropertyCache_CrossContext.js",
+        baseline_path: Some("TypePropertyCache_CrossContext.baseline"),
+        tags: vec!["exclude_jsrt"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn getter_sideeffect_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/getter_sideeffect.js",
+        directory: DIRECTORY,
+        source_path: "getter_sideeffect.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -91,10 +103,9 @@ fn getter_sideeffect_js() {
 #[test]
 fn prototype_chain_modifications_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/prototypeChainModifications.js",
-        baseline_path: Some(
-            "chakracore-cxx/test/InlineCaches/prototypeChainModifications.baseline",
-        ),
+        directory: DIRECTORY,
+        source_path: "prototypeChainModifications.js",
+        baseline_path: Some("prototypeChainModifications.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -103,10 +114,9 @@ fn prototype_chain_modifications_js() {
 #[test]
 fn inline_local_cache_without_property_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/inlineLocalCacheWithoutProperty.js",
-        baseline_path: Some(
-            "chakracore-cxx/test/InlineCaches/inlineLocalCacheWithoutProperty.baseline",
-        ),
+        directory: DIRECTORY,
+        source_path: "inlineLocalCacheWithoutProperty.js",
+        baseline_path: Some("inlineLocalCacheWithoutProperty.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -115,7 +125,8 @@ fn inline_local_cache_without_property_js() {
 #[test]
 fn writable1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/writable1.js",
+        directory: DIRECTORY,
+        source_path: "writable1.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -124,7 +135,8 @@ fn writable1_js() {
 #[test]
 fn writable2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/writable2.js",
+        directory: DIRECTORY,
+        source_path: "writable2.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -133,7 +145,8 @@ fn writable2_js() {
 #[test]
 fn writable3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/writable3.js",
+        directory: DIRECTORY,
+        source_path: "writable3.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -142,7 +155,8 @@ fn writable3_js() {
 #[test]
 fn defaultsetterbug_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/defaultsetterbug.js",
+        directory: DIRECTORY,
+        source_path: "defaultsetterbug.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -151,7 +165,8 @@ fn defaultsetterbug_js() {
 #[test]
 fn big_dictionary_type_handler_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/BigDictionaryTypeHandler.js",
+        directory: DIRECTORY,
+        source_path: "BigDictionaryTypeHandler.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -160,8 +175,9 @@ fn big_dictionary_type_handler_js() {
 #[test]
 fn add_fld_fast_path_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/addFldFastPath.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/addFldFastPath.baseline"),
+        directory: DIRECTORY,
+        source_path: "addFldFastPath.js",
+        baseline_path: Some("addFldFastPath.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -170,8 +186,9 @@ fn add_fld_fast_path_js() {
 #[test]
 fn missing_property_cache1_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/MissingPropertyCache1.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/MissingPropertyCache1.baseline"),
+        directory: DIRECTORY,
+        source_path: "MissingPropertyCache1.js",
+        baseline_path: Some("MissingPropertyCache1.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -180,8 +197,9 @@ fn missing_property_cache1_js() {
 #[test]
 fn missing_property_cache2_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/MissingPropertyCache2.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/MissingPropertyCache2.baseline"),
+        directory: DIRECTORY,
+        source_path: "MissingPropertyCache2.js",
+        baseline_path: Some("MissingPropertyCache2.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -190,8 +208,9 @@ fn missing_property_cache2_js() {
 #[test]
 fn missing_property_cache3_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/MissingPropertyCache3.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/MissingPropertyCache3.baseline"),
+        directory: DIRECTORY,
+        source_path: "MissingPropertyCache3.js",
+        baseline_path: Some("MissingPropertyCache3.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -200,7 +219,8 @@ fn missing_property_cache3_js() {
 #[test]
 fn missing_property_cache4_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/MissingPropertyCache4.js",
+        directory: DIRECTORY,
+        source_path: "MissingPropertyCache4.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -209,7 +229,8 @@ fn missing_property_cache4_js() {
 #[test]
 fn missing_proto_inval_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/MissingProtoInval.js",
+        directory: DIRECTORY,
+        source_path: "MissingProtoInval.js",
         ..Default::default()
     };
     common::run_test(&test);
@@ -218,10 +239,9 @@ fn missing_proto_inval_js() {
 #[test]
 fn instance_of_cache_cross_registration_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/instanceOfCacheCrossRegistration.js",
-        baseline_path: Some(
-            "chakracore-cxx/test/InlineCaches/instanceOfCacheCrossRegistration.baseline",
-        ),
+        directory: DIRECTORY,
+        source_path: "instanceOfCacheCrossRegistration.js",
+        baseline_path: Some("instanceOfCacheCrossRegistration.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
@@ -230,8 +250,9 @@ fn instance_of_cache_cross_registration_js() {
 #[test]
 fn bug_vso_os_1206083_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/InlineCaches/bug_vso_os_1206083.js",
-        baseline_path: Some("chakracore-cxx/test/InlineCaches/bug_vso_os_1206083.baseline"),
+        directory: DIRECTORY,
+        source_path: "bug_vso_os_1206083.js",
+        baseline_path: Some("bug_vso_os_1206083.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
