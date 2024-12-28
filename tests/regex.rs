@@ -259,23 +259,17 @@ fn bol_eol_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>crossContext.js</files>
-//     <baseline>crossContext.baseline</baseline>
-//     <tags>exclude_native</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>crossContext.js</files>
-//     <baseline>crossContext.baseline</baseline>
-//     <tags>exclude_native</tags>
-//   </default>
-// </test>
+#[test]
+fn cross_context_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "crossContext.js",
+        baseline_path: Some("crossContext.baseline"),
+        tags: vec!["exclude_native"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn properties_js() {
