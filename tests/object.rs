@@ -517,54 +517,69 @@ fn object_header_inlining_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_SimpleDictTypeHandler.js</files>
-//     <baseline>ObjectHeaderInlining_SimpleDictTypeHandler.baseline</baseline>
-//     <compile-flags>-nonative</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_simple_dict_type_handler_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_SimpleDictTypeHandler.js",
+        baseline_path: Some("ObjectHeaderInlining_SimpleDictTypeHandler.baseline"),
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_DictTypeHandler.js</files>
-//     <baseline>ObjectHeaderInlining_DictTypeHandler.baseline</baseline>
-//     <compile-flags>-nonative</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_dict_type_handler_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_DictTypeHandler.js",
+        baseline_path: Some("ObjectHeaderInlining_DictTypeHandler.baseline"),
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_deleteProps.js</files>
-//     <baseline>ObjectHeaderInlining_deleteProps.baseline</baseline>
-//     <compile-flags>-nonative</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_delete_props_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_deleteProps.js",
+        baseline_path: Some("ObjectHeaderInlining_deleteProps.baseline"),
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_prototype.js</files>
-//     <compile-flags>-nonative</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_prototype_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_prototype.js",
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_prototypeTypeChange.js</files>
-//     <baseline>ObjectHeaderInlining_prototypeTypeChange.baseline</baseline>
-//     <compile-flags>-nonative</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_prototype_type_change_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_prototypeTypeChange.js",
+        baseline_path: Some("ObjectHeaderInlining_prototypeTypeChange.baseline"),
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn object_header_inlining_obj_array_fast_path_js() {
