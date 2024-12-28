@@ -66,14 +66,17 @@ fn array_sort_order_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_init.js</files>
-//     <baseline>array_init.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[ignore]
+#[test]
+fn array_init_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_init.js",
+        baseline_path: Some("array_init.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn array_init2_js_serialized() {
@@ -1488,18 +1491,24 @@ fn bug_gh5667_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_gh6320.js</files>
-//     <tags>exclude_nonative</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_gh6320_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_gh6320.js",
+        tags: vec!["exclude_nonative"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_sort_random.js</files>
-//     <tags>exclude_disable_jit,exclude_lite</tags>
-//   </default>
-// </test>
+#[test]
+fn array_sort_random_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_sort_random.js",
+        tags: vec!["exclude_disable_jit", "exclude_lite"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}

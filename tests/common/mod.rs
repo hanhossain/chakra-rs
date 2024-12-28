@@ -37,6 +37,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
         Variant::DisableJit => VariantConfig {
             compile_flags: vec!["-nonative"],
             excluded_tags: vec![
+                "exclude_disable_jit",
                 "exclude_interpreted",
                 "fails_interpreted",
                 "require_backend",
