@@ -210,15 +210,17 @@ fn fieldhoist8_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_nullfieldhoist.js</files>
-//     <compile-flags></compile-flags>
-//     <baseline>fieldhoist_nullfieldhoist.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_nullfieldhoist_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_nullfieldhoist.js",
+        baseline_path: Some("fieldhoist_nullfieldhoist.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist9_js() {
@@ -276,23 +278,29 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_typespec2.js</files>
-//     <compile-flags>-force:jitLoopBody -off:aggressiveIntTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_typespec2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_typespec2.js",
+        compile_flags: vec!["-force:jitLoopBody", "-off:aggressiveIntTypeSpec"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_typespec3.js</files>
-//     <baseline>fieldhoist_typespec3.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_typespec3_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_typespec3.js",
+        baseline_path: Some("fieldhoist_typespec3.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist_undefined_global_js() {
@@ -316,15 +324,17 @@ fn fieldhoist_negzero_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_negzero.js</files>
-//     <compile-flags>-Serialized</compile-flags>
-//     <baseline>fieldhoist_negzero.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_negzero_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_negzero.js",
+        baseline_path: Some("fieldhoist_negzero.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist_typeof_js() {
@@ -593,45 +603,58 @@ fn fieldhoist_number_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec1.js</files>
-//     <baseline>objtypespec1.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec1.js",
+        baseline_path: Some("objtypespec1.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec2.js</files>
-//     <baseline>objtypespec2.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec2.js",
+        baseline_path: Some("objtypespec2.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec3.js</files>
-//     <baseline>objtypespec3.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec3_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec3.js",
+        baseline_path: Some("objtypespec3.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objtypespec-fieldhoist.js</files>
-//     <baseline>objtypespec-fieldhoist.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit -bgjit- -loopinterpretcount:0 </compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn objtypespec_fieldhoist_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objtypespec-fieldhoist.js",
+        baseline_path: Some("objtypespec-fieldhoist.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-bgjit-",
+            "-loopinterpretcount:0",
+        ],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
