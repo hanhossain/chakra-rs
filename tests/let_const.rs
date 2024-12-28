@@ -45,15 +45,17 @@ fn d_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>d.js</files>
-//     <baseline>d.baseline</baseline>
-//     <compile-flags>-forceundodefer</compile-flags>
-//   </default>
-// </test>
-// TODO (hanhossain): migrate
+#[test]
+fn d_js_forceundodefer() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "d.js",
+        baseline_path: Some("d.baseline"),
+        compile_flags: vec!["-forceundodefer"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn e_js() {
@@ -66,14 +68,17 @@ fn e_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>e.js</files>
-//     <baseline>e.baseline</baseline>
-//     <compile-flags>-forceundodefer</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn e_js_forceundodefer() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "e.js",
+        baseline_path: Some("e.baseline"),
+        compile_flags: vec!["-forceundodefer"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn f_js() {
@@ -218,14 +223,17 @@ fn redeclaration_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>redeclaration.js</files>
-//     <baseline>redeclaration.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn redeclaration_js_forcedeferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "redeclaration.js",
+        baseline_path: Some("redeclaration.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn r_js() {
@@ -249,14 +257,17 @@ fn assignment_to_const_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>AssignmentToConst.js</files>
-//     <baseline>AssignmentToConst.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn assignment_to_const_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "AssignmentToConst.js",
+        baseline_path: Some("AssignmentToConst.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn decl_outof_block_js() {
@@ -269,34 +280,41 @@ fn decl_outof_block_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>DeclOutofBlock.js</files>
-//     <baseline>DeclOutofBlock.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn decl_out_of_block_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DeclOutofBlock.js",
+        baseline_path: Some("DeclOutofBlock.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>defer1.js</files>
-//     <baseline>defer1.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn defer1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defer1.js",
+        baseline_path: Some("defer1.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>defer2.js</files>
-//     <baseline>defer2.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn defer2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defer2.js",
+        baseline_path: Some("defer2.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn defer3_js() {
@@ -309,23 +327,29 @@ fn defer3_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>defer4.js</files>
-//     <baseline>defer4.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn defer4_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defer4.js",
+        baseline_path: Some("defer4.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>defer5.js</files>
-//     <baseline>defer5.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn defer5_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "defer5.js",
+        baseline_path: Some("defer5.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn tdz1_js() {
@@ -359,14 +383,17 @@ fn eval1_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>eval1.js</files>
-//     <baseline>eval1.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn eval1_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval1.js",
+        baseline_path: Some("eval1.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn scopegen1_js() {
@@ -412,14 +439,17 @@ fn for_loop_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>for-loop.js</files>
-//     <baseline>for-loop.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn for_loop_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "for-loop.js",
+        baseline_path: Some("for-loop.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn letvar_js() {
@@ -442,91 +472,121 @@ fn eval_letconst_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>eval_letconst.js</files>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn eval_letconst_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval_letconst.js",
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>eval_letconst.js</files>
-//     <compile-flags>-force:evalcompile</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn eval_letconst_js_force_eval_compile() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval_letconst.js",
+        compile_flags: vec!["-force:evalcompile"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>eval_letconst.js</files>
-//     <compile-flags>-force:deferparse -force:evalcompile</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn eval_letconst_js_force_eval_compile_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval_letconst.js",
+        compile_flags: vec!["-force:deferparse", "-force:evalcompile"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arguments.js</files>
-//     <baseline>arguments.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn arguments_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arguments.js",
+        baseline_path: Some("arguments.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>seal.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn seal_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "seal.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>seal1.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn seal1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "seal1.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>seal2.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn seal2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "seal2.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dop.js</files>
-//     <baseline>dop.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn dop_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dop.js",
+        baseline_path: Some("dop.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dop1.js</files>
-//     <baseline>dop1.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn dop1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dop1.js",
+        baseline_path: Some("dop1.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delete.js</files>
-//     <baseline>delete.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn delete_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delete.js",
+        baseline_path: Some("delete.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn eval_fncdecl_js() {
@@ -572,48 +632,63 @@ fn with_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unassignedconst.js</files>
-//     <compile-flags>-Intl-</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn unassignedconst_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unassignedconst.js",
+        compile_flags: vec!["-Intl-"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unassignedconst.js</files>
-//     <compile-flags>-Intl- -force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn unassignedconst_js_force_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unassignedconst.js",
+        compile_flags: vec!["-Intl-", "-force:deferparse"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>letconst_undeclinlinecache.js</files>
-//     <compile-flags>-Intl-</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn letconst_undeclinlinecache_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "letconst_undeclinlinecache.js",
+        compile_flags: vec!["-Intl-"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>loopinit.js</files>
-//     <compile-flags>-loopinterpretcount:1 -bgjit-</compile-flags>
-//     <baseline>loopinit.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn loopinit_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopinit.js",
+        compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
+        baseline_path: Some("loopinit.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>letlet.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn letlet_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "letlet.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn shadowedsetter_js() {
