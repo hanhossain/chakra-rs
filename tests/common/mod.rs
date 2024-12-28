@@ -26,6 +26,9 @@ pub fn run_test(test: &Test) {
 
 fn run_test_variant(test: &Test, variant: Variant) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+    assert_ne!(test.directory, "");
+
     let test_dir = manifest_dir.join(test.directory);
     let source = test_dir.join(test.source_path);
     println!("source_path: {:?}", source);

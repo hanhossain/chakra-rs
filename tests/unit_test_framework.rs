@@ -1,10 +1,12 @@
 mod common;
+const DIRECTORY: &str = "chakracore-cxx/test/UnitTestFramework";
 
 #[test]
 fn utf_tests_js() {
     let test = common::Test {
-        source_path: "chakracore-cxx/test/UnitTestFramework/UTFTests.js",
-        baseline_path: Some("chakracore-cxx/test/UnitTestFramework/UTFTests.baseline"),
+        directory: DIRECTORY,
+        source_path: "UTFTests.js",
+        baseline_path: Some("UTFTests.baseline"),
         ..Default::default()
     };
     common::run_test(&test);
