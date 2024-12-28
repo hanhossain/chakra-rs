@@ -188,15 +188,17 @@ fn invalcachedscope_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Serialized</compile-flags>
-//     <files>invalcachedscope.js</files>
-//     <baseline>invalcachedscope.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn invalcachedscope_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalcachedscope.js",
+        baseline_path: Some("invalcachedscope.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -264,13 +266,16 @@ fn bug_os_9781249_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_9008744.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_os_9008744_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_9008744.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_os_10735999_js() {
@@ -282,13 +287,16 @@ fn bug_os_10735999_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_13412380.js</files>
-//     <tags>BugFix,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_os_13412380_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_13412380.js",
+        tags: vec!["BugFix", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn copy_prop_stack_slot_js() {
@@ -300,14 +308,6 @@ fn copy_prop_stack_slot_js() {
     };
     common::run_test(&test);
 }
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_13412380.js</files>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
 
 #[test]
 fn update_funcexpr_js() {
