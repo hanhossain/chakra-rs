@@ -114,15 +114,17 @@ fn error_num_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>CallNonFunction.js</files>
-//     <baseline>CallNonFunction_3.baseline</baseline>
-//     <tags>exclude_native,exclude_dynapogo</tags>
-//     <!-- one of the error is different in JIT'ed code (Microsoft/ChakraCore#3011) -->
-//   </default>
-// </test>
+#[test]
+fn call_non_function_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CallNonFunction.js",
+        baseline_path: Some("CallNonFunction_3.baseline"),
+        tags: vec!["exclude_native", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn source_info_00_js() {
@@ -219,14 +221,18 @@ fn various_errors_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>RuntimeCompileStackOverflow.js</files>
-//     <baseline>RuntimeCompileStackOverflow.baseline</baseline>
-//     <tags>exclude_forceundodefer,exclude_arm,exclude_xplat</tags>
-//   </default>
-// </test>
+#[cfg(all(windows, not(target_arch = "arm")))]
+#[test]
+fn runtime_compile_stack_overflow_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "RuntimeCompileStackOverflow.js",
+        baseline_path: Some("RuntimeCompileStackOverflow.baseline"),
+        tags: vec!["exclude_forceundodefer"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
