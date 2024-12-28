@@ -66,17 +66,14 @@ fn array_sort_order_js() {
     common::run_test(&test);
 }
 
-#[ignore]
-#[test]
-fn array_init_js() {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "array_init.js",
-        baseline_path: Some("array_init.baseline"),
-        ..Default::default()
-    };
-    common::run_test(&test);
-}
+// TODO (hanhossain): migrate
+// <test>
+//   <default>
+//     <files>array_init.js</files>
+//     <baseline>array_init.baseline</baseline>
+//     <tags>Slow</tags>
+//   </default>
+// </test>
 
 #[test]
 fn array_init2_js_serialized() {
