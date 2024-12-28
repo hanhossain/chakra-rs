@@ -341,13 +341,16 @@ fn has_bailed_out_bug_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>hasBailedOutBug2.js</files>
-//       <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn has_bailed_out_bug2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "hasBailedOutBug2.js",
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn has_bailed_out_bug3_js() {
