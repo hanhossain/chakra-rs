@@ -2605,7 +2605,7 @@ fn bug_os14880030_js_force_defer_parse() {
 }
 
 #[test]
-fn bug_os13976524_js() {
+fn bug_os13976524_js_force_defer_parse() {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS13976524.js",
@@ -2638,7 +2638,7 @@ fn bug_issue_4635_js() {
 }
 
 #[test]
-fn bug_OS13976524_js() {
+fn bug_os13976524_js() {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS13976524.js",
