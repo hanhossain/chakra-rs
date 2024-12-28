@@ -19,76 +19,125 @@ const DIRECTORY: &str = "chakracore-cxx/test/es6module";
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>moduletest1.js</files>
-//     <compile-flags>-ES6Module</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn moduletest1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "moduletest1.js",
+        compile_flags: vec!["-ES6Module"],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>moduletest2.js</files>
-//     <compile-flags>-ES6Module</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn moduletest2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "moduletest2.js",
+        compile_flags: vec!["-ES6Module"],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-syntax.js</files>
-//     <compile-flags>-MuteHostErrorMsg -ES6Module -args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_syntax_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-syntax.js",
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-ES6Module",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-syntax1.js</files>
-//     <compile-flags>-ES6Module -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_syntax1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-syntax1.js",
+        compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-functionality.js</files>
-//     <compile-flags>-MuteHostErrorMsg -ES6Module -args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_functionality_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-functionality.js",
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-ES6Module",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>moduleUrlInError.js</files>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_url_in_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "moduleUrlInError.js",
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dynamic-module-functionality.js</files>
-//       <compile-flags>-ES6Module -ESDynamicImport -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn dynamic_module_functionality_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dynamic-module-functionality.js",
+        compile_flags: vec![
+            "-ES6Module",
+            "-ESDynamicImport",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dynamic-module-import-specifier.js</files>
-//       <compile-flags>-MuteHostErrorMsg -ES6Module -ESDynamicImport -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn dynamic_module_import_specifier_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dynamic-module-import-specifier.js",
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-ES6Module",
+            "-ESDynamicImport",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn dynamic_import_promises_5796_js() {
@@ -101,23 +150,42 @@ fn dynamic_import_promises_5796_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-syntax.js</files>
-//     <compile-flags>-MuteHostErrorMsg -ES6Module -force:deferparse -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_syntax_js_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-syntax.js",
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-ES6Module",
+            "-force:deferparse",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-syntax1.js</files>
-//     <compile-flags>-ES6Module -force:deferparse -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_syntax1_js_defer_parse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-syntax1.js",
+        compile_flags: vec![
+            "-ES6Module",
+            "-force:deferparse",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -128,42 +196,66 @@ fn dynamic_import_promises_5796_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-bugfixes.js</files>
-//     <compile-flags>-MuteHostErrorMsg -ES6Module -args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn module_bugfixes_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-bugfixes.js",
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-ES6Module",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>exportBindingLoader.js</files>
-//     <compile-flags>-ES6Module -args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn export_binding_loader_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "exportBindingLoader.js",
+        compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test_bug_2645.js</files>
-//     <compile-flags>-ES6Module</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn test_bug_2645_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test_bug_2645.js",
+        compile_flags: vec!["-ES6Module"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS12095746.js</files>
-//       <compile-flags>-MuteHostErrorMsg -IgnoreScriptErrorCode -TraceHostCallback -ES6Module -ESDynamicImport</compile-flags>
-//     <tags>exclude_dynapogo,exclude_sanitize_address,exclude_drt</tags>
-//     <baseline>bug_OS12095746.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn bug_os12095746_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS12095746.js",
+        baseline_path: Some("bug_OS12095746.baseline"),
+        compile_flags: vec![
+            "-MuteHostErrorMsg",
+            "-IgnoreScriptErrorCode",
+            "-TraceHostCallback",
+            "-ES6Module",
+            "-ESDynamicImport",
+        ],
+        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_os14562349_js() {
@@ -176,57 +268,82 @@ fn bug_os14562349_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_issue_3076.js</files>
-//   <compile-flags>-force:deferparse -ESDynamicImport</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_issue_3076_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_issue_3076.js",
+        compile_flags: vec!["-force:deferparse", "-ESDynamicImport"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_issue_3257.js</files>
-//     <compile-flags>-ESDynamicImport</compile-flags>
-//     <baseline>bug_issue_3257.baseline</baseline>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_issue_3257_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_issue_3257.js",
+        baseline_path: Some("bug_issue_3257.baseline"),
+        compile_flags: vec!["-ESDynamicImport"],
+        tags: vec!["exclude_sanitize_address"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_issue_5777.js</files>
-//     <compile-flags>-ESDynamicImport -MuteHostErrorMsg</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_issue_5777_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_issue_5777.js",
+        compile_flags: vec!["-ESDynamicImport", "-MuteHostErrorMsg"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>export_namespace_as.js</files>
-//     <compile-flags>-ESExportNsAs -MuteHostErrorMsg -args summary -endargs</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
-//   <test>
-//   <default>
-//     <files>multiple-roots-circular.js</files>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn export_namespace_as_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "export_namespace_as.js",
+        compile_flags: vec![
+            "-ESExportNsAs",
+            "-MuteHostErrorMsg",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>GetModuleNamespace.js</files>
-//     <compile-flags>-ESDynamicImport</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn multiple_roots_circular_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multiple-roots-circular.js",
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
+
+#[test]
+fn esdynamic_import_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "GetModuleNamespace.js",
+        compile_flags: vec!["-ESDynamicImport"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn module_load_twice_js() {
@@ -249,14 +366,17 @@ fn passmodule_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS17830745.js</files>
-//     <compile-flags>-MuteHostErrorMsg</compile-flags>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_os17830745_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS17830745.js",
+        compile_flags: vec!["-MuteHostErrorMsg"],
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_os18460517_js() {
@@ -285,10 +405,13 @@ fn import_meta_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>top-level-await.js</files>
-//     <compile-flags>-ESDynamicImport -ESTopLevelAwait -module</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn top_level_await_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "top-level-await.js",
+        compile_flags: vec!["-ESDynamicImport", "-ESTopLevelAwait", "-module"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
