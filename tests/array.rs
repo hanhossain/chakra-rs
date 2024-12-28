@@ -75,15 +75,17 @@ fn array_sort_order_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Serialized</compile-flags>
-//     <files>array_init2.js</files>
-//     <baseline>array_init2.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn array_init2_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_init2.js",
+        baseline_path: Some("array_init2.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -142,14 +144,17 @@ fn bug1065362_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug11370283.js</files>
-//     <compile-flags>-bgjit- -lic:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug11370283_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug11370283.js",
+        compile_flags: vec!["-bgjit-", "-lic:1"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug4916987_js() {
@@ -337,14 +342,21 @@ fn ldindex_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug612012.js</files>
-//     <compile-flags>-maxinterpretcount:1 -loopinterpretcount:1 -ForceArrayBTree -oopjit-</compile-flags>
-//     <tags>exclude_serialized</tags>
-//   </default>
-// </test>
+#[test]
+fn bug612012_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug612012.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-loopinterpretcount:1",
+            "-ForceArrayBTree",
+            "-oopjit-",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn segment_map_flag_reset_in_jsarray_constructor_js() {
@@ -821,16 +833,18 @@ fn nativearray_gen1_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nativearray_gen1.js</files>
-//     <compile-flags>-sse:0 -forceserialized</compile-flags>
-//     <baseline>nativearray_gen1.baseline</baseline>
-//     <!-- Exclude the serialized variants because we're using -forceserialized here. -->
-//     <tags>exclude_serialized</tags>
-//   </default>
-// </test>
+#[test]
+fn nativearray_gen1_js_force_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nativearray_gen1.js",
+        baseline_path: Some("nativearray_gen1.baseline"),
+        compile_flags: vec!["-sse:0", "-forceserialized"],
+        // exclude the serialized variants because we're using -forceserialized here.
+        tags: vec!["exclude_serialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn nativearray_gen2_js() {
@@ -1148,25 +1162,33 @@ fn bug945376size_bound_start_seg_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>CopyOnAccessArray_bugs.js</files>
-//     <tags>require_backend</tags>
-//     <compile-flags>-force:copyonaccessarray</compile-flags>
-//     <baseline>CopyOnAccessArray_bugs.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn copy_on_access_array_bugs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CopyOnAccessArray_bugs.js",
+        baseline_path: Some("CopyOnAccessArray_bugs.baseline"),
+        compile_flags: vec!["-force:copyonaccessarray"],
+        tags: vec!["require_backend"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>CopyOnAccessArray_cache_index_overflow.js</files>
-//     <tags>exclude_nonative,exclude_forceserialized,require_backend</tags>
-//     <compile-flags>-force:copyonaccessarray -testtrace:CopyOnAccessArray</compile-flags>
-//     <baseline>CopyOnAccessArray_cache_index_overflow.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn copy_on_access_array_cache_index_overflow_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CopyOnAccessArray_cache_index_overflow.js",
+        baseline_path: Some("CopyOnAccessArray_cache_index_overflow.baseline"),
+        compile_flags: vec!["-force:copyonaccessarray", "-testtrace:CopyOnAccessArray"],
+        tags: vec![
+            "exclude_nonative",
+            "exclude_forceserialized",
+            "require_backend",
+        ],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn memop_lifetime_bug_js() {
@@ -1454,14 +1476,17 @@ fn filter_with_typed_array_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_gh5667.js</files>
-//     <tags>exclude_windows</tags>
-//     <compile-flags>-JsBuiltIn-</compile-flags>
-//   </default>
-// </test>
+#[cfg(not(windows))]
+#[test]
+fn bug_gh5667_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_gh5667.js",
+        compile_flags: vec!["-JsBuiltIn-"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
