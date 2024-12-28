@@ -221,7 +221,7 @@ fn various_errors_js() {
     common::run_test(&test);
 }
 
-#[cfg(all(windows, not(target_arch = "arm")))]
+#[cfg(all(windows, not(target_arch = "aarch64")))]
 #[test]
 fn runtime_compile_stack_overflow_js() {
     let test = common::Test {

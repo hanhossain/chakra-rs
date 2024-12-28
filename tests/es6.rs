@@ -217,14 +217,17 @@ fn super_dot_osbug3930962_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toStringTag.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn to_string_tag_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toStringTag.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn proto_basic_js() {
@@ -259,15 +262,17 @@ fn proto_initializer_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>proto_initializer.js</files>
-//     <baseline>proto_initializer.baseline</baseline>
-//     <compile-flags>-ForceSerialized</compile-flags>
-//     <tags>exclude_serialized</tags>
-//   </default>
-// </test>
+#[test]
+fn proto_initializer_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "proto_initializer.js",
+        baseline_path: Some("proto_initializer.baseline"),
+        compile_flags: vec!["-ForceSerialized"],
+        tags: vec!["exclude_serialized"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn proto_addprop_js() {
@@ -1104,15 +1109,17 @@ fn bug517864_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_6_identifier_Blue511452.js</files>
-//     <baseline>unicode_6_identifier_Blue511452.baseline</baseline>
-//     <compile-flags> -ES6Unicode</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn unicode_6_identifier_blue511452_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_6_identifier_Blue511452.js",
+        baseline_path: Some("unicode_6_identifier_Blue511452.baseline"),
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1123,42 +1130,53 @@ fn bug517864_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_6_identifier_Blue524737.js</files>
-//     <baseline>unicode_6_identifier_Blue524737.baseline</baseline>
-//     <compile-flags> -ES6Unicode</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn unicode_6_identifier_blue524737_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_6_identifier_Blue524737.js",
+        baseline_path: Some("unicode_6_identifier_Blue524737.baseline"),
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>supersyntax02.js</files>
-//     <baseline>supersyntax02.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn supersyntax02_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "supersyntax02.js",
+        baseline_path: Some("supersyntax02.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>supersyntax05.js</files>
-//     <baseline>supersyntax05.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn supersyntax05_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "supersyntax05.js",
+        baseline_path: Some("supersyntax05.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>supersyntax06.js</files>
-//     <baseline>supersyntax06.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn supersyntax06_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "supersyntax06.js",
+        baseline_path: Some("supersyntax06.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn objlit_js() {
@@ -1501,23 +1519,35 @@ fn rest_js_force_defer_parse() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-syntax.js</files>
-//     <compile-flags>-ES6Generators -args summary -endargs</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_syntax_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-syntax.js",
+        compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-syntax.js</files>
-//     <compile-flags>-ES6Generators -force:deferparse -args summary -endargs</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_syntax_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-syntax.js",
+        compile_flags: vec![
+            "-ES6Generators",
+            "-force:deferparse",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn for_in_edge_cases_js() {
@@ -1530,87 +1560,114 @@ fn for_in_edge_cases_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-deferparse.js</files>
-//     <compile-flags>-force:deferparse -ES6Generators</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_deferparse_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-deferparse.js",
+        compile_flags: vec!["-force:deferparse", "-ES6Generators"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-apis.js</files>
-//     <compile-flags>-ES6Generators -args summary -endargs</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_apis_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-apis.js",
+        compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-functionality.js</files>
-//     <compile-flags>-ES6Generators -args summary -endargs</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_functionality_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-functionality.js",
+        compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-deferred.js</files>
-//     <compile-flags>-ES6Generators -force:deferparse</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-deferred.js",
+        compile_flags: vec!["-ES6Generators", "-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-deferred.js</files>
-//     <compile-flags>-ES6Generators -serialized</compile-flags>
-//     <tags>exclude_arm,exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_deferred_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-deferred.js",
+        compile_flags: vec!["-ES6Generators", "-serialized"],
+        tags: vec!["exclude_forceserialized"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-undodefer.js</files>
-//     <compile-flags>-ES6Generators -force:deferparse -forceundodefer</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn generators_undodefer_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-undodefer.js",
+        compile_flags: vec!["-ES6Generators", "-force:deferparse", "-forceundodefer"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-cachedscope.js</files>
-//     <compile-flags>-ES6Generators</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_cachedscope_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-cachedscope.js",
+        compile_flags: vec!["-ES6Generators"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-applyargs.js</files>
-//     <!-- -off:inlineapply triggers the use of the ApplyArgs bytecode -->
-//     <compile-flags>-ES6Generators -off:inlineapply</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_applyargs_js_no_inline_apply() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-applyargs.js",
+        compile_flags: vec!["-ES6Generators", "-off:inlineapply"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>generators-applyargs.js</files>
-//     <compile-flags>-ES6Generators</compile-flags>
-//     <tags>exclude_arm</tags>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[test]
+fn generators_applyargs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generators-applyargs.js",
+        compile_flags: vec!["-ES6Generators"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn destructuring_js() {
@@ -2064,14 +2121,17 @@ fn proxytest9_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ES6Function_bugs.js</files>
-//     <tags>exclude_nonrazzle</tags>
-//     <compile-flags>-ES6 -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn es6function_bugs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ES6Function_bugs.js",
+        compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_nonrazzle"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn os_2700778_js() {
@@ -2211,41 +2271,53 @@ fn es6class_super_chain_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>globalLambdaNewTargetSyntaxError.js</files>
-//     <baseline>globalLambdaNewTargetSyntaxError.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn global_lambda_new_target_syntax_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "globalLambdaNewTargetSyntaxError.js",
+        baseline_path: Some("globalLambdaNewTargetSyntaxError.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>globalNewTargetSyntaxError.js</files>
-//     <baseline>globalNewTargetSyntaxError.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn global_new_target_syntax_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "globalNewTargetSyntaxError.js",
+        baseline_path: Some("globalNewTargetSyntaxError.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>globalCatchNewTargetSyntaxError.js</files>
-//     <baseline>globalCatchNewTargetSyntaxError.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn global_catch_new_target_syntax_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "globalCatchNewTargetSyntaxError.js",
+        baseline_path: Some("globalCatchNewTargetSyntaxError.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>globalParamCatchNewTargetSyntaxError.js</files>
-//     <baseline>globalParamCatchNewTargetSyntaxError.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn global_param_catch_new_target_syntax_error_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "globalParamCatchNewTargetSyntaxError.js",
+        baseline_path: Some("globalParamCatchNewTargetSyntaxError.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn es6class_base_class_construction_js() {
@@ -2324,14 +2396,24 @@ fn object_literal_bug_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>OS_5403724.js</files>
-//     <tags>exclude_dynapogo</tags>
-//     <compile-flags>-maxinterpretcount:3 -off:simpleJit -ES6 -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn os_5403724_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_5403724.js",
+        compile_flags: vec![
+            "-maxinterpretcount:3",
+            "-off:simpleJit",
+            "-ES6",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn forloops_per_iteration_bindings_js() {
@@ -2355,32 +2437,42 @@ fn htmlcomments_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>await-futreserved-only-in-modules.js</files>
-//     <compile-flags>-MuteHostErrorMsg -ES6Module</compile-flags>
-//     <tags>exclude_dynapogo,exclude_xplat</tags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[test]
+fn await_futreserved_only_in_modules_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "await-futreserved-only-in-modules.js",
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>OS_5500719.js</files>
-//     <compile-flags>-forceserialized</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn os_5500719_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_5500719.js",
+        compile_flags: vec!["-forceserialized"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>OS_8600339.js</files>
-//     <compile-flags>-forceserialized</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn os_8600339_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_8600339.js",
+        compile_flags: vec!["-forceserialized"],
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn iteratorclose_js() {
@@ -2427,14 +2519,17 @@ fn bug_issue_1496_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_issue_3247.js</files>
-//     <baseline>bug_issue_3247.baseline</baseline>
-//     <tags>exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_issue_3247_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_issue_3247.js",
+        baseline_path: Some("bug_issue_3247.baseline"),
+        tags: vec!["exclude_sanitize_address"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn typedarray_bugs_js() {
@@ -2542,14 +2637,17 @@ fn bug_issue_4635_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS13976524.js</files>
-//     <tags>BugFix</tags>
-//     <compile-flags>-force:deferparse -args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn bug_OS13976524_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS13976524.js",
+        compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
+        tags: vec!["BugFix"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn defer_parse_lambda_js() {
