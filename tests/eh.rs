@@ -153,14 +153,17 @@ fn trylabel_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate, but it needs the baseline for some reason
-// <test>
-//   <default>
-//     <files>alignment.js</files>
-//     <compile-flags>-off:inline -checkalignment</compile-flags>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn alignment_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "alignment.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-off:inline", "-checkalignment"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn test101832_js() {

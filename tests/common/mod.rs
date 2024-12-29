@@ -80,14 +80,18 @@ fn run_test_variant(test: &Test, variant: Variant) {
         .collect::<Vec<_>>();
 
     if let Some(baseline_path) = test.baseline_path {
-        let baseline = manifest_dir.join(test.directory).join(baseline_path);
-        let expected = read_to_string(baseline).unwrap();
-        let expected = expected
-            .lines()
-            .map(|s| trim_carriage_return(s))
-            .collect::<Vec<_>>();
+        if baseline_path.is_empty() {
+            assert_eq!(Vec::<&str>::new(), actual);
+        } else {
+            let baseline = manifest_dir.join(test.directory).join(baseline_path);
+            let expected = read_to_string(baseline).unwrap();
+            let expected = expected
+                .lines()
+                .map(|s| trim_carriage_return(s))
+                .collect::<Vec<_>>();
 
-        assert_eq!(actual, expected);
+            assert_eq!(actual, expected);
+        }
     } else {
         println!("Actual output: {:#?}", actual);
         let mut passed = false;
