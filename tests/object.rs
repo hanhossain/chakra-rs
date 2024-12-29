@@ -473,14 +473,17 @@ fn large_aux_array_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stackobject_dependency.js</files>
-//     <baseline />
-//     <compile-flags>-off:inline</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn stackobject_dependency_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stackobject_dependency.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-off:inline"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn object_create_null_js() {
@@ -605,50 +608,53 @@ fn object_header_inlining_st_fld_opt_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stackobject_dependency.js</files>
-//     <baseline />
-//     <compile-flags>-off:inline</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn stackobject_dependency_js_off_inline() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stackobject_dependency.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-off:inline"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stackobject_dependency.js</files>
-//     <baseline />
-//     <compile-flags>-off:inline</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_new_prop_no_inline_cache_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stackobject_dependency.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-forcejitloopbody"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_NewPropNoInlineCache.js</files>
-//     <baseline />
-//     <compile-flags>-forcejitloopbody</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_new_prop_no_inline_cache_static_type_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_NewPropNoInlineCache_StaticType.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-msjrc:1", "-mic:1"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_NewPropNoInlineCache_StaticType.js</files>
-//     <baseline />
-//     <compile-flags>-msjrc:1 -mic:1</compile-flags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ObjectHeaderInlining_NewPropSharedInlineCache.js</files>
-//     <baseline />
-//     <compile-flags>-mic:1 -forcejitloopbody -off:interpreterautoprofile</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn object_header_inlining_new_prop_shared_inline_cache_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjectHeaderInlining_NewPropSharedInlineCache.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-mic:1", "-forcejitloopbody", "-off:interpreterautoprofile"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn for_in_inline_js() {
@@ -662,13 +668,16 @@ fn for_in_inline_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>forinenumcachebuiltin.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn forinenumcachebuiltin_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "forinenumcachebuiltin.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn assign_js() {

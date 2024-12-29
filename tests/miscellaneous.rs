@@ -22,13 +22,16 @@ fn has_only_writable_data_properties_cache_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>evalAlias.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn eval_alias_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "evalAlias.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn set_timeout_js() {

@@ -23,13 +23,16 @@ fn add_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>addcross.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn addcross_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "addcross.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>

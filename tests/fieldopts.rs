@@ -157,14 +157,17 @@ fn fieldhoist4_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist5.js</files>
-//     <compile-flags>-force:fieldcopyprop</compile-flags>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn fieldhoist5_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist5.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-force:fieldcopyprop"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist6_js() {
@@ -450,14 +453,16 @@ fn fieldhoist_slots2_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_objptrcopyprop.js</files>
-//     <compile-flags></compile-flags>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_objptrcopyprop_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_objptrcopyprop.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn fieldhoist_objptrcopyprop2_js() {
@@ -492,13 +497,16 @@ fn fieldhoist_stripbailouts_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>redundanttype2.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn redundanttype2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "redundanttype2.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn check_this_js() {
@@ -545,13 +553,16 @@ fn fieldcopyprop_typespec_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>fieldhoist_deletefld.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn fieldhoist_deletefld_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fieldhoist_deletefld.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn forcefixdataprops_js() {
@@ -564,13 +575,16 @@ fn forcefixdataprops_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>PropObjectPointerCopyProp.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn prop_object_pointer_copy_prop_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "PropObjectPointerCopyProp.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn redundanttype_kills_js() {
