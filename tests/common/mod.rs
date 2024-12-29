@@ -73,7 +73,6 @@ fn run_test_variant(test: &Test, variant: Variant) {
     let mut out = String::from_utf8(output.stdout).unwrap();
     let err = std::str::from_utf8(&output.stderr).unwrap();
     out.push_str(err);
-    println!("Output: {:#?}", out);
 
     let actual = out
         .lines()
