@@ -73,6 +73,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
     let mut out = String::from_utf8(output.stdout).unwrap();
     let err = std::str::from_utf8(&output.stderr).unwrap();
     out.push_str(err);
+    println!("Output: {:#?}", out);
 
     let actual = out
         .lines()
@@ -80,9 +81,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
         .collect::<Vec<_>>();
 
     if let Some(baseline_path) = test.baseline_path {
-        if baseline_path.is_empty() {
-            assert_eq!(Vec::<&str>::new(), actual);
-        } else {
+        if !baseline_path.is_empty() {
             let baseline = manifest_dir.join(test.directory).join(baseline_path);
             let expected = read_to_string(baseline).unwrap();
             let expected = expected

@@ -100,13 +100,16 @@ fn error_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>workingset.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn workingset_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "workingset.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn proxyenum_js() {

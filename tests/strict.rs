@@ -107,13 +107,16 @@ fn caller_or_args_no_access_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>evalargs.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[test]
+fn evalargs_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "evalargs.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>

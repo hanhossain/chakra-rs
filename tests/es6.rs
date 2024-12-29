@@ -2031,15 +2031,17 @@ fn stickyflag_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>utfbug.js</files>
-//     <baseline />
-//     <compile-flags>-dump:bytecode</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn utfbug_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "utfbug.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-dump:bytecode"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn proxybug_with_ld_fld_js() {
