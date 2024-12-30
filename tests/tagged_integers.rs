@@ -343,23 +343,39 @@ fn preincrement_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arrays.js</files>
-//     <tags>exclude_dynapogo,exclude_serialized,require_backend</tags>
-//     <compile-flags>-dynamicprofilecache:profile.dpl.arrays.js</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn arrays_js_dynamicprofilecache() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrays.js",
+        compile_flags: vec!["-dynamicprofilecache:profile.dpl.arrays.js"],
+        tags: vec!["exclude_dynapogo", "exclude_serialized", "require_backend"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arrays.js</files>
-//     <tags>exclude_interpreted,exclude_serialized,require_backend</tags>
-//     <compile-flags>-dynamicprofileinput:profile.dpl.arrays.js -off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn arrays_js_dynamicprofilinput() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrays.js",
+        compile_flags: vec![
+            "-dynamicprofilecache:profile.dpl.arrays.js",
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        tags: vec![
+            "exclude_interpreted",
+            "exclude_serialized",
+            "require_backend",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
