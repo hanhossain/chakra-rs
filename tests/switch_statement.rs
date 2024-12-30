@@ -164,7 +164,6 @@ fn bug_fix_regression_max_interpret_js() {
         ..Default::default()
     };
     common::run_test(&test);
-    assert!(false);
 }
 
 #[test]
