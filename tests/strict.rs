@@ -47,65 +47,77 @@ fn caller_or_args_no_access_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stricteval-deferred.js</files>
-//     <baseline>stricteval-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn stricteval_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stricteval-deferred.js",
+        baseline_path: Some("stricteval-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stricteval2-deferred.js</files>
-//     <baseline>stricteval2-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn stricteval2_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stricteval2-deferred.js",
+        baseline_path: Some("stricteval2-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stricteval3-deferred.js</files>
-//     <baseline>stricteval3-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn stricteval3_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stricteval3-deferred.js",
+        baseline_path: Some("stricteval3-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictargs-deferred.js</files>
-//     <baseline>strictargs-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictargs_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictargs-deferred.js",
+        baseline_path: Some("strictargs-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictargs2-deferred.js</files>
-//     <baseline>strictargs2-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictargs2_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictargs2-deferred.js",
+        baseline_path: Some("strictargs2-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictargs3-deferred.js</files>
-//     <baseline>strictargs3-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictargs3_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictargs3-deferred.js",
+        baseline_path: Some("strictargs3-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn evalargs_js() {
@@ -161,71 +173,89 @@ fn eval_this_nested_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formal_samename1.js</files>
-//     <baseline>formal_samename1.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn formal_samename1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_samename1.js",
+        baseline_path: Some("formal_samename1.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formal_samename1.js</files>
-//     <baseline>formal_samename1.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn formal_samename1_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_samename1.js",
+        baseline_path: Some("formal_samename1.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formal_samename2.js</files>
-//     <baseline>formal_samename2.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn formal_samename2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_samename2.js",
+        baseline_path: Some("formal_samename2.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formal_samename2.js</files>
-//     <baseline>formal_samename2.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn formal_samename2_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_samename2.js",
+        baseline_path: Some("formal_samename2.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>multiunit.js</files>
-//     <baseline>multiunit.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn multiunit_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multiunit.js",
+        baseline_path: Some("multiunit.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delete.js</files>
-//     <baseline>delete.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn delete_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delete.js",
+        baseline_path: Some("delete.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delete.js</files>
-//     <baseline>delete.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn delete_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delete.js",
+        baseline_path: Some("delete.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn test01_octal_js() {
@@ -315,23 +345,16 @@ fn test03_assign_sm_js() {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>04.eval.js</files>
-//     <baseline>04.eval.baseline</baseline>
-//     <!-- TODO 04.eval_sm.js -->
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>04.eval.js</files>
-//     <baseline>04.eval.baseline</baseline>
-//     <!-- TODO 04.eval_sm.js -->
-//   </default>
-// </test>
+#[test]
+fn test04_eval_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "04.eval.js",
+        baseline_path: Some("04.eval.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn test05_arguments_js() {
@@ -356,15 +379,17 @@ fn test05_arguments_js_force_strict_mode() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>05.arguments.js</files>
-//     <baseline>05.arguments_sm.baseline</baseline>
-//     <compile-flags>-Serialized -ForceStrictMode</compile-flags>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn test05_arguments_js_serialized_strict_mode() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "05.arguments.js",
+        baseline_path: Some("05.arguments_sm.baseline"),
+        compile_flags: vec!["-Serialized", "-ForceStrictMode"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -387,15 +412,17 @@ fn test05_arguments_sm_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>05.arguments_sm.js</files>
-//     <baseline>05.arguments_sm.baseline</baseline>
-//     <compile-flags>-Serialized</compile-flags>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn test05_arguments_sm_js_serialized() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "05.arguments_sm.js",
+        baseline_path: Some("05.arguments_sm.baseline"),
+        compile_flags: vec!["-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -627,15 +654,17 @@ fn test11_this_sm_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>11.this_sm.js</files>
-//     <baseline>11.this_sm.baseline</baseline>
-//     <compile-flags>-maxInterpretCount:10</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn test11_this_sm_js_max_interpret_count10() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "11.this_sm.js",
+        baseline_path: Some("11.this_sm.baseline"),
+        compile_flags: vec!["-maxInterpretCount:10"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn test12_delete_js() {
@@ -1032,35 +1061,41 @@ fn test24_properties_sm_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictkwd.js</files>
-//     <baseline>strictkwd.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictkwd_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictkwd.js",
+        baseline_path: Some("strictkwd.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictkwd.js</files>
-//     <baseline>strictkwd.baseline</baseline>
-//     <compile-flags>-Off:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictkwd_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictkwd.js",
+        baseline_path: Some("strictkwd.baseline"),
+        compile_flags: vec!["-Off:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>strictkwd-deferred.js</files>
-//     <baseline>strictkwd-deferred.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn strictkwd_deferred_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "strictkwd-deferred.js",
+        baseline_path: Some("strictkwd-deferred.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn comma_bug219390_js() {
@@ -1086,24 +1121,29 @@ fn nestedfnnameargs_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug212755.js</files>
-//     <baseline>bug212755.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug212755_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug212755.js",
+        baseline_path: Some("bug212755.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug212755.js</files>
-//     <baseline>bug212755.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug212755_js_force_deferparse() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug212755.js",
+        baseline_path: Some("bug212755.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn os_1362136_js() {
@@ -1115,14 +1155,17 @@ fn os_1362136_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nonSimpleParameterList.js</files>
-//     <baseline>nonSimpleParameterList.baseline</baseline>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn non_simple_parameter_list_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nonSimpleParameterList.js",
+        baseline_path: Some("nonSimpleParameterList.baseline"),
+        tags: vec!["exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn class_computed_property_name_js() {
