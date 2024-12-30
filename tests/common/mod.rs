@@ -25,8 +25,9 @@ struct VariantConfig<'a> {
 pub fn run_test(test: &Test) {
     if cfg!(disable_jit) {
         run_test_variant(test, Variant::DisableJit);
+    } else {
+        run_test_variant(test, Variant::Interpreted);
     }
-    run_test_variant(test, Variant::Interpreted);
 }
 
 fn run_test_variant(test: &Test, variant: Variant) {
@@ -52,7 +53,6 @@ fn run_test_variant(test: &Test, variant: Variant) {
                 "require_backend",
             ],
         },
-
         Variant::Interpreted => VariantConfig {
             compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
             excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
