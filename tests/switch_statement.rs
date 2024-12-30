@@ -151,14 +151,21 @@ fn simple_switch_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>BugFixRegression_MaxInterpret.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_fix_regression_max_interpret_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BugFixRegression_MaxInterpret.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+    assert!(false);
+}
 
 #[test]
 fn amd64jscript_number_regression_js() {
