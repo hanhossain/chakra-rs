@@ -13,15 +13,19 @@ pub struct Test {
 
 enum Variant {
     DisableJit,
+    Interpreted,
 }
 
-struct VariantConfig {
-    compile_flags: Vec<&'static str>,
+struct VariantConfig<'a> {
+    compile_flags: Vec<&'a str>,
     excluded_tags: Vec<&'static str>,
 }
 
 pub fn run_test(test: &Test) {
-    run_test_variant(test, Variant::DisableJit);
+    if cfg!(disable_jit) {
+        run_test_variant(test, Variant::DisableJit);
+    }
+    run_test_variant(test, Variant::Interpreted);
 }
 
 fn run_test_variant(test: &Test, variant: Variant) {
@@ -46,6 +50,11 @@ fn run_test_variant(test: &Test, variant: Variant) {
                 "fails_interpreted",
                 "require_backend",
             ],
+        },
+
+        Variant::Interpreted => VariantConfig {
+            compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
+            excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
         },
     };
 
