@@ -109,6 +109,7 @@ fn $1_js() {
         source_path: "$1.js",
         baseline_path: Some("$2"),
         compile_flags: vec![todo!("$3")],
+        ..Default::default()
     };
     common::run_test(&test);
 }
@@ -127,6 +128,7 @@ fn $1_js() {
         source_path: "$1.js",
         baseline_path: Some("$3"),
         compile_flags: vec![todo!("$2")],
+        ..Default::default()
     };
     common::run_test(&test);
 }

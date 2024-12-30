@@ -235,15 +235,18 @@ fn property_string_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-CollectGarbage -Serialized</compile-flags>
-//     <files>propertyString.js</files>
-//     <baseline>propertyString.baseline</baseline>
-//     <tags>exclude_forceserialized</tags>
-//   </default>
-// </test>
+#[test]
+fn property_string_serialized_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "propertyString.js",
+        baseline_path: Some("propertyString.baseline"),
+        compile_flags: vec!["-CollectGarbage", "-Serialized"],
+        tags: vec!["exclude_forceserialized"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn bug_fix_versioned_js() {

@@ -1,14 +1,17 @@
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/utf8";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>invalidutf8.js</files>
-//     <baseline>invalidutf8.baseline</baseline>
-//     <tags>exclude_serialized</tags>
-//   </default>
-// </test>
+#[test]
+fn invalidutf8_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalidutf8.js",
+        baseline_path: Some("invalidutf8.baseline"),
+        tags: vec!["exclude_serialized"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
