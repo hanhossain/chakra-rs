@@ -1,95 +1,148 @@
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/StackTrace";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>SimpleThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -errorStackTrace- -args runTest -endargs</compile-flags>
-//     <baseline>simpleThrow.js.stackTraceDisabled.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn simple_throw_js_stack_trace_disabled() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "SimpleThrow.js",
+        baseline_path: Some("simpleThrow.js.stackTraceDisabled.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-errorStackTrace-",
+            "-args",
+            "runTest",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>PropertyValidation.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//     <baseline>PropertyValidation.nostrict.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn property_validation_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "PropertyValidation.js",
+        baseline_path: Some("PropertyValidation.nostrict.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>PropertyValidation.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -forceStrictMode</compile-flags>
-//     <baseline>PropertyValidation.nostrict.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn property_validation_js_force_strict_mode() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "PropertyValidation.js",
+        baseline_path: Some("PropertyValidation.nostrict.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost", "-forceStrictMode"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>SimpleThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest -endargs</compile-flags>
-//     <baseline>SimpleThrow.js.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn simple_throw_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "SimpleThrow.js",
+        baseline_path: Some("SimpleThrow.js.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-args",
+            "runTest",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>LongCallStackThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 5 -endargs</compile-flags>
-//     <baseline>LongCallStackThrow.js.Args5.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn long_call_stack_throw_js_args5() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LongCallStackThrow.js",
+        baseline_path: Some("LongCallStackThrow.js.Args5.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-args",
+            "runTest",
+            "5",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>LongCallStackThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 6 -endargs</compile-flags>
-//     <baseline>LongCallStackThrow.js.Args6.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn long_call_stack_throw_js_args6() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LongCallStackThrow.js",
+        baseline_path: Some("LongCallStackThrow.js.Args6.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-args",
+            "runTest",
+            "6",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>LongCallStackThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 7 -endargs</compile-flags>
-//     <baseline>LongCallStackThrow.js.Args7.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn long_call_stack_throw_js_args7() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LongCallStackThrow.js",
+        baseline_path: Some("LongCallStackThrow.js.Args7.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-args",
+            "runTest",
+            "7",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>LongCallStackThrow.js</files>
-//     <compile-flags>-ExtendedErrorStackForTestHost -args runTest 30 -endargs</compile-flags>
-//     <baseline>LongCallStackThrow.js.Args30.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn long_call_stack_throw_js_args30() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LongCallStackThrow.js",
+        baseline_path: Some("LongCallStackThrow.js.Args30.baseline"),
+        compile_flags: vec![
+            "-ExtendedErrorStackForTestHost",
+            "-args",
+            "runTest",
+            "30",
+            "-endargs",
+        ],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>StackTraceLimit.js</files>
-//     <baseline>StackTraceLimit.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn stack_trace_limit_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "StackTraceLimit.js",
+        baseline_path: Some("StackTraceLimit.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -111,64 +164,79 @@ const DIRECTORY: &str = "chakracore-cxx/test/StackTrace";
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>dynamic.js</files>
-//     <baseline>dynamic.js.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn dynamic_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dynamic.js",
+        baseline_path: Some("dynamic.js.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>ErrorPrototype.js</files>
-//     <baseline>ErrorPrototype.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn error_prototype_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ErrorPrototype.js",
+        baseline_path: Some("ErrorPrototype.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>ErrorDotStackAlreadyExists.js</files>
-//     <baseline>ErrorDotStackAlreadyExists.baseline</baseline>
-//   </default>
-// </test>
+#[test]
+fn error_dot_stack_already_exists_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ErrorDotStackAlreadyExists.js",
+        baseline_path: Some("ErrorDotStackAlreadyExists.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace</tags>
-//     <files>FunctionName.js</files>
-//     <baseline>FunctionName.js.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn function_name_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FunctionName.js",
+        baseline_path: Some("FunctionName.js.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["StackTrace"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>x64StackWalk.js</files>
-//     <tags>exclude_x86,exclude_arm,exclude_dynapogo</tags>
-//     <baseline>x64StackWalk.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[test]
+fn x64_stack_walk_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "x64StackWalk.js",
+        baseline_path: Some("x64StackWalk.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>x64StackWalkLoopBody.js</files>
-//     <tags>exclude_x86,exclude_arm,exclude_dynapogo</tags>
-//     <baseline>x64StackWalkLoopBody.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost -loopinterpretcount:1</compile-flags>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[test]
+fn x64_stack_walk_loop_body_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "x64StackWalkLoopBody.js",
+        baseline_path: Some("x64StackWalkLoopBody.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost", "-loopinterpretcount:1"],
+        tags: vec!["exclude_dynapogo"],
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn dot_chain_name_hint_js() {
