@@ -23,6 +23,7 @@ fn build_cmake() {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
+        .profile("RelWithDebInfo")
         .build_target("ch");
 
     let target = std::env::var("TARGET").unwrap();
