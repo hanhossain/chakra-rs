@@ -11,6 +11,7 @@ pub struct Test {
     pub tags: Vec<&'static str>,
 }
 
+#[derive(Debug)]
 enum Variant {
     DisableJit,
     Interpreted,
@@ -63,7 +64,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
         .iter()
         .any(|tag| test.tags.contains(tag))
     {
-        println!("Skipping test because it is excluded for this variant");
+        println!("Skipping test because it is excluded for the {variant:?} variant");
         return;
     }
 
@@ -97,7 +98,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
                 .map(|s| trim_carriage_return(s))
                 .collect::<Vec<_>>();
 
-            assert_eq!(actual, expected);
+            assert_eq!(expected, actual);
         }
     } else {
         println!("Actual output: {:#?}", actual);
