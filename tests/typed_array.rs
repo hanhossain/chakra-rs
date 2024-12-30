@@ -2,185 +2,222 @@ mod common;
 
 const DIRECTORY: &str = "chakracore-cxx/test/typedarray";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>typedarray_at.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn typedarray_at_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "typedarray_at.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>likely.js</files>
-//     <compile-flags>-bgjit- -lic:1</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn likely_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "likely.js",
+        compile_flags: vec!["-bgjit-", "-lic:1"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arraybuffer.js</files>
-//     <baseline>arrayBuffer.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn arraybuffer_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arraybuffer.js",
+        baseline_path: Some("arrayBuffer.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>arraybufferType.js</files>
-//     <baseline>arraybufferType.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn arraybuffer_type_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arraybufferType.js",
+        baseline_path: Some("arraybufferType.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>TypedArrayBuiltins.js</files>
-//     <tags>typedarray</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn typed_array_builtins_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "TypedArrayBuiltins.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>IntegerIndexedExoticObject.js</files>
-//     <tags>typedarray</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn integer_indexed_exotic_object_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntegerIndexedExoticObject.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>BadNaN.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn bad_na_n_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BadNaN.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>int8array.js</files>
-//     <baseline>int8array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int8array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "int8array.js",
+        baseline_path: Some("int8array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>uint8array.js</files>
-//     <baseline>uint8array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint8array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "uint8array.js",
+        baseline_path: Some("uint8array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>int16array.js</files>
-//     <baseline>int16array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int16array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "int16array.js",
+        baseline_path: Some("int16array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>uint16array.js</files>
-//     <baseline>uint16array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint16array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "uint16array.js",
+        baseline_path: Some("uint16array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>int32array.js</files>
-//     <baseline>int32array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int32array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "int32array.js",
+        baseline_path: Some("int32array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>uint32array.js</files>
-//     <baseline>uint32array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint32array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "uint32array.js",
+        baseline_path: Some("uint32array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>float32array.js</files>
-//     <baseline>float32array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn float32array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "float32array.js",
+        baseline_path: Some("float32array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>float64array.js</files>
-//     <baseline>float64array_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn float64array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "float64array.js",
+        baseline_path: Some("float64array_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
 //   <default>
 //     <files>dataview.js</files>
 //     <baseline>dataview.baseline</baseline>
-//     <tags>typedarray</tags>
 //     <timeout>300</timeout>
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dataview2.js</files>
-//     <tags>typedarray</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn dataview2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dataview2.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>reflect_defineProperty.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn reflect_define_property_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "reflect_defineProperty.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objectproperty.js</files>
-//     <baseline>objectproperty_es6.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn objectproperty_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objectproperty.js",
+        baseline_path: Some("objectproperty_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>objectproperty.js</files>
-//     <baseline>objectproperty_es6.baseline</baseline>
-//     <compile-flags>-force:typedarrayvirtual</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn objectproperty_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objectproperty.js",
+        baseline_path: Some("objectproperty_es6.baseline"),
+        compile_flags: vec!["-force:typedarrayvirtual"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -203,40 +240,45 @@ const DIRECTORY: &str = "chakracore-cxx/test/typedarray";
 //   </condition>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>negIndexes.js</files>
-//     <baseline>negIndexes.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn neg_indexes_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "negIndexes.js",
+        baseline_path: Some("negIndexes.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>set.js</files>
-//     <baseline>set.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn set_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "set.js",
+        baseline_path: Some("set.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>set.js</files>
-//     <baseline>set.baseline</baseline>
-//     <compile-flags>-force:typedarrayvirtual</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn set_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "set.js",
+        baseline_path: Some("set.baseline"),
+        compile_flags: vec!["-force:typedarrayvirtual"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
 //   <default>
 //     <files>samethread.js</files>
 //     <baseline>samethread.baseline</baseline>
-//     <tags>typedarray</tags>
 //     <timeout>300</timeout>
 //   </default>
 // </test>
@@ -253,95 +295,117 @@ const DIRECTORY: &str = "chakracore-cxx/test/typedarray";
 // </test>
 // -->
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Int8Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int8_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Int8Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>UInt8Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint8_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "UInt8Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Int16Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int16_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Int16Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>UInt16Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint16_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "UInt16Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Int32Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn int32_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Int32Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>UInt32Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn uint32_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "UInt32Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Float32Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn float32_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Float32Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Float64Array2.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn float64_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Float64Array2.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FloatHelperAccess.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn float_helper_access_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FloatHelperAccess.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>subarray.js</files>
-//     <baseline>subarray.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn subarray_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "subarray.js",
+        baseline_path: Some("subarray.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dataview1.js</files>
-//     <baseline>dataview1.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn dataview1_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dataview1.js",
+        baseline_path: Some("dataview1.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -370,98 +434,131 @@ const DIRECTORY: &str = "chakracore-cxx/test/typedarray";
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>pixelArrayRounding.js</files>
-//     <baseline>pixelArrayRounding.baseline</baseline>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -ES6-</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn pixel_array_rounding_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "pixelArrayRounding.js",
+        baseline_path: Some("pixelArrayRounding.baseline"),
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-ES6-",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>pixelArrayRounding.js</files>
-//     <baseline>pixelArrayRounding.es6.baseline</baseline>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn pixel_array_rounding_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "pixelArrayRounding.js",
+        baseline_path: Some("pixelArrayRounding.es6.baseline"),
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>cseTypedArray.js</files>
-//     <baseline>cseTypedArray.baseline</baseline>
-//     <compile-flags>-maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn cse_typed_array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cseTypedArray.js",
+        baseline_path: Some("cseTypedArray.baseline"),
+        compile_flags: vec!["-maxInterpretCount:1", "-off:simpleJit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Uint8ClampedArray.js</files>
-//     <baseline>Uint8ClampedArray_es6.baseline</baseline>
-//     <tags>typedarray</tags> <!-->Disabled jshost, created issue #5520<!-->
-//   </default>
-// </test>
+#[test]
+fn uint8_clamped_array_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Uint8ClampedArray.js",
+        baseline_path: Some("Uint8ClampedArray_es6.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Uint8ClampedArray2.js</files>
-//     <tags>typedarray</tags>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//   </default>
-// </test>
+#[test]
+fn uint8_clamped_array2_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Uint8ClampedArray2.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>setDifferentTypes.js</files>
-//     <baseline>setDifferentTypes.baseline</baseline>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn set_different_types_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "setDifferentTypes.js",
+        baseline_path: Some("setDifferentTypes.baseline"),
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>setDifferentTypes.js</files>
-//     <baseline>setDifferentTypes.baseline</baseline>
-//     <compile-flags>-force:typedarrayvirtual</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn set_different_types_js2() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "setDifferentTypes.js",
+        baseline_path: Some("setDifferentTypes.baseline"),
+        compile_flags: vec!["-force:typedarrayvirtual"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug2230916.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn bug2230916_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug2230916.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug2268573.js</files>
-//     <baseline>bug2268573.baseline</baseline>
-//     <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn bug2268573_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug2268573.js",
+        baseline_path: Some("bug2268573.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_4653428.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn bug_4653428_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_4653428.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn memset_js() {
@@ -547,21 +644,25 @@ fn cross_site_virtual_js() {
     common::run_test(&test);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>builtin_from.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn builtin_from_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "builtin_from.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delete.js</files>
-//     <tags>typedarray</tags>
-//   </default>
-// </test>
+#[test]
+fn delete_js() {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delete.js",
+        ..Default::default()
+    };
+    common::run_test(&test);
+}
 
 #[test]
 fn typeof_detached_js() {
