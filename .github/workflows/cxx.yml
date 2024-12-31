@@ -45,6 +45,10 @@ jobs:
     - name: Install dependencies
       run: ${{ matrix.deps }}
 
+    - name: Install mold linker
+      if: matrix.os == 'ubuntu-latest'
+      uses: rui314/setup-mold@v1
+
     - name: Create build directory
       run: mkdir -p ${{ steps.strings.outputs.build-output-dir }}
 

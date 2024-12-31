@@ -36,6 +36,9 @@ jobs:
         run: ${{ matrix.deps }}
       - name: Install cargo-nextest
         uses: taiki-e/install-action@nextest
+      - name: Install mold linker
+        if: matrix.os == 'ubuntu-latest'
+        uses: rui314/setup-mold@v1
       - name: Add msbuild to PATH
         if: matrix.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v2
