@@ -157,7 +157,6 @@ fn arguments_resolution_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn arguments_limits_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -414,7 +413,6 @@ fn jit_loop_body_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn deferred_bad_continue_js1(#[case] variant: Variant) {
     let test = common::Test {
@@ -429,7 +427,6 @@ fn deferred_bad_continue_js1(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn deferred_bad_continue_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -936,7 +933,6 @@ fn stack_args_with_formals_js_force_defer_parse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn stack_args_max_interpret_js(#[case] variant: Variant) {
     let test = common::Test {

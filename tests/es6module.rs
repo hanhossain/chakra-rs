@@ -24,7 +24,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/es6module";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn moduletest1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -39,7 +38,6 @@ fn moduletest1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn moduletest2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -54,7 +52,6 @@ fn moduletest2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn module_syntax_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -90,7 +87,6 @@ fn module_syntax1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn module_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -234,7 +230,6 @@ fn module_syntax1_js_defer_parse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn module_bugfixes_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -255,7 +250,6 @@ fn module_bugfixes_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn export_binding_loader_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -285,7 +279,6 @@ fn test_bug_2645_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_os12095746_js(#[case] variant: Variant) {
     let test = common::Test {

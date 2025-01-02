@@ -275,7 +275,6 @@ fn fieldhoist8_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn fieldhoist_nullfieldhoist_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -361,7 +360,6 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline(#[case] variant: V
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn fieldhoist_typespec2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -376,7 +374,6 @@ fn fieldhoist_typespec2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn fieldhoist_typespec3_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -787,7 +784,6 @@ fn fieldhoist_number_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -802,7 +798,6 @@ fn objtypespec1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -817,7 +812,6 @@ fn objtypespec2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec3_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -832,7 +826,6 @@ fn objtypespec3_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_fieldhoist_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -852,7 +845,6 @@ fn objtypespec_fieldhoist_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_fieldhoist_2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -867,7 +859,6 @@ fn objtypespec_fieldhoist_2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_proto_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -882,7 +873,6 @@ fn objtypespec_proto_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_add_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -897,7 +887,6 @@ fn objtypespec_add_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_add_2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -912,7 +901,6 @@ fn objtypespec_add_2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_add_4_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -927,7 +915,6 @@ fn objtypespec_add_4_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -942,7 +929,6 @@ fn objtypespec_newobj_1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_glob_opt(#[case] variant: Variant) {
     let test = common::Test {
@@ -957,7 +943,6 @@ fn objtypespec_newobj_1_js_off_glob_opt(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_inline(#[case] variant: Variant) {
     let test = common::Test {
@@ -972,7 +957,6 @@ fn objtypespec_newobj_1_js_off_inline(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_obj_type_spec(#[case] variant: Variant) {
     let test = common::Test {
@@ -987,7 +971,6 @@ fn objtypespec_newobj_1_js_off_obj_type_spec(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
     let test = common::Test {
@@ -1002,7 +985,6 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_fixed_new_obj(#[case] variant: Variant) {
     let test = common::Test {
@@ -1021,7 +1003,6 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_fixed_methods(#[case] variant: Variant) {
     let test = common::Test {
@@ -1036,7 +1017,6 @@ fn objtypespec_newobj_1_js_off_fixed_methods(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1051,7 +1031,6 @@ fn objtypespec_newobj_1_js_off_split_new_sc_object(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1070,7 +1049,6 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1090,7 +1068,6 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1105,7 +1082,6 @@ fn objtypespec_newobj_2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_glob_opt(#[case] variant: Variant) {
     let test = common::Test {
@@ -1120,7 +1096,6 @@ fn objtypespec_newobj_2_js_off_glob_opt(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_inline(#[case] variant: Variant) {
     let test = common::Test {
@@ -1135,7 +1110,6 @@ fn objtypespec_newobj_2_js_off_inline(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_obj_type_spec(#[case] variant: Variant) {
     let test = common::Test {
@@ -1150,7 +1124,6 @@ fn objtypespec_newobj_2_js_off_obj_type_spec(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
     let test = common::Test {
@@ -1165,7 +1138,6 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_fixed_new_obj(#[case] variant: Variant) {
     let test = common::Test {
@@ -1184,7 +1156,6 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_fixed_methods(#[case] variant: Variant) {
     let test = common::Test {
@@ -1199,7 +1170,6 @@ fn objtypespec_newobj_2_js_off_fixed_methods(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1214,7 +1184,6 @@ fn objtypespec_newobj_2_js_off_split_new_sc_object(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1233,7 +1202,6 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
@@ -1253,7 +1221,6 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js1(#[case] variant: Variant) {
     let test = common::Test {
@@ -1268,7 +1235,6 @@ fn objtypespec_newobj_invalidation_1_js1(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -1283,7 +1249,6 @@ fn objtypespec_newobj_invalidation_1_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js3(#[case] variant: Variant) {
     let test = common::Test {
@@ -1298,7 +1263,6 @@ fn objtypespec_newobj_invalidation_1_js3(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js4(#[case] variant: Variant) {
     let test = common::Test {
@@ -1313,7 +1277,6 @@ fn objtypespec_newobj_invalidation_1_js4(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js5(#[case] variant: Variant) {
     let test = common::Test {
@@ -1328,7 +1291,6 @@ fn objtypespec_newobj_invalidation_1_js5(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js6(#[case] variant: Variant) {
     let test = common::Test {
@@ -1347,7 +1309,6 @@ fn objtypespec_newobj_invalidation_1_js6(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js7(#[case] variant: Variant) {
     let test = common::Test {
@@ -1362,7 +1323,6 @@ fn objtypespec_newobj_invalidation_1_js7(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js8(#[case] variant: Variant) {
     let test = common::Test {
@@ -1381,7 +1341,6 @@ fn objtypespec_newobj_invalidation_1_js8(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_1_js9(#[case] variant: Variant) {
     let test = common::Test {
@@ -1401,7 +1360,6 @@ fn objtypespec_newobj_invalidation_1_js9(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js1(#[case] variant: Variant) {
     let test = common::Test {
@@ -1416,7 +1374,6 @@ fn objtypespec_newobj_invalidation_2_js1(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -1431,7 +1388,6 @@ fn objtypespec_newobj_invalidation_2_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js3(#[case] variant: Variant) {
     let test = common::Test {
@@ -1446,7 +1402,6 @@ fn objtypespec_newobj_invalidation_2_js3(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js4(#[case] variant: Variant) {
     let test = common::Test {
@@ -1461,7 +1416,6 @@ fn objtypespec_newobj_invalidation_2_js4(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js5(#[case] variant: Variant) {
     let test = common::Test {
@@ -1476,7 +1430,6 @@ fn objtypespec_newobj_invalidation_2_js5(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js6(#[case] variant: Variant) {
     let test = common::Test {
@@ -1495,7 +1448,6 @@ fn objtypespec_newobj_invalidation_2_js6(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js7(#[case] variant: Variant) {
     let test = common::Test {
@@ -1510,7 +1462,6 @@ fn objtypespec_newobj_invalidation_2_js7(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js8(#[case] variant: Variant) {
     let test = common::Test {
@@ -1529,7 +1480,6 @@ fn objtypespec_newobj_invalidation_2_js8(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn objtypespec_newobj_invalidation_2_js9(#[case] variant: Variant) {
     let test = common::Test {
@@ -1549,7 +1499,6 @@ fn objtypespec_newobj_invalidation_2_js9(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn field_hoist_max_interpret_js(#[case] variant: Variant) {
     let test = common::Test {

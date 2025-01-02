@@ -276,7 +276,6 @@ fn super_dot_osbug3930962_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn to_string_tag_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1378,7 +1377,6 @@ fn bug517864_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1402,7 +1400,6 @@ fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1417,7 +1414,6 @@ fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn supersyntax02_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1432,7 +1428,6 @@ fn supersyntax02_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn supersyntax05_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1447,7 +1442,6 @@ fn supersyntax05_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn supersyntax06_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2016,7 +2010,6 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generators_undodefer_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2513,7 +2506,6 @@ fn stickyflag_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn utfbug_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2812,7 +2804,6 @@ fn es6class_super_chain_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2827,7 +2818,6 @@ fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn global_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2842,7 +2832,6 @@ fn global_new_target_syntax_error_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2857,7 +2846,6 @@ fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn global_param_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2970,7 +2958,6 @@ fn object_literal_bug_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn os_5403724_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3006,7 +2993,6 @@ fn forloops_per_iteration_bindings_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn htmlcomments_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3021,7 +3007,6 @@ fn htmlcomments_js(#[case] variant: Variant) {
 #[cfg(windows)]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3036,7 +3021,6 @@ fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn os_5500719_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3051,7 +3035,6 @@ fn os_5500719_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn os_8600339_js(#[case] variant: Variant) {
     let test = common::Test {

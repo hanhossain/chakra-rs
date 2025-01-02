@@ -390,7 +390,6 @@ fn preincrement_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

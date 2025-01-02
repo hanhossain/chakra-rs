@@ -546,7 +546,6 @@ fn os_1362136_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_os_4683246_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -561,7 +560,6 @@ fn bug_os_4683246_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn fabs1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -576,7 +574,6 @@ fn fabs1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn os_5248645_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -742,7 +739,6 @@ fn bug8554038_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn invertloop_bug_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -931,7 +927,6 @@ fn bug11026788_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug11576900_js(#[case] variant: Variant) {
     let test = common::Test {

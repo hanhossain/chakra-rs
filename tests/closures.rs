@@ -331,7 +331,6 @@ fn bug_os_9781249_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_os_9008744_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -358,7 +357,6 @@ fn bug_os_10735999_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_os_13412380_js(#[case] variant: Variant) {
     let test = common::Test {

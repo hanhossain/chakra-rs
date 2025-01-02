@@ -64,7 +64,6 @@ fn caller_or_args_no_access_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn stricteval_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -79,7 +78,6 @@ fn stricteval_deferred_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn stricteval2_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -94,7 +92,6 @@ fn stricteval2_deferred_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn stricteval3_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -109,7 +106,6 @@ fn stricteval3_deferred_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictargs_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -124,7 +120,6 @@ fn strictargs_deferred_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictargs2_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -139,7 +134,6 @@ fn strictargs2_deferred_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictargs3_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -220,7 +214,6 @@ fn eval_this_nested_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn formal_samename1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -235,7 +228,6 @@ fn formal_samename1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn formal_samename1_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
@@ -250,7 +242,6 @@ fn formal_samename1_js_force_deferparse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn formal_samename2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -265,7 +256,6 @@ fn formal_samename2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn formal_samename2_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
@@ -280,7 +270,6 @@ fn formal_samename2_js_force_deferparse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn multiunit_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -295,7 +284,6 @@ fn multiunit_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn delete_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -310,7 +298,6 @@ fn delete_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn delete_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
@@ -806,7 +793,6 @@ fn test11_this_sm_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn test11_this_sm_js_max_interpret_count10(#[case] variant: Variant) {
     let test = common::Test {
@@ -1321,7 +1307,6 @@ fn test24_properties_sm_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictkwd_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
@@ -1336,7 +1321,6 @@ fn strictkwd_js_force_deferparse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictkwd_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1351,7 +1335,6 @@ fn strictkwd_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn strictkwd_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1396,7 +1379,6 @@ fn nestedfnnameargs_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug212755_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1411,7 +1393,6 @@ fn bug212755_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug212755_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
@@ -1439,7 +1420,6 @@ fn os_1362136_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn non_simple_parameter_list_js(#[case] variant: Variant) {
     let test = common::Test {

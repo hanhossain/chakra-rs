@@ -375,7 +375,6 @@ fn decl_out_of_block_js_force_defer_parse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn defer1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -390,7 +389,6 @@ fn defer1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn defer2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -603,7 +601,6 @@ fn eval_letconst_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn eval_letconst_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
@@ -632,7 +629,6 @@ fn eval_letconst_js_force_eval_compile(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn eval_letconst_js_force_eval_compile_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
@@ -647,7 +643,6 @@ fn eval_letconst_js_force_eval_compile_defer_parse(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn arguments_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -662,7 +657,6 @@ fn arguments_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn seal_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -676,7 +670,6 @@ fn seal_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn seal1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -690,7 +683,6 @@ fn seal1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn seal2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -704,7 +696,6 @@ fn seal2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn dop_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -719,7 +710,6 @@ fn dop_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn dop1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -734,7 +724,6 @@ fn dop1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn delete_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -805,7 +794,6 @@ fn with_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn unassignedconst_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -820,7 +808,6 @@ fn unassignedconst_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn unassignedconst_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {

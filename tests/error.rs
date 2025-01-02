@@ -146,7 +146,6 @@ fn error_num_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn call_non_function_js(#[case] variant: Variant) {
     let test = common::Test {

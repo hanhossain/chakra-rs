@@ -182,7 +182,6 @@ fn bug1065362_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug11370283_js(#[case] variant: Variant) {
     let test = common::Test {

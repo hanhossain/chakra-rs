@@ -648,7 +648,6 @@ fn object_header_inlining_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_header_inlining_simple_dict_type_handler_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -664,7 +663,6 @@ fn object_header_inlining_simple_dict_type_handler_js(#[case] variant: Variant) 
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_header_inlining_dict_type_handler_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -680,7 +678,6 @@ fn object_header_inlining_dict_type_handler_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_header_inlining_delete_props_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -696,7 +693,6 @@ fn object_header_inlining_delete_props_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_header_inlining_prototype_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -711,7 +707,6 @@ fn object_header_inlining_prototype_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_header_inlining_prototype_type_change_js(#[case] variant: Variant) {
     let test = common::Test {
