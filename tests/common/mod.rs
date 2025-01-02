@@ -62,6 +62,7 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .iter()
         .any(|tag| test.tags.contains(tag))
     {
+        // TODO (hanhossain) remove this after removing the exclude_ tags
         panic!("Skipping test because it is excluded for the {variant:?} variant");
     }
 
