@@ -1,3 +1,4 @@
+use pretty_assertions::{assert_eq, assert_ne};
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
