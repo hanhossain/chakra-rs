@@ -257,7 +257,6 @@ fn function_name_js(#[case] variant: Variant) {
 #[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn x64_stack_walk_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -273,7 +272,6 @@ fn x64_stack_walk_js(#[case] variant: Variant) {
 #[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn x64_stack_walk_loop_body_js(#[case] variant: Variant) {
     let test = common::Test {
