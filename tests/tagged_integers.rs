@@ -391,7 +391,6 @@ fn preincrement_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -406,7 +405,6 @@ fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

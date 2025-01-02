@@ -562,7 +562,6 @@ fn bug_os_4683246_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fabs1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

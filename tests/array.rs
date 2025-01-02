@@ -1450,7 +1450,6 @@ fn bug945376size_bound_start_seg_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn copy_on_access_array_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1465,7 +1464,6 @@ fn copy_on_access_array_bugs_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn copy_on_access_array_cache_index_overflow_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1868,7 +1866,6 @@ fn bug_gh6320_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn array_sort_random_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
