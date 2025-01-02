@@ -12,7 +12,7 @@ pub struct Test {
     pub tags: Vec<&'static str>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Variant {
     Interpreted,
     Dynapogo,
@@ -25,6 +25,11 @@ struct VariantConfig<'a> {
 }
 
 pub fn run_test_variant(test: &Test, variant: Variant) {
+    if cfg!(disable_jit) && variant != Variant::DisableJit {
+        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        return;
+    }
+
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     assert_ne!(test.directory, "");
