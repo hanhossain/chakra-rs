@@ -13,9 +13,10 @@ pub struct Test {
 }
 
 #[derive(Debug)]
-enum Variant {
-    DisableJit,
+pub enum Variant {
     Interpreted,
+    Dynapogo,
+    DisableJit,
 }
 
 struct VariantConfig<'a> {
@@ -23,15 +24,7 @@ struct VariantConfig<'a> {
     excluded_tags: Vec<&'static str>,
 }
 
-pub fn run_test(test: &Test) {
-    if cfg!(disable_jit) {
-        run_test_variant(test, Variant::DisableJit);
-    } else {
-        run_test_variant(test, Variant::Interpreted);
-    }
-}
-
-fn run_test_variant(test: &Test, variant: Variant) {
+pub fn run_test_variant(test: &Test, variant: Variant) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     assert_ne!(test.directory, "");
@@ -45,6 +38,14 @@ fn run_test_variant(test: &Test, variant: Variant) {
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
     let variant_config = match variant {
+        Variant::Interpreted => VariantConfig {
+            compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
+            excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
+        },
+        Variant::Dynapogo => VariantConfig {
+            compile_flags: vec!["-forceNative", "-off:simpleJit", "-bgJitDelay:0"],
+            excluded_tags: vec!["exclude_dynapogo", "require_disable_jit"],
+        },
         Variant::DisableJit => VariantConfig {
             compile_flags: vec!["-nonative"],
             excluded_tags: vec![
@@ -54,10 +55,6 @@ fn run_test_variant(test: &Test, variant: Variant) {
                 "require_backend",
             ],
         },
-        Variant::Interpreted => VariantConfig {
-            compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
-            excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
-        },
     };
 
     if variant_config
@@ -65,8 +62,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
         .iter()
         .any(|tag| test.tags.contains(tag))
     {
-        println!("Skipping test because it is excluded for the {variant:?} variant");
-        return;
+        panic!("Skipping test because it is excluded for the {variant:?} variant");
     }
 
     let mut ch = Command::new(out_dir.join("build/ch"));

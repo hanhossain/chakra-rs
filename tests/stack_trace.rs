@@ -1,8 +1,14 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/StackTrace";
 
-#[test]
-fn simple_throw_js_stack_trace_disabled() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_throw_js_stack_trace_disabled(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SimpleThrow.js",
@@ -16,11 +22,14 @@ fn simple_throw_js_stack_trace_disabled() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn property_validation_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn property_validation_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "PropertyValidation.js",
@@ -28,11 +37,14 @@ fn property_validation_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn property_validation_js_force_strict_mode() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn property_validation_js_force_strict_mode(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "PropertyValidation.js",
@@ -40,11 +52,14 @@ fn property_validation_js_force_strict_mode() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-forceStrictMode"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn simple_throw_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_throw_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SimpleThrow.js",
@@ -57,11 +72,14 @@ fn simple_throw_js() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn long_call_stack_throw_js_args5() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_call_stack_throw_js_args5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
@@ -75,11 +93,14 @@ fn long_call_stack_throw_js_args5() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn long_call_stack_throw_js_args6() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_call_stack_throw_js_args6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
@@ -93,11 +114,14 @@ fn long_call_stack_throw_js_args6() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn long_call_stack_throw_js_args7() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_call_stack_throw_js_args7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
@@ -111,11 +135,14 @@ fn long_call_stack_throw_js_args7() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn long_call_stack_throw_js_args30() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_call_stack_throw_js_args30(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
@@ -129,11 +156,14 @@ fn long_call_stack_throw_js_args30() {
         ],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn stack_trace_limit_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stack_trace_limit_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "StackTraceLimit.js",
@@ -141,7 +171,7 @@ fn stack_trace_limit_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -164,8 +194,11 @@ fn stack_trace_limit_js() {
 //   </default>
 // </test>
 
-#[test]
-fn dynamic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dynamic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dynamic.js",
@@ -173,11 +206,14 @@ fn dynamic_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_prototype_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_prototype_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ErrorPrototype.js",
@@ -185,11 +221,14 @@ fn error_prototype_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_dot_stack_already_exists_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_dot_stack_already_exists_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ErrorDotStackAlreadyExists.js",
@@ -197,11 +236,14 @@ fn error_dot_stack_already_exists_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn function_name_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn function_name_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FunctionName.js",
@@ -209,12 +251,15 @@ fn function_name_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["StackTrace"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(target_arch = "x86_64")]
-#[test]
-fn x64_stack_walk_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn x64_stack_walk_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "x64StackWalk.js",
@@ -222,12 +267,15 @@ fn x64_stack_walk_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(target_arch = "x86_64")]
-#[test]
-fn x64_stack_walk_loop_body_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn x64_stack_walk_loop_body_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "x64StackWalkLoopBody.js",
@@ -235,16 +283,19 @@ fn x64_stack_walk_loop_body_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-loopinterpretcount:1"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn dot_chain_name_hint_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dot_chain_name_hint_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dotChainNameHint.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
