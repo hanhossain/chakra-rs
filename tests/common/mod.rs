@@ -1,3 +1,4 @@
+use pretty_assertions::{assert_eq, assert_ne};
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
@@ -11,20 +12,24 @@ pub struct Test {
     pub tags: Vec<&'static str>,
 }
 
-enum Variant {
+#[derive(Debug, PartialEq, Eq)]
+pub enum Variant {
+    Interpreted,
+    Dynapogo,
     DisableJit,
 }
 
-struct VariantConfig {
-    compile_flags: Vec<&'static str>,
+struct VariantConfig<'a> {
+    compile_flags: Vec<&'a str>,
     excluded_tags: Vec<&'static str>,
 }
 
-pub fn run_test(test: &Test) {
-    run_test_variant(test, Variant::DisableJit);
-}
+pub fn run_test_variant(test: &Test, variant: Variant) {
+    if cfg!(disable_jit) && variant != Variant::DisableJit {
+        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        return;
+    }
 
-fn run_test_variant(test: &Test, variant: Variant) {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     assert_ne!(test.directory, "");
@@ -38,6 +43,14 @@ fn run_test_variant(test: &Test, variant: Variant) {
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
     let variant_config = match variant {
+        Variant::Interpreted => VariantConfig {
+            compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
+            excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
+        },
+        Variant::Dynapogo => VariantConfig {
+            compile_flags: vec!["-forceNative", "-off:simpleJit", "-bgJitDelay:0"],
+            excluded_tags: vec!["exclude_dynapogo", "require_disable_jit"],
+        },
         Variant::DisableJit => VariantConfig {
             compile_flags: vec!["-nonative"],
             excluded_tags: vec![
@@ -54,8 +67,8 @@ fn run_test_variant(test: &Test, variant: Variant) {
         .iter()
         .any(|tag| test.tags.contains(tag))
     {
-        println!("Skipping test because it is excluded for this variant");
-        return;
+        // TODO (hanhossain) remove this after removing the exclude_ tags
+        panic!("Skipping test because it is excluded for the {variant:?} variant");
     }
 
     let mut ch = Command::new(out_dir.join("build/ch"));
@@ -88,7 +101,7 @@ fn run_test_variant(test: &Test, variant: Variant) {
                 .map(|s| trim_carriage_return(s))
                 .collect::<Vec<_>>();
 
-            assert_eq!(actual, expected);
+            assert_eq!(expected, actual);
         }
     } else {
         println!("Actual output: {:#?}", actual);

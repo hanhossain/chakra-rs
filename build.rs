@@ -8,6 +8,11 @@ fn main() {
         #[cfg(unix)]
         build_cmake();
     }
+
+    println!("cargo:rustc-check-cfg=cfg(disable_jit)");
+    if !cfg!(target_arch = "x86_64") && cfg!(unix) {
+        println!("cargo:rustc-cfg=disable_jit");
+    }
 }
 
 #[cfg(unix)]

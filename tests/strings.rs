@@ -1,62 +1,83 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Strings";
 
-#[test]
-fn string_at_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "string_at.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn char_at_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn char_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "charAt.js",
         baseline_path: Some("charAt.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn from_char_code_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn from_char_code_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fromCharCode.js",
         baseline_path: Some("fromCharCode.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn from_code_point_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn from_code_point_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fromCodePoint.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn char_code_at_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn char_code_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "charCodeAt.js",
         baseline_path: Some("charCodeAt.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat1.js",
@@ -64,11 +85,14 @@ fn concat1_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat2.js",
@@ -76,33 +100,42 @@ fn concat2_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat3.js",
         baseline_path: Some("concat3.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat4_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat4.js",
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat5_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat5.js",
@@ -110,32 +143,41 @@ fn concat5_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat6_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat6.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat7_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat7_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat7.js",
         compile_flags: vec!["-off:bailonnoprofile", "-loopinterpretcount:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concat_empty_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concat_empty_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concat_empty.js",
@@ -143,22 +185,28 @@ fn concat_empty_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn left_dead_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn left_dead_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "LeftDead.js",
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn split1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn split1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "split1.js",
@@ -166,32 +214,41 @@ fn split1_js() {
         compile_flags: vec!["-ES6ToLength"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn string_builtin_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_builtin_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringBuiltin.js",
         baseline_path: Some("stringBuiltin.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn to_case_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_case_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toCase.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn string_replace_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_replace_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "string_replace.js",
@@ -199,97 +256,124 @@ fn string_replace_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn compare_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn compare_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "compare.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn replace_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn replace_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "replace.js",
         baseline_path: Some("replace.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn replace_xsite_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn replace_xsite_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "replace-xsite.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn trim_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trim_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "trim.js",
         baseline_path: Some("trim.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn trimstart_trimend_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trimstart_trimend_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "trimStart_trimEnd.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn lastindexof_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lastindexof_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lastindexof.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn indexof_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn indexof_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "indexof.js",
         baseline_path: Some("indexof.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn neg_index_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn neg_index_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "neg_index.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn substring_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn substring_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "substring.js",
@@ -297,11 +381,14 @@ fn substring_js() {
         compile_flags: vec!["-CollectGarbage", "-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn html_helpers_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn html_helpers_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "HTMLHelpers.js",
@@ -309,22 +396,28 @@ fn html_helpers_js() {
         compile_flags: vec!["-Intl-", "-ES6StringPrototypeFixes"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn stringindex_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stringindex_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringindex.js",
         baseline_path: Some("stringindex_v3.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn length_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn length_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "length.js",
@@ -332,11 +425,14 @@ fn length_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn stringtypespec_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stringtypespec_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringtypespec.js",
@@ -344,7 +440,7 @@ fn stringtypespec_js() {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -357,63 +453,81 @@ fn stringtypespec_js() {
 //   </default>
 // </test>
 
-#[test]
-fn concatmulti_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concatmulti_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concatmulti.js",
         baseline_path: Some("concatmulti.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concatmulti_compoundstring_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concatmulti_compoundstring_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concatmulti_compoundstring.js",
         baseline_path: Some("concatmulti_compoundstring.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concatmulti_large_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concatmulti_large_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concatmulti_large.js",
         baseline_path: Some("concatmulti_large.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn concatmulti_loop_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn concatmulti_loop_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "concatmulti_loop.js",
         baseline_path: Some("concatmulti_loop.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn long_concatstr_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_concatstr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "long_concatstr.js",
         baseline_path: Some("long_concatstr.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn string_tag_functions_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_tag_functions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "StringTagFunctions.js",
@@ -421,39 +535,48 @@ fn string_tag_functions_js() {
         compile_flags: vec!["-ES6StringPrototypeFixes"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn string_object_indices_589140_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_object_indices_589140_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "string_object_indices_589140.js",
         baseline_path: Some("string_object_indices_589140.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn property_and_index_of_string_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn property_and_index_of_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "property_and_index_of_string.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os_3080673_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_3080673_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_3080673.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -465,24 +588,30 @@ fn bug_os_3080673_js() {
 //   </default>
 // </test>
 
-#[test]
-fn null_embedded_string_to_double_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn null_embedded_string_to_double_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "null_embedded_string_toDouble.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn constructor_contact_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constructor_contact_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "constructorConcat.js",
         compile_flags: vec!["-lic:1", "-mic:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }

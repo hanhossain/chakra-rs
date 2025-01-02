@@ -1,95 +1,125 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es6";
 
-#[test]
-fn instance_of_proto_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn instance_of_proto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "instanceOfProto.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_issue_2747_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_issue_2747_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_issue_2747.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn lambda1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lambda1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lambda1.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn lambda_expr_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lambda_expr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lambda-expr.js",
         baseline_path: Some("lambda-expr.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn lambda_params_shadow_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lambda_params_shadow_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lambda-params-shadow.js",
         compile_flags: vec!["-off:deferparse", "-es7asyncawait"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn numeric_literal_test_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn numeric_literal_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NumericLiteralTest.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bound_bug3837520_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bound_bug3837520_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "boundBug3837520.js",
         compile_flags: vec!["-es6generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6to_length_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6to_length_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "es6toLength.js",
         compile_flags: vec!["-es6toLength", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6to_length_js_jsbuiltin() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6to_length_js_jsbuiltin(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "es6toLength.js",
@@ -102,86 +132,110 @@ fn es6to_length_js_jsbuiltin() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn to_primitive_cross_script_test_case_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_primitive_cross_script_test_case_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toPrimitiveCrossScriptTestCase.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn computed_property_to_string_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn computed_property_to_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "computedPropertyToString.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn computed_property_side_effect_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn computed_property_side_effect_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "computedPropertySideEffect.js",
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_fix2214646_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_fix2214646_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BugFix2214646.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6is_concat_spreadable_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6is_concat_spreadable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "es6IsConcatSpreadable.js",
         compile_flags: vec!["-es6tolength", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn to_primitive_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_primitive_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toPrimitive.js",
         compile_flags: vec!["-es6regexsymbols", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn unscopables_with_scope_test_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unscopables_with_scope_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unscopablesWithScopeTest.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn function_name_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn function_name_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "function.name.js",
@@ -194,7 +248,7 @@ fn function_name_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -206,19 +260,24 @@ fn function_name_js() {
 //   </default>
 // </test>
 
-#[test]
-fn super_dot_osbug3930962_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn super_dot_osbug3930962_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "superDotOSBug3930962.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn to_string_tag_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_string_tag_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toStringTag.js",
@@ -226,44 +285,56 @@ fn to_string_tag_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_basic.js",
         baseline_path: Some("proto_basic.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_disable_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_disable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_disable.js",
         baseline_path: Some("proto_disable.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_initializer_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_initializer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_initializer.js",
         baseline_path: Some("proto_initializer.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_initializer_js_serialized() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_initializer_js_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_initializer.js",
@@ -271,142 +342,181 @@ fn proto_initializer_js_serialized() {
         compile_flags: vec!["-ForceSerialized"],
         tags: vec!["exclude_serialized"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_addprop_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_addprop_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_addprop.js",
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proto_addprop_js_maxinterpretcount2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proto_addprop_js_maxinterpretcount2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proto_addprop.js",
         compile_flags: vec!["-maxinterpretcount:2", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn map_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn map_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "map_basic.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn map_functionality_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn map_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "map_functionality.js",
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "set_basic.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_functionality_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "set_functionality.js",
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn weakmap_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn weakmap_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "weakmap_basic.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn weakmap_functionality_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn weakmap_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "weakmap_functionality.js",
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn weakset_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn weakset_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "weakset_basic.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn weakset_functionality_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn weakset_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "weakset_functionality.js",
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blockscope_activationobject_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_activationobject_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope-activationobject.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blockscope_deferred_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope-deferred.js",
         baseline_path: Some("blockscope-deferred.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blockscope_deferred_js_deferparse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_deferred_js_deferparse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope-deferred.js",
@@ -414,22 +524,28 @@ fn blockscope_deferred_js_deferparse() {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blockscope_functionbinding_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_functionbinding_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope-functionbinding.js",
         baseline_path: Some("blockscope-functionbinding.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blockscope_functionbinding_js_deferparse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_functionbinding_js_deferparse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope-functionbinding.js",
@@ -437,7 +553,7 @@ fn blockscope_functionbinding_js_deferparse() {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -450,95 +566,122 @@ fn blockscope_functionbinding_js_deferparse() {
 //   </default>
 // </test>
 
-#[test]
-fn letconst_global_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global.js",
         baseline_path: Some("letconst_global.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_shadowing_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_shadowing_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_shadowing.js",
         baseline_path: Some("letconst_global_shadowing.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_shadow_builtins_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_shadow_builtins_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_shadow_builtins.js",
         baseline_path: Some("letconst_global_shadow_builtins.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_shadow_builtins_nonconfigurable_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_shadow_builtins_nonconfigurable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_shadow_builtins_nonconfigurable.js",
         baseline_path: Some("letconst_global_shadow_builtins_nonconfigurable.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_shadow_deleted_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_shadow_deleted_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_shadow_deleted.js",
         baseline_path: Some("letconst_global_shadow_deleted.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_shadow_accessor_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_shadow_accessor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_shadow_accessor.js",
         baseline_path: Some("letconst_global_shadow_accessor.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_global_bug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_global_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_global_bug.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_eval_redecl_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_eval_redecl_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_eval_redecl.js",
         baseline_path: Some("letconst_eval_redecl.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn letconst_eval_redecl_js_forcestrictmode() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn letconst_eval_redecl_js_forcestrictmode(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letconst_eval_redecl.js",
@@ -546,40 +689,49 @@ fn letconst_eval_redecl_js_forcestrictmode() {
         compile_flags: vec!["-forcestrictmode"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn definegettersetter_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn definegettersetter_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "definegettersetter.js",
         baseline_path: Some("definegettersetter.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn classes_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "classes.js",
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn classes_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "classes.js",
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -600,8 +752,11 @@ fn classes_js_force_defer_parse() {
 //   </default>
 // </test>
 
-#[test]
-fn es6super_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6super_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Super.js",
@@ -614,65 +769,83 @@ fn es6super_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6super_js_defer_parse_off() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6super_js_defer_parse_off(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Super.js",
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6super_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6super_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Super.js",
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn classes_bug_os_6471427_js_force_serialized() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_bug_os_6471427_js_force_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "classes_bug_OS_6471427.js",
         compile_flags: vec!["-ForceSerialized"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn classes_bug_os_6471427_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_bug_os_6471427_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "classes_bug_OS_6471427.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn classes_bug_os_7100885_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_bug_os_7100885_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "classes_bug_OS_7100885.js",
         compile_flags: vec!["-maxsimplejitruncount:4", "-maxinterpretcount:4"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6subclassable_builtins_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6subclassable_builtins_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6SubclassableBuiltins.js",
@@ -687,11 +860,14 @@ fn es6subclassable_builtins_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6subclassable_builtins_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6subclassable_builtins_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6SubclassableBuiltins.js",
@@ -706,11 +882,14 @@ fn es6subclassable_builtins_js_force_defer_parse() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6subclassable_async_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6subclassable_async_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6SubclassableAsync.js",
@@ -718,11 +897,14 @@ fn es6subclassable_async_js() {
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Off:Deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6subclassable_async_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6subclassable_async_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6SubclassableAsync.js",
@@ -730,44 +912,56 @@ fn es6subclassable_async_js_force_defer_parse() {
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Force:Deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6math_apis_js_es6_math() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6math_apis_js_es6_math(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6MathAPIs.js",
         compile_flags: vec!["-ES6Math", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6math_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6math_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6MathAPIs.js",
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6number_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6number_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6NumberAPIs.js",
         compile_flags: vec!["-ES6Number", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6string_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6string_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6StringAPIs.js",
@@ -780,11 +974,14 @@ fn es6string_apis_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn code_point_at_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn code_point_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "codePointAt.js",
@@ -792,44 +989,56 @@ fn code_point_at_js() {
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn stringtemplate_basic_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stringtemplate_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringtemplate_basic.js",
         baseline_path: Some("stringtemplate_basic.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6string_template_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6string_template_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6StringTemplate.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6string_template_slow_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6string_template_slow_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6StringTemplateSlow.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6typed_array_extensions_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6typed_array_extensions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6TypedArrayExtensions.js",
@@ -843,44 +1052,56 @@ fn es6typed_array_extensions_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6array_api_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6array_api_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6ArrayAPI.js",
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6array_use_constructor_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6array_use_constructor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6ArrayUseConstructor.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6array_use_constructor_v5_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6array_use_constructor_v5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6ArrayUseConstructor_v5.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6symbol_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6symbol_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Symbol.js",
@@ -894,7 +1115,7 @@ fn es6symbol_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -906,19 +1127,25 @@ fn es6symbol_js() {
 //   </default>
 // </test>
 
-#[test]
-fn es6promise_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6promise_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Promise.js",
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6promise_async_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6promise_async_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6PromiseAsync.js",
@@ -926,7 +1153,7 @@ fn es6promise_async_js() {
         compile_flags: vec!["-ES6"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -939,19 +1166,25 @@ fn es6promise_async_js() {
 //   </default>
 // </test>
 
-#[test]
-fn normalize_prop_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn normalize_prop_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "normalizeProp.js",
         baseline_path: Some("normalizeProp.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn unicode_escape_sequences_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_escape_sequences_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_escape_sequences.js",
@@ -959,7 +1192,7 @@ fn unicode_escape_sequences_js() {
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -972,8 +1205,11 @@ fn unicode_escape_sequences_js() {
 //   </default>
 // </test>
 
-#[test]
-fn unicode_regex_surrogate_atoms_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_regex_surrogate_atoms_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_regex_surrogate_atoms.js",
@@ -981,103 +1217,130 @@ fn unicode_regex_surrogate_atoms_js() {
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn spread_iterator_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn spread_iterator_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spreadIterator.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn reflect_construct_consume_new_target_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn reflect_construct_consume_new_target_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "reflectConstructConsumeNewTarget.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn reflect_api_tests_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn reflect_api_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ReflectApiTests.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxy_trap_consume_new_target_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_trap_consume_new_target_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxyTrapConsumeNewTarget.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bound_construction_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bound_construction_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "boundConstruction.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn cross_context_spreadfunction_call_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_context_spreadfunction_call_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CrossContextSpreadfunctionCall.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn cross_context_promise_file1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_context_promise_file1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CrossContextPromiseFile1.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn cross_context_promise_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_context_promise_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CrossContextPromise.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn spread_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn spread_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spread.js",
         compile_flags: vec!["-ES6Spread", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1089,15 +1352,18 @@ fn spread_js() {
 //   </default>
 // </test>
 
-#[test]
-fn bug517864_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug517864_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Bug517864.js",
         compile_flags: vec!["-force:deferparse", "-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1109,8 +1375,10 @@ fn bug517864_js() {
 //   </default>
 // </test>
 
-#[test]
-fn unicode_6_identifier_blue511452_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_6_identifier_Blue511452.js",
@@ -1118,7 +1386,7 @@ fn unicode_6_identifier_blue511452_js() {
         compile_flags: vec!["-ES6Unicode"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1130,8 +1398,10 @@ fn unicode_6_identifier_blue511452_js() {
 //   </default>
 // </test>
 
-#[test]
-fn unicode_6_identifier_blue524737_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_6_identifier_Blue524737.js",
@@ -1139,11 +1409,13 @@ fn unicode_6_identifier_blue524737_js() {
         compile_flags: vec!["-ES6Unicode"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn supersyntax02_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn supersyntax02_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "supersyntax02.js",
@@ -1151,11 +1423,13 @@ fn supersyntax02_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn supersyntax05_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn supersyntax05_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "supersyntax05.js",
@@ -1163,11 +1437,13 @@ fn supersyntax05_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn supersyntax06_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn supersyntax06_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "supersyntax06.js",
@@ -1175,18 +1451,21 @@ fn supersyntax06_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objlit_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objlit_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objlit.js",
         compile_flags: vec!["-ES6", "-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1200,8 +1479,11 @@ fn objlit_js() {
 //   </default>
 // </test>
 
-#[test]
-fn unicode_blue_533163_utf8_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_blue_533163_utf8_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_blue_533163_utf8.js",
@@ -1209,281 +1491,359 @@ fn unicode_blue_533163_utf8_js() {
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6iterators_forof_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6iterators_forof_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Iterators-forof.js",
         compile_flags: vec!["-ES6", "-Intl-", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6iterators_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6iterators_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Iterators-apis.js",
         compile_flags: vec!["-ES6", "-Intl-", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6species_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6species_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Species-apis.js",
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6species_bugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6species_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Species-bugs.js",
         compile_flags: vec!["-CollectGarbage", "-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn blue595539_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blue595539_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blue595539.js",
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxytest6_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxytest6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxytest6.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxy_properties_api_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_properties_api_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ProxyPropertiesAPI.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxybugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxybugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxybugs.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxyconstruction_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxyconstruction_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxyconstruction.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxybug3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxybug3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxybug3.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxyprotobug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxyprotobug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxyprotobug.js",
         baseline_path: Some("proxyprotobug.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxybug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxybug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxybug.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxy_call_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_call_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ProxyCall.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxyenumremoval_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxyenumremoval_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxyenumremoval.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxy_issue884_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_issue884_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxy-issue884.js",
         baseline_path: Some("proxy-issue884.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn null_property_descriptor_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn null_property_descriptor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "nullPropertyDescriptor.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn object_is_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn object_is_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "object-is.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn object_assign_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn object_assign_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "object-assign.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_js_off_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_js_off_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_js_force_cached_scope() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_js_force_cached_scope(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default.js",
         compile_flags: vec!["-force:CachedScope", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_splitscope_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_splitscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default-splitscope.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_splitscope_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_splitscope_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default-splitscope.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_splitscope_undodeferparse_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_splitscope_undodeferparse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default-splitscope-undodeferparse.js",
         compile_flags: vec!["-forceundodefer"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn default_splitscope_serialized_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn default_splitscope_serialized_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "default-splitscope-serialized.js",
         compile_flags: vec!["-forceserialized"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn rest_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn rest_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "rest.js",
@@ -1497,11 +1857,14 @@ fn rest_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn rest_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn rest_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "rest.js",
@@ -1516,24 +1879,30 @@ fn rest_js_force_defer_parse() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_syntax_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_syntax_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-syntax.js",
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_syntax_js_force_deferparse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_syntax_js_force_deferparse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-syntax.js",
@@ -1546,71 +1915,89 @@ fn generators_syntax_js_force_deferparse() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn for_in_edge_cases_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn for_in_edge_cases_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forInEdgeCases.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_deferparse_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_deferparse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-deferparse.js",
         compile_flags: vec!["-force:deferparse", "-ES6Generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_apis_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-apis.js",
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_functionality_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-functionality.js",
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_deferred_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-deferred.js",
         compile_flags: vec!["-ES6Generators", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_deferred_js_serialized() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_deferred_js_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-deferred.js",
@@ -1618,11 +2005,13 @@ fn generators_deferred_js_serialized() {
         tags: vec!["exclude_forceserialized"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn generators_undodefer_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_undodefer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-undodefer.js",
@@ -1630,130 +2019,163 @@ fn generators_undodefer_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_cachedscope_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_cachedscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-cachedscope.js",
         compile_flags: vec!["-ES6Generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_applyargs_js_no_inline_apply() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_applyargs_js_no_inline_apply(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-applyargs.js",
         compile_flags: vec!["-ES6Generators", "-off:inlineapply"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
-#[test]
-fn generators_applyargs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generators_applyargs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-applyargs.js",
         compile_flags: vec!["-ES6Generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring.js",
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_obj_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_obj_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_obj.js",
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_params_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_params_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_params.js",
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_params_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_params_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_params.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_params_arguments_override_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_params_arguments_override_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_params_arguments_override.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_catch_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_catch_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_catch.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn destructuring_bugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn destructuring_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "destructuring_bugs.js",
         compile_flags: vec!["-ForceDeferParse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_279376_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_279376_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_279376.js",
         compile_flags: vec!["-es6spread"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1766,30 +2188,39 @@ fn bug_279376_js() {
 //   </default>
 // </test>
 
-#[test]
-fn bug_981217_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_981217_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_981217.js",
         baseline_path: Some("bug_981217.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objlit_shorthand_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objlit_shorthand_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objlit-shorthand-error.js",
         baseline_path: Some("objlit-shorthand-error.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn generator_strict_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generator_strict_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generator-strict-error.js",
@@ -1797,22 +2228,28 @@ fn generator_strict_error_js() {
         compile_flags: vec!["-ES6Generators", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_annex_b_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_annex_b_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-annex-b.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_case_folding_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_case_folding_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-case-folding.js",
@@ -1825,7 +2262,7 @@ fn regex_case_folding_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -1837,47 +2274,59 @@ fn regex_case_folding_js() {
 //   </default>
 // </test>
 
-#[test]
-fn regex_quantifiers_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_quantifiers_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-quantifiers.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_code_point_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_code_point_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-code-point.js",
         compile_flags: vec!["-ES6RegExSticky", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_unicode_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_unicode_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-unicode.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_unicode_case_insensitive_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_unicode_case_insensitive_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-unicode-CaseInsensitive.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 // <!--
 //   The following two tests take close to 60 seconds in interpreted mode on OS X test machines,
@@ -1903,19 +2352,25 @@ fn regex_unicode_case_insensitive_js() {
 //   </default>
 // </test>
 
-#[test]
-fn regex_set_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_set_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-set.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_prototype_properties_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_prototype_properties_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-prototype-properties.js",
@@ -1928,11 +2383,14 @@ fn regex_prototype_properties_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_symbols_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_symbols_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-symbols.js",
@@ -1945,21 +2403,27 @@ fn regex_symbols_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regex_w_sharp_s_kelvin_sign_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_w_sharp_s_kelvin_sign_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-w-sharp-s-kelvin-sign.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regexflags_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regexflags_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regexflags.js",
@@ -1974,11 +2438,14 @@ fn regexflags_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn regexflags_disabled_features_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regexflags_disabled_features_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regexflags-disabled-features.js",
@@ -1993,11 +2460,14 @@ fn regexflags_disabled_features_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn reg_exp_apis_test_with_sticky_flag_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn reg_exp_apis_test_with_sticky_flag_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "RegExpApisTestWithStickyFlag.js",
@@ -2010,11 +2480,14 @@ fn reg_exp_apis_test_with_sticky_flag_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn stickyflag_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stickyflag_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stickyflag.js",
@@ -2028,11 +2501,13 @@ fn stickyflag_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn utfbug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn utfbug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "utfbug.js",
@@ -2040,11 +2515,14 @@ fn utfbug_js() {
         compile_flags: vec!["-dump:bytecode"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxybug_with_ld_fld_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxybug_with_ld_fld_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxybugWithLdFld.js",
@@ -2056,17 +2534,20 @@ fn proxybug_with_ld_fld_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxybug_withproto_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxybug_withproto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxybugWithproto.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -2079,52 +2560,67 @@ fn proxybug_withproto_js() {
 //   </default>
 // </test>
 
-#[test]
-fn proxy_set_prototype_of_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_set_prototype_of_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ProxySetPrototypeOf.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn arraywithproxy_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arraywithproxy_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "arraywithproxy.js",
         baseline_path: Some("arraywithproxy.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxytest8_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxytest8_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxytest8.js",
         baseline_path: Some("proxytest8.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn proxytest9_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxytest9_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "proxytest9.js",
         baseline_path: Some("proxytest9.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6function_bugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6function_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Function_bugs.js",
@@ -2132,11 +2628,14 @@ fn es6function_bugs_js() {
         tags: vec!["exclude_nonrazzle"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn os_2700778_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn os_2700778_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "OS_2700778.js",
@@ -2148,28 +2647,34 @@ fn os_2700778_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os_2184795_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_2184795_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_2184795.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn unicode_whitespace_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_whitespace_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_whitespace.js",
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -2180,29 +2685,38 @@ fn unicode_whitespace_js() {
 //   </default>
 // </test>
 
-#[test]
-fn bug_os_2915477_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_2915477_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_2915477.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os3198161_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os3198161_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_os3198161.js",
         compile_flags: vec!["-es6all"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os_4498031_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_4498031_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_4498031.js",
@@ -2215,66 +2729,83 @@ fn bug_os_4498031_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6new_target_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6new_target_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6NewTarget.js",
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6new_target_bugfixes_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6new_target_bugfixes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6NewTarget_bugfixes.js",
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6new_target_bugfixes_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6new_target_bugfixes_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6NewTarget_bugfixes.js",
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6new_target_bugfixes_js_force_undo_defer() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6new_target_bugfixes_js_force_undo_defer(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6NewTarget_bugfixes.js",
         compile_flags: vec!["-forceundodefer", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6class_super_chain_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6class_super_chain_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Class_SuperChain.js",
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn global_lambda_new_target_syntax_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalLambdaNewTargetSyntaxError.js",
@@ -2282,11 +2813,13 @@ fn global_lambda_new_target_syntax_error_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn global_new_target_syntax_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn global_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalNewTargetSyntaxError.js",
@@ -2294,11 +2827,13 @@ fn global_new_target_syntax_error_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn global_catch_new_target_syntax_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalCatchNewTargetSyntaxError.js",
@@ -2306,11 +2841,13 @@ fn global_catch_new_target_syntax_error_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn global_param_catch_new_target_syntax_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn global_param_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalParamCatchNewTargetSyntaxError.js",
@@ -2318,88 +2855,111 @@ fn global_param_catch_new_target_syntax_error_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6class_base_class_construction_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6class_base_class_construction_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Class_BaseClassConstruction.js",
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn expo_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn expo_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "expo.js",
         compile_flags: vec!["-args", "summary", "-endargs", "-es7exponentiationoperator"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn trailingcomma_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trailingcomma_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "trailingcomma.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6has_instance_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6has_instance_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "es6HasInstance.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6restricted_properties_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6restricted_properties_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6RestrictedProperties.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn es6proto_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6proto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6Proto.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn object_literal_bug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn object_literal_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "object_literal_bug.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn os_5403724_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn os_5403724_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "OS_5403724.js",
@@ -2414,34 +2974,41 @@ fn os_5403724_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn forloops_per_iteration_bindings_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn forloops_per_iteration_bindings_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forloops-per-iteration-bindings.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn htmlcomments_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn htmlcomments_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "HTMLComments.js",
         baseline_path: Some("HTMLComments.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(windows)]
-#[test]
-fn await_futreserved_only_in_modules_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "await-futreserved-only-in-modules.js",
@@ -2449,11 +3016,13 @@ fn await_futreserved_only_in_modules_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn os_5500719_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn os_5500719_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "OS_5500719.js",
@@ -2461,11 +3030,13 @@ fn os_5500719_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn os_8600339_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn os_8600339_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "OS_8600339.js",
@@ -2473,44 +3044,56 @@ fn os_8600339_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn iteratorclose_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn iteratorclose_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "iteratorclose.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn iterator_next_caches_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn iterator_next_caches_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "iterator_next_caches.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn iteratorclose_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn iteratorclose_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "iteratorclose.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_issue_1496_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_issue_1496_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_issue_1496.js",
@@ -2518,11 +3101,14 @@ fn bug_issue_1496_js() {
         compile_flags: vec!["-mic:1", "-maxsimplejitruncount:2"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_issue_3247_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_issue_3247_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_issue_3247.js",
@@ -2530,22 +3116,28 @@ fn bug_issue_3247_js() {
         tags: vec!["exclude_sanitize_address"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn typedarray_bugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typedarray_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "typedarray_bugs.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os10595959_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os10595959_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug-OS10595959.js",
@@ -2560,87 +3152,111 @@ fn bug_os10595959_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_spread_rest_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_spread_rest_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferSpreadRestError.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os10898061_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os10898061_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS10898061.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os14880030_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os14880030_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS14880030.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os14880030_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os14880030_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS14880030.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os13976524_js_force_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os13976524_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS13976524.js",
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os15679026_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os15679026_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS15679026.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_issue_4635_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_issue_4635_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_issue_4635.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os13976524_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os13976524_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS13976524.js",
@@ -2648,22 +3264,28 @@ fn bug_os13976524_js() {
         tags: vec!["BugFix"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_lambda_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_lambda_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseLambda.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_lambda_js_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_lambda_js_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseLambda.js",
@@ -2676,11 +3298,14 @@ fn defer_parse_lambda_js_defer_parse() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_lambda_js_force_undo_defer() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_lambda_js_force_undo_defer(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseLambda.js",
@@ -2694,22 +3319,28 @@ fn defer_parse_lambda_js_force_undo_defer() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_methods_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_methods_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseMethods.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_methods_js_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_methods_js_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseMethods.js",
@@ -2722,11 +3353,14 @@ fn defer_parse_methods_js_defer_parse() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn defer_parse_methods_js_force_undo_defer() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_parse_methods_js_force_undo_defer(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DeferParseMethods.js",
@@ -2740,86 +3374,110 @@ fn defer_parse_methods_js_force_undo_defer() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn function_expr_capture_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn function_expr_capture_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "function-expr-capture.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_user_func_as_proto_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_user_func_as_proto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "setUserFuncAsProto.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn function_expr_capture2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn function_expr_capture2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "function-expr-capture2.js",
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn supersetter_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn supersetter_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "supersetter.js",
         baseline_path: Some("supersetter.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os16649604_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os16649604_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS16649604.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os17895855_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os17895855_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS17895855.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn super_bugs_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn super_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "super_bugs.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_issue_5994_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_issue_5994_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_issue_5994.js",
@@ -2827,11 +3485,14 @@ fn bug_issue_5994_js() {
         compile_flags: vec!["-MuteHostErrorMsg"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_19225364_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_19225364_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_19225364.js",
@@ -2839,5 +3500,5 @@ fn bug_19225364_js() {
         compile_flags: vec!["-bgjit-", "-loopinterpretcount:1"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }

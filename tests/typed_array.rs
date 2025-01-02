@@ -1,169 +1,217 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 
 const DIRECTORY: &str = "chakracore-cxx/test/typedarray";
 
-#[test]
-fn typedarray_at_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typedarray_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "typedarray_at.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn likely_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn likely_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "likely.js",
         compile_flags: vec!["-bgjit-", "-lic:1"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn arraybuffer_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arraybuffer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "arraybuffer.js",
         baseline_path: Some("arrayBuffer.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn arraybuffer_type_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arraybuffer_type_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "arraybufferType.js",
         baseline_path: Some("arraybufferType.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn typed_array_builtins_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typed_array_builtins_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "TypedArrayBuiltins.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn integer_indexed_exotic_object_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn integer_indexed_exotic_object_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "IntegerIndexedExoticObject.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bad_na_n_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bad_na_n_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BadNaN.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn int8array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int8array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "int8array.js",
         baseline_path: Some("int8array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint8array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint8array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "uint8array.js",
         baseline_path: Some("uint8array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn int16array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int16array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "int16array.js",
         baseline_path: Some("int16array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint16array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint16array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "uint16array.js",
         baseline_path: Some("uint16array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn int32array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int32array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "int32array.js",
         baseline_path: Some("int32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint32array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint32array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "uint32array.js",
         baseline_path: Some("uint32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn float32array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn float32array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "float32array.js",
         baseline_path: Some("float32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn float64array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn float64array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "float64array.js",
         baseline_path: Some("float64array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -175,40 +223,52 @@ fn float64array_js() {
 //   </default>
 // </test>
 
-#[test]
-fn dataview2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dataview2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dataview2.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn reflect_define_property_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn reflect_define_property_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "reflect_defineProperty.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objectproperty_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objectproperty_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objectproperty.js",
         baseline_path: Some("objectproperty_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objectproperty_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objectproperty_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objectproperty.js",
@@ -216,7 +276,7 @@ fn objectproperty_js2() {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -240,30 +300,39 @@ fn objectproperty_js2() {
 //   </condition>
 // </test>
 
-#[test]
-fn neg_indexes_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn neg_indexes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "negIndexes.js",
         baseline_path: Some("negIndexes.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "set.js",
         baseline_path: Some("set.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "set.js",
@@ -271,7 +340,7 @@ fn set_js2() {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -295,116 +364,149 @@ fn set_js2() {
 // </test>
 // -->
 
-#[test]
-fn int8_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int8_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Int8Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint8_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint8_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "UInt8Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn int16_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int16_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Int16Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint16_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint16_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "UInt16Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn int32_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int32_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Int32Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint32_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint32_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "UInt32Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn float32_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn float32_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Float32Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn float64_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn float64_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Float64Array2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn float_helper_access_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn float_helper_access_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FloatHelperAccess.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn subarray_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn subarray_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "subarray.js",
         baseline_path: Some("subarray.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn dataview1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dataview1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dataview1.js",
         baseline_path: Some("dataview1.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -434,8 +536,11 @@ fn dataview1_js() {
 //   </default>
 // </test>
 
-#[test]
-fn pixel_array_rounding_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn pixel_array_rounding_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "pixelArrayRounding.js",
@@ -448,11 +553,14 @@ fn pixel_array_rounding_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn pixel_array_rounding_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn pixel_array_rounding_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "pixelArrayRounding.js",
@@ -464,11 +572,14 @@ fn pixel_array_rounding_js2() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn cse_typed_array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cse_typed_array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "cseTypedArray.js",
@@ -476,22 +587,28 @@ fn cse_typed_array_js() {
         compile_flags: vec!["-maxInterpretCount:1", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint8_clamped_array_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint8_clamped_array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Uint8ClampedArray.js",
         baseline_path: Some("Uint8ClampedArray_es6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn uint8_clamped_array2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint8_clamped_array2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Uint8ClampedArray2.js",
@@ -502,22 +619,28 @@ fn uint8_clamped_array2_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_different_types_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_different_types_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "setDifferentTypes.js",
         baseline_path: Some("setDifferentTypes.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn set_different_types_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_different_types_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "setDifferentTypes.js",
@@ -525,21 +648,27 @@ fn set_different_types_js2() {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug2230916_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug2230916_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug2230916.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug2268573_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug2268573_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug2268573.js",
@@ -547,82 +676,103 @@ fn bug2268573_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_4653428_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_4653428_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_4653428.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn memset_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memset_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "memset.js",
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn memset_neg_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memset_neg_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "memset_neg.js",
         compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn memcopy_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memcopy_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "memcopy.js",
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn memcopy_negative_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memcopy_negative_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "memcopy_negative.js",
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn typedarray_bugfixes_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typedarray_bugfixes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "typedarray_bugfixes.js",
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug_os_6911900_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_6911900_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_6911900.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -634,73 +784,94 @@ fn bug_os_6911900_js() {
 //   </default>
 // </test>
 
-#[test]
-fn cross_site_virtual_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_site_virtual_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CrossSiteVirtual.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn builtin_from_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn builtin_from_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "builtin_from.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn delete_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "delete.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn typeof_detached_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typeof_detached_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "typeofDetached.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn bug18321215_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug18321215_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug18321215.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn definitetypedarray_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn definitetypedarray_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "definitetypedarray.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn sort_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn sort_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sort.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }

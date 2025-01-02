@@ -1,40 +1,55 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/fieldopts";
 
-#[test]
-fn depolymorph01_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn depolymorph01_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "depolymorph01.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_finaltypeandpoly_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_finaltypeandpoly_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-finaltypeandpoly.js",
         compile_flags: vec!["-maxSimpleJitRunCount:2"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_missing_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_missing_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-missing.js",
         baseline_path: Some("equiv-missing.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_mismatch_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_mismatch_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-mismatch.js",
@@ -42,77 +57,98 @@ fn equiv_mismatch_js() {
         compile_flags: vec!["-CollectGarbage", "-maxsimplejitruncount:2"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_mismatch2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_mismatch2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-mismatch2.js",
         compile_flags: vec!["-force:rejit", "-off:bailonnoprofile"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_locktypeid_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_locktypeid_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-locktypeid.js",
         baseline_path: Some("equiv-locktypeid.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_needmonocheck_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_needmonocheck_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-needmonocheck.js",
         compile_flags: vec!["-maxsimplejitruncount:4", "-force:inline"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn equiv_needsmonocheck2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn equiv_needsmonocheck2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "equiv-needsmonocheck2.js",
         baseline_path: Some("equiv-needsmonocheck2.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldconstprop_ldmethodfld_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldconstprop_ldmethodfld_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldconstprop_ldmethodfld.js",
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_assign_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_assign_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_assign.js",
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_delete_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_delete.js",
@@ -120,33 +156,42 @@ fn fieldcopyprop_delete_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_deletestrict_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_deletestrict_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_deletestrict.js",
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist2.js",
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist4_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist4.js",
@@ -154,11 +199,14 @@ fn fieldhoist4_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist5_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist5.js",
@@ -166,55 +214,69 @@ fn fieldhoist5_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist6_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist6.js",
         baseline_path: Some("fieldhoist6.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist6b_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist6b_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist6b.js",
         baseline_path: Some("fieldhoist6b.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist7_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist7_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist7.js",
         baseline_path: Some("fieldhoist7.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist8_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist8_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist8.js",
         baseline_path: Some("fieldhoist8.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_nullfieldhoist_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_nullfieldhoist_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_nullfieldhoist.js",
@@ -222,43 +284,55 @@ fn fieldhoist_nullfieldhoist_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist9_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist9_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist9.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_unreachable_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_unreachable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_unreachable.js",
         baseline_path: Some("fieldhoist_unreachable.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typespec_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typespec_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec.js",
         baseline_path: Some("fieldhoist_typespec.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typespec_js_aggressive_int_type_spec() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typespec_js_aggressive_int_type_spec(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec.js",
@@ -266,11 +340,14 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec() {
         compile_flags: vec!["-off:aggressiveIntTypeSpec"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec.js",
@@ -278,11 +355,13 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline() {
         compile_flags: vec!["-off:aggressiveIntTypeSpec", "-off:inline"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typespec2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typespec2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec2.js",
@@ -290,11 +369,13 @@ fn fieldhoist_typespec2_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typespec3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typespec3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec3.js",
@@ -302,33 +383,42 @@ fn fieldhoist_typespec3_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_undefined_global_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_undefined_global_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_undefined_global.js",
         baseline_path: Some("fieldhoist_undefined_global.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_negzero_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_negzero_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_negzero.js",
         baseline_path: Some("fieldhoist_negzero.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_negzero_js_serialized() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_negzero_js_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_negzero.js",
@@ -336,33 +426,42 @@ fn fieldhoist_negzero_js_serialized() {
         compile_flags: vec!["-Serialized"],
         tags: vec!["exclude_forceserialized"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_typeof_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_typeof_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_typeof.js",
         baseline_path: Some("fieldhoist_typeof.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_sideeffect_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_sideeffect_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_sideeffect.js",
         baseline_path: Some("fieldhoist_sideeffect.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_nonwritable_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_nonwritable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_nonwritable.js",
@@ -370,11 +469,14 @@ fn fieldcopyprop_nonwritable_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_primitive_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_primitive_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_primitive.js",
@@ -382,11 +484,14 @@ fn fieldcopyprop_primitive_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_preventextensions_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_preventextensions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_preventextensions.js",
@@ -394,11 +499,14 @@ fn fieldcopyprop_preventextensions_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_freeze_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_freeze_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_freeze.js",
@@ -406,110 +514,140 @@ fn fieldcopyprop_freeze_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn redundanttype1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn redundanttype1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "redundanttype1.js",
         baseline_path: Some("redundanttype1.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_join_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_join_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_join.js",
         baseline_path: Some("fieldhoist_join.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_slots_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_slots_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_slots.js",
         baseline_path: Some("fieldhoist_slots.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_slots2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_slots2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_slots2.js",
         baseline_path: Some("fieldhoist_slots2.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_objptrcopyprop_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_objptrcopyprop_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_objptrcopyprop.js",
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_objptrcopyprop2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_objptrcopyprop2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_objptrcopyprop2.js",
         baseline_path: Some("fieldhoist_objptrcopyprop2.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_kills_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_kills_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_kills.js",
         baseline_path: Some("fieldhoist_kills.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_stripbailouts_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_stripbailouts_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_stripbailouts.js",
         baseline_path: Some("fieldhoist_stripbailouts.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn redundanttype2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn redundanttype2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "redundanttype2.js",
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn check_this_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn check_this_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CheckThis.js",
@@ -517,32 +655,41 @@ fn check_this_js() {
         compile_flags: vec!["-force:inline", "-force:checkthis"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objptrcopyprop_bug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objptrcopyprop_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objptrcopyprop_bug.js",
         baseline_path: Some("objptrcopyprop_bug.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objptrcopyprop_typescript_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objptrcopyprop_typescript_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objptrcopyprop_typescript.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldcopyprop_typespec_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldcopyprop_typespec_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldcopyprop_typespec.js",
@@ -550,75 +697,95 @@ fn fieldcopyprop_typespec_js() {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_deletefld_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_deletefld_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_deletefld.js",
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn forcefixdataprops_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn forcefixdataprops_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forcefixdataprops.js",
         compile_flags: vec!["-off:simplejit", "-force:fixdataprops"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn prop_object_pointer_copy_prop_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn prop_object_pointer_copy_prop_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "PropObjectPointerCopyProp.js",
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn redundanttype_kills_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn redundanttype_kills_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "redundanttype_kills.js",
         baseline_path: Some("redundanttype_kills.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_copypropdep_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_copypropdep_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_copypropdep.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_number_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_number_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_number.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec1.js",
@@ -626,11 +793,13 @@ fn objtypespec1_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec2.js",
@@ -638,11 +807,13 @@ fn objtypespec2_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec3.js",
@@ -650,11 +821,13 @@ fn objtypespec3_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_fieldhoist_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_fieldhoist_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-fieldhoist.js",
@@ -667,11 +840,13 @@ fn objtypespec_fieldhoist_js() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_fieldhoist_2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_fieldhoist_2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-fieldhoist.2.js",
@@ -679,11 +854,13 @@ fn objtypespec_fieldhoist_2_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_proto_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_proto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec_proto.js",
@@ -691,11 +868,13 @@ fn objtypespec_proto_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_add_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_add_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-add.js",
@@ -703,11 +882,13 @@ fn objtypespec_add_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_add_2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_add_2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-add-2.js",
@@ -715,11 +896,13 @@ fn objtypespec_add_2_js() {
         compile_flags: vec!["-maxinterpretcount:1", "-loopInterpretCount:1"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_add_4_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_add_4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-add-4.js",
@@ -727,11 +910,13 @@ fn objtypespec_add_4_js() {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -739,11 +924,13 @@ fn objtypespec_newobj_1_js() {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_glob_opt() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_glob_opt(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -751,11 +938,13 @@ fn objtypespec_newobj_1_js_off_glob_opt() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_inline() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_inline(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -763,11 +952,13 @@ fn objtypespec_newobj_1_js_off_inline() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_obj_type_spec() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_obj_type_spec(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -775,11 +966,13 @@ fn objtypespec_newobj_1_js_off_obj_type_spec() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -787,11 +980,13 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_fixed_new_obj() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_fixed_new_obj(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -803,11 +998,13 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_fixed_methods() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_fixed_methods(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -815,11 +1012,13 @@ fn objtypespec_newobj_1_js_off_fixed_methods() {
         compile_flags: vec!["-maxinterpretcount:2 -off:fixedMethods"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -827,11 +1026,13 @@ fn objtypespec_newobj_1_js_off_split_new_sc_object() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -843,11 +1044,13 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.1.js",
@@ -860,11 +1063,13 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -872,11 +1077,13 @@ fn objtypespec_newobj_2_js() {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_glob_opt() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_glob_opt(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -884,11 +1091,13 @@ fn objtypespec_newobj_2_js_off_glob_opt() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_inline() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_inline(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -896,11 +1105,13 @@ fn objtypespec_newobj_2_js_off_inline() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_obj_type_spec() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_obj_type_spec(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -908,11 +1119,13 @@ fn objtypespec_newobj_2_js_off_obj_type_spec() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -920,11 +1133,13 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_fixed_new_obj() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_fixed_new_obj(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -936,11 +1151,13 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_fixed_methods() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_fixed_methods(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -948,11 +1165,13 @@ fn objtypespec_newobj_2_js_off_fixed_methods() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:fixedMethods"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -960,11 +1179,13 @@ fn objtypespec_newobj_2_js_off_split_new_sc_object() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -976,11 +1197,13 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj.2.js",
@@ -993,11 +1216,13 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js1() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js1(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1005,11 +1230,13 @@ fn objtypespec_newobj_invalidation_1_js1() {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1017,11 +1244,13 @@ fn objtypespec_newobj_invalidation_1_js2() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js3() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1029,11 +1258,13 @@ fn objtypespec_newobj_invalidation_1_js3() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js4() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1041,11 +1272,13 @@ fn objtypespec_newobj_invalidation_1_js4() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js5() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1053,11 +1286,13 @@ fn objtypespec_newobj_invalidation_1_js5() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js6() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1069,11 +1304,13 @@ fn objtypespec_newobj_invalidation_1_js6() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js7() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1081,11 +1318,13 @@ fn objtypespec_newobj_invalidation_1_js7() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js8() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1097,11 +1336,13 @@ fn objtypespec_newobj_invalidation_1_js8() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_1_js9() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_1_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.1.js",
@@ -1114,11 +1355,13 @@ fn objtypespec_newobj_invalidation_1_js9() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js1() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js1(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1126,11 +1369,13 @@ fn objtypespec_newobj_invalidation_2_js1() {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js2() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1138,11 +1383,13 @@ fn objtypespec_newobj_invalidation_2_js2() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js3() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1150,11 +1397,13 @@ fn objtypespec_newobj_invalidation_2_js3() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js4() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1162,11 +1411,13 @@ fn objtypespec_newobj_invalidation_2_js4() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js5() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1174,11 +1425,13 @@ fn objtypespec_newobj_invalidation_2_js5() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js6() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1190,11 +1443,13 @@ fn objtypespec_newobj_invalidation_2_js6() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js7() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1202,11 +1457,13 @@ fn objtypespec_newobj_invalidation_2_js7() {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js8() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1218,11 +1475,13 @@ fn objtypespec_newobj_invalidation_2_js8() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn objtypespec_newobj_invalidation_2_js9() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objtypespec_newobj_invalidation_2_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objtypespec-newobj-invalidation.2.js",
@@ -1235,11 +1494,13 @@ fn objtypespec_newobj_invalidation_2_js9() {
         ],
         tags: vec!["exclude_dynapogo"],
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn field_hoist_max_interpret_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn field_hoist_max_interpret_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FieldHoist_MaxInterpret.js",
@@ -1251,33 +1512,42 @@ fn field_hoist_max_interpret_js() {
         tags: vec!["exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn mark_temp_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn mark_temp_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "markTemp.js",
         baseline_path: Some("markTemp.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn root_obj_1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn root_obj_1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "rootObj-1.js",
         baseline_path: Some("rootObj-1.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltypebug_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltypebug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltypebug.js",
@@ -1285,75 +1555,96 @@ fn finaltypebug_js() {
         compile_flags: vec!["-MaxSimpleJITRunCount:1", "-MaxinterpretCount:1"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltype2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltype2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltype2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltype2_js_bgjit() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltype2_js_bgjit(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltype2.js",
         compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltype_objheaderinlining1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltype_objheaderinlining1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltype-objheaderinlining1.js",
         compile_flags: vec!["-off:simplejit", "-fja:1"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltype_objheaderinlining2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltype_objheaderinlining2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltype-objheaderinlining2.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn finaltype_objheaderinlining3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn finaltype_objheaderinlining3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "finaltype-objheaderinlining3.js",
         compile_flags: vec!["-lic:1", "-bgjit-", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_accessorinlining1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_accessorinlining1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_accessorinlining1.js",
         compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fieldhoist_accessorinlining2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fieldhoist_accessorinlining2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fieldhoist_accessorinlining2.js",
@@ -1361,22 +1652,28 @@ fn fieldhoist_accessorinlining2_js() {
         compile_flags: vec!["-off:inlinegetters", "-off:fixedmethods"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck.js",
         compile_flags: vec!["-force:fixdataprops"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck2.js",
@@ -1387,11 +1684,14 @@ fn fixedfieldmonocheck2_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck3_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck3.js",
@@ -1403,63 +1703,81 @@ fn fixedfieldmonocheck3_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck4_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck4.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck5_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck5.js",
         compile_flags: vec!["-maxinterpretcount:2", "-maxsimplejitruncount:6"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn fixedfieldmonocheck6_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fixedfieldmonocheck6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fixedfieldmonocheck6.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn add_prop_to_dictionary_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn add_prop_to_dictionary_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "add-prop-to-dictionary.js",
         baseline_path: Some("add-prop-to-dictionary.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn argobjlengthhoist_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argobjlengthhoist_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "argobjlengthhoist.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn os23440664_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn os23440664_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "OS23440664.js",
@@ -1470,5 +1788,5 @@ fn os23440664_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }

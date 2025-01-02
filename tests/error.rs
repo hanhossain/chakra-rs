@@ -1,30 +1,42 @@
+use common::Variant;
+use rstest::rstest;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Error";
 
-#[test]
-fn error_cause_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_cause_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "error_cause.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn aggregate_error_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn aggregate_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "aggregate_error.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_props_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_props_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "errorProps.js",
@@ -32,22 +44,28 @@ fn error_props_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_ctor_props_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_ctor_props_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ErrorCtorProps.js",
         baseline_path: Some("ErrorCtorProps_v3.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn native_errors_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn native_errors_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NativeErrors.js",
@@ -55,11 +73,14 @@ fn native_errors_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn outofmem_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn outofmem_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "outofmem.js",
@@ -67,7 +88,7 @@ fn outofmem_js() {
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -80,19 +101,25 @@ fn outofmem_js() {
 //   </default>
 // </test>
 
-#[test]
-fn stack2_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stack2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stack2.js",
         baseline_path: Some("stack2.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_ctor_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_ctor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "errorCtor.js",
@@ -100,22 +127,27 @@ fn error_ctor_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_num_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_num_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "errorNum.js",
         baseline_path: Some("errorNum.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn call_non_function_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn call_non_function_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CallNonFunction.js",
@@ -123,11 +155,14 @@ fn call_non_function_js() {
         tags: vec!["exclude_native", "exclude_dynapogo"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_00_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_00_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_00.js",
@@ -135,11 +170,14 @@ fn source_info_00_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_01_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_01_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_01.js",
@@ -147,11 +185,14 @@ fn source_info_01_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_10_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_10_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_10.js",
@@ -159,11 +200,14 @@ fn source_info_10_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_11_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_11_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_11.js",
@@ -171,11 +215,14 @@ fn source_info_11_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_12_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_12_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_12.js",
@@ -183,11 +230,14 @@ fn source_info_12_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_13_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_13_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_13.js",
@@ -195,11 +245,14 @@ fn source_info_13_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn source_info_20_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn source_info_20_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfo_20.js",
@@ -207,23 +260,29 @@ fn source_info_20_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn various_errors_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn various_errors_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "variousErrors.js",
         baseline_path: Some("variousErrors3.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 #[cfg(all(windows, not(target_arch = "aarch64")))]
-#[test]
-fn runtime_compile_stack_overflow_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn runtime_compile_stack_overflow_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "RuntimeCompileStackOverflow.js",
@@ -231,7 +290,7 @@ fn runtime_compile_stack_overflow_js() {
         tags: vec!["exclude_forceundodefer"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -245,14 +304,17 @@ fn runtime_compile_stack_overflow_js() {
 //   </default>
 // </test>
 
-#[test]
-fn bug560940_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug560940_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug560940.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
 // TODO (hanhossain): migrate
@@ -264,8 +326,11 @@ fn bug560940_js() {
 //   </default>
 // </test>
 
-#[test]
-fn inline_same_func_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn inline_same_func_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "inlineSameFunc.js",
@@ -277,11 +342,14 @@ fn inline_same_func_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn part_init_stack_frame_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn part_init_stack_frame_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "PartInitStackFrame.js",
@@ -294,11 +362,14 @@ fn part_init_stack_frame_js() {
         ],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn validate_line_column_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn validate_line_column_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "validate_line_column.js",
@@ -306,11 +377,14 @@ fn validate_line_column_js() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn validate_line_column_js_defer_parse() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn validate_line_column_js_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "validate_line_column.js",
@@ -318,26 +392,32 @@ fn validate_line_column_js_defer_parse() {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-force:DeferParse"],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn error_prototypeto_string_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn error_prototypeto_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "errorPrototypetoString.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 
-#[test]
-fn exception_in_error_to_string_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn exception_in_error_to_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "exceptionInErrorToString.js",
         baseline_path: Some("exceptionInErrorToString.baseline"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }

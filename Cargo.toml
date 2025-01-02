@@ -8,3 +8,7 @@ edition = "2021"
 [target.'cfg(unix)'.build-dependencies]
 cc = { version = "1.2.6", features = ["parallel"] }
 cmake = "0.1.52"
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
+rstest = "0.24.0"

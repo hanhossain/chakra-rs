@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+// TODO (hanhossain): use common module
 #[test]
 fn hello() {
     let out_dir = env!("OUT_DIR");
