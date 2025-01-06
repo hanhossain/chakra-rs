@@ -681,43 +681,85 @@ fn special_symbol_capture_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate test
-// <test>
-//   <default>
-//     <files>VerifyParserState.js</files>
-//     <baseline>VerifyParserState.baseline</baseline>
-//     <compile-flags>-UseParserStateCache -ParserStateCache -Force:DeferParse -Trace:CreateParserState</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn verify_parser_state_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "VerifyParserState.js",
+        baseline_path: Some("VerifyParserState.baseline"),
+        compile_flags: vec![
+            "-UseParserStateCache",
+            "-ParserStateCache",
+            "-Force:DeferParse",
+            "-Trace:CreateParserState",
+        ],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate test
-// <test>
-//   <default>
-//     <files>VerifySkipNestedDeferred.js</files>
-//     <baseline>VerifySkipNestedDeferred.baseline</baseline>
-//     <compile-flags>-UseParserStateCache -ParserStateCache -Force:DeferParse -Trace:SkipNestedDeferred</compile-flags>
-//     <tags>exclude_test,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "VerifySkipNestedDeferred.js",
+        baseline_path: Some("VerifySkipNestedDeferred.baseline"),
+        compile_flags: vec![
+            "-UseParserStateCache",
+            "-ParserStateCache",
+            "-Force:DeferParse",
+            "-Trace:SkipNestedDeferred",
+        ],
+        tags: vec!["exclude_test", "exclude_dynapogo"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate test
-// <test>
-//   <default>
-//     <files>bug_os17542375.js</files>
-//     <compile-flags>-UseParserStateCache -ParserStateCache -Force:DeferParse -pageheap:2</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os17542375_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_os17542375.js",
+        compile_flags: vec![
+            "-UseParserStateCache",
+            "-ParserStateCache",
+            "-Force:DeferParse",
+            "-pageheap:2",
+        ],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate test
-// <test>
-//   <default>
-//     <files>bug_os16855035.js</files>
-//     <compile-flags>-UseParserStateCache -ParserStateCache -Force:DeferParse -Force:Redeferral -CollectGarbage</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os16855035_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_os16855035.js",
+        compile_flags: vec![
+            "-UseParserStateCache",
+            "-ParserStateCache",
+            "-Force:DeferParse",
+            "-Force:Redeferral",
+            "-CollectGarbage",
+        ],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
