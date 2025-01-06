@@ -556,15 +556,20 @@ fn blockscope_functionbinding_js_deferparse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>blockscope-functionbinding.js</files>
-//     <compile-flags>-lic:1 -InitializeInterpreterSlotsWithInvalidStackVar</compile-flags>
-//     <baseline>blockscope-functionbinding.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_functionbinding_js_invalidstackvar(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blockscope-functionbinding.js",
+        baseline_path: Some("blockscope-functionbinding.baseline"),
+        compile_flags: vec!["-lic:1", "-InitializeInterpreterSlotsWithInvalidStackVar"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -734,23 +739,35 @@ fn classes_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>classes_bugfixes.js</files>
-//     <compile-flags>-Off:Deferparse -args summary -endargs</compile-flags>
-//     <tags>exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_bugfixes_js1(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "classes_bugfixes.js",
+        compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>classes_bugfixes.js</files>
-//     <compile-flags>-Force:Deferparse -args summary -endargs</compile-flags>
-//     <tags>exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn classes_bugfixes_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "classes_bugfixes.js",
+        compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1118,14 +1135,20 @@ fn es6symbol_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ES6Symbol_540238.js</files>
-//     <compile-flags>-RecyclerStress</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6symbol_540238_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ES6Symbol_540238.js",
+        compile_flags: vec!["-RecyclerStress"],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1156,15 +1179,21 @@ fn es6promise_async_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>normalize.js</files>
-//     <baseline>normalize.baseline</baseline>
-//     <tags>exclude_noicu</tags>
-//     <compile-flags> -ES6Unicode</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn normalize_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "normalize.js",
+        baseline_path: Some("normalize.baseline"),
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1389,14 +1418,20 @@ fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_idDeferParseFunctions_utf8.js</files>
-//     <compile-flags>-ES6Unicode</compile-flags>
-//     <tags>exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_id_defer_parse_functions_utf8_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_idDeferParseFunctions_utf8.js",
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2178,15 +2213,20 @@ fn bug_279376_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>blue_641922.js</files>
-//     <baseline>blue_641922.baseline</baseline>
-//     <compile-flags> -ES6Rest -RecyclerNoPageReuse -PageHeap:2</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blue_641922_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blue_641922.js",
+        baseline_path: Some("blue_641922.baseline"),
+        compile_flags: vec!["-ES6Rest", "-RecyclerNoPageReuse", "-PageHeap:2"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2265,14 +2305,20 @@ fn regex_case_folding_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>regex-octoquad.js</files>
-//     <compile-flags>-RegexOptimize -args summary -endargs</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_octoquad_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regex-octoquad.js",
+        compile_flags: vec!["-RegexOptimize", "-args", "summary", "-endargs"],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2550,15 +2596,20 @@ fn proxybug_withproto_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ProxyInProxy.js</files>
-//     <baseline>ProxyInProxy.baseline</baseline>
-//     <compile-flags> -mic:1 -off:simpleJIT </compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_in_proxy_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ProxyInProxy.js",
+        baseline_path: Some("ProxyInProxy.baseline"),
+        compile_flags: vec!["-mic:1", "-off:simpleJIT"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
