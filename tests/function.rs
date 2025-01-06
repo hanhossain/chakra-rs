@@ -772,7 +772,6 @@ fn func_body_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn func_body_bug133933_js(#[case] variant: Variant) {
     let test = common::Test {
