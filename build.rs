@@ -28,7 +28,8 @@ fn build_cmake() {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
-        .profile("RelWithDebInfo")
+        // TODO (hanhossain): use features or cfg to enable optimizations
+        // .profile("RelWithDebInfo")
         .build_target("ch");
 
     let target = std::env::var("TARGET").unwrap();
