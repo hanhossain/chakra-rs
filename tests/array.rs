@@ -334,15 +334,20 @@ fn array_ctr_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-arrayValidate</compile-flags>
-//     <files>array_ctr.js</files>
-//     <baseline>array_ctr.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn array_ctr_js_array_validate(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_ctr.js",
+        baseline_path: Some("array_ctr.baseline"),
+        compile_flags: vec!["-arrayValidate"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -702,15 +707,20 @@ fn to_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toString.js</files>
-//     <compile-flags>-ForceES5Array</compile-flags>
-//     <tags>exclude_test</tags>
-//     <baseline>toString.baseline</baseline>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_string_js_force_es5_array(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toString.js",
+        baseline_path: Some("toString.baseline"),
+        compile_flags: vec!["-ForceES5Array"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -726,15 +736,20 @@ fn to_locale_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toLocaleString.js</files>
-//     <compile-flags>-ForceES5Array</compile-flags>
-//     <tags>exclude_test</tags>
-//     <baseline>toLocaleString.baseline</baseline>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_locale_string_js_force_es5_array(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toLocaleString.js",
+        baseline_path: Some("toLocaleString.baseline"),
+        compile_flags: vec!["-ForceES5Array"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -815,15 +830,20 @@ fn array_splice_double_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-arrayValidate</compile-flags>
-//     <files>array_splice.js</files>
-//     <baseline>array_splice.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn array_splice_js_array_validate(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_splice.js",
+        baseline_path: Some("array_splice.baseline"),
+        compile_flags: vec!["-arrayValidate"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
