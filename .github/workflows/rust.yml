@@ -44,4 +44,4 @@ jobs:
       - name: Build
         run: cargo build -vv
       - name: Run tests
-        run: cargo nextest run --no-fail-fast
+        run: cargo nextest run
