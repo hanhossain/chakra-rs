@@ -19,14 +19,20 @@ fn has_only_writable_data_properties_cache_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-recyclerVerify</compile-flags>
-//     <files>longstring.js</files>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn long_string_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "longstring.js",
+        compile_flags: vec!["-recyclerVerify"],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
