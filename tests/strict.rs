@@ -160,15 +160,20 @@ fn evalargs_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>evalargs.js</files>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//     <baseline />
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn evalargs_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "evalargs.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -382,15 +387,20 @@ fn test03_assign_js_force_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>03.assign.js</files>
-//     <baseline>03.assign_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse -ForceStrictMode</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test03_assign_js_deferparse_force_strict_mode(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "03.assign.js",
+        baseline_path: Some("03.assign_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -406,15 +416,20 @@ fn test03_assign_sm_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>03.assign_sm.js</files>
-//     <baseline>03.assign_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test03_assign_sm_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "03.assign_sm.js",
+        baseline_path: Some("03.assign_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -474,15 +489,20 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>05.arguments.js</files>
-//     <baseline>05.arguments_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse -ForceStrictMode</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test05_arguments_js_deferparse_strictmode(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "05.arguments.js",
+        baseline_path: Some("05.arguments_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -513,15 +533,20 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>05.arguments_sm.js</files>
-//     <baseline>05.arguments_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test05_arguments_sm_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "05.arguments_sm.js",
+        baseline_path: Some("05.arguments_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -552,25 +577,35 @@ fn test06_arguments_js_force_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>06.arguments.js</files>
-//     <baseline>06.arguments_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse -ForceStrictMode</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test06_arguments_js_force_strict_mode_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "06.arguments.js",
+        baseline_path: Some("06.arguments_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>06.arguments.js</files>
-//     <baseline>06.arguments_sm.baseline</baseline>
-//     <compile-flags>-force:cachedscope -ForceStrictMode</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test06_arguments_js_force_strict_mode_cachedscope(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "06.arguments.js",
+        baseline_path: Some("06.arguments_sm.baseline"),
+        compile_flags: vec!["-force:cachedscope", "-ForceStrictMode"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -586,25 +621,35 @@ fn test06_arguments_sm_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>06.arguments_sm.js</files>
-//     <baseline>06.arguments_sm.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test06_arguments_sm_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "06.arguments_sm.js",
+        baseline_path: Some("06.arguments_sm.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>06.arguments_sm.js</files>
-//     <baseline>06.arguments_sm.baseline</baseline>
-//     <compile-flags>-force:cachedscope</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test06_arguments_sm_js_cachedscope(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "06.arguments_sm.js",
+        baseline_path: Some("06.arguments_sm.baseline"),
+        compile_flags: vec!["--force:cachedscope"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
