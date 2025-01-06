@@ -154,15 +154,20 @@ fn parse_int1_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferunicode.js</files>
-//     <baseline>deferunicode.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn defer_unicode_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferunicode.js",
+        baseline_path: Some("deferunicode.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
