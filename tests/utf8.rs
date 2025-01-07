@@ -19,13 +19,19 @@ fn invalidutf8_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_digit_as_identifier_should_work.js</files>
-//     <tags>exclude_serialized,exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_digit_as_identifier_should_work_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_digit_as_identifier_should_work.js",
+        tags: vec!["exclude_serialized", "exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -81,14 +87,20 @@ fn unicode_sequence_serialized_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bugGH2656.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//     <tags>exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_gh2656_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugGH2656.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: vec!["exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
