@@ -244,7 +244,8 @@ fn marshalbug_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(unix)]
+// TODO (hanhossain): this should be all unix, but this takes way too long on mac. maybe it should be exclude_debug
+#[cfg(target_os = "linux")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
