@@ -42,4 +42,6 @@ jobs:
       - name: Build
         run: cargo build -vv
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test
+      - name: Run slow tests
+        run: cargo test -- --ignored
