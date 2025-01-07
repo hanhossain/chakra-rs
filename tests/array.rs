@@ -87,14 +87,21 @@ fn array_sort_order_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_init.js</files>
-//     <baseline>array_init.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn array_init_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_init.js",
+        baseline_path: Some("array_init.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -111,14 +118,27 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-args summary -endargs -ForceArrayBTree -recyclerStress</compile-flags>
-//     <files>SpliceBtreeMemoryCorruption.js</files>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn splice_btree_memory_corruption_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "SpliceBtreeMemoryCorruption.js",
+        compile_flags: vec![
+            "-args",
+            "summary",
+            "-endargs",
+            "-ForceArrayBTree",
+            "-recyclerStress",
+        ],
+        tags: vec!["exclude_test", "Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1029,15 +1049,21 @@ fn array_literal_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-recyclerStress</compile-flags>
-//     <files>array_literal.js</files>
-//     <baseline>array_literal.baseline</baseline>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn array_literal_js_recycler_stress(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_literal.js",
+        baseline_path: Some("array_literal.baseline"),
+        compile_flags: vec!["-recyclerStress"],
+        tags: vec!["exclude_test", "Slow"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
