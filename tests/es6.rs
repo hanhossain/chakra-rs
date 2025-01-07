@@ -1224,15 +1224,21 @@ fn unicode_escape_sequences_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_6_identifiers_utf8.js</files>
-//     <baseline>unicode_6_identifiers_utf8.baseline</baseline>
-//     <compile-flags> -ES6Unicode</compile-flags>
-//     <tags>exclude_win7,exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_6_identifiers_utf8_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_6_identifiers_utf8.js",
+        baseline_path: Some("unicode_6_identifiers_utf8.baseline"),
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["exclude_win7", "exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1372,14 +1378,21 @@ fn spread_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_convertUTF8.js</files>
-//     <compile-flags> -ES6Unicode</compile-flags>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn unicode_convert_utf8_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_convertUTF8.js",
+        compile_flags: vec!["-ES6Unicode"],
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1395,14 +1408,21 @@ fn bug517864_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug620694.js</files>
-//     <compile-flags>-es6all -recyclerstress</compile-flags>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn bug620694_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug620694.js",
+        compile_flags: vec!["-es6all", "-recyclerstress"],
+        tags: vec!["exclude_test", "Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2728,13 +2748,19 @@ fn unicode_whitespace_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_OS_2553885.js</files>
-//     <tags>exclude_win7,Intl,exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_os_2553885_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_OS_2553885.js",
+        tags: vec!["exclude_win7", "Intl", "exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
