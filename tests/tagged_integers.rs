@@ -30,21 +30,35 @@ fn comparison_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>addition.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn addition_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "addition.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>subtraction.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn subtraction_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "subtraction.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -59,13 +73,20 @@ fn div_min_int_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>multiplication.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn multiplication_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multiplication.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -80,29 +101,50 @@ fn divide_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>and.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn and_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "and.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>or.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn or_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "or.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>xor.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn xor_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "xor.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -169,13 +211,20 @@ fn unsignedshiftright_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>modulus.js</files>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn modulus_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "modulus.js",
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -217,14 +266,21 @@ fn shift_constants_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>loops.js</files>
-//     <baseline>loops.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn loops_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loops.js",
+        baseline_path: Some("loops.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -272,32 +328,68 @@ fn comparison_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>addition.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn addition_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "addition.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>subtraction.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn subtraction_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "subtraction.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>multiplication.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn multiplication_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multiplication.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -319,32 +411,68 @@ fn divide_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>and.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn and_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "and.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>or.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn or_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "or.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>xor.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn xor_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "xor.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -386,41 +514,89 @@ fn negate_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>signedshiftleft.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn signedshiftleft_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "signedshiftleft.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>signedshiftright.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn signedshiftright_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "signedshiftright.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unsignedshiftright.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn unsignedshiftright_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsignedshiftright.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>modulus.js</files>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn modulus_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "modulus.js",
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -519,15 +695,26 @@ fn shift_constants_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>loops.js</files>
-//     <baseline>loops.baseline</baseline>
-//     <tags>exclude_test,Slow</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn loops_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loops.js",
+        baseline_path: Some("loops.baseline"),
+        tags: vec!["exclude_test", "Slow"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
