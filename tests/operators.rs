@@ -46,14 +46,21 @@ fn addcross_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>biops.js</files>
-//     <baseline>biops.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn biops_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "biops.js",
+        baseline_path: Some("biops.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
