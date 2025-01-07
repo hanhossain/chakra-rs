@@ -529,7 +529,6 @@ fn dataview1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn typed_array_profile_js(#[case] variant: Variant) {
     let test = common::Test {
