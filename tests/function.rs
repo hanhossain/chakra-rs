@@ -1046,15 +1046,21 @@ fn child_calls_eval_jit_loop_body_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>631838.js</files>
-//     <compile-flags>-nonative</compile-flags>
-//     <!-- On ARM it would take TOO long (700s on Tegra 2 vs 20s on Intel Core i7) to run, as we need to use even bigger object -->
-//     <tags>exclude_dynapogo,exclude_arm,Slow</tags>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn bug631838_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "631838.js",
+        compile_flags: vec!["-nonative"],
+        tags: vec!["exclude_dynapogo", "exclude_arm", "Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
