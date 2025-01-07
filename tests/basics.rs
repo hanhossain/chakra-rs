@@ -33,14 +33,21 @@ fn script_function_to_strings_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate test
-// <test>
-//   <default>
-//     <files>DomProperties.js</files>
-//     <compile-flags>-Intl-</compile-flags>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn dom_properties_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DomProperties.js",
+        compile_flags: vec!["-Intl-"],
+        tags: vec!["slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
