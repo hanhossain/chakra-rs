@@ -443,15 +443,25 @@ fn stringtypespec_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>CompoundString.js</files>
-//     <baseline>CompoundString.baseline</baseline>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -Intl-</compile-flags>
-//     <tags>exclude_dynapogo,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn compound_string_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CompoundString.js",
+        baseline_path: Some("CompoundString.baseline"),
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-Intl-",
+        ],
+        tags: vec!["exclude_dynapogo", "Slow"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
