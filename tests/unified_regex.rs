@@ -32,24 +32,38 @@ fn assertion_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bugFixRegression.js</files>
-//     <baseline>bugFixRegression.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn bug_fix_regression_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugFixRegression.js",
+        baseline_path: Some("bugFixRegression.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bugFixRegression.js</files>
-//     <baseline>bugFixRegression.baseline</baseline>
-//     <compile-flags>-forceSerialized</compile-flags>
-//     <tags>exclude_serialized,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn bug_fix_regression_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugFixRegression.js",
+        baseline_path: Some("bugFixRegression.baseline"),
+        compile_flags: vec!["-forceSerialized"],
+        tags: vec!["exclude_serialized", "Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -135,14 +149,21 @@ fn fast_regex_captures_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>lastIndex.js</files>
-//     <baseline>lastIndex.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn last_index_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lastIndex.js",
+        baseline_path: Some("lastIndex.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -228,14 +249,21 @@ fn prioritizedalternatives_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>quantifiableAssertions.js</files>
-//     <baseline>quantifiableAssertions.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn quantifiable_assertions_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "quantifiableAssertions.js",
+        baseline_path: Some("quantifiableAssertions.baseline"),
+        tags: vec!["Slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
