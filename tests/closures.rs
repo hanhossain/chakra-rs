@@ -216,21 +216,27 @@ fn delaycapture_loopbody2_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>initcachedscope.js</files>
-//     <compile-flags>-recyclerstress -force:cachedscope</compile-flags>
-//     <baseline>initcachedscope.baseline</baseline>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn initcachedscope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "initcachedscope.js",
+        baseline_path: Some("initcachedscope.baseline"),
+        compile_flags: vec!["-recyclerstress", "-force:cachedscope"],
+        tags: vec!["exclude_test", "Slow"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn initcachedscope_js(#[case] variant: Variant) {
+fn initcachedscope_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "initcachedscope.js",
