@@ -579,14 +579,20 @@ fn bug_os_3080673_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_toUpperCase_toLowerCase.js</files>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//     <tags>exclude_win7,exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unicode_to_upper_case_to_lower_case_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_toUpperCase_toLowerCase.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: vec!["exclude_win7", "exclude_noicu"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
