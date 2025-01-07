@@ -80,6 +80,10 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .args(&test.compile_flags)
         .args(&variant_config.compile_flags);
 
+    if cfg!(unix) {
+        ch.env("TZ", "US/Pacific");
+    }
+
     println!("Running command: {ch:#?}");
     let output = ch.output().unwrap();
 

@@ -18,14 +18,21 @@ fn jx1_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jx2.js</files>
-//     <baseline>jx2.baseline</baseline>
-//     <tags>slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn jx2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jx2.js",
+        baseline_path: Some("jx2.baseline"),
+        tags: vec!["slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -40,15 +47,21 @@ fn cacheassert_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stringify-replacer.js</files>
-//     <baseline>stringify-replacer.baseline</baseline>
-//     <compile-flags>-recyclerstress</compile-flags>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn stringify_replacer_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stringify-replacer.js",
+        baseline_path: Some("stringify-replacer.baseline"),
+        compile_flags: vec!["-recyclerstress"],
+        tags: vec!["exclude_test", "slow"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -99,15 +112,21 @@ fn simple_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>simple.withLog.js</files>
-//     <baseline>simple.withLog.baseline</baseline>
-//     <compile-flags>-recyclerstress -trace:JSON</compile-flags>
-//     <tags>exclude_test,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+fn simple_with_log_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple.withLog.js",
+        baseline_path: Some("simple.withLog.baseline"),
+        compile_flags: vec!["-recyclerstress", "-trace:JSON"],
+        tags: vec!["exclude_test", "slow"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
