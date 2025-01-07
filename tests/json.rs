@@ -123,24 +123,35 @@ fn simple_stringify_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>parseWithGc.js</files>
-//     <compile-flags>-ForceGCAfterJSONParse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn parse_with_gc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "parseWithGc.js",
+        compile_flags: vec!["-ForceGCAfterJSONParse"],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jsonCache.js</files>
-//     <compile-flags>-ForceGCAfterJSONParse</compile-flags>
-//     <baseline>jsonCache.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn json_cache_js_force_gc(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jsonCache.js",
+        baseline_path: Some("jsonCache.baseline"),
+        compile_flags: vec!["-ForceGCAfterJSONParse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

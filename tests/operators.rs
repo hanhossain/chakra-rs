@@ -221,15 +221,23 @@ fn mod_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-maxinterpretCount:1 -off:simpleJit -testtrace:rejit</compile-flags>
-//     <files>modopt.js</files>
-//     <baseline>modopt.baseline</baseline>
-//     <tags>exclude_dynapogo,exclude_nonative,exclude_arm,require_backend</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn modopt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "modopt.js",
+        baseline_path: Some("modopt.baseline"),
+        compile_flags: vec!["-maxinterpretCount:1", "-off:simpleJit", "-testtrace:rejit"],
+        tags: vec![
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_arm",
+            "require_backend",
+        ],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

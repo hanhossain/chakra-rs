@@ -188,16 +188,20 @@ fn to_locale_string2_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>toLocaleStringBasics.js</files>
-//       <baseline>toLocaleStringBasics.baseline</baseline>
-//       <compile-flags>-args summary -endargs</compile-flags>
-//       <!-- The output is different on windows with Intl off, may want to merge the windows and linux implementation -->
-//       <tags>Intl,exclude_sanitize_address</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn to_locale_string_basics_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toLocaleStringBasics.js",
+        baseline_path: Some("toLocaleStringBasics.baseline"),
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: vec!["Intl", "exclude_sanitize_address"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

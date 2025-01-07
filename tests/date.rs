@@ -165,16 +165,20 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
 //   </condition>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>marshalbug.js</files>
-//     <!-- only to catch debug build assertions -->
-//     <compile-flags>-nonative -intl-</compile-flags>
-//     <baseline/>
-//     <tags>exclude_test,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn marshalbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "marshalbug.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-nonative", "-intl-"],
+        tags: vec!["exclude_test", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>

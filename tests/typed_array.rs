@@ -527,14 +527,19 @@ fn dataview1_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>exclude_test,exclude_dynapogo,typedarray</tags>
-//     <compile-flags>-maxinterpretcount:1 -off:simpleJit</compile-flags>
-//     <files>typedArrayProfile.js</files>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typed_array_profile_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "typedArrayProfile.js",
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
+        tags: vec!["exclude_test", "exclude_dynapogo", "typedarray"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

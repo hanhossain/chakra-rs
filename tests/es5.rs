@@ -225,15 +225,20 @@ fn obj_lit_get_set_parse_only_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <files>ObjLitGetSetParseOnly.js</files>
-//     <baseline>ObjLitGetSetParseOnlyFdp.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn obj_lit_get_set_parse_only_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ObjLitGetSetParseOnly.js",
+        baseline_path: Some("ObjLitGetSetParseOnlyFdp.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -303,15 +308,20 @@ fn array_length_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-ForceES5Array</compile-flags>
-//     <tags>exclude_test</tags>
-//     <files>array_length.js</files>
-//     <baseline>array_length.baseline</baseline>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn array_length_js_forcees5array(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_length.js",
+        baseline_path: Some("array_length.baseline"),
+        compile_flags: vec!["-ForceES5Array"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -590,15 +600,21 @@ fn setters_arguments_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <files>settersArguments.js</files>
-//     <baseline>settersArguments.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn setters_arguments_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "settersArguments.js",
+        baseline_path: Some("settersArguments.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

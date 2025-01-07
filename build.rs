@@ -28,7 +28,8 @@ fn build_cmake() {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
-        .profile("RelWithDebInfo")
+        // TODO (hanhossain): use features or cfg to enable optimizations
+        // .profile("RelWithDebInfo")
         .build_target("ch");
 
     let target = std::env::var("TARGET").unwrap();
@@ -47,7 +48,9 @@ fn build_msvc() {
         .join("chakracore-cxx/Build/Chakra.Core.sln");
     let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("build/");
     let status = msbuild
-        .arg("/p:Configuration=Test")
+        .arg("/p:Configuration=Debug")
+        // TODO (hanhossain): use features or cfg to enable optimizations
+        // .arg("/p:Configuration=Test")
         .arg("/p:Platform=x64")
         .arg(format!("/p:OutDir={}", out_dir.display()))
         .arg("/m")

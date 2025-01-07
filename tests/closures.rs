@@ -176,23 +176,45 @@ fn closure_ole_js_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delaycapture-loopbody.js</files>
-//     <compile-flags>-lic:1 -off:simplejit -bgjit- -off:stackfunc -InitializeInterpreterSlotsWithInvalidStackVar</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn delaycapture_loopbody_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delaycapture-loopbody.js",
+        compile_flags: vec![
+            "-lic:1",
+            "-off:simplejit",
+            "-bgjit-",
+            "-off:stackfunc",
+            "-InitializeInterpreterSlotsWithInvalidStackVar",
+        ],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>delaycapture-loopbody2.js</files>
-//     <compile-flags>-lic:1 -bgjit- -InitializeInterpreterSlotsWithInvalidStackVar</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn delaycapture_loopbody2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delaycapture-loopbody2.js",
+        compile_flags: vec![
+            "-lic:1",
+            "-bgjit-",
+            "-InitializeInterpreterSlotsWithInvalidStackVar",
+        ],
+        tags: vec!["exclude_test"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -248,15 +270,20 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>invalcachedscope.js</files>
-//     <compile-flags>-force:deferparse -Intl-</compile-flags>
-//     <baseline>invalcachedscope.baseline</baseline>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn invalcachedscope_js_deferparse(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalcachedscope.js",
+        baseline_path: Some("invalcachedscope.baseline"),
+        compile_flags: vec!["-force:deferparse", "-Intl-"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

@@ -252,14 +252,25 @@ fn preincrement_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>comparison.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn comparison_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "comparison.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -288,14 +299,25 @@ fn preincrement_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>divide.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn divide_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "divide.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -324,23 +346,45 @@ fn preincrement_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>not.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn not_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "not.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>negate.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn negate_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "negate.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -378,15 +422,26 @@ fn preincrement_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>loopbounds.js</files>
-//     <baseline>loopbounds.baseline</baseline>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopbounds_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopbounds.js",
+        baseline_path: Some("loopbounds.baseline"),
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -424,23 +479,45 @@ fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>not_1.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn not_1_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "not_1.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>shift_constants.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn shift_constants_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "shift_constants.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -452,20 +529,42 @@ fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>predecrement.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn predecrement_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "predecrement.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>preincrement.js</files>
-//     <tags>exclude_test</tags>
-//     <compile-flags>-off:constprop -off:copyprop -off:constfold -off:typespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn preincrement_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "preincrement.js",
+        tags: vec!["exclude_test"],
+        compile_flags: vec![
+            "-off:constprop",
+            "-off:copyprop",
+            "-off:constfold",
+            "-off:typespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

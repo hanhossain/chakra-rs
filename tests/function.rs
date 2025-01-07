@@ -381,35 +381,50 @@ fn jit_loop_body_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredParsing.js</files>
-//     <baseline>deferredParsing_3.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deferred_parsing_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredParsing.js",
+        baseline_path: Some("deferredParsing_3.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredParsing.js</files>
-//     <baseline>deferredParsing_3.baseline</baseline>
-//     <compile-flags>-forceUndoDefer</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deferred_parsing_js_force_undodefer(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredParsing.js",
+        baseline_path: Some("deferredParsing_3.baseline"),
+        compile_flags: vec!["-forceUndoDefer"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredGetterSetter.js</files>
-//     <baseline>deferredGetterSetter.baseline</baseline>
-//     <compile-flags>-force:deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deferred_getter_setter_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredGetterSetter.js",
+        baseline_path: Some("deferredGetterSetter.baseline"),
+        compile_flags: vec!["-force:deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -453,25 +468,35 @@ fn deferredstuboob_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredWith.js</files>
-//     <baseline>deferredWith.v4.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deferred_with_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredWith.js",
+        baseline_path: Some("deferredWith.v4.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>deferredWith2.js</files>
-//     <baseline>deferredWith2.baseline</baseline>
-//     <compile-flags>-Force:Deferparse</compile-flags>
-//     <tags>exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deferred_with2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deferredWith2.js",
+        baseline_path: Some("deferredWith2.baseline"),
+        compile_flags: vec!["-Force:Deferparse"],
+        tags: vec!["exclude_test"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -745,15 +770,19 @@ fn func_body_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FuncBody.bug133933.js</files>
-//     <baseline>FuncBody.bug133933.baseline</baseline>
-//     <compile-flags>-trace:FunctionSourceInfoParse -off:deferparse</compile-flags>
-//     <tags>exclude_test,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn func_body_bug133933_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FuncBody.bug133933.js",
+        baseline_path: Some("FuncBody.bug133933.baseline"),
+        compile_flags: vec!["-trace:FunctionSourceInfoParse", "-off:deferparse"],
+        tags: vec!["exclude_test", "exclude_dynapogo"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -799,15 +828,24 @@ fn func_body_bug236810_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>FuncBody.bug231397.js</files>
-//     <baseline>FuncBody.bug231397.baseline</baseline>
-//     <compile-flags>-dump:bytecode</compile-flags>
-//     <tags>exclude_bytecodelayout,exclude_test,exclude_nonative,require_backend</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn func_body_bug231397_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FuncBody.bug231397.js",
+        baseline_path: Some("FuncBody.bug231397.baseline"),
+        compile_flags: vec!["-dump:bytecode"],
+        tags: vec![
+            "exclude_bytecodelayout",
+            "exclude_test",
+            "exclude_nonative",
+            "require_backend",
+        ],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -921,15 +959,26 @@ fn stack_args_with_formals_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>StackArgsWithFormals.js</files>
-//     <compile-flags>-mic:1 -off:simpleJit -trace:stackargformalsopt</compile-flags>
-//     <tags>exclude_dynapogo,exclude_test,exclude_nonative,require_backend,exclude_forceserialized,exclude_arm64</tags>
-//     <baseline>StackArgsWithFormals.baseline</baseline>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn stack_args_with_formals_js_stack_arg_formals_opt(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "StackArgsWithFormals.js",
+        compile_flags: vec!["-mic:1", "-off:simpleJit", "-trace:stackargformalsopt"],
+        tags: vec![
+            "exclude_dynapogo",
+            "exclude_test",
+            "exclude_nonative",
+            "require_backend",
+            "exclude_forceserialized",
+            "exclude_arm64",
+        ],
+        baseline_path: Some("StackArgsWithFormals.baseline"),
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -949,15 +998,25 @@ fn stack_args_max_interpret_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stackArgsLenConstOpt.js</files>
-//     <compile-flags>-mic:1 -off:simpleJit -testtrace:StackArgLenConstOpt</compile-flags>
-//     <tags>exclude_dynapogo,exclude_nonative,require_backend,exclude_forceserialized,exclude_arm64</tags>
-//     <baseline>stackArgsLenConstOpt.baseline</baseline>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn stack_args_len_const_opt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stackArgsLenConstOpt.js",
+        compile_flags: vec!["-mic:1", "-off:simpleJit", "-testtrace:StackArgLenConstOpt"],
+        tags: vec![
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "require_backend",
+            "exclude_forceserialized",
+            "exclude_arm64",
+        ],
+        baseline_path: Some("stackArgsLenConstOpt.baseline"),
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -972,15 +1031,20 @@ fn stack_args_with_inlinee_bail_out_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>childCallsEvalJitLoopBody.js</files>
-//     <baseline />
-//     <compile-flags>-prejit</compile-flags>
-//     <tags>exclude_test,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn child_calls_eval_jit_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "childCallsEvalJitLoopBody.js",
+        baseline_path: Some(""),
+        compile_flags: vec!["-prejit"],
+        tags: vec!["exclude_test", "exclude_dynapogo"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1057,7 +1121,7 @@ fn crosssite_bind_main_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
+// TODO (hanhossain): migrate, but the test's failing when trying to run on ubuntu and windows?
 // <test>
 //   <default>
 //     <files>failnativecodeinstall.js</files>

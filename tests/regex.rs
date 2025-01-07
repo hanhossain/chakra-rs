@@ -375,15 +375,20 @@ fn not_boiliteral2_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>BoiHardFail.js</files>
-//     <baseline>BoiHardFail.baseline</baseline>
-//     <compile-flags>-regexDebug</compile-flags>
-//     <tags>exclude_test,exclude_serialized</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn boi_hard_fail_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BoiHardFail.js",
+        baseline_path: Some("BoiHardFail.baseline"),
+        compile_flags: vec!["-regexDebug"],
+        tags: vec!["exclude_test", "exclude_serialized"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

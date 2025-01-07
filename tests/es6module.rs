@@ -4,23 +4,78 @@ use rstest::rstest;
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es6module";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test001.js</files>
-//     <baseline/>
-//     <compile-flags>-PrintSystemException  -es6module -es6generators -es7asyncawait -ArrayMutationTestSeed:456986689  -maxinterpretcount:1 -maxsimplejitruncount:2 -MinMemOpCount:0 -werexceptionsupport  -bgjit- -loopinterpretcount:1 -off:lossyinttypespec</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test001_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test001.js",
+        baseline_path: Some(""),
+        compile_flags: vec![
+            "-PrintSystemException",
+            "-es6module",
+            "-es6generators",
+            "-es7asyncawait",
+            "-ArrayMutationTestSeed:456986689",
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+            "-MinMemOpCount:0",
+            "-werexceptionsupport",
+            "-bgjit-",
+            "-loopinterpretcount:1",
+            "-off:lossyinttypespec",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test002.js</files>
-//     <baseline/>
-//     <compile-flags>-PrintSystemException  -es6module -es6generators -es7asyncawait -ArrayMutationTestSeed:1580332815  -maxinterpretcount:1 -maxsimplejitruncount:2 -MinMemOpCount:0 -werexceptionsupport  -MinSwitchJumpTableSize:3 -MaxLinearStringCaseCount:2 -MaxLinearIntCaseCount:2 -force:fieldcopyprop -force:rejit -UseJITTrampoline- -force:fixdataprops -off:stackargopt -force:atom -oopjit- -force:ScriptFunctionWithInlineCache -off:lossyinttypespec -ForceArrayBTree -off:trackintusage -ForceJITCFGCheck -ForceStaticInterpreterThunk -off:cachedScope -off:DelayCapture -off:fefixedmethods -off:ArrayCheckHoist</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test002_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test002.js",
+        baseline_path: Some(""),
+        compile_flags: vec![
+            "-PrintSystemException",
+            "-es6module",
+            "-es6generators",
+            "-es7asyncawait",
+            "-ArrayMutationTestSeed:1580332815",
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:2",
+            "-MinMemOpCount:0",
+            "-werexceptionsupport",
+            "-MinSwitchJumpTableSize:3",
+            "-MaxLinearStringCaseCount:2",
+            "-MaxLinearIntCaseCount:2",
+            "-force:fieldcopyprop",
+            "-force:rejit",
+            "-UseJITTrampoline-",
+            "-force:fixdataprops",
+            "-off:stackargopt",
+            "-force:atom",
+            "-oopjit-",
+            "-force:ScriptFunctionWithInlineCache",
+            "-off:lossyinttypespec",
+            "-ForceArrayBTree",
+            "-off:trackintusage",
+            "-ForceJITCFGCheck",
+            "-ForceStaticInterpreterThunk",
+            "-off:cachedScope",
+            "-off:DelayCapture",
+            "-off:fefixedmethods",
+            "-off:ArrayCheckHoist",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -219,14 +274,30 @@ fn module_syntax1_js_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>module-namespace.js</files>
-//     <compile-flags>-ES6Module -Es6ToStringTag -args summary -endargs</compile-flags>
-//     <tags>exclude_dynapogo,exclude_drt,exclude_sanitize_address,exclude_noicu</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn module_namespace_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "module-namespace.js",
+        compile_flags: vec![
+            "-ES6Module",
+            "-Es6ToStringTag",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        tags: vec![
+            "exclude_dynapogo",
+            "exclude_drt",
+            "exclude_sanitize_address",
+            "exclude_noicu",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
