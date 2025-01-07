@@ -39,6 +39,9 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
+      - name: Set timezone
+        if: matrix.os == 'windows-latest'
+        run: tzutil /s "Pacific Standard time"
       - name: Build
         run: cargo build -vv
       - name: Run tests
