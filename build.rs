@@ -1,12 +1,14 @@
 use std::path::PathBuf;
 
 fn main() {
+    let debug_test = cfg!(feature = "debug-test");
+
     let target = std::env::var("TARGET").unwrap();
     if target.contains("windows") {
-        build_msvc();
+        build_msvc(debug_test);
     } else {
         #[cfg(unix)]
-        build_cmake();
+        build_cmake(debug_test);
     }
 
     // set rstest timeout to 60s
@@ -19,7 +21,7 @@ fn main() {
 }
 
 #[cfg(unix)]
-fn build_cmake() {
+fn build_cmake(debug_test: bool) {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
         cc_config.compiler("clang");
@@ -31,9 +33,11 @@ fn build_cmake() {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
-        // TODO (hanhossain): use features or cfg to enable optimizations
-        // .profile("RelWithDebInfo")
         .build_target("ch");
+
+    if debug_test {
+        config.profile("RelWithDebInfo");
+    }
 
     let target = std::env::var("TARGET").unwrap();
     if target.contains("darwin") {
@@ -45,15 +49,21 @@ fn build_cmake() {
     config.build();
 }
 
-fn build_msvc() {
+fn build_msvc(debug_test: bool) {
+    let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
+    let configuration = match (debug_test, debug) {
+        (true, _) => "Test",
+        (false, true) => "Debug",
+        (false, false) => "Release",
+    };
+
     let mut msbuild = std::process::Command::new("msbuild");
     let sln = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap())
         .join("chakracore-cxx/Build/Chakra.Core.sln");
     let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("build/");
+
     let status = msbuild
-        .arg("/p:Configuration=Debug")
-        // TODO (hanhossain): use features or cfg to enable optimizations
-        // .arg("/p:Configuration=Test")
+        .arg(format!("/p:Configuration={configuration}"))
         .arg("/p:Platform=x64")
         .arg(format!("/p:OutDir={}", out_dir.display()))
         .arg("/m")
