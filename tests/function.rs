@@ -828,9 +828,10 @@ fn func_body_bug236810_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(disable_jit))]
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
 fn func_body_bug231397_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

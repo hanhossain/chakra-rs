@@ -229,8 +229,9 @@ fn mod_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(disable_jit))]
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[case::interpreted(Variant::Interpreted)]
 fn modopt_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

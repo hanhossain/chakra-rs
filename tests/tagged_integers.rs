@@ -637,8 +637,9 @@ fn loopbounds_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(disable_jit))]
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[case::interpreted(Variant::Interpreted)]
 fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -650,8 +651,9 @@ fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(disable_jit))]
 #[rstest]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[case::dynapogo(Variant::Dynapogo)]
 fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
