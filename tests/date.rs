@@ -9,6 +9,7 @@ const DIRECTORY: &str = "chakracore-cxx/test/Date";
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn date_ctr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -25,6 +26,7 @@ fn date_ctr_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn date_get_set_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -41,6 +43,7 @@ fn date_get_set_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn date_parse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -58,6 +61,7 @@ fn date_parse_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn date_parse2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -144,6 +148,7 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn conversions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -168,6 +173,7 @@ fn conversions_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn conversions_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -201,6 +207,7 @@ fn conversions_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn formatting_xplat_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -251,6 +258,7 @@ fn marshalbug_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn xplat_interval_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -293,6 +301,7 @@ fn two_digit_years_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn to_string_and_to_utcstring_year_padding_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -339,6 +348,7 @@ fn parse_to_utcstring_and_to_isostring_results_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn parse_invalid_iso_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -356,6 +366,7 @@ fn parse_invalid_iso_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn parse_invalid_iso2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

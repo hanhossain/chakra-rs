@@ -1383,6 +1383,7 @@ fn spread_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn unicode_convert_utf8_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1413,6 +1414,7 @@ fn bug517864_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn bug620694_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

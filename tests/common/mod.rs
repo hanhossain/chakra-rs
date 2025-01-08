@@ -2,6 +2,10 @@ use pretty_assertions::{assert_eq, assert_ne};
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::Duration;
+
+#[allow(dead_code)]
+pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
 
 #[derive(Debug, Default)]
 pub struct Test {

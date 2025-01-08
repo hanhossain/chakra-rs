@@ -1051,6 +1051,7 @@ fn child_calls_eval_jit_loop_body_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn bug631838_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

@@ -92,6 +92,7 @@ fn array_sort_order_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn array_init_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -123,6 +124,7 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn splice_btree_memory_corruption_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1054,6 +1056,7 @@ fn array_literal_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn array_literal_js_recycler_stress(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

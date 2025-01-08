@@ -37,6 +37,7 @@ fn assertion_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn bug_fix_regression_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -53,6 +54,7 @@ fn bug_fix_regression_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn bug_fix_regression_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -154,6 +156,7 @@ fn fast_regex_captures_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn last_index_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -254,6 +257,7 @@ fn prioritizedalternatives_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn quantifiable_assertions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

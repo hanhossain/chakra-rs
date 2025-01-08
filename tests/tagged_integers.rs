@@ -35,6 +35,7 @@ fn comparison_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn addition_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -50,6 +51,7 @@ fn addition_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn subtraction_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -78,6 +80,7 @@ fn div_min_int_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn multiplication_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -106,6 +109,7 @@ fn divide_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn and_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -121,6 +125,7 @@ fn and_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn or_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -136,6 +141,7 @@ fn or_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn xor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -216,6 +222,7 @@ fn unsignedshiftright_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn modulus_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -271,6 +278,7 @@ fn shift_constants_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn loops_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -333,6 +341,7 @@ fn comparison_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn addition_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -354,6 +363,7 @@ fn addition_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn subtraction_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -375,6 +385,7 @@ fn subtraction_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn multiplication_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -416,6 +427,7 @@ fn divide_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn and_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -437,6 +449,7 @@ fn and_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn or_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -458,6 +471,7 @@ fn or_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn xor_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -519,6 +533,7 @@ fn negate_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn signedshiftleft_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -540,6 +555,7 @@ fn signedshiftleft_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn signedshiftright_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -561,6 +577,7 @@ fn signedshiftright_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn unsignedshiftright_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -582,6 +599,7 @@ fn unsignedshiftright_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn modulus_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -700,6 +718,7 @@ fn shift_constants_js2(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn loops_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

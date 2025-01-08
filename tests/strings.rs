@@ -447,6 +447,7 @@ fn stringtypespec_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn compound_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

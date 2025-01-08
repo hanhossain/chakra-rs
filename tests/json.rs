@@ -23,6 +23,7 @@ fn jx1_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn jx2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -54,6 +55,7 @@ fn cacheassert_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn stringify_replacer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -119,6 +121,7 @@ fn simple_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn simple_with_log_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

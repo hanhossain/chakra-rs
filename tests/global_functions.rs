@@ -136,6 +136,7 @@ fn parse_short_cut_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn internal_to_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

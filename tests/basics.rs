@@ -38,6 +38,7 @@ fn script_function_to_strings_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn dom_properties_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

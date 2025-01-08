@@ -106,6 +106,7 @@ fn is_prototype_of_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn big_constructor_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -149,6 +150,7 @@ fn null_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn property_is_enumerable_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -310,6 +312,7 @@ fn var_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn big_es5_array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
