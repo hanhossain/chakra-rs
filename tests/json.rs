@@ -116,6 +116,7 @@ fn simple_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -147,6 +148,7 @@ fn simple_stringify_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -162,6 +164,7 @@ fn parse_with_gc_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]

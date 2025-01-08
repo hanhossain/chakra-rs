@@ -316,6 +316,7 @@ fn preincrement_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -336,6 +337,7 @@ fn comparison_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -358,6 +360,7 @@ fn addition_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -380,6 +383,7 @@ fn subtraction_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -402,6 +406,7 @@ fn multiplication_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -422,6 +427,7 @@ fn divide_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -444,6 +450,7 @@ fn and_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -466,6 +473,7 @@ fn or_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -488,6 +496,7 @@ fn xor_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -508,6 +517,7 @@ fn not_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -528,6 +538,7 @@ fn negate_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -550,6 +561,7 @@ fn signedshiftleft_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -572,6 +584,7 @@ fn signedshiftright_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -594,6 +607,7 @@ fn unsignedshiftright_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -616,6 +630,7 @@ fn modulus_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -675,6 +690,7 @@ fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -695,6 +711,7 @@ fn not_1_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -715,6 +732,7 @@ fn shift_constants_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -737,6 +755,7 @@ fn loops_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -757,6 +776,7 @@ fn predecrement_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]

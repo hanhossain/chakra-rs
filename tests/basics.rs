@@ -689,6 +689,7 @@ fn special_symbol_capture_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -709,6 +710,7 @@ fn verify_parser_state_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
@@ -728,6 +730,7 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -748,6 +751,7 @@ fn bug_os17542375_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]

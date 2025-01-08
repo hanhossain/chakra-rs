@@ -119,6 +119,7 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -356,6 +357,7 @@ fn array_ctr_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -729,6 +731,7 @@ fn to_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -758,6 +761,7 @@ fn to_locale_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -852,6 +856,7 @@ fn array_splice_double_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -1051,6 +1056,7 @@ fn array_literal_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
