@@ -49,7 +49,7 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
 
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
-    let variant_config = match variant {
+    let mut variant_config = match variant {
         Variant::Interpreted => VariantConfig {
             compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
             excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
@@ -68,6 +68,13 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
             ],
         },
     };
+
+    let exclude_build_type = if cfg!(feature = "optimized-test") {
+        "exclude_test"
+    } else {
+        "exclude_debug"
+    };
+    variant_config.excluded_tags.push(exclude_build_type);
 
     if variant_config
         .excluded_tags

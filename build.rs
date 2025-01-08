@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 
 fn main() {
-    let debug_test = cfg!(feature = "debug-test");
+    let optimized_test = cfg!(feature = "optimized-test");
 
     let target = std::env::var("TARGET").unwrap();
     if target.contains("windows") {
-        build_msvc(debug_test);
+        build_msvc(optimized_test);
     } else {
         #[cfg(unix)]
-        build_cmake(debug_test);
+        build_cmake(optimized_test);
     }
 
     // set rstest timeout to 60s
@@ -21,7 +21,7 @@ fn main() {
 }
 
 #[cfg(unix)]
-fn build_cmake(debug_test: bool) {
+fn build_cmake(optimized_test: bool) {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
         cc_config.compiler("clang");
@@ -35,7 +35,7 @@ fn build_cmake(debug_test: bool) {
         .define("CMAKE_C_COMPILER", "clang")
         .build_target("ch");
 
-    if debug_test {
+    if optimized_test {
         config.profile("RelWithDebInfo");
     }
 
@@ -49,9 +49,9 @@ fn build_cmake(debug_test: bool) {
     config.build();
 }
 
-fn build_msvc(debug_test: bool) {
+fn build_msvc(optimized_test: bool) {
     let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
-    let configuration = match (debug_test, debug) {
+    let configuration = match (optimized_test, debug) {
         (true, _) => "Test",
         (false, true) => "Debug",
         (false, false) => "Release",
