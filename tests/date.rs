@@ -4,47 +4,79 @@ use rstest::rstest;
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Date";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>DateCtr.js</files>
-//     <tags>slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn date_ctr_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DateCtr.js",
+        tags: vec!["slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>DateGetSet.js</files>
-//     <baseline>DateGetSet.baseline</baseline>
-//     <!-- XPLAT doesn't provide expected DST info for year 35816 -->
-//     <tags>exclude_xplat,slow</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>DateParse.js</files>
-//     <baseline>DateParse_es5.baseline</baseline>
-//     <tags>slow</tags>
-//   </default>
-// </test>
-
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>DateParse2.js</files>
-//     <baseline>DateParse2.v5.baseline</baseline>
-//     <!-- xplat DST info for BC years don't mach to ones for Windows. Internally trying to match them is very expensive -->
-//     <tags>slow,exclude_xplat</tags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn date_get_set_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DateGetSet.js",
+        baseline_path: Some("DateGetSet.baseline"),
+        tags: vec!["exclude_xplat", "slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn date_parse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DateParse.js",
+        baseline_path: Some("DateParse_es5.baseline"),
+        tags: vec!["slow"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn date_parse2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DateParse2.js",
+        baseline_path: Some("DateParse2.v5.baseline"),
+        tags: vec!["slow", "exclude_xplat"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn date_parse3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -55,9 +87,9 @@ fn date_parse3_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn to_iso_3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -69,9 +101,9 @@ fn to_iso_3_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn dateutc_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -83,9 +115,9 @@ fn dateutc_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn dateutc_dategmt_same_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -97,9 +129,9 @@ fn dateutc_dategmt_same_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -110,25 +142,55 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Conversions.js</files>
-//     <baseline>Conversions.win8.baseline</baseline>
-//     <compile-flags>-Intl-</compile-flags>
-//     <tags>exclude_win7,exclude_winBlue,exclude_snap,exclude_xplat,slow</tags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn conversions_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Conversions.js",
+        baseline_path: Some("Conversions.win8.baseline"),
+        compile_flags: vec!["-Intl-"],
+        tags: vec![
+            "exclude_win7",
+            "exclude_winBlue",
+            "exclude_snap",
+            "exclude_xplat",
+            "slow",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Conversions.js</files>
-//     <baseline>Conversions.baseline</baseline>
-//     <compile-flags>-Intl-</compile-flags>
-//     <tags>exclude_win7,exclude_win8,exclude_snap,exclude_xplat,slow</tags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn conversions_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Conversions.js",
+        baseline_path: Some("Conversions.baseline"),
+        compile_flags: vec!["-Intl-"],
+        tags: vec![
+            "exclude_win7",
+            "exclude_winBlue",
+            "exclude_snap",
+            "exclude_xplat",
+            "slow",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -139,13 +201,22 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formatting_xplat.js</files>
-//     <tags>slow,exclude_windows</tags>
-//   </default>
-// </test>
+#[cfg(unix)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn formatting_xplat_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formatting_xplat.js",
+        tags: vec!["slow", "exclude_windows"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -166,8 +237,8 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
 // </test>
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn marshalbug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -180,18 +251,28 @@ fn marshalbug_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>xplatInterval.js</files>
-//     <tags>Slow,exclude_windows</tags>
-//   </default>
-// </test>
+// TODO (hanhossain): this should be all unix, but this takes way too long on mac. maybe it should be exclude_debug
+#[cfg(target_os = "linux")]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xplat_interval_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "xplatInterval.js",
+        tags: vec!["slow", "exclude_windows"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn military_time_zone_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -202,9 +283,9 @@ fn military_time_zone_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn two_digit_years_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -214,21 +295,29 @@ fn two_digit_years_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>toStringAndToUTCStringYearPadding.js</files>
-//     <!-- xplat tz info for BC != Windows tz info for BC -->
-//     <tags>slow,exclude_xplat</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn to_string_and_to_utcstring_year_padding_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toStringAndToUTCStringYearPadding.js",
+        tags: vec!["slow", "exclude_xplat"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[cfg(windows)]
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_to_string_results_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -240,9 +329,9 @@ fn parse_to_string_results_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_to_utcstring_and_to_isostring_results_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -253,23 +342,38 @@ fn parse_to_utcstring_and_to_isostring_results_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>parseValidISO.js</files>
-//     <baseline>parseValidISO.baseline</baseline>
-//     <!-- xplat tz info for BC != Windows tz info for BC -->
-//     <tags>slow,exclude_xplat</tags>
-//     <compile-flags>-args summary -endargs</compile-flags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn parse_invalid_iso_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "parseInvalidISO.js",
+        baseline_path: Some("parseInvalidISO.baseline"),
+        tags: vec!["slow", "exclude_xplat"],
+        compile_flags: vec!["-args", "summary", "-endargs"],
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>parseInvalidISO.js</files>
-//     <baseline>parseInvalidISO.baseline</baseline>
-//     <!-- OSX doesn't provide expected DST for minus years -->
-//     <tags>slow,exclude_xplat</tags>
-//   </default>
-// </test>
+#[cfg(windows)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn parse_invalid_iso2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "parseInvalidISO.js",
+        baseline_path: Some("parseInvalidISO.baseline"),
+        tags: vec!["slow", "exclude_xplat"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

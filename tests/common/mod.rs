@@ -2,6 +2,10 @@ use pretty_assertions::{assert_eq, assert_ne};
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::Duration;
+
+#[allow(dead_code)]
+pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
 
 #[derive(Debug, Default)]
 pub struct Test {
@@ -14,8 +18,11 @@ pub struct Test {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Variant {
+    #[cfg_attr(disable_jit, allow(dead_code))]
     Interpreted,
+    #[cfg_attr(disable_jit, allow(dead_code))]
     Dynapogo,
+    #[cfg_attr(not(disable_jit), allow(dead_code))]
     DisableJit,
 }
 
@@ -79,6 +86,10 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .arg("-WERExceptionSupport")
         .args(&test.compile_flags)
         .args(&variant_config.compile_flags);
+
+    if cfg!(unix) {
+        ch.env("TZ", "US/Pacific");
+    }
 
     println!("Running command: {ch:#?}");
     let output = ch.output().unwrap();
