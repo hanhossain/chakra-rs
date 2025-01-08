@@ -5,9 +5,9 @@ mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/GlobalFunctions";
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn global_functions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -19,9 +19,9 @@ fn global_functions_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn eval1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -33,9 +33,9 @@ fn eval1_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn eval_nulls_newlines_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -47,9 +47,9 @@ fn eval_nulls_newlines_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn evalreturns_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -61,9 +61,9 @@ fn evalreturns_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn eval_deferred_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -76,9 +76,9 @@ fn eval_deferred_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn eval_strict_delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -90,9 +90,9 @@ fn eval_strict_delete_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_float_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -104,9 +104,9 @@ fn parse_float_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_int_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -118,9 +118,9 @@ fn parse_int_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_short_cut_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -132,9 +132,9 @@ fn parse_short_cut_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 #[ignore]
 #[timeout(common::SLOW_TEST_TIMEOUT)]
 fn internal_to_string_js(#[case] variant: Variant) {
@@ -149,9 +149,9 @@ fn internal_to_string_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn parse_int1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -163,9 +163,9 @@ fn parse_int1_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn defer_unicode_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -178,9 +178,9 @@ fn defer_unicode_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn to_string_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -192,9 +192,9 @@ fn to_string_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn can_declare_global_function_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -206,9 +206,9 @@ fn can_declare_global_function_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 fn can_declare_global_function_non_eval_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
