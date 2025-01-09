@@ -35,7 +35,9 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: ${{ matrix.deps }}
       - name: Install cargo-nextest
-        uses: taiki-e/install-action@nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: nextest
       - name: Add msbuild to PATH
         if: matrix.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v2
