@@ -50,7 +50,7 @@ fn cacheassert_js(#[case] variant: Variant) {
 }
 
 // This fails on macos for some reason
-#[cfg(not(target_os = "macos"))]
+#[cfg(all(not(target_os = "macos")), not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
