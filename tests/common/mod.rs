@@ -1,4 +1,5 @@
 use pretty_assertions::{assert_eq, assert_ne};
+use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
@@ -76,14 +77,16 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
     };
     variant_config.excluded_tags.push(exclude_build_type);
 
-    if variant_config
-        .excluded_tags
-        .iter()
-        .any(|tag| test.tags.contains(tag))
-    {
-        // TODO (hanhossain) remove this after removing the exclude_ tags
-        panic!("Skipping test because it is excluded for the {variant:?} variant");
-    }
+    let variant_config_tags: HashSet<_> = variant_config.excluded_tags.iter().collect();
+    let test_tags: HashSet<_> = test.tags.iter().collect();
+    let both: HashSet<_> = variant_config_tags.intersection(&test_tags).collect();
+
+    // TODO (hanhossain) remove this after removing the exclude_ tags
+    assert!(
+        both.is_empty(),
+        "The following test tags were found in the variant's excluded tags: {:?}",
+        both
+    );
 
     let mut ch = Command::new(out_dir.join("build/ch"));
     ch.current_dir(test_dir)
