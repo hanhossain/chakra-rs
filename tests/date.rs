@@ -156,13 +156,13 @@ fn conversions_js(#[case] variant: Variant) {
         source_path: "Conversions.js",
         baseline_path: Some("Conversions.win8.baseline"),
         compile_flags: vec!["-Intl-"],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_win7",
             "exclude_winBlue",
             "exclude_snap",
             "exclude_xplat",
             "slow",
-        ],
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -181,13 +181,13 @@ fn conversions_js2(#[case] variant: Variant) {
         source_path: "Conversions.js",
         baseline_path: Some("Conversions.baseline"),
         compile_flags: vec!["-Intl-"],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_win7",
             "exclude_winBlue",
             "exclude_snap",
             "exclude_xplat",
             "slow",
-        ],
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
