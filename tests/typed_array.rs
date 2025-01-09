@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 
@@ -536,7 +537,7 @@ fn typed_array_profile_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "typedArrayProfile.js",
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_test", "exclude_dynapogo", "typedarray"],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo", "typedarray"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/GlobalFunctions";
@@ -142,7 +143,7 @@ fn internal_to_string_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "InternalToString.js",
         baseline_path: Some("InternalToString.baseline"),
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -173,7 +174,7 @@ fn defer_unicode_js(#[case] variant: Variant) {
         source_path: "deferunicode.js",
         baseline_path: Some("deferunicode.baseline"),
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }

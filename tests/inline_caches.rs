@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/InlineCaches";
@@ -111,7 +112,7 @@ fn type_property_cache_cross_context_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "TypePropertyCache_CrossContext.js",
         baseline_path: Some("TypePropertyCache_CrossContext.baseline"),
-        tags: vec!["exclude_jsrt"],
+        tags: HashSet::from(["exclude_jsrt"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

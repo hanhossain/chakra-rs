@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/JSON";
@@ -29,7 +30,7 @@ fn jx2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jx2.js",
         baseline_path: Some("jx2.baseline"),
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -62,7 +63,7 @@ fn stringify_replacer_js(#[case] variant: Variant) {
         source_path: "stringify-replacer.js",
         baseline_path: Some("stringify-replacer.baseline"),
         compile_flags: vec!["-recyclerstress"],
-        tags: vec!["exclude_test", "slow"],
+        tags: HashSet::from(["exclude_test", "slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -129,7 +130,7 @@ fn simple_with_log_js(#[case] variant: Variant) {
         source_path: "simple.withLog.js",
         baseline_path: Some("simple.withLog.baseline"),
         compile_flags: vec!["-recyclerstress", "-trace:JSON"],
-        tags: vec!["exclude_test", "slow"],
+        tags: HashSet::from(["exclude_test", "slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -158,7 +159,7 @@ fn parse_with_gc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "parseWithGc.js",
         compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -175,7 +176,7 @@ fn json_cache_js_force_gc(#[case] variant: Variant) {
         source_path: "jsonCache.js",
         baseline_path: Some("jsonCache.baseline"),
         compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }

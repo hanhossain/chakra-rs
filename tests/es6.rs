@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es6";
@@ -282,7 +283,7 @@ fn to_string_tag_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toStringTag.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -340,7 +341,7 @@ fn proto_initializer_js_serialized(#[case] variant: Variant) {
         source_path: "proto_initializer.js",
         baseline_path: Some("proto_initializer.baseline"),
         compile_flags: vec!["-ForceSerialized"],
-        tags: vec!["exclude_serialized"],
+        tags: HashSet::from(["exclude_serialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -567,7 +568,7 @@ fn blockscope_functionbinding_js_invalidstackvar(#[case] variant: Variant) {
         source_path: "blockscope-functionbinding.js",
         baseline_path: Some("blockscope-functionbinding.baseline"),
         compile_flags: vec!["-lic:1", "-InitializeInterpreterSlotsWithInvalidStackVar"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -749,7 +750,7 @@ fn classes_bugfixes_js1(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "classes_bugfixes.js",
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_noicu"],
+        tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -764,7 +765,7 @@ fn classes_bugfixes_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "classes_bugfixes.js",
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_noicu"],
+        tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1146,7 +1147,7 @@ fn es6symbol_540238_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ES6Symbol_540238.js",
         compile_flags: vec!["-RecyclerStress"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1191,7 +1192,7 @@ fn normalize_js(#[case] variant: Variant) {
         source_path: "normalize.js",
         baseline_path: Some("normalize.baseline"),
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["exclude_noicu"],
+        tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1236,7 +1237,7 @@ fn unicode_6_identifiers_utf8_js(#[case] variant: Variant) {
         source_path: "unicode_6_identifiers_utf8.js",
         baseline_path: Some("unicode_6_identifiers_utf8.baseline"),
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["exclude_win7", "exclude_noicu"],
+        tags: HashSet::from(["exclude_win7", "exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1391,7 +1392,7 @@ fn unicode_convert_utf8_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unicode_convertUTF8.js",
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1423,7 +1424,7 @@ fn bug620694_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug620694.js",
         compile_flags: vec!["-es6all", "-recyclerstress"],
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1438,7 +1439,7 @@ fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
         source_path: "unicode_6_identifier_Blue511452.js",
         baseline_path: Some("unicode_6_identifier_Blue511452.baseline"),
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1452,7 +1453,7 @@ fn unicode_id_defer_parse_functions_utf8_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unicode_idDeferParseFunctions_utf8.js",
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["exclude_noicu"],
+        tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1467,7 +1468,7 @@ fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
         source_path: "unicode_6_identifier_Blue524737.js",
         baseline_path: Some("unicode_6_identifier_Blue524737.baseline"),
         compile_flags: vec!["-ES6Unicode"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1480,7 +1481,7 @@ fn supersyntax02_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "supersyntax02.js",
         baseline_path: Some("supersyntax02.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1494,7 +1495,7 @@ fn supersyntax05_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "supersyntax05.js",
         baseline_path: Some("supersyntax05.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1508,7 +1509,7 @@ fn supersyntax06_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "supersyntax06.js",
         baseline_path: Some("supersyntax06.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2062,7 +2063,7 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "generators-deferred.js",
         compile_flags: vec!["-ES6Generators", "-serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2076,7 +2077,7 @@ fn generators_undodefer_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "generators-undodefer.js",
         compile_flags: vec!["-ES6Generators", "-force:deferparse", "-forceundodefer"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2249,7 +2250,7 @@ fn blue_641922_js(#[case] variant: Variant) {
         source_path: "blue_641922.js",
         baseline_path: Some("blue_641922.baseline"),
         compile_flags: vec!["-ES6Rest", "-RecyclerNoPageReuse", "-PageHeap:2"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -2341,7 +2342,7 @@ fn regex_octoquad_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "regex-octoquad.js",
         compile_flags: vec!["-RegexOptimize", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2586,7 +2587,7 @@ fn utfbug_js(#[case] variant: Variant) {
         source_path: "utfbug.js",
         baseline_path: Some(""),
         compile_flags: vec!["-dump:bytecode"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -2634,7 +2635,7 @@ fn proxy_in_proxy_js(#[case] variant: Variant) {
         source_path: "ProxyInProxy.js",
         baseline_path: Some("ProxyInProxy.baseline"),
         compile_flags: vec!["-mic:1", "-off:simpleJIT"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -2704,7 +2705,7 @@ fn es6function_bugs_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ES6Function_bugs.js",
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_nonrazzle"],
+        tags: HashSet::from(["exclude_nonrazzle"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2764,7 +2765,7 @@ fn bug_os_2553885_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_2553885.js",
-        tags: vec!["exclude_win7", "Intl", "exclude_noicu"],
+        tags: HashSet::from(["exclude_win7", "Intl", "exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2895,7 +2896,7 @@ fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "globalLambdaNewTargetSyntaxError.js",
         baseline_path: Some("globalLambdaNewTargetSyntaxError.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2909,7 +2910,7 @@ fn global_new_target_syntax_error_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "globalNewTargetSyntaxError.js",
         baseline_path: Some("globalNewTargetSyntaxError.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2923,7 +2924,7 @@ fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "globalCatchNewTargetSyntaxError.js",
         baseline_path: Some("globalCatchNewTargetSyntaxError.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2937,7 +2938,7 @@ fn global_param_catch_new_target_syntax_error_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "globalParamCatchNewTargetSyntaxError.js",
         baseline_path: Some("globalParamCatchNewTargetSyntaxError.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3056,7 +3057,7 @@ fn os_5403724_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3098,7 +3099,7 @@ fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "await-futreserved-only-in-modules.js",
         compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3112,7 +3113,7 @@ fn os_5500719_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "OS_5500719.js",
         compile_flags: vec!["-forceserialized"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3126,7 +3127,7 @@ fn os_8600339_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "OS_8600339.js",
         compile_flags: vec!["-forceserialized"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3198,7 +3199,7 @@ fn bug_issue_3247_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_issue_3247.js",
         baseline_path: Some("bug_issue_3247.baseline"),
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3346,7 +3347,7 @@ fn bug_os13976524_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_OS13976524.js",
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
-        tags: vec!["BugFix"],
+        tags: HashSet::from(["BugFix"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

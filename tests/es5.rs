@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es5";
@@ -236,7 +237,7 @@ fn obj_lit_get_set_parse_only_js_deferparse(#[case] variant: Variant) {
         source_path: "ObjLitGetSetParseOnly.js",
         baseline_path: Some("ObjLitGetSetParseOnlyFdp.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -320,7 +321,7 @@ fn array_length_js_forcees5array(#[case] variant: Variant) {
         source_path: "array_length.js",
         baseline_path: Some("array_length.baseline"),
         compile_flags: vec!["-ForceES5Array"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -372,7 +373,7 @@ fn define_property_js_serialized(#[case] variant: Variant) {
         source_path: "defineProperty.js",
         baseline_path: Some("defineProperty.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -401,7 +402,7 @@ fn define_index_property_js_serialized(#[case] variant: Variant) {
         source_path: "defineIndexProperty.js",
         baseline_path: Some("defineIndexProperty.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -613,7 +614,7 @@ fn setters_arguments_js_deferparse(#[case] variant: Variant) {
         source_path: "settersArguments.js",
         baseline_path: Some("settersArguments.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

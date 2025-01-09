@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Closures";
@@ -192,7 +193,7 @@ fn delaycapture_loopbody_js(#[case] variant: Variant) {
             "-off:stackfunc",
             "-InitializeInterpreterSlotsWithInvalidStackVar",
         ],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -212,7 +213,7 @@ fn delaycapture_loopbody2_js(#[case] variant: Variant) {
             "-bgjit-",
             "-InitializeInterpreterSlotsWithInvalidStackVar",
         ],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -231,7 +232,7 @@ fn initcachedscope_js(#[case] variant: Variant) {
         source_path: "initcachedscope.js",
         baseline_path: Some("initcachedscope.baseline"),
         compile_flags: vec!["-recyclerstress", "-force:cachedscope"],
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -275,7 +276,7 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
         source_path: "invalcachedscope.js",
         baseline_path: Some("invalcachedscope.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -291,7 +292,7 @@ fn invalcachedscope_js_deferparse(#[case] variant: Variant) {
         source_path: "invalcachedscope.js",
         baseline_path: Some("invalcachedscope.baseline"),
         compile_flags: vec!["-force:deferparse", "-Intl-"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -374,7 +375,7 @@ fn bug_os_9008744_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_9008744.js",
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -400,7 +401,7 @@ fn bug_os_13412380_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_13412380.js",
-        tags: vec!["BugFix", "exclude_dynapogo"],
+        tags: HashSet::from(["BugFix", "exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

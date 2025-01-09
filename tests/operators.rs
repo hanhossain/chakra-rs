@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Operators";
@@ -57,7 +58,7 @@ fn biops_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "biops.js",
         baseline_path: Some("biops.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

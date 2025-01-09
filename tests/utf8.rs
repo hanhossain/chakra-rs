@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/utf8";
@@ -13,7 +14,7 @@ fn invalidutf8_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "invalidutf8.js",
         baseline_path: Some("invalidutf8.baseline"),
-        tags: vec!["exclude_serialized"],
+        tags: HashSet::from(["exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -27,7 +28,7 @@ fn unicode_digit_as_identifier_should_work_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_digit_as_identifier_should_work.js",
-        tags: vec!["exclude_serialized", "exclude_noicu"],
+        tags: HashSet::from(["exclude_serialized", "exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -96,7 +97,7 @@ fn bug_gh2656_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bugGH2656.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
-        tags: vec!["exclude_noicu"],
+        tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

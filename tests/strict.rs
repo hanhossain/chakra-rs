@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/strict";
@@ -71,7 +72,7 @@ fn stricteval_deferred_js(#[case] variant: Variant) {
         source_path: "stricteval-deferred.js",
         baseline_path: Some("stricteval-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -85,7 +86,7 @@ fn stricteval2_deferred_js(#[case] variant: Variant) {
         source_path: "stricteval2-deferred.js",
         baseline_path: Some("stricteval2-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -99,7 +100,7 @@ fn stricteval3_deferred_js(#[case] variant: Variant) {
         source_path: "stricteval3-deferred.js",
         baseline_path: Some("stricteval3-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -113,7 +114,7 @@ fn strictargs_deferred_js(#[case] variant: Variant) {
         source_path: "strictargs-deferred.js",
         baseline_path: Some("strictargs-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -127,7 +128,7 @@ fn strictargs2_deferred_js(#[case] variant: Variant) {
         source_path: "strictargs2-deferred.js",
         baseline_path: Some("strictargs2-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -141,7 +142,7 @@ fn strictargs3_deferred_js(#[case] variant: Variant) {
         source_path: "strictargs3-deferred.js",
         baseline_path: Some("strictargs3-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -171,7 +172,7 @@ fn evalargs_js_deferparse(#[case] variant: Variant) {
         source_path: "evalargs.js",
         baseline_path: Some(""),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -226,7 +227,7 @@ fn formal_samename1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_samename1.js",
         baseline_path: Some("formal_samename1.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -241,7 +242,7 @@ fn formal_samename1_js_force_deferparse(#[case] variant: Variant) {
         source_path: "formal_samename1.js",
         baseline_path: Some("formal_samename1.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -254,7 +255,7 @@ fn formal_samename2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_samename2.js",
         baseline_path: Some("formal_samename2.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -269,7 +270,7 @@ fn formal_samename2_js_force_deferparse(#[case] variant: Variant) {
         source_path: "formal_samename2.js",
         baseline_path: Some("formal_samename2.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -282,7 +283,7 @@ fn multiunit_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "multiunit.js",
         baseline_path: Some("multiunit.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -296,7 +297,7 @@ fn delete_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "delete.js",
         baseline_path: Some("delete.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -311,7 +312,7 @@ fn delete_js_force_deferparse(#[case] variant: Variant) {
         source_path: "delete.js",
         baseline_path: Some("delete.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -399,7 +400,7 @@ fn test03_assign_js_deferparse_force_strict_mode(#[case] variant: Variant) {
         source_path: "03.assign.js",
         baseline_path: Some("03.assign_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -429,7 +430,7 @@ fn test03_assign_sm_js_deferparse(#[case] variant: Variant) {
         source_path: "03.assign_sm.js",
         baseline_path: Some("03.assign_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -487,7 +488,7 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
         source_path: "05.arguments.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-Serialized", "-ForceStrictMode"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -503,7 +504,7 @@ fn test05_arguments_js_deferparse_strictmode(#[case] variant: Variant) {
         source_path: "05.arguments.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -532,7 +533,7 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
         source_path: "05.arguments_sm.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -548,7 +549,7 @@ fn test05_arguments_sm_js_deferparse(#[case] variant: Variant) {
         source_path: "05.arguments_sm.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -593,7 +594,7 @@ fn test06_arguments_js_force_strict_mode_deferparse(#[case] variant: Variant) {
         source_path: "06.arguments.js",
         baseline_path: Some("06.arguments_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -609,7 +610,7 @@ fn test06_arguments_js_force_strict_mode_cachedscope(#[case] variant: Variant) {
         source_path: "06.arguments.js",
         baseline_path: Some("06.arguments_sm.baseline"),
         compile_flags: vec!["-force:cachedscope", "-ForceStrictMode"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -639,7 +640,7 @@ fn test06_arguments_sm_js_deferparse(#[case] variant: Variant) {
         source_path: "06.arguments_sm.js",
         baseline_path: Some("06.arguments_sm.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -655,7 +656,7 @@ fn test06_arguments_sm_js_cachedscope(#[case] variant: Variant) {
         source_path: "06.arguments_sm.js",
         baseline_path: Some("06.arguments_sm.baseline"),
         compile_flags: vec!["--force:cachedscope"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -854,7 +855,7 @@ fn test11_this_sm_js_max_interpret_count10(#[case] variant: Variant) {
         source_path: "11.this_sm.js",
         baseline_path: Some("11.this_sm.baseline"),
         compile_flags: vec!["-maxInterpretCount:10"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1368,7 +1369,7 @@ fn strictkwd_js_force_deferparse(#[case] variant: Variant) {
         source_path: "strictkwd.js",
         baseline_path: Some("strictkwd.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1382,7 +1383,7 @@ fn strictkwd_js(#[case] variant: Variant) {
         source_path: "strictkwd.js",
         baseline_path: Some("strictkwd.baseline"),
         compile_flags: vec!["-Off:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1396,7 +1397,7 @@ fn strictkwd_deferred_js(#[case] variant: Variant) {
         source_path: "strictkwd-deferred.js",
         baseline_path: Some("strictkwd-deferred.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1439,7 +1440,7 @@ fn bug212755_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug212755.js",
         baseline_path: Some("bug212755.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1454,7 +1455,7 @@ fn bug212755_js_force_deferparse(#[case] variant: Variant) {
         source_path: "bug212755.js",
         baseline_path: Some("bug212755.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1480,7 +1481,7 @@ fn non_simple_parameter_list_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "nonSimpleParameterList.js",
         baseline_path: Some("nonSimpleParameterList.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

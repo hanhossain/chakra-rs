@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/LetConst";
@@ -382,7 +383,7 @@ fn defer1_js(#[case] variant: Variant) {
         source_path: "defer1.js",
         baseline_path: Some("defer1.baseline"),
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -396,7 +397,7 @@ fn defer2_js(#[case] variant: Variant) {
         source_path: "defer2.js",
         baseline_path: Some("defer2.baseline"),
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -607,7 +608,7 @@ fn eval_letconst_js_force_defer_parse(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "eval_letconst.js",
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -635,7 +636,7 @@ fn eval_letconst_js_force_eval_compile_defer_parse(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "eval_letconst.js",
         compile_flags: vec!["-force:deferparse", "-force:evalcompile"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -649,7 +650,7 @@ fn arguments_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arguments.js",
         baseline_path: Some("arguments.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -662,7 +663,7 @@ fn seal_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "seal.js",
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -675,7 +676,7 @@ fn seal1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "seal1.js",
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -688,7 +689,7 @@ fn seal2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "seal2.js",
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -702,7 +703,7 @@ fn dop_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "dop.js",
         baseline_path: Some("dop.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -716,7 +717,7 @@ fn dop1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "dop1.js",
         baseline_path: Some("dop1.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -730,7 +731,7 @@ fn delete_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "delete.js",
         baseline_path: Some("delete.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -800,7 +801,7 @@ fn unassignedconst_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unassignedconst.js",
         compile_flags: vec!["-Intl-"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -814,7 +815,7 @@ fn unassignedconst_js_force_defer_parse(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unassignedconst.js",
         compile_flags: vec!["-Intl-", "-force:deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

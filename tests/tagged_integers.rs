@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/TaggedIntegers";
@@ -40,7 +41,7 @@ fn addition_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "addition.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -56,7 +57,7 @@ fn subtraction_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "subtraction.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -85,7 +86,7 @@ fn multiplication_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "multiplication.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -114,7 +115,7 @@ fn and_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "and.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -130,7 +131,7 @@ fn or_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "or.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -146,7 +147,7 @@ fn xor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "xor.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -227,7 +228,7 @@ fn modulus_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "modulus.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -284,7 +285,7 @@ fn loops_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "loops.js",
         baseline_path: Some("loops.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -325,7 +326,7 @@ fn comparison_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "comparison.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -348,7 +349,7 @@ fn addition_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "addition.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -371,7 +372,7 @@ fn subtraction_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "subtraction.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -394,7 +395,7 @@ fn multiplication_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "multiplication.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -415,7 +416,7 @@ fn divide_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "divide.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -438,7 +439,7 @@ fn and_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "and.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -461,7 +462,7 @@ fn or_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "or.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -484,7 +485,7 @@ fn xor_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "xor.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -505,7 +506,7 @@ fn not_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "not.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -526,7 +527,7 @@ fn negate_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "negate.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -549,7 +550,7 @@ fn signedshiftleft_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "signedshiftleft.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -572,7 +573,7 @@ fn signedshiftright_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "signedshiftright.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -595,7 +596,7 @@ fn unsignedshiftright_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsignedshiftright.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -618,7 +619,7 @@ fn modulus_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "modulus.js",
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -640,7 +641,7 @@ fn loopbounds_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "loopbounds.js",
         baseline_path: Some("loopbounds.baseline"),
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -660,7 +661,7 @@ fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arrays.js",
         compile_flags: vec!["-dynamicprofilecache:profile.dpl.arrays.js"],
-        tags: vec!["exclude_dynapogo", "exclude_serialized", "require_backend"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized", "require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -699,7 +700,7 @@ fn not_1_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "not_1.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -720,7 +721,7 @@ fn shift_constants_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "shift_constants.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -744,7 +745,7 @@ fn loops_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "loops.js",
         baseline_path: Some("loops.baseline"),
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -764,7 +765,7 @@ fn predecrement_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "predecrement.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",
@@ -785,7 +786,7 @@ fn preincrement_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "preincrement.js",
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         compile_flags: vec![
             "-off:constprop",
             "-off:copyprop",

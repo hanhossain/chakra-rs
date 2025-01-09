@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Date";
@@ -14,7 +15,7 @@ fn date_ctr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DateCtr.js",
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -32,7 +33,7 @@ fn date_get_set_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "DateGetSet.js",
         baseline_path: Some("DateGetSet.baseline"),
-        tags: vec!["exclude_xplat", "slow"],
+        tags: HashSet::from(["exclude_xplat", "slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -49,7 +50,7 @@ fn date_parse_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "DateParse.js",
         baseline_path: Some("DateParse_es5.baseline"),
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -67,7 +68,7 @@ fn date_parse2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "DateParse2.js",
         baseline_path: Some("DateParse2.v5.baseline"),
-        tags: vec!["slow", "exclude_xplat"],
+        tags: HashSet::from(["slow", "exclude_xplat"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -212,7 +213,7 @@ fn formatting_xplat_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "formatting_xplat.js",
-        tags: vec!["slow", "exclude_windows"],
+        tags: HashSet::from(["slow", "exclude_windows"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -246,7 +247,7 @@ fn marshalbug_js(#[case] variant: Variant) {
         source_path: "marshalbug.js",
         baseline_path: Some(""),
         compile_flags: vec!["-nonative", "-intl-"],
-        tags: vec!["exclude_test", "exclude_dynapogo"],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -264,7 +265,7 @@ fn xplat_interval_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "xplatInterval.js",
-        tags: vec!["slow", "exclude_windows"],
+        tags: HashSet::from(["slow", "exclude_windows"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -307,7 +308,7 @@ fn to_string_and_to_utcstring_year_padding_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toStringAndToUTCStringYearPadding.js",
-        tags: vec!["slow", "exclude_xplat"],
+        tags: HashSet::from(["slow", "exclude_xplat"]),
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
@@ -355,7 +356,7 @@ fn parse_invalid_iso_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "parseInvalidISO.js",
         baseline_path: Some("parseInvalidISO.baseline"),
-        tags: vec!["slow", "exclude_xplat"],
+        tags: HashSet::from(["slow", "exclude_xplat"]),
         compile_flags: vec!["-args", "summary", "-endargs"],
     };
     common::run_test_variant(&test, variant);
@@ -373,7 +374,7 @@ fn parse_invalid_iso2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "parseInvalidISO.js",
         baseline_path: Some("parseInvalidISO.baseline"),
-        tags: vec!["slow", "exclude_xplat"],
+        tags: HashSet::from(["slow", "exclude_xplat"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Miscellaneous";
@@ -29,7 +30,7 @@ fn long_string_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "longstring.js",
         compile_flags: vec!["-recyclerVerify"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

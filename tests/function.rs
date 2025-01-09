@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Function";
@@ -164,7 +165,7 @@ fn arguments_limits_js(#[case] variant: Variant) {
         source_path: "argumentsLimits.js",
         baseline_path: Some("argumentsLimits.baseline"),
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -392,7 +393,7 @@ fn deferred_parsing_js(#[case] variant: Variant) {
         source_path: "deferredParsing.js",
         baseline_path: Some("deferredParsing_3.baseline"),
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -408,7 +409,7 @@ fn deferred_parsing_js_force_undodefer(#[case] variant: Variant) {
         source_path: "deferredParsing.js",
         baseline_path: Some("deferredParsing_3.baseline"),
         compile_flags: vec!["-forceUndoDefer"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -424,7 +425,7 @@ fn deferred_getter_setter_js(#[case] variant: Variant) {
         source_path: "deferredGetterSetter.js",
         baseline_path: Some("deferredGetterSetter.baseline"),
         compile_flags: vec!["-force:deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -437,7 +438,7 @@ fn deferred_bad_continue_js1(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "deferredBadContinue.js",
         baseline_path: Some("deferredBadContinue.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -452,7 +453,7 @@ fn deferred_bad_continue_js2(#[case] variant: Variant) {
         source_path: "deferredBadContinue.js",
         baseline_path: Some("deferredBadContinue.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -482,7 +483,7 @@ fn deferred_with_js(#[case] variant: Variant) {
         source_path: "deferredWith.js",
         baseline_path: Some("deferredWith.v4.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -498,7 +499,7 @@ fn deferred_with2_js(#[case] variant: Variant) {
         source_path: "deferredWith2.js",
         baseline_path: Some("deferredWith2.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -785,7 +786,7 @@ fn func_body_bug133933_js(#[case] variant: Variant) {
         source_path: "FuncBody.bug133933.js",
         baseline_path: Some("FuncBody.bug133933.baseline"),
         compile_flags: vec!["-trace:FunctionSourceInfoParse", "-off:deferparse"],
-        tags: vec!["exclude_test", "exclude_dynapogo"],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -999,7 +1000,7 @@ fn stack_args_max_interpret_js(#[case] variant: Variant) {
             "-maxInterpretCount:1",
             "-off:simpleJit",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1048,7 +1049,7 @@ fn child_calls_eval_jit_loop_body_js(#[case] variant: Variant) {
         source_path: "childCallsEvalJitLoopBody.js",
         baseline_path: Some(""),
         compile_flags: vec!["-prejit"],
-        tags: vec!["exclude_test", "exclude_dynapogo"],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1065,7 +1066,7 @@ fn bug631838_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "631838.js",
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo", "exclude_arm", "Slow"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_arm", "Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
