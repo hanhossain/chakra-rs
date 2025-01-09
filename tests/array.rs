@@ -1527,11 +1527,11 @@ fn copy_on_access_array_cache_index_overflow_js(#[case] variant: Variant) {
         source_path: "CopyOnAccessArray_cache_index_overflow.js",
         baseline_path: Some("CopyOnAccessArray_cache_index_overflow.baseline"),
         compile_flags: vec!["-force:copyonaccessarray", "-testtrace:CopyOnAccessArray"],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_nonative",
             "exclude_forceserialized",
             "require_backend",
-        ],
+        ]),
     };
     common::run_test_variant(&test, variant);
 }

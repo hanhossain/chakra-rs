@@ -681,11 +681,11 @@ fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
             "-off:constfold",
             "-off:typespec",
         ],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_interpreted",
             "exclude_serialized",
             "require_backend",
-        ],
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

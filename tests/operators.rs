@@ -239,12 +239,12 @@ fn modopt_js(#[case] variant: Variant) {
         source_path: "modopt.js",
         baseline_path: Some("modopt.baseline"),
         compile_flags: vec!["-maxinterpretCount:1", "-off:simpleJit", "-testtrace:rejit"],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_dynapogo",
             "exclude_nonative",
             "exclude_arm",
             "require_backend",
-        ],
+        ]),
     };
     common::run_test_variant(&test, variant);
 }
