@@ -23,9 +23,17 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
+        use-mold:
+          - false
+          - true
         features:
           - '--no-default-features'
           - '--features optimized-test'
+        exclude:
+          - os: windows-latest
+            use-mold: true
+          - os: macos-latest
+            use-mold: true
         include:
           - os: macos-latest
             deps: brew install ninja icu4c@74
@@ -49,6 +57,9 @@ jobs:
       - name: Set timezone
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
+      - name: Install mold linker
+        if: matrix.use-mold
+        uses: rui314/setup-mold@v1
       - name: Build
         run: cargo build -vv ${{ matrix.features }}
       - name: Run tests
