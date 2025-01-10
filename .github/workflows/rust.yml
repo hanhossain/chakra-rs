@@ -23,6 +23,9 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
+        features:
+          - '--no-default-features'
+          - '--features optimized-test'
         include:
           - os: macos-latest
             deps: brew install ninja icu4c@74
@@ -47,8 +50,8 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
       - name: Build
-        run: cargo build -vv
+        run: cargo build -vv ${{ matrix.features }}
       - name: Run tests
-        run: cargo nextest run --no-fail-fast
+        run: cargo nextest run --no-fail-fast ${{ matrix.features }}
       - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --run-ignored only
+        run: cargo nextest run --no-fail-fast --run-ignored only ${{ matrix.features }}
