@@ -99,9 +99,6 @@ jobs:
         run: mkdir -p cmake-build
       - name: Install dependencies
         run: ${{ matrix.deps }}
-      - name: Install mold linker
-        if: matrix.os == 'ubuntu-latest'
-        uses: rui314/setup-mold@v1
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
       - name: Build
