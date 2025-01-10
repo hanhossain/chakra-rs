@@ -32,8 +32,8 @@ jobs:
             deps: sudo apt-get install -y ninja-build
             cmake-flags: ''
     env:
-      CMAKE_CXX_COMPILER: clang++
-      CMAKE_C_COMPILER: clang
+      CXX: clang++
+      CC: clang
     steps:
       - uses: actions/checkout@v4
       - name: Create build directory
