@@ -42,9 +42,10 @@
     </default>
   </test>
   <test>
+    <!-- This test times out in debug frequently -->
     <default>
       <files>bigconstructorbug.js</files>
-      <tags>Slow</tags>
+      <tags>Slow,exclude_debug</tags>
     </default>
   </test>
   <test>
