@@ -382,7 +382,7 @@ fn jit_loop_body_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -398,7 +398,7 @@ fn deferred_parsing_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -414,7 +414,7 @@ fn deferred_parsing_js_force_undodefer(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -472,7 +472,7 @@ fn deferredstuboob_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -488,7 +488,7 @@ fn deferred_with_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -776,7 +776,7 @@ fn func_body_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
@@ -835,7 +835,7 @@ fn func_body_bug236810_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(all(not(disable_jit), not(feature = "optimized-test")))]
+#[cfg(all(not(disable_jit), not(optimized)))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -967,7 +967,7 @@ fn stack_args_with_formals_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(all(target_arch = "x86_64", not(feature = "optimized-test")))]
+#[cfg(all(target_arch = "x86_64", not(optimized)))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 fn stack_args_with_formals_js_stack_arg_formals_opt(#[case] variant: Variant) {
@@ -1039,7 +1039,7 @@ fn stack_args_with_inlinee_bail_out_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimized-test"))]
+#[cfg(not(optimized))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
