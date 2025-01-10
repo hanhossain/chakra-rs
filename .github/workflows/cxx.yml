@@ -36,6 +36,9 @@ jobs:
       CMAKE_C_COMPILER: clang
     steps:
       - uses: actions/checkout@v4
+      - name: Create build directory
+        working-directory: ${{ github.workspace }}/chakracore-cxx
+        run: mkdir -p cmake-build
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Install mold linker
