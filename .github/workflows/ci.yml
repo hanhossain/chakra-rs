@@ -21,11 +21,18 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
+        build-type:
+          - debug
+          - test
         include:
           - os: macos-latest
             deps: brew install ninja icu4c@74
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
+          - build-type: debug
+            build-profile: dev
+          - build-type: test
+            build-profile: test
     env:
       CARGO_TERM_COLOR: always
     steps:
@@ -50,13 +57,11 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: rui314/setup-mold@v1
       - name: Build
-        run: cargo build -vv
-      - name: Build (test)
-        run: cargo build -vv --profile test
+        run: cargo build -vv --profile ${{ matrix.build-profile }}
       - name: Run tests
-        run: cargo nextest run --no-fail-fast
+        run: cargo nextest run --no-fail-fast --cargo-profile ${{ matrix.build-profile }}
       - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --run-ignored only
+        run: cargo nextest run --no-fail-fast --run-ignored only --cargo-profile ${{ matrix.build-profile }}
 
   build-cmake:
     runs-on: ${{ matrix.os }}
@@ -70,6 +75,9 @@ jobs:
         os:
           - macos-latest
           - ubuntu-latest
+        build-type:
+          - debug
+          - test
         include:
           - os: macos-latest
             deps: brew install ninja icu4c@74
@@ -77,6 +85,10 @@ jobs:
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
             cmake-flags: ''
+          - build-type: debug
+            cmake-build-type: Debug
+          - build-type: test
+            cmake-build-type: RelWithDebInfo
     env:
       CXX: clang++
       CC: clang
@@ -90,13 +102,9 @@ jobs:
       - name: Install mold linker
         if: matrix.os == 'ubuntu-latest'
         uses: rui314/setup-mold@v1
-      - name: Configure CMake (debug)
-        run: cmake -DCMAKE_BUILD_TYPE=Debug ${{ matrix.cmake-flags }} -GNinja ..
-      - name: Build (debug)
-        run: ninja
-      - name: Configure CMake (test)
-        run: cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ${{ matrix.cmake-flags }} -GNinja ..
-      - name: Build (test)
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+      - name: Build
         run: ninja
       - name: Test
         run: ninja check
@@ -109,13 +117,17 @@ jobs:
     defaults:
       run:
         working-directory: ${{ github.workspace }}/chakracore-cxx
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type:
+          - debug
+          - test
     steps:
       - uses: actions/checkout@v4
-      - name: Build (debug)
-        run: test\ci.buildone.cmd x64 debug
-      - name: Build (test)
-        run: test\ci.buildone.cmd x64 test
+      - name: Build
+        run: test\ci.buildone.cmd x64 ${{ matrix.build-type }}
       - name: Test
-        run: test\ci.testone.cmd x64 test
+        run: test\ci.testone.cmd x64 ${{ matrix.build-type }}
       - name: Slow Tests
-        run: test\ci.testone.cmd x64 test --only-slow
+        run: test\ci.testone.cmd x64 ${{ matrix.build-type }} --only-slow
