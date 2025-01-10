@@ -26,11 +26,9 @@ jobs:
           - os: macos-latest
             deps: brew install ninja icu4c@74
             cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c@74/include -DDISABLE_JIT=ON
-            run-tests: true
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
             cmake-flags: ''
-            run-tests: true
 
     steps:
       - uses: actions/checkout@v4
@@ -57,12 +55,10 @@ jobs:
         run: ninja
 
       - name: Test
-        if: ${{ matrix.run-tests }}
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: ninja check
 
       - name: Slow Tests
-        if: ${{ matrix.run-tests }}
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: ninja slow-check
 
