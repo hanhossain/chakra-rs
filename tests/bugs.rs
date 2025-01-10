@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Bugs";
@@ -251,7 +252,7 @@ fn bug547302_js(#[case] variant: Variant) {
             "-maxsimplejitruncount:5",
             "-off:inline",
         ],
-        tags: vec!["exclude_shp"],
+        tags: HashSet::from(["exclude_shp"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -448,7 +449,7 @@ fn bug934443_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug934443.js",
         compile_flags: vec!["-force:fieldcopyprop", "-off:dynamicprofile"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -559,7 +560,7 @@ fn bug_os_4683246_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_OS_4683246.js",
         compile_flags: vec!["-loopinterpretcount:0", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -574,7 +575,7 @@ fn fabs1_js(#[case] variant: Variant) {
         source_path: "fabs1.js",
         baseline_path: Some("fabs1.baseline"),
         compile_flags: vec!["-off:backend", "-asmjs", "-testtrace:asmjs"],
-        tags: vec!["exclude_dynapogo", "require_backend", "require_asmjs"],
+        tags: HashSet::from(["exclude_dynapogo", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -595,7 +596,7 @@ fn os_5248645_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -752,7 +753,7 @@ fn invertloop_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "invertloop_bug.js",
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -941,7 +942,7 @@ fn bug11576900_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug11576900.js",
         compile_flags: vec!["-lic:1", "-bgjit-"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

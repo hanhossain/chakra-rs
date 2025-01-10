@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Number";
@@ -99,7 +100,7 @@ fn to_uint16_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toUint16.js",
         baseline_path: Some("toUint16.baseline"),
-        tags: vec!["exclude_drt"],
+        tags: HashSet::from(["exclude_drt"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

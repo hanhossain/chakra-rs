@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Array";
@@ -98,7 +99,7 @@ fn array_init_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "array_init.js",
         baseline_path: Some("array_init.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -114,11 +115,12 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
         source_path: "array_init2.js",
         baseline_path: Some("array_init2.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -136,7 +138,7 @@ fn splice_btree_memory_corruption_js(#[case] variant: Variant) {
             "-ForceArrayBTree",
             "-recyclerStress",
         ],
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -210,7 +212,7 @@ fn bug11370283_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug11370283.js",
         compile_flags: vec!["-bgjit-", "-lic:1"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -356,6 +358,7 @@ fn array_ctr_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -366,7 +369,7 @@ fn array_ctr_js_array_validate(#[case] variant: Variant) {
         source_path: "array_ctr.js",
         baseline_path: Some("array_ctr.baseline"),
         compile_flags: vec!["-arrayValidate"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -729,6 +732,7 @@ fn to_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -739,7 +743,7 @@ fn to_string_js_force_es5_array(#[case] variant: Variant) {
         source_path: "toString.js",
         baseline_path: Some("toString.baseline"),
         compile_flags: vec!["-ForceES5Array"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -758,6 +762,7 @@ fn to_locale_string_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -768,7 +773,7 @@ fn to_locale_string_js_force_es5_array(#[case] variant: Variant) {
         source_path: "toLocaleString.js",
         baseline_path: Some("toLocaleString.baseline"),
         compile_flags: vec!["-ForceES5Array"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -852,6 +857,7 @@ fn array_splice_double_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -862,7 +868,7 @@ fn array_splice_js_array_validate(#[case] variant: Variant) {
         source_path: "array_splice.js",
         baseline_path: Some("array_splice.baseline"),
         compile_flags: vec!["-arrayValidate"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1051,6 +1057,7 @@ fn array_literal_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -1063,7 +1070,7 @@ fn array_literal_js_recycler_stress(#[case] variant: Variant) {
         source_path: "array_literal.js",
         baseline_path: Some("array_literal.baseline"),
         compile_flags: vec!["-recyclerStress"],
-        tags: vec!["exclude_test", "Slow"],
+        tags: HashSet::from(["exclude_test", "Slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1093,7 +1100,7 @@ fn nativearray_gen1_js_force_serialized(#[case] variant: Variant) {
         baseline_path: Some("nativearray_gen1.baseline"),
         compile_flags: vec!["-sse:0", "-forceserialized"],
         // exclude the serialized variants because we're using -forceserialized here.
-        tags: vec!["exclude_serialized"],
+        tags: HashSet::from(["exclude_serialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1505,7 +1512,7 @@ fn copy_on_access_array_bugs_js(#[case] variant: Variant) {
         source_path: "CopyOnAccessArray_bugs.js",
         baseline_path: Some("CopyOnAccessArray_bugs.baseline"),
         compile_flags: vec!["-force:copyonaccessarray"],
-        tags: vec!["require_backend"],
+        tags: HashSet::from(["require_backend"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1520,11 +1527,11 @@ fn copy_on_access_array_cache_index_overflow_js(#[case] variant: Variant) {
         source_path: "CopyOnAccessArray_cache_index_overflow.js",
         baseline_path: Some("CopyOnAccessArray_cache_index_overflow.baseline"),
         compile_flags: vec!["-force:copyonaccessarray", "-testtrace:CopyOnAccessArray"],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_nonative",
             "exclude_forceserialized",
             "require_backend",
-        ],
+        ]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1907,7 +1914,7 @@ fn bug_gh6320_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_gh6320.js",
-        tags: vec!["exclude_nonative"],
+        tags: HashSet::from(["exclude_nonative"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1921,7 +1928,7 @@ fn array_sort_random_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_sort_random.js",
-        tags: vec!["exclude_disable_jit", "exclude_lite"],
+        tags: HashSet::from(["exclude_disable_jit", "exclude_lite"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

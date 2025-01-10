@@ -527,6 +527,7 @@ fn dataview1_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
@@ -535,7 +536,7 @@ fn typed_array_profile_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "typedArrayProfile.js",
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_test", "exclude_dynapogo", "typedarray"],
+        tags: std::collections::HashSet::from(["exclude_test", "exclude_dynapogo", "typedarray"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

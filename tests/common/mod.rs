@@ -1,4 +1,5 @@
 use pretty_assertions::{assert_eq, assert_ne};
+use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
@@ -13,7 +14,7 @@ pub struct Test {
     pub source_path: &'static str,
     pub baseline_path: Option<&'static str>,
     pub compile_flags: Vec<&'static str>,
-    pub tags: Vec<&'static str>,
+    pub tags: HashSet<&'static str>,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -28,7 +29,7 @@ pub enum Variant {
 
 struct VariantConfig<'a> {
     compile_flags: Vec<&'a str>,
-    excluded_tags: Vec<&'static str>,
+    excluded_tags: HashSet<&'static str>,
 }
 
 pub fn run_test_variant(test: &Test, variant: Variant) {
@@ -49,34 +50,44 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
 
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
-    let variant_config = match variant {
+    let mut variant_config = match variant {
         Variant::Interpreted => VariantConfig {
             compile_flags: vec!["-maxInterpretCount:1", "-maxSimpleJitRunCount:1", "-bgjit-"],
-            excluded_tags: vec!["exclude_interpreted", "require_disable_jit"],
+            excluded_tags: HashSet::from(["exclude_interpreted", "require_disable_jit"]),
         },
         Variant::Dynapogo => VariantConfig {
             compile_flags: vec!["-forceNative", "-off:simpleJit", "-bgJitDelay:0"],
-            excluded_tags: vec!["exclude_dynapogo", "require_disable_jit"],
+            excluded_tags: HashSet::from(["exclude_dynapogo", "require_disable_jit"]),
         },
         Variant::DisableJit => VariantConfig {
             compile_flags: vec!["-nonative"],
-            excluded_tags: vec![
+            excluded_tags: HashSet::from([
                 "exclude_disable_jit",
                 "exclude_interpreted",
                 "fails_interpreted",
                 "require_backend",
-            ],
+            ]),
         },
     };
 
-    if variant_config
+    let exclude_build_type = if cfg!(feature = "optimized-test") {
+        "exclude_test"
+    } else {
+        "exclude_debug"
+    };
+    variant_config.excluded_tags.insert(exclude_build_type);
+
+    let both: HashSet<_> = variant_config
         .excluded_tags
-        .iter()
-        .any(|tag| test.tags.contains(tag))
-    {
-        // TODO (hanhossain) remove this after removing the exclude_ tags
-        panic!("Skipping test because it is excluded for the {variant:?} variant");
-    }
+        .intersection(&test.tags)
+        .collect();
+
+    // TODO (hanhossain) remove this after removing the exclude_ tags
+    assert!(
+        both.is_empty(),
+        "The following test tags were found in the variant's excluded tags: {:?}",
+        both
+    );
 
     let mut ch = Command::new(out_dir.join("build/ch"));
     ch.current_dir(test_dir)

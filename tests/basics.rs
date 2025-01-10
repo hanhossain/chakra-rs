@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Basics";
@@ -44,7 +45,7 @@ fn dom_properties_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "DomProperties.js",
         compile_flags: vec!["-Intl-"],
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -689,6 +690,7 @@ fn special_symbol_capture_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -704,11 +706,12 @@ fn verify_parser_state_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:CreateParserState",
         ],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
@@ -723,11 +726,12 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:SkipNestedDeferred",
         ],
-        tags: vec!["exclude_test", "exclude_dynapogo"],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -742,12 +746,13 @@ fn bug_os17542375_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-pageheap:2",
         ],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -763,7 +768,7 @@ fn bug_os16855035_js(#[case] variant: Variant) {
             "-Force:Redeferral",
             "-CollectGarbage",
         ],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

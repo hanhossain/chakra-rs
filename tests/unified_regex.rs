@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/UnifiedRegex";
@@ -43,7 +44,7 @@ fn bug_fix_regression_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bugFixRegression.js",
         baseline_path: Some("bugFixRegression.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -61,7 +62,7 @@ fn bug_fix_regression_js2(#[case] variant: Variant) {
         source_path: "bugFixRegression.js",
         baseline_path: Some("bugFixRegression.baseline"),
         compile_flags: vec!["-forceSerialized"],
-        tags: vec!["exclude_serialized", "Slow"],
+        tags: HashSet::from(["exclude_serialized", "Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -162,7 +163,7 @@ fn last_index_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "lastIndex.js",
         baseline_path: Some("lastIndex.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -263,7 +264,7 @@ fn quantifiable_assertions_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "quantifiableAssertions.js",
         baseline_path: Some("quantifiableAssertions.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -331,7 +332,7 @@ fn property_string_serialized_js(#[case] variant: Variant) {
         source_path: "propertyString.js",
         baseline_path: Some("propertyString.baseline"),
         compile_flags: vec!["-CollectGarbage", "-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

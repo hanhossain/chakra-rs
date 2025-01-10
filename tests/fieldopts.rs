@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/fieldopts";
@@ -281,7 +282,7 @@ fn fieldhoist_nullfieldhoist_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "fieldhoist_nullfieldhoist.js",
         baseline_path: Some("fieldhoist_nullfieldhoist.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -366,7 +367,7 @@ fn fieldhoist_typespec2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec2.js",
         compile_flags: vec!["-force:jitLoopBody", "-off:aggressiveIntTypeSpec"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -380,7 +381,7 @@ fn fieldhoist_typespec3_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "fieldhoist_typespec3.js",
         baseline_path: Some("fieldhoist_typespec3.baseline"),
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -424,7 +425,7 @@ fn fieldhoist_negzero_js_serialized(#[case] variant: Variant) {
         source_path: "fieldhoist_negzero.js",
         baseline_path: Some("fieldhoist_negzero.baseline"),
         compile_flags: vec!["-Serialized"],
-        tags: vec!["exclude_forceserialized"],
+        tags: HashSet::from(["exclude_forceserialized"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -791,7 +792,7 @@ fn objtypespec1_js(#[case] variant: Variant) {
         source_path: "objtypespec1.js",
         baseline_path: Some("objtypespec1.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -805,7 +806,7 @@ fn objtypespec2_js(#[case] variant: Variant) {
         source_path: "objtypespec2.js",
         baseline_path: Some("objtypespec2.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -819,7 +820,7 @@ fn objtypespec3_js(#[case] variant: Variant) {
         source_path: "objtypespec3.js",
         baseline_path: Some("objtypespec3.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -838,7 +839,7 @@ fn objtypespec_fieldhoist_js(#[case] variant: Variant) {
             "-bgjit-",
             "-loopinterpretcount:0",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -852,7 +853,7 @@ fn objtypespec_fieldhoist_2_js(#[case] variant: Variant) {
         source_path: "objtypespec-fieldhoist.2.js",
         baseline_path: Some("objtypespec-fieldhoist.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -866,7 +867,7 @@ fn objtypespec_proto_js(#[case] variant: Variant) {
         source_path: "objtypespec_proto.js",
         baseline_path: Some("objtypespec_proto.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -880,7 +881,7 @@ fn objtypespec_add_js(#[case] variant: Variant) {
         source_path: "objtypespec-add.js",
         baseline_path: Some("objtypespec-add.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -894,7 +895,7 @@ fn objtypespec_add_2_js(#[case] variant: Variant) {
         source_path: "objtypespec-add-2.js",
         baseline_path: Some("objtypespec-add-2.baseline"),
         compile_flags: vec!["-maxinterpretcount:1", "-loopInterpretCount:1"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -908,7 +909,7 @@ fn objtypespec_add_4_js(#[case] variant: Variant) {
         source_path: "objtypespec-add-4.js",
         baseline_path: Some("objtypespec-add-4.baseline"),
         compile_flags: vec!["-maxinterpretcount:2"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -922,7 +923,7 @@ fn objtypespec_newobj_1_js(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -936,7 +937,7 @@ fn objtypespec_newobj_1_js_off_glob_opt(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -950,7 +951,7 @@ fn objtypespec_newobj_1_js_off_inline(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -964,7 +965,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -978,7 +979,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -996,7 +997,7 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:fixedNewObj",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1010,7 +1011,7 @@ fn objtypespec_newobj_1_js_off_fixed_methods(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2 -off:fixedMethods"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1024,7 +1025,7 @@ fn objtypespec_newobj_1_js_off_split_new_sc_object(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.1.js",
         baseline_path: Some("objtypespec-newobj.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1042,7 +1043,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
             "-off:objTypeSpecNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1061,7 +1062,7 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
             "-off:fixedNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1075,7 +1076,7 @@ fn objtypespec_newobj_2_js(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1089,7 +1090,7 @@ fn objtypespec_newobj_2_js_off_glob_opt(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1103,7 +1104,7 @@ fn objtypespec_newobj_2_js_off_inline(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1117,7 +1118,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1131,7 +1132,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1149,7 +1150,7 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:fixedNewObj",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1163,7 +1164,7 @@ fn objtypespec_newobj_2_js_off_fixed_methods(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:fixedMethods"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1177,7 +1178,7 @@ fn objtypespec_newobj_2_js_off_split_new_sc_object(#[case] variant: Variant) {
         source_path: "objtypespec-newobj.2.js",
         baseline_path: Some("objtypespec-newobj.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1195,7 +1196,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
             "-off:objTypeSpecNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1214,7 +1215,7 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
             "-off:fixedNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1228,7 +1229,7 @@ fn objtypespec_newobj_invalidation_1_js1(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1242,7 +1243,7 @@ fn objtypespec_newobj_invalidation_1_js2(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1256,7 +1257,7 @@ fn objtypespec_newobj_invalidation_1_js3(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1270,7 +1271,7 @@ fn objtypespec_newobj_invalidation_1_js4(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1284,7 +1285,7 @@ fn objtypespec_newobj_invalidation_1_js5(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1302,7 +1303,7 @@ fn objtypespec_newobj_invalidation_1_js6(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:fixedNewObj",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1316,7 +1317,7 @@ fn objtypespec_newobj_invalidation_1_js7(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.1.js",
         baseline_path: Some("objtypespec-newobj-invalidation.1.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1334,7 +1335,7 @@ fn objtypespec_newobj_invalidation_1_js8(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1353,7 +1354,7 @@ fn objtypespec_newobj_invalidation_1_js9(#[case] variant: Variant) {
             "-off:fixedNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1367,7 +1368,7 @@ fn objtypespec_newobj_invalidation_2_js1(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1381,7 +1382,7 @@ fn objtypespec_newobj_invalidation_2_js2(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1395,7 +1396,7 @@ fn objtypespec_newobj_invalidation_2_js3(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1409,7 +1410,7 @@ fn objtypespec_newobj_invalidation_2_js4(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1423,7 +1424,7 @@ fn objtypespec_newobj_invalidation_2_js5(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1441,7 +1442,7 @@ fn objtypespec_newobj_invalidation_2_js6(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:fixedNewObj",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1455,7 +1456,7 @@ fn objtypespec_newobj_invalidation_2_js7(#[case] variant: Variant) {
         source_path: "objtypespec-newobj-invalidation.2.js",
         baseline_path: Some("objtypespec-newobj-invalidation.2.baseline"),
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1473,7 +1474,7 @@ fn objtypespec_newobj_invalidation_2_js8(#[case] variant: Variant) {
             "-off:objTypeSpecNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1492,7 +1493,7 @@ fn objtypespec_newobj_invalidation_2_js9(#[case] variant: Variant) {
             "-off:fixedNewObj",
             "-off:splitNewScObject",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -1509,7 +1510,7 @@ fn field_hoist_max_interpret_js(#[case] variant: Variant) {
             "-maxInterpretCount:1",
             "-off:simpleJit",
         ],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Object";
@@ -111,7 +112,7 @@ fn big_constructor_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bigconstructorbug.js",
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -156,7 +157,7 @@ fn property_is_enumerable_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "propertyIsEnumerable.js",
         baseline_path: Some("propertyIsEnumerable.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -214,7 +215,7 @@ fn to_locale_string_basics_js(#[case] variant: Variant) {
         source_path: "toLocaleStringBasics.js",
         baseline_path: Some("toLocaleStringBasics.baseline"),
         compile_flags: vec!["-args", "summary", "-endargs"],
-        tags: vec!["Intl", "exclude_sanitize_address"],
+        tags: HashSet::from(["Intl", "exclude_sanitize_address"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -318,7 +319,7 @@ fn big_es5_array_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bigES5Array.js",
         baseline_path: Some("bigES5Array.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -683,7 +684,7 @@ fn object_header_inlining_simple_dict_type_handler_js(#[case] variant: Variant) 
         source_path: "ObjectHeaderInlining_SimpleDictTypeHandler.js",
         baseline_path: Some("ObjectHeaderInlining_SimpleDictTypeHandler.baseline"),
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -698,7 +699,7 @@ fn object_header_inlining_dict_type_handler_js(#[case] variant: Variant) {
         source_path: "ObjectHeaderInlining_DictTypeHandler.js",
         baseline_path: Some("ObjectHeaderInlining_DictTypeHandler.baseline"),
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -713,7 +714,7 @@ fn object_header_inlining_delete_props_js(#[case] variant: Variant) {
         source_path: "ObjectHeaderInlining_deleteProps.js",
         baseline_path: Some("ObjectHeaderInlining_deleteProps.baseline"),
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -727,7 +728,7 @@ fn object_header_inlining_prototype_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ObjectHeaderInlining_prototype.js",
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -742,7 +743,7 @@ fn object_header_inlining_prototype_type_change_js(#[case] variant: Variant) {
         source_path: "ObjectHeaderInlining_prototypeTypeChange.js",
         baseline_path: Some("ObjectHeaderInlining_prototypeTypeChange.baseline"),
         compile_flags: vec!["-nonative"],
-        tags: vec!["exclude_dynapogo"],
+        tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

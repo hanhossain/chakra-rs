@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Strings";
@@ -459,7 +460,7 @@ fn compound_string_js(#[case] variant: Variant) {
             "-off:simpleJit",
             "-Intl-",
         ],
-        tags: vec!["exclude_dynapogo", "Slow"],
+        tags: HashSet::from(["exclude_dynapogo", "Slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -599,7 +600,7 @@ fn unicode_to_upper_case_to_lower_case_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unicode_toUpperCase_toLowerCase.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
-        tags: vec!["exclude_win7", "exclude_noicu"],
+        tags: HashSet::from(["exclude_win7", "exclude_noicu"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

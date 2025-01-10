@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Regex";
@@ -340,7 +341,7 @@ fn cross_context_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "crossContext.js",
         baseline_path: Some("crossContext.baseline"),
-        tags: vec!["exclude_native"],
+        tags: HashSet::from(["exclude_native"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -375,6 +376,7 @@ fn not_boiliteral2_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -385,7 +387,7 @@ fn boi_hard_fail_js(#[case] variant: Variant) {
         source_path: "BoiHardFail.js",
         baseline_path: Some("BoiHardFail.baseline"),
         compile_flags: vec!["-regexDebug"],
-        tags: vec!["exclude_test", "exclude_serialized"],
+        tags: HashSet::from(["exclude_test", "exclude_serialized"]),
     };
     common::run_test_variant(&test, variant);
 }

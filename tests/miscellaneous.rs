@@ -19,6 +19,7 @@ fn has_only_writable_data_properties_cache_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -28,7 +29,7 @@ fn long_string_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "longstring.js",
         compile_flags: vec!["-recyclerVerify"],
-        tags: vec!["exclude_test"],
+        tags: std::collections::HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

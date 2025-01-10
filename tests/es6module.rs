@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es6module";
@@ -85,7 +86,7 @@ fn moduletest1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "moduletest1.js",
         compile_flags: vec!["-ES6Module"],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -99,7 +100,7 @@ fn moduletest2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "moduletest2.js",
         compile_flags: vec!["-ES6Module"],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -119,7 +120,7 @@ fn module_syntax_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -134,7 +135,7 @@ fn module_syntax1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "module-syntax1.js",
         compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -154,7 +155,7 @@ fn module_functionality_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -168,7 +169,7 @@ fn module_url_in_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "moduleUrlInError.js",
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -189,7 +190,7 @@ fn dynamic_module_functionality_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -211,7 +212,7 @@ fn dynamic_module_import_specifier_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -247,7 +248,7 @@ fn module_syntax_js_defer_parse(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -268,7 +269,7 @@ fn module_syntax1_js_defer_parse(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -288,12 +289,12 @@ fn module_namespace_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec![
+        tags: HashSet::from([
             "exclude_dynapogo",
             "exclude_drt",
             "exclude_sanitize_address",
             "exclude_noicu",
-        ],
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -313,7 +314,7 @@ fn module_bugfixes_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -327,7 +328,7 @@ fn export_binding_loader_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "exportBindingLoader.js",
         compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -342,7 +343,7 @@ fn test_bug_2645_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "test_bug_2645.js",
         compile_flags: vec!["-ES6Module"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -363,7 +364,7 @@ fn bug_os12095746_js(#[case] variant: Variant) {
             "-ES6Module",
             "-ESDynamicImport",
         ],
-        tags: vec!["exclude_dynapogo", "exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -392,7 +393,7 @@ fn bug_issue_3076_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_issue_3076.js",
         compile_flags: vec!["-force:deferparse", "-ESDynamicImport"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -408,7 +409,7 @@ fn bug_issue_3257_js(#[case] variant: Variant) {
         source_path: "bug_issue_3257.js",
         baseline_path: Some("bug_issue_3257.baseline"),
         compile_flags: vec!["-ESDynamicImport"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -422,7 +423,7 @@ fn bug_issue_5777_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_issue_5777.js",
         compile_flags: vec!["-ESDynamicImport", "-MuteHostErrorMsg"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -443,7 +444,7 @@ fn export_namespace_as_js(#[case] variant: Variant) {
             "summary",
             "-endargs",
         ],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -457,7 +458,7 @@ fn multiple_roots_circular_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "multiple-roots-circular.js",
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -472,7 +473,7 @@ fn esdynamic_import_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "GetModuleNamespace.js",
         compile_flags: vec!["-ESDynamicImport"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -514,7 +515,7 @@ fn bug_os17830745_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_OS17830745.js",
         compile_flags: vec!["-MuteHostErrorMsg"],
-        tags: vec!["exclude_sanitize_address"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

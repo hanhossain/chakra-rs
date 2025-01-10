@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Error";
@@ -152,7 +153,7 @@ fn call_non_function_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "CallNonFunction.js",
         baseline_path: Some("CallNonFunction_3.baseline"),
-        tags: vec!["exclude_native", "exclude_dynapogo"],
+        tags: HashSet::from(["exclude_native", "exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -287,7 +288,7 @@ fn runtime_compile_stack_overflow_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "RuntimeCompileStackOverflow.js",
         baseline_path: Some("RuntimeCompileStackOverflow.baseline"),
-        tags: vec!["exclude_forceundodefer"],
+        tags: HashSet::from(["exclude_forceundodefer"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -328,7 +329,7 @@ fn stackoverflow_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "stackoverflow.js",
         baseline_path: Some("stackoverflow.baseline"),
-        tags: vec!["Slow"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

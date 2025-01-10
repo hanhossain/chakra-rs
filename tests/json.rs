@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/JSON";
@@ -29,7 +30,7 @@ fn jx2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jx2.js",
         baseline_path: Some("jx2.baseline"),
-        tags: vec!["slow"],
+        tags: HashSet::from(["slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -49,7 +50,7 @@ fn cacheassert_js(#[case] variant: Variant) {
 }
 
 // This fails on macos for some reason
-#[cfg(not(target_os = "macos"))]
+#[cfg(all(not(target_os = "macos"), not(feature = "optimized-test")))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -62,7 +63,7 @@ fn stringify_replacer_js(#[case] variant: Variant) {
         source_path: "stringify-replacer.js",
         baseline_path: Some("stringify-replacer.baseline"),
         compile_flags: vec!["-recyclerstress"],
-        tags: vec!["exclude_test", "slow"],
+        tags: HashSet::from(["exclude_test", "slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -116,6 +117,7 @@ fn simple_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -128,7 +130,7 @@ fn simple_with_log_js(#[case] variant: Variant) {
         source_path: "simple.withLog.js",
         baseline_path: Some("simple.withLog.baseline"),
         compile_flags: vec!["-recyclerstress", "-trace:JSON"],
-        tags: vec!["exclude_test", "slow"],
+        tags: HashSet::from(["exclude_test", "slow"]),
     };
     common::run_test_variant(&test, variant);
 }
@@ -147,6 +149,7 @@ fn simple_stringify_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -156,12 +159,13 @@ fn parse_with_gc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "parseWithGc.js",
         compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(feature = "optimized-test"))]
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
@@ -172,7 +176,7 @@ fn json_cache_js_force_gc(#[case] variant: Variant) {
         source_path: "jsonCache.js",
         baseline_path: Some("jsonCache.baseline"),
         compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: vec!["exclude_test"],
+        tags: HashSet::from(["exclude_test"]),
     };
     common::run_test_variant(&test, variant);
 }
