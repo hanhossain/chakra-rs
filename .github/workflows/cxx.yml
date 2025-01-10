@@ -25,12 +25,6 @@ jobs:
         build-type:
           - Debug
           - RelWithDebInfo
-        use-mold:
-          - false
-          - true
-        exclude:
-          - os: macos-latest
-            use-mold: true
         include:
           - os: macos-latest
             deps: brew install ninja icu4c@74
@@ -53,7 +47,7 @@ jobs:
         run: ${{ matrix.deps }}
 
       - name: Install mold linker
-        if: matrix.use-mold
+        if: matrix.os == 'ubuntu-latest'
         uses: rui314/setup-mold@v1
 
       - name: Create build directory
