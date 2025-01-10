@@ -1,14 +1,20 @@
 use std::path::PathBuf;
 
 fn main() {
-    let optimized_test = cfg!(feature = "optimized-test");
+    let opt_level = std::env::var("OPT_LEVEL").unwrap();
+    let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
 
     let target = std::env::var("TARGET").unwrap();
     if target.contains("windows") {
-        build_msvc(optimized_test);
+        build_msvc(&opt_level, debug);
     } else {
         #[cfg(unix)]
-        build_cmake(optimized_test);
+        build_cmake();
+    }
+
+    println!("cargo::rustc-check-cfg=cfg(optimized)");
+    if opt_level != "0" {
+        println!("cargo::rustc-cfg=optimized");
     }
 
     // set rstest timeout to 60s
@@ -21,7 +27,7 @@ fn main() {
 }
 
 #[cfg(unix)]
-fn build_cmake(optimized_test: bool) {
+fn build_cmake() {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
         cc_config.compiler("clang");
@@ -35,10 +41,6 @@ fn build_cmake(optimized_test: bool) {
         .define("CMAKE_C_COMPILER", "clang")
         .build_target("ch");
 
-    if optimized_test {
-        config.profile("RelWithDebInfo");
-    }
-
     let target = std::env::var("TARGET").unwrap();
     if target.contains("darwin") {
         config
@@ -49,12 +51,11 @@ fn build_cmake(optimized_test: bool) {
     config.build();
 }
 
-fn build_msvc(optimized_test: bool) {
-    let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
-    let configuration = match (optimized_test, debug) {
-        (true, _) => "Test",
-        (false, true) => "Debug",
-        (false, false) => "Release",
+fn build_msvc(opt_level: &str, debug: bool) {
+    let configuration = match (opt_level, debug) {
+        ("0", _) => "Debug",
+        (_, true) => "Test",
+        (_, false) => "Release",
     };
 
     let mut msbuild = std::process::Command::new("msbuild");
