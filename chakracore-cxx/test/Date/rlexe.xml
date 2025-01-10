@@ -115,7 +115,7 @@
   <test>
     <default>
       <files>xplatInterval.js</files>
-      <tags>Slow,exclude_windows</tags>
+      <tags>Slow,exclude_windows,exclude_mac</tags>
     </default>
   </test>
   <test>

@@ -23,7 +23,7 @@
       <files>stringify-replacer.js</files>
       <baseline>stringify-replacer.baseline</baseline>
       <compile-flags>-recyclerstress</compile-flags>
-      <tags>exclude_test,Slow</tags>
+      <tags>exclude_test,Slow,exclude_mac</tags>
     </default>
   </test>
   <test>

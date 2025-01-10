@@ -1,0 +1,133 @@
+name: ci
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+concurrency:
+  # allow concurrent jobs on master, but not on PRs
+  group: ${{ github.workflow }}-${{ (github.ref == 'refs/heads/master' && github.sha) || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-rust:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        build-type:
+          - debug
+          - test
+        include:
+          - os: macos-latest
+            deps: brew install ninja icu4c@74
+          - os: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build
+          - build-type: debug
+            build-profile: dev
+          - build-type: test
+            build-profile: test
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        if: matrix.os != 'windows-latest'
+        run: ${{ matrix.deps }}
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+      - name: Add msbuild to PATH
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Set timezone
+        if: matrix.os == 'windows-latest'
+        run: tzutil /s "Pacific Standard time"
+      - name: Install mold linker
+        if: matrix.os == 'ubuntu-latest'
+        uses: rui314/setup-mold@v1
+      - name: Build
+        run: cargo build -vv --profile ${{ matrix.build-profile }}
+      - name: Run tests
+        run: cargo nextest run --no-fail-fast --cargo-profile ${{ matrix.build-profile }}
+      - name: Run slow tests
+        run: cargo nextest run --no-fail-fast --run-ignored only --cargo-profile ${{ matrix.build-profile }}
+
+  build-cmake:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+        build-type:
+          - debug
+          - test
+        include:
+          - os: macos-latest
+            deps: brew install ninja icu4c@74
+            cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c@74/include -DDISABLE_JIT=ON
+          - os: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build
+            cmake-flags: ''
+          - build-type: debug
+            cmake-build-type: Debug
+          - build-type: test
+            cmake-build-type: RelWithDebInfo
+    env:
+      CXX: clang++
+      CC: clang
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create build directory
+        working-directory: ${{ github.workspace }}/chakracore-cxx
+        run: mkdir -p cmake-build
+      - name: Install dependencies
+        run: ${{ matrix.deps }}
+      - name: Install mold linker
+        if: matrix.os == 'ubuntu-latest'
+        uses: rui314/setup-mold@v1
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+      - name: Build
+        run: ninja
+      - name: Test
+        run: ninja check
+      - name: Slow Tests
+        run: ninja slow-check
+
+  build-msvc:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/chakracore-cxx
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type:
+          - debug
+          - test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: test\ci.buildone.cmd x64 ${{ matrix.build-type }}
+      - name: Test
+        run: test\ci.testone.cmd x64 ${{ matrix.build-type }}
+      - name: Slow Tests
+        run: test\ci.testone.cmd x64 ${{ matrix.build-type }} --only-slow
