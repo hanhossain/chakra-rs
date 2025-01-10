@@ -7,10 +7,57 @@ on:
     branches: [ "master" ]
 
 concurrency:
-  group: cxx-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  # allow concurrent jobs on master, but not on PRs
+  group: ${{ github.workflow }}-${{ (github.ref == 'refs/heads/master' && github.sha) || github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  build-rust:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        include:
+          - os: macos-latest
+            deps: brew install ninja icu4c@74
+          - os: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        if: matrix.os != 'windows-latest'
+        run: ${{ matrix.deps }}
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+      - name: Add msbuild to PATH
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Set timezone
+        if: matrix.os == 'windows-latest'
+        run: tzutil /s "Pacific Standard time"
+      - name: Install mold linker
+        if: matrix.os == 'ubuntu-latest'
+        uses: rui314/setup-mold@v1
+      - name: Build
+        run: cargo build -vv
+      - name: Build (test)
+        run: cargo build -vv --profile test
+      - name: Run tests
+        run: cargo nextest run --no-fail-fast
+      - name: Run slow tests
+        run: cargo nextest run --no-fail-fast --run-ignored only
+
   build-cmake:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
@@ -18,7 +65,6 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
     strategy:
-      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
       matrix:
         os:
