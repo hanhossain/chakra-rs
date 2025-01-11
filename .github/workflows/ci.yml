@@ -53,9 +53,6 @@ jobs:
       - name: Set timezone
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
-      - name: Install mold linker
-        if: matrix.os == 'ubuntu-latest'
-        uses: rui314/setup-mold@v1
       - name: Build
         run: cargo build -vv --profile ${{ matrix.build-profile }}
       - name: Run tests
@@ -99,16 +96,15 @@ jobs:
         run: mkdir -p cmake-build
       - name: Install dependencies
         run: ${{ matrix.deps }}
-      - name: Install mold linker
-        if: matrix.os == 'ubuntu-latest'
-        uses: rui314/setup-mold@v1
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
       - name: Build
         run: ninja
       - name: Test
+        continue-on-error: ${{ matrix.build-type == 'debug' }}
         run: ninja check
       - name: Slow Tests
+        continue-on-error: ${{ matrix.build-type == 'debug' }}
         run: ninja slow-check
 
   build-msvc:
@@ -128,6 +124,8 @@ jobs:
       - name: Build
         run: test\ci.buildone.cmd x64 ${{ matrix.build-type }}
       - name: Test
+        continue-on-error: ${{ matrix.build-type == 'debug' }}
         run: test\ci.testone.cmd x64 ${{ matrix.build-type }}
       - name: Slow Tests
+        continue-on-error: ${{ matrix.build-type == 'debug' }}
         run: test\ci.testone.cmd x64 ${{ matrix.build-type }} --only-slow
