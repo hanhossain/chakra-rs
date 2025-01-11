@@ -1,6 +1,7 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Operators";
@@ -290,15 +291,22 @@ fn or_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>property.js</files>
-//     <baseline>property.baseline</baseline>
-//     <tags>Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(300))]
+fn property_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "property.js",
+        baseline_path: Some("property.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]

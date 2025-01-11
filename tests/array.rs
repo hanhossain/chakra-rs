@@ -1,6 +1,7 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Array";
@@ -778,14 +779,20 @@ fn to_locale_string_js_force_es5_array(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>array_slice.js</files>
-//     <baseline>array_slice.baseline</baseline>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[timeout(Duration::from_secs(300))]
+fn array_slice_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array_slice.js",
+        baseline_path: Some("array_slice.baseline"),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -1570,15 +1577,22 @@ fn memset_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>memset_invariant.js</files>
-//     <tags>Slow</tags>
-//     <compile-flags>-mic:1 -off:simplejit -mmoc:0 -off:JITLoopBody</compile-flags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[timeout(Duration::from_secs(300))]
+#[ignore]
+fn memset_invariant_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "memset_invariant.js",
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0", "-off:JITLoopBody"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]

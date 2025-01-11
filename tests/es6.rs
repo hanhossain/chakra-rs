@@ -1,6 +1,7 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es6";
@@ -252,14 +253,27 @@ fn function_name_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>function.name.js</files>
-//     <compile-flags>-ES6Generators -es6functionnamefull -force:deferparse -args summary -endargs</compile-flags>
-//     <timeout>120</timeout> <!-- ARM64 take more than 60 -->
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[timeout(Duration::from_secs(120))]
+fn function_name_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "function.name.js",
+        compile_flags: vec![
+            "-ES6Generators",
+            "-es6functionnamefull",
+            "-force:deferparse",
+            "-args",
+            "summary",
+            "-endargs",
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -1529,16 +1543,22 @@ fn objlit_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>unicode_regex_surrogate_utf8.js</files>
-//     <baseline>unicode_regex_surrogate_utf8.baseline</baseline>
-//     <compile-flags> -ES6Unicode -ES6RegExSticky</compile-flags>
-//     <tags>Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(300))]
+fn unicode_regex_surrogate_utf8_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unicode_regex_surrogate_utf8.js",
+        baseline_path: Some("unicode_regex_surrogate_utf8.baseline"),
+        compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
+        tags: HashSet::from(["Slow"]),
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -2408,23 +2428,37 @@ fn regex_unicode_case_insensitive_js(#[case] variant: Variant) {
 //   all of the important cases are covered in regex-unicode-CaseInsensitive.js
 // -->
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>regex-unicode-CaseInsensitive-all-i.js</files>
-//     <tags>Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(300))]
+fn regex_unicode_case_insensitive_all_i_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regex-unicode-CaseInsensitive-all-i.js",
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>regex-unicode-CaseInsensitive-all-iu.js</files>
-//     <tags>Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(300))]
+fn regex_unicode_case_insensitive_all_iu_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regex-unicode-CaseInsensitive-all-iu.js",
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
