@@ -298,14 +298,23 @@ fn split_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>WOOB1138949.js</files>
-//     <baseline>WOOB1138949.baseline</baseline>
-//     <tags>exclude_debug,Slow</tags>
-//   </default>
-// </test>
+#[cfg(optimized)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn woob1138949_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WOOB1138949.js",
+        baseline_path: Some("WOOB1138949.baseline"),
+        tags: HashSet::from(["exclude_debug", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]

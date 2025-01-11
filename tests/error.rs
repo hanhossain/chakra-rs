@@ -1,6 +1,7 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Error";
@@ -92,15 +93,22 @@ fn outofmem_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>stack.js</files>
-//     <compile-flags>-JsBuiltIn- -off:inline </compile-flags>
-//     <tags>Slow</tags>
-//     <timeout>600</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(600))]
+fn stack_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stack.js",
+        tags: HashSet::from(["Slow"]),
+        compile_flags: vec!["-JsBuiltIn-", "-off:inline"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -294,16 +302,22 @@ fn runtime_compile_stack_overflow_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>encodeoverflow.js</files>
-//     <baseline>encodeoverflow.baseline</baseline>
-//     <compile-flags>-EnableFatalErrorOnOOM-</compile-flags>
-//     <tags>Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(300))]
+fn encodeoverflow_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "encodeoverflow.js",
+        baseline_path: Some("encodeoverflow.baseline"),
+        compile_flags: vec!["-EnableFatalErrorOnOOM-"],
+        tags: HashSet::from(["Slow"]),
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]

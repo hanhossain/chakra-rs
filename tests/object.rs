@@ -1,6 +1,7 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Object";
@@ -290,23 +291,39 @@ fn var_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>moreProperties-enumeration.js</files>
-//     <baseline>moreProperties-enumeration.baseline</baseline>
-//     <tags>Slow</tags>
-//     <timeout>600</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(Duration::from_secs(600))]
+fn more_properties_enumeration_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "moreProperties-enumeration.js",
+        baseline_path: Some("moreProperties-enumeration.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Slow.js</files>
-//     <tags>exclude_debug,Slow</tags>
-//   </default>
-// </test>
+#[cfg(optimized)]
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn slow_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Slow.js",
+        tags: HashSet::from(["exclude_debug", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]

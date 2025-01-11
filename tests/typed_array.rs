@@ -1,5 +1,7 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
+use std::time::Duration;
 
 mod common;
 
@@ -214,14 +216,20 @@ fn float64array_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>dataview.js</files>
-//     <baseline>dataview.baseline</baseline>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[timeout(Duration::from_secs(300))]
+fn dataview_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dataview.js",
+        baseline_path: Some("dataview.baseline"),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -279,26 +287,20 @@ fn objectproperty_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>nan.js</files>
-//     <baseline>nan.baseline</baseline>
-//     <tags>typedarray,exclude_nonrazzle</tags>
-//   </default>
-//   <condition order="1" type="include">
-//     <target>amd64</target>
-//     <override>
-//       <baseline>nan.x64.baseline</baseline>
-//     </override>
-//   </condition>
-//   <condition order="2" type="include">
-//     <target>arm64</target>
-//     <override>
-//       <baseline>nan.x64.baseline</baseline>
-//     </override>
-//   </condition>
-// </test>
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+fn nan_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nan.js",
+        baseline_path: Some("nan.x64.baseline"),
+        tags: HashSet::from(["typedarray", "exclude_nonrazzle"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
@@ -343,17 +345,22 @@ fn set_js2(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>samethread.js</files>
-//     <baseline>samethread.baseline</baseline>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
-// <!--
-// Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
+#[rstest]
+#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
+#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
+#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[timeout(Duration::from_secs(300))]
+fn samethread_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "samethread.js",
+        baseline_path: Some("samethread.baseline"),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
+// TODO Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
 // TODO (hanhossain): migrate
 // <test>
 //   <default>
@@ -362,7 +369,6 @@ fn set_js2(#[case] variant: Variant) {
 //       <tags>typedarray,exclude_arm,exclude_debug</tags>
 //   </default>
 // </test>
-// -->
 
 #[rstest]
 #[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
