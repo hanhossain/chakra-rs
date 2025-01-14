@@ -2,14 +2,18 @@ use std::path::PathBuf;
 
 fn main() {
     let opt_level = std::env::var("OPT_LEVEL").unwrap();
-    let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
 
-    let target = std::env::var("TARGET").unwrap();
-    if target.contains("windows") {
-        build_msvc(&opt_level, debug);
-    } else {
-        #[cfg(unix)]
-        build_cmake();
+    // only compile c++ when asked to, this allows cargo check to skip it until we need it.
+    if cfg!(feature = "compile-cpp") {
+        let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
+
+        let target = std::env::var("TARGET").unwrap();
+        if target.contains("windows") {
+            build_msvc(&opt_level, debug);
+        } else {
+            #[cfg(unix)]
+            build_cmake();
+        }
     }
 
     println!("cargo::rustc-check-cfg=cfg(optimized)");
