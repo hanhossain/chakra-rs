@@ -85,9 +85,6 @@ deps/thirdparty
 .*.swp
 tags
 
-# VS Code
-.vscode/
-
 # additional *nix generated files
 *.a
 *.gch
@@ -109,11 +106,3 @@ cc-toolchain/
 Build/VcBuild
 Build/VcBuild.NoJIT
 Build/VcBuild.SWB
-
-# IntelliJ
-cmake-build*
-.idea
-
-# Added by cargo
-
-/target
