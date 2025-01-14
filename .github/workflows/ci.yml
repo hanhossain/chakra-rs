@@ -68,7 +68,7 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os:
           - macos-latest
@@ -78,8 +78,8 @@ jobs:
           - test
         include:
           - os: macos-latest
-            deps: brew install ninja icu4c@74
-            cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c@74/include -DDISABLE_JIT=ON
+            deps: brew install ninja icu4c
+            cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
             cmake-flags: ''
