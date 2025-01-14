@@ -1,7 +1,6 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
-use std::time::Duration;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/es5";
@@ -333,7 +332,7 @@ fn array_length_js_forcees5array(#[case] variant: Variant) {
 #[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
 #[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
 #[ignore]
-#[timeout(Duration::from_secs(900))]
+#[timeout(std::time::Duration::from_secs(900))]
 fn es5array_index_list_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
