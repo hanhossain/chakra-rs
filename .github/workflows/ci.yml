@@ -68,7 +68,7 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - macos-latest
