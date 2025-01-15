@@ -448,30 +448,7 @@ void AssertValue(void * mem, T value, uint byteCount)
 #define NO_EXPORT(x) x
 #endif
 
-// For the debugger extension, we don't need the placement news
-#ifndef __PLACEMENT_NEW_INLINE
-#define __PLACEMENT_NEW_INLINE
-
-_Ret_notnull_
-NO_EXPORT(inline void *) __cdecl
-operator new(
-DECLSPEC_GUARD_OVERFLOW size_t byteSize,
-_In_ void * previousAllocation) throw()
-{
-    return previousAllocation;
-}
-
-
-NO_EXPORT(inline void) __cdecl
-operator delete(
-void * allocationToFree,                // Allocation to free
-void * previousAllocation               // Previously allocated memory
-) throw()
-{
-
-}
-
-#endif
+#include <new>
 
 //----------------------------------------
 // throwing operator new overrides

@@ -49,7 +49,7 @@ fn build_cmake() {
     if target.contains("darwin") {
         config
             .define("DISABLE_JIT", "ON")
-            .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c@74/include");
+            .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
     }
 
     config.build();
