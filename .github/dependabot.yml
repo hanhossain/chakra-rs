@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: weekly
     allow:
-      dependency-type: all
+      - dependency-type: all
     assignees:
       - hanhossain
   - package-ecosystem: github-actions
