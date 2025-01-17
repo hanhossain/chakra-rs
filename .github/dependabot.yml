@@ -9,10 +9,20 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    allow:
-      - dependency-type: all
     assignees:
       - hanhossain
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-type: indirect
+    assignees:
+      - hanhossain
+    groups:
+      transient-deps:
+        patterns:
+          - '*'
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
