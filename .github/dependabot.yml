@@ -15,7 +15,11 @@ updates:
       all-deps:
         patterns:
           - '*'
+    assignees:
+      - hanhossain
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
+    assignees:
+      - hanhossain
