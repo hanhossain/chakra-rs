@@ -11,6 +11,10 @@ updates:
       interval: weekly
     allow:
       - dependency-type: all
+    groups:
+      all-deps:
+        patterns:
+          - '*'
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
