@@ -9,10 +9,6 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    groups:
-      all-deps:
-        patterns:
-          - '*'
     assignees:
       - hanhossain
   - package-ecosystem: github-actions
