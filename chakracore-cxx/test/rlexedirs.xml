@@ -73,7 +73,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Intl</files>
     <tags>exclude_noicu</tags>
