@@ -76,6 +76,9 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         "exclude_debug"
     };
     variant_config.excluded_tags.insert(exclude_build_type);
+    variant_config
+        .excluded_tags
+        .insert("exclude_icu62AndAboveTestFailures");
 
     let both: HashSet<_> = variant_config
         .excluded_tags

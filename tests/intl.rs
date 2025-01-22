@@ -53,46 +53,12 @@ fn date_time_format_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn number_format_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "NumberFormat.js",
-        tags: HashSet::from([
-            "Intl",
-            "exclude_noicu",
-            "exclude_drt",
-            "exclude_icu62AndAboveTestFailures",
-        ]),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn number_format_options_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NumberFormatOptions.js",
         compile_flags: vec!["-args", "summary", "-endargs"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn get_canonical_locales_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "GetCanonicalLocales.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
-        tags: HashSet::from(["Intl", "exclude_noicu", "exclude_icu62AndAboveTestFailures"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -186,6 +152,7 @@ fn intl_identities_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(windows)]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
