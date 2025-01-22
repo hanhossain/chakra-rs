@@ -686,19 +686,13 @@ inline T* InterlockedCompareExchangePointerT(
     __android_log_print(ANDROID_LOG_ERROR, CC_AND_TAG, __VA_ARGS__)
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 // do not change the location of the definitions below.
 // these defs should be always at the end
 #ifndef max
-#define max(a, b)            (((a) > (b)) ? (a) : (b))
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 #ifndef min
-#define min(a, b)            (((a) < (b)) ? (a) : (b))
-#endif
-#ifdef __cplusplus
-}
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
 #endif /* _PAL_INTERNAL_H_ */
