@@ -52,7 +52,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Generated</files>
     <tags>Slow</tags>

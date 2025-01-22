@@ -66,15 +66,18 @@ fn $1_js() {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
         baseline_path: Some("$2"),
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 ```
 
