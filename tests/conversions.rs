@@ -5,9 +5,9 @@ mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Conversions";
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn toint32_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -18,9 +18,9 @@ fn toint32_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn toint32_2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -31,9 +31,9 @@ fn toint32_2_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn touint32_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -44,9 +44,9 @@ fn touint32_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn implicit_conversions_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -58,9 +58,9 @@ fn implicit_conversions_js(#[case] variant: Variant) {
 }
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn bug1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

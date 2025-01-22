@@ -19,11 +19,8 @@ pub struct Test {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Variant {
-    #[cfg_attr(disable_jit, allow(dead_code))]
     Interpreted,
-    #[cfg_attr(disable_jit, allow(dead_code))]
     Dynapogo,
-    #[cfg_attr(not(disable_jit), allow(dead_code))]
     DisableJit,
 }
 
@@ -35,6 +32,9 @@ struct VariantConfig<'a> {
 pub fn run_test_variant(test: &Test, variant: Variant) {
     if cfg!(disable_jit) && variant != Variant::DisableJit {
         println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        return;
+    } else if !cfg!(disable_jit) && variant == Variant::DisableJit {
+        println!("Skipping {variant:?} as it's not supported without cfg!(disable_jit)");
         return;
     }
 

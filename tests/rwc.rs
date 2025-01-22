@@ -5,9 +5,9 @@ mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/RWC";
 
 #[rstest]
-#[cfg_attr(not(disable_jit), case::interpreted(Variant::Interpreted))]
-#[cfg_attr(not(disable_jit), case::dynapogo(Variant::Dynapogo))]
-#[cfg_attr(disable_jit, case::disable_jit(Variant::DisableJit))]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
 fn onenote_ribbon_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
