@@ -21,7 +21,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>ConfigParsing</files>
     <tags>exclude_xplat</tags>
