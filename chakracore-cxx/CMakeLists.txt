@@ -127,7 +127,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     OR CMAKE_CXX_COMPILER_ID STREQUAL Clang
     OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     # Color diagnostics for g++ and clang++
-    add_definitions("-fdiagnostics-color=always")
+    set(CMAKE_COLOR_DIAGNOSTICS ON)
 endif()
 
 # TODO (hanhossain): don't use add_definition for this, just use the CMake variable
