@@ -9,12 +9,6 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-    allow:
-      - dependency-type: all
-    groups:
-      all-deps:
-        patterns:
-          - '*'
     assignees:
       - hanhossain
   - package-ecosystem: github-actions
