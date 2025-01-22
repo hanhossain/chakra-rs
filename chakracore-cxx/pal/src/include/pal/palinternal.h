@@ -265,6 +265,12 @@ function_name() to call the system's implementation
 #ifdef stderr
 #undef stderr
 #endif
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
 
 #ifdef SCHAR_MIN
 #undef SCHAR_MIN
