@@ -3,156 +3,20 @@ use rstest::rstest;
 use std::collections::HashSet;
 
 mod common;
-const DIRECTORY: &str = "chakracore-cxx/test/Bugs";
+const DIRECTORY: &str = "chakracore-cxx/test/Generated";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug602_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mul_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug602.js",
-        baseline_path: Some("bug602_3.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn bug764_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "bug764.js",
-        baseline_path: Some("bug764.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn withnonative_apply_optimization_bug3433559_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "withnonativeApplyOptimizationBug3433559.js",
-        compile_flags: vec!["-nonative"],
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn win8_486977_branch_strict_equal_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "Win8_486977_BranchStrictEqual.js",
-        baseline_path: Some("Win8_486977_BranchStrictEqual.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[cfg(not(target_arch = "x86_64"))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn win8_459638_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "Win8_459638.js",
-        baseline_path: Some("Win8_459638.baseline"),
-        compile_flags: vec!["-forceNative", "-off:simpleJit"],
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn bug_os_1197716_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "bug_OS_1197716.js",
-        compile_flags: vec!["-deferparse"],
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn addexception_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "addexception.js",
-        baseline_path: Some("addexception.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn regalloc_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "regalloc.js",
-        baseline_path: Some("regalloc.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn randombug_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "randombug.js",
-        baseline_path: Some("randombug.baseline"),
-        compile_flags: vec![
-            "-CollectGarbage",
-            "-ExtendedErrorStackForTestHost",
-            "-off:earlyreferenceerrors",
-        ],
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn blue_532460_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "blue_532460.js",
-        compile_flags: vec![
-            "-CollectGarbage",
-            "-MaxinterpretCount:1",
-            "-MaxSimpleJITRunCount:0",
-            "-loopinterpretcount:1",
-            "-force:deferparse",
-        ],
+        source_path: "mul.js",
+        baseline_path: Some("mul.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -164,10 +28,12 @@ fn blue_532460_js(#[case] variant: Variant) {
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
 #[timeout(common::SLOW_TEST_TIMEOUT)]
-fn bug56026_js(#[case] variant: Variant) {
+fn mul0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug56026.js",
+        source_path: "mul0.js",
+        baseline_path: Some("mul0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -177,10 +43,14 @@ fn bug56026_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug56026_minimal_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mul1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug56026_minimal.js",
+        source_path: "mul1.js",
+        baseline_path: Some("mul1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -190,10 +60,14 @@ fn bug56026_minimal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug56026_minimal_with_properties_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mul2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug56026_minimalWithProperties.js",
+        source_path: "mul2.js",
+        baseline_path: Some("mul2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -203,10 +77,14 @@ fn bug56026_minimal_with_properties_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug56026_nested_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mul3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug56026_nested.js",
+        source_path: "mul3.js",
+        baseline_path: Some("mul3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -216,10 +94,14 @@ fn bug56026_nested_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug56026_trycatch_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn div_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug56026_trycatch.js",
+        source_path: "div.js",
+        baseline_path: Some("div.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -229,11 +111,14 @@ fn bug56026_trycatch_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blue_245702_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn div0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "blue_245702.js",
-        baseline_path: Some("blue_245702.baseline"),
+        source_path: "div0.js",
+        baseline_path: Some("div0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -243,16 +128,14 @@ fn blue_245702_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug547302_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn div1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug547302.js",
-        compile_flags: vec![
-            "-maxinterpretcount:2",
-            "-maxsimplejitruncount:5",
-            "-off:inline",
-        ],
-        tags: HashSet::from(["exclude_shp"]),
+        source_path: "div1.js",
+        baseline_path: Some("div1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -262,25 +145,14 @@ fn bug547302_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug215238_mul_53_ovf_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn div2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug215238.mul-53-ovf.js",
-        baseline_path: Some("bug215238.mul-53-ovf.baseline"),
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:2",
-            "-MaxLinearStringCaseCount:2",
-            "-MaxLinearIntCaseCount:2",
-            "-forceserialized",
-            "-MinSwitchJumpTableSize:3",
-            "-bgjit-",
-            "-loopinterpretcount:1",
-            "-force:polymorphicinlinecache",
-            "-force:fieldcopyprop",
-            "-sse:2",
-            "-force:interpreterautoprofile",
-        ],
+        source_path: "div2.js",
+        baseline_path: Some("div2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -290,21 +162,14 @@ fn bug215238_mul_53_ovf_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug215238_shrua_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn div3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug215238-shrua.js",
-        baseline_path: Some("bug215238-shrua.baseline"),
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-MinSwitchJumpTableSize:3",
-            "-bgjit-",
-            "-loopinterpretcount:1",
-            "-force:rejit",
-            "-force:ScriptFunctionWithInlineCache",
-            "-force:fixdataprops",
-        ],
+        source_path: "div3.js",
+        baseline_path: Some("div3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -314,23 +179,14 @@ fn bug215238_shrua_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug215238_shrua_2_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mod_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug215238.shrua-2.js",
-        baseline_path: Some("bug215238.shrua-2.baseline"),
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-force:polymorphicinlinecache",
-            "-MinSwitchJumpTableSize:2",
-            "-force:rejit",
-            "-force:ScriptFunctionWithInlineCache",
-            "-force:atom",
-            "-off:ArrayCheckHoist",
-            "-force:fixdataprops",
-            "-ForceArrayBTree",
-        ],
+        source_path: "mod.js",
+        baseline_path: Some("mod.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -340,11 +196,14 @@ fn bug215238_shrua_2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug435809_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mod0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug435809.js",
-        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        source_path: "mod0.js",
+        baseline_path: Some("mod0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -354,15 +213,14 @@ fn bug435809_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug594298_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mod1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug594298.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-off:simplejit",
-            "-force:fixdataprops",
-        ],
+        source_path: "mod1.js",
+        baseline_path: Some("mod1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -372,17 +230,14 @@ fn bug594298_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug661952_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mod2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug661952.js",
-        compile_flags: vec![
-            "-loopinterpretcount:1",
-            "-bgjit-",
-            "-maxsimplejitruncount:1",
-            "-maxinterpretcount:1",
-            "-force:inline",
-        ],
+        source_path: "mod2.js",
+        baseline_path: Some("mod2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -392,18 +247,14 @@ fn bug661952_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug724121_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn mod3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug724121.js",
-        compile_flags: vec![
-            "-loopinterpretcount:1",
-            "-bgjit-",
-            "-maxsimplejitruncount:1",
-            "-maxinterpretcount:1",
-            "-force:deferparse",
-            "-force:inline",
-        ],
+        source_path: "mod3.js",
+        baseline_path: Some("mod3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -413,15 +264,14 @@ fn bug724121_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deserializationbug339404_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn add_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "deserializationbug339404.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-force:fieldcopyprop",
-            "-forceserialized",
-        ],
+        source_path: "add.js",
+        baseline_path: Some("add.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -431,10 +281,14 @@ fn deserializationbug339404_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug843670_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn add0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug843670.js",
+        source_path: "add0.js",
+        baseline_path: Some("add0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -444,12 +298,14 @@ fn bug843670_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug934443_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn add1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug934443.js",
-        compile_flags: vec!["-force:fieldcopyprop", "-off:dynamicprofile"],
-        tags: HashSet::from(["exclude_sanitize_address"]),
+        source_path: "add1.js",
+        baseline_path: Some("add1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -459,10 +315,14 @@ fn bug934443_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn vso_os_1091425_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn add2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "vso_os_1091425.js",
+        source_path: "add2.js",
+        baseline_path: Some("add2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -472,11 +332,14 @@ fn vso_os_1091425_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug1092916_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn add3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug1092916.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit"],
+        source_path: "add3.js",
+        baseline_path: Some("add3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -486,17 +349,14 @@ fn bug1092916_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blue_1096569_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sub_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "blue_1096569.js",
-        baseline_path: Some("blue_1096569.baseline"),
-        compile_flags: vec![
-            "-MaxinterpretCount:2",
-            "-off:simplejit",
-            "-force:Inline",
-            "-off:insertnops",
-        ],
+        source_path: "sub.js",
+        baseline_path: Some("sub.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -506,19 +366,14 @@ fn blue_1096569_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blue_1086262_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sub0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "blue_1086262.js",
-        baseline_path: Some("blue_1086262.baseline"),
-        compile_flags: vec![
-            "-off:insertnops",
-            "-bgjit-",
-            "-fja:2",
-            "-off:simplejit",
-            "-force:fieldcopyprop",
-            "-off:aggressiveinttypespec",
-        ],
+        source_path: "sub0.js",
+        baseline_path: Some("sub0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -528,11 +383,14 @@ fn blue_1086262_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug1288931_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sub1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug1288931.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit", "-off:fastpath"],
+        source_path: "sub1.js",
+        baseline_path: Some("sub1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -542,11 +400,14 @@ fn bug1288931_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn os_1362136_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sub2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "OS_1362136.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit", "-off:fastpath"],
+        source_path: "sub2.js",
+        baseline_path: Some("sub2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -554,28 +415,288 @@ fn os_1362136_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sub3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "sub3.js",
+        baseline_path: Some("sub3.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lsh_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lsh.js",
+        baseline_path: Some("lsh.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lsh0_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lsh0.js",
+        baseline_path: Some("lsh0.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lsh1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lsh1.js",
+        baseline_path: Some("lsh1.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lsh2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lsh2.js",
+        baseline_path: Some("lsh2.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lsh3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lsh3.js",
+        baseline_path: Some("lsh3.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rsh_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rsh.js",
+        baseline_path: Some("rsh.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rsh0_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rsh0.js",
+        baseline_path: Some("rsh0.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rsh1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rsh1.js",
+        baseline_path: Some("rsh1.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rsh2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rsh2.js",
+        baseline_path: Some("rsh2.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rsh3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rsh3.js",
+        baseline_path: Some("rsh3.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rshu_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rshu.js",
+        baseline_path: Some("rshu.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rshu0_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rshu0.js",
+        baseline_path: Some("rshu0.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rshu1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rshu1.js",
+        baseline_path: Some("rshu1.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rshu2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rshu2.js",
+        baseline_path: Some("rshu2.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os_4683246_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn rshu3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS_4683246.js",
-        compile_flags: vec!["-loopinterpretcount:0", "-args", "summary", "-endargs"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        source_path: "rshu3.js",
+        baseline_path: Some("rshu3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(disable_jit))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-fn fabs1_js(#[case] variant: Variant) {
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lt_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "fabs1.js",
-        baseline_path: Some("fabs1.baseline"),
-        compile_flags: vec!["-off:backend", "-asmjs", "-testtrace:asmjs"],
-        tags: HashSet::from(["exclude_dynapogo", "require_backend", "require_asmjs"]),
+        source_path: "lt.js",
+        baseline_path: Some("lt.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -583,20 +704,16 @@ fn fabs1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn os_5248645_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lt0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "OS_5248645.js",
-        compile_flags: vec![
-            "-maxinterpretCount:2",
-            "-off:simplejit",
-            "-off:dynamicProfile",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        source_path: "lt0.js",
+        baseline_path: Some("lt0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -606,10 +723,14 @@ fn os_5248645_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn os_5553123_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lt1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "OS_5553123.js",
+        source_path: "lt1.js",
+        baseline_path: Some("lt1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -619,15 +740,14 @@ fn os_5553123_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn symbol_tostring_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lt2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "symbol_tostring.js",
-        compile_flags: vec![
-            "-maxsimplejitruncount:1",
-            "-maxinterpretcount:1",
-            "-force:fieldcopyprop",
-        ],
+        source_path: "lt2.js",
+        baseline_path: Some("lt2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -637,11 +757,14 @@ fn symbol_tostring_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn default_undodefer_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lt3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "default_undodefer.js",
-        compile_flags: vec!["-forcedeferparse", "-forceundodefer"],
+        source_path: "lt3.js",
+        baseline_path: Some("lt3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -651,11 +774,14 @@ fn default_undodefer_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_resetisdead_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn gt_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "Bug_resetisdead.js",
-        compile_flags: vec!["-on:prelowererpeeps"],
+        source_path: "gt.js",
+        baseline_path: Some("gt.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -665,11 +791,14 @@ fn bug_resetisdead_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_es5array_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn gt0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_es5array.js",
-        compile_flags: vec!["-off:NativeArray", "-ForceES5Array"],
+        source_path: "gt0.js",
+        baseline_path: Some("gt0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -679,11 +808,14 @@ fn bug_es5array_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn simpletypehandler_property_deletion_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn gt1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "simpletypehandler-property-deletion.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "gt1.js",
+        baseline_path: Some("gt1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -693,11 +825,14 @@ fn simpletypehandler_property_deletion_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn has_only_writable_data_properties_cross_context_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn gt2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "HasOnlyWritableDataProperties-cross-context.js",
-        compile_flags: vec!["-nonative"],
+        source_path: "gt2.js",
+        baseline_path: Some("gt2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -707,11 +842,14 @@ fn has_only_writable_data_properties_cross_context_js(#[case] variant: Variant) 
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug9080773_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn gt3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug9080773.js",
-        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        source_path: "gt3.js",
+        baseline_path: Some("gt3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -721,11 +859,14 @@ fn bug9080773_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug9080773_2_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn le_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug9080773_2.js",
-        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:1"],
+        source_path: "le.js",
+        baseline_path: Some("le.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -735,12 +876,14 @@ fn bug9080773_2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug8554038_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn le0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug8554038.js",
-        baseline_path: Some("bug8554038.baseline"),
-        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        source_path: "le0.js",
+        baseline_path: Some("le0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -748,12 +891,16 @@ fn bug8554038_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn invertloop_bug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn le1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "invertloop_bug.js",
-        tags: HashSet::from(["exclude_dynapogo"]),
+        source_path: "le1.js",
+        baseline_path: Some("le1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -763,11 +910,14 @@ fn invertloop_bug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn typespec_bug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn le2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "typespec_bug.js",
-        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:1", "-bgjit-"],
+        source_path: "le2.js",
+        baseline_path: Some("le2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -777,26 +927,31 @@ fn typespec_bug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deletenonconfig_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn le3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "deletenonconfig.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "le3.js",
+        baseline_path: Some("le3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(windows))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn misc_bugs_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ge_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "misc_bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "ge.js",
+        baseline_path: Some("ge.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -806,11 +961,14 @@ fn misc_bugs_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn cross_context_test_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ge0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "cross_context_test.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "ge0.js",
+        baseline_path: Some("ge0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -820,11 +978,14 @@ fn cross_context_test_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn json_bugs_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ge1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "json_bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "ge1.js",
+        baseline_path: Some("ge1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -834,11 +995,14 @@ fn json_bugs_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug10191241_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ge2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug10191241.js",
-        compile_flags: vec!["-forceundodefer"],
+        source_path: "ge2.js",
+        baseline_path: Some("ge2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -848,11 +1012,14 @@ fn bug10191241_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn inline_function_parameter_with_infinite_loop_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ge3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "InlineFunctionParameterWithInfiniteLoop.js",
-        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        source_path: "ge3.js",
+        baseline_path: Some("ge3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -862,17 +1029,14 @@ fn inline_function_parameter_with_infinite_loop_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn math_abs_type_spec_on_int_min_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn eq_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "Math.abs_TypeSpecOnIntMin.js",
-        compile_flags: vec![
-            "-loopinterpretcount:1",
-            "-bgjit-",
-            "-maxsimplejitruncount:1",
-            "-maxinterpretcount:1",
-            "-oopjit-",
-        ],
+        source_path: "eq.js",
+        baseline_path: Some("eq.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -882,12 +1046,14 @@ fn math_abs_type_spec_on_int_min_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug10026875_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn eq0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug10026875.js",
-        baseline_path: Some("bug10026875.baseline"),
-        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        source_path: "eq0.js",
+        baseline_path: Some("eq0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -897,11 +1063,14 @@ fn bug10026875_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn miss_to_generate_st_st_slot_for_jitloop_body_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn eq1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "MissToGenerateStStSlotForJITLoopBody.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit", "-oopjit-", "-bgjit-"],
+        source_path: "eq1.js",
+        baseline_path: Some("eq1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -911,11 +1080,14 @@ fn miss_to_generate_st_st_slot_for_jitloop_body_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn cmpfgpeep_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn eq2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "cmpfgpeep.js",
-        compile_flags: vec!["-maxsimplejitruncount:1", "-maxinterpretcount:1"],
+        source_path: "eq2.js",
+        baseline_path: Some("eq2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -925,10 +1097,14 @@ fn cmpfgpeep_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug11026788_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn eq3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug11026788.js",
+        source_path: "eq3.js",
+        baseline_path: Some("eq3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -936,13 +1112,16 @@ fn bug11026788_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug11576900_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ne_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug11576900.js",
-        compile_flags: vec!["-lic:1", "-bgjit-"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        source_path: "ne.js",
+        baseline_path: Some("ne.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -952,11 +1131,14 @@ fn bug11576900_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug12628506_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ne0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug12628506.js",
-        compile_flags: vec!["-loopinterpretcount:1"],
+        source_path: "ne0.js",
+        baseline_path: Some("ne0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -966,11 +1148,14 @@ fn bug12628506_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug13172050_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ne1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug13172050.js",
-        compile_flags: vec!["-pageheap:2"],
+        source_path: "ne1.js",
+        baseline_path: Some("ne1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -980,11 +1165,14 @@ fn bug13172050_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug13213828_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ne2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug13213828.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit"],
+        source_path: "ne2.js",
+        baseline_path: Some("ne2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -994,10 +1182,14 @@ fn bug13213828_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn value_info_loss_bug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn ne3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "valueInfoLossBug.js",
+        source_path: "ne3.js",
+        baseline_path: Some("ne3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1007,10 +1199,14 @@ fn value_info_loss_bug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn os11907290_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn seq_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "os11907290.js",
+        source_path: "seq.js",
+        baseline_path: Some("seq.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1020,17 +1216,14 @@ fn os11907290_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug13383062_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn seq0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug13383062.js",
-        baseline_path: Some("bug13383062.baseline"),
-        compile_flags: vec![
-            "-maxinterpretcount:2",
-            "-off:simplejit",
-            "-off:lossyinttypespec",
-            "-bgjit-",
-        ],
+        source_path: "seq0.js",
+        baseline_path: Some("seq0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1040,11 +1233,14 @@ fn bug13383062_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn profiled_args_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn seq1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "profiledArgs.js",
-        compile_flags: vec!["-off:inlineConstructors"],
+        source_path: "seq1.js",
+        baseline_path: Some("seq1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1054,11 +1250,14 @@ fn profiled_args_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug14323330_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn seq2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug14323330.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "seq2.js",
+        baseline_path: Some("seq2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1068,11 +1267,14 @@ fn bug14323330_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug13830477_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn seq3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug13830477.js",
-        baseline_path: Some("bug13830477.baseline"),
+        source_path: "seq3.js",
+        baseline_path: Some("seq3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1082,10 +1284,14 @@ fn bug13830477_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug15490382_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sne_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug15490382.js",
+        source_path: "sne.js",
+        baseline_path: Some("sne.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1095,11 +1301,14 @@ fn bug15490382_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os14326981_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sne0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS14326981.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "sne0.js",
+        baseline_path: Some("sne0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1109,10 +1318,14 @@ fn bug_os14326981_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug14057294_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sne1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug14057294.js",
+        source_path: "sne1.js",
+        baseline_path: Some("sne1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1122,11 +1335,14 @@ fn bug14057294_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os14115684_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sne2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS14115684.js",
-        compile_flags: vec!["-forceundodefer"],
+        source_path: "sne2.js",
+        baseline_path: Some("sne2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1136,10 +1352,14 @@ fn bug_os14115684_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn inbug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn sne3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "inbug.js",
+        source_path: "sne3.js",
+        baseline_path: Some("sne3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1149,10 +1369,14 @@ fn inbug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn inbug2_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn and_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "inbug2.js",
+        source_path: "and.js",
+        baseline_path: Some("and.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1162,10 +1386,14 @@ fn inbug2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn instancebug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn and0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "instancebug.js",
+        source_path: "and0.js",
+        baseline_path: Some("and0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1175,11 +1403,14 @@ fn instancebug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn missingvalue_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn and1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "missingvalue.js",
-        compile_flags: vec!["-off:ArrayMissingValueCheckHoist"],
+        source_path: "and1.js",
+        baseline_path: Some("and1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1189,10 +1420,14 @@ fn missingvalue_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn symcmpbug_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn and2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "symcmpbug.js",
+        source_path: "and2.js",
+        baseline_path: Some("and2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1202,22 +1437,14 @@ fn symcmpbug_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os17417473_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn and3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS17417473.js",
-        compile_flags: vec![
-            "-pageheap:2",
-            "-CollectGarbage",
-            "-lic:4",
-            "-Sja:4",
-            "-Fja:6",
-            "-maxInterpretCount:2",
-            "-MinBailOutsBeforeRejit:2",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        source_path: "and3.js",
+        baseline_path: Some("and3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1227,16 +1454,14 @@ fn bug_os17417473_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn home_obj_in_loop_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "HomeObjInLoop.js",
-        compile_flags: vec![
-            "-forceNative",
-            "-forcejitloopbody",
-            "-off:aggressiveinttypespec",
-            "-off:ArrayCheckHoist",
-        ],
+        source_path: "xor.js",
+        baseline_path: Some("xor.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1246,10 +1471,14 @@ fn home_obj_in_loop_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug17785360_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xor0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug17785360.js",
+        source_path: "xor0.js",
+        baseline_path: Some("xor0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1259,15 +1488,14 @@ fn bug17785360_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os17530048_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xor1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS17530048.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        source_path: "xor1.js",
+        baseline_path: Some("xor1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1277,15 +1505,14 @@ fn bug_os17530048_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn skipping_nested_deferred_incorrect_function_id_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xor2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "skipping_nested_deferred_incorrect_function_id.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        source_path: "xor2.js",
+        baseline_path: Some("xor2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1295,10 +1522,14 @@ fn skipping_nested_deferred_incorrect_function_id_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn with_split_scope_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn xor3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "withSplitScope.js",
+        source_path: "xor3.js",
+        baseline_path: Some("xor3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1308,10 +1539,14 @@ fn with_split_scope_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os17614914_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn or_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS17614914.js",
+        source_path: "or.js",
+        baseline_path: Some("or.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1321,10 +1556,14 @@ fn bug_os17614914_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn os_17745531_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn or0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "OS_17745531.js",
+        source_path: "or0.js",
+        baseline_path: Some("or0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1334,11 +1573,14 @@ fn os_17745531_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn super_undo_defer_issue_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn or1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "SuperUndoDeferIssue.js",
-        compile_flags: vec!["-forceundodefer"],
+        source_path: "or1.js",
+        baseline_path: Some("or1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1348,11 +1590,14 @@ fn super_undo_defer_issue_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn arguments_attr_issue_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn or2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "ArgumentsAttrIssue.js",
-        compile_flags: vec!["-force:cachedScope"],
+        source_path: "or2.js",
+        baseline_path: Some("or2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1362,15 +1607,14 @@ fn arguments_attr_issue_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deferred_stub_bugs_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn or3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "deferredStubBugs.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        source_path: "or3.js",
+        baseline_path: Some("or3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1380,11 +1624,14 @@ fn deferred_stub_bugs_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn super_access_in_global_lambda_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn land_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "SuperAccessInGlobalLambda.js",
-        baseline_path: Some("SuperAccessInGlobalLambda.baseline"),
+        source_path: "land.js",
+        baseline_path: Some("land.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1394,11 +1641,14 @@ fn super_access_in_global_lambda_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_5572_wscript_loadscript_loadmodule_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn land0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_5572_wscript_loadscript_loadmodule.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "land0.js",
+        baseline_path: Some("land0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1408,15 +1658,14 @@ fn bug_5572_wscript_loadscript_loadmodule_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn function_id_destructured_reparse_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn land1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "function_id_destructured_reparse.js",
-        compile_flags: vec![
-            "-useparserstatecache",
-            "-parserstatecache",
-            "-force:deferparse",
-        ],
+        source_path: "land1.js",
+        baseline_path: Some("land1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1426,17 +1675,14 @@ fn function_id_destructured_reparse_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_5585_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn land2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_5585.js",
-        compile_flags: vec![
-            "-esdynamicimport",
-            "-mutehosterrormsg",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        source_path: "land2.js",
+        baseline_path: Some("land2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1446,18 +1692,14 @@ fn bug_5585_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn loopcrash_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn land3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "loopcrash.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-MinMemOpCount:0",
-            "-werexceptionsupport",
-            "-bgjit-",
-            "-loopinterpretcount:1",
-        ],
+        source_path: "land3.js",
+        baseline_path: Some("land3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1467,11 +1709,14 @@ fn loopcrash_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os18260560_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lor_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS18260560.js",
-        compile_flags: vec!["-force:deferparse"],
+        source_path: "lor.js",
+        baseline_path: Some("lor.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1481,11 +1726,14 @@ fn bug_os18260560_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_5883_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lor0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_5883.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "lor0.js",
+        baseline_path: Some("lor0.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1495,11 +1743,14 @@ fn bug_5883_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os18926499_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lor1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS18926499.js",
-        compile_flags: vec!["-force:deferparse"],
+        source_path: "lor1.js",
+        baseline_path: Some("lor1.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1509,17 +1760,14 @@ fn bug_os18926499_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug19767482_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lor2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "Bug19767482.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-bgjit-",
-            "-oopjit-",
-            "-loopinterpretcount:1",
-            "-maxsimplejitruncount:2",
-        ],
+        source_path: "lor2.js",
+        baseline_path: Some("lor2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1529,17 +1777,14 @@ fn bug19767482_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug19948792_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn lor3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "Bug19948792.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-bgjit-",
-            "-oopjit-",
-            "-loopinterpretcount:1",
-            "-maxsimplejitruncount:2",
-        ],
+        source_path: "lor3.js",
+        baseline_path: Some("lor3.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1549,11 +1794,14 @@ fn bug19948792_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_6179_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn imul_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_6179.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        source_path: "imul.js",
+        baseline_path: Some("imul.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1563,17 +1811,14 @@ fn bug_6179_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os21193960_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn divbypow2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS21193960.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:2",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        source_path: "divbypow2.js",
+        baseline_path: Some("divbypow2.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1583,11 +1828,15 @@ fn bug_os21193960_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_6239_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn b9aa6bbf_0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_6239.js",
-        compile_flags: vec!["-force:deferparse"],
+        source_path: "B9AA6BBF.0.js",
+        baseline_path: Some("B9AA6BBF.0.baseline"),
+        compile_flags: vec!["-CollectGarbage"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1597,10 +1846,15 @@ fn bug_6239_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_6277_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn test6e55fa7a_0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_6277.js",
+        source_path: "6E55FA7A.0.js",
+        baseline_path: Some("6E55FA7A.0.baseline"),
+        compile_flags: vec!["-CollectGarbage"],
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1610,11 +1864,14 @@ fn bug_6277_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_os23102586_js(#[case] variant: Variant) {
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn attackoftheclones_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "bug_OS23102586.js",
-        compile_flags: vec!["-force:deferparse"],
+        source_path: "attackoftheclones.js",
+        baseline_path: Some("attackoftheclones.baseline"),
+        tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

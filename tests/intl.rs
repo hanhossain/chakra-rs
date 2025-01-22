@@ -1,20 +1,235 @@
 use common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
-use std::time::Duration;
 
 mod common;
-const DIRECTORY: &str = "chakracore-cxx/test/JSON";
+const DIRECTORY: &str = "chakracore-cxx/test/Intl";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jx1_js(#[case] variant: Variant) {
+fn collator_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "jx1.js",
-        baseline_path: Some("jx1.baseline"),
+        source_path: "Collator.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn common_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "common.js",
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn date_time_format_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "DateTimeFormat.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn number_format_options_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "NumberFormatOptions.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn supported_locales_of_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "SupportedLocalesOf.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_hidden_internals_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlHiddenInternals.js",
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_tainting_tests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlTaintingTests.js",
+        baseline_path: Some("IntlTaintingTests.baseline"),
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_tainting_pre_init_tests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlTaintingPreInitTests.js",
+        baseline_path: Some("IntlTaintingPreInitTests.baseline"),
+        tags: HashSet::from(["Intl", "exclude_noicu", "exclude_drt"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_built_ins_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlBuiltIns.js",
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_identities_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlIdentities.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[cfg(windows)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_returned_value_tests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlReturnedValueTests.js",
+        compile_flags: vec![
+            "-Intl",
+            "-debugLaunch",
+            "-dbgbaseline:IntlReturnedValueTests.js.dbg.baseline",
+        ],
+        tags: HashSet::from(["Intl", "exclude_noicu", "require_winglob"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_internals_hidden_from_exception_stack_test_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlInternalsHiddenFromExceptionStackTest.js",
+        baseline_path: Some("IntlInternalsHiddenFromExceptionStackTest.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_internals_hidden_from_first_chance_exception_stack_test_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlInternalsHiddenFromFirstChanceExceptionStackTest.js",
+        baseline_path: Some("IntlInternalsHiddenFromFirstChanceExceptionStackTest.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["Intl", "exclude_noicu"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[cfg(unix)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_platform_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlPlatform.js",
+        compile_flags: vec!["-IntlPlatform"],
+        tags: HashSet::from(["Intl", "exclude_noicu", "exclude_windows"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[cfg(unix)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn plural_rules_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "PluralRules.js",
+        tags: HashSet::from(["Intl", "exclude_noicu", "exclude_windows"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -25,258 +240,13 @@ fn jx1_js(#[case] variant: Variant) {
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
-#[timeout(common::SLOW_TEST_TIMEOUT)]
-fn jx2_js(#[case] variant: Variant) {
+#[timeout(std::time::Duration::from_secs(900))]
+fn tainting_prevention_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
-        source_path: "jx2.js",
-        baseline_path: Some("jx2.baseline"),
-        tags: HashSet::from(["slow"]),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn cacheassert_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "cacheassert.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-// This fails on macos for some reason
-#[cfg(all(not(target_os = "macos"), not(optimized)))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-#[ignore]
-#[timeout(common::SLOW_TEST_TIMEOUT)]
-fn stringify_replacer_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "stringify-replacer.js",
-        baseline_path: Some("stringify-replacer.baseline"),
-        compile_flags: vec!["-recyclerstress"],
-        tags: HashSet::from(["exclude_test", "slow"]),
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn arguments_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "arguments.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-#[timeout(Duration::from_secs(300))]
-fn replacer_function_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "replacerFunction.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn space_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "space.js",
-        baseline_path: Some("space.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn simple_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "simple.js",
-        baseline_path: Some("simple.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[cfg(not(optimized))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-#[ignore]
-#[timeout(common::SLOW_TEST_TIMEOUT)]
-fn simple_with_log_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "simple.withLog.js",
-        baseline_path: Some("simple.withLog.baseline"),
-        compile_flags: vec!["-recyclerstress", "-trace:JSON"],
-        tags: HashSet::from(["exclude_test", "slow"]),
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn simple_stringify_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "simple.stringify.js",
-        baseline_path: Some("simple.stringify.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[cfg(not(optimized))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn parse_with_gc_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "parseWithGc.js",
-        compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: HashSet::from(["exclude_test"]),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[cfg(not(optimized))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn json_cache_js_force_gc(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "jsonCache.js",
-        baseline_path: Some("jsonCache.baseline"),
-        compile_flags: vec!["-ForceGCAfterJSONParse"],
-        tags: HashSet::from(["exclude_test"]),
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn json_cache_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "jsonCache.js",
-        baseline_path: Some("jsonCache.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn json_parse_blue_548957_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "json_parse_Blue_548957.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn json_parse_walk_test_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "jsonParseWalkTest.js",
-        baseline_path: Some("jsonParseWalkTest.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn syntax_error_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "syntaxError.js",
-        baseline_path: Some("syntaxError.baseline"),
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn to_json_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "toJSON.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn stackoverflow_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "stackoverflow.js",
-        ..Default::default()
-    };
-    common::run_test_variant(&test, variant);
-}
-
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsonerrorbuffer_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "jsonerrorbuffer.js",
+        source_path: "TaintingPreventionTests.js",
+        compile_flags: vec!["-args", "summary", "-endargs"],
+        tags: HashSet::from(["Intl", "exclude_noicu", "Slow"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
