@@ -119,7 +119,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>TaggedFloats</files>
   </default>
