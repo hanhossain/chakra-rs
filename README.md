@@ -49,8 +49,11 @@ const DIRECTORY: &str = "chakracore-cxx/test/{}";
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
@@ -87,8 +90,11 @@ fn $1_js(#[case] variant: Variant) {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
@@ -105,8 +111,11 @@ fn $1_js() {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
@@ -124,8 +133,11 @@ fn $1_js() {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
