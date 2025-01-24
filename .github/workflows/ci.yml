@@ -34,12 +34,16 @@ jobs:
           - build-type: test
             build-profile: test
     env:
+      CARGO_INCREMENTAL: 1
       CARGO_TERM_COLOR: always
       NEXTEST_RETRIES: 2
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.build-profile }}
+          cache-all-crates: true
       - name: Install dependencies
         if: matrix.os != 'windows-latest'
         run: ${{ matrix.deps }}
