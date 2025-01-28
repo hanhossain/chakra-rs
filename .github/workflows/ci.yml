@@ -36,6 +36,7 @@ jobs:
     env:
       CARGO_TERM_COLOR: always
       NEXTEST_RETRIES: 2
+      RUSTFLAGS: -D warnings
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
