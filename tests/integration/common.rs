@@ -157,13 +157,10 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
     } else {
         println!("Actual output: {:#?}", actual);
         let mut passed = false;
-        for line in &actual {
+        for (index, line) in actual.iter().enumerate() {
             let lower = line.to_lowercase();
             if lower != "pass" && lower != "passed" && !lower.is_empty() {
-                panic!(
-                    "Test can only print `pass` or `passed`. Actual: {:?}",
-                    actual
-                );
+                panic!("Test can only print 'pass' or 'passed'. Index: {index}, output: {line}");
             } else {
                 passed = true;
             }
