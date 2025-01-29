@@ -690,7 +690,7 @@ fn special_symbol_capture_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -711,7 +711,7 @@ fn verify_parser_state_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -731,7 +731,7 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -752,7 +752,7 @@ fn bug_os17542375_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

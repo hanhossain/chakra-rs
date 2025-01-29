@@ -226,7 +226,7 @@ fn obj_lit_get_set_parse_only_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -310,7 +310,7 @@ fn array_length_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -326,7 +326,7 @@ fn array_length_js_forcees5array(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(optimized)]
+#[cfg(feature = "optimize")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -611,7 +611,7 @@ fn setters_arguments_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

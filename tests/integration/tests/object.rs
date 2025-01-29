@@ -308,7 +308,7 @@ fn more_properties_enumeration_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(optimized)]
+#[cfg(feature = "optimize")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

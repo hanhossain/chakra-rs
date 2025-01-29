@@ -2370,7 +2370,7 @@ fn test140_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn test141_js(#[case] variant: Variant) {
@@ -3110,7 +3110,7 @@ fn int_div_type_spec_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn bailonnoprofile_objtypespecstore_js(#[case] variant: Variant) {

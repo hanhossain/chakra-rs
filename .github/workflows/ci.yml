@@ -29,10 +29,8 @@ jobs:
             deps: brew install ninja icu4c
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
-          - build-type: debug
-            build-profile: dev
           - build-type: test
-            build-profile: test
+            features: optimize
     env:
       CARGO_TERM_COLOR: always
       NEXTEST_RETRIES: 2
@@ -56,11 +54,11 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
       - name: Build
-        run: cargo build -vv --profile ${{ matrix.build-profile }} --features compile-cpp
+        run: cargo build -vv --features compile-cpp ${{ matrix.features }}
       - name: Run tests
-        run: cargo nextest run --no-fail-fast --cargo-profile ${{ matrix.build-profile }} --features compile-cpp
+        run: cargo nextest run --no-fail-fast --features compile-cpp ${{ matrix.features }}
       - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --run-ignored only --cargo-profile ${{ matrix.build-profile }} --features compile-cpp
+        run: cargo nextest run --no-fail-fast --run-ignored only --features compile-cpp ${{ matrix.features }}
 
   build-cmake:
     runs-on: ${{ matrix.os }}

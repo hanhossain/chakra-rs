@@ -163,7 +163,7 @@ fn parse_int1_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

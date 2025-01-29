@@ -161,7 +161,7 @@ fn evalargs_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -389,7 +389,7 @@ fn test03_assign_js_force_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -419,7 +419,7 @@ fn test03_assign_sm_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -493,7 +493,7 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -538,7 +538,7 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -583,7 +583,7 @@ fn test06_arguments_js_force_strict_mode(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -599,7 +599,7 @@ fn test06_arguments_js_force_strict_mode_deferparse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -629,7 +629,7 @@ fn test06_arguments_sm_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -645,7 +645,7 @@ fn test06_arguments_sm_js_deferparse(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(optimized))]
+#[cfg(not(feature = "optimize"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

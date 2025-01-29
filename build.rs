@@ -1,24 +1,18 @@
 use std::path::PathBuf;
 
 fn main() {
-    let opt_level = std::env::var("OPT_LEVEL").unwrap();
-
     // only compile c++ when asked to, this allows cargo check to skip it until we need it.
     if cfg!(feature = "compile-cpp") {
         let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
+        let optimized = cfg!(feature = "optimize");
 
         let target = std::env::var("TARGET").unwrap();
         if target.contains("windows") {
-            build_msvc(&opt_level, debug);
+            build_msvc(optimized, debug);
         } else {
             #[cfg(unix)]
-            build_cmake();
+            build_cmake(optimized, debug);
         }
-    }
-
-    println!("cargo::rustc-check-cfg=cfg(optimized)");
-    if opt_level != "0" {
-        println!("cargo::rustc-cfg=optimized");
     }
 
     // set rstest timeout to 60s
@@ -31,11 +25,17 @@ fn main() {
 }
 
 #[cfg(unix)]
-fn build_cmake() {
+fn build_cmake(optimized: bool, debug: bool) {
     let mut cc_config = cc::Build::new();
     if !cc_config.get_compiler().is_like_clang() {
         cc_config.compiler("clang");
     }
+
+    let build_type = match (optimized, debug) {
+        (false, true) => "Debug",
+        (true, true) => "RelWithDebInfo",
+        (_, false) => "Release",
+    };
 
     let mut config = cmake::Config::new("chakracore-cxx");
     config
@@ -43,6 +43,7 @@ fn build_cmake() {
         .generator("Ninja")
         .define("CMAKE_CXX_COMPILER", "clang++")
         .define("CMAKE_C_COMPILER", "clang")
+        .profile(build_type)
         .build_target("ch");
 
     let target = std::env::var("TARGET").unwrap();
@@ -55,10 +56,10 @@ fn build_cmake() {
     config.build();
 }
 
-fn build_msvc(opt_level: &str, debug: bool) {
-    let configuration = match (opt_level, debug) {
-        ("0", _) => "Debug",
-        (_, true) => "Test",
+fn build_msvc(optimized: bool, debug: bool) {
+    let configuration = match (optimized, debug) {
+        (false, true) => "Debug",
+        (true, true) => "Test",
         (_, false) => "Release",
     };
 
