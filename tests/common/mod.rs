@@ -17,6 +17,32 @@ pub struct Test {
     pub tags: HashSet<&'static str>,
 }
 
+impl Test {
+    fn validate(&self) {
+        assert_ne!(self.directory, "");
+        assert_ne!(self.source_path, "");
+
+        let empty_vec: Vec<&&str> = Vec::new();
+
+        let invalid_flags = self
+            .compile_flags
+            .iter()
+            .filter(|flag| flag.contains(','))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            empty_vec, invalid_flags,
+            "no commas allowed in compile flags"
+        );
+
+        let invalid_tags = self
+            .tags
+            .iter()
+            .filter(|tag| tag.contains(','))
+            .collect::<Vec<_>>();
+        assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum Variant {
     Interpreted,
@@ -30,25 +56,7 @@ struct VariantConfig<'a> {
 }
 
 pub fn run_test_variant(test: &Test, variant: Variant) {
-    if cfg!(disable_jit) && variant != Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
-        return;
-    } else if !cfg!(disable_jit) && variant == Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported without cfg!(disable_jit)");
-        return;
-    }
-
-    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-
-    assert_ne!(test.directory, "");
-
-    let test_dir = manifest_dir.join(test.directory);
-    let source = test_dir.join(test.source_path);
-    println!("source_path: {:?}", source);
-
-    assert!(source.exists());
-
-    let out_dir = PathBuf::from(env!("OUT_DIR"));
+    test.validate();
 
     let mut variant_config = match variant {
         Variant::Interpreted => VariantConfig {
@@ -91,6 +99,24 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         "The following test tags were found in the variant's excluded tags: {:?}",
         both
     );
+
+    if cfg!(disable_jit) && variant != Variant::DisableJit {
+        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        return;
+    } else if !cfg!(disable_jit) && variant == Variant::DisableJit {
+        println!("Skipping {variant:?} as it's not supported without cfg!(disable_jit)");
+        return;
+    }
+
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+    let test_dir = manifest_dir.join(test.directory);
+    let source = test_dir.join(test.source_path);
+    println!("source_path: {:?}", source);
+
+    assert!(source.exists());
+
+    let out_dir = PathBuf::from(env!("OUT_DIR"));
 
     let mut ch = Command::new(out_dir.join("build/ch"));
     ch.current_dir(test_dir)
