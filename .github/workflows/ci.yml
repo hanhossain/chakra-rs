@@ -57,14 +57,10 @@ jobs:
         run: tzutil /s "Pacific Standard time"
       - name: Build
         run: cargo build --features ${{ matrix.features }} --all-targets
-      - name: Run tests (cargo nextest)
+      - name: Run tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
-      - name: Run tests (cargo test)
-        run: cargo test --no-fail-fast --features ${{ matrix.features }}
-      - name: Run slow tests (cargo nextest)
+      - name: Run slow tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
-      - name: Run slow tests (cargo test)
-        run: cargo test --no-fail-fast --features ${{ matrix.features }} -- --ignored
 
   build-cmake:
     runs-on: ${{ matrix.os }}
