@@ -56,7 +56,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
       - name: Build
-        run: cargo build -vv --features ${{ matrix.features }}
+        run: cargo build --features ${{ matrix.features }} --all-targets
       - name: Run tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
       - name: Run slow tests
