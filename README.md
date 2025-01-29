@@ -109,6 +109,28 @@ fn $1_js(#[case] variant: Variant) {
 }
 ```
 
+### files, compile flags, and tags
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<compile-flags>(.*)</compile-flags>\n.*<tags>(.*)</tags>\n.*</default>\n.*</test>
+```
+
+```rust
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec![todo!("$2")],
+        tags: HashSet::from([todo!("$3")]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+```
+
 ### files, baseline, and compile flags
 ```re
 // TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<baseline>(.*)</baseline>\n.*<compile-flags>(.*)</compile-flags>\n.*</default>\n.*</test>
