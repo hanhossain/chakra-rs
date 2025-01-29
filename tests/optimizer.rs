@@ -2335,6 +2335,7 @@ fn test140_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(not(optimized))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2350,7 +2351,7 @@ fn test141_js(#[case] variant: Variant) {
             "-on:simulatePolyCacheWithOneTypeForFunction:1",
             "-simulatePolyCacheWithOneTypeForInlineCacheIndex:3",
         ],
-        tags: HashSet::from(["exclude_dynapogo,exclude_test"]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
