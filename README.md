@@ -28,19 +28,23 @@ open graph.svg
 ## Migrate tests
 ### Header
 ```rust
+use common::Variant;
+use rstest::rstest;
+use std::collections::HashSet;
+
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/{}";
 ```
 
 ### add todo
 ```rust
-// <test>
+//\s*<test>
 ```
 
 ```rust
 
 // TODO (hanhossain): migrate
-// <test>
+$0
 ```
 
 ### files only
@@ -49,14 +53,17 @@ const DIRECTORY: &str = "chakracore-cxx/test/{}";
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 ```
 
@@ -87,15 +94,18 @@ fn $1_js(#[case] variant: Variant) {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
         compile_flags: vec![todo!("$2")],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 ```
 
@@ -105,8 +115,11 @@ fn $1_js() {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
@@ -114,7 +127,7 @@ fn $1_js() {
         compile_flags: vec![todo!("$3")],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 ```
 
@@ -124,8 +137,11 @@ fn $1_js() {
 ```
 
 ```rust
-#[test]
-fn $1_js() {
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "$1.js",
@@ -133,7 +149,7 @@ fn $1_js() {
         compile_flags: vec![todo!("$2")],
         ..Default::default()
     };
-    common::run_test(&test);
+    common::run_test_variant(&test, variant);
 }
 ```
 
