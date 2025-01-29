@@ -5,6 +5,7 @@ use rstest::rstest;
 #[cfg(target_arch = "x86_64")]
 use std::collections::HashSet;
 
+#[cfg(target_arch = "x86_64")]
 mod common;
 #[cfg(target_arch = "x86_64")]
 const DIRECTORY: &str = "chakracore-cxx/test/TaggedFloats";
