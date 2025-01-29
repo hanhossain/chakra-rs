@@ -1,9 +1,9 @@
-use common::Variant;
+use crate::common;
+use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 use std::time::Duration;
 
-mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Array";
 
 #[rstest]

@@ -1,7 +1,8 @@
-use common::Variant;
+use crate::common;
+use crate::common::Variant;
 use rstest::rstest;
 
-mod common;
+
 const DIRECTORY: &str = "chakracore-cxx/test/switchStatement";
 
 #[rstest]

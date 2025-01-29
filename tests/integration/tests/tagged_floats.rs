@@ -1,16 +1,10 @@
-#[cfg(target_arch = "x86_64")]
-use common::Variant;
-#[cfg(target_arch = "x86_64")]
+use crate::common;
+use crate::common::Variant;
 use rstest::rstest;
-#[cfg(target_arch = "x86_64")]
 use std::collections::HashSet;
 
-#[cfg(target_arch = "x86_64")]
-mod common;
-#[cfg(target_arch = "x86_64")]
 const DIRECTORY: &str = "chakracore-cxx/test/TaggedFloats";
 
-#[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

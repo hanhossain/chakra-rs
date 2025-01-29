@@ -5,6 +5,7 @@ mod bigint;
 mod boolean;
 mod bugs;
 mod closures;
+#[cfg(windows)]
 mod config_parsing;
 mod control_flow;
 mod conversions;
@@ -40,6 +41,7 @@ mod stack_trace;
 mod strict;
 mod strings;
 mod switch_statement;
+#[cfg(target_arch = "x86_64")]
 mod tagged_floats;
 mod tagged_integers;
 mod test262;
