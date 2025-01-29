@@ -4,7 +4,6 @@ use rstest::rstest;
 use std::collections::HashSet;
 use std::time::Duration;
 
-
 const DIRECTORY: &str = "chakracore-cxx/test/JSON";
 
 #[rstest]

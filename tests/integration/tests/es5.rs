@@ -3,7 +3,6 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-
 const DIRECTORY: &str = "chakracore-cxx/test/es5";
 
 #[rstest]
