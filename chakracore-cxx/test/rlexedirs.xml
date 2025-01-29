@@ -129,7 +129,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Optimizer</files>
     <tags>require_backend</tags>
