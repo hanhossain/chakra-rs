@@ -17,6 +17,32 @@ pub struct Test {
     pub tags: HashSet<&'static str>,
 }
 
+impl Test {
+    fn validate(&self) {
+        assert_ne!(self.directory, "");
+        assert_ne!(self.source_path, "");
+
+        let empty_vec: Vec<&&str> = Vec::new();
+
+        let invalid_flags = self
+            .compile_flags
+            .iter()
+            .filter(|flag| flag.contains(','))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            empty_vec, invalid_flags,
+            "no commas allowed in compile flags"
+        );
+
+        let invalid_tags = self
+            .tags
+            .iter()
+            .filter(|tag| tag.contains(','))
+            .collect::<Vec<_>>();
+        assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum Variant {
     Interpreted,
@@ -38,9 +64,9 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         return;
     }
 
-    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    test.validate();
 
-    assert_ne!(test.directory, "");
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     let test_dir = manifest_dir.join(test.directory);
     let source = test_dir.join(test.source_path);
