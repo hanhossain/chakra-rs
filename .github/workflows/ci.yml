@@ -26,7 +26,7 @@ jobs:
           - test
         include:
           - os: macos-latest
-            deps: brew install ninja icu4c
+            deps: brew install ninja icu4c --quiet
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
           - build-type: debug
