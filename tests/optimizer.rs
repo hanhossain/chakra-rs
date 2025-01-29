@@ -2479,16 +2479,33 @@ fn test142_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test143.js</files>
-//     <baseline>test143.baseline</baseline>
-//     <compile-flags>-bgJit- -off:simpleJit -loopInterpretCount:1 -testTrace:arrayCheckHoist</compile-flags>
-//     <!-- ch.exe doesn't output entire baseline before exiting; -testTrace flush issue? -->
-//     <tags>exclude_dynapogo,exclude_forceserialized,exclude_nonative,exclude_arm64</tags>
-//   </default>
-// </test>
+#[cfg(target_arch = "x86_64")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test143_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test143.js",
+        baseline_path: Some("test143.baseline"),
+        compile_flags: vec![
+            "-bgJit-",
+            "-off:simpleJit",
+            "-loopInterpretCount:1",
+            "-testTrace:arrayCheckHoist",
+        ],
+        // ch.exe doesn't output entire baseline before exiting; -testTrace flush issue?
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_forceserialized",
+            "exclude_nonative",
+            "exclude_arm64",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2601,31 +2618,53 @@ fn marktempnumberontempobjects_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>mul.js</files>
-//     <baseline />
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn mul_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "mul.js",
+        baseline_path: Some(""),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>NegativeZero.js</files>
-//     <baseline>NegativeZero.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn negative_zero_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "NegativeZero.js",
+        baseline_path: Some("NegativeZero.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Overflow.js</files>
-//     <baseline>Overflow.baseline</baseline>
-//     <tags>Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn overflow_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Overflow.js",
+        baseline_path: Some("Overflow.baseline"),
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2909,49 +2948,98 @@ fn missing_len_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ArrayCheckHoist.js</files>
-//     <baseline>ArrayCheckHoist_NoBailout.baseline</baseline>
-//     <compile-flags>-noNative -dynamicprofilecache:profile.dpl.ArrayCheckHoist.js</compile-flags>
-//     <tags>exclude_dynapogo,exclude_serialized,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn array_check_hoist_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayCheckHoist.js",
+        baseline_path: Some("ArrayCheckHoist_NoBailout.baseline"),
+        compile_flags: vec![
+            "-noNative",
+            "-dynamicprofilecache:profile.dpl.ArrayCheckHoist.js",
+        ],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ArrayCheckHoist.js</files>
-//     <baseline>ArrayCheckHoist_Bailout.baseline</baseline>
-//     <compile-flags>-off:arrayCheckHoist -args bailout -endArgs -dynamicprofileinput:profile.dpl.ArrayCheckHoist.js</compile-flags>
-//     <tags>exclude_interpreted,exclude_serialized,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn array_check_hoist_bailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayCheckHoist.js",
+        baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
+        compile_flags: vec![
+            "-off:arrayCheckHoist",
+            "-args",
+            "bailout",
+            "-endArgs",
+            "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
+        ],
+        tags: HashSet::from(["exclude_interpreted", "exclude_serialized", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ArrayCheckHoist.js</files>
-//     <baseline>ArrayCheckHoist_Bailout.baseline</baseline>
-//     <compile-flags>-args bailout -endArgs -off:fieldCopyProp -off:objTypeSpec -dynamicprofileinput:profile.dpl.ArrayCheckHoist.js</compile-flags>
-//     <tags>exclude_interpreted,exclude_serialized,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn array_check_hoist_bailout_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayCheckHoist.js",
+        baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
+        compile_flags: vec![
+            "-args",
+            "bailout",
+            "-endArgs",
+            "-off:fieldCopyProp",
+            "-off:objTypeSpec",
+            "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
+        ],
+        tags: HashSet::from(["exclude_interpreted", "exclude_serialized", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>ArrayCheckHoist.js</files>
-//     <baseline>ArrayCheckHoist_Bailout.baseline</baseline>
-//     <compile-flags>-args bailout -endArgs -dynamicprofileinput:profile.dpl.ArrayCheckHoist.js</compile-flags>
-//     <tags>exclude_interpreted,exclude_serialized,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn array_check_hoist_bailout_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayCheckHoist.js",
+        baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
+        compile_flags: vec![
+            "-args",
+            "bailout",
+            "-endArgs",
+            "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
+        ],
+        tags: HashSet::from(["exclude_interpreted", "exclude_serialized", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3110,15 +3198,26 @@ fn int_div_type_spec_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bailonnoprofile_objtypespecstore.js</files>
-//     <compile-flags>-recyclerverify:run -off:simplejit -maxinterpretcount:2</compile-flags>
-//     <tags>exclude_test,exclude_dynapogo</tags>
-//     <baseline />
-//   </default>
-// </test>
+#[cfg(not(optimized))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bailonnoprofile_objtypespecstore_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bailonnoprofile_objtypespecstore.js",
+        baseline_path: Some(""),
+        compile_flags: vec![
+            "-recyclerverify:run",
+            "-off:simplejit",
+            "-maxinterpretcount:2",
+        ],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3618,15 +3717,27 @@ fn mul_rejit_bug_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>testsimplepathbrfold.js</files>
-//     <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:1 -oopjit- -trace:pathdepbranchfolding -bgjit-</compile-flags>
-//     <baseline>testsimplepathbrfold.baseline</baseline>
-//     <tags>exclude_dynapogo,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn testsimplepathbrfold_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "testsimplepathbrfold.js",
+        baseline_path: Some("testsimplepathbrfold.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-oopjit-",
+            "-trace:pathdepbranchfolding",
+            "-bgjit-",
+        ],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3704,22 +3815,34 @@ fn bugsimplepathbrfold4_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bugsimplepathbrfold5.js</files>
-//     <tags>exclude_dynapogo,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bugsimplepathbrfold5_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugsimplepathbrfold5.js",
+        tags: HashSet::from(["exclude_dynapogo", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bugsimplepathbrfoldgetter.js</files>
-//     <baseline>bugsimplepathbrfoldgetter.baseline</baseline>
-//     <tags>exclude_dynapogo,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bugsimplepathbrfoldgetter_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugsimplepathbrfoldgetter.js",
+        baseline_path: Some("bugsimplepathbrfoldgetter.baseline"),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
