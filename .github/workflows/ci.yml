@@ -26,7 +26,7 @@ jobs:
           - test
         include:
           - os: macos-latest
-            deps: brew install ninja icu4c
+            deps: brew install ninja icu4c --quiet
           - os: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
           - build-type: debug
@@ -56,11 +56,11 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: tzutil /s "Pacific Standard time"
       - name: Build
-        run: cargo build -vv --features ${{ matrix.features }}
+        run: cargo build --features ${{ matrix.features }} --all-targets
       - name: Run tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
       - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --run-ignored only --features ${{ matrix.features }}
+        run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
 
   build-cmake:
     runs-on: ${{ matrix.os }}
