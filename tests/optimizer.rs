@@ -1,5 +1,6 @@
 use common::Variant;
 use rstest::rstest;
+use std::collections::HashSet;
 
 mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/Optimizer";
@@ -1748,14 +1749,24 @@ fn test101_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test102.js</files>
-//     <compile-flags>-minInterpretCount:4 -maxInterpretCount:4 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test102_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test102.js",
+        compile_flags: vec![
+            "-minInterpretCount:4",
+            "-maxInterpretCount:4",
+            "-off:simpleJit",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1800,86 +1811,184 @@ fn test106_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test107.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -off:lossyIntTypeSpec -force:jitLoopBody</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test107_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test107.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-off:lossyIntTypeSpec",
+            "-force:jitLoopBody",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test108.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test108_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test108.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test109.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -off:aggressiveIntTypeSpec -off:lossyIntTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test109_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test109.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-off:aggressiveIntTypeSpec",
+            "-off:lossyIntTypeSpec",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test110.js</files>
-//     <compile-flags>-bgJit- -minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -loopInterpretCount:0 -off:aggressiveIntTypeSpec -off:lossyIntTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test110_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test110.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-loopInterpretCount:0",
+            "-off:aggressiveIntTypeSpec",
+            "-off:lossyIntTypeSpec",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test111.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -force:rejit -force:deferparse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test111_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test111.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-force:rejit",
+            "-force:deferparse",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test112.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -off:typedArrayTypeSpec</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test112_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test112.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-off:typedArrayTypeSpec",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test113.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -off:arrayMissingValueCheckHoist</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test113_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test113.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-off:arrayMissingValueCheckHoist",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test115.js</files>
-//     <compile-flags>-args bailout -endArgs</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test115_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test115.js",
+        compile_flags: vec!["-args", "bailout", "-endArgs"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test116.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test116_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test116.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1911,32 +2020,54 @@ fn test106_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test120.js</files>
-//     <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test120_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test120.js",
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test121.js</files>
-//     <compile-flags>-bgJit- -loopInterpretCount:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test121_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test121.js",
+        compile_flags: vec!["-bgJit-", "-loopInterpretCount:1"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test122.js</files>
-//     <compile-flags>-bgJit- -maxInterpretCount:2 -loopInterpretCount:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test122_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test122.js",
+        compile_flags: vec!["-bgJit-", "-maxInterpretCount:2", "-loopInterpretCount:1"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -1948,32 +2079,56 @@ fn test106_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test124.js</files>
-//     <compile-flags>-bgJit- -loopInterpretCount:1 -maxInterpretCount:2 -maxSimpleJitRunCount:0 -forceSerialized</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test124_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test124.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-loopInterpretCount:1",
+            "-maxInterpretCount:2",
+            "-maxSimpleJitRunCount:0",
+            "-forceSerialized",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test125.js</files>
-//     <compile-flags>-forceNative -off:fullJit</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test125_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test125.js",
+        compile_flags: vec!["-forceNative", "-off:fullJit"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test126.js</files>
-//     <compile-flags>-bgJit- -fullJitAfter:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test126_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test126.js",
+        compile_flags: vec!["-bgJit-", "-fullJitAfter:1"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1998,41 +2153,69 @@ fn test127_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test129.js</files>
-//     <compile-flags>-bgJit- -loopInterpretCount:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test129_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test129.js",
+        compile_flags: vec!["-bgJit-", "-loopInterpretCount:1"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test130.js</files>
-//     <compile-flags>-bgJit- -fullJitAfter:1 -force:deferParse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test130_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test130.js",
+        compile_flags: vec!["-bgJit-", "-fullJitAfter:1", "-force:deferParse"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test131.js</files>
-//     <compile-flags>-bgJit- -fullJitAfter:1 -off:fieldCopyProp</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test131_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test131.js",
+        compile_flags: vec!["-bgJit-", "-fullJitAfter:1", "-off:fieldCopyProp"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test132.js</files>
-//     <compile-flags>-bgJit- -fullJitAfter:1 -off:eliminateArrayAccessHelperCall</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test132_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test132.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-fullJitAfter:1",
+            "-off:eliminateArrayAccessHelperCall",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -2077,32 +2260,55 @@ fn test135_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test137.js</files>
-//     <compile-flags>-bgJit- -simpleJitAfter:1 -fullJitAfter:3 -loopInterpretCount:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test137_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test137.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-simpleJitAfter:1",
+            "-fullJitAfter:3",
+            "-loopInterpretCount:1",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test138.js</files>
-//     <compile-flags>-bgJit- -bgJitDelay:0 -loopInterpretCount:50</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test138_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test138.js",
+        compile_flags: vec!["-bgJit-", "-bgJitDelay:0", "-loopInterpretCount:50"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test138.js</files>
-//     <compile-flags>-bgJit- -bgJitDelay:0</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test138_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test138.js",
+        compile_flags: vec!["-bgJit-", "-bgJitDelay:0"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -2114,32 +2320,56 @@ fn test135_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test140.js</files>
-//     <compile-flags>-bgJit- -off:simpleJit -fullJitAfter:1</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test140_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test140.js",
+        compile_flags: vec!["-bgJit-", "-off:simpleJit", "-fullJitAfter:1"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test141.js</files>
-//     <compile-flags>-bgJit- -off:simpleJit -fullJitAfter:2 -on:simulatePolyCacheWithOneTypeForFunction:1 -simulatePolyCacheWithOneTypeForInlineCacheIndex:3</compile-flags>
-//     <tags>exclude_dynapogo,exclude_test</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test141_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test141.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-off:simpleJit",
+            "-fullJitAfter:2",
+            "-on:simulatePolyCacheWithOneTypeForFunction:1",
+            "-simulatePolyCacheWithOneTypeForInlineCacheIndex:3",
+        ],
+        tags: HashSet::from(["exclude_dynapogo,exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test142.js</files>
-//     <compile-flags>-bgJit- -off:simpleJit -fullJitAfter:2</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test142_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test142.js",
+        compile_flags: vec!["-bgJit-", "-off:simpleJit", "-fullJitAfter:2"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -2152,23 +2382,45 @@ fn test135_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test144.js</files>
-//     <compile-flags>-bgJit- -off:simpleJit -fullJitAfter:1 -off:arrayCheckHoist</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test144_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test144.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-off:simpleJit",
+            "-fullJitAfter:1",
+            "-off:arrayCheckHoist",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>test145.js</files>
-//     <compile-flags>-bgJit- -off:simpleJit -fullJitAfter:1 -force:deferParse</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn test145_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "test145.js",
+        compile_flags: vec![
+            "-bgJit-",
+            "-off:simpleJit",
+            "-fullJitAfter:1",
+            "-force:deferParse",
+        ],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2587,14 +2839,20 @@ fn bound_check_hoist_bug_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>Miscellaneous_ForceJitLoopBody.js</files>
-//     <compile-flags>-bgJit- -force:jitLoopBody</compile-flags>
-//     <tags>exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn miscellaneous_force_jit_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Miscellaneous_ForceJitLoopBody.js",
+        compile_flags: vec!["-bgJit-", "-force:jitLoopBody"],
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3388,14 +3646,20 @@ fn aux_slot_type_transition_2_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>bug_gh6325.js</files>
-//     <compile-flags>-off:backend -forcejitloopbody</compile-flags>
-//     <tags>exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_gh6325_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_gh6325.js",
+        compile_flags: vec!["-off:backend", "-forcejitloopbody"],
+        tags: HashSet::from(["exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
