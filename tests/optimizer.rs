@@ -2464,7 +2464,6 @@ fn test143_js(#[case] variant: Variant) {
             "exclude_nonative",
             "exclude_arm64",
         ]),
-        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
