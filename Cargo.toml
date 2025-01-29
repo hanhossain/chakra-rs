@@ -15,4 +15,4 @@ rstest = "0.24.0"
 
 [features]
 compile-cpp = []
-optimize = []
+optimized-tests = []

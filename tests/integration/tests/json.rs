@@ -51,7 +51,7 @@ fn cacheassert_js(#[case] variant: Variant) {
 }
 
 // This fails on macos for some reason
-#[cfg(all(not(target_os = "macos"), not(feature = "optimize")))]
+#[cfg(all(not(target_os = "macos"), not(feature = "optimized-tests")))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -124,7 +124,7 @@ fn simple_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -156,7 +156,7 @@ fn simple_stringify_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -172,7 +172,7 @@ fn parse_with_gc_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

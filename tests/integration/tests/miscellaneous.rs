@@ -19,7 +19,7 @@ fn has_only_writable_data_properties_cache_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

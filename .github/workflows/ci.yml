@@ -32,7 +32,7 @@ jobs:
           - build-type: debug
             features: compile-cpp
           - build-type: test
-            features: compile-cpp,optimize
+            features: compile-cpp,optimized-tests
     env:
       CARGO_TERM_COLOR: always
       NEXTEST_RETRIES: 2

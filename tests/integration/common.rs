@@ -78,7 +78,7 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         },
     };
 
-    let exclude_build_type = if cfg!(feature = "optimize") {
+    let exclude_build_type = if cfg!(feature = "optimized-tests") {
         "exclude_test"
     } else {
         "exclude_debug"

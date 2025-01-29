@@ -298,7 +298,7 @@ fn split_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
-#[cfg(feature = "optimize")]
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

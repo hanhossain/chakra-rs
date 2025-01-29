@@ -244,7 +244,7 @@ fn formatting_xplat_js(#[case] variant: Variant) {
 //   </condition>
 // </test>
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]

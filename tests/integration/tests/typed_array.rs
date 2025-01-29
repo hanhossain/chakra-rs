@@ -532,7 +532,7 @@ fn dataview1_js(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-#[cfg(not(feature = "optimize"))]
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]

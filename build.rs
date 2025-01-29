@@ -4,7 +4,7 @@ fn main() {
     // only compile c++ when asked to, this allows cargo check to skip it until we need it.
     if cfg!(feature = "compile-cpp") {
         let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
-        let optimized = cfg!(feature = "optimize");
+        let optimized = cfg!(feature = "optimized-tests");
 
         let target = std::env::var("TARGET").unwrap();
         if target.contains("windows") {
