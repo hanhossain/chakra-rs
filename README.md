@@ -18,6 +18,8 @@ Generate graph
 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang --graphviz=graph.dot ..
 ```
 
+See [dependency-graph.md](./dependency-graph.md)
+
 Visualize graph
 ```sh
 brew install graphviz
