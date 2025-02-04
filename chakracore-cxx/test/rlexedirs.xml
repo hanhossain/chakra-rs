@@ -241,7 +241,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>FixedFields</files>
     <tags>require_backend</tags>

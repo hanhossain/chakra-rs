@@ -17,6 +17,7 @@ mod es6;
 mod es6module;
 mod es7;
 mod fieldopts;
+mod fixed_fields;
 mod function;
 mod generated;
 mod global_functions;
