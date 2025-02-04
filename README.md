@@ -30,11 +30,11 @@ open graph.svg
 ## Migrate tests
 ### Header
 ```rust
-use common::Variant;
+use crate::common;
+use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-mod common;
 const DIRECTORY: &str = "chakracore-cxx/test/{}";
 ```
 
