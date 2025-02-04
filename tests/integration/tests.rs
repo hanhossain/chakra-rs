@@ -17,6 +17,7 @@ mod es6;
 mod es6module;
 mod es7;
 mod fieldopts;
+#[cfg(not(disable_jit))]
 mod fixed_fields;
 mod function;
 mod generated;

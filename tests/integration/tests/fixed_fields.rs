@@ -8,7 +8,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/FixedFields";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn non_fixed_field_hoist_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -24,7 +23,6 @@ fn non_fixed_field_hoist_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn non_fixed_field_hoist_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -39,7 +37,6 @@ fn non_fixed_field_hoist_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_fields_on_singletons_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -54,7 +51,6 @@ fn fixed_fields_on_singletons_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_fields_on_prototypes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -69,7 +65,6 @@ fn fixed_fields_on_prototypes_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_fields_type_system_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -84,7 +79,6 @@ fn fixed_fields_type_system_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_fields_invalidation_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -99,7 +93,6 @@ fn fixed_fields_invalidation_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_fields_with_property_string_cache_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -114,7 +107,6 @@ fn fixed_fields_with_property_string_cache_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_with_different_type_handlers_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -130,7 +122,6 @@ fn fixed_data_with_different_type_handlers_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_with_different_type_handlers_prototypes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -146,7 +137,6 @@ fn fixed_data_with_different_type_handlers_prototypes_js(#[case] variant: Varian
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_polymorphism_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -162,7 +152,6 @@ fn fixed_data_polymorphism_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_type_transition_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -178,7 +167,6 @@ fn fixed_data_type_transition_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_dictionary_type_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -194,7 +182,6 @@ fn fixed_data_dictionary_type_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_with_subsequent_uses_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -210,7 +197,6 @@ fn fixed_data_with_subsequent_uses_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixed_data_with_cache_sharing_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -226,7 +212,6 @@ fn fixed_data_with_cache_sharing_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn bug677247_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -242,7 +227,6 @@ fn bug677247_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn bug712503_fixed_accessors_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -258,7 +242,6 @@ fn bug712503_fixed_accessors_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn fixedmethods_poly_inlining_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -277,7 +260,6 @@ fn fixedmethods_poly_inlining_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn bug_vso_os_1015467_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
