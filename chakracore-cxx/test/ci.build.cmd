@@ -110,9 +110,9 @@ if "%_CoreBuild%" EQU "0" (
 
 echo MSBuildArgs are %_msBuildArgs%
 
-echo msbuild %_msBuildArgs% /m /p:Configuration=%_ChakraBuildConfig% /p:Platform=%_BuildArch% %_ChakraSolution% %_msbuildProj% %_LoggingParams% %_targets% /verbosity:minimal /nr:false
+echo msbuild %_msBuildArgs% /m /p:Configuration=%_ChakraBuildConfig% /p:Platform=%_BuildArch% %_ChakraSolution% %_msbuildProj% %_LoggingParams% %_targets% /verbosity:normal /nr:false
 
-msbuild %_msBuildArgs% /m /p:Configuration=%_ChakraBuildConfig% /p:Platform=%_BuildArch% %_ChakraSolution% %_msbuildProj% %_LoggingParams% %_targets% /verbosity:minimal /nr:false
+msbuild %_msBuildArgs% /m /p:Configuration=%_ChakraBuildConfig% /p:Platform=%_BuildArch% %_ChakraSolution% %_msbuildProj% %_LoggingParams% %_targets% /verbosity:normal /nr:false
 
 goto :end
 
