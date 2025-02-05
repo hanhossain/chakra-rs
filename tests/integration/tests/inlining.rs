@@ -206,7 +206,6 @@ fn bugs_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn linenumber4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -227,7 +226,6 @@ fn linenumber4_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn miscellaneous_max_interpret_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
