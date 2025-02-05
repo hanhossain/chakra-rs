@@ -39,6 +39,8 @@ mod number;
 mod object;
 mod operators;
 mod optimizer;
+#[cfg(not(disable_jit))]
+mod perf_hint;
 mod prototypes;
 mod reg_alloc;
 mod regex;

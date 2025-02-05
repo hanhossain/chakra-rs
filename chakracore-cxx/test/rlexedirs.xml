@@ -291,7 +291,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>PerfHint</files>
     <tags>exclude_serialized,exclude_snap,require_backend</tags>
