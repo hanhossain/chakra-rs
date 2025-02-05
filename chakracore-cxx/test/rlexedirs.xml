@@ -247,7 +247,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>inlining</files>
     <tags>require_backend</tags>

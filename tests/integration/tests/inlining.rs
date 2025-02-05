@@ -5,14 +5,20 @@ use std::collections::HashSet;
 
 const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arg.js</files>
-//       <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//       <baseline>arg.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn arg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arg.js",
+        baseline_path: Some("arg.baseline"),
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -97,91 +103,163 @@ const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>InlinedConstructorBailout.js</files>
-//       <baseline>InlinedConstructorBailout.baseline</baseline>
-//       <compile-flags>-force:inline</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlined_constructor_bailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "InlinedConstructorBailout.js",
+        baseline_path: Some("InlinedConstructorBailout.baseline"),
+        compile_flags: vec!["-force:inline"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlining_with_arguments_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inliningWithArguments.js",
+        compile_flags: vec!["-force:inline"],
+        tags: HashSet::from(["require_backend", "exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlining_apply_target_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inliningApplyTarget.js",
+        baseline_path: Some("inliningApplyTarget.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn apply_bugs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "applyBugs.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn apply_bailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "applyBailout.js",
+        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:0"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn apply_bailout_args_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "applyBailoutArgs.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bugs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugs.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simplejit",
+            "-loopinterpretcount:1",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn linenumber4_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber4.js",
+        baseline_path: Some("linenumber4.baseline"),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-loopinterpretcount:0",
+            "-force:inline",
+            "-bgjit-",
+        ],
+        tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn miscellaneous_max_interpret_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "Miscellaneous_MaxInterpret.js",
+        baseline_path: Some("Miscellaneous_MaxInterpret.baseline"),
+        compile_flags: vec![
+            "-minInterpretCount:1",
+            "-maxInterpretCount:1",
+            "-off:simpleJit",
+            "-force:inline",
+        ],
+        tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn no_prof_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "NoProf.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inliningWithArguments.js</files>
-//       <compile-flags>-force:inline</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inliningApplyTarget.js</files>
-//       <baseline>inliningApplyTarget.baseline</baseline>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>applyBugs.js</files>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>applyBailout.js</files>
-//       <compile-flags>-maxinterpretcount:1 -maxsimplejitruncount:0</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>applyBailoutArgs.js</files>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bugs.js</files>
-//       <compile-flags>-maxinterpretcount:1 -off:simplejit -loopinterpretcount:1</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber4.js</files>
-//       <baseline>linenumber4.baseline</baseline>
-//       <compile-flags>-maxinterpretcount:1 -off:simpleJit -loopinterpretcount:0 -force:inline -bgjit-</compile-flags>
-//       <tags>exclude_dynapogo</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>Miscellaneous_MaxInterpret.js</files>
-//       <baseline>Miscellaneous_MaxInterpret.baseline</baseline>
-//       <compile-flags>-minInterpretCount:1 -maxInterpretCount:1 -off:simpleJit -force:inline</compile-flags>
-//       <tags>exclude_dynapogo</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>NoProf.js</files>
-//     </default>
-//   </test>
 // <!-- Random stack overflow with forced inlining
-
-// TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>bug515849.js</files>
@@ -192,216 +270,408 @@ const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 //   </test>
 // -->
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inlineBuiltIns.js</files>
-//       <compile-flags> -maxInterpretCount:1 -msjrc:0 </compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inline_built_ins_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inlineBuiltIns.js",
+        compile_flags: vec!["-maxInterpretCount:1", "-msjrc:0"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>spread.js</files>
-//       <compile-flags>-maxSimpleJitRunCount:1 -maxInterpretCount:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn spread_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "spread.js",
+        compile_flags: vec!["-maxSimpleJitRunCount:1", "-maxInterpretCount:1"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>polyInliningFixedMethods.js</files>
-//       <baseline>polyInliningFixedMethods.baseline</baseline>
-//       <compile-flags>-maxInterpretCount:1 -maxSimpleJitRunCount:1 -ExtendedErrorStackForTestHost</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn poly_inlining_fixed_methods_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "polyInliningFixedMethods.js",
+        baseline_path: Some("polyInliningFixedMethods.baseline"),
+        compile_flags: vec![
+            "-maxInterpretCount:1",
+            "-maxSimpleJitRunCount:1",
+            "-ExtendedErrorStackForTestHost",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug650495.js</files>
-//       <baseline>bug650495.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug650495_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug650495.js",
+        baseline_path: Some("bug650495.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>polyInliningBugs.js</files>
-//       <compile-flags>-maxInterpretCount:1 -maxSimpleJitRunCount:1 -off:aggressiveinttypespec</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn poly_inlining_bugs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "polyInliningBugs.js",
+        compile_flags: vec![
+            "-maxInterpretCount:1",
+            "-maxSimpleJitRunCount:1",
+            "-off:aggressiveinttypespec",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>polyInliningUninitializedRetVal.js</files>
-//       <baseline>polyInliningUninitializedRetVal.baseline</baseline>
-//       <compile-flags>-bgjit- -maxinterpretcount:1 -maxsimplejitruncount:1 -force:inline -stress:BailOnNoProfile</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn poly_inlining_uninitialized_ret_val_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "polyInliningUninitializedRetVal.js",
+        baseline_path: Some("polyInliningUninitializedRetVal.baseline"),
+        compile_flags: vec![
+            "-bgjit-",
+            "-maxinterpretcount:1",
+            "-maxsimplejitruncount:1",
+            "-force:inline",
+            "-stress:BailOnNoProfile",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>callTarget.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn call_target_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "callTarget.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug594138.js</files>
-//       <compile-flags>-maxinterpretcount:1 -force:scriptfunctionwithinlinecache</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug594138_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug594138.js",
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-force:scriptfunctionwithinlinecache",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inlineeArgoutCount.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlinee_argout_count_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inlineeArgoutCount.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>markTempArgOut.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn mark_temp_arg_out_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "markTempArgOut.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug1469518.js</files>
-//       <baseline>bug1469518.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug1469518_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug1469518.js",
+        baseline_path: Some("bug1469518.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug1355201.js</files>
-//       <baseline>bug1355201.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug1355201_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug1355201.js",
+        baseline_path: Some("bug1355201.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>recursive_inline.js</files>
-//       <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn recursive_inline_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "recursive_inline.js",
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>recursive_inline2.js</files>
-//       <compile-flags>-maxinterpretcount:2 -off:simplejit</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn recursive_inline2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "recursive_inline2.js",
+        compile_flags: vec!["-maxinterpretcount:2", "-off:simplejit"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug2328551.js</files>
-//       <baseline>bug2328551.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug2328551_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug2328551.js",
+        baseline_path: Some("bug2328551.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug2269097.js</files>
-//       <compile-flags>-maxinterpretcount:1 -off:simplejit</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug2269097_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug2269097.js",
+        compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>OS_2733280.js</files>
-//       <compile-flags>-loopinterpretcount:1 -bgjit- -maxsimplejitruncount:1 -maxinterpretcount:1 -force:scriptfunctionwithinlinecache</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn os_2733280_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_2733280.js",
+        compile_flags: vec![
+            "-loopinterpretcount:1",
+            "-bgjit-",
+            "-maxsimplejitruncount:1",
+            "-maxinterpretcount:1",
+            "-force:scriptfunctionwithinlinecache",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>OS_2733280.js</files>
-//       <compile-flags>-loopinterpretcount:1 -bgjit- -maxsimplejitruncount:1 -maxinterpretcount:1 -force:scriptfunctionwithinlinecache -off:stackargopt</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn os_2733280_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "OS_2733280.js",
+        compile_flags: vec![
+            "-loopinterpretcount:1",
+            "-bgjit-",
+            "-maxsimplejitruncount:1",
+            "-maxinterpretcount:1",
+            "-force:scriptfunctionwithinlinecache",
+            "-off:stackargopt",
+        ],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>builtInApplyTarget.js</files>
-//       <baseline>builtInApplyTarget.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn built_in_apply_target_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "builtInApplyTarget.js",
+        baseline_path: Some("builtInApplyTarget.baseline"),
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>stackTrace.js</files>
-//       <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-//       <baseline>stackTrace.baseline</baseline>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn stack_trace_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "stackTrace.js",
+        baseline_path: Some("stackTrace.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>missingInlineeEnd.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn missing_inlinee_end_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "missingInlineeEnd.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inliningInLoopBody.js</files>
-//       <compile-flags>-loopinterpretcount:1 -bgjit- -force:inline</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlining_in_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inliningInLoopBody.js",
+        compile_flags: vec!["-loopinterpretcount:1", "-bgjit-", "-force:inline"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug9936017.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug9936017_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug9936017.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug11265991.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug11265991_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug11265991.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>profilingbug.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn profilingbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "profilingbug.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug12528802.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn bug12528802_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug12528802.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>callToDynamicScript.js</files>
-//       <compile-flags>-loopinterpretcount:1 -bgjit-</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn call_to_dynamic_script_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "callToDynamicScript.js",
+        compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -433,20 +703,32 @@ const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>recursiveCallbacks.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn recursive_callbacks_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "recursiveCallbacks.js",
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argoptbugs.js</files>
-//       <compile-flags>-mic:1 -bgjit- -off:simplejit</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn argoptbugs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argoptbugs.js",
+        compile_flags: vec!["-mic:1", "-bgjit-", "-off:simplejit"],
+        tags: HashSet::from(["require_backend"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
