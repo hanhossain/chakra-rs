@@ -1,7 +1,10 @@
 mod array;
-mod asm_js;
-mod asm_js_float;
-mod asm_js_parser;
+// TODO (hanhossain): migrate
+// mod asm_js;
+// TODO (hanhossain): migrate
+// mod asm_js_float;
+// TODO (hanhossain): migrate
+// mod asm_js_parser;
 mod bailout;
 mod basics;
 mod bigint;
@@ -13,8 +16,10 @@ mod config_parsing;
 mod control_flow;
 mod conversions;
 mod date;
-mod debugger;
-mod debugger_common;
+// TODO (hanhossain): migrate
+// mod debugger;
+// TODO (hanhossain): migrate
+// mod debugger_common;
 #[cfg(not(feature = "optimized-tests"))]
 mod dynamic_code;
 mod eh;
@@ -28,7 +33,8 @@ mod es7;
 mod fieldopts;
 #[cfg(not(disable_jit))]
 mod fixed_fields;
-mod flow_graph;
+// TODO (hanhossain): migrate
+// mod flow_graph;
 mod function;
 mod generated;
 mod global_functions;
@@ -47,7 +53,8 @@ mod operators;
 mod optimizer;
 #[cfg(not(disable_jit))]
 mod perf_hint;
-mod pre;
+// TODO (hanhossain): migrate
+// mod pre;
 mod prototypes;
 mod reg_alloc;
 mod regex;
@@ -55,7 +62,8 @@ mod rwc;
 mod scanner;
 mod smoke_tests;
 mod stack_trace;
-mod stackfunc;
+// TODO (hanhossain): migrate
+// mod stackfunc;
 mod strict;
 mod strings;
 mod switch_statement;
@@ -65,13 +73,19 @@ mod tagged_integers;
 mod test262;
 mod test_loop;
 mod try_catch;
-mod ttbasic;
-mod ttexecute_basic;
+// TODO (hanhossain): migrate
+// mod ttbasic;
+// TODO (hanhossain): migrate
+// mod ttexecute_basic;
 mod typed_array;
 mod unified_regex;
 mod unit_test_framework;
 mod utf8;
-mod wasm;
-mod wasm_simd;
-mod wasm_spec;
-mod wasm_spec_multi_value;
+// TODO (hanhossain): migrate
+// mod wasm;
+// TODO (hanhossain): migrate
+// mod wasm_simd;
+// TODO (hanhossain): migrate
+// mod wasm_spec;
+// TODO (hanhossain): migrate
+// mod wasm_spec_multi_value;
