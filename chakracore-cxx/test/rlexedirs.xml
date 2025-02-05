@@ -263,7 +263,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>es6GeneratorJit</files>
     <tags>require_backend</tags>

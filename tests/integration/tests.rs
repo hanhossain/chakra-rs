@@ -16,6 +16,8 @@ mod eh;
 mod error;
 mod es5;
 mod es6;
+#[cfg(not(disable_jit))]
+mod es6_generator_jit;
 mod es6module;
 mod es7;
 mod fieldopts;
