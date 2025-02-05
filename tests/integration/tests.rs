@@ -23,6 +23,7 @@ mod function;
 mod generated;
 mod global_functions;
 mod inline_caches;
+mod inlining;
 mod intl;
 mod json;
 mod let_const;
