@@ -10,6 +10,8 @@ mod config_parsing;
 mod control_flow;
 mod conversions;
 mod date;
+#[cfg(not(feature = "optimized-tests"))]
+mod dynamic_code;
 mod eh;
 mod error;
 mod es5;
