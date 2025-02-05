@@ -284,7 +284,6 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>stackfunc</files>
     <tags>exclude_serialized,require_backend</tags>
@@ -297,70 +296,60 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>AsmJs</files>
     <tags>exclude_serialized,require_backend,require_asmjs</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>AsmJsFloat</files>
     <tags>exclude_serialized,require_backend,require_asmjs</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>AsmJsParser</files>
     <tags>exclude_serialized,require_backend,require_asmjs</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>WasmSpec</files>
     <tags>exclude_serialized,require_backend,exclude_win7,require_wasm</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>WasmSpec.MultiValue</files>
     <tags>exclude_serialized,require_backend,require_wasm</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>wasm</files>
     <tags>exclude_serialized,require_backend,require_wasm</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>Debugger</files>
     <tags>exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>DebuggerCommon</files>
     <tags>exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>TTExecuteBasic</files>
     <tags>sequential,exclude_dynapogo,exclude_snap,exclude_serialized,require_debugger,exclude_sanitize_address</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>TTBasic</files>
     <tags>sequential,exclude_dynapogo,exclude_snap,exclude_serialized,require_debugger,exclude_sanitize_address</tags>
@@ -372,21 +361,18 @@
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>wasm.simd</files>
     <tags>require_wasm,exclude_serialized,require_backend,exclude_xplat</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>PRE</files>
     <tags>require_backend</tags>
   </default>
 </dir>
 <dir>
-  <!-- TODO (hanhossain): migrate -->
   <default>
     <files>FlowGraph</files>
     <tags>require_backend</tags>
