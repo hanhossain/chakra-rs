@@ -10,10 +10,14 @@ mod config_parsing;
 mod control_flow;
 mod conversions;
 mod date;
+#[cfg(not(feature = "optimized-tests"))]
+mod dynamic_code;
 mod eh;
 mod error;
 mod es5;
 mod es6;
+#[cfg(not(disable_jit))]
+mod es6_generator_jit;
 mod es6module;
 mod es7;
 mod fieldopts;
@@ -23,6 +27,8 @@ mod function;
 mod generated;
 mod global_functions;
 mod inline_caches;
+#[cfg(not(disable_jit))]
+mod inlining;
 mod intl;
 mod json;
 mod let_const;
@@ -33,6 +39,8 @@ mod number;
 mod object;
 mod operators;
 mod optimizer;
+#[cfg(not(disable_jit))]
+mod perf_hint;
 mod prototypes;
 mod reg_alloc;
 mod regex;
