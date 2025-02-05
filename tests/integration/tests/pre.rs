@@ -16,10 +16,16 @@ const DIRECTORY: &str = "chakracore-cxx/test/PRE";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug0.js</files>
-//       <compile-flags>-args summary -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug0_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug0.js",
+        compile_flags: vec![todo!("-args summary -endargs")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

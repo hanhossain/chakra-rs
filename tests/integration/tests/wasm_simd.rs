@@ -7,98 +7,170 @@ use std::collections::HashSet;
 
 const DIRECTORY: &str = "chakracore-cxx/test/wasm.simd";
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>loadTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loadTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loadTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>storeTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn storeTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "storeTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>constTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>splatNegTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn splatNegTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "splatNegTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>replaceLaneTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn replaceLaneTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "replaceLaneTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>truncConvTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn truncConvTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "truncConvTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>logicalTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn logicalTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "logicalTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>comparisonTests.js</files>
-//     <compile-flags> -wasm -wasmsimd -off:jitloopbody</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn comparisonTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "comparisonTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd -off:jitloopbody")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>mathTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn mathTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "mathTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>binaryArithmeticTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn binaryArithmeticTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "binaryArithmeticTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>int64x2Tests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn int64x2Tests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "int64x2Tests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>buildExtractTests.js</files>
-//     <compile-flags> -wasm -wasmsimd</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn buildExtractTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "buildExtractTests.js",
+        compile_flags: vec![todo!(" -wasm -wasmsimd")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

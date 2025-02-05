@@ -6,365 +6,581 @@ use std::collections::HashSet;
 // TODO (hanhossain): tags -<tags>exclude_serialized,require_backend</tags>
 
 const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_escape.js</files>
-//       <baseline>simple_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_escape.js",
+        baseline_path: Some("simple_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_stackfunc.js</files>
-//       <baseline>simple_stackfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simplejit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_stackfunc.js",
+        baseline_path: Some("simple_stackfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simplejit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_stackfunc.js</files>
-//       <baseline>simple_stackfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -Off:Deferparse -on:stackfunc -nonative</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_stackfunc.js",
+        baseline_path: Some("simple_stackfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -Off:Deferparse -on:stackfunc -nonative")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>trycatch_stackfunc.js</files>
-//       <baseline>trycatch_stackfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -nonative</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trycatch_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "trycatch_stackfunc.js",
+        baseline_path: Some("trycatch_stackfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -nonative")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_namedstackfunc.js</files>
-//       <baseline>simple_namedstackfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_namedstackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_namedstackfunc.js",
+        baseline_path: Some("simple_namedstackfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>toString_escape.js</files>
-//       <baseline>toString_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn toString_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toString_escape.js",
+        baseline_path: Some("toString_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>chain_assign.js</files>
-//       <baseline>chain_assign.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn chain_assign_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "chain_assign.js",
+        baseline_path: Some("chain_assign.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nested_escape.js</files>
-//       <baseline>nested_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nested_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nested_escape.js",
+        baseline_path: Some("nested_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcname_escape.js</files>
-//       <baseline>funcname_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcname_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcname_escape.js",
+        baseline_path: Some("funcname_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>call_escape.js</files>
-//       <baseline>call_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn call_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "call_escape.js",
+        baseline_path: Some("call_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argout_escape.js</files>
-//       <baseline>argout_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argout_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argout_escape.js",
+        baseline_path: Some("argout_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>throw_escape.js</files>
-//       <baseline>throw_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn throw_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "throw_escape.js",
+        baseline_path: Some("throw_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcname_asg.js</files>
-//       <baseline>funcname_asg.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcname_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcname_asg.js",
+        baseline_path: Some("funcname_asg.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arrlit_escape.js</files>
-//       <baseline>arrlit_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arrlit_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrlit_escape.js",
+        baseline_path: Some("arrlit_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arrlit_asg_escape.js</files>
-//       <baseline>arrlit_asg_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arrlit_asg_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrlit_asg_escape.js",
+        baseline_path: Some("arrlit_asg_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>objlit_escape.js</files>
-//       <baseline>objlit_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objlit_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objlit_escape.js",
+        baseline_path: Some("objlit_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>formal_asg.js</files>
-//       <baseline>formal_asg.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn formal_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_asg.js",
+        baseline_path: Some("formal_asg.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argument_escape.js</files>
-//       <baseline>argument_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argument_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argument_escape.js",
+        baseline_path: Some("argument_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arguments_assignment.js</files>
-//       <baseline>arguments_assignment.baseline</baseline>
-//       <compile-flags>-mic:1 -off:simplejit</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arguments_assignment_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arguments_assignment.js",
+        baseline_path: Some("arguments_assignment.baseline"),
+        compile_flags: vec!["-mic:1","-off:simplejit"],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>cross_scope.js</files>
-//       <baseline>cross_scope.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_scope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cross_scope.js",
+        baseline_path: Some("cross_scope.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>eval_escape.js</files>
-//       <baseline>eval_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn eval_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval_escape.js",
+        baseline_path: Some("eval_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>child_eval_escape.js</files>
-//       <baseline>child_eval_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn child_eval_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "child_eval_escape.js",
+        baseline_path: Some("child_eval_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>with_namedfunc.js</files>
-//       <baseline>with_namedfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn with_namedfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "with_namedfunc.js",
+        baseline_path: Some("with_namedfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>formal_namedfunc.js</files>
-//       <baseline>formal_namedfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn formal_namedfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_namedfunc.js",
+        baseline_path: Some("formal_namedfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>throw_func.js</files>
-//       <baseline>throw_func.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn throw_func_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "throw_func.js",
+        baseline_path: Some("throw_func.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>glo_asg.js</files>
-//       <baseline>glo_asg.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn glo_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "glo_asg.js",
+        baseline_path: Some("glo_asg.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>multinested_escape.js</files>
-//       <baseline>multinested_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn multinested_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multinested_escape.js",
+        baseline_path: Some("multinested_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>let_stackfunc.js</files>
-//       <baseline>let_stackfunc.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -off:deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn let_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "let_stackfunc.js",
+        baseline_path: Some("let_stackfunc.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -off:deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>let_blockescape.js</files>
-//       <baseline>let_blockescape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -off:deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn let_blockescape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "let_blockescape.js",
+        baseline_path: Some("let_blockescape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -off:deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_escape.js</files>
-//       <baseline>simple_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_escape.js",
+        baseline_path: Some("simple_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_stackfunc.js</files>
-//       <baseline>simple_stackfunc.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_stackfunc.js",
+        baseline_path: Some("simple_stackfunc.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>simple_namedstackfunc.js</files>
-//       <baseline>simple_namedstackfunc.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn simple_namedstackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "simple_namedstackfunc.js",
+        baseline_path: Some("simple_namedstackfunc.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>toString_escape.js</files>
-//       <baseline>toString_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn toString_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "toString_escape.js",
+        baseline_path: Some("toString_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>chain_assign.js</files>
-//       <baseline>chain_assign.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn chain_assign_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "chain_assign.js",
+        baseline_path: Some("chain_assign.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nested_escape.js</files>
-//       <baseline>nested_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -off:DisableStackFuncOnDeferredEscape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nested_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nested_escape.js",
+        baseline_path: Some("nested_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:DisableStackFuncOnDeferredEscape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcname_escape.js</files>
-//       <baseline>funcname_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcname_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcname_escape.js",
+        baseline_path: Some("funcname_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -388,115 +604,181 @@ const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcname_asg.js</files>
-//       <baseline>funcname_asg.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcname_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcname_asg.js",
+        baseline_path: Some("funcname_asg.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arrlit_escape.js</files>
-//       <baseline>arrlit_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arrlit_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrlit_escape.js",
+        baseline_path: Some("arrlit_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arrlit_asg_escape.js</files>
-//       <baseline>arrlit_asg_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arrlit_asg_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arrlit_asg_escape.js",
+        baseline_path: Some("arrlit_asg_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>objlit_escape.js</files>
-//       <baseline>objlit_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn objlit_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "objlit_escape.js",
+        baseline_path: Some("objlit_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>formal_asg.js</files>
-//       <baseline>formal_asg.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn formal_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_asg.js",
+        baseline_path: Some("formal_asg.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argument_escape.js</files>
-//       <baseline>argument_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argument_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argument_escape.js",
+        baseline_path: Some("argument_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>cross_scope.js</files>
-//       <baseline>cross_scope.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cross_scope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cross_scope.js",
+        baseline_path: Some("cross_scope.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>eval_escape.js</files>
-//       <baseline>eval_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn eval_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval_escape.js",
+        baseline_path: Some("eval_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>child_eval_escape.js</files>
-//       <baseline>child_eval_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn child_eval_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "child_eval_escape.js",
+        baseline_path: Some("child_eval_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>with_namedfunc.js</files>
-//       <baseline>with_namedfunc.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn with_namedfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "with_namedfunc.js",
+        baseline_path: Some("with_namedfunc.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>formal_namedfunc.js</files>
-//       <baseline>formal_namedfunc.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn formal_namedfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formal_namedfunc.js",
+        baseline_path: Some("formal_namedfunc.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -509,185 +791,293 @@ const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>glo_asg.js</files>
-//       <baseline>glo_asg.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn glo_asg_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "glo_asg.js",
+        baseline_path: Some("glo_asg.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>multinested_escape.js</files>
-//       <baseline>multinested_escape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn multinested_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "multinested_escape.js",
+        baseline_path: Some("multinested_escape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>let_stackfunc.js</files>
-//       <baseline>let_stackfunc.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn let_stackfunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "let_stackfunc.js",
+        baseline_path: Some("let_stackfunc.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>let_blockescape.js</files>
-//       <baseline>let_blockescape.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn let_blockescape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "let_blockescape.js",
+        baseline_path: Some("let_blockescape.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box.js</files>
-//       <baseline>box.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_nonative,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box.js",
+        baseline_path: Some("box.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box.js</files>
-//       <baseline>box.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -force:inline -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_nonative,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box.js",
+        baseline_path: Some("box.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -force:inline -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>callee_escape.js</files>
-//       <baseline>callee_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -force:inline -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn callee_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "callee_escape.js",
+        baseline_path: Some("callee_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>callee_escape2.js</files>
-//       <baseline>callee_escape2.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -force:inline -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn callee_escape2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "callee_escape2.js",
+        baseline_path: Some("callee_escape2.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>callee_escape2.js</files>
-//       <baseline>callee_escape2.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -force:inline -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn callee_escape2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "callee_escape2.js",
+        baseline_path: Some("callee_escape2.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>caller_escape.js</files>
-//       <baseline>caller_escape.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_nonative,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn caller_escape_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "caller_escape.js",
+        baseline_path: Some("caller_escape.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>singleuse.js</files>
-//       <baseline>singleuse.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn singleuse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "singleuse.js",
+        baseline_path: Some("singleuse.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>iffuncdecl.js</files>
-//       <baseline>iffuncdecl.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn iffuncdecl_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "iffuncdecl.js",
+        baseline_path: Some("iffuncdecl.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>cachescope.js</files>
-//       <baseline>cachescope.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cachescope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cachescope.js",
+        baseline_path: Some("cachescope.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_callparam.js</files>
-//       <baseline>box_callparam.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames -off:disablestackfuncondeferredescape </compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_callparam_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_callparam.js",
+        baseline_path: Some("box_callparam.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames -off:disablestackfuncondeferredescape ")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inlinee_box.js</files>
-//       <baseline>inlinee_box.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:inline</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_nonative,exclude_arm,exclude_arm64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn inlinee_box_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inlinee_box.js",
+        baseline_path: Some("inlinee_box.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:inline")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm,exclude_arm64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>blockscope_funcdecl.js</files>
-//       <baseline>blockscope_funcdecl.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockscope_funcdecl_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blockscope_funcdecl.js",
+        baseline_path: Some("blockscope_funcdecl.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>recurse.js</files>
-//       <baseline>recurse.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn recurse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "recurse.js",
+        baseline_path: Some("recurse.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>jitdefer.js</files>
-//       <baseline>jitdefer.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jitdefer_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jitdefer.js",
+        baseline_path: Some("jitdefer.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -711,114 +1101,180 @@ const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>withref_delayobjscope.js</files>
-//       <baseline>withref_delayobjscope.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn withref_delayobjscope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "withref_delayobjscope.js",
+        baseline_path: Some("withref_delayobjscope.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcexpr.js</files>
-//       <baseline>funcexpr.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcexpr_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcexpr.js",
+        baseline_path: Some("funcexpr.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcexpr_2.js</files>
-//       <baseline>funcexpr_2.deferparse.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcexpr_2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcexpr_2.js",
+        baseline_path: Some("funcexpr_2.deferparse.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>funcexpr_2.js</files>
-//       <baseline>funcexpr_2.deferparse.native.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -on:stackfunc -force:deferparse -forceNative -off:simpleJit -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn funcexpr_2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "funcexpr_2.js",
+        baseline_path: Some("funcexpr_2.deferparse.native.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -on:stackfunc -force:deferparse -forceNative -off:simpleJit -off:disablestackfuncondeferredescape")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>with_existing.js</files>
-//       <baseline>with_existing.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn with_existing_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "with_existing.js",
+        baseline_path: Some("with_existing.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>with_crossscope.js</files>
-//       <baseline>with_crossscope.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn with_crossscope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "with_crossscope.js",
+        baseline_path: Some("with_crossscope.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug565705.js</files>
-//       <baseline>bug565705.baseline</baseline>
-//       <compile-flags>-testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug565705_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug565705.js",
+        baseline_path: Some("bug565705.baseline"),
+        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_postjit.js</files>
-//       <baseline>box_postjit.deferparse.baseline</baseline>
-//       <compile-flags>-off:simplejit -mic:1 -off:inline -force:deferparse</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_postjit_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_postjit.js",
+        baseline_path: Some("box_postjit.deferparse.baseline"),
+        compile_flags: vec!["-off:simplejit",todo!("-mic:1 -off:inline -force:deferparse")],
+        tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_jitloopbody.js</files>
-//       <baseline>box_jitloopbody.baseline</baseline>
-//       <compile-flags>-forcejitloopbody</compile-flags>
-//       <tags>exclude_test,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_jitloopbody_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_jitloopbody.js",
+        baseline_path: Some("box_jitloopbody.baseline"),
+        compile_flags: vec!["-forcejitloopbody"],
+        tags: HashSet::from(["exclude_test","exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_jitloopbody2.js</files>
-//       <baseline>box_jitloopbody2.baseline</baseline>
-//       <compile-flags>-forcejitloopbody</compile-flags>
-//       <tags>exclude_test,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_jitloopbody2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_jitloopbody2.js",
+        baseline_path: Some("box_jitloopbody2.baseline"),
+        compile_flags: vec!["-forcejitloopbody"],
+        tags: HashSet::from(["exclude_test","exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_jitloopbody3.js</files>
-//       <compile-flags>-forcejitloopbody -force:deferparse -bgjit-</compile-flags>
-//       <tags>exclude_test,exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_jitloopbody3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_jitloopbody3.js",
+        compile_flags: vec!["-forcejitloopbody",todo!("-force:deferparse -bgjit-")],
+        tags: HashSet::from(["exclude_test","exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -828,61 +1284,103 @@ const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>605893.js</files>
-//       <compile-flags>-force:deferparse -force:inline</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn 605893_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "605893.js",
+        compile_flags: vec!["-force:deferparse","-force:inline"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>622043.js</files>
-//       <compile-flags>-force:deferparse -mic:1 -off:bailonnoprofile -force:inline -off:simplejit</compile-flags>
-//       <tags>exclude_dynapogo,exclude_test</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn 622043_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "622043.js",
+        compile_flags: vec!["-force:deferparse",todo!("-mic:1 -off:bailonnoprofile -force:inline -off:simplejit")],
+        tags: HashSet::from(["exclude_dynapogo","exclude_test"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>delaycapture.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn delaycapture_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "delaycapture.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>closure-1129602.js</files>
-//       <compile-flags>-force:deferparse</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn closure_1129602_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "closure-1129602.js",
+        compile_flags: vec!["-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_blockscope.js</files>
-//       <baseline>box_blockscope.baseline</baseline>
-//       <compile-flags>-off:simplejit -testtrace:stackfunc -off:redeferral</compile-flags>
-//       <tags>exclude_test,exclude_arm,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_blockscope_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_blockscope.js",
+        baseline_path: Some("box_blockscope.baseline"),
+        compile_flags: vec!["-off:simplejit",todo!("-testtrace:stackfunc -off:redeferral")],
+        tags: HashSet::from(["exclude_test","exclude_arm,exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_native_emptyframe.js</files>
-//       <baseline>box_native_emptyframe.baseline</baseline>
-//       <compile-flags>-lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_native_emptyframe_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_native_emptyframe.js",
+        baseline_path: Some("box_native_emptyframe.baseline"),
+        compile_flags: vec!["-lic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_inlineeFrameInLoopBody.js</files>
-//       <compile-flags>-forcedeferparse -forcejitloopbody -force:rejit -force:inline</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn box_inlineeFrameInLoopBody_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_inlineeFrameInLoopBody.js",
+        compile_flags: vec!["-forcedeferparse",todo!("-forcejitloopbody -force:rejit -force:inline")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

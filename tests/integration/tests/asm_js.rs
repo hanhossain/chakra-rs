@@ -7,20 +7,439 @@ use std::collections::HashSet;
 
 const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argTest.js</files>
-//       <compile-flags>-maic:0 -maxInterpretCount:0</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argTest_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argTest.js",
+        compile_flags: vec!["-maic:0", "-maxInterpretCount:0"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayView.js",
+        baseline_path: Some("ArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicBranching_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicBranching.js",
+        baseline_path: Some("BasicBranching.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicBranching_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicBranching.js",
+        baseline_path: Some("BasicBranchingLinkFail.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-forceAsmJsLinkFail"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonDouble_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonDouble.js",
+        baseline_path: Some("basicComparisonDouble.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonInt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonInt.js",
+        baseline_path: Some("basicComparisonInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonUInt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonUInt.js",
+        baseline_path: Some("basicComparisonUInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicLooping_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicLooping.js",
+        baseline_path: Some("BasicLooping.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMath_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMath.js",
+        baseline_path: Some("basicMath.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMathIntSpecific_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathIntSpecific.js",
+        baseline_path: Some("basicMathIntSpecific.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMathUnary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathUnary.js",
+        baseline_path: Some("basicMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicSwitch_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicSwitch.js",
+        baseline_path: Some("BasicSwitch.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn CompositionMathUnary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CompositionMathUnary.js",
+        baseline_path: Some("CompositionMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn FunctionCalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FunctionCalls.js",
+        baseline_path: Some("FunctionCalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn FunctionCalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FunctionCalls.js",
+        baseline_path: Some("FunctionCalls.baseline"),
+        compile_flags: vec!["-ForceStaticInterpreterThunk", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn functiontablecalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "functiontablecalls.js",
+        baseline_path: Some("functiontablecalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn MathBuiltinsCall_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "MathBuiltinsCall.js",
+        baseline_path: Some("MathBuiltinsCall.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn MathBuiltinsCall_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "MathBuiltinsCall.js",
+        baseline_path: Some("MathBuiltinsCall.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-maic:1 -sse:3")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ModuleVarRead_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarRead.js",
+        baseline_path: Some("ModuleVarRead.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ModuleVarWrite_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarWrite.js",
+        baseline_path: Some("ModuleVarWrite.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ReadArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadArrayView.js",
+        baseline_path: Some("ReadArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ReadFixOffset_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadFixOffset.js",
+        baseline_path: Some("ReadFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn relink_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "relink.js",
+        baseline_path: Some("relink.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn relink_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "relink.js",
+        baseline_path: Some("relink.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn relink_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "relink.js",
+        baseline_path: Some("relink.baseline"),
+        compile_flags: vec!["-forceserialized", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn relink_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "relink.js",
+        baseline_path: Some("relink.baseline"),
+        compile_flags: vec!["-forceserialized", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn WriteArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteArrayView.js",
+        baseline_path: Some("WriteArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn WriteFixOffset_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteFixOffset.js",
+        baseline_path: Some("WriteFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>ArrayView.js</files>
 //       <baseline>ArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
+//       <tags>exclude_x64</tags>
+//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+//       -->
+//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
 //     </default>
 //   </test>
 
@@ -29,257 +448,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     <default>
 //       <files>BasicBranching.js</files>
 //       <baseline>BasicBranching.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicBranching.js</files>
-//       <baseline>BasicBranchingLinkFail.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -forceAsmJsLinkFail</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonDouble.js</files>
-//       <baseline>basicComparisonDouble.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonInt.js</files>
-//       <baseline>basicComparisonInt.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonUInt.js</files>
-//       <baseline>basicComparisonUInt.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicLooping.js</files>
-//       <baseline>BasicLooping.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMath.js</files>
-//       <baseline>basicMath.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathIntSpecific.js</files>
-//       <baseline>basicMathIntSpecific.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathUnary.js</files>
-//       <baseline>basicMathUnary.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicSwitch.js</files>
-//       <baseline>BasicSwitch.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>CompositionMathUnary.js</files>
-//       <baseline>CompositionMathUnary.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>FunctionCalls.js</files>
-//       <baseline>FunctionCalls.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>FunctionCalls.js</files>
-//       <baseline>FunctionCalls.baseline</baseline>
-//       <compile-flags>-ForceStaticInterpreterThunk -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>functiontablecalls.js</files>
-//       <baseline>functiontablecalls.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>MathBuiltinsCall.js</files>
-//       <baseline>MathBuiltinsCall.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>MathBuiltinsCall.js</files>
-//       <baseline>MathBuiltinsCall.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1 -sse:3</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarRead.js</files>
-//       <baseline>ModuleVarRead.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarWrite.js</files>
-//       <baseline>ModuleVarWrite.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadArrayView.js</files>
-//       <baseline>ReadArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadFixOffset.js</files>
-//       <baseline>ReadFixOffset.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>relink.js</files>
-//       <baseline>relink.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>relink.js</files>
-//       <baseline>relink.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>relink.js</files>
-//       <baseline>relink.baseline</baseline>
-//       <compile-flags>-forceserialized -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>relink.js</files>
-//       <baseline>relink.baseline</baseline>
-//       <compile-flags>-forceserialized -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteArrayView.js</files>
-//       <baseline>WriteArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteFixOffset.js</files>
-//       <baseline>WriteFixOffset.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ArrayView.js</files>
-//       <baseline>ArrayView.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicBranching.js</files>
-//       <baseline>BasicBranching.baseline</baseline>
 //       <tags>exclude_x64</tags>
 //       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 //       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
@@ -522,286 +690,472 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ArrayView.js</files>
-//       <baseline>ArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayView.js",
+        baseline_path: Some("ArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicBranching.js</files>
-//       <baseline>BasicBranching.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicBranching_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicBranching.js",
+        baseline_path: Some("BasicBranching.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonDouble.js</files>
-//       <baseline>basicComparisonDouble.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonDouble_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonDouble.js",
+        baseline_path: Some("basicComparisonDouble.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonInt.js</files>
-//       <baseline>basicComparisonInt.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonInt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonInt.js",
+        baseline_path: Some("basicComparisonInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonUInt.js</files>
-//       <baseline>basicComparisonUInt.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicComparisonUInt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonUInt.js",
+        baseline_path: Some("basicComparisonUInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicLooping.js</files>
-//       <baseline>BasicLooping.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicLooping_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicLooping.js",
+        baseline_path: Some("BasicLooping.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMath.js</files>
-//       <baseline>basicMath.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMath_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMath.js",
+        baseline_path: Some("basicMath.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathIntSpecific.js</files>
-//       <baseline>basicMathIntSpecific.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMathIntSpecific_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathIntSpecific.js",
+        baseline_path: Some("basicMathIntSpecific.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathUnary.js</files>
-//       <baseline>basicMathUnary.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basicMathUnary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathUnary.js",
+        baseline_path: Some("basicMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicSwitch.js</files>
-//       <baseline>BasicSwitch.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn BasicSwitch_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicSwitch.js",
+        baseline_path: Some("BasicSwitch.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>CompositionMathUnary.js</files>
-//       <baseline>CompositionMathUnary.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn CompositionMathUnary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CompositionMathUnary.js",
+        baseline_path: Some("CompositionMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>FunctionCalls.js</files>
-//       <baseline>FunctionCalls.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn FunctionCalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FunctionCalls.js",
+        baseline_path: Some("FunctionCalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>functiontablecalls.js</files>
-//       <baseline>functiontablecalls.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn functiontablecalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "functiontablecalls.js",
+        baseline_path: Some("functiontablecalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>MathBuiltinsCall.js</files>
-//       <baseline>MathBuiltinsCall.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn MathBuiltinsCall_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "MathBuiltinsCall.js",
+        baseline_path: Some("MathBuiltinsCall.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarRead.js</files>
-//       <baseline>ModuleVarRead.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ModuleVarRead_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarRead.js",
+        baseline_path: Some("ModuleVarRead.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarWrite.js</files>
-//       <baseline>ModuleVarWrite.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ModuleVarWrite_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarWrite.js",
+        baseline_path: Some("ModuleVarWrite.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadArrayView.js</files>
-//       <baseline>ReadArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ReadArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadArrayView.js",
+        baseline_path: Some("ReadArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadFixOffset.js</files>
-//       <baseline>ReadFixOffset.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ReadFixOffset_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadFixOffset.js",
+        baseline_path: Some("ReadFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteArrayView.js</files>
-//       <baseline>WriteArrayView.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn WriteArrayView_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteArrayView.js",
+        baseline_path: Some("WriteArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteFixOffset.js</files>
-//       <baseline>WriteFixOffset.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//       <tags>Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn WriteFixOffset_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteFixOffset.js",
+        baseline_path: Some("WriteFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        tags: HashSet::from(["Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>functiontablebug.js</files>
-//       <baseline>functiontablebug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn functiontablebug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "functiontablebug.js",
+        baseline_path: Some("functiontablebug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nanbug.js</files>
-//       <baseline>nanbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nanbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nanbug.js",
+        baseline_path: Some("nanbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nanbug.js</files>
-//       <baseline>nanbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nanbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nanbug.js",
+        baseline_path: Some("nanbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>switchbug.js</files>
-//       <baseline>switchbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn switchbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "switchbug.js",
+        baseline_path: Some("switchbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>fgpeepsbug.js</files>
-//       <baseline>fgpeepsbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fgpeepsbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fgpeepsbug.js",
+        baseline_path: Some("fgpeepsbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>cseBug.js</files>
-//       <baseline>cseBug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -off:deferparse</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cseBug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cseBug.js",
+        baseline_path: Some("cseBug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-off:deferparse"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>evalbug.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn evalbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "evalbug.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>symBug.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn symBug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "symBug.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>brbool.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn brbool_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "brbool.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constTest.js</files>
-//       <baseline>constTest.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constTest_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constTest.js",
+        baseline_path: Some("constTest.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constTest.js</files>
-//       <baseline>constTest.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constTest_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constTest.js",
+        baseline_path: Some("constTest.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -816,185 +1170,305 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ffibug.js</files>
-//       <baseline>ffibug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ffibug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ffibug.js",
+        baseline_path: Some("ffibug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ternaryfloat.js</files>
-//       <baseline>ternaryfloat.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ternaryfloat_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ternaryfloat.js",
+        baseline_path: Some("ternaryfloat.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>minintbug.js</files>
-//       <baseline>minintbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn minintbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "minintbug.js",
+        baseline_path: Some("minintbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>floatmod.js</files>
-//       <baseline>floatmod.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn floatmod_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "floatmod.js",
+        baseline_path: Some("floatmod.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>floatmod.js</files>
-//       <baseline>floatmod.baseline</baseline>
-//       <compile-flags>-forceserialized -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn floatmod_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "floatmod.js",
+        baseline_path: Some("floatmod.baseline"),
+        compile_flags: vec!["-forceserialized", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>invalidIntLiteral.js</files>
-//       <baseline>invalidIntLiteral.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -force:deferparse</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn invalidIntLiteral_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalidIntLiteral.js",
+        baseline_path: Some("invalidIntLiteral.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-force:deferparse"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>fstpbug.js</files>
-//       <baseline>fstpbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fstpbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fstpbug.js",
+        baseline_path: Some("fstpbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>break2.js</files>
-//       <baseline>break2.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn break2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "break2.js",
+        baseline_path: Some("break2.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>break3.js</files>
-//       <baseline>break3.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn break3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "break3.js",
+        baseline_path: Some("break3.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>return1.js</files>
-//       <baseline>return1.baseline</baseline>
-//       <compile-flags>-off:deferparse -testtrace:asmjs -bgjit- -lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn return1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "return1.js",
+        baseline_path: Some("return1.baseline"),
+        compile_flags: vec!["-off:deferparse", todo!("-testtrace:asmjs -bgjit- -lic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>return2.js</files>
-//       <baseline>return2.baseline</baseline>
-//       <compile-flags>-off:deferparse -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn return2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "return2.js",
+        baseline_path: Some("return2.baseline"),
+        compile_flags: vec!["-off:deferparse", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>return3.js</files>
-//       <baseline>return3.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn return3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "return3.js",
+        baseline_path: Some("return3.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>returndouble.js</files>
-//       <baseline>returndouble.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn returndouble_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "returndouble.js",
+        baseline_path: Some("returndouble.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>break1.js</files>
-//       <baseline>break1.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn break1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "break1.js",
+        baseline_path: Some("break1.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>JitToLoopBody.js</files>
-//       <baseline>JitToLoopBody.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1 -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn JitToLoopBody_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "JitToLoopBody.js",
+        baseline_path: Some("JitToLoopBody.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1 -maic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>LoopBodyToJit.js</files>
-//       <baseline>LoopBodyToJit.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1 -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn LoopBodyToJit_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "LoopBodyToJit.js",
+        baseline_path: Some("LoopBodyToJit.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1 -maic:1")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>breakfloat1.js</files>
-//       <baseline>breakfloat1.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1 </compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn breakfloat1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "breakfloat1.js",
+        baseline_path: Some("breakfloat1.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1 ")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>returnFloat.js</files>
-//       <baseline>returnFloat.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -bgjit- -lic:1 </compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn returnFloat_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "returnFloat.js",
+        baseline_path: Some("returnFloat.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", todo!("-bgjit- -lic:1 ")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unitybug.js</files>
-//       <baseline>unitybug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unitybug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unitybug.js",
+        baseline_path: Some("unitybug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unitybug.js</files>
-//       <baseline>unitybug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unitybug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unitybug.js",
+        baseline_path: Some("unitybug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -1009,41 +1483,65 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argoutcapturebug.js</files>
-//       <baseline>argoutcapturebug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argoutcapturebug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argoutcapturebug.js",
+        baseline_path: Some("argoutcapturebug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadAV1.js</files>
-//       <baseline>ReadAV1.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -off:deferparse</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ReadAV1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadAV1.js",
+        baseline_path: Some("ReadAV1.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-off:deferparse"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>clz32.js</files>
-//       <baseline>clz32.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn clz32_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "clz32.js",
+        baseline_path: Some("clz32.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>clz32.js</files>
-//       <baseline>clz32.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -nonative</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn clz32_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "clz32.js",
+        baseline_path: Some("clz32.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-nonative"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -1058,144 +1556,240 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>negZero.js</files>
-//       <baseline>negZero.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn negZero_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "negZero.js",
+        baseline_path: Some("negZero.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>shadowingBug.js</files>
-//       <baseline>shadowingBug.baseline</baseline>
-//       <compile-flags>-forcedeferparse -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn shadowingBug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "shadowingBug.js",
+        baseline_path: Some("shadowingBug.baseline"),
+        compile_flags: vec!["-forcedeferparse", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>blockLabelBug.js</files>
-//       <baseline>blockLabelBug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn blockLabelBug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "blockLabelBug.js",
+        baseline_path: Some("blockLabelBug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>switchJumpTable.js</files>
-//       <baseline>switchJumpTable.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn switchJumpTable_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "switchJumpTable.js",
+        baseline_path: Some("switchJumpTable.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>switchBinaryTraverse.js</files>
-//       <baseline>switchBinaryTraverse.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn switchBinaryTraverse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "switchBinaryTraverse.js",
+        baseline_path: Some("switchBinaryTraverse.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>lowererdivbug.js</files>
-//       <baseline>lowererdivbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lowererdivbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lowererdivbug.js",
+        baseline_path: Some("lowererdivbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>qmarkbug.js</files>
-//       <baseline>qmarkbug.baseline</baseline>
-//       <compile-flags>-forcedeferparse -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn qmarkbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "qmarkbug.js",
+        baseline_path: Some("qmarkbug.baseline"),
+        compile_flags: vec!["-forcedeferparse", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>uint.js</files>
-//       <baseline>uint.baseline</baseline>
-//       <compile-flags>-maic:1 -off:deferparse -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn uint_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "uint.js",
+        baseline_path: Some("uint.baseline"),
+        compile_flags: vec!["-maic:1", todo!("-off:deferparse -testtrace:asmjs")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>asmjscctx.js</files>
-//       <baseline>asmjscctx.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn asmjscctx_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "asmjscctx.js",
+        baseline_path: Some("asmjscctx.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constloads.js</files>
-//       <baseline>constloads.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constloads_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constloads.js",
+        baseline_path: Some("constloads.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>vardeclnorhs.js</files>
-//       <baseline>vardeclnorhs.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn vardeclnorhs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "vardeclnorhs.js",
+        baseline_path: Some("vardeclnorhs.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug12239366.js</files>
-//       <compile-flags>-lic:1 -bgjit-</compile-flags>
-//       <tags>exclude_drt</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug12239366_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug12239366.js",
+        compile_flags: vec!["-lic:1", "-bgjit-"],
+        tags: HashSet::from(["exclude_drt"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug16253406.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug16253406_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug16253406.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>badFunctionType.js</files>
-//       <baseline>badFunctionType.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn badFunctionType_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "badFunctionType.js",
+        baseline_path: Some("badFunctionType.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["exclude_sanitize_address"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bugGH2270.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bugGH2270_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugGH2270.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -1205,20 +1799,32 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug9883547.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug9883547_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug9883547.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constFoldTests.js</files>
-//       <compile-flags>-asmjs -maic:0</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constFoldTests_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constFoldTests.js",
+        compile_flags: vec!["-asmjs", "-maic:0"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -1240,150 +1846,252 @@ const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nested.js</files>
-//       <baseline>nested.baseline</baseline>
-//       <compile-flags>-forcedeferparse -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nested_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nested.js",
+        baseline_path: Some("nested.baseline"),
+        compile_flags: vec!["-forcedeferparse", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>notBinaryPropertyDefinition.js</files>
-//       <baseline>notBinaryPropertyDefinition.baseline</baseline>
-//       <compile-flags>-ES2018ObjectRestSpread -testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn notBinaryPropertyDefinition_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "notBinaryPropertyDefinition.js",
+        baseline_path: Some("notBinaryPropertyDefinition.baseline"),
+        compile_flags: vec!["-ES2018ObjectRestSpread", "-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constbrbug.js</files>
-//       <baseline>constbrbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:0</compile-flags>
-//       <tags>exclude_drt</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constbrbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constbrbug.js",
+        baseline_path: Some("constbrbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:0"],
+        tags: HashSet::from(["exclude_drt"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>useasmbug.js</files>
-//       <baseline>useasmbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn useasmbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "useasmbug.js",
+        baseline_path: Some("useasmbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>lambda.js</files>
-//       <baseline>lambda.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>exclude_drt</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn lambda_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lambda.js",
+        baseline_path: Some("lambda.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["exclude_drt"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>badFunctionType.js</files>
-//       <baseline>badFunctionType.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>exclude_drt,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn badFunctionType_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "badFunctionType.js",
+        baseline_path: Some("badFunctionType.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["exclude_drt", "exclude_sanitize_address"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>badFunctionType.js</files>
-//       <baseline>badFunctionType.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>exclude_drt,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn badFunctionType_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "badFunctionType.js",
+        baseline_path: Some("badFunctionType.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["exclude_drt", "exclude_sanitize_address"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>exports.js</files>
-//       <baseline>exports.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//       <tags>exclude_drt</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn exports_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "exports.js",
+        baseline_path: Some("exports.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        tags: HashSet::from(["exclude_drt"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>trackdeferredonreparse.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trackdeferredonreparse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "trackdeferredonreparse.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>regress_hascalls.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regress_hascalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regress_hascalls.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>argassignbug.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn argassignbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "argassignbug.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>manyargs.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn manyargs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "manyargs.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>maybecallbug.js</files>
-//       <baseline>maybecallbug.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn maybecallbug_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "maybecallbug.js",
+        baseline_path: Some("maybecallbug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>divByConstants.js</files>
-//       <baseline>divByConstants.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn divByConstants_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "divByConstants.js",
+        baseline_path: Some("divByConstants.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>divByConstants_Unsigned.js</files>
-//       <baseline>divByConstants.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -maic:1</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn divByConstants_Unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "divByConstants_Unsigned.js",
+        baseline_path: Some("divByConstants.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-maic:1"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug16252562.js</files>
-//       <baseline>bug16252562.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug16252562_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug16252562.js",
+        baseline_path: Some("bug16252562.baseline"),
+        compile_flags: vec!["-testtrace:asmjs"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>emit_recursive.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn emit_recursive_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "emit_recursive.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}

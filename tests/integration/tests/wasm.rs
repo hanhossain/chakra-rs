@@ -6,59 +6,95 @@ use std::collections::HashSet;
 // TODO (hanhossain): tags - <tags>exclude_serialized,require_backend,require_wasm</tags>
 
 const DIRECTORY: &str = "chakracore-cxx/test/wasm";
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//       <compile-flags>-wasm -args 0 5 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        compile_flags: vec!["-wasm", todo!("-args 0 5 -endargs")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//       <compile-flags>-wasm -args 6 10 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        compile_flags: vec!["-wasm", todo!("-args 6 10 -endargs")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//       <compile-flags>-wasm -args 11 15 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        compile_flags: vec!["-wasm", todo!("-args 11 15 -endargs")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//       <compile-flags>-wasm -args 16 20 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        compile_flags: vec!["-wasm", todo!("-args 16 20 -endargs")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unsigned.js</files>
-//       <compile-flags>-wasm -args 21 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unsigned.js",
+        compile_flags: vec!["-wasm", todo!("-args 21 -endargs")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>regress.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regress_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regress.js",
+        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -69,170 +105,284 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>rot.js</files>
-//       <baseline>rot.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn rot_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "rot.js",
+        baseline_path: Some("rot.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>fastarray.js</files>
-//       <compile-flags>-wasm -WasmFastArray-</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fastarray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fastarray.js",
+        compile_flags: vec!["-wasm", "-WasmFastArray-"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>fastarray.js</files>
-//       <compile-flags>-wasm -WasmFastArray</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn fastarray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "fastarray.js",
+        compile_flags: vec!["-wasm", "-WasmFastArray"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>misc.js</files>
-//       <baseline>misc.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn misc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "misc.js",
+        baseline_path: Some("misc.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>controlflow.js</files>
-//       <baseline>controlflow.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn controlflow_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "controlflow.js",
+        baseline_path: Some("controlflow.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>f32.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn f32_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "f32.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>f64.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn f64_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "f64.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>math.js</files>
-//       <compile-flags>-wasm -wasmi64</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn math_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "math.js",
+        compile_flags: vec!["-wasm", "-wasmi64"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>dropteelocal.js</files>
-//       <baseline>dropteelocal.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dropteelocal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dropteelocal.js",
+        baseline_path: Some("dropteelocal.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>i32_popcnt.js</files>
-//       <baseline>i32_popcnt.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn i32_popcnt_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "i32_popcnt.js",
+        baseline_path: Some("i32_popcnt.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>f32address.js</files>
-//       <compile-flags>-wasm  </compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn f32address_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "f32address.js",
+        compile_flags: vec!["-wasm", todo!(" ")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>divByConstants.js</files>
-//       <compile-flags>-wasm  </compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn divByConstants_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "divByConstants.js",
+        compile_flags: vec!["-wasm", todo!(" ")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>divByConstants_unsigned.js</files>
-//       <compile-flags>-wasm  </compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn divByConstants_unsigned_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "divByConstants_unsigned.js",
+        compile_flags: vec!["-wasm", todo!(" ")],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>global.js</files>
-//       <baseline>baselines/global.baseline</baseline>
-//       <compile-flags>-wasm -wasmi64</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn global_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "global.js",
+        baseline_path: Some("baselines/global.baseline"),
+        compile_flags: vec!["-wasm", "-wasmi64"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basic.js</files>
-//       <baseline>basic.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basic.js",
+        baseline_path: Some("basic.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basic.js</files>
-//       <baseline>basic.baseline</baseline>
-//       <compile-flags>-ForceStaticInterpreterThunk -wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn basic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basic.js",
+        baseline_path: Some("basic.baseline"),
+        compile_flags: vec!["-ForceStaticInterpreterThunk", "-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>table.js</files>
-//       <baseline>table.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn table_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "table.js",
+        baseline_path: Some("table.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>badfuncformat.js</files>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn badfuncformat_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "badfuncformat.js",
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>table_imports.js</files>
-//       <baseline>baselines/table_imports.baseline</baseline>
-//       <compile-flags>-wasm -wasmi64</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn table_imports_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "table_imports.js",
+        baseline_path: Some("baselines/table_imports.baseline"),
+        compile_flags: vec!["-wasm", "-wasmi64"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -243,67 +393,115 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>call.js</files>
-//       <baseline>baselines/call.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn call_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "call.js",
+        baseline_path: Some("baselines/call.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>array.js</files>
-//       <baseline>array.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn array_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array.js",
+        baseline_path: Some("array.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>trunc.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn trunc_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "trunc.js",
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>api.js</files>
-//       <baseline>baselines/api.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn api_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "api.js",
+        baseline_path: Some("baselines/api.baseline"),
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>invalid_global_mut.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn invalid_global_mut_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "invalid_global_mut.js",
+        compile_flags: vec!["-wasm"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bugs.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bugs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bugs.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>params.js</files>
-//       <baseline>baselines/params.baseline</baseline>
-//       <compile-flags>-wasm -EnableFatalErrorOnOOM- -args 14000 -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7,exclude_dynapogo,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn params_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "params.js",
+        baseline_path: Some("baselines/params.baseline"),
+        compile_flags: vec![
+            "-wasm",
+            todo!("-EnableFatalErrorOnOOM- -args 14000 -endargs"),
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7,exclude_dynapogo,exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -314,48 +512,75 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>params.js</files>
-//       <baseline>baselines/params.baseline</baseline>
-//       <compile-flags>-wasm -args 14000 -endargs</compile-flags>
-//       <tags>exclude_win7,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn params_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "params.js",
+        baseline_path: Some("baselines/params.baseline"),
+        compile_flags: vec!["-wasm", todo!("-args 14000 -endargs")],
+        tags: HashSet::from(["exclude_win7", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 //   TODO (hanhossain): migrate
 
-// TODO (hanhossain): migrate
-//     <test>
-//       <default>
-//         <files>debugger_basic.js</files>
-//         <compile-flags>-wasm -dbgbaseline:debugger_basic.js.dbg.baseline</compile-flags>
-//         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger</tags>
-//       </default>
-//     </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn debugger_basic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "debugger_basic.js",
+        compile_flags: vec!["-wasm", "-dbgbaseline:debugger_basic.js.dbg.baseline"],
+        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 //   TODO (hanhossain): migrate
 
-// TODO (hanhossain): migrate
-//     <test>
-//       <default>
-//         <files>debugger_basic.js</files>
-//         <compile-flags>-wasm -maic:1 -dbgbaseline:debugger_basic.js.dbg.baseline</compile-flags>
-//         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger</tags>
-//       </default>
-//     </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn debugger_basic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "debugger_basic.js",
+        compile_flags: vec![
+            "-wasm",
+            todo!("-maic:1 -dbgbaseline:debugger_basic.js.dbg.baseline"),
+        ],
+        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 //   TODO (hanhossain): migrate
 
-// TODO (hanhossain): migrate
-//     <test>
-//       <default>
-//         <files>debugger_basic.js</files>
-//         <compile-flags>-wasm -debuglaunch -args debuglaunch -endargs -dbgbaseline:debugger_basic_launch.js.dbg.baseline</compile-flags>
-//         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger</tags>
-//       </default>
-//     </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn debugger_basic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "debugger_basic.js",
+        compile_flags: vec!["-wasm",todo!("-debuglaunch -args debuglaunch -endargs -dbgbaseline:debugger_basic_launch.js.dbg.baseline")],
+        tags: HashSet::from(["exclude_win7","exclude_drt,exclude_snap,require_debugger"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 //   TODO (hanhossain): migrate
 
@@ -379,139 +604,244 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>oom_wasm.js</files>
-//       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 3 16381 -endargs</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn oom_wasm_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "oom_wasm.js",
+        compile_flags: vec![
+            "-EnableFatalErrorOnOOM-",
+            todo!("-wasm -args 3 16381 -endargs"),
+        ],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>oom.js</files>
-//       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 0 16384 -endargs</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn oom_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "oom.js",
+        compile_flags: vec![
+            "-EnableFatalErrorOnOOM-",
+            todo!("-wasm -args 0 16384 -endargs"),
+        ],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>oom.js</files>
-//       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 3 16381 -endargs</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn oom_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "oom.js",
+        compile_flags: vec![
+            "-EnableFatalErrorOnOOM-",
+            todo!("-wasm -args 3 16381 -endargs"),
+        ],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>response.js</files>
-//       <baseline>baselines/response.baseline</baseline>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn response_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "response.js",
+        baseline_path: Some("baselines/response.baseline"),
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>i64.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn i64_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "i64.js",
+        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>i64cf.js</files>
-//       <compile-flags>-wasm -maic:0</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn i64cf_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "i64cf.js",
+        compile_flags: vec!["-wasm", "-maic:0"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nestedblocks.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nestedblocks_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nestedblocks.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7,exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>cse.js</files>
-//       <baseline>baselines/cse.baseline</baseline>
-//       <compile-flags>-wasm -maic:0 -WasmAssignModuleID -testtrace:cse:2.0-99.999</compile-flags>
-//       <tags>exclude_drt,exclude_win7,exclude_interpreted,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn cse_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "cse.js",
+        baseline_path: Some("baselines/cse.baseline"),
+        compile_flags: vec![
+            "-wasm",
+            todo!("-maic:0 -WasmAssignModuleID -testtrace:cse:2.0-99.999"),
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7,exclude_interpreted,exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>signextend.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn signextend_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "signextend.js",
+        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>memory.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memory_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "memory.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>memory.js</files>
-//       <compile-flags>-wasm -wasmfastarray-</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn memory_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "memory.js",
+        compile_flags: vec!["-wasm", "-wasmfastarray-"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>superlongsignaturemismatch.js</files>
-//       <compile-flags>-wasm</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn superlongsignaturemismatch_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "superlongsignaturemismatch.js",
+        compile_flags: vec!["-wasm"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>binary.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn binary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "binary.js",
+        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>binary.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn binary_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "binary.js",
+        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>polyinline.js</files>
-//       <compile-flags>-maxinterpretcount:2 -off:simplejit</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn polyinline_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "polyinline.js",
+        compile_flags: vec!["-maxinterpretcount:2", "-off:simplejit"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
 // TODO (hanhossain): migrate
 //   <test>
@@ -543,63 +873,108 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm";
 //     </default>
 //   </test>
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loopstslot.js</files>
-//       <compile-flags>-forcejitloopbody</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopstslot_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopstslot.js",
+        compile_flags: vec!["-forcejitloopbody"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loopyield.js</files>
-//       <compile-flags>-forcejitloopbody</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopyield_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopyield.js",
+        compile_flags: vec!["-forcejitloopbody"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loopyieldnested.js</files>
-//       <compile-flags>-lic:10 -bgjit-</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopyieldnested_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopyieldnested.js",
+        compile_flags: vec!["-lic:10", "-bgjit-"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loopyieldtypes.js</files>
-//       <compile-flags>-forcejitloopbody</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopyieldtypes_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopyieldtypes.js",
+        compile_flags: vec!["-forcejitloopbody"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loopyieldregress.js</files>
-//       <compile-flags>-lic:0 -bgjit-</compile-flags>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loopyieldregress_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loopyieldregress.js",
+        compile_flags: vec!["-lic:0", "-bgjit-"],
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>atomics_test.js</files>
-//       <compile-flags>-wasmthreads -ESSharedArrayBuffer -args summary -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn atomics_test_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "atomics_test.js",
+        compile_flags: vec![
+            "-wasmthreads",
+            todo!("-ESSharedArrayBuffer -args summary -endargs"),
+        ],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>reload.js</files>
-//       <compile-flags>-wasmthreads -ESSharedArrayBuffer</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn reload_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "reload.js",
+        compile_flags: vec!["-wasmthreads", "-ESSharedArrayBuffer"],
+        ..Default::default()
+    };
+    common::run_test_variant(&test, variant);
+}
