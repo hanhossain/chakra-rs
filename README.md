@@ -39,7 +39,7 @@ const DIRECTORY: &str = "chakracore-cxx/test/{}";
 ```
 
 ### add todo
-```rust
+```re
 //\s*<test>
 ```
 
@@ -47,6 +47,25 @@ const DIRECTORY: &str = "chakracore-cxx/test/{}";
 
 // TODO (hanhossain): migrate
 $0
+```
+
+### add folder tags
+```re
+(//\s*)</default>
+```
+
+```rust
+$1  {FOLDER_TAGS_ELEMENT}
+$0
+```
+
+## combine folder tags
+```re
+(.*)</tags>\n..*<tags>(.*)
+```
+
+```rust
+$1,$2
 ```
 
 ### files only
