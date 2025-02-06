@@ -3,19 +3,24 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-
 const DIRECTORY: &str = "chakracore-cxx/test/DebuggerCommon";
+
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn arguments_mapES6_attach_js(#[case] variant: Variant) {
+fn arguments_map_es6_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "arguments_mapES6_attach.js",
         baseline_path: Some("arguments_mapES6_attach.js.baseline"),
         compile_flags: vec!["-dbgbaseline:arguments_mapES6_attach.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -25,12 +30,18 @@ fn arguments_mapES6_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockscope_fastdebug_ES5_js(#[case] variant: Variant) {
+fn blockscope_fastdebug_es5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope_fastdebug_ES5.js",
         baseline_path: Some("blockscope_fastdebug_ES5.js.baseline"),
         compile_flags: vec!["-dbgbaseline:blockscope_fastdebug_ES5.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -40,12 +51,18 @@ fn blockscope_fastdebug_ES5_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockscope_fastdebug_ES6_js(#[case] variant: Variant) {
+fn blockscope_fastdebug_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope_fastdebug_ES6.js",
         baseline_path: Some("blockscope_fastdebug_ES6.js.baseline"),
         compile_flags: vec!["-dbgbaseline:blockscope_fastdebug_ES6.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -64,6 +81,12 @@ fn blockscope_func_insidescopes_js(#[case] variant: Variant) {
             "-dbgbaseline:blockscope_func_insidescopes.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -74,7 +97,7 @@ fn blockscope_func_insidescopes_js(#[case] variant: Variant) {
 //     <default>
 //       <compile-flags>-debuglaunch -dbgbaseline:IntlInit.js.dbg.baseline -Intl</compile-flags>
 //       <files>IntlInit.js</files>
-//       <tags>Intl</tags>
+//       <tags>Intl,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -82,12 +105,18 @@ fn blockscope_func_insidescopes_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_intl_stepinto_js(#[case] variant: Variant) {
+fn es6_intl_stepinto_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_intl_stepinto.js",
         compile_flags: vec!["-dbgbaseline:ES6_intl_stepinto.js.dbg.baseline", "-Intl"],
-        tags: HashSet::from(["Intl"]),
+        tags: HashSet::from([
+            "Intl",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -97,12 +126,18 @@ fn ES6_intl_stepinto_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_const_reassignment_fnscope_js(#[case] variant: Variant) {
+fn es6_letconst_const_reassignment_fnscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_const_reassignment_fnscope.js",
         baseline_path: Some("ES6_letconst_const_reassignment_fnscope.js.baseline"),
         compile_flags: vec!["-dbgbaseline:ES6_letconst_const_reassignment_fnscope.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -112,12 +147,18 @@ fn ES6_letconst_const_reassignment_fnscope_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_eval_strict_fn_js(#[case] variant: Variant) {
+fn es6_letconst_eval_strict_fn_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_eval_strict_fn.js",
         baseline_path: Some("ES6_letconst_eval_strict_fn.js.baseline"),
         compile_flags: vec!["-dbgbaseline:ES6_letconst_eval_strict_fn.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -127,12 +168,18 @@ fn ES6_letconst_eval_strict_fn_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_redeclaration_indebugger_js(#[case] variant: Variant) {
+fn es6_letconst_redeclaration_indebugger_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_redeclaration_indebugger.js",
         baseline_path: Some("ES6_letconst_redeclaration_indebugger.js.baseline"),
         compile_flags: vec!["-dbgbaseline:ES6_letconst_redeclaration_indebugger.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -142,11 +189,17 @@ fn ES6_letconst_redeclaration_indebugger_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_shadow_evaluation_js(#[case] variant: Variant) {
+fn es6_letconst_shadow_evaluation_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_shadow_evaluation.js",
         compile_flags: vec!["-dbgbaseline:ES6_letconst_shadow_evaluation.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -156,7 +209,7 @@ fn ES6_letconst_shadow_evaluation_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_shadow_eval_with_js(#[case] variant: Variant) {
+fn es6_letconst_shadow_eval_with_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_shadow_eval_with.js",
@@ -165,6 +218,12 @@ fn ES6_letconst_shadow_eval_with_js(#[case] variant: Variant) {
             "-dbgbaseline:ES6_letconst_shadow_eval_with.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -181,8 +240,15 @@ fn es6_forof_decl_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -199,8 +265,15 @@ fn es6_forof_decl_2_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl-2.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl-2.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl-2.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -217,8 +290,15 @@ fn es6_forof_decl_3_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl-3.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl-3.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl-3.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -235,8 +315,15 @@ fn es6_forof_decl_4_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl-4.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl-4.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl-4.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -253,8 +340,15 @@ fn es6_forof_decl_5_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl-5.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl-5.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl-5.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -271,8 +365,15 @@ fn es6_forof_decl_6_js(#[case] variant: Variant) {
         baseline_path: Some("es6_forof_decl-6.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -dbgbaseline:es6_forof_decl-6.js.dbg.baseline"),
+            "-ES6",
+            "-dbgbaseline:es6_forof_decl-6.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -282,7 +383,7 @@ fn es6_forof_decl_6_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn frames_values_mapES6_js(#[case] variant: Variant) {
+fn frames_values_map_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "frames_values_mapES6.js",
@@ -291,6 +392,12 @@ fn frames_values_mapES6_js(#[case] variant: Variant) {
             "-dbgbaseline:frames_values_mapES6.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -300,11 +407,17 @@ fn frames_values_mapES6_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_in_ES6_attach_js(#[case] variant: Variant) {
+fn step_in_es6_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_in_ES6_attach.js",
         compile_flags: vec!["-dbgbaseline:step_in_ES6_attach.js.dbg.baseline", "-Intl-"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -322,6 +435,12 @@ fn step_in_from_interpreted_function_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_in_from_interpreted_function_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -331,11 +450,17 @@ fn step_in_from_interpreted_function_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_in_from_JITted_function_attach_js(#[case] variant: Variant) {
+fn step_in_from_jitted_function_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_in_from_JITted_function_attach.js",
         compile_flags: vec!["-dbgbaseline:step_in_from_JITted_function_attach.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -345,15 +470,22 @@ fn step_in_from_JITted_function_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_in_only_debugJIT_attach_js(#[case] variant: Variant) {
+fn step_in_only_debug_jit_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_in_only_debugJIT_attach.js",
         baseline_path: Some("step_in_only_debugJIT_attach.js.baseline"),
         compile_flags: vec![
             "-dbgbaseline:step_in_only_debugJIT_attach.js.dbg.baseline",
-            todo!("-maxinterpretcount:1 -off:simpleJit"),
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -371,6 +503,12 @@ fn step_out_direct_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_out_direct_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -380,11 +518,17 @@ fn step_out_direct_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_out_ES5_js(#[case] variant: Variant) {
+fn step_out_es5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_out_ES5.js",
         compile_flags: vec!["-dbgbaseline:step_out_ES5.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -394,15 +538,22 @@ fn step_out_ES5_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_out_ES6_js(#[case] variant: Variant) {
+fn step_out_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_out_ES6.js",
         baseline_path: Some("step_out_ES6.js.baseline"),
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-dbgbaseline:step_out_ES6.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:step_out_ES6.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -421,6 +572,12 @@ fn step_out_from_catch_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_out_from_catch_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -438,6 +595,12 @@ fn step_out_from_interpreted_function_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_out_from_interpreted_function_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -447,7 +610,7 @@ fn step_out_from_interpreted_function_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_out_from_JITted_function_attach_js(#[case] variant: Variant) {
+fn step_out_from_jitted_function_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_out_from_JITted_function_attach.js",
@@ -455,6 +618,12 @@ fn step_out_from_JITted_function_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_out_from_JITted_function_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -464,11 +633,17 @@ fn step_out_from_JITted_function_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_out_only_debugJIT_attach_js(#[case] variant: Variant) {
+fn step_out_only_debug_jit_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_out_only_debugJIT_attach.js",
         compile_flags: vec!["-dbgbaseline:step_out_only_debugJIT_attach.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -478,7 +653,7 @@ fn step_out_only_debugJIT_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_over_ES6_attach_js(#[case] variant: Variant) {
+fn step_over_es6_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_over_ES6_attach.js",
@@ -486,6 +661,12 @@ fn step_over_ES6_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_over_ES6_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -495,7 +676,7 @@ fn step_over_ES6_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn step_over_JITd_fn_from_Intrprt_fn_attach_js(#[case] variant: Variant) {
+fn step_over_jitd_fn_from_intrprt_fn_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "step_over_JITd_fn_from_Intrprt_fn_attach.js",
@@ -503,6 +684,12 @@ fn step_over_JITd_fn_from_Intrprt_fn_attach_js(#[case] variant: Variant) {
             "-dbgbaseline:step_over_JITd_fn_from_Intrprt_fn_attach.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -512,15 +699,23 @@ fn step_over_JITd_fn_from_Intrprt_fn_attach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn TempStrExpr_js(#[case] variant: Variant) {
+fn temp_str_expr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "TempStrExpr.js",
         baseline_path: Some("TempStrExpr.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-ES6 -ES6ObjectLiterals -dbgbaseline:TempStrExpr.js.dbg.baseline"),
+            "-ES6",
+            "-ES6ObjectLiterals",
+            "-dbgbaseline:TempStrExpr.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -533,7 +728,7 @@ fn TempStrExpr_js(#[case] variant: Variant) {
 //       <compile-flags>-dbgbaseline:ES6_intl_simple_attach.js.dbg.baseline -Intl</compile-flags>
 //       <baseline>ES6_intl_simple_attach.js.baseline</baseline>
 //       <!-- This test is still require_winglob because it has winglob-specific output in the .dbg.baseline -->
-//       <tags>Intl,require_winglob</tags>
+//       <tags>Intl,require_winglob,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -541,7 +736,7 @@ fn TempStrExpr_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn frames_inspection_arrayES5_js(#[case] variant: Variant) {
+fn frames_inspection_array_es5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "frames_inspection_arrayES5.js",
@@ -550,6 +745,12 @@ fn frames_inspection_arrayES5_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:frames_inspection_arrayES5.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -566,8 +767,15 @@ fn shadow_with_js(#[case] variant: Variant) {
         baseline_path: Some("shadow_with.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:shadow_with.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:shadow_with.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -577,15 +785,22 @@ fn shadow_with_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockscope_func_declaration_ES6_js(#[case] variant: Variant) {
+fn blockscope_func_declaration_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope_func_declaration_ES6.js",
         baseline_path: Some("blockscope_func_declaration_ES6.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockscope_func_declaration_ES6.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockscope_func_declaration_ES6.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -595,12 +810,23 @@ fn blockscope_func_declaration_ES6_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockscope_func_expression_ES6_js(#[case] variant: Variant) {
+fn blockscope_func_expression_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockscope_func_expression_ES6.js",
         baseline_path: Some("blockscope_func_expression_ES6.js.baseline"),
-        compile_flags: vec!["-debuglaunch",todo!("-es6functionnamefull -dbgbaseline:blockscope_func_expression_ES6.js.dbg.baseline -Intl-")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-es6functionnamefull",
+            "-dbgbaseline:blockscope_func_expression_ES6.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -610,15 +836,22 @@ fn blockscope_func_expression_ES6_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_eval_nonstrict_js(#[case] variant: Variant) {
+fn es6_letconst_eval_nonstrict_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_eval_nonstrict.js",
         baseline_path: Some("ES6_letconst_eval_nonstrict.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_letconst_eval_nonstrict.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_letconst_eval_nonstrict.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -628,14 +861,21 @@ fn ES6_letconst_eval_nonstrict_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_for_js(#[case] variant: Variant) {
+fn es6_letconst_for_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_for.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_letconst_for.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_letconst_for.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -645,14 +885,21 @@ fn ES6_letconst_for_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_trycatch_simple_fast_js(#[case] variant: Variant) {
+fn es6_letconst_trycatch_simple_fast_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_trycatch_simple_fast.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_letconst_trycatch_simple_fast.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_letconst_trycatch_simple_fast.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -662,14 +909,22 @@ fn ES6_letconst_trycatch_simple_fast_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_proto_chained_js(#[case] variant: Variant) {
+fn es6_proto_chained_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_proto_chained.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_proto_chained.js.dbg.baseline -Intl- -disableDebugObject"),
+            "-dbgbaseline:ES6_proto_chained.js.dbg.baseline",
+            "-Intl-",
+            "-disableDebugObject",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -679,14 +934,21 @@ fn ES6_proto_chained_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_proto_simple_js(#[case] variant: Variant) {
+fn es6_proto_simple_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_proto_simple.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_proto_simple.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_proto_simple.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -696,14 +958,21 @@ fn ES6_proto_simple_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_proto_userDefinedObject_js(#[case] variant: Variant) {
+fn es6_proto_user_defined_object_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_proto_userDefinedObject.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_proto_userDefinedObject.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_proto_userDefinedObject.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -713,15 +982,22 @@ fn ES6_proto_userDefinedObject_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_intl_stepinto_libexpandos_js(#[case] variant: Variant) {
+fn es6_intl_stepinto_libexpandos_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_intl_stepinto_libexpandos.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_intl_stepinto_libexpandos.js.dbg.baseline -Intl"),
+            "-dbgbaseline:ES6_intl_stepinto_libexpandos.js.dbg.baseline",
+            "-Intl",
         ],
-        tags: HashSet::from(["Intl"]),
+        tags: HashSet::from([
+            "Intl",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -731,14 +1007,21 @@ fn ES6_intl_stepinto_libexpandos_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_forin_js(#[case] variant: Variant) {
+fn es6_letconst_forin_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_forin.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_letconst_forin.js.dbg.baseline -Intl"),
+            "-dbgbaseline:ES6_letconst_forin.js.dbg.baseline",
+            "-Intl",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -748,7 +1031,7 @@ fn ES6_letconst_forin_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_const_usebeforedeclaration_js(#[case] variant: Variant) {
+fn es6_letconst_const_usebeforedeclaration_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_const_usebeforedeclaration.js",
@@ -756,6 +1039,12 @@ fn ES6_letconst_const_usebeforedeclaration_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ES6_letconst_const_usebeforedeclaration.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -765,7 +1054,7 @@ fn ES6_letconst_const_usebeforedeclaration_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_proto_invalidation_js(#[case] variant: Variant) {
+fn es6_proto_invalidation_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_proto_invalidation.js",
@@ -773,6 +1062,12 @@ fn ES6_proto_invalidation_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ES6_proto_invalidation.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -782,7 +1077,7 @@ fn ES6_proto_invalidation_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn frames_letconst_reassignobjects_ES6_js(#[case] variant: Variant) {
+fn frames_letconst_reassignobjects_es6_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "frames_letconst_reassignobjects_ES6.js",
@@ -790,6 +1085,12 @@ fn frames_letconst_reassignobjects_ES6_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:frames_letconst_reassignobjects_ES6.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -799,17 +1100,22 @@ fn frames_letconst_reassignobjects_ES6_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_const_reassignment_globalscope_js(#[case] variant: Variant) {
+fn es6_letconst_const_reassignment_globalscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_const_reassignment_globalscope.js",
         baseline_path: Some("ES6_letconst_const_reassignment_globalscope.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!(
-                "-dbgbaseline:ES6_letconst_const_reassignment_globalscope.js.dbg.baseline -Intl-"
-            ),
+            "-dbgbaseline:ES6_letconst_const_reassignment_globalscope.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -819,15 +1125,22 @@ fn ES6_letconst_const_reassignment_globalscope_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_letconst_redcl_js(#[case] variant: Variant) {
+fn es6_letconst_redcl_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_letconst_redcl.js",
         baseline_path: Some("ES6_letconst_redcl.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_letconst_redcl.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:ES6_letconst_redcl.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -843,6 +1156,12 @@ fn native_array_js(#[case] variant: Variant) {
         source_path: "native_array.js",
         baseline_path: Some("native_array.js.baseline"),
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:native_array.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -859,8 +1178,15 @@ fn argument_disp_js(#[case] variant: Variant) {
         baseline_path: Some("argument_disp.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:argument_disp.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:argument_disp.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -877,8 +1203,15 @@ fn multiple_argumentsdisp_safeguard_js(#[case] variant: Variant) {
         baseline_path: Some("multiple_argumentsdisp_safeguard.js.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:multiple_argumentsdisp_safeguard.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:multiple_argumentsdisp_safeguard.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -893,6 +1226,12 @@ fn level_1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "level_1.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:level_1.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -907,6 +1246,12 @@ fn failedasm_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "failedasm.js",
         compile_flags: vec!["-dbgbaseline:emptyJson.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -916,15 +1261,23 @@ fn failedasm_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_spread_js(#[case] variant: Variant) {
+fn es6_spread_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_spread.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:ES6_spread.js.dbg.baseline -es6spread -nonative"),
+            "-dbgbaseline:ES6_spread.js.dbg.baseline",
+            "-es6spread",
+            "-nonative",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -940,9 +1293,16 @@ fn specialproperties_fn_js(#[case] variant: Variant) {
         source_path: "specialproperties_fn.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-inspectmaxstringlength:100 -dbgbaseline:specialproperties_fn.js.dbg.baseline"),
+            "-inspectmaxstringlength:100",
+            "-dbgbaseline:specialproperties_fn.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -952,11 +1312,24 @@ fn specialproperties_fn_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
+fn es6_reg_exp_specialproperties_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_RegExp_specialproperties.js",
-        compile_flags: vec!["-ES6Unicode-",todo!("-ES2018RegExDotAll- -ES6RegExSticky- -debuglaunch -inspectmaxstringlength:100 -dbgbaseline:ES6_RegExp_specialproperties_default.js.dbg.baseline")],
+        compile_flags: vec![
+            "-ES6Unicode-",
+            "-ES2018RegExDotAll-",
+            "-ES6RegExSticky-",
+            "-debuglaunch",
+            "-inspectmaxstringlength:100",
+            "-dbgbaseline:ES6_RegExp_specialproperties_default.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -966,11 +1339,24 @@ fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
+fn es6_reg_exp_specialproperties_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_RegExp_specialproperties.js",
-        compile_flags: vec!["-ES6Unicode",todo!("-ES2018RegExDotAll- -ES6RegExSticky- -debuglaunch -inspectmaxstringlength:100 -dbgbaseline:ES6_RegExp_specialproperties_with_unicode.js.dbg.baseline")],
+        compile_flags: vec![
+            "-ES6Unicode",
+            "-ES2018RegExDotAll-",
+            "-ES6RegExSticky-",
+            "-debuglaunch",
+            "-inspectmaxstringlength:100",
+            "-dbgbaseline:ES6_RegExp_specialproperties_with_unicode.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -980,11 +1366,24 @@ fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
+fn es6_reg_exp_specialproperties_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_RegExp_specialproperties.js",
-        compile_flags: vec!["-ES6Unicode-",todo!("-ES2018RegExDotAll- -ES6RegExSticky -debuglaunch -inspectmaxstringlength:100 -dbgbaseline:ES6_RegExp_specialproperties_with_sticky.js.dbg.baseline")],
+        compile_flags: vec![
+            "-ES6Unicode-",
+            "-ES2018RegExDotAll-",
+            "-ES6RegExSticky",
+            "-debuglaunch",
+            "-inspectmaxstringlength:100",
+            "-dbgbaseline:ES6_RegExp_specialproperties_with_sticky.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -994,11 +1393,23 @@ fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ES6_RegExp_specialproperties_js(#[case] variant: Variant) {
+fn es6_reg_exp_specialproperties_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ES6_RegExp_specialproperties.js",
-        compile_flags: vec!["-ES6Unicode",todo!("-ES6RegExSticky -debuglaunch -inspectmaxstringlength:100 -dbgbaseline:ES6_RegExp_specialproperties_all.js.dbg.baseline")],
+        compile_flags: vec![
+            "-ES6Unicode",
+            "-ES6RegExSticky",
+            "-debuglaunch",
+            "-inspectmaxstringlength:100",
+            "-dbgbaseline:ES6_RegExp_specialproperties_all.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1012,8 +1423,19 @@ fn specialproperties_level2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "specialproperties_level2.js",
-        compile_flags: vec!["-debuglaunch",todo!("-es6functionnamefull -inspectmaxstringlength:256 -dbgbaseline:specialproperties_level2.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-es6functionnamefull",
+            "-inspectmaxstringlength:256",
+            "-dbgbaseline:specialproperties_level2.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1032,6 +1454,12 @@ fn testdynamicattach1_js(#[case] variant: Variant) {
             "-dbgbaseline:testdynamicattach1.js.dbg.baseline",
             "-DeferLoadingAvailableSource",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1041,15 +1469,22 @@ fn testdynamicattach1_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn testdynamicattach1_js(#[case] variant: Variant) {
+fn testdynamicattach1_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "testdynamicattach1.js",
         baseline_path: Some("testdynamicattach1.baseline"),
         compile_flags: vec![
             "-dbgbaseline:testdynamicattach1.js.dbg.baseline",
-            todo!("-Intl- -DeferLoadingAvailableSource"),
+            "-Intl-",
+            "-DeferLoadingAvailableSource",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1066,8 +1501,15 @@ fn targeted_js(#[case] variant: Variant) {
         baseline_path: Some("targeted.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:targeted.js.dbg.baseline -DeferLoadingAvailableSource"),
+            "-dbgbaseline:targeted.js.dbg.baseline",
+            "-DeferLoadingAvailableSource",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1077,11 +1519,17 @@ fn targeted_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn protoTest2_js(#[case] variant: Variant) {
+fn proto_test2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "protoTest2.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:protoTest2.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1097,6 +1545,12 @@ fn testdynamicattach2_js(#[case] variant: Variant) {
         source_path: "testdynamicattach2.js",
         baseline_path: Some("testdynamicattach2.baseline"),
         compile_flags: vec!["-dbgbaseline:testdynamicattach2.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1106,7 +1560,7 @@ fn testdynamicattach2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deferParseDetach_js(#[case] variant: Variant) {
+fn defer_parse_detach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferParseDetach.js",
@@ -1114,6 +1568,12 @@ fn deferParseDetach_js(#[case] variant: Variant) {
             "-force:deferparse",
             "-dbgbaseline:deferParseDetach.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1123,7 +1583,7 @@ fn deferParseDetach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deferParseDetach2_js(#[case] variant: Variant) {
+fn defer_parse_detach2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferParseDetach2.js",
@@ -1131,6 +1591,12 @@ fn deferParseDetach2_js(#[case] variant: Variant) {
             "-force:deferparse",
             "-dbgbaseline:deferParseDetach2.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1140,15 +1606,22 @@ fn deferParseDetach2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn attachWithDeferParse_js(#[case] variant: Variant) {
+fn attach_with_defer_parse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "attachWithDeferParse.js",
         compile_flags: vec![
             "-CollectGarbage",
-            todo!("-force:deferparse -dbgbaseline:attachWithDeferParse.js.dbg.baseline"),
+            "-force:deferparse",
+            "-dbgbaseline:attachWithDeferParse.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1166,6 +1639,12 @@ fn array_prototest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:array_prototest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1179,10 +1658,15 @@ fn breakpoints_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "breakpoints.js",
-        compile_flags: vec![todo!(
-            " -debuglaunch -dbgbaseline:breakpoints.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_jsrt", "exclude_dynapogo"]),
+        compile_flags: vec!["-debuglaunch", "-dbgbaseline:breakpoints.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_jsrt",
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1197,6 +1681,12 @@ fn indexprop_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "indexprop.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:indexprop.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1206,14 +1696,21 @@ fn indexprop_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn funcSource_js(#[case] variant: Variant) {
+fn func_source_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "funcSource.js",
         compile_flags: vec![
             "-inspectmaxstringlength:100",
-            todo!("-debuglaunch -dbgbaseline:funcSource.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:funcSource.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1229,8 +1726,15 @@ fn evaluate_js(#[case] variant: Variant) {
         source_path: "evaluate.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:evaluate.js.dbg.baseline -InspectMaxStringLength:100"),
+            "-dbgbaseline:evaluate.js.dbg.baseline",
+            "-InspectMaxStringLength:100",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1240,11 +1744,17 @@ fn evaluate_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn attachAfterException_js(#[case] variant: Variant) {
+fn attach_after_exception_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "attachAfterException.js",
         compile_flags: vec!["-dbgbaseline:attachAfterException.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1254,7 +1764,7 @@ fn attachAfterException_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn catchInspection_js(#[case] variant: Variant) {
+fn catch_inspection_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "catchInspection.js",
@@ -1262,6 +1772,12 @@ fn catchInspection_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:catchInspection.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1271,11 +1787,17 @@ fn catchInspection_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn funcExprName_js(#[case] variant: Variant) {
+fn func_expr_name_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "funcExprName.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:funcExprName.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1290,6 +1812,12 @@ fn attachdetach_delaycapture_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "attachdetach-delaycapture.js",
         compile_flags: vec!["-dbgbaseline:attachdetach-delaycapture.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1299,7 +1827,7 @@ fn attachdetach_delaycapture_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn globalFuncVars_js(#[case] variant: Variant) {
+fn global_func_vars_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalFuncVars.js",
@@ -1307,6 +1835,12 @@ fn globalFuncVars_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:globalFuncVars.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1316,7 +1850,7 @@ fn globalFuncVars_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArrayCaptureAttach_js(#[case] variant: Variant) {
+fn block_scope_slot_array_capture_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArrayCaptureAttach.js",
@@ -1324,6 +1858,12 @@ fn blockScopeSlotArrayCaptureAttach_js(#[case] variant: Variant) {
             "-InspectMaxStringLength:33",
             "-dbgbaseline:blockScopeSlotArrayCaptureAttach.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1333,14 +1873,21 @@ fn blockScopeSlotArrayCaptureAttach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArrayCapture_js(#[case] variant: Variant) {
+fn block_scope_slot_array_capture_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArrayCapture.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeSlotArrayCapture.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeSlotArrayCapture.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1350,14 +1897,21 @@ fn blockScopeSlotArrayCapture_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeActivationObjectCapture_js(#[case] variant: Variant) {
+fn block_scope_activation_object_capture_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeActivationObjectCapture.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeActivationObjectCapture.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeActivationObjectCapture.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1367,7 +1921,7 @@ fn blockScopeActivationObjectCapture_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeBasicLetConstTest_js(#[case] variant: Variant) {
+fn block_scope_basic_let_const_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeBasicLetConstTest.js",
@@ -1375,6 +1929,12 @@ fn blockScopeBasicLetConstTest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeBasicLetConstTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1384,16 +1944,21 @@ fn blockScopeBasicLetConstTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeActivationObjectAsSlotArray_js(#[case] variant: Variant) {
+fn block_scope_activation_object_as_slot_array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeActivationObjectAsSlotArray.js",
         compile_flags: vec![
             "-InspectMaxStringLength:150",
-            todo!(
-                "-debuglaunch -dbgbaseline:blockScopeActivationObjectAsSlotArray.js.dbg.baseline"
-            ),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeActivationObjectAsSlotArray.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1403,7 +1968,7 @@ fn blockScopeActivationObjectAsSlotArray_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeBasicScopingTest_js(#[case] variant: Variant) {
+fn block_scope_basic_scoping_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeBasicScopingTest.js",
@@ -1411,6 +1976,12 @@ fn blockScopeBasicScopingTest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeBasicScopingTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1420,14 +1991,21 @@ fn blockScopeBasicScopingTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeForTest_bug183991_js(#[case] variant: Variant) {
+fn block_scope_for_test_bug183991_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeForTest.bug183991.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeForTest.bug183991.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeForTest.bug183991.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1437,14 +2015,21 @@ fn blockScopeForTest_bug183991_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeNestedFunctionTest_js(#[case] variant: Variant) {
+fn block_scope_nested_function_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeNestedFunctionTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeNestedFunctionTest.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeNestedFunctionTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1454,14 +2039,21 @@ fn blockScopeNestedFunctionTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeDeadZoneTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeDeadZoneTest.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeDeadZoneTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1471,14 +2063,21 @@ fn blockScopeDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeEvalTest_js(#[case] variant: Variant) {
+fn block_scope_eval_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeEvalTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeEvalTest.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeEvalTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1488,7 +2087,7 @@ fn blockScopeEvalTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeGlobalTest_js(#[case] variant: Variant) {
+fn block_scope_global_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeGlobalTest.js",
@@ -1496,6 +2095,12 @@ fn blockScopeGlobalTest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeGlobalTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1505,14 +2110,22 @@ fn blockScopeGlobalTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeForTest_js(#[case] variant: Variant) {
+fn block_scope_for_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeForTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeForTest.js.dbg.baseline -Intl-"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeForTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1522,14 +2135,21 @@ fn blockScopeForTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeWithTest_js(#[case] variant: Variant) {
+fn block_scope_with_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeWithTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeWithTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeWithTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1539,14 +2159,22 @@ fn blockScopeWithTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSwitchTest_js(#[case] variant: Variant) {
+fn block_scope_switch_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSwitchTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeSwitchTest.js.dbg.baseline -Intl-"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeSwitchTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1556,11 +2184,22 @@ fn blockScopeSwitchTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeActivationObjectDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_activation_object_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeActivationObjectDeadZoneTest.js",
-        compile_flags: vec!["-InspectMaxStringLength:33",todo!("-debuglaunch -dbgbaseline:blockScopeActivationObjectDeadZoneTest.js.dbg.baseline -Intl-")],
+        compile_flags: vec![
+            "-InspectMaxStringLength:33",
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeActivationObjectDeadZoneTest.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1570,14 +2209,22 @@ fn blockScopeActivationObjectDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeRegSlotDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_reg_slot_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeRegSlotDeadZoneTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!("-debuglaunch -dbgbaseline:blockScopeRegSlotDeadZoneTest.js.dbg.baseline -Intl-"),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeRegSlotDeadZoneTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1587,16 +2234,22 @@ fn blockScopeRegSlotDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArrayDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_slot_array_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArrayDeadZoneTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!(
-                "-debuglaunch -dbgbaseline:blockScopeSlotArrayDeadZoneTest.js.dbg.baseline -Intl-"
-            ),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeSlotArrayDeadZoneTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1606,14 +2259,21 @@ fn blockScopeSlotArrayDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeGlobalDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_global_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeGlobalDeadZoneTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeGlobalDeadZoneTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeGlobalDeadZoneTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1623,14 +2283,21 @@ fn blockScopeGlobalDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeGlobalBlockTest_js(#[case] variant: Variant) {
+fn block_scope_global_block_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeGlobalBlockTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeGlobalBlockTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeGlobalBlockTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1640,7 +2307,7 @@ fn blockScopeGlobalBlockTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArrayTest_js(#[case] variant: Variant) {
+fn block_scope_slot_array_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArrayTest.js",
@@ -1648,6 +2315,12 @@ fn blockScopeSlotArrayTest_js(#[case] variant: Variant) {
             "-dbgbaseline:blockScopeSlotArrayTest.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1657,14 +2330,21 @@ fn blockScopeSlotArrayTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArrayTest_js(#[case] variant: Variant) {
+fn block_scope_slot_array_test_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArrayTest.js",
         compile_flags: vec![
             "-forceserialized",
-            todo!("-dbgbaseline:blockScopeSlotArrayTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeSlotArrayTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1674,7 +2354,7 @@ fn blockScopeSlotArrayTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSlotArraySiblingTest_js(#[case] variant: Variant) {
+fn block_scope_slot_array_sibling_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSlotArraySiblingTest.js",
@@ -1682,6 +2362,12 @@ fn blockScopeSlotArraySiblingTest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeSlotArraySiblingTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1691,14 +2377,21 @@ fn blockScopeSlotArraySiblingTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeGlobalSlotArrayTest_bug222631_js(#[case] variant: Variant) {
+fn block_scope_global_slot_array_test_bug222631_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeGlobalSlotArrayTest.bug222631.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeGlobalSlotArrayTest.bug222631.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeGlobalSlotArrayTest.bug222631.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1708,7 +2401,7 @@ fn blockScopeGlobalSlotArrayTest_bug222631_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSibling_bug263635_js(#[case] variant: Variant) {
+fn block_scope_sibling_bug263635_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSibling.bug263635.js",
@@ -1716,6 +2409,12 @@ fn blockScopeSibling_bug263635_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeSibling.bug263635.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1725,7 +2424,7 @@ fn blockScopeSibling_bug263635_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeSiblingScopeTrackedInNonDebugMode_bug321751_js(#[case] variant: Variant) {
+fn block_scope_sibling_scope_tracked_in_non_debug_mode_bug321751_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeSiblingScopeTrackedInNonDebugMode.bug321751.js",
@@ -1733,6 +2432,12 @@ fn blockScopeSiblingScopeTrackedInNonDebugMode_bug321751_js(#[case] variant: Var
             "-dbgbaseline:blockScopeSiblingScopeTrackedInNonDebugMode.bug321751.js.dbg.baseline",
             "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1742,14 +2447,21 @@ fn blockScopeSiblingScopeTrackedInNonDebugMode_bug321751_js(#[case] variant: Var
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationRegSlotTest_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_reg_slot_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationRegSlotTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeFunctionDeclarationRegSlotTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeFunctionDeclarationRegSlotTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1759,14 +2471,21 @@ fn blockScopeFunctionDeclarationRegSlotTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationSlotArrayTest_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_slot_array_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationSlotArrayTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeFunctionDeclarationSlotArrayTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeFunctionDeclarationSlotArrayTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1776,11 +2495,21 @@ fn blockScopeFunctionDeclarationSlotArrayTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationActivationObjectTest_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_activation_object_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationActivationObjectTest.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:blockScopeFunctionDeclarationActivationObjectTest.js.dbg.baseline -Intl-")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeFunctionDeclarationActivationObjectTest.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1790,11 +2519,22 @@ fn blockScopeFunctionDeclarationActivationObjectTest_js(#[case] variant: Variant
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationGlobalTest_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_global_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationGlobalTest.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:blockScopeFunctionDeclarationGlobalTest.js.dbg.baseline -Intl- -InspectMaxStringLength:100")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeFunctionDeclarationGlobalTest.js.dbg.baseline",
+            "-Intl-",
+            "-InspectMaxStringLength:100",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1804,12 +2544,13 @@ fn blockScopeFunctionDeclarationGlobalTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationGlobalShadowingTest_bug305562_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_global_shadowing_test_bug305562_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js.dbg.baseline -Intl-")],
-        ..Default::default()
+        compile_flags: vec!["-debuglaunch","-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js.dbg.baseline","-Intl-"],
+        tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
+..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
@@ -1818,12 +2559,13 @@ fn blockScopeFunctionDeclarationGlobalShadowingTest_bug305562_js(#[case] variant
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionDeclarationGlobalShadowingTest_bug308191_js(#[case] variant: Variant) {
+fn block_scope_function_declaration_global_shadowing_test_bug308191_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js",
-        compile_flags: vec!["-debuglaunch",todo!("-InspectMaxStringLength:33 -dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js.dbg.baseline -Intl-")],
-        ..Default::default()
+        compile_flags: vec!["-debuglaunch","-InspectMaxStringLength:33","-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js.dbg.baseline","-Intl-"],
+        tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
+..Default::default()
     };
     common::run_test_variant(&test, variant);
 }
@@ -1832,14 +2574,21 @@ fn blockScopeFunctionDeclarationGlobalShadowingTest_bug308191_js(#[case] variant
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionRedeclarationTest_js(#[case] variant: Variant) {
+fn block_scope_function_redeclaration_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionRedeclarationTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeFunctionRedeclarationTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeFunctionRedeclarationTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1849,7 +2598,7 @@ fn blockScopeFunctionRedeclarationTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeFunctionRedeclaration_blue523098_js(#[case] variant: Variant) {
+fn block_scope_function_redeclaration_blue523098_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionRedeclaration_blue523098.js",
@@ -1857,6 +2606,12 @@ fn blockScopeFunctionRedeclaration_blue523098_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeFunctionRedeclaration_blue523098.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1871,6 +2626,12 @@ fn disablebp_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "disablebp.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:disablebp.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1885,6 +2646,12 @@ fn disablebp2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "disablebp2.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:disablebp2.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1900,8 +2667,15 @@ fn setframe_js(#[case] variant: Variant) {
         source_path: "setframe.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:setframe.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:setframe.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1911,15 +2685,22 @@ fn setframe_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn funcExprCrash_150491_js(#[case] variant: Variant) {
+fn func_expr_crash_150491_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "funcExprCrash_150491.js",
         compile_flags: vec![
             "-force:deferparse",
-            todo!("-dbgbaseline:funcExprCrash_150491.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:funcExprCrash_150491.js.dbg.baseline",
+            "-Intl-",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1929,17 +2710,24 @@ fn funcExprCrash_150491_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn JIT_localsAtNativeFrame1_js(#[case] variant: Variant) {
+fn jit_locals_at_native_frame1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "JIT_localsAtNativeFrame1.js",
         compile_flags: vec![
             "-forceNative",
-            todo!(
-                "-off:simpleJit -debuglaunch -dbgbaseline:JIT_localsAtNativeFrame1.js.dbg.baseline"
-            ),
+            "-off:simpleJit",
+            "-debuglaunch",
+            "-dbgbaseline:JIT_localsAtNativeFrame1.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_arm,exclude_nonative"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_arm,exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1949,17 +2737,24 @@ fn JIT_localsAtNativeFrame1_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn JIT_localsAtNativeFrame2_js(#[case] variant: Variant) {
+fn jit_locals_at_native_frame2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "JIT_localsAtNativeFrame2.js",
         compile_flags: vec![
             "-forceNative",
-            todo!(
-                "-off:simpleJit -debuglaunch -dbgbaseline:JIT_localsAtNativeFrame2.js.dbg.baseline"
-            ),
+            "-off:simpleJit",
+            "-debuglaunch",
+            "-dbgbaseline:JIT_localsAtNativeFrame2.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_arm,exclude_nonative"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_arm,exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1975,6 +2770,12 @@ fn bug594394_js(#[case] variant: Variant) {
         source_path: "bug594394.js",
         baseline_path: Some("bug594394.baseline"),
         compile_flags: vec!["-DebugLaunch", "-dbgbaseline:bug594394.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -1984,17 +2785,23 @@ fn bug594394_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn FastF12_BOBranch_js(#[case] variant: Variant) {
+fn fast_f12_bobranch_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FastF12_BOBranch.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!(
-                "-maxinterpretcount:1 -off:simpleJit -dbgbaseline:FastF12_BOBranch.js.dbg.baseline"
-            ),
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-dbgbaseline:FastF12_BOBranch.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2009,7 +2816,13 @@ fn negzerotest_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "negzerotest.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:negzerotest.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2019,11 +2832,17 @@ fn negzerotest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn detachBasicTest_js(#[case] variant: Variant) {
+fn detach_basic_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "detachBasicTest.js",
         compile_flags: vec!["-dbgbaseline:detachBasicTest.js.dbg.baseline", "-Intl-"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2033,11 +2852,17 @@ fn detachBasicTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn detachBasicTest_js(#[case] variant: Variant) {
+fn detach_basic_test_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "detachBasicTest.js",
         compile_flags: vec!["-dbgbaseline:detachBasicTest.js.dbg.baseline", "-Intl-"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2053,6 +2878,12 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
         source_path: "testdynamicdetach1.js",
         baseline_path: Some("testdynamicdetach1.baseline"),
         compile_flags: vec!["-dbgbaseline:testdynamicdetach1.js.dbg.baseline", "-Intl-"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2063,7 +2894,7 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
 //     <default>
 //       <compile-flags>-debuglaunch -nonative -dbgbaseline:jitStepping2.js.dbg.baseline</compile-flags>
 //       <files>jitStepping2.js</files>
-//       <tags>exclude_dynapogo</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2072,7 +2903,7 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
 //     <default>
 //       <compile-flags>-debuglaunch -forcenative -dbgbaseline:jitStepping2.js.dbg.baseline</compile-flags>
 //       <files>jitStepping2.js</files>
-//       <tags>exclude_dynapogo</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2080,12 +2911,26 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jit_exprEval1_js(#[case] variant: Variant) {
+fn jit_expr_eval1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jit_exprEval1.js",
-        compile_flags: vec!["-debuglaunch",todo!("-es6functionnamefull -forceNative -off:simpleJit -dbgbaseline:jit_exprEval1.js.dbg.baseline -Intl-")],
-        tags: HashSet::from(["exclude_dynapogo","exclude_nonative"]),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-es6functionnamefull",
+            "-forceNative",
+            "-off:simpleJit",
+            "-dbgbaseline:jit_exprEval1.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2099,8 +2944,21 @@ fn jit_editvalue1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jit_editvalue1.js",
-        compile_flags: vec!["-es6functionnamefull",todo!("-debuglaunch -forceNative -off:simpleJit -dbgbaseline:jit_editvalue1.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_dynapogo","exclude_nonative"]),
+        compile_flags: vec![
+            "-es6functionnamefull",
+            "-debuglaunch",
+            "-forceNative",
+            "-off:simpleJit",
+            "-dbgbaseline:jit_editvalue1.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2110,14 +2968,22 @@ fn jit_editvalue1_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jitAttach_js(#[case] variant: Variant) {
+fn jit_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jitAttach.js",
-        compile_flags: vec![todo!(
-            " -maxinterpretcount:1 -off:simpleJit -dbgbaseline:jitAttach.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-dbgbaseline:jitAttach.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2131,7 +2997,17 @@ fn stringkeyedtypehandler_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringkeyedtypehandler.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:stringkeyedtypehandler.js.dbg.baseline -DeletedPropertyReuseThreshold:1")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:stringkeyedtypehandler.js.dbg.baseline",
+            "-DeletedPropertyReuseThreshold:1",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2141,7 +3017,7 @@ fn stringkeyedtypehandler_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn functionNameShowsInScopeGroupTest_bug157127_js(#[case] variant: Variant) {
+fn function_name_shows_in_scope_group_test_bug157127_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "functionNameShowsInScopeGroupTest.bug157127.js",
@@ -2149,6 +3025,12 @@ fn functionNameShowsInScopeGroupTest_bug157127_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:functionNameShowsInScopeGroupTest.bug157127.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2158,7 +3040,7 @@ fn functionNameShowsInScopeGroupTest_bug157127_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn functionNameShowsInNestedScopeGroupTest_js(#[case] variant: Variant) {
+fn function_name_shows_in_nested_scope_group_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "functionNameShowsInNestedScopeGroupTest.js",
@@ -2166,6 +3048,12 @@ fn functionNameShowsInNestedScopeGroupTest_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:functionNameShowsInNestedScopeGroupTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2175,7 +3063,7 @@ fn functionNameShowsInNestedScopeGroupTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeExpressionNoWriteOfConst_js(#[case] variant: Variant) {
+fn block_scope_expression_no_write_of_const_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeExpressionNoWriteOfConst.js",
@@ -2183,6 +3071,12 @@ fn blockScopeExpressionNoWriteOfConst_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:blockScopeExpressionNoWriteOfConst.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2192,11 +3086,21 @@ fn blockScopeExpressionNoWriteOfConst_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeRegSlotShadowingExpressionEvaluationTest_js(#[case] variant: Variant) {
+fn block_scope_reg_slot_shadowing_expression_evaluation_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeRegSlotShadowingExpressionEvaluationTest.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:blockScopeRegSlotShadowingExpressionEvaluationTest.js.dbg.baseline -Intl-")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeRegSlotShadowingExpressionEvaluationTest.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2206,16 +3110,21 @@ fn blockScopeRegSlotShadowingExpressionEvaluationTest_js(#[case] variant: Varian
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeExpressionSimpleDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_expression_simple_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeExpressionSimpleDeadZoneTest.js",
         compile_flags: vec![
             "-InspectMaxStringLength:33",
-            todo!(
-                "-debuglaunch -dbgbaseline:blockScopeExpressionSimpleDeadZoneTest.js.dbg.baseline"
-            ),
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeExpressionSimpleDeadZoneTest.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2225,11 +3134,21 @@ fn blockScopeExpressionSimpleDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeExpressionEquationDeadZoneTest_js(#[case] variant: Variant) {
+fn block_scope_expression_equation_dead_zone_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeExpressionEquationDeadZoneTest.js",
-        compile_flags: vec!["-InspectMaxStringLength:33",todo!("-debuglaunch -dbgbaseline:blockScopeExpressionEquationDeadZoneTest.js.dbg.baseline")],
+        compile_flags: vec![
+            "-InspectMaxStringLength:33",
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeExpressionEquationDeadZoneTest.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2239,14 +3158,21 @@ fn blockScopeExpressionEquationDeadZoneTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn blockScopeTryCatchTest_js(#[case] variant: Variant) {
+fn block_scope_try_catch_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeTryCatchTest.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:blockScopeTryCatchTest.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:blockScopeTryCatchTest.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2256,11 +3182,21 @@ fn blockScopeTryCatchTest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn localsInspectionOnNonTopFrameInBlockTest_bug163347_js(#[case] variant: Variant) {
+fn locals_inspection_on_non_top_frame_in_block_test_bug163347_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "localsInspectionOnNonTopFrameInBlockTest.bug163347.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:localsInspectionOnNonTopFrameInBlockTest.bug163347.js.dbg.baseline -Intl-")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:localsInspectionOnNonTopFrameInBlockTest.bug163347.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2270,14 +3206,22 @@ fn localsInspectionOnNonTopFrameInBlockTest_bug163347_js(#[case] variant: Varian
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jitAttach_js(#[case] variant: Variant) {
+fn jit_attach_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jitAttach.js",
-        compile_flags: vec![todo!(
-            " -maxinterpretcount:1 -off:simpleJit -dbgbaseline:jitAttach.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-dbgbaseline:jitAttach.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2287,7 +3231,7 @@ fn jitAttach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn getterInspection_js(#[case] variant: Variant) {
+fn getter_inspection_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "getterInspection.js",
@@ -2295,6 +3239,12 @@ fn getterInspection_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:getterInspection.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2304,7 +3254,7 @@ fn getterInspection_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn promise_deferNestedAttach_js(#[case] variant: Variant) {
+fn promise_defer_nested_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "promise_deferNestedAttach.js",
@@ -2312,7 +3262,13 @@ fn promise_deferNestedAttach_js(#[case] variant: Variant) {
             "-es6functionnamefull",
             "-dbgbaseline:promise_deferNestedAttach.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2322,15 +3278,22 @@ fn promise_deferNestedAttach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn promise_deferNestedAttach_js(#[case] variant: Variant) {
+fn promise_defer_nested_attach_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "promise_deferNestedAttach.js",
         compile_flags: vec![
             "-ForceStaticInterpreterThunk",
-            todo!("-es6functionnamefull -dbgbaseline:promise_deferNestedAttach.js.dbg.baseline"),
+            "-es6functionnamefull",
+            "-dbgbaseline:promise_deferNestedAttach.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2344,10 +3307,14 @@ fn bug_222633_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_222633.js",
-        compile_flags: vec![todo!(
-            " -debuglaunch -dbgbaseline:bug_222633.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_222633.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2361,10 +3328,17 @@ fn bug_149118_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_149118.js",
-        compile_flags: vec![todo!(
-            " -force:deferparse -dbgbaseline:bug_149118.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-force:deferparse",
+            "-dbgbaseline:bug_149118.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2374,14 +3348,21 @@ fn bug_149118_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_149118_js(#[case] variant: Variant) {
+fn bug_149118_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_149118.js",
-        compile_flags: vec![todo!(
-            " -force:deferparse -dbgbaseline:bug_149118.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-force:deferparse",
+            "-dbgbaseline:bug_149118.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2395,8 +3376,14 @@ fn bug_204064_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_204064.js",
-        compile_flags: vec![todo!(" -dbgbaseline:bug_204064.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec!["-dbgbaseline:bug_204064.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2410,10 +3397,17 @@ fn bug_177146_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_177146.js",
-        compile_flags: vec![todo!(
-            " -debuglaunch -dbgbaseline:bug_177146.js.dbg.baseline -Intl-"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:bug_177146.js.dbg.baseline -Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2423,14 +3417,22 @@ fn bug_177146_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_177146_js(#[case] variant: Variant) {
+fn bug_177146_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_177146.js",
-        compile_flags: vec![todo!(
-            " -debuglaunch -dbgbaseline:bug_177146.js.dbg.baseline -Intl-"
-        )],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:bug_177146.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2444,10 +3446,15 @@ fn bug_256729_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_256729.js",
-        compile_flags: vec![todo!(
-            " -debuglaunch -dbgbaseline:bug_256729.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_nonative"]),
+        compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_256729.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2459,7 +3466,7 @@ fn bug_256729_js(#[case] variant: Variant) {
 //       <files>bug_266843.js</files>
 //       <compile-flags>-debuglaunch -maxinterpretcount:1 -off:simpleJit -dbgbaseline:bug_266843.js.dbg.baseline</compile-flags>
 //       <baseline>bug_266843.baseline</baseline>
-//       <tags>exclude_dynapogo</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2473,8 +3480,16 @@ fn bug_350674_js(#[case] variant: Variant) {
         source_path: "bug_350674.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-forceNative -off:simpleJit -dbgbaseline:bug_350674.js.dbg.baseline"),
+            "-forceNative",
+            "-off:simpleJit",
+            "-dbgbaseline:bug_350674.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2490,9 +3505,17 @@ fn with_shadow_js(#[case] variant: Variant) {
         source_path: "with_shadow.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-InspectMaxStringLength:100 -dbgbaseline:with_shadow.js.dbg.baseline -Intl- "),
+            "-InspectMaxStringLength:100",
+            "-dbgbaseline:with_shadow.js.dbg.baseline",
+            "-Intl-",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2507,7 +3530,13 @@ fn var_shadow_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "var_shadow.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:var_shadow.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2523,9 +3552,16 @@ fn arraytoes5array_js(#[case] variant: Variant) {
         source_path: "arraytoes5array.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:arraytoes5array.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:arraytoes5array.js.dbg.baseline",
+            "-Intl-",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2535,7 +3571,7 @@ fn arraytoes5array_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn propertyEnumeration_bug241480_js(#[case] variant: Variant) {
+fn property_enumeration_bug241480_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "propertyEnumeration.bug241480.js",
@@ -2543,6 +3579,12 @@ fn propertyEnumeration_bug241480_js(#[case] variant: Variant) {
             "-dbgbaseline:propertyEnumeration.bug241480.js.dbg.baseline",
             "-debuglaunch",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2554,7 +3596,7 @@ fn propertyEnumeration_bug241480_js(#[case] variant: Variant) {
 //       <files>bug_271356.js</files>
 //       <compile-flags>-debuglaunch -maxinterpretcount:4 -off:simpleJit -dbgbaseline:bug_271356.js.dbg.baseline</compile-flags>
 //       <baseline>bug_271356.js.baseline</baseline>
-//       <tags>exclude_dynapogo</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2568,9 +3610,16 @@ fn bug_291582_js(#[case] variant: Variant) {
         source_path: "bug_291582.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:bug_291582.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:bug_291582.js.dbg.baseline",
+            "-Intl-",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2586,9 +3635,16 @@ fn bug_355097_js(#[case] variant: Variant) {
         source_path: "bug_355097.js",
         compile_flags: vec![
             "-force:deferparse",
-            todo!("-dbgbaseline:bug_355097.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:bug_355097.js.dbg.baseline",
+            "-Intl-",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2603,7 +3659,13 @@ fn bug_301517_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_301517.js",
         compile_flags: vec!["-dbgbaseline:bug_301517.js.dbg.baseline", "-Intl-"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2615,7 +3677,7 @@ fn bug_301517_js(#[case] variant: Variant) {
 //       <files>bug_325839.js</files>
 //       <compile-flags>-debuglaunch -forceNative -off:simpleJit -dbgbaseline:bug_325839.js.dbg.baseline</compile-flags>
 //       <baseline>bug_325839.baseline</baseline>
-//       <tags>exclude_dynapogo,exclude_nonative</tags>
+//       <tags>exclude_dynapogo,exclude_nonative,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2623,12 +3685,18 @@ fn bug_301517_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn deferParse_210165_js(#[case] variant: Variant) {
+fn defer_parse_210165_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferParse_210165.js",
         baseline_path: Some("deferParse_210165.baseline"),
         compile_flags: vec!["-dbgbaseline:deferParse_210165.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2644,8 +3712,15 @@ fn qualified_names1_js(#[case] variant: Variant) {
         source_path: "qualified_names1.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:qualified_names1.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:qualified_names1.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2661,8 +3736,15 @@ fn qualified_names2_js(#[case] variant: Variant) {
         source_path: "qualified_names2.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:qualified_names2.js.dbg.baseline -Intl-"),
+            "-dbgbaseline:qualified_names2.js.dbg.baseline",
+            "-Intl-",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2672,11 +3754,17 @@ fn qualified_names2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn evalDetection_js(#[case] variant: Variant) {
+fn eval_detection_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "evalDetection.js",
         compile_flags: vec!["-dbgbaseline:evalDetection.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2693,8 +3781,15 @@ fn bug_507528_js(#[case] variant: Variant) {
         baseline_path: Some("bug_507528.baseline"),
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-Intl- -dbgbaseline:emptyJson.dbg.baseline"),
+            "-Intl-",
+            "-dbgbaseline:emptyJson.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2710,8 +3805,15 @@ fn bug_543550_js(#[case] variant: Variant) {
         source_path: "bug_543550.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-inspectmaxstringlength:110 -dbgbaseline:bug_543550.js.dbg.baseline"),
+            "-inspectmaxstringlength:110",
+            "-dbgbaseline:bug_543550.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2726,6 +3828,12 @@ fn bug_523101_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_523101.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_523101.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2740,7 +3848,13 @@ fn symbols_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "symbols.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:symbols.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2758,7 +3872,13 @@ fn qualified_names5_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:qualified_names5.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2773,7 +3893,13 @@ fn bug_538163_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_538163.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_538163.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2788,6 +3914,12 @@ fn bug_575634_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_575634.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_575634.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2802,7 +3934,13 @@ fn nested_eval_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "nested_eval.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:nested_eval.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2817,7 +3955,13 @@ fn bug_592506_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_592506.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_592506.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2827,15 +3971,22 @@ fn bug_592506_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn permanentArguments_js(#[case] variant: Variant) {
+fn permanent_arguments_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "permanentArguments.js",
         compile_flags: vec![
             "-forcenative",
-            todo!("-debuglaunch -dbgbaseline:permanentArguments.js.dbg.baseline"),
+            "-debuglaunch",
+            "-dbgbaseline:permanentArguments.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2845,15 +3996,22 @@ fn permanentArguments_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn sourceInfoMismatch_js(#[case] variant: Variant) {
+fn source_info_mismatch_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sourceInfoMismatch.js",
         compile_flags: vec![
             "-Force:Deferparse",
-            todo!("-ForceUndoDefer -dbgbaseline:emptyJson.dbg.baseline"),
+            "-ForceUndoDefer",
+            "-dbgbaseline:emptyJson.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2867,8 +4025,19 @@ fn spread_debugging_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spread_debugging.js",
-        compile_flags: vec!["-ES6Spread",todo!("-DebugLaunch -InspectMaxStringLength:100 -dbgbaseline:spread_debugging.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_serialized"]),
+        compile_flags: vec![
+            "-ES6Spread",
+            "-DebugLaunch",
+            "-InspectMaxStringLength:100",
+            "-dbgbaseline:spread_debugging.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2883,7 +4052,13 @@ fn bug_622304_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_622304.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:bug_622304.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2901,7 +4076,14 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
             "-debugLaunch",
             "-dbgbaseline:returnedvaluetests.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2913,7 +4095,7 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
 //       <files>returnedvaluetests1.js</files>
 //       <compile-flags>-dbgbaseline:returnedvaluetests1.js.dbg.baseline</compile-flags>
 //       <!-- xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919) -->
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2923,7 +4105,7 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
 //       <files>returnedvaluetests2.js</files>
 //       <compile-flags>-debugLaunch -dbgbaseline:returnedvaluetests2.js.dbg.baseline</compile-flags>
 //       <!-- xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919) -->
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat</tags>
+//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
 
@@ -2936,7 +4118,14 @@ fn delaycapture_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "delaycapture.js",
         compile_flags: vec!["-dbgbaseline:delaycapture.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2954,7 +4143,14 @@ fn returnedvaluetests3_js(#[case] variant: Variant) {
             "-debugLaunch",
             "-dbgbaseline:returnedvaluetests3.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2968,8 +4164,15 @@ fn returnedvaluetests4_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "returnedvaluetests4.js",
-        compile_flags: vec![todo!(" -dbgbaseline:returnedvaluetests4.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        compile_flags: vec!["-dbgbaseline:returnedvaluetests4.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -2979,14 +4182,22 @@ fn returnedvaluetests4_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn returnedvaluetests4_js(#[case] variant: Variant) {
+fn returnedvaluetests4_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "returnedvaluetests4.js",
-        compile_flags: vec![todo!(
-            " -force:deferparse -dbgbaseline:returnedvaluetests4.js.dbg.baseline"
-        )],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        compile_flags: vec![
+            "-force:deferparse",
+            "-dbgbaseline:returnedvaluetests4.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3002,9 +4213,18 @@ fn bug_261867_js(#[case] variant: Variant) {
         source_path: "bug_261867.js",
         compile_flags: vec![
             "-CollectGarbage",
-            todo!("-debuglaunch -maxinterpretcount:1 -dbgbaseline:bug_261867.js.dbg.baseline"),
+            "-debuglaunch",
+            "-maxinterpretcount:1",
+            "-dbgbaseline:bug_261867.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_dynapogo", "exclude_serialized"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3020,8 +4240,15 @@ fn rest_js(#[case] variant: Variant) {
         source_path: "rest.js",
         compile_flags: vec![
             "-dbgbaseline:rest.js.dbg.baseline",
-            todo!("-ES6Rest -InspectMaxStringLength:100"),
+            "-ES6Rest",
+            "-InspectMaxStringLength:100",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3031,7 +4258,7 @@ fn rest_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ObjLit_step_into_more_js(#[case] variant: Variant) {
+fn obj_lit_step_into_more_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjLit_step_into_more.js",
@@ -3040,6 +4267,12 @@ fn ObjLit_step_into_more_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ObjLit_step_into_more.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3049,7 +4282,7 @@ fn ObjLit_step_into_more_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ObjLit_step_into_out_js(#[case] variant: Variant) {
+fn obj_lit_step_into_out_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjLit_step_into_out.js",
@@ -3058,6 +4291,12 @@ fn ObjLit_step_into_out_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ObjLit_step_into_out.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3067,7 +4306,7 @@ fn ObjLit_step_into_out_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ObjLit_step_over_js(#[case] variant: Variant) {
+fn obj_lit_step_over_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjLit_step_over.js",
@@ -3076,6 +4315,12 @@ fn ObjLit_step_over_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ObjLit_step_over.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3089,7 +4334,18 @@ fn generators_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators.js",
-        compile_flags: vec!["-debuglaunch",todo!("-dbgbaseline:generators.js.dbg.baseline -ES6Generators -InspectMaxStringLength:200")],
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:generators.js.dbg.baseline",
+            "-ES6Generators",
+            "-InspectMaxStringLength:200",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3104,6 +4360,12 @@ fn async_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "async.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:async.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3121,6 +4383,12 @@ fn async_step_out_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:async_step_out.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3138,6 +4406,12 @@ fn async_step_over_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:async_step_over.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3147,14 +4421,21 @@ fn async_step_over_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn TypedArray_js(#[case] variant: Variant) {
+fn typed_array_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "TypedArray.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-dbgbaseline:TypedArray.js.dbg.baseline -InspectMaxStringLength:200"),
+            "-dbgbaseline:TypedArray.js.dbg.baseline",
+            "-InspectMaxStringLength:200",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3164,7 +4445,7 @@ fn TypedArray_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ComputedPropertyNames_js(#[case] variant: Variant) {
+fn computed_property_names_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ComputedPropertyNames.js",
@@ -3172,6 +4453,12 @@ fn ComputedPropertyNames_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ComputedPropertyNames.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3181,7 +4468,7 @@ fn ComputedPropertyNames_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn parentedDynamicCode2_js(#[case] variant: Variant) {
+fn parented_dynamic_code2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "parentedDynamicCode2.js",
@@ -3189,6 +4476,12 @@ fn parentedDynamicCode2_js(#[case] variant: Variant) {
             "-InspectMaxStringLength:1000",
             "-dbgbaseline:parentedDynamicCode2.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3198,7 +4491,7 @@ fn parentedDynamicCode2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn parentedDynamicCode3_js(#[case] variant: Variant) {
+fn parented_dynamic_code3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "parentedDynamicCode3.js",
@@ -3206,6 +4499,12 @@ fn parentedDynamicCode3_js(#[case] variant: Variant) {
             "-InspectMaxStringLength:1000",
             "-dbgbaseline:parentedDynamicCode3.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3220,7 +4519,13 @@ fn bug_os_2946365_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_os_2946365.js",
         compile_flags: vec!["-dbgbaseline:bug_os_2946365.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3230,12 +4535,18 @@ fn bug_os_2946365_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ConsoleScope_js(#[case] variant: Variant) {
+fn console_scope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ConsoleScope.js",
         baseline_path: Some("ConsoleScope.js.baseline"),
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:ConsoleScope.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3245,7 +4556,7 @@ fn ConsoleScope_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ConsoleScopePMSpec_js(#[case] variant: Variant) {
+fn console_scope_pmspec_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ConsoleScopePMSpec.js",
@@ -3254,6 +4565,12 @@ fn ConsoleScopePMSpec_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:ConsoleScopePMSpec.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3268,6 +4585,12 @@ fn infiniteloop_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "infiniteloop.js",
         compile_flags: vec!["-debuglaunch", "-dbgbaseline:infiniteloop.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3283,8 +4606,15 @@ fn destructuring_debug_js(#[case] variant: Variant) {
         source_path: "destructuring-debug.js",
         compile_flags: vec![
             "-debuglaunch",
-            todo!("-InspectMaxStringLength:100 -dbgbaseline:destructuring-debug.js.dbg.baseline"),
+            "-InspectMaxStringLength:100",
+            "-dbgbaseline:destructuring-debug.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3298,7 +4628,18 @@ fn regex_symbols_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regex-symbols.js",
-        compile_flags: vec!["-ES6RegExSymbols",todo!("-ES6RegExPrototypeProperties -debuglaunch -dbgbaseline:regex-symbols.js.dbg.baseline")],
+        compile_flags: vec![
+            "-ES6RegExSymbols",
+            "-ES6RegExPrototypeProperties",
+            "-debuglaunch",
+            "-dbgbaseline:regex-symbols.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3313,6 +4654,12 @@ fn default_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "default.js",
         compile_flags: vec!["-debugLaunch", "-dbgbaseline:default.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3327,7 +4674,13 @@ fn default_attach_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "default_attach.js",
         compile_flags: vec!["-dbgbaseline:default_attach.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3345,6 +4698,12 @@ fn bug_vso5792108_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:bug_vso5792108.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3354,7 +4713,7 @@ fn bug_vso5792108_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn promiseDisplay_js(#[case] variant: Variant) {
+fn promise_display_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "promiseDisplay.js",
@@ -3362,6 +4721,12 @@ fn promiseDisplay_js(#[case] variant: Variant) {
             "-debuglaunch",
             "-dbgbaseline:promiseDisplay.js.dbg.baseline",
         ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3371,11 +4736,17 @@ fn promiseDisplay_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn bug_OS12814968_js(#[case] variant: Variant) {
+fn bug_os12814968_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS12814968.js",
         compile_flags: vec!["-forcedeferparse"],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -3385,12 +4756,18 @@ fn bug_OS12814968_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn AsyncDynamicAttach_js(#[case] variant: Variant) {
+fn async_dynamic_attach_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "AsyncDynamicAttach.js",
         compile_flags: vec!["-dbgbaseline:AsyncDynamicAttach.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_dynapogo"]),
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

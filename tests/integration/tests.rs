@@ -17,8 +17,7 @@ mod control_flow;
 mod conversions;
 mod date;
 mod debugger;
-// TODO (hanhossain): migrate
-// mod debugger_common;
+mod debugger_common;
 #[cfg(not(feature = "optimized-tests"))]
 mod dynamic_code;
 mod eh;
