@@ -3,13 +3,11 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>require_backend</tags>
-
 const DIRECTORY: &str = "chakracore-cxx/test/FlowGraph";
+
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn mic1msjrc1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -21,6 +19,7 @@ fn mic1msjrc1_js(#[case] variant: Variant) {
             "-bgjit-",
             "-loopinterpretcount:1",
         ],
+        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -29,7 +28,6 @@ fn mic1msjrc1_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn weird1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -41,6 +39,7 @@ fn weird1_js(#[case] variant: Variant) {
             "-off:bailonnoprofile",
             "-off:cachedScope",
         ],
+        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -49,7 +48,6 @@ fn weird1_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn weird2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -63,6 +61,7 @@ fn weird2_js(#[case] variant: Variant) {
             "-off:simplejit",
             "-force:inline",
         ],
+        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -71,7 +70,6 @@ fn weird2_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn for_of_try_catch_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -83,6 +81,7 @@ fn for_of_try_catch_js(#[case] variant: Variant) {
             "-oopjit-",
             "-off:jitloopbody",
         ],
+        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -91,8 +90,7 @@ fn for_of_try_catch_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn byteCodeUpwardExposedUsed_js(#[case] variant: Variant) {
+fn byte_code_upward_exposed_used_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "byteCodeUpwardExposedUsed.js",
@@ -102,6 +100,7 @@ fn byteCodeUpwardExposedUsed_js(#[case] variant: Variant) {
             "-bgjit-",
             "-oopjit-",
         ],
+        tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

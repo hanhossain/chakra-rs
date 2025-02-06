@@ -31,8 +31,8 @@ mod es7;
 mod fieldopts;
 #[cfg(not(disable_jit))]
 mod fixed_fields;
-// TODO (hanhossain): migrate
-// mod flow_graph;
+#[cfg(not(disable_jit))]
+mod flow_graph;
 mod function;
 mod generated;
 mod global_functions;
