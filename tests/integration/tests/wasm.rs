@@ -14,7 +14,7 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", todo!("-args 0 5 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "0", "5", "-endargs"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -29,7 +29,7 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", todo!("-args 6 10 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "6", "10", "-endargs"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -44,7 +44,7 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", todo!("-args 11 15 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "11", "15", "-endargs"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -59,7 +59,7 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", todo!("-args 16 20 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "16", "20", "-endargs"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -74,7 +74,7 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", todo!("-args 21 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "21", "-endargs"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -89,7 +89,7 @@ fn regress_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regress.js",
-        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
@@ -492,7 +492,10 @@ fn params_js(#[case] variant: Variant) {
         baseline_path: Some("baselines/params.baseline"),
         compile_flags: vec![
             "-wasm",
-            todo!("-EnableFatalErrorOnOOM- -args 14000 -endargs"),
+            "-EnableFatalErrorOnOOM-",
+            "-args",
+            "14000",
+            "-endargs",
         ],
         tags: HashSet::from([
             "exclude_drt",
@@ -521,7 +524,7 @@ fn params_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "params.js",
         baseline_path: Some("baselines/params.baseline"),
-        compile_flags: vec!["-wasm", todo!("-args 14000 -endargs")],
+        compile_flags: vec!["-wasm", "-args", "14000", "-endargs"],
         tags: HashSet::from(["exclude_win7", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -557,7 +560,8 @@ fn debugger_basic_js(#[case] variant: Variant) {
         source_path: "debugger_basic.js",
         compile_flags: vec![
             "-wasm",
-            todo!("-maic:1 -dbgbaseline:debugger_basic.js.dbg.baseline"),
+            "-maic:1",
+            "-dbgbaseline:debugger_basic.js.dbg.baseline",
         ],
         tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
         ..Default::default()
@@ -575,8 +579,15 @@ fn debugger_basic_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "debugger_basic.js",
-        compile_flags: vec!["-wasm",todo!("-debuglaunch -args debuglaunch -endargs -dbgbaseline:debugger_basic_launch.js.dbg.baseline")],
-        tags: HashSet::from(["exclude_win7","exclude_drt,exclude_snap,require_debugger"]),
+        compile_flags: vec![
+            "-wasm",
+            "-debuglaunch",
+            "-args",
+            "debuglaunch",
+            "-endargs",
+            "-dbgbaseline:debugger_basic_launch.js.dbg.baseline",
+        ],
+        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -614,7 +625,11 @@ fn oom_wasm_js(#[case] variant: Variant) {
         source_path: "oom_wasm.js",
         compile_flags: vec![
             "-EnableFatalErrorOnOOM-",
-            todo!("-wasm -args 3 16381 -endargs"),
+            "-wasm",
+            "-args",
+            "3",
+            "16381",
+            "-endargs",
         ],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
@@ -632,7 +647,11 @@ fn oom_js(#[case] variant: Variant) {
         source_path: "oom.js",
         compile_flags: vec![
             "-EnableFatalErrorOnOOM-",
-            todo!("-wasm -args 0 16384 -endargs"),
+            "-wasm",
+            "-args",
+            "0",
+            "16384",
+            "-endargs",
         ],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
@@ -650,7 +669,11 @@ fn oom_js(#[case] variant: Variant) {
         source_path: "oom.js",
         compile_flags: vec![
             "-EnableFatalErrorOnOOM-",
-            todo!("-wasm -args 3 16381 -endargs"),
+            "-wasm",
+            "-args",
+            "3",
+            "16381",
+            "-endargs",
         ],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
@@ -682,7 +705,7 @@ fn i64_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "i64.js",
-        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -729,7 +752,9 @@ fn cse_js(#[case] variant: Variant) {
         baseline_path: Some("baselines/cse.baseline"),
         compile_flags: vec![
             "-wasm",
-            todo!("-maic:0 -WasmAssignModuleID -testtrace:cse:2.0-99.999"),
+            "-maic:0",
+            "-WasmAssignModuleID",
+            "-testtrace:cse:2.0-99.999",
         ],
         tags: HashSet::from([
             "exclude_drt",
@@ -748,7 +773,7 @@ fn signextend_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "signextend.js",
-        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
@@ -808,7 +833,7 @@ fn binary_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binary.js",
-        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -822,7 +847,7 @@ fn binary_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binary.js",
-        compile_flags: vec!["-wasm", todo!("-args --no-verbose -endargs")],
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
@@ -958,7 +983,10 @@ fn atomics_test_js(#[case] variant: Variant) {
         source_path: "atomics_test.js",
         compile_flags: vec![
             "-wasmthreads",
-            todo!("-ESSharedArrayBuffer -args summary -endargs"),
+            "-ESSharedArrayBuffer",
+            "-args",
+            "summary",
+            "-endargs",
         ],
         ..Default::default()
     };

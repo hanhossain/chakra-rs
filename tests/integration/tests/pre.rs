@@ -24,7 +24,7 @@ fn bug0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug0.js",
-        compile_flags: vec![todo!("-args summary -endargs")],
+        compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(&test, variant);

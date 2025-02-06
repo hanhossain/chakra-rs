@@ -15,7 +15,7 @@ fn simple_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_escape.js",
         baseline_path: Some("simple_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -31,7 +31,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_stackfunc.js",
         baseline_path: Some("simple_stackfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simplejit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simplejit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -47,7 +47,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_stackfunc.js",
         baseline_path: Some("simple_stackfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -Off:Deferparse -on:stackfunc -nonative")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-Off:Deferparse","-on:stackfunc","-nonative"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -63,7 +63,7 @@ fn trycatch_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "trycatch_stackfunc.js",
         baseline_path: Some("trycatch_stackfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -nonative")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc","-nonative"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -79,7 +79,7 @@ fn simple_namedstackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_namedstackfunc.js",
         baseline_path: Some("simple_namedstackfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -95,7 +95,7 @@ fn toString_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toString_escape.js",
         baseline_path: Some("toString_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -111,7 +111,7 @@ fn chain_assign_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "chain_assign.js",
         baseline_path: Some("chain_assign.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -127,7 +127,7 @@ fn nested_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "nested_escape.js",
         baseline_path: Some("nested_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -143,7 +143,7 @@ fn funcname_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcname_escape.js",
         baseline_path: Some("funcname_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -159,7 +159,7 @@ fn call_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "call_escape.js",
         baseline_path: Some("call_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -175,7 +175,7 @@ fn argout_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "argout_escape.js",
         baseline_path: Some("argout_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -191,7 +191,7 @@ fn throw_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "throw_escape.js",
         baseline_path: Some("throw_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -207,7 +207,7 @@ fn funcname_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcname_asg.js",
         baseline_path: Some("funcname_asg.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -223,7 +223,7 @@ fn arrlit_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arrlit_escape.js",
         baseline_path: Some("arrlit_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -239,7 +239,7 @@ fn arrlit_asg_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arrlit_asg_escape.js",
         baseline_path: Some("arrlit_asg_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -255,7 +255,7 @@ fn objlit_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "objlit_escape.js",
         baseline_path: Some("objlit_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -271,7 +271,7 @@ fn formal_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_asg.js",
         baseline_path: Some("formal_asg.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -287,7 +287,7 @@ fn argument_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "argument_escape.js",
         baseline_path: Some("argument_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -319,7 +319,7 @@ fn cross_scope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "cross_scope.js",
         baseline_path: Some("cross_scope.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -335,7 +335,7 @@ fn eval_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "eval_escape.js",
         baseline_path: Some("eval_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -351,7 +351,7 @@ fn child_eval_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "child_eval_escape.js",
         baseline_path: Some("child_eval_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -367,7 +367,7 @@ fn with_namedfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "with_namedfunc.js",
         baseline_path: Some("with_namedfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -383,7 +383,7 @@ fn formal_namedfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_namedfunc.js",
         baseline_path: Some("formal_namedfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -399,7 +399,7 @@ fn throw_func_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "throw_func.js",
         baseline_path: Some("throw_func.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -415,7 +415,7 @@ fn glo_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "glo_asg.js",
         baseline_path: Some("glo_asg.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -431,7 +431,7 @@ fn multinested_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "multinested_escape.js",
         baseline_path: Some("multinested_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -447,7 +447,7 @@ fn let_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "let_stackfunc.js",
         baseline_path: Some("let_stackfunc.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -off:deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-off:deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -463,7 +463,7 @@ fn let_blockescape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "let_blockescape.js",
         baseline_path: Some("let_blockescape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -off:deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-off:deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -479,7 +479,7 @@ fn simple_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_escape.js",
         baseline_path: Some("simple_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -495,7 +495,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_stackfunc.js",
         baseline_path: Some("simple_stackfunc.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -511,7 +511,7 @@ fn simple_namedstackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "simple_namedstackfunc.js",
         baseline_path: Some("simple_namedstackfunc.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -527,7 +527,7 @@ fn toString_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toString_escape.js",
         baseline_path: Some("toString_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -543,7 +543,7 @@ fn chain_assign_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "chain_assign.js",
         baseline_path: Some("chain_assign.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -559,7 +559,7 @@ fn nested_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "nested_escape.js",
         baseline_path: Some("nested_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:DisableStackFuncOnDeferredEscape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-off:DisableStackFuncOnDeferredEscape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -575,7 +575,7 @@ fn funcname_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcname_escape.js",
         baseline_path: Some("funcname_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -613,7 +613,7 @@ fn funcname_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcname_asg.js",
         baseline_path: Some("funcname_asg.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -629,7 +629,7 @@ fn arrlit_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arrlit_escape.js",
         baseline_path: Some("arrlit_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -645,7 +645,7 @@ fn arrlit_asg_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "arrlit_asg_escape.js",
         baseline_path: Some("arrlit_asg_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -661,7 +661,7 @@ fn objlit_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "objlit_escape.js",
         baseline_path: Some("objlit_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -677,7 +677,7 @@ fn formal_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_asg.js",
         baseline_path: Some("formal_asg.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -693,7 +693,7 @@ fn argument_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "argument_escape.js",
         baseline_path: Some("argument_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -709,7 +709,7 @@ fn cross_scope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "cross_scope.js",
         baseline_path: Some("cross_scope.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-off:cachescopeinfonames","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -725,7 +725,7 @@ fn eval_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "eval_escape.js",
         baseline_path: Some("eval_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -741,7 +741,7 @@ fn child_eval_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "child_eval_escape.js",
         baseline_path: Some("child_eval_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -757,7 +757,7 @@ fn with_namedfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "with_namedfunc.js",
         baseline_path: Some("with_namedfunc.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -773,7 +773,7 @@ fn formal_namedfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "formal_namedfunc.js",
         baseline_path: Some("formal_namedfunc.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -800,7 +800,7 @@ fn glo_asg_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "glo_asg.js",
         baseline_path: Some("glo_asg.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -816,7 +816,7 @@ fn multinested_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "multinested_escape.js",
         baseline_path: Some("multinested_escape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-off:cachescopeinfonames","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -832,7 +832,7 @@ fn let_stackfunc_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "let_stackfunc.js",
         baseline_path: Some("let_stackfunc.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -848,7 +848,7 @@ fn let_blockescape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "let_blockescape.js",
         baseline_path: Some("let_blockescape.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -864,7 +864,7 @@ fn box_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "box.js",
         baseline_path: Some("box.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-off:cachescopeinfonames","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
@@ -880,7 +880,7 @@ fn box_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "box.js",
         baseline_path: Some("box.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -off:cachescopeinfonames -force:inline -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-off:cachescopeinfonames","-force:inline","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
@@ -896,7 +896,7 @@ fn callee_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "callee_escape.js",
         baseline_path: Some("callee_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-force:inline","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -912,7 +912,7 @@ fn callee_escape2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "callee_escape2.js",
         baseline_path: Some("callee_escape2.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-force:inline","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -928,7 +928,7 @@ fn callee_escape2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "callee_escape2.js",
         baseline_path: Some("callee_escape2.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -force:inline -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-force:inline","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -944,7 +944,7 @@ fn caller_escape_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "caller_escape.js",
         baseline_path: Some("caller_escape.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Off:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Off:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
@@ -960,7 +960,7 @@ fn singleuse_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "singleuse.js",
         baseline_path: Some("singleuse.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-Force:Deferparse","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -976,7 +976,7 @@ fn iffuncdecl_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "iffuncdecl.js",
         baseline_path: Some("iffuncdecl.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -992,7 +992,7 @@ fn cachescope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "cachescope.js",
         baseline_path: Some("cachescope.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -1008,7 +1008,7 @@ fn box_callparam_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "box_callparam.js",
         baseline_path: Some("box_callparam.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames -off:disablestackfuncondeferredescape ")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:deferparse","-off:cachescopeinfonames","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -1024,7 +1024,7 @@ fn inlinee_box_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "inlinee_box.js",
         baseline_path: Some("inlinee_box.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:inline")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:inline"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm,exclude_arm64"]),
         ..Default::default()
     };
@@ -1040,7 +1040,7 @@ fn blockscope_funcdecl_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "blockscope_funcdecl.js",
         baseline_path: Some("blockscope_funcdecl.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -1056,7 +1056,7 @@ fn recurse_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "recurse.js",
         baseline_path: Some("recurse.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:deferparse","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
@@ -1072,7 +1072,7 @@ fn jitdefer_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jitdefer.js",
         baseline_path: Some("jitdefer.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:cachescopeinfonames")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:deferparse","-off:cachescopeinfonames"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64"]),
         ..Default::default()
     };
@@ -1110,7 +1110,7 @@ fn withref_delayobjscope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "withref_delayobjscope.js",
         baseline_path: Some("withref_delayobjscope.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1126,7 +1126,7 @@ fn funcexpr_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcexpr.js",
         baseline_path: Some("funcexpr.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:deferparse","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1142,7 +1142,7 @@ fn funcexpr_2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcexpr_2.js",
         baseline_path: Some("funcexpr_2.deferparse.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc","-force:deferparse","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1158,7 +1158,7 @@ fn funcexpr_2_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "funcexpr_2.js",
         baseline_path: Some("funcexpr_2.deferparse.native.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -on:stackfunc -force:deferparse -forceNative -off:simpleJit -off:disablestackfuncondeferredescape")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-on:stackfunc","-force:deferparse","-forceNative","-off:simpleJit","-off:disablestackfuncondeferredescape"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative"]),
         ..Default::default()
     };
@@ -1174,7 +1174,7 @@ fn with_existing_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "with_existing.js",
         baseline_path: Some("with_existing.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1190,7 +1190,7 @@ fn with_crossscope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "with_crossscope.js",
         baseline_path: Some("with_crossscope.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1206,7 +1206,7 @@ fn bug565705_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug565705.js",
         baseline_path: Some("bug565705.baseline"),
-        compile_flags: vec!["-testtrace:stackfunc",todo!("-off:redeferral -off:simpleJit -on:stackfunc")],
+        compile_flags: vec!["-testtrace:stackfunc","-off:redeferral","-off:simpleJit","-on:stackfunc"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1222,7 +1222,7 @@ fn box_postjit_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "box_postjit.js",
         baseline_path: Some("box_postjit.deferparse.baseline"),
-        compile_flags: vec!["-off:simplejit",todo!("-mic:1 -off:inline -force:deferparse")],
+        compile_flags: vec!["-off:simplejit","-mic:1","-off:inline","-force:deferparse"],
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
@@ -1269,7 +1269,7 @@ fn box_jitloopbody3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "box_jitloopbody3.js",
-        compile_flags: vec!["-forcejitloopbody",todo!("-force:deferparse -bgjit-")],
+        compile_flags: vec!["-forcejitloopbody","-force:deferparse","-bgjit-"],
         tags: HashSet::from(["exclude_test","exclude_arm"]),
         ..Default::default()
     };
@@ -1306,7 +1306,7 @@ fn 622043_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "622043.js",
-        compile_flags: vec!["-force:deferparse",todo!("-mic:1 -off:bailonnoprofile -force:inline -off:simplejit")],
+        compile_flags: vec!["-force:deferparse","-mic:1","-off:bailonnoprofile","-force:inline","-off:simplejit"],
         tags: HashSet::from(["exclude_dynapogo","exclude_test"]),
         ..Default::default()
     };
@@ -1349,7 +1349,7 @@ fn box_blockscope_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "box_blockscope.js",
         baseline_path: Some("box_blockscope.baseline"),
-        compile_flags: vec!["-off:simplejit",todo!("-testtrace:stackfunc -off:redeferral")],
+        compile_flags: vec!["-off:simplejit","-testtrace:stackfunc","-off:redeferral"],
         tags: HashSet::from(["exclude_test","exclude_arm,exclude_dynapogo"]),
         ..Default::default()
     };
@@ -1379,7 +1379,7 @@ fn box_inlineeFrameInLoopBody_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "box_inlineeFrameInLoopBody.js",
-        compile_flags: vec!["-forcedeferparse",todo!("-forcejitloopbody -force:rejit -force:inline")],
+        compile_flags: vec!["-forcedeferparse","-forcejitloopbody","-force:rejit","-force:inline"],
         ..Default::default()
     };
     common::run_test_variant(&test, variant);
