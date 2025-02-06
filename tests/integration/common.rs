@@ -156,7 +156,7 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .args(&variant_config.compile_flags);
 
     if cfg!(unix) {
-        ch.env("TZ", "US/Pacific");
+        ch.env("TZ", "America/Los_Angeles");
     }
 
     println!("Running command: {ch:#?}");
