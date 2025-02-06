@@ -2960,6 +2960,7 @@ fn array_check_hoist_bailout_js3(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn bound_check_elimination_js(#[case] variant: Variant) {

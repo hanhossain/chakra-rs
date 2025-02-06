@@ -1259,7 +1259,6 @@ fn failedasm_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn es6_spread_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1285,7 +1284,6 @@ fn es6_spread_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn specialproperties_fn_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1417,7 +1415,6 @@ fn es6_reg_exp_specialproperties_js4(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn specialproperties_level2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1604,7 +1601,6 @@ fn defer_parse_detach2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn attach_with_defer_parse_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1652,7 +1648,6 @@ fn array_prototest_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn breakpoints_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2683,7 +2678,6 @@ fn setframe_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn func_expr_crash_150491_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2706,9 +2700,9 @@ fn func_expr_crash_150491_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_locals_at_native_frame1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2722,7 +2716,8 @@ fn jit_locals_at_native_frame1_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from([
             "exclude_dynapogo",
-            "exclude_arm,exclude_nonative",
+            "exclude_arm",
+            "exclude_nonative",
             "exclude_serialized",
             "exclude_snap",
             "require_debugger",
@@ -2733,9 +2728,9 @@ fn jit_locals_at_native_frame1_js(#[case] variant: Variant) {
     common::run_test_variant(&test, variant);
 }
 
+#[cfg(target_arch = "x86_64")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_locals_at_native_frame2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2749,7 +2744,8 @@ fn jit_locals_at_native_frame2_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from([
             "exclude_dynapogo",
-            "exclude_arm,exclude_nonative",
+            "exclude_arm",
+            "exclude_nonative",
             "exclude_serialized",
             "exclude_snap",
             "require_debugger",
@@ -2783,7 +2779,6 @@ fn bug594394_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn fast_f12_bobranch_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2809,7 +2804,6 @@ fn fast_f12_bobranch_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn negzerotest_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2909,7 +2903,6 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_expr_eval1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2938,7 +2931,6 @@ fn jit_expr_eval1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_editvalue1_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2966,7 +2958,6 @@ fn jit_editvalue1_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_attach_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3204,7 +3195,6 @@ fn locals_inspection_on_non_top_frame_in_block_test_bug163347_js(#[case] variant
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn jit_attach_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -3252,7 +3242,6 @@ fn getter_inspection_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn promise_defer_nested_attach_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3276,7 +3265,6 @@ fn promise_defer_nested_attach_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn promise_defer_nested_attach_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -3301,7 +3289,6 @@ fn promise_defer_nested_attach_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_222633_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3322,7 +3309,6 @@ fn bug_222633_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_149118_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3346,7 +3332,6 @@ fn bug_149118_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_149118_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -3370,7 +3355,6 @@ fn bug_149118_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_204064_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3391,7 +3375,6 @@ fn bug_204064_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_177146_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3415,7 +3398,6 @@ fn bug_177146_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_177146_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -3440,7 +3422,6 @@ fn bug_177146_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_256729_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3497,7 +3478,6 @@ fn bug_350674_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn with_shadow_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3523,7 +3503,6 @@ fn with_shadow_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn var_shadow_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3544,7 +3523,6 @@ fn var_shadow_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn arraytoes5array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3602,7 +3580,6 @@ fn property_enumeration_bug241480_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_291582_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3627,7 +3604,6 @@ fn bug_291582_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_355097_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3652,7 +3628,6 @@ fn bug_355097_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_301517_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3841,7 +3816,6 @@ fn bug_523101_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn symbols_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3862,7 +3836,6 @@ fn symbols_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn qualified_names5_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3886,7 +3859,6 @@ fn qualified_names5_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_538163_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3927,7 +3899,6 @@ fn bug_575634_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn nested_eval_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3948,7 +3919,6 @@ fn nested_eval_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_592506_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3969,7 +3939,6 @@ fn bug_592506_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn permanent_arguments_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3994,7 +3963,6 @@ fn permanent_arguments_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn source_info_mismatch_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4045,7 +4013,6 @@ fn spread_debugging_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_622304_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4066,7 +4033,6 @@ fn bug_622304_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn returnedvaluetests_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4111,7 +4077,6 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn delaycapture_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4133,7 +4098,6 @@ fn delaycapture_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn returnedvaluetests3_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4158,7 +4122,6 @@ fn returnedvaluetests3_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn returnedvaluetests4_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4180,7 +4143,6 @@ fn returnedvaluetests4_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn returnedvaluetests4_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -4205,7 +4167,6 @@ fn returnedvaluetests4_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_261867_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4512,7 +4473,6 @@ fn parented_dynamic_code3_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_os_2946365_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4667,7 +4627,6 @@ fn default_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn default_attach_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -4754,7 +4713,6 @@ fn bug_os12814968_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn async_dynamic_attach_js(#[case] variant: Variant) {
     let test = common::Test {

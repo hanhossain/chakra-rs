@@ -200,6 +200,7 @@ fn js_diag_get_function_position_js(#[case] variant: Variant) {
 }
 
 // xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919)
+#[cfg(windows)]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
