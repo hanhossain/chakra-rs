@@ -100,6 +100,22 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .excluded_tags
         .insert("exclude_icu62AndAboveTestFailures");
 
+    if cfg!(target_arch = "aarch64") {
+        variant_config.excluded_tags.insert("exclude_arm");
+        variant_config.excluded_tags.insert("exclude_arm64");
+        variant_config.excluded_tags.insert("require_asmjs");
+    } else if cfg!(target_arch = "x86_64") {
+        variant_config.excluded_tags.insert("exclude_x64");
+    }
+
+    if cfg!(unix) {
+        variant_config.excluded_tags.insert("exclude_xplat");
+        variant_config.excluded_tags.insert("require_winglob");
+        variant_config.excluded_tags.insert("require_simd");
+    } else if cfg!(windows) {
+        variant_config.excluded_tags.insert("exclude_windows");
+    }
+
     let both: HashSet<_> = variant_config
         .excluded_tags
         .intersection(&test.tags)
