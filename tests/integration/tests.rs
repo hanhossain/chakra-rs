@@ -16,8 +16,7 @@ mod config_parsing;
 mod control_flow;
 mod conversions;
 mod date;
-// TODO (hanhossain): migrate
-// mod debugger;
+mod debugger;
 // TODO (hanhossain): migrate
 // mod debugger_common;
 #[cfg(not(feature = "optimized-tests"))]
