@@ -1,8 +1,8 @@
 mod array;
 #[cfg(not(disable_jit))]
 mod asm_js;
-// TODO (hanhossain): migrate
-// mod asm_js_float;
+#[cfg(not(disable_jit))]
+mod asm_js_float;
 // TODO (hanhossain): migrate
 // mod asm_js_parser;
 mod bailout;
