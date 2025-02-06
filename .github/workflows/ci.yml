@@ -61,6 +61,8 @@ jobs:
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
       - name: Run slow tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
+        env:
+          CHAKRA_TEST_SLOW: true
 
   build-cmake:
     runs-on: ${{ matrix.os }}

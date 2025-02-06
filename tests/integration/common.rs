@@ -40,6 +40,18 @@ impl Test {
             .filter(|tag| tag.contains(','))
             .collect::<Vec<_>>();
         assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
+
+        if self
+            .tags
+            .iter()
+            .map(|t| t.to_lowercase())
+            .filter(|t| t == "slow")
+            .next()
+            .is_some()
+            && std::env::var("CHAKRA_TEST_SLOW").is_err()
+        {
+            panic!("Test is marked as slow but CHAKRA_TEST_SLOW is not set");
+        }
     }
 }
 
