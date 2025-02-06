@@ -51,8 +51,8 @@ mod operators;
 mod optimizer;
 #[cfg(not(disable_jit))]
 mod perf_hint;
-// TODO (hanhossain): migrate
-// mod pre;
+#[cfg(not(disable_jit))]
+mod pre;
 mod prototypes;
 mod reg_alloc;
 mod regex;
