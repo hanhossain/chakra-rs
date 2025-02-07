@@ -72,19 +72,14 @@ mod tagged_integers;
 mod test262;
 mod test_loop;
 mod try_catch;
-// TODO (hanhossain): migrate
-// mod ttbasic;
-// TODO (hanhossain): migrate
-// mod ttexecute_basic;
+mod ttbasic;
+mod ttexecute_basic;
 mod typed_array;
 mod unified_regex;
 mod unit_test_framework;
 mod utf8;
-// TODO (hanhossain): migrate
-// mod wasm;
-// TODO (hanhossain): migrate
-// mod wasm_simd;
+mod wasm;
+mod wasm_simd;
 // TODO (hanhossain): migrate
 // mod wasm_spec;
-// TODO (hanhossain): migrate
-// mod wasm_spec_multi_value;
+mod wasm_spec_multi_value;

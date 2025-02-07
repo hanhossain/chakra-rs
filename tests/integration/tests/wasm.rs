@@ -5,6 +5,7 @@ use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 3] = ["exclude_serialized", "require_backend", "require_wasm"];
 const DIRECTORY: &str = "chakracore-cxx/test/wasm";
+
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -24,7 +25,7 @@ fn unsigned_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn unsigned_js(#[case] variant: Variant) {
+fn unsigned_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
@@ -39,7 +40,7 @@ fn unsigned_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn unsigned_js(#[case] variant: Variant) {
+fn unsigned_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
@@ -54,7 +55,7 @@ fn unsigned_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn unsigned_js(#[case] variant: Variant) {
+fn unsigned_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
@@ -69,7 +70,7 @@ fn unsigned_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn unsigned_js(#[case] variant: Variant) {
+fn unsigned_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
@@ -137,7 +138,7 @@ fn fastarray_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn fastarray_js(#[case] variant: Variant) {
+fn fastarray_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fastarray.js",
@@ -329,7 +330,7 @@ fn basic_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basic_js(#[case] variant: Variant) {
+fn basic_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basic.js",
@@ -520,7 +521,7 @@ fn params_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn params_js(#[case] variant: Variant) {
+fn params_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "params.js",
@@ -560,7 +561,7 @@ fn debugger_basic_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn debugger_basic_js(#[case] variant: Variant) {
+fn debugger_basic_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "debugger_basic.js",
@@ -586,7 +587,7 @@ fn debugger_basic_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn debugger_basic_js(#[case] variant: Variant) {
+fn debugger_basic_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "debugger_basic.js",
@@ -679,7 +680,7 @@ fn oom_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn oom_js(#[case] variant: Variant) {
+fn oom_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom.js",
@@ -817,7 +818,7 @@ fn memory_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn memory_js(#[case] variant: Variant) {
+fn memory_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "memory.js",
@@ -861,7 +862,7 @@ fn binary_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn binary_js(#[case] variant: Variant) {
+fn binary_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binary.js",

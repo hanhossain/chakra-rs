@@ -70,12 +70,12 @@ $0
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -91,13 +91,13 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-baseline_path: Some("$2"),
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -113,13 +113,13 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-compile_flags: vec ! [todo ! ("$2")],
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec ! [todo ! ("$2")],
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -135,14 +135,14 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-compile_flags: vec ! [todo ! ("$2")],
-tags: HashSet::from([todo ! ("$3")]),
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        compile_flags: vec ! [todo ! ("$2")],
+        tags: HashSet::from([todo ! ("$3")]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -158,14 +158,14 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-baseline_path: Some("$2"),
-compile_flags: vec ! [todo ! ("$3")],
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
+        compile_flags: vec ! [todo ! ("$3")],
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -181,15 +181,15 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-baseline_path: Some("$2"),
-compile_flags: vec ! [todo ! ("$3")],
-tags: HashSet::from([todo ! ("$4")]),
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
+        compile_flags: vec ! [todo ! ("$3")],
+        tags: HashSet::from([todo ! ("$4")]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
@@ -205,14 +205,14 @@ common::run_test_variant(test, variant, COMMON_TAGS);
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn $1_js(#[case] variant: Variant) {
-let test = common::Test {
-directory: DIRECTORY,
-source_path: "$1.js",
-baseline_path: Some("$3"),
-compile_flags: vec ! [todo ! ("$2")],
-..Default::default()
-};
-common::run_test_variant(test, variant, COMMON_TAGS);
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$3"),
+        compile_flags: vec ! [todo ! ("$2")],
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 ```
 
