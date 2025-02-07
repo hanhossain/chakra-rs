@@ -72,6 +72,7 @@ pub fn run_test_variant<const N: usize>(
     variant: Variant,
     common_tags: [&'static str; N],
 ) {
+    test.tags.extend(common_tags.iter());
     test.validate();
 
     let mut variant_config = match variant {
@@ -93,8 +94,6 @@ pub fn run_test_variant<const N: usize>(
             ]),
         },
     };
-
-    test.tags.extend(common_tags.iter());
 
     let exclude_build_type = if cfg!(feature = "optimized-tests") {
         "exclude_test"

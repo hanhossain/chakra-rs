@@ -61,8 +61,7 @@ mod rwc;
 mod scanner;
 mod smoke_tests;
 mod stack_trace;
-// TODO (hanhossain): migrate
-// mod stackfunc;
+mod stackfunc;
 mod strict;
 mod strings;
 mod switch_statement;

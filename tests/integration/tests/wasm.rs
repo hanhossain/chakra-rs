@@ -498,7 +498,9 @@ fn params_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from([
             "exclude_drt",
-            "exclude_win7,exclude_dynapogo,exclude_sanitize_address",
+            "exclude_win7",
+            "exclude_dynapogo",
+            "exclude_sanitize_address",
         ]),
         ..Default::default()
     };
@@ -541,7 +543,12 @@ fn debugger_basic_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "debugger_basic.js",
         compile_flags: vec!["-wasm", "-dbgbaseline:debugger_basic.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
+        tags: HashSet::from([
+            "exclude_win7",
+            "exclude_drt",
+            "exclude_snap",
+            "require_debugger",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -562,7 +569,12 @@ fn debugger_basic_js(#[case] variant: Variant) {
             "-maic:1",
             "-dbgbaseline:debugger_basic.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
+        tags: HashSet::from([
+            "exclude_win7",
+            "exclude_drt",
+            "exclude_snap",
+            "require_debugger",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -586,7 +598,12 @@ fn debugger_basic_js(#[case] variant: Variant) {
             "-endargs",
             "-dbgbaseline:debugger_basic_launch.js.dbg.baseline",
         ],
-        tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
+        tags: HashSet::from([
+            "exclude_win7",
+            "exclude_drt",
+            "exclude_snap",
+            "require_debugger",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -734,7 +751,7 @@ fn nestedblocks_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "nestedblocks.js",
         compile_flags: vec!["-wasm"],
-        tags: HashSet::from(["exclude_drt", "exclude_win7,exclude_dynapogo"]),
+        tags: HashSet::from(["exclude_drt", "exclude_win7", "exclude_dynapogo"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -757,7 +774,9 @@ fn cse_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from([
             "exclude_drt",
-            "exclude_win7,exclude_interpreted,exclude_sanitize_address",
+            "exclude_win7",
+            "exclude_interpreted",
+            "exclude_sanitize_address",
         ]),
         ..Default::default()
     };
