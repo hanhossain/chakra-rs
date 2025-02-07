@@ -49,25 +49,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/{}";
 $0
 ```
 
-### add folder tags
-```re
-(//\s*)</default>
-```
-
-```rust
-$1  {FOLDER_TAGS_ELEMENT}
-$0
-```
-
-## combine folder tags
-```re
-(.*)</tags>\n..*<tags>(.*)
-```
-
-```rust
-$1,$2
-```
-
 ### files only
 ```re
 // TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*</default>\n.*</test>
@@ -84,7 +65,7 @@ fn $1_js(#[case] variant: Variant) {
         source_path: "$1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -105,7 +86,7 @@ fn $1_js(#[case] variant: Variant) {
         baseline_path: Some("$2"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -126,7 +107,7 @@ fn $1_js(#[case] variant: Variant) {
         compile_flags: vec![todo!("$2")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -148,7 +129,7 @@ fn $1_js(#[case] variant: Variant) {
         tags: HashSet::from([todo!("$3")]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -170,7 +151,7 @@ fn $1_js(#[case] variant: Variant) {
         compile_flags: vec![todo!("$3")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -193,7 +174,7 @@ fn $1_js(#[case] variant: Variant) {
         tags: HashSet::from([todo!("$4")]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 
@@ -215,7 +196,7 @@ fn $1_js(#[case] variant: Variant) {
         compile_flags: vec![todo!("$2")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 ```
 

@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = ["exclude_xplat"];
+const COMMON_TAGS: [&str; 1] = ["exclude_xplat"];
 const DIRECTORY: &str = "chakracore-cxx/test/ConfigParsing";
 
 #[rstest]

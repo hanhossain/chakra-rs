@@ -3,8 +3,12 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = ["require_wasm","exclude_serialized","require_backend","exclude_xplat",todo!(""
-)];
+const COMMON_TAGS: [&str; 4] = [
+    "require_wasm",
+    "exclude_serialized",
+    "require_backend",
+    "exclude_xplat",
+];
 const DIRECTORY: &str = "chakracore-cxx/test/wasm.simd";
 
 #[rstest]

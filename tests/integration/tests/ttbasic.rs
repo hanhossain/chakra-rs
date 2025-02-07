@@ -3,14 +3,13 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = [
+const COMMON_TAGS: [&str; 6] = [
     "sequential",
     "exclude_dynapogo",
     "exclude_snap",
     "exclude_serialized",
     "require_debugger",
     "exclude_sanitize_address",
-    todo!(""),
 ];
 const DIRECTORY: &str = "chakracore-cxx/test/TTBasic";
 // TODO (hanhossain): migrate

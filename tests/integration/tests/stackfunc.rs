@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = ["exclude_serialized","require_backend"];
+const COMMON_TAGS: [&str; 2] = ["exclude_serialized","require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

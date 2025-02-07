@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = ["exclude_serialized", "require_backend", "require_asmjs"];
+const COMMON_TAGS: [&str; 3] = ["exclude_serialized", "require_backend", "require_asmjs"];
 const DIRECTORY: &str = "chakracore-cxx/test/AsmJs";
 
 #[rstest]

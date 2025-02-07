@@ -3,7 +3,12 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = ["exclude_serialized","require_backend","exclude_win7","require_wasm"];
+const COMMON_TAGS: [&str; 4] = [
+    "exclude_serialized",
+    "require_backend",
+    "exclude_win7",
+    "require_wasm",
+];
 const DIRECTORY: &str = "chakracore-cxx/test/WasmSpec";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

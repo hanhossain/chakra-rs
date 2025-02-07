@@ -3,7 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-const COMMON_TAGS: [&str] = [
+const COMMON_TAGS: [&str; 4] = [
     "exclude_serialized",
     "exclude_snap",
     "require_debugger",
