@@ -731,8 +731,8 @@ fn temp_str_expr_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>ES6_intl_simple_attach.js</files>
-//       <compile-flags>-dbgbaseline:ES6_intl_simple_attach.js.dbg.baseline -Intl</compile-flags>
 //       <baseline>ES6_intl_simple_attach.js.baseline</baseline>
+//       <compile-flags>-dbgbaseline:ES6_intl_simple_attach.js.dbg.baseline -Intl</compile-flags>
 //       <!-- This test is still require_winglob because it has winglob-specific output in the .dbg.baseline -->
 //       <tags>Intl,require_winglob,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
@@ -3451,8 +3451,8 @@ fn bug_256729_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>bug_266843.js</files>
-//       <compile-flags>-debuglaunch -maxinterpretcount:1 -off:simpleJit -dbgbaseline:bug_266843.js.dbg.baseline</compile-flags>
 //       <baseline>bug_266843.baseline</baseline>
+//       <compile-flags>-debuglaunch -maxinterpretcount:1 -off:simpleJit -dbgbaseline:bug_266843.js.dbg.baseline</compile-flags>
 //       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
@@ -3578,8 +3578,8 @@ fn property_enumeration_bug241480_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>bug_271356.js</files>
-//       <compile-flags>-debuglaunch -maxinterpretcount:4 -off:simpleJit -dbgbaseline:bug_271356.js.dbg.baseline</compile-flags>
 //       <baseline>bug_271356.js.baseline</baseline>
+//       <compile-flags>-debuglaunch -maxinterpretcount:4 -off:simpleJit -dbgbaseline:bug_271356.js.dbg.baseline</compile-flags>
 //       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>
@@ -3656,8 +3656,8 @@ fn bug_301517_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>bug_325839.js</files>
-//       <compile-flags>-debuglaunch -forceNative -off:simpleJit -dbgbaseline:bug_325839.js.dbg.baseline</compile-flags>
 //       <baseline>bug_325839.baseline</baseline>
+//       <compile-flags>-debuglaunch -forceNative -off:simpleJit -dbgbaseline:bug_325839.js.dbg.baseline</compile-flags>
 //       <tags>exclude_dynapogo,exclude_nonative,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
 //     </default>
 //   </test>

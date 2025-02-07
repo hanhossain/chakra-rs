@@ -211,8 +211,8 @@ fn new_test_js4(#[case] variant: Variant) {
 // <test>
 //   <default>
 //     <files>jit-gen-loop-body.js</files>
-//     <compile-flags>-testtrace:Backend</compile-flags>
 //     <baseline>jit-gen-loop-body.baseline</baseline>
+//     <compile-flags>-testtrace:Backend</compile-flags>
 //     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
 //   </default>
 // </test>
@@ -230,8 +230,8 @@ fn new_test_js4(#[case] variant: Variant) {
 // <test>
 //   <default>
 //     <files>jit-async-loop-body.js</files>
-//     <compile-flags>-testtrace:Backend</compile-flags>
 //     <baseline>jit-async-loop-body.baseline</baseline>
+//     <compile-flags>-testtrace:Backend</compile-flags>
 //     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
 //   </default>
 // </test>
@@ -249,8 +249,8 @@ fn new_test_js4(#[case] variant: Variant) {
 // <test>
 //   <default>
 //     <files>jit-module-loop-body.js</files>
-//     <compile-flags>-testtrace:Backend -module</compile-flags>
 //     <baseline>jit-module-loop-body.baseline</baseline>
+//     <compile-flags>-testtrace:Backend -module</compile-flags>
 //     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
 //   </default>
 // </test>
@@ -259,8 +259,8 @@ fn new_test_js4(#[case] variant: Variant) {
 // <test>
 //   <default>
 //     <files>jit-module-loop-body.js</files>
-//     <compile-flags>-module</compile-flags>
 //     <baseline>jit-module-loop-body-2.baseline</baseline>
+//     <compile-flags>-module</compile-flags>
 //     <tags>require_backend,exclude_nonative</tags>
 //   </default>
 // </test>

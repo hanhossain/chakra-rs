@@ -17,8 +17,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>callbackSingle.js</files>
-//       <compile-flags>-TTRecord=callbackSingleTest -TTSnapInterval=0</compile-flags>
 //       <baseline>callbackSingleRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=callbackSingleTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -27,8 +27,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=callbackSingleTest</compile-flags>
 //       <baseline>callbackSingleReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=callbackSingleTest</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -37,8 +37,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>callbackSpread.js</files>
-//       <compile-flags>-TTRecord=callbackSpreadTest -TTSnapInterval=0</compile-flags>
 //       <baseline>callbackSpreadRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=callbackSpreadTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -47,8 +47,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=callbackSpreadTest</compile-flags>
 //       <baseline>callbackSpreadReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=callbackSpreadTest</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -57,8 +57,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>callbackSequence.js</files>
-//       <compile-flags>-TTRecord=callbackSequenceTest -TTSnapInterval=0</compile-flags>
 //       <baseline>callbackSequenceRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=callbackSequenceTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -67,8 +67,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=callbackSequenceTest</compile-flags>
 //       <baseline>callbackSequenceReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=callbackSequenceTest</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -77,8 +77,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>callbackClear.js</files>
-//       <compile-flags>-TTRecord=callbackClearTest -TTSnapInterval=0</compile-flags>
 //       <baseline>callbackClearRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=callbackClearTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -87,8 +87,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=callbackClearTest</compile-flags>
 //       <baseline>callbackClearReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=callbackClearTest</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -97,8 +97,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>enumerable.js</files>
-//       <compile-flags>-TTRecord=enumerableTest -TTSnapInterval=0</compile-flags>
 //       <baseline>enumerableRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=enumerableTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -107,8 +107,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=enumerableTest -TTDStartEvent=2</compile-flags>
 //       <baseline>enumerableReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=enumerableTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -117,8 +117,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>enumeratingWithES5.js</files>
-//       <compile-flags>-TTRecord=enumeratingWithES5Test -TTSnapInterval=0</compile-flags>
 //       <baseline>enumeratingWithES5Record.baseline</baseline>
+//       <compile-flags>-TTRecord=enumeratingWithES5Test -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -127,8 +127,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=enumeratingWithES5Test -TTDStartEvent=2</compile-flags>
 //       <baseline>enumeratingWithES5Replay.baseline</baseline>
+//       <compile-flags>-TTReplay=enumeratingWithES5Test -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -137,8 +137,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>enumerationAddDelete.js</files>
-//       <compile-flags>-TTRecord=enumerationAddDeleteTest -TTSnapInterval=0</compile-flags>
 //       <baseline>enumerationAddDeleteRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=enumerationAddDeleteTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -147,8 +147,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=enumerationAddDeleteTest -TTDStartEvent=2</compile-flags>
 //       <baseline>enumerationAddDeleteReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=enumerationAddDeleteTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -157,8 +157,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>forEach.js</files>
-//       <compile-flags>-TTRecord=forEachTest -TTSnapInterval=0</compile-flags>
 //       <baseline>forEachRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=forEachTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -167,8 +167,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=forEachTest -TTDStartEvent=2</compile-flags>
 //       <baseline>forEachReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=forEachTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -177,8 +177,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>forInArrayAdd.js</files>
-//       <compile-flags>-TTRecord=forInArrayAddTest -TTSnapInterval=0</compile-flags>
 //       <baseline>forInArrayAddRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=forInArrayAddTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -187,8 +187,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=forInArrayAddTest -TTDStartEvent=2</compile-flags>
 //       <baseline>forInArrayAddReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=forInArrayAddTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -197,8 +197,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>forInObjectAdd.js</files>
-//       <compile-flags>-TTRecord=forInObjectAddTest -TTSnapInterval=0</compile-flags>
 //       <baseline>forInObjectAddRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=forInObjectAddTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -207,8 +207,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=forInObjectAddTest -TTDStartEvent=2</compile-flags>
 //       <baseline>forInObjectAddReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=forInObjectAddTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -217,8 +217,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>forInObjectAddDelete.js</files>
-//       <compile-flags>-TTRecord=forInObjectAddDeleteTest -TTSnapInterval=0</compile-flags>
 //       <baseline>forInObjectAddDeleteRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=forInObjectAddDeleteTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -227,8 +227,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=forInObjectAddDeleteTest -TTDStartEvent=2</compile-flags>
 //       <baseline>forInObjectAddDeleteReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=forInObjectAddDeleteTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -237,8 +237,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>forInObjectDelete.js</files>
-//       <compile-flags>-TTRecord=forInObjectDeleteTest -TTSnapInterval=0</compile-flags>
 //       <baseline>forInObjectDeleteRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=forInObjectDeleteTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -247,8 +247,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=forInObjectDeleteTest -TTDStartEvent=2</compile-flags>
 //       <baseline>forInObjectDeleteReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=forInObjectDeleteTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -257,8 +257,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>symbolFor.js</files>
-//       <compile-flags>-TTRecord=symbolForTest -TTSnapInterval=0</compile-flags>
 //       <baseline>symbolForRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=symbolForTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -267,8 +267,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=symbolForTest -TTDStartEvent=2</compile-flags>
 //       <baseline>symbolForReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=symbolForTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -277,8 +277,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>try.js</files>
-//       <compile-flags>-TTRecord=tryTest -TTSnapInterval=0</compile-flags>
 //       <baseline>tryRecord.baseline</baseline>
+//       <compile-flags>-TTRecord=tryTest -TTSnapInterval=0</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>
@@ -287,8 +287,8 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 //   <test>
 //     <default>
 //       <files>ttdSentinal.js</files>
-//       <compile-flags>-TTReplay=tryTest -TTDStartEvent=2</compile-flags>
 //       <baseline>tryReplay.baseline</baseline>
+//       <compile-flags>-TTReplay=tryTest -TTDStartEvent=2</compile-flags>
 //       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
 //     </default>
 //   </test>

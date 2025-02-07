@@ -260,7 +260,7 @@ fn f32address_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "f32address.js",
-        compile_flags: vec!["-wasm", todo!(" ")],
+        compile_flags: vec!["-wasm"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -274,7 +274,7 @@ fn divByConstants_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "divByConstants.js",
-        compile_flags: vec!["-wasm", todo!(" ")],
+        compile_flags: vec!["-wasm"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -289,7 +289,7 @@ fn divByConstants_unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "divByConstants_unsigned.js",
-        compile_flags: vec!["-wasm", todo!(" ")],
+        compile_flags: vec!["-wasm"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };

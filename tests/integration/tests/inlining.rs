@@ -26,8 +26,8 @@ fn arg_js(#[case] variant: Variant) {
 //     <default>
 //       <files>linenumber1.js</files>
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber1.baseline</baseline>
+//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -39,8 +39,8 @@ fn arg_js(#[case] variant: Variant) {
 //       <!-- Variant of test without -force:inline to ensure output is the same -->
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
 //       <!-- <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags> -->
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber1.baseline</baseline>
+//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -50,8 +50,8 @@ fn arg_js(#[case] variant: Variant) {
 //     <default>
 //       <files>linenumber2.js</files>
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber2.baseline</baseline>
+//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -63,8 +63,8 @@ fn arg_js(#[case] variant: Variant) {
 //       <!-- Variant of test without -force:inline to ensure output is the same -->
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
 //       <!-- <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags> -->
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber2.baseline</baseline>
+//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -74,8 +74,8 @@ fn arg_js(#[case] variant: Variant) {
 //     <default>
 //       <files>linenumber3.js</files>
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber3.baseline</baseline>
+//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -87,8 +87,8 @@ fn arg_js(#[case] variant: Variant) {
 //       <!-- Variant of test without -force:inline to ensure output is the same -->
 //       <!-- TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130) -->
 //       <!-- <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags> -->
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <baseline>linenumber3.baseline</baseline>
+//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
 //       <tags>exclude_arm</tags>
 //     </default>
 //   </test>
@@ -676,8 +676,8 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>InlineCallbacks.js</files>
-//       <compile-flags>-testtrace:InlineCallbacks</compile-flags>
 //       <baseline>InlineCallbacks.baseline</baseline>
+//       <compile-flags>-testtrace:InlineCallbacks</compile-flags>
 //       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
 //     </default>
 //   </test>
@@ -686,8 +686,8 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>InlineCallbackCallBailout.js</files>
-//       <compile-flags>-testtrace:InlineCallbacks -testtrace:Bailout</compile-flags>
 //       <baseline>InlineCallbackCallBailout.baseline</baseline>
+//       <compile-flags>-testtrace:InlineCallbacks -testtrace:Bailout</compile-flags>
 //       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
 //     </default>
 //   </test>
@@ -696,8 +696,8 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>InlineCallInstanceFunction.js</files>
-//       <compile-flags>-TestChakraLib -testtrace:bailout -testtrace:inlineCallbacks</compile-flags>
 //       <baseline>InlineCallInstanceFunction.baseline</baseline>
+//       <compile-flags>-TestChakraLib -testtrace:bailout -testtrace:inlineCallbacks</compile-flags>
 //       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
 //     </default>
 //   </test>

@@ -217,8 +217,8 @@ fn atomics_test_js(#[case] variant: Variant) {
 //   <test>
 //   <default>
 //     <files>PromiseRejectionTracking.js</files>
-//     <compile-flags>-TrackRejectedPromises -args summary -endargs -nodeferparse</compile-flags>
 //     <baseline>PromiseRejectionTracking.baseline</baseline>
+//     <compile-flags>-TrackRejectedPromises -args summary -endargs -nodeferparse</compile-flags>
 //   </default>
 // </test>
 
