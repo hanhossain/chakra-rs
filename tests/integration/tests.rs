@@ -59,6 +59,7 @@ mod reg_alloc;
 mod regex;
 mod rwc;
 mod scanner;
+#[cfg(feature = "compile-cpp")]
 mod smoke_tests;
 mod stack_trace;
 mod stackfunc;
