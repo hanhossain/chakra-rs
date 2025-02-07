@@ -674,9 +674,7 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn InlineCallbacks_js(#[case] variant: Variant) {
+fn inline_callbacks_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "InlineCallbacks.js",
@@ -695,9 +693,7 @@ fn InlineCallbacks_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn InlineCallbackCallBailout_js(#[case] variant: Variant) {
+fn inline_callback_call_bailout_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "InlineCallbackCallBailout.js",
@@ -716,9 +712,7 @@ fn InlineCallbackCallBailout_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn InlineCallInstanceFunction_js(#[case] variant: Variant) {
+fn inline_call_instance_function_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "InlineCallInstanceFunction.js",
