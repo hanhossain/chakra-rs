@@ -672,35 +672,75 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>InlineCallbacks.js</files>
-//       <baseline>InlineCallbacks.baseline</baseline>
-//       <compile-flags>-testtrace:InlineCallbacks</compile-flags>
-//       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn InlineCallbacks_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "InlineCallbacks.js",
+        baseline_path: Some("InlineCallbacks.baseline"),
+        compile_flags: vec!["-testtrace:InlineCallbacks"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_forceserialized",
+            "require_backend",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>InlineCallbackCallBailout.js</files>
-//       <baseline>InlineCallbackCallBailout.baseline</baseline>
-//       <compile-flags>-testtrace:InlineCallbacks -testtrace:Bailout</compile-flags>
-//       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn InlineCallbackCallBailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "InlineCallbackCallBailout.js",
+        baseline_path: Some("InlineCallbackCallBailout.baseline"),
+        compile_flags: vec!["-testtrace:InlineCallbacks", "-testtrace:Bailout"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_forceserialized",
+            "require_backend",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>InlineCallInstanceFunction.js</files>
-//       <baseline>InlineCallInstanceFunction.baseline</baseline>
-//       <compile-flags>-TestChakraLib -testtrace:bailout -testtrace:inlineCallbacks</compile-flags>
-//       <tags>exclude_dynapogo,exclude_nonative,exclude_forceserialized,require_backend</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn InlineCallInstanceFunction_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "InlineCallInstanceFunction.js",
+        baseline_path: Some("InlineCallInstanceFunction.baseline"),
+        compile_flags: vec![
+            "-TestChakraLib",
+            "-testtrace:bailout",
+            "-testtrace:inlineCallbacks",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_forceserialized",
+            "require_backend",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

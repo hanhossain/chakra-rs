@@ -13,1422 +13,3041 @@ const COMMON_TAGS: [&str; 6] = [
 ];
 const DIRECTORY: &str = "chakracore-cxx/test/TTBasic";
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>accessor.js</files>
-//       <baseline>accessorRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=accessorTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>accessorReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=accessorTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>arguments.js</files>
-//       <baseline>argumentsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=argumentsTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>argumentsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=argumentsTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>array.js</files>
-//       <baseline>arrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=arrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>arrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=arrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bind.js</files>
-//       <baseline>bindRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=bindTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>bindReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=bindTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>boolean.js</files>
-//       <baseline>booleanRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=booleanTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>booleanReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=booleanTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>boundFunction.js</files>
-//       <baseline>boundFunctionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=boundFunctionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>boundFunctionReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=boundFunctionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>boxedObject.js</files>
-//       <baseline>boxedObjectRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=boxedObjectTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>boxedObjectReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=boxedObjectTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>crossSiteMain.js</files>
-//       <baseline>crossSiteRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=crossSiteTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>crossSiteReplay1.baseline</baseline>
-//       <compile-flags>-TTReplay=crossSiteTest</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>crossSiteReplay2.baseline</baseline>
-//       <compile-flags>-TTReplay=crossSiteTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constructor.js</files>
-//       <baseline>constructorRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=constructorTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>constructorReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=constructorTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>dateBasic.js</files>
-//       <baseline>dateBasicRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=dateBasicTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>dateBasicReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=dateBasicTest</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>dateBasicReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=dateBasicTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>deleteArray.js</files>
-//       <baseline>deleteArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=deleteArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>deleteArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=deleteArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>es5Array.js</files>
-//       <baseline>es5ArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=es5ArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>es5ArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=es5ArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>es5Arguments.js</files>
-//       <baseline>es5ArgumentsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=es5ArgumentsTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>es5ArgumentsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=es5ArgumentsTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>eval.js</files>
-//       <baseline>evalRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=evalTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>evalReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=evalTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>extensible.js</files>
-//       <baseline>extensibleRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=extensibleTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>extensibleReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=extensibleTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>forInShadowing.js</files>
-//       <baseline>forInShadowingRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=forInShadowingTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>forInShadowingReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=forInShadowingTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>freeze.js</files>
-//       <baseline>freezeRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=freezeTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>freezeReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=freezeTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>function.js</files>
-//       <baseline>functionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=functionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>functionReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=functionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>largeAuxArray.js</files>
-//       <baseline>largeAuxArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=largeAuxArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>largeAuxArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=largeAuxArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>loadReEntrant.js</files>
-//       <baseline>loadReEntrantRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=loadReEntrantTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>loadReEntrantReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=loadReEntrantTest</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>loadReEntrantReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=loadReEntrantTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>map.js</files>
-//       <baseline>mapRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=mapTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>mapReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=mapTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>missingArray.js</files>
-//       <baseline>missingArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=missingArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>missingArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=missingArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>nativeArray.js</files>
-//       <baseline>nativeArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=nativeArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>nativeArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=nativeArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>newFromArgs.js</files>
-//       <baseline>newFromArgsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=newFromArgsTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>newFromArgsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=newFromArgsTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>newFunction.js</files>
-//       <baseline>newFunctionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=newFunctionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>newFunctionReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=newFunctionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>number.js</files>
-//       <baseline>numberRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=numberTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>numberReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=numberTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>numericPropertyIsEnumerable.js</files>
-//       <baseline>numericPropertyIsEnumerableRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=numericPropertyIsEnumerableTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>numericPropertyIsEnumerableReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=numericPropertyIsEnumerableTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>object.js</files>
-//       <baseline>objectRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=objectTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>objectReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=objectTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>popArrayImplicitCall.js</files>
-//       <baseline>popArrayImplicitCallRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=popArrayImplicitCallTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>popArrayImplicitCallReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=popArrayImplicitCallTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>promise.js</files>
-//       <baseline>promiseRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=promiseTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promiseReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promiseTest</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promiseReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promiseTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promiseReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promiseTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promiseReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promiseTest -TTDStartEvent=6</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promiseReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promiseTest -TTDStartEvent=7</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>promise_MultipleThenCalls.js</files>
-//       <baseline>promise_MultipleThenCallsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=promise_MultipleThenCallsTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=3</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=6</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>promise_MultipleThenCallsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=promise_MultipleThenCallsTest -TTDStartEvent=7</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>proxy.js</files>
-//       <baseline>proxyRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=proxyTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>proxyReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=proxyTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>regex.js</files>
-//       <baseline>regexRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=regexTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>regexReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=regexTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>seal.js</files>
-//       <baseline>sealRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=sealTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>sealReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=sealTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>scopedAccessors.js</files>
-//       <baseline>scopedAccessorsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=scopedAccessorsTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>scopedAccessorsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=scopedAccessorsTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>scopeFunction.js</files>
-//       <baseline>scopeFunctionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=scopeFunctionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>scopeFunctionReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=scopeFunctionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>set.js</files>
-//       <baseline>setRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=setTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>setReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=setTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>shadowPrototype.js</files>
-//       <baseline>shadowPrototypeRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=shadowPrototypeTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>shadowPrototypeReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=shadowPrototypeTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>sparseArray.js</files>
-//       <baseline>sparseArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=sparseArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>sparseArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=sparseArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>string.js</files>
-//       <baseline>stringRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=stringTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>stringReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=stringTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>symbol.js</files>
-//       <baseline>symbolRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=symbolTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>symbolReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=symbolTest</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>symbolReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=symbolTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>typeConversions.js</files>
-//       <baseline>typeConversionsRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=typeConversionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>typeConversionsReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=typeConversionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>typedArray.js</files>
-//       <baseline>typedArrayRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=typedArrayTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>typedArrayReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=typedArrayTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>typePromotion.js</files>
-//       <baseline>typePromotionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=typePromotionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>typePromotionReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=typePromotionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorBasic.js</files>
-//       <baseline>generatorBasicRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorBasicTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorBasicReplay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorBasicTest -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorBasicReplay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorBasicTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorBasicReplay_3.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorBasicTest -TTDStartEvent=3</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorBasicReplay_4.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorBasicTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorBasicReplay_5.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorBasicTest -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorReturnYieldResult.js</files>
-//       <baseline>generatorReturnYieldResultRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorReturnYieldResult -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorReturnYieldResultReplay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorReturnYieldResult -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorReturnYieldResultReplay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorReturnYieldResult -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorReturnYieldResultReplay_3.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorReturnYieldResult -TTDStartEvent=3</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorReturnYieldResultReplay_4.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorReturnYieldResult -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorIntParam.js</files>
-//       <baseline>generatorIntParamRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorIntParamTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorIntParamReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorIntParamTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorObjectParam.js</files>
-//       <baseline>generatorObjectParamRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorObjectParamTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorObjectParamReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorObjectParamTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorClassMethod.js</files>
-//       <baseline>generatorClassMethodRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorClassMethodTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorClassMethodReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorClassMethodTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorNested.js</files>
-//       <baseline>generatorNestedRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorNestedTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorNestedReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorNestedTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorRestoreCompletedGenerator.js</files>
-//       <baseline>generatorRestoreCompletedGeneratorRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorRestoreCompletedGeneratorTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorRestoreCompletedGeneratorReplay.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorRestoreCompletedGeneratorTest -TTDStartEvent=6</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>generatorWriteLogDuringGeneratorExecution.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=generatorWriteLogDuringGeneratorExecutionTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_3.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=3</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_4.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_5.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>generatorWriteLogDuringGeneratorExecutionReplay_6.baseline</baseline>
-//       <compile-flags>-TTReplay=generatorWriteLogDuringGeneratorExecutionTest -TTDStartEvent=6</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>asyncAwaitBasic.js</files>
-//       <baseline>asyncAwaitBasicRecord.baseline</baseline>
-//       <compile-flags>-TTRecord=asyncAwaitBasicTest -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwaitBasicReplay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwaitBasicTest -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwaitBasicReplay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwaitBasicTest -TTDStartEvent=2</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwaitBasicReplay_3.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwaitBasicTest -TTDStartEvent=3</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwaitBasicReplay_4.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwaitBasicTest -TTDStartEvent=4</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwaitBasicReplay_5.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwaitBasicTest -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>asyncAwait2.js</files>
-//       <baseline>asyncAwait2Record.baseline</baseline>
-//       <compile-flags>-TTRecord=asyncAwait2Test -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwait2Replay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwait2Test -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwait2Replay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwait2Test -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>asyncAwait3.js</files>
-//       <baseline>asyncAwait3Record.baseline</baseline>
-//       <compile-flags>-TTRecord=asyncAwait3Test -TTSnapInterval=0</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwait3Replay_1.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwait3Test -TTDStartEvent=1</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//     <test>
-//     <default>
-//       <files>ttdSentinal.js</files>
-//       <baseline>asyncAwait3Replay_2.baseline</baseline>
-//       <compile-flags>-TTReplay=asyncAwait3Test -TTDStartEvent=5</compile-flags>
-//       <tags>exclude_dynapogo,exclude_snap,exclude_serialized</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn accessor_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "accessor.js",
+        baseline_path: Some("accessorRecord.baseline"),
+        compile_flags: vec!["-TTRecord=accessorTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("accessorReplay.baseline"),
+        compile_flags: vec!["-TTReplay=accessorTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn arguments_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "arguments.js",
+        baseline_path: Some("argumentsRecord.baseline"),
+        compile_flags: vec!["-TTRecord=argumentsTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("argumentsReplay.baseline"),
+        compile_flags: vec!["-TTReplay=argumentsTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn array_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "array.js",
+        baseline_path: Some("arrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=arrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("arrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=arrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bind_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bind.js",
+        baseline_path: Some("bindRecord.baseline"),
+        compile_flags: vec!["-TTRecord=bindTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("bindReplay.baseline"),
+        compile_flags: vec!["-TTReplay=bindTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn boolean_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "boolean.js",
+        baseline_path: Some("booleanRecord.baseline"),
+        compile_flags: vec!["-TTRecord=booleanTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("booleanReplay.baseline"),
+        compile_flags: vec!["-TTReplay=booleanTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn boundFunction_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "boundFunction.js",
+        baseline_path: Some("boundFunctionRecord.baseline"),
+        compile_flags: vec!["-TTRecord=boundFunctionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("boundFunctionReplay.baseline"),
+        compile_flags: vec!["-TTReplay=boundFunctionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn boxedObject_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "boxedObject.js",
+        baseline_path: Some("boxedObjectRecord.baseline"),
+        compile_flags: vec!["-TTRecord=boxedObjectTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("boxedObjectReplay.baseline"),
+        compile_flags: vec!["-TTReplay=boxedObjectTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn crossSiteMain_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "crossSiteMain.js",
+        baseline_path: Some("crossSiteRecord.baseline"),
+        compile_flags: vec!["-TTRecord=crossSiteTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("crossSiteReplay1.baseline"),
+        compile_flags: vec!["-TTReplay=crossSiteTest"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("crossSiteReplay2.baseline"),
+        compile_flags: vec!["-TTReplay=crossSiteTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn constructor_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constructor.js",
+        baseline_path: Some("constructorRecord.baseline"),
+        compile_flags: vec!["-TTRecord=constructorTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("constructorReplay.baseline"),
+        compile_flags: vec!["-TTReplay=constructorTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn dateBasic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "dateBasic.js",
+        baseline_path: Some("dateBasicRecord.baseline"),
+        compile_flags: vec!["-TTRecord=dateBasicTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("dateBasicReplay.baseline"),
+        compile_flags: vec!["-TTReplay=dateBasicTest"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("dateBasicReplay.baseline"),
+        compile_flags: vec!["-TTReplay=dateBasicTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn deleteArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "deleteArray.js",
+        baseline_path: Some("deleteArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=deleteArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("deleteArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=deleteArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es5Array_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "es5Array.js",
+        baseline_path: Some("es5ArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=es5ArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("es5ArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=es5ArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es5Arguments_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "es5Arguments.js",
+        baseline_path: Some("es5ArgumentsRecord.baseline"),
+        compile_flags: vec!["-TTRecord=es5ArgumentsTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("es5ArgumentsReplay.baseline"),
+        compile_flags: vec!["-TTReplay=es5ArgumentsTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn eval_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "eval.js",
+        baseline_path: Some("evalRecord.baseline"),
+        compile_flags: vec!["-TTRecord=evalTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("evalReplay.baseline"),
+        compile_flags: vec!["-TTReplay=evalTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn extensible_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "extensible.js",
+        baseline_path: Some("extensibleRecord.baseline"),
+        compile_flags: vec!["-TTRecord=extensibleTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("extensibleReplay.baseline"),
+        compile_flags: vec!["-TTReplay=extensibleTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn forInShadowing_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "forInShadowing.js",
+        baseline_path: Some("forInShadowingRecord.baseline"),
+        compile_flags: vec!["-TTRecord=forInShadowingTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("forInShadowingReplay.baseline"),
+        compile_flags: vec!["-TTReplay=forInShadowingTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn freeze_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "freeze.js",
+        baseline_path: Some("freezeRecord.baseline"),
+        compile_flags: vec!["-TTRecord=freezeTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("freezeReplay.baseline"),
+        compile_flags: vec!["-TTReplay=freezeTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn function_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "function.js",
+        baseline_path: Some("functionRecord.baseline"),
+        compile_flags: vec!["-TTRecord=functionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("functionReplay.baseline"),
+        compile_flags: vec!["-TTReplay=functionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn largeAuxArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "largeAuxArray.js",
+        baseline_path: Some("largeAuxArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=largeAuxArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("largeAuxArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=largeAuxArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn loadReEntrant_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "loadReEntrant.js",
+        baseline_path: Some("loadReEntrantRecord.baseline"),
+        compile_flags: vec!["-TTRecord=loadReEntrantTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("loadReEntrantReplay.baseline"),
+        compile_flags: vec!["-TTReplay=loadReEntrantTest"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("loadReEntrantReplay.baseline"),
+        compile_flags: vec!["-TTReplay=loadReEntrantTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn map_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "map.js",
+        baseline_path: Some("mapRecord.baseline"),
+        compile_flags: vec!["-TTRecord=mapTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("mapReplay.baseline"),
+        compile_flags: vec!["-TTReplay=mapTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn missingArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "missingArray.js",
+        baseline_path: Some("missingArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=missingArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("missingArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=missingArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn nativeArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "nativeArray.js",
+        baseline_path: Some("nativeArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=nativeArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("nativeArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=nativeArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn newFromArgs_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "newFromArgs.js",
+        baseline_path: Some("newFromArgsRecord.baseline"),
+        compile_flags: vec!["-TTRecord=newFromArgsTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("newFromArgsReplay.baseline"),
+        compile_flags: vec!["-TTReplay=newFromArgsTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn newFunction_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "newFunction.js",
+        baseline_path: Some("newFunctionRecord.baseline"),
+        compile_flags: vec!["-TTRecord=newFunctionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("newFunctionReplay.baseline"),
+        compile_flags: vec!["-TTReplay=newFunctionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn number_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "number.js",
+        baseline_path: Some("numberRecord.baseline"),
+        compile_flags: vec!["-TTRecord=numberTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("numberReplay.baseline"),
+        compile_flags: vec!["-TTReplay=numberTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn numericPropertyIsEnumerable_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "numericPropertyIsEnumerable.js",
+        baseline_path: Some("numericPropertyIsEnumerableRecord.baseline"),
+        compile_flags: vec![
+            "-TTRecord=numericPropertyIsEnumerableTest",
+            "-TTSnapInterval=0",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("numericPropertyIsEnumerableReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=numericPropertyIsEnumerableTest",
+            "-TTDStartEvent=2",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn object_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "object.js",
+        baseline_path: Some("objectRecord.baseline"),
+        compile_flags: vec!["-TTRecord=objectTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("objectReplay.baseline"),
+        compile_flags: vec!["-TTReplay=objectTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn popArrayImplicitCall_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "popArrayImplicitCall.js",
+        baseline_path: Some("popArrayImplicitCallRecord.baseline"),
+        compile_flags: vec!["-TTRecord=popArrayImplicitCallTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("popArrayImplicitCallReplay.baseline"),
+        compile_flags: vec!["-TTReplay=popArrayImplicitCallTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn promise_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "promise.js",
+        baseline_path: Some("promiseRecord.baseline"),
+        compile_flags: vec!["-TTRecord=promiseTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promiseReplay.baseline"),
+        compile_flags: vec!["-TTReplay=promiseTest"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promiseReplay.baseline"),
+        compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promiseReplay.baseline"),
+        compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promiseReplay.baseline"),
+        compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=6"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promiseReplay.baseline"),
+        compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=7"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn promise_MultipleThenCalls_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "promise_MultipleThenCalls.js",
+        baseline_path: Some("promise_MultipleThenCallsRecord.baseline"),
+        compile_flags: vec![
+            "-TTRecord=promise_MultipleThenCallsTest",
+            "-TTSnapInterval=0",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=1",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=2",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=3",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=4",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=5",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=6",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("promise_MultipleThenCallsReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=promise_MultipleThenCallsTest",
+            "-TTDStartEvent=7",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn proxy_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "proxy.js",
+        baseline_path: Some("proxyRecord.baseline"),
+        compile_flags: vec!["-TTRecord=proxyTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("proxyReplay.baseline"),
+        compile_flags: vec!["-TTReplay=proxyTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regex_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regex.js",
+        baseline_path: Some("regexRecord.baseline"),
+        compile_flags: vec!["-TTRecord=regexTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("regexReplay.baseline"),
+        compile_flags: vec!["-TTReplay=regexTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn seal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "seal.js",
+        baseline_path: Some("sealRecord.baseline"),
+        compile_flags: vec!["-TTRecord=sealTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("sealReplay.baseline"),
+        compile_flags: vec!["-TTReplay=sealTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn scopedAccessors_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "scopedAccessors.js",
+        baseline_path: Some("scopedAccessorsRecord.baseline"),
+        compile_flags: vec!["-TTRecord=scopedAccessorsTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("scopedAccessorsReplay.baseline"),
+        compile_flags: vec!["-TTReplay=scopedAccessorsTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn scopeFunction_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "scopeFunction.js",
+        baseline_path: Some("scopeFunctionRecord.baseline"),
+        compile_flags: vec!["-TTRecord=scopeFunctionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("scopeFunctionReplay.baseline"),
+        compile_flags: vec!["-TTReplay=scopeFunctionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn set_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "set.js",
+        baseline_path: Some("setRecord.baseline"),
+        compile_flags: vec!["-TTRecord=setTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("setReplay.baseline"),
+        compile_flags: vec!["-TTReplay=setTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn shadowPrototype_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "shadowPrototype.js",
+        baseline_path: Some("shadowPrototypeRecord.baseline"),
+        compile_flags: vec!["-TTRecord=shadowPrototypeTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("shadowPrototypeReplay.baseline"),
+        compile_flags: vec!["-TTReplay=shadowPrototypeTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn sparseArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "sparseArray.js",
+        baseline_path: Some("sparseArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=sparseArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("sparseArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=sparseArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn string_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "string.js",
+        baseline_path: Some("stringRecord.baseline"),
+        compile_flags: vec!["-TTRecord=stringTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("stringReplay.baseline"),
+        compile_flags: vec!["-TTReplay=stringTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn symbol_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "symbol.js",
+        baseline_path: Some("symbolRecord.baseline"),
+        compile_flags: vec!["-TTRecord=symbolTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("symbolReplay.baseline"),
+        compile_flags: vec!["-TTReplay=symbolTest"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("symbolReplay.baseline"),
+        compile_flags: vec!["-TTReplay=symbolTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typeConversions_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "typeConversions.js",
+        baseline_path: Some("typeConversionsRecord.baseline"),
+        compile_flags: vec!["-TTRecord=typeConversionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("typeConversionsReplay.baseline"),
+        compile_flags: vec!["-TTReplay=typeConversionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typedArray_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "typedArray.js",
+        baseline_path: Some("typedArrayRecord.baseline"),
+        compile_flags: vec!["-TTRecord=typedArrayTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("typedArrayReplay.baseline"),
+        compile_flags: vec!["-TTReplay=typedArrayTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn typePromotion_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "typePromotion.js",
+        baseline_path: Some("typePromotionRecord.baseline"),
+        compile_flags: vec!["-TTRecord=typePromotionTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("typePromotionReplay.baseline"),
+        compile_flags: vec!["-TTReplay=typePromotionTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorBasic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorBasic.js",
+        baseline_path: Some("generatorBasicRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorBasicTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorBasicReplay_1.baseline"),
+        compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=1"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorBasicReplay_2.baseline"),
+        compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorBasicReplay_3.baseline"),
+        compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=3"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorBasicReplay_4.baseline"),
+        compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorBasicReplay_5.baseline"),
+        compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=5"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorReturnYieldResult_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorReturnYieldResult.js",
+        baseline_path: Some("generatorReturnYieldResultRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorReturnYieldResult", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorReturnYieldResultReplay_1.baseline"),
+        compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=1"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorReturnYieldResultReplay_2.baseline"),
+        compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorReturnYieldResultReplay_3.baseline"),
+        compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=3"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorReturnYieldResultReplay_4.baseline"),
+        compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorIntParam_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorIntParam.js",
+        baseline_path: Some("generatorIntParamRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorIntParamTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorIntParamReplay.baseline"),
+        compile_flags: vec!["-TTReplay=generatorIntParamTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorObjectParam_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorObjectParam.js",
+        baseline_path: Some("generatorObjectParamRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorObjectParamTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorObjectParamReplay.baseline"),
+        compile_flags: vec!["-TTReplay=generatorObjectParamTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorClassMethod_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorClassMethod.js",
+        baseline_path: Some("generatorClassMethodRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorClassMethodTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorClassMethodReplay.baseline"),
+        compile_flags: vec!["-TTReplay=generatorClassMethodTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorNested_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorNested.js",
+        baseline_path: Some("generatorNestedRecord.baseline"),
+        compile_flags: vec!["-TTRecord=generatorNestedTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorNestedReplay.baseline"),
+        compile_flags: vec!["-TTReplay=generatorNestedTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorRestoreCompletedGenerator_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorRestoreCompletedGenerator.js",
+        baseline_path: Some("generatorRestoreCompletedGeneratorRecord.baseline"),
+        compile_flags: vec![
+            "-TTRecord=generatorRestoreCompletedGeneratorTest",
+            "-TTSnapInterval=0",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorRestoreCompletedGeneratorReplay.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorRestoreCompletedGeneratorTest",
+            "-TTDStartEvent=6",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn generatorWriteLogDuringGeneratorExecution_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "generatorWriteLogDuringGeneratorExecution.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionRecord.baseline"),
+        compile_flags: vec![
+            "-TTRecord=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTSnapInterval=0",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_1.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=1",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_2.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=2",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_3.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=3",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_4.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=4",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_5.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=5",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("generatorWriteLogDuringGeneratorExecutionReplay_6.baseline"),
+        compile_flags: vec![
+            "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
+            "-TTDStartEvent=6",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn asyncAwaitBasic_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "asyncAwaitBasic.js",
+        baseline_path: Some("asyncAwaitBasicRecord.baseline"),
+        compile_flags: vec!["-TTRecord=asyncAwaitBasicTest", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwaitBasicReplay_1.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=1"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwaitBasicReplay_2.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=2"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwaitBasicReplay_3.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=3"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwaitBasicReplay_4.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=4"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwaitBasicReplay_5.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=5"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn asyncAwait2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "asyncAwait2.js",
+        baseline_path: Some("asyncAwait2Record.baseline"),
+        compile_flags: vec!["-TTRecord=asyncAwait2Test", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwait2Replay_1.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwait2Test", "-TTDStartEvent=1"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwait2Replay_2.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwait2Test", "-TTDStartEvent=5"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn asyncAwait3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "asyncAwait3.js",
+        baseline_path: Some("asyncAwait3Record.baseline"),
+        compile_flags: vec!["-TTRecord=asyncAwait3Test", "-TTSnapInterval=0"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwait3Replay_1.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwait3Test", "-TTDStartEvent=1"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn ttdSentinal_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ttdSentinal.js",
+        baseline_path: Some("asyncAwait3Replay_2.baseline"),
+        compile_flags: vec!["-TTReplay=asyncAwait3Test", "-TTDStartEvent=5"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_snap",
+            "exclude_serialized",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}

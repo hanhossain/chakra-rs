@@ -3447,15 +3447,33 @@ fn bug_256729_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug_266843.js</files>
-//       <baseline>bug_266843.baseline</baseline>
-//       <compile-flags>-debuglaunch -maxinterpretcount:1 -off:simpleJit -dbgbaseline:bug_266843.js.dbg.baseline</compile-flags>
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_266843_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_266843.js",
+        baseline_path: Some("bug_266843.baseline"),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-maxinterpretcount:1",
+            "-off:simpleJit",
+            "-dbgbaseline:bug_266843.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3574,15 +3592,33 @@ fn property_enumeration_bug241480_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug_271356.js</files>
-//       <baseline>bug_271356.js.baseline</baseline>
-//       <compile-flags>-debuglaunch -maxinterpretcount:4 -off:simpleJit -dbgbaseline:bug_271356.js.dbg.baseline</compile-flags>
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_271356_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_271356.js",
+        baseline_path: Some("bug_271356.js.baseline"),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-maxinterpretcount:4",
+            "-off:simpleJit",
+            "-dbgbaseline:bug_271356.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -3652,15 +3688,34 @@ fn bug_301517_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>bug_325839.js</files>
-//       <baseline>bug_325839.baseline</baseline>
-//       <compile-flags>-debuglaunch -forceNative -off:simpleJit -dbgbaseline:bug_325839.js.dbg.baseline</compile-flags>
-//       <tags>exclude_dynapogo,exclude_nonative,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn bug_325839_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "bug_325839.js",
+        baseline_path: Some("bug_325839.baseline"),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-forceNative",
+            "-off:simpleJit",
+            "-dbgbaseline:bug_325839.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_nonative",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

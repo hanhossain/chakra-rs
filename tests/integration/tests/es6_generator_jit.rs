@@ -207,15 +207,27 @@ fn new_test_js4(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-gen-loop-body.js</files>
-//     <baseline>jit-gen-loop-body.baseline</baseline>
-//     <compile-flags>-testtrace:Backend</compile-flags>
-//     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_gen_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-gen-loop-body.js",
+        baseline_path: Some("jit-gen-loop-body.baseline"),
+        compile_flags: vec!["-testtrace:Backend"],
+        tags: HashSet::from([
+            "require_backend",
+            "exclude_test",
+            "exclude_nonative",
+            "exclude_dynapogo",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -226,15 +238,27 @@ fn new_test_js4(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-async-loop-body.js</files>
-//     <baseline>jit-async-loop-body.baseline</baseline>
-//     <compile-flags>-testtrace:Backend</compile-flags>
-//     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_async_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-async-loop-body.js",
+        baseline_path: Some("jit-async-loop-body.baseline"),
+        compile_flags: vec!["-testtrace:Backend"],
+        tags: HashSet::from([
+            "require_backend",
+            "exclude_test",
+            "exclude_nonative",
+            "exclude_dynapogo",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // TODO (hanhossain): migrate
 // <test>
@@ -245,22 +269,40 @@ fn new_test_js4(#[case] variant: Variant) {
 //   </default>
 // </test>
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-module-loop-body.js</files>
-//     <baseline>jit-module-loop-body.baseline</baseline>
-//     <compile-flags>-testtrace:Backend -module</compile-flags>
-//     <tags>require_backend,exclude_test,exclude_nonative,exclude_dynapogo</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_module_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-module-loop-body.js",
+        baseline_path: Some("jit-module-loop-body.baseline"),
+        compile_flags: vec!["-testtrace:Backend", "-module"],
+        tags: HashSet::from([
+            "require_backend",
+            "exclude_test",
+            "exclude_nonative",
+            "exclude_dynapogo",
+            todo!(""),
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-module-loop-body.js</files>
-//     <baseline>jit-module-loop-body-2.baseline</baseline>
-//     <compile-flags>-module</compile-flags>
-//     <tags>require_backend,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_module_loop_body_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-module-loop-body.js",
+        baseline_path: Some("jit-module-loop-body-2.baseline"),
+        compile_flags: vec!["-module"],
+        tags: HashSet::from(["require_backend", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
