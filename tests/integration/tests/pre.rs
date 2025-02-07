@@ -21,7 +21,7 @@ fn pre1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -35,5 +35,5 @@ fn bug0_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

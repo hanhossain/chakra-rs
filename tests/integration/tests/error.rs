@@ -17,7 +17,7 @@ fn error_cause_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn aggregate_error_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -46,7 +46,7 @@ fn error_props_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -60,7 +60,7 @@ fn error_ctor_props_js(#[case] variant: Variant) {
         baseline_path: Some("ErrorCtorProps_v3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -75,7 +75,7 @@ fn native_errors_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -90,7 +90,7 @@ fn outofmem_js(#[case] variant: Variant) {
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -107,7 +107,7 @@ fn stack_js(#[case] variant: Variant) {
         compile_flags: vec!["-JsBuiltIn-", "-off:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -121,7 +121,7 @@ fn stack2_js(#[case] variant: Variant) {
         baseline_path: Some("stack2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -136,7 +136,7 @@ fn error_ctor_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -150,7 +150,7 @@ fn error_num_js(#[case] variant: Variant) {
         baseline_path: Some("errorNum.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -164,7 +164,7 @@ fn call_non_function_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_native", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -179,7 +179,7 @@ fn source_info_00_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -194,7 +194,7 @@ fn source_info_01_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -209,7 +209,7 @@ fn source_info_10_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -224,7 +224,7 @@ fn source_info_11_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -239,7 +239,7 @@ fn source_info_12_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -254,7 +254,7 @@ fn source_info_13_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -269,7 +269,7 @@ fn source_info_20_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -283,7 +283,7 @@ fn various_errors_js(#[case] variant: Variant) {
         baseline_path: Some("variousErrors3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(all(windows, not(target_arch = "aarch64")))]
@@ -299,7 +299,7 @@ fn runtime_compile_stack_overflow_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_forceundodefer"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -316,7 +316,7 @@ fn encodeoverflow_js(#[case] variant: Variant) {
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
         tags: HashSet::from(["Slow"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -329,7 +329,7 @@ fn bug560940_js(#[case] variant: Variant) {
         source_path: "bug560940.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -346,7 +346,7 @@ fn stackoverflow_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -365,7 +365,7 @@ fn inline_same_func_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -385,7 +385,7 @@ fn part_init_stack_frame_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -400,7 +400,7 @@ fn validate_line_column_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -415,7 +415,7 @@ fn validate_line_column_js_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-force:DeferParse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -428,7 +428,7 @@ fn error_prototypeto_string_js(#[case] variant: Variant) {
         source_path: "errorPrototypetoString.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -442,5 +442,5 @@ fn exception_in_error_to_string_js(#[case] variant: Variant) {
         baseline_path: Some("exceptionInErrorToString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -15,7 +15,7 @@ fn do_loop_js(#[case] variant: Variant) {
         baseline_path: Some("DoLoop.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn do_loop2_js(#[case] variant: Variant) {
         baseline_path: Some("DoLoop2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn do_loop3_js(#[case] variant: Variant) {
         baseline_path: Some("DoLoop3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn jump_js(#[case] variant: Variant) {
         baseline_path: Some("jump.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -71,7 +71,7 @@ fn for_loop_js(#[case] variant: Variant) {
         baseline_path: Some("ForLoop.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn for_loop2_js(#[case] variant: Variant) {
         baseline_path: Some("ForLoop2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn while_loop_js(#[case] variant: Variant) {
         baseline_path: Some("WhileLoop.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -113,7 +113,7 @@ fn while_loop2_js(#[case] variant: Variant) {
         baseline_path: Some("WhileLoop2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn for_in_misc_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn for_in_object_delete_js(#[case] variant: Variant) {
         baseline_path: Some("forInObjectDelete.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn for_in_object_add_js(#[case] variant: Variant) {
         baseline_path: Some("forInObjectAddv3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -170,7 +170,7 @@ fn for_in_object_add_delete_js(#[case] variant: Variant) {
         baseline_path: Some("forInObjectAddDeletev3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -184,7 +184,7 @@ fn for_in_primitive_js(#[case] variant: Variant) {
         baseline_path: Some("forInPrimitive.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -198,7 +198,7 @@ fn enumeration_adddelete_js(#[case] variant: Variant) {
         baseline_path: Some("enumeration_adddelete.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -212,7 +212,7 @@ fn for_in_array_add_js(#[case] variant: Variant) {
         baseline_path: Some("forinArrayAddv3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -226,7 +226,7 @@ fn for_in_object_with_prototype_js(#[case] variant: Variant) {
         baseline_path: Some("forInObjectWithPrototype.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -240,5 +240,5 @@ fn do_while_js(#[case] variant: Variant) {
         baseline_path: Some("DoWhileES5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

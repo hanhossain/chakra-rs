@@ -23,7 +23,7 @@ fn try_with_eval_perfhint_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -48,7 +48,7 @@ fn try_with_eval_perfhint_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -70,7 +70,7 @@ fn arguments1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -92,5 +92,5 @@ fn polymorphictest_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

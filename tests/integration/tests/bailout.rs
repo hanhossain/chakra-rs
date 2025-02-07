@@ -17,7 +17,7 @@ fn arrayctor_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -32,7 +32,7 @@ fn bailout_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -51,7 +51,7 @@ fn bailout_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -66,7 +66,7 @@ fn bailout_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -82,7 +82,7 @@ fn bailout2_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -98,7 +98,7 @@ fn bailout3_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -114,7 +114,7 @@ fn bailout4_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -130,7 +130,7 @@ fn bailout5_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -145,7 +145,7 @@ fn bailout6_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -161,7 +161,7 @@ fn bailout7_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -175,7 +175,7 @@ fn bailout_loopbodystart_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -192,7 +192,7 @@ fn bailout_loopbodystart_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -209,7 +209,7 @@ fn bailout_loopbodystart_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -225,7 +225,7 @@ fn bailout_eh_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -241,7 +241,7 @@ fn bailout_args_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -257,7 +257,7 @@ fn bailout_argobj_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_forceserialized"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -273,7 +273,7 @@ fn bailout_throw_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -288,7 +288,7 @@ fn bailout_floatpref_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -306,7 +306,7 @@ fn bailout_floatpref_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -324,7 +324,7 @@ fn bailout_floatpref_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_interpreted", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -340,7 +340,7 @@ fn bailout_copy_prop1_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -354,7 +354,7 @@ fn bailout_strict_exception_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -369,7 +369,7 @@ fn aggressive_int_type_spec_with_float_pref_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -385,7 +385,7 @@ fn bailout_inlined_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -399,7 +399,7 @@ fn bug10_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -414,7 +414,7 @@ fn flags_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -428,7 +428,7 @@ fn initlocals_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -443,7 +443,7 @@ fn implicit_nosideeffect_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -457,7 +457,7 @@ fn inline_builtins_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo", "exclude_serialized"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -480,7 +480,7 @@ fn inline_builtins_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -495,7 +495,7 @@ fn bailout_branch_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -510,7 +510,7 @@ fn bailout_checkthis_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -524,7 +524,7 @@ fn inline_call_bailout_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -538,7 +538,7 @@ fn inline_get_bailout_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -551,7 +551,7 @@ fn spill_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -565,7 +565,7 @@ fn bug12782316_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -578,7 +578,7 @@ fn bug13674598_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -591,5 +591,5 @@ fn bug17449647_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

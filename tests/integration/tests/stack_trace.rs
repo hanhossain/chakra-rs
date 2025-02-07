@@ -23,7 +23,7 @@ fn simple_throw_js_stack_trace_disabled(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -38,7 +38,7 @@ fn property_validation_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -53,7 +53,7 @@ fn property_validation_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-forceStrictMode"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn simple_throw_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -94,7 +94,7 @@ fn long_call_stack_throw_js_args5(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -115,7 +115,7 @@ fn long_call_stack_throw_js_args6(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -136,7 +136,7 @@ fn long_call_stack_throw_js_args7(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -157,7 +157,7 @@ fn long_call_stack_throw_js_args30(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -172,7 +172,7 @@ fn stack_trace_limit_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -207,7 +207,7 @@ fn dynamic_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -222,7 +222,7 @@ fn error_prototype_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -237,7 +237,7 @@ fn error_dot_stack_already_exists_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -252,7 +252,7 @@ fn function_name_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(target_arch = "x86_64")]
@@ -267,7 +267,7 @@ fn x64_stack_walk_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(target_arch = "x86_64")]
@@ -282,7 +282,7 @@ fn x64_stack_walk_loop_body_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-loopinterpretcount:1"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -296,5 +296,5 @@ fn dot_chain_name_hint_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

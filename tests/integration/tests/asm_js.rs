@@ -17,7 +17,7 @@ fn arg_test_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -32,7 +32,7 @@ fn array_view_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -47,7 +47,7 @@ fn basic_branching_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -69,7 +69,7 @@ fn basic_branching_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -84,7 +84,7 @@ fn basic_comparison_double_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn basic_comparison_int_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn basic_comparison_uint_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -129,7 +129,7 @@ fn basic_looping_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -151,7 +151,7 @@ fn basic_math_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -166,7 +166,7 @@ fn basic_math_int_specific_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -181,7 +181,7 @@ fn basic_math_unary_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -196,7 +196,7 @@ fn basic_switch_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -211,7 +211,7 @@ fn composition_math_unary_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -226,7 +226,7 @@ fn function_calls_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -241,7 +241,7 @@ fn function_calls_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -256,7 +256,7 @@ fn functiontablecalls_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -271,7 +271,7 @@ fn math_builtins_call_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -286,7 +286,7 @@ fn math_builtins_call_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -301,7 +301,7 @@ fn module_var_read_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -316,7 +316,7 @@ fn module_var_write_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -331,7 +331,7 @@ fn read_array_view_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -346,7 +346,7 @@ fn read_fix_offset_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -361,7 +361,7 @@ fn relink_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -376,7 +376,7 @@ fn relink_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -391,7 +391,7 @@ fn relink_js3(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -406,7 +406,7 @@ fn relink_js4(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -428,7 +428,7 @@ fn write_array_view_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -450,7 +450,7 @@ fn write_fix_offset_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -725,7 +725,7 @@ fn array_view_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -740,7 +740,7 @@ fn basic_branching_js3(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -762,7 +762,7 @@ fn basic_comparison_double_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -784,7 +784,7 @@ fn basic_comparison_int_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -806,7 +806,7 @@ fn basic_comparison_uint_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -821,7 +821,7 @@ fn basic_looping_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -843,7 +843,7 @@ fn basic_math_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -865,7 +865,7 @@ fn basic_math_int_specific_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -880,7 +880,7 @@ fn basic_math_unary_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -895,7 +895,7 @@ fn basic_switch_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -910,7 +910,7 @@ fn composition_math_unary_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -925,7 +925,7 @@ fn function_calls_js3(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -940,7 +940,7 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -955,7 +955,7 @@ fn math_builtins_call_js3(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -970,7 +970,7 @@ fn module_var_read_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -985,7 +985,7 @@ fn module_var_write_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1007,7 +1007,7 @@ fn read_array_view_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1022,7 +1022,7 @@ fn read_fix_offset_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1044,7 +1044,7 @@ fn write_array_view_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1066,7 +1066,7 @@ fn write_fix_offset_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1081,7 +1081,7 @@ fn functiontablebug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1096,7 +1096,7 @@ fn nanbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1111,7 +1111,7 @@ fn nanbug_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1126,7 +1126,7 @@ fn switchbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1141,7 +1141,7 @@ fn fgpeepsbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1156,7 +1156,7 @@ fn cse_bug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1169,7 +1169,7 @@ fn evalbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1182,7 +1182,7 @@ fn sym_bug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1195,7 +1195,7 @@ fn brbool_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1210,7 +1210,7 @@ fn const_test_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1225,7 +1225,7 @@ fn const_test_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1253,7 +1253,7 @@ fn ffibug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1268,7 +1268,7 @@ fn ternaryfloat_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1283,7 +1283,7 @@ fn minintbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1298,7 +1298,7 @@ fn floatmod_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1313,7 +1313,7 @@ fn floatmod_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1328,7 +1328,7 @@ fn invalid_int_literal_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1343,7 +1343,7 @@ fn fstpbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1358,7 +1358,7 @@ fn break2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1373,7 +1373,7 @@ fn break3_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1388,7 +1388,7 @@ fn return1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1403,7 +1403,7 @@ fn return2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1418,7 +1418,7 @@ fn return3_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1433,7 +1433,7 @@ fn returndouble_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1448,7 +1448,7 @@ fn break1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1463,7 +1463,7 @@ fn jit_to_loop_body_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1478,7 +1478,7 @@ fn loop_body_to_jit_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1493,7 +1493,7 @@ fn breakfloat1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1508,7 +1508,7 @@ fn return_float_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1523,7 +1523,7 @@ fn unitybug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1538,7 +1538,7 @@ fn unitybug_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1566,7 +1566,7 @@ fn argoutcapturebug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1581,7 +1581,7 @@ fn read_av1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1596,7 +1596,7 @@ fn clz32_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1611,7 +1611,7 @@ fn clz32_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1639,7 +1639,7 @@ fn neg_zero_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1654,7 +1654,7 @@ fn shadowing_bug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1669,7 +1669,7 @@ fn block_label_bug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1684,7 +1684,7 @@ fn switch_jump_table_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1699,7 +1699,7 @@ fn switch_binary_traverse_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1714,7 +1714,7 @@ fn lowererdivbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1729,7 +1729,7 @@ fn qmarkbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1744,7 +1744,7 @@ fn uint_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1757,7 +1757,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1772,7 +1772,7 @@ fn asmjscctx_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1787,7 +1787,7 @@ fn constloads_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1802,7 +1802,7 @@ fn vardeclnorhs_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1821,7 +1821,7 @@ fn bug12239366_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1834,7 +1834,7 @@ fn bug16253406_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1854,7 +1854,7 @@ fn bad_function_type_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1867,7 +1867,7 @@ fn bug_gh2270_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1888,7 +1888,7 @@ fn bug9883547_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1902,7 +1902,7 @@ fn const_fold_tests_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1937,7 +1937,7 @@ fn nested_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1952,7 +1952,7 @@ fn not_binary_property_definition_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1972,7 +1972,7 @@ fn constbrbug_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1987,7 +1987,7 @@ fn useasmbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2007,7 +2007,7 @@ fn lambda_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2028,7 +2028,7 @@ fn bad_function_type_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2049,7 +2049,7 @@ fn bad_function_type_js3(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2069,7 +2069,7 @@ fn exports_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2082,7 +2082,7 @@ fn trackdeferredonreparse_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2095,7 +2095,7 @@ fn regress_hascalls_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2108,7 +2108,7 @@ fn argassignbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2121,7 +2121,7 @@ fn manyargs_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2136,7 +2136,7 @@ fn maybecallbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2151,7 +2151,7 @@ fn div_by_constants_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2166,7 +2166,7 @@ fn div_by_constants_unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2181,7 +2181,7 @@ fn bug16252562_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2194,5 +2194,5 @@ fn emit_recursive_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

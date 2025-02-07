@@ -17,7 +17,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -32,7 +32,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -47,7 +47,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -62,7 +62,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -77,7 +77,7 @@ fn unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -92,7 +92,7 @@ fn regress_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -116,7 +116,7 @@ fn rot_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -130,7 +130,7 @@ fn fastarray_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmFastArray-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -144,7 +144,7 @@ fn fastarray_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmFastArray"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -159,7 +159,7 @@ fn misc_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -174,7 +174,7 @@ fn controlflow_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -189,7 +189,7 @@ fn f32_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -204,7 +204,7 @@ fn f64_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -218,7 +218,7 @@ fn math_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-wasmi64"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -233,7 +233,7 @@ fn dropteelocal_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -248,7 +248,7 @@ fn i32_popcnt_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -262,7 +262,7 @@ fn f32address_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", todo!(" ")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -277,7 +277,7 @@ fn divByConstants_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -292,7 +292,7 @@ fn divByConstants_unsigned_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -307,7 +307,7 @@ fn global_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-wasmi64"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -322,7 +322,7 @@ fn basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -337,7 +337,7 @@ fn basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStaticInterpreterThunk", "-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -352,7 +352,7 @@ fn table_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -365,7 +365,7 @@ fn badfuncformat_js(#[case] variant: Variant) {
         source_path: "badfuncformat.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -380,7 +380,7 @@ fn table_imports_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-wasmi64"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -404,7 +404,7 @@ fn call_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -419,7 +419,7 @@ fn array_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -433,7 +433,7 @@ fn trunc_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -448,7 +448,7 @@ fn api_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -462,7 +462,7 @@ fn invalid_global_mut_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -477,7 +477,7 @@ fn bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -502,7 +502,7 @@ fn params_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -527,7 +527,7 @@ fn params_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 //   TODO (hanhossain): migrate
@@ -544,7 +544,7 @@ fn debugger_basic_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 //   TODO (hanhossain): migrate
@@ -565,7 +565,7 @@ fn debugger_basic_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 //   TODO (hanhossain): migrate
@@ -589,7 +589,7 @@ fn debugger_basic_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "exclude_drt,exclude_snap,require_debugger"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 //   TODO (hanhossain): migrate
@@ -633,7 +633,7 @@ fn oom_wasm_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -655,7 +655,7 @@ fn oom_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -677,7 +677,7 @@ fn oom_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -693,7 +693,7 @@ fn response_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -707,7 +707,7 @@ fn i64_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -722,7 +722,7 @@ fn i64cf_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -737,7 +737,7 @@ fn nestedblocks_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7,exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -761,7 +761,7 @@ fn cse_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -776,7 +776,7 @@ fn signextend_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -791,7 +791,7 @@ fn memory_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -806,7 +806,7 @@ fn memory_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -821,7 +821,7 @@ fn superlongsignaturemismatch_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -835,7 +835,7 @@ fn binary_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -849,7 +849,7 @@ fn binary_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -864,7 +864,7 @@ fn polyinline_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -909,7 +909,7 @@ fn loopstslot_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -924,7 +924,7 @@ fn loopyield_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -939,7 +939,7 @@ fn loopyieldnested_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -954,7 +954,7 @@ fn loopyieldtypes_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -969,7 +969,7 @@ fn loopyieldregress_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -989,7 +989,7 @@ fn atomics_test_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1003,5 +1003,5 @@ fn reload_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasmthreads", "-ESSharedArrayBuffer"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

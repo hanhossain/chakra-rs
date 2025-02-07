@@ -22,7 +22,7 @@ fn loadTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -36,7 +36,7 @@ fn storeTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -50,7 +50,7 @@ fn constTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -64,7 +64,7 @@ fn splatNegTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -78,7 +78,7 @@ fn replaceLaneTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -92,7 +92,7 @@ fn truncConvTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -106,7 +106,7 @@ fn logicalTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -120,7 +120,7 @@ fn comparisonTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd -off:jitloopbody")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -134,7 +134,7 @@ fn mathTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -148,7 +148,7 @@ fn binaryArithmeticTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -162,7 +162,7 @@ fn int64x2Tests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -176,5 +176,5 @@ fn buildExtractTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

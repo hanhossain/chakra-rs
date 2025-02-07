@@ -68,7 +68,7 @@ struct VariantConfig<'a> {
 }
 
 pub fn run_test_variant<const N: usize>(
-    test: &Test,
+    mut test: Test,
     variant: Variant,
     common_tags: [&'static str; N],
 ) {
@@ -94,7 +94,7 @@ pub fn run_test_variant<const N: usize>(
         },
     };
 
-    variant_config.excluded_tags.extend(common_tags.iter());
+    test.tags.extend(common_tags.iter());
 
     let exclude_build_type = if cfg!(feature = "optimized-tests") {
         "exclude_test"

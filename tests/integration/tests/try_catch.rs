@@ -14,5 +14,5 @@ fn try_catch_stack_overflow_js(#[case] variant: Variant) {
         source_path: "TryCatchStackOverflow.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -17,7 +17,7 @@ fn typedarray_at_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn likely_js(#[case] variant: Variant) {
         compile_flags: vec!["-bgjit-", "-lic:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn arraybuffer_js(#[case] variant: Variant) {
         baseline_path: Some("arrayBuffer.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -59,7 +59,7 @@ fn arraybuffer_type_js(#[case] variant: Variant) {
         baseline_path: Some("arraybufferType.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn typed_array_builtins_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -87,7 +87,7 @@ fn integer_indexed_exotic_object_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn bad_na_n_js(#[case] variant: Variant) {
         source_path: "BadNaN.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn int8array_js(#[case] variant: Variant) {
         baseline_path: Some("int8array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn uint8array_js(#[case] variant: Variant) {
         baseline_path: Some("uint8array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn int16array_js(#[case] variant: Variant) {
         baseline_path: Some("int16array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn uint16array_js(#[case] variant: Variant) {
         baseline_path: Some("uint16array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -170,7 +170,7 @@ fn int32array_js(#[case] variant: Variant) {
         baseline_path: Some("int32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -184,7 +184,7 @@ fn uint32array_js(#[case] variant: Variant) {
         baseline_path: Some("uint32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -198,7 +198,7 @@ fn float32array_js(#[case] variant: Variant) {
         baseline_path: Some("float32array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -212,7 +212,7 @@ fn float64array_js(#[case] variant: Variant) {
         baseline_path: Some("float64array_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -227,7 +227,7 @@ fn dataview_js(#[case] variant: Variant) {
         baseline_path: Some("dataview.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -241,7 +241,7 @@ fn dataview2_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -254,7 +254,7 @@ fn reflect_define_property_js(#[case] variant: Variant) {
         source_path: "reflect_defineProperty.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -268,7 +268,7 @@ fn objectproperty_js(#[case] variant: Variant) {
         baseline_path: Some("objectproperty_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -283,7 +283,7 @@ fn objectproperty_js2(#[case] variant: Variant) {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -298,7 +298,7 @@ fn nan_js(#[case] variant: Variant) {
         tags: HashSet::from(["typedarray", "exclude_nonrazzle"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -312,7 +312,7 @@ fn neg_indexes_js(#[case] variant: Variant) {
         baseline_path: Some("negIndexes.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -326,7 +326,7 @@ fn set_js(#[case] variant: Variant) {
         baseline_path: Some("set.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -341,7 +341,7 @@ fn set_js2(#[case] variant: Variant) {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): flaky test
@@ -357,7 +357,7 @@ fn set_js2(#[case] variant: Variant) {
 //         baseline_path: Some("samethread.baseline"),
 //         ..Default::default()
 //     };
-//     common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+//     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 // }
 
 // TODO Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
@@ -380,7 +380,7 @@ fn int8_array2_js(#[case] variant: Variant) {
         source_path: "Int8Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -393,7 +393,7 @@ fn uint8_array2_js(#[case] variant: Variant) {
         source_path: "UInt8Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -406,7 +406,7 @@ fn int16_array2_js(#[case] variant: Variant) {
         source_path: "Int16Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -419,7 +419,7 @@ fn uint16_array2_js(#[case] variant: Variant) {
         source_path: "UInt16Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -432,7 +432,7 @@ fn int32_array2_js(#[case] variant: Variant) {
         source_path: "Int32Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -445,7 +445,7 @@ fn uint32_array2_js(#[case] variant: Variant) {
         source_path: "UInt32Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -458,7 +458,7 @@ fn float32_array2_js(#[case] variant: Variant) {
         source_path: "Float32Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -471,7 +471,7 @@ fn float64_array2_js(#[case] variant: Variant) {
         source_path: "Float64Array2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -484,7 +484,7 @@ fn float_helper_access_js(#[case] variant: Variant) {
         source_path: "FloatHelperAccess.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -498,7 +498,7 @@ fn subarray_js(#[case] variant: Variant) {
         baseline_path: Some("subarray.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -512,7 +512,7 @@ fn dataview1_js(#[case] variant: Variant) {
         baseline_path: Some("dataview1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -545,7 +545,7 @@ fn typed_array_profile_js(#[case] variant: Variant) {
         tags: std::collections::HashSet::from(["exclude_test", "exclude_dynapogo", "typedarray"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -565,7 +565,7 @@ fn pixel_array_rounding_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -584,7 +584,7 @@ fn pixel_array_rounding_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -599,7 +599,7 @@ fn cse_typed_array_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxInterpretCount:1", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -613,7 +613,7 @@ fn uint8_clamped_array_js(#[case] variant: Variant) {
         baseline_path: Some("Uint8ClampedArray_es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -631,7 +631,7 @@ fn uint8_clamped_array2_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -645,7 +645,7 @@ fn set_different_types_js(#[case] variant: Variant) {
         baseline_path: Some("setDifferentTypes.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -660,7 +660,7 @@ fn set_different_types_js2(#[case] variant: Variant) {
         compile_flags: vec!["-force:typedarrayvirtual"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -673,7 +673,7 @@ fn bug2230916_js(#[case] variant: Variant) {
         source_path: "bug2230916.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -688,7 +688,7 @@ fn bug2268573_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -701,7 +701,7 @@ fn bug_4653428_js(#[case] variant: Variant) {
         source_path: "bug_4653428.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -715,7 +715,7 @@ fn memset_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -729,7 +729,7 @@ fn memset_neg_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -743,7 +743,7 @@ fn memcopy_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -757,7 +757,7 @@ fn memcopy_negative_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -771,7 +771,7 @@ fn typedarray_bugfixes_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -784,7 +784,7 @@ fn bug_os_6911900_js(#[case] variant: Variant) {
         source_path: "bug_OS_6911900.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -806,7 +806,7 @@ fn cross_site_virtual_js(#[case] variant: Variant) {
         source_path: "CrossSiteVirtual.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -819,7 +819,7 @@ fn builtin_from_js(#[case] variant: Variant) {
         source_path: "builtin_from.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -832,7 +832,7 @@ fn delete_js(#[case] variant: Variant) {
         source_path: "delete.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -845,7 +845,7 @@ fn typeof_detached_js(#[case] variant: Variant) {
         source_path: "typeofDetached.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -858,7 +858,7 @@ fn bug18321215_js(#[case] variant: Variant) {
         source_path: "bug18321215.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -871,7 +871,7 @@ fn definitetypedarray_js(#[case] variant: Variant) {
         source_path: "definitetypedarray.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -885,5 +885,5 @@ fn sort_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

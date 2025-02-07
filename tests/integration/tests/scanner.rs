@@ -15,7 +15,7 @@ fn numeric_literal_suffix_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn invalid_character_js(#[case] variant: Variant) {
         baseline_path: Some("InvalidCharacter.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,5 +43,5 @@ fn hashbang_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESHashbang"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

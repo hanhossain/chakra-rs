@@ -17,7 +17,7 @@ fn jx1_js(#[case] variant: Variant) {
         baseline_path: Some("jx1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -34,7 +34,7 @@ fn jx2_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -47,7 +47,7 @@ fn cacheassert_js(#[case] variant: Variant) {
         source_path: "cacheassert.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // This fails on macos for some reason
@@ -66,7 +66,7 @@ fn stringify_replacer_js(#[case] variant: Variant) {
         compile_flags: vec!["-recyclerstress"],
         tags: HashSet::from(["exclude_test", "slow"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -79,7 +79,7 @@ fn arguments_js(#[case] variant: Variant) {
         source_path: "arguments.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -93,7 +93,7 @@ fn replacer_function_js(#[case] variant: Variant) {
         source_path: "replacerFunction.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -107,7 +107,7 @@ fn space_js(#[case] variant: Variant) {
         baseline_path: Some("space.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -121,7 +121,7 @@ fn simple_js(#[case] variant: Variant) {
         baseline_path: Some("simple.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -139,7 +139,7 @@ fn simple_with_log_js(#[case] variant: Variant) {
         compile_flags: vec!["-recyclerstress", "-trace:JSON"],
         tags: HashSet::from(["exclude_test", "slow"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -153,7 +153,7 @@ fn simple_stringify_js(#[case] variant: Variant) {
         baseline_path: Some("simple.stringify.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -169,7 +169,7 @@ fn parse_with_gc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -185,7 +185,7 @@ fn json_cache_js_force_gc(#[case] variant: Variant) {
         compile_flags: vec!["-ForceGCAfterJSONParse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -199,7 +199,7 @@ fn json_cache_js(#[case] variant: Variant) {
         baseline_path: Some("jsonCache.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -212,7 +212,7 @@ fn json_parse_blue_548957_js(#[case] variant: Variant) {
         source_path: "json_parse_Blue_548957.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -226,7 +226,7 @@ fn json_parse_walk_test_js(#[case] variant: Variant) {
         baseline_path: Some("jsonParseWalkTest.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -240,7 +240,7 @@ fn syntax_error_js(#[case] variant: Variant) {
         baseline_path: Some("syntaxError.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -253,7 +253,7 @@ fn to_json_js(#[case] variant: Variant) {
         source_path: "toJSON.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -266,7 +266,7 @@ fn stackoverflow_js(#[case] variant: Variant) {
         source_path: "stackoverflow.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -279,5 +279,5 @@ fn jsonerrorbuffer_js(#[case] variant: Variant) {
         source_path: "jsonerrorbuffer.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

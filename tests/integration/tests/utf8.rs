@@ -17,7 +17,7 @@ fn invalidutf8_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn unicode_digit_as_identifier_should_work_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn os_2977448_js(#[case] variant: Variant) {
         source_path: "OS_2977448.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn surrogatepair_js(#[case] variant: Variant) {
         source_path: "surrogatepair.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -71,7 +71,7 @@ fn bug_gh2386_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:CaptureBytecodeRegUse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn unicode_sequence_serialized_js(#[case] variant: Variant) {
         compile_flags: vec!["-forceserialized", "-oopjit-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn bug_gh2656_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn utf8_console_log_js(#[case] variant: Variant) {
         baseline_path: Some("utf8_console_log.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,5 +128,5 @@ fn utf8_console_log_null_embedded_js(#[case] variant: Variant) {
         baseline_path: Some("utf8_console_log_null_embedded.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -18,7 +18,7 @@ fn unary_pos_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -32,5 +32,5 @@ fn defer_reparse_bug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

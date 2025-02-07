@@ -5,6 +5,7 @@ mod asm_js;
 mod asm_js_float;
 #[cfg(not(disable_jit))]
 mod asm_js_parser;
+#[cfg(not(disable_jit))]
 mod bailout;
 mod basics;
 mod bigint;

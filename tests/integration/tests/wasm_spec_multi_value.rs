@@ -16,7 +16,7 @@ fn simple_block_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmMultiValue"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -30,5 +30,5 @@ fn blocktypes_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmMultiValue"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

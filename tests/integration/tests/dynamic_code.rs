@@ -19,7 +19,7 @@ fn eval_nativecodedata_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         tags: HashSet::from(["exclude_test", "Slow"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -36,7 +36,7 @@ fn eval_nativenumber_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         tags: HashSet::from(["exclude_test", "Slow"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -50,5 +50,5 @@ fn eval_nativenumber_js2(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage", "-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

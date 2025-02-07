@@ -18,7 +18,7 @@ fn simple_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -34,7 +34,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -50,7 +50,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -66,7 +66,7 @@ fn trycatch_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -82,7 +82,7 @@ fn simple_namedstackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -98,7 +98,7 @@ fn toString_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn chain_assign_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -130,7 +130,7 @@ fn nested_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -146,7 +146,7 @@ fn funcname_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -162,7 +162,7 @@ fn call_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -178,7 +178,7 @@ fn argout_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -194,7 +194,7 @@ fn throw_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -210,7 +210,7 @@ fn funcname_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -226,7 +226,7 @@ fn arrlit_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -242,7 +242,7 @@ fn arrlit_asg_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -258,7 +258,7 @@ fn objlit_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -274,7 +274,7 @@ fn formal_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -290,7 +290,7 @@ fn argument_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -306,7 +306,7 @@ fn arguments_assignment_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -322,7 +322,7 @@ fn cross_scope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -338,7 +338,7 @@ fn eval_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -354,7 +354,7 @@ fn child_eval_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -370,7 +370,7 @@ fn with_namedfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -386,7 +386,7 @@ fn formal_namedfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -402,7 +402,7 @@ fn throw_func_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -418,7 +418,7 @@ fn glo_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -434,7 +434,7 @@ fn multinested_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -450,7 +450,7 @@ fn let_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -466,7 +466,7 @@ fn let_blockescape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -482,7 +482,7 @@ fn simple_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -498,7 +498,7 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -514,7 +514,7 @@ fn simple_namedstackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -530,7 +530,7 @@ fn toString_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -546,7 +546,7 @@ fn chain_assign_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -562,7 +562,7 @@ fn nested_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -578,7 +578,7 @@ fn funcname_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -616,7 +616,7 @@ fn funcname_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -632,7 +632,7 @@ fn arrlit_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -648,7 +648,7 @@ fn arrlit_asg_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -664,7 +664,7 @@ fn objlit_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -680,7 +680,7 @@ fn formal_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -696,7 +696,7 @@ fn argument_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -712,7 +712,7 @@ fn cross_scope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -728,7 +728,7 @@ fn eval_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -744,7 +744,7 @@ fn child_eval_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -760,7 +760,7 @@ fn with_namedfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -776,7 +776,7 @@ fn formal_namedfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -803,7 +803,7 @@ fn glo_asg_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -819,7 +819,7 @@ fn multinested_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -835,7 +835,7 @@ fn let_stackfunc_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -851,7 +851,7 @@ fn let_blockescape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -867,7 +867,7 @@ fn box_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -883,7 +883,7 @@ fn box_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -899,7 +899,7 @@ fn callee_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -915,7 +915,7 @@ fn callee_escape2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -931,7 +931,7 @@ fn callee_escape2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -947,7 +947,7 @@ fn caller_escape_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -963,7 +963,7 @@ fn singleuse_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -979,7 +979,7 @@ fn iffuncdecl_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -995,7 +995,7 @@ fn cachescope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1011,7 +1011,7 @@ fn box_callparam_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1027,7 +1027,7 @@ fn inlinee_box_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_nonative,exclude_arm,exclude_arm64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1043,7 +1043,7 @@ fn blockscope_funcdecl_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1059,7 +1059,7 @@ fn recurse_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1075,7 +1075,7 @@ fn jitdefer_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1113,7 +1113,7 @@ fn withref_delayobjscope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1129,7 +1129,7 @@ fn funcexpr_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1145,7 +1145,7 @@ fn funcexpr_2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1161,7 +1161,7 @@ fn funcexpr_2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm,exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1177,7 +1177,7 @@ fn with_existing_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1193,7 +1193,7 @@ fn with_crossscope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1209,7 +1209,7 @@ fn bug565705_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1225,7 +1225,7 @@ fn box_postjit_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_dynapogo,exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1241,7 +1241,7 @@ fn box_jitloopbody_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1257,7 +1257,7 @@ fn box_jitloopbody2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1272,7 +1272,7 @@ fn box_jitloopbody3_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -1294,7 +1294,7 @@ fn 605893_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse","-force:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1309,7 +1309,7 @@ fn 622043_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo","exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1322,7 +1322,7 @@ fn delaycapture_js(#[case] variant: Variant) {
         source_path: "delaycapture.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1336,7 +1336,7 @@ fn closure_1129602_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1352,7 +1352,7 @@ fn box_blockscope_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test","exclude_arm,exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1367,7 +1367,7 @@ fn box_native_emptyframe_js(#[case] variant: Variant) {
         compile_flags: vec!["-lic:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1381,5 +1381,5 @@ fn box_inlineeFrameInLoopBody_js(#[case] variant: Variant) {
         compile_flags: vec!["-forcedeferparse","-forcejitloopbody","-force:rejit","-force:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

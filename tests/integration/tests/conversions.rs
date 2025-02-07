@@ -14,7 +14,7 @@ fn toint32_js(#[case] variant: Variant) {
         source_path: "toint32.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -27,7 +27,7 @@ fn toint32_2_js(#[case] variant: Variant) {
         source_path: "toint32_2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -40,7 +40,7 @@ fn touint32_js(#[case] variant: Variant) {
         source_path: "touint32.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -54,7 +54,7 @@ fn implicit_conversions_js(#[case] variant: Variant) {
         baseline_path: Some("ImplicitConversions_es5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -67,5 +67,5 @@ fn bug1_js(#[case] variant: Variant) {
         source_path: "bug1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
