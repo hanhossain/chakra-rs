@@ -15,7 +15,7 @@ fn asyncawait_syntax_js(#[case] variant: Variant) {
         compile_flags: vec!["-nodeferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn asyncawait_syntax_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-forcedeferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn asyncawait_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-nodeferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -65,7 +65,7 @@ fn asyncawait_functionality_js_force_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -80,7 +80,7 @@ fn asyncawait_undodefer_js(#[case] variant: Variant) {
         compile_flags: vec!["-forceundodefer"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -94,7 +94,7 @@ fn stringpad_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -108,7 +108,7 @@ fn asyncawait_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-es7asyncawait", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -122,7 +122,7 @@ fn values_and_entries_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -136,7 +136,7 @@ fn misc_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6experimental", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn misc_bugs_js_force_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -170,7 +170,7 @@ fn immutable_prototype_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -184,7 +184,7 @@ fn lookupgettersetter_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -198,7 +198,7 @@ fn sharedarraybuffer_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESSharedArrayBuffer", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -212,7 +212,7 @@ fn atomics_test_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESSharedArrayBuffer", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 //   <test>
 //   <default>
@@ -233,7 +233,7 @@ fn symboldescription_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESSymbolDescription", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -247,7 +247,7 @@ fn global_this_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESGlobalThis", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -261,7 +261,7 @@ fn async_generator_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -275,7 +275,7 @@ fn async_generator_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -289,7 +289,7 @@ fn for_await_of_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -303,7 +303,7 @@ fn wellformed_json_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -317,7 +317,7 @@ fn json_superset_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -331,7 +331,7 @@ fn deferparseclass_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -345,5 +345,5 @@ fn nullish_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

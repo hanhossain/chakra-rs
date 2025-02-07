@@ -15,5 +15,5 @@ fn onenote_ribbon_js(#[case] variant: Variant) {
         baseline_path: Some("OneNote.ribbon.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

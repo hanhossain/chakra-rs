@@ -17,7 +17,7 @@ fn cachedscope_1_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:cachedscope"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn cachedscope_2_js(#[case] variant: Variant) {
         source_path: "cachedscope_2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn closure_js(#[case] variant: Variant) {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -59,7 +59,7 @@ fn closure_callback_js(#[case] variant: Variant) {
         baseline_path: Some("closure-callback.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -74,7 +74,7 @@ fn closure_multiple_1_js(#[case] variant: Variant) {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -89,7 +89,7 @@ fn closure_multiple_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -103,7 +103,7 @@ fn closure_binding_js(#[case] variant: Variant) {
         baseline_path: Some("closure_binding.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -118,7 +118,7 @@ fn closure_binding_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -132,7 +132,7 @@ fn closure_funcexpr_eval_js(#[case] variant: Variant) {
         baseline_path: Some("closure-funcexpr-eval-3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -147,7 +147,7 @@ fn closure_qmark_js(#[case] variant: Variant) {
         compile_flags: vec!["-Intl-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -160,7 +160,7 @@ fn closure_ole_js(#[case] variant: Variant) {
         source_path: "closure_ole.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -174,7 +174,7 @@ fn closure_ole_js_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -196,7 +196,7 @@ fn delaycapture_loopbody_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -216,7 +216,7 @@ fn delaycapture_loopbody2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -234,7 +234,7 @@ fn initcachedscope_js(#[case] variant: Variant) {
         compile_flags: vec!["-recyclerstress", "-force:cachedscope"],
         tags: HashSet::from(["exclude_test", "Slow"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -249,7 +249,7 @@ fn initcachedscope_js2(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -263,7 +263,7 @@ fn invalcachedscope_js(#[case] variant: Variant) {
         baseline_path: Some("invalcachedscope.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -278,7 +278,7 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -294,7 +294,7 @@ fn invalcachedscope_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-Intl-"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -308,7 +308,7 @@ fn invalcachedscope_caller_js(#[case] variant: Variant) {
         baseline_path: Some("invalcachedscope-caller.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -323,7 +323,7 @@ fn bug_os_2299723_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:cachedscope"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -337,7 +337,7 @@ fn bug_os_2671095_js(#[case] variant: Variant) {
         compile_flags: vec!["-forcedeferparse", "-force:cachedscope"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -351,7 +351,7 @@ fn bug_os_2903083_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:cachedscope"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -365,7 +365,7 @@ fn bug_os_9781249_js(#[case] variant: Variant) {
         compile_flags: vec!["-forcejitloopbody", "-force:inline", "-force:rejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -378,7 +378,7 @@ fn bug_os_9008744_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -391,7 +391,7 @@ fn bug_os_10735999_js(#[case] variant: Variant) {
         source_path: "bug_OS_10735999.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -404,7 +404,7 @@ fn bug_os_13412380_js(#[case] variant: Variant) {
         tags: HashSet::from(["BugFix", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -418,7 +418,7 @@ fn copy_prop_stack_slot_js(#[case] variant: Variant) {
         baseline_path: Some("copy-prop-stack-slot.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -431,5 +431,5 @@ fn update_funcexpr_js(#[case] variant: Variant) {
         source_path: "update-funcexpr.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

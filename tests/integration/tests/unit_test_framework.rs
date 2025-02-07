@@ -15,5 +15,5 @@ fn utf_tests_js(#[case] variant: Variant) {
         baseline_path: Some("UTFTests.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

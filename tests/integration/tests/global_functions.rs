@@ -16,7 +16,7 @@ fn global_functions_js(#[case] variant: Variant) {
         baseline_path: Some("GlobalFunctions.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn eval1_js(#[case] variant: Variant) {
         baseline_path: Some("eval1_v3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn eval_nulls_newlines_js(#[case] variant: Variant) {
         baseline_path: Some("evalNullsNewlines.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn evalreturns_js(#[case] variant: Variant) {
         baseline_path: Some("evalreturns3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn eval_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -87,7 +87,7 @@ fn eval_strict_delete_js(#[case] variant: Variant) {
         baseline_path: Some("eval-strict-delete.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -101,7 +101,7 @@ fn parse_float_js(#[case] variant: Variant) {
         baseline_path: Some("parseFloat.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -115,7 +115,7 @@ fn parse_int_js(#[case] variant: Variant) {
         baseline_path: Some("parseInt.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -129,7 +129,7 @@ fn parse_short_cut_js(#[case] variant: Variant) {
         baseline_path: Some("parseShortCut.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -146,7 +146,7 @@ fn internal_to_string_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -160,7 +160,7 @@ fn parse_int1_js(#[case] variant: Variant) {
         baseline_path: Some("ParseInt1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -176,7 +176,7 @@ fn defer_unicode_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -190,7 +190,7 @@ fn to_string_js(#[case] variant: Variant) {
         baseline_path: Some("toString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -204,7 +204,7 @@ fn can_declare_global_function_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -218,5 +218,5 @@ fn can_declare_global_function_non_eval_js(#[case] variant: Variant) {
         baseline_path: Some("CanDeclareGlobalFunctionNonEval.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

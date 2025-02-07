@@ -15,7 +15,7 @@ fn neg_js(#[case] variant: Variant) {
         baseline_path: Some("neg.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn min_js(#[case] variant: Variant) {
         baseline_path: Some("min.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn max_js(#[case] variant: Variant) {
         baseline_path: Some("max.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn miscellaneous_js(#[case] variant: Variant) {
         baseline_path: Some("miscellaneous.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -71,7 +71,7 @@ fn basics_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn basics_js_sse3(#[case] variant: Variant) {
         compile_flags: vec!["-sse:3", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn clz32_js(#[case] variant: Variant) {
         baseline_path: Some("clz32.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -112,7 +112,7 @@ fn max2_js(#[case] variant: Variant) {
         source_path: "max2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -126,5 +126,5 @@ fn max2_js_jsbuiltin(#[case] variant: Variant) {
         compile_flags: vec!["-JsBuiltin-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

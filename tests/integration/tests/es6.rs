@@ -17,7 +17,7 @@ fn instance_of_proto_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn bug_issue_2747_js(#[case] variant: Variant) {
         source_path: "bug_issue_2747.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn lambda1_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn lambda_expr_js(#[case] variant: Variant) {
         baseline_path: Some("lambda-expr.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn lambda_params_shadow_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-es7asyncawait"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn numeric_literal_test_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn bound_bug3837520_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn es6to_length_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6toLength", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -134,7 +134,7 @@ fn es6to_length_js_jsbuiltin(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -147,7 +147,7 @@ fn to_primitive_cross_script_test_case_js(#[case] variant: Variant) {
         source_path: "toPrimitiveCrossScriptTestCase.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -161,7 +161,7 @@ fn computed_property_to_string_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -175,7 +175,7 @@ fn computed_property_side_effect_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -188,7 +188,7 @@ fn bug_fix2214646_js(#[case] variant: Variant) {
         source_path: "BugFix2214646.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -202,7 +202,7 @@ fn es6is_concat_spreadable_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6tolength", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -216,7 +216,7 @@ fn to_primitive_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6regexsymbols", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -230,7 +230,7 @@ fn unscopables_with_scope_test_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -250,7 +250,7 @@ fn function_name_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -272,7 +272,7 @@ fn function_name_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -286,7 +286,7 @@ fn super_dot_osbug3930962_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -300,7 +300,7 @@ fn to_string_tag_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -314,7 +314,7 @@ fn proto_basic_js(#[case] variant: Variant) {
         baseline_path: Some("proto_basic.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -328,7 +328,7 @@ fn proto_disable_js(#[case] variant: Variant) {
         baseline_path: Some("proto_disable.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -342,7 +342,7 @@ fn proto_initializer_js(#[case] variant: Variant) {
         baseline_path: Some("proto_initializer.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -357,7 +357,7 @@ fn proto_initializer_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-ForceSerialized"],
         tags: HashSet::from(["exclude_serialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -371,7 +371,7 @@ fn proto_addprop_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -385,7 +385,7 @@ fn proto_addprop_js_maxinterpretcount2(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:simpleJit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -399,7 +399,7 @@ fn map_basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -413,7 +413,7 @@ fn map_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -427,7 +427,7 @@ fn set_basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -441,7 +441,7 @@ fn set_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -455,7 +455,7 @@ fn weakmap_basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -469,7 +469,7 @@ fn weakmap_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -483,7 +483,7 @@ fn weakset_basic_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -497,7 +497,7 @@ fn weakset_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -510,7 +510,7 @@ fn blockscope_activationobject_js(#[case] variant: Variant) {
         source_path: "blockscope-activationobject.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -524,7 +524,7 @@ fn blockscope_deferred_js(#[case] variant: Variant) {
         baseline_path: Some("blockscope-deferred.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -539,7 +539,7 @@ fn blockscope_deferred_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -553,7 +553,7 @@ fn blockscope_functionbinding_js(#[case] variant: Variant) {
         baseline_path: Some("blockscope-functionbinding.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -568,7 +568,7 @@ fn blockscope_functionbinding_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -584,7 +584,7 @@ fn blockscope_functionbinding_js_invalidstackvar(#[case] variant: Variant) {
         compile_flags: vec!["-lic:1", "-InitializeInterpreterSlotsWithInvalidStackVar"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -598,7 +598,7 @@ fn letconst_global_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_global.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -612,7 +612,7 @@ fn letconst_global_shadowing_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_global_shadowing.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -626,7 +626,7 @@ fn letconst_global_shadow_builtins_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_global_shadow_builtins.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -640,7 +640,7 @@ fn letconst_global_shadow_builtins_nonconfigurable_js(#[case] variant: Variant) 
         baseline_path: Some("letconst_global_shadow_builtins_nonconfigurable.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -654,7 +654,7 @@ fn letconst_global_shadow_deleted_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_global_shadow_deleted.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -668,7 +668,7 @@ fn letconst_global_shadow_accessor_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_global_shadow_accessor.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -681,7 +681,7 @@ fn letconst_global_bug_js(#[case] variant: Variant) {
         source_path: "letconst_global_bug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -695,7 +695,7 @@ fn letconst_eval_redecl_js(#[case] variant: Variant) {
         baseline_path: Some("letconst_eval_redecl.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -710,7 +710,7 @@ fn letconst_eval_redecl_js_forcestrictmode(#[case] variant: Variant) {
         compile_flags: vec!["-forcestrictmode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -724,7 +724,7 @@ fn definegettersetter_js(#[case] variant: Variant) {
         baseline_path: Some("definegettersetter.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -738,7 +738,7 @@ fn classes_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -752,7 +752,7 @@ fn classes_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -767,7 +767,7 @@ fn classes_bugfixes_js1(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -782,7 +782,7 @@ fn classes_bugfixes_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -802,7 +802,7 @@ fn es6super_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -816,7 +816,7 @@ fn es6super_js_defer_parse_off(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -830,7 +830,7 @@ fn es6super_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -844,7 +844,7 @@ fn classes_bug_os_6471427_js_force_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-ForceSerialized"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -857,7 +857,7 @@ fn classes_bug_os_6471427_js(#[case] variant: Variant) {
         source_path: "classes_bug_OS_6471427.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -871,7 +871,7 @@ fn classes_bug_os_7100885_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxsimplejitruncount:4", "-maxinterpretcount:4"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -893,7 +893,7 @@ fn es6subclassable_builtins_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -915,7 +915,7 @@ fn es6subclassable_builtins_js_force_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -930,7 +930,7 @@ fn es6subclassable_async_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Off:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -945,7 +945,7 @@ fn es6subclassable_async_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Spread", "-ES6Generators", "-Force:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -959,7 +959,7 @@ fn es6math_apis_js_es6_math(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Math", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -973,7 +973,7 @@ fn es6math_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -987,7 +987,7 @@ fn es6number_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Number", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1007,7 +1007,7 @@ fn es6string_apis_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1022,7 +1022,7 @@ fn code_point_at_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1036,7 +1036,7 @@ fn stringtemplate_basic_js(#[case] variant: Variant) {
         baseline_path: Some("stringtemplate_basic.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1050,7 +1050,7 @@ fn es6string_template_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1064,7 +1064,7 @@ fn es6string_template_slow_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1085,7 +1085,7 @@ fn es6typed_array_extensions_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1099,7 +1099,7 @@ fn es6array_api_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1113,7 +1113,7 @@ fn es6array_use_constructor_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1127,7 +1127,7 @@ fn es6array_use_constructor_v5_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1148,7 +1148,7 @@ fn es6symbol_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -1164,7 +1164,7 @@ fn es6symbol_540238_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1178,7 +1178,7 @@ fn es6promise_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1193,7 +1193,7 @@ fn es6promise_async_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1209,7 +1209,7 @@ fn normalize_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1223,7 +1223,7 @@ fn normalize_prop_js(#[case] variant: Variant) {
         baseline_path: Some("normalizeProp.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1238,7 +1238,7 @@ fn unicode_escape_sequences_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1254,7 +1254,7 @@ fn unicode_6_identifiers_utf8_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1269,7 +1269,7 @@ fn unicode_regex_surrogate_atoms_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1283,7 +1283,7 @@ fn spread_iterator_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1297,7 +1297,7 @@ fn reflect_construct_consume_new_target_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1311,7 +1311,7 @@ fn reflect_api_tests_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1325,7 +1325,7 @@ fn proxy_trap_consume_new_target_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1339,7 +1339,7 @@ fn bound_construction_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1352,7 +1352,7 @@ fn cross_context_spreadfunction_call_js(#[case] variant: Variant) {
         source_path: "CrossContextSpreadfunctionCall.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1365,7 +1365,7 @@ fn cross_context_promise_file1_js(#[case] variant: Variant) {
         source_path: "CrossContextPromiseFile1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1378,7 +1378,7 @@ fn cross_context_promise_js(#[case] variant: Variant) {
         source_path: "CrossContextPromise.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1392,7 +1392,7 @@ fn spread_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Spread", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1409,7 +1409,7 @@ fn unicode_convert_utf8_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1423,7 +1423,7 @@ fn bug517864_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -1441,7 +1441,7 @@ fn bug620694_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1455,7 +1455,7 @@ fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1470,7 +1470,7 @@ fn unicode_id_defer_parse_functions_utf8_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1484,7 +1484,7 @@ fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1498,7 +1498,7 @@ fn supersyntax02_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1512,7 +1512,7 @@ fn supersyntax05_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1526,7 +1526,7 @@ fn supersyntax06_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1540,7 +1540,7 @@ fn objlit_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-ES6ObjectLiterals", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1557,7 +1557,7 @@ fn unicode_regex_surrogate_utf8_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode", "-ES6RegExSticky"],
         tags: HashSet::from(["Slow"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1572,7 +1572,7 @@ fn unicode_blue_533163_utf8_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1586,7 +1586,7 @@ fn es6iterators_forof_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-Intl-", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1600,7 +1600,7 @@ fn es6iterators_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-Intl-", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1614,7 +1614,7 @@ fn es6species_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1628,7 +1628,7 @@ fn es6species_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage", "-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1642,7 +1642,7 @@ fn blue595539_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1656,7 +1656,7 @@ fn proxytest6_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1670,7 +1670,7 @@ fn proxy_properties_api_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1684,7 +1684,7 @@ fn proxybugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1698,7 +1698,7 @@ fn proxyconstruction_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1711,7 +1711,7 @@ fn proxybug3_js(#[case] variant: Variant) {
         source_path: "proxybug3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1725,7 +1725,7 @@ fn proxyprotobug_js(#[case] variant: Variant) {
         baseline_path: Some("proxyprotobug.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1738,7 +1738,7 @@ fn proxybug_js(#[case] variant: Variant) {
         source_path: "proxybug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1751,7 +1751,7 @@ fn proxy_call_js(#[case] variant: Variant) {
         source_path: "ProxyCall.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1764,7 +1764,7 @@ fn proxyenumremoval_js(#[case] variant: Variant) {
         source_path: "proxyenumremoval.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1778,7 +1778,7 @@ fn proxy_issue884_js(#[case] variant: Variant) {
         baseline_path: Some("proxy-issue884.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1791,7 +1791,7 @@ fn null_property_descriptor_js(#[case] variant: Variant) {
         source_path: "nullPropertyDescriptor.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1805,7 +1805,7 @@ fn object_is_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1819,7 +1819,7 @@ fn object_assign_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1833,7 +1833,7 @@ fn default_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1847,7 +1847,7 @@ fn default_js_off_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1861,7 +1861,7 @@ fn default_js_force_cached_scope(#[case] variant: Variant) {
         compile_flags: vec!["-force:CachedScope", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1875,7 +1875,7 @@ fn default_splitscope_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1889,7 +1889,7 @@ fn default_splitscope_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1903,7 +1903,7 @@ fn default_splitscope_undodeferparse_js(#[case] variant: Variant) {
         compile_flags: vec!["-forceundodefer"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1917,7 +1917,7 @@ fn default_splitscope_serialized_js(#[case] variant: Variant) {
         compile_flags: vec!["-forceserialized"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1938,7 +1938,7 @@ fn rest_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1960,7 +1960,7 @@ fn rest_js_force_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -1975,7 +1975,7 @@ fn generators_syntax_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -1996,7 +1996,7 @@ fn generators_syntax_js_force_deferparse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2010,7 +2010,7 @@ fn for_in_edge_cases_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2025,7 +2025,7 @@ fn generators_deferparse_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-ES6Generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2040,7 +2040,7 @@ fn generators_apis_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2055,7 +2055,7 @@ fn generators_functionality_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2070,7 +2070,7 @@ fn generators_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2086,7 +2086,7 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2100,7 +2100,7 @@ fn generators_undodefer_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2115,7 +2115,7 @@ fn generators_cachedscope_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2130,7 +2130,7 @@ fn generators_applyargs_js_no_inline_apply(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-off:inlineapply"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -2145,7 +2145,7 @@ fn generators_applyargs_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2159,7 +2159,7 @@ fn destructuring_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2173,7 +2173,7 @@ fn destructuring_obj_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2187,7 +2187,7 @@ fn destructuring_params_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Rest", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2201,7 +2201,7 @@ fn destructuring_params_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2214,7 +2214,7 @@ fn destructuring_params_arguments_override_js(#[case] variant: Variant) {
         source_path: "destructuring_params_arguments_override.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2228,7 +2228,7 @@ fn destructuring_catch_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2242,7 +2242,7 @@ fn destructuring_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-ForceDeferParse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2256,7 +2256,7 @@ fn bug_279376_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6spread"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -2272,7 +2272,7 @@ fn blue_641922_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Rest", "-RecyclerNoPageReuse", "-PageHeap:2"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2286,7 +2286,7 @@ fn bug_981217_js(#[case] variant: Variant) {
         baseline_path: Some("bug_981217.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2300,7 +2300,7 @@ fn objlit_shorthand_error_js(#[case] variant: Variant) {
         baseline_path: Some("objlit-shorthand-error.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2315,7 +2315,7 @@ fn generator_strict_error_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Generators", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2329,7 +2329,7 @@ fn regex_annex_b_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2349,7 +2349,7 @@ fn regex_case_folding_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -2365,7 +2365,7 @@ fn regex_octoquad_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2379,7 +2379,7 @@ fn regex_quantifiers_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2393,7 +2393,7 @@ fn regex_code_point_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6RegExSticky", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2407,7 +2407,7 @@ fn regex_unicode_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2420,7 +2420,7 @@ fn regex_unicode_case_insensitive_js(#[case] variant: Variant) {
         source_path: "regex-unicode-CaseInsensitive.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 // <!--
 //   The following two tests take close to 60 seconds in interpreted mode on OS X test machines,
@@ -2441,7 +2441,7 @@ fn regex_unicode_case_insensitive_all_i_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2457,7 +2457,7 @@ fn regex_unicode_case_insensitive_all_iu_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2471,7 +2471,7 @@ fn regex_set_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2491,7 +2491,7 @@ fn regex_prototype_properties_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2511,7 +2511,7 @@ fn regex_symbols_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2524,7 +2524,7 @@ fn regex_w_sharp_s_kelvin_sign_js(#[case] variant: Variant) {
         source_path: "regex-w-sharp-s-kelvin-sign.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2546,7 +2546,7 @@ fn regexflags_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2568,7 +2568,7 @@ fn regexflags_disabled_features_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2588,7 +2588,7 @@ fn reg_exp_apis_test_with_sticky_flag_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2609,7 +2609,7 @@ fn stickyflag_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2623,7 +2623,7 @@ fn utfbug_js(#[case] variant: Variant) {
         compile_flags: vec!["-dump:bytecode"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2642,7 +2642,7 @@ fn proxybug_with_ld_fld_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2655,7 +2655,7 @@ fn proxybug_withproto_js(#[case] variant: Variant) {
         source_path: "proxybugWithproto.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -2671,7 +2671,7 @@ fn proxy_in_proxy_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simpleJIT"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2685,7 +2685,7 @@ fn proxy_set_prototype_of_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2699,7 +2699,7 @@ fn arraywithproxy_js(#[case] variant: Variant) {
         baseline_path: Some("arraywithproxy.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2713,7 +2713,7 @@ fn proxytest8_js(#[case] variant: Variant) {
         baseline_path: Some("proxytest8.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2727,7 +2727,7 @@ fn proxytest9_js(#[case] variant: Variant) {
         baseline_path: Some("proxytest9.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2742,7 +2742,7 @@ fn es6function_bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_nonrazzle"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2761,7 +2761,7 @@ fn os_2700778_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2774,7 +2774,7 @@ fn bug_os_2184795_js(#[case] variant: Variant) {
         source_path: "bug_OS_2184795.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2788,7 +2788,7 @@ fn unicode_whitespace_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2802,7 +2802,7 @@ fn bug_os_2553885_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_win7", "Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2815,7 +2815,7 @@ fn bug_os_2915477_js(#[case] variant: Variant) {
         source_path: "bug_OS_2915477.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2829,7 +2829,7 @@ fn bug_os3198161_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6all"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2849,7 +2849,7 @@ fn bug_os_4498031_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2863,7 +2863,7 @@ fn es6new_target_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2877,7 +2877,7 @@ fn es6new_target_bugfixes_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2891,7 +2891,7 @@ fn es6new_target_bugfixes_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2905,7 +2905,7 @@ fn es6new_target_bugfixes_js_force_undo_defer(#[case] variant: Variant) {
         compile_flags: vec!["-forceundodefer", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2919,7 +2919,7 @@ fn es6class_super_chain_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2933,7 +2933,7 @@ fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2947,7 +2947,7 @@ fn global_new_target_syntax_error_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2961,7 +2961,7 @@ fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2975,7 +2975,7 @@ fn global_param_catch_new_target_syntax_error_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -2989,7 +2989,7 @@ fn es6class_base_class_construction_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-es6generators"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3003,7 +3003,7 @@ fn expo_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-es7exponentiationoperator"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3017,7 +3017,7 @@ fn trailingcomma_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3031,7 +3031,7 @@ fn es6has_instance_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3045,7 +3045,7 @@ fn es6restricted_properties_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3059,7 +3059,7 @@ fn es6proto_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3073,7 +3073,7 @@ fn object_literal_bug_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3094,7 +3094,7 @@ fn os_5403724_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3108,7 +3108,7 @@ fn forloops_per_iteration_bindings_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3121,7 +3121,7 @@ fn htmlcomments_js(#[case] variant: Variant) {
         baseline_path: Some("HTMLComments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -3136,7 +3136,7 @@ fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3150,7 +3150,7 @@ fn os_5500719_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3164,7 +3164,7 @@ fn os_8600339_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3178,7 +3178,7 @@ fn iteratorclose_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3192,7 +3192,7 @@ fn iterator_next_caches_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3206,7 +3206,7 @@ fn iteratorclose_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3221,7 +3221,7 @@ fn bug_issue_1496_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-maxsimplejitruncount:2"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3236,7 +3236,7 @@ fn bug_issue_3247_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3250,7 +3250,7 @@ fn typedarray_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3272,7 +3272,7 @@ fn bug_os10595959_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3286,7 +3286,7 @@ fn defer_spread_rest_error_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3299,7 +3299,7 @@ fn bug_os10898061_js(#[case] variant: Variant) {
         source_path: "bug_OS10898061.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3313,7 +3313,7 @@ fn bug_os14880030_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3327,7 +3327,7 @@ fn bug_os14880030_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3341,7 +3341,7 @@ fn bug_os13976524_js_force_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3355,7 +3355,7 @@ fn bug_os15679026_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3369,7 +3369,7 @@ fn bug_issue_4635_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3384,7 +3384,7 @@ fn bug_os13976524_js(#[case] variant: Variant) {
         tags: HashSet::from(["BugFix"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3398,7 +3398,7 @@ fn defer_parse_lambda_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3418,7 +3418,7 @@ fn defer_parse_lambda_js_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3439,7 +3439,7 @@ fn defer_parse_lambda_js_force_undo_defer(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3453,7 +3453,7 @@ fn defer_parse_methods_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:deferparse", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3473,7 +3473,7 @@ fn defer_parse_methods_js_defer_parse(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3494,7 +3494,7 @@ fn defer_parse_methods_js_force_undo_defer(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3507,7 +3507,7 @@ fn function_expr_capture_js(#[case] variant: Variant) {
         source_path: "function-expr-capture.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3520,7 +3520,7 @@ fn set_user_func_as_proto_js(#[case] variant: Variant) {
         source_path: "setUserFuncAsProto.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3534,7 +3534,7 @@ fn function_expr_capture2_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3548,7 +3548,7 @@ fn supersetter_js(#[case] variant: Variant) {
         baseline_path: Some("supersetter.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3562,7 +3562,7 @@ fn bug_os16649604_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3576,7 +3576,7 @@ fn bug_os17895855_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3590,7 +3590,7 @@ fn super_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3605,7 +3605,7 @@ fn bug_issue_5994_js(#[case] variant: Variant) {
         compile_flags: vec!["-MuteHostErrorMsg"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -3620,5 +3620,5 @@ fn bug_19225364_js(#[case] variant: Variant) {
         compile_flags: vec!["-bgjit-", "-loopinterpretcount:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

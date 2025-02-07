@@ -16,7 +16,7 @@ fn captures_js(#[case] variant: Variant) {
         baseline_path: Some("captures.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn fast_regex_captures_js(#[case] variant: Variant) {
         baseline_path: Some("fastRegexCaptures.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn regex1_js(#[case] variant: Variant) {
         baseline_path: Some("regex1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn regex_split_optimization_js(#[case] variant: Variant) {
         compile_flags: vec!["-skipsplitonnoresult-", "-off:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn match_global_js(#[case] variant: Variant) {
         baseline_path: Some("match_global.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -87,7 +87,7 @@ fn configurable_test_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn clamp_numeric_quantifier_js(#[case] variant: Variant) {
         source_path: "clampNumericQuantifier.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn rx1_js(#[case] variant: Variant) {
         baseline_path: Some("rx1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn regex_replacefn_js(#[case] variant: Variant) {
         baseline_path: Some("regex_replacefn.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn regex_replacefn_this_js(#[case] variant: Variant) {
         baseline_path: Some("regex_replacefn_this.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn class_case_js(#[case] variant: Variant) {
         baseline_path: Some("class-case.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -170,7 +170,7 @@ fn prioritizedalternatives_js(#[case] variant: Variant) {
         baseline_path: Some("prioritizedalternatives.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -184,7 +184,7 @@ fn multiline_js(#[case] variant: Variant) {
         baseline_path: Some("multiline.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -198,7 +198,7 @@ fn regex_assertion_js(#[case] variant: Variant) {
         baseline_path: Some("regex_assertion.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -212,7 +212,7 @@ fn regex_deviations_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -226,7 +226,7 @@ fn undefined_option_js(#[case] variant: Variant) {
         baseline_path: Some("undefined_option.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -240,7 +240,7 @@ fn unicode_forbidden_escapes_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -254,7 +254,7 @@ fn to_string_js(#[case] variant: Variant) {
         baseline_path: Some("toString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -268,7 +268,7 @@ fn trigram_js(#[case] variant: Variant) {
         baseline_path: Some("trigram.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -282,7 +282,7 @@ fn nul_character_js(#[case] variant: Variant) {
         baseline_path: Some("nul_character.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -296,7 +296,7 @@ fn replace_js(#[case] variant: Variant) {
         baseline_path: Some("replace.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -315,7 +315,7 @@ fn dot_all_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -329,7 +329,7 @@ fn bol_eol_js(#[case] variant: Variant) {
         baseline_path: Some("BolEol.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -344,7 +344,7 @@ fn cross_context_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_native"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -359,7 +359,7 @@ fn properties_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -373,7 +373,7 @@ fn not_boiliteral2_js(#[case] variant: Variant) {
         baseline_path: Some("NotBOILiteral2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -389,7 +389,7 @@ fn boi_hard_fail_js(#[case] variant: Variant) {
         compile_flags: vec!["-regexDebug"],
         tags: HashSet::from(["exclude_test", "exclude_serialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -403,7 +403,7 @@ fn leadtrail_js(#[case] variant: Variant) {
         baseline_path: Some("leadtrail.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -417,7 +417,7 @@ fn bug517864_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -431,7 +431,7 @@ fn stackregex_box_js(#[case] variant: Variant) {
         baseline_path: Some("stackregex_box.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -446,7 +446,7 @@ fn blue_102584_1_js(#[case] variant: Variant) {
         compile_flags: vec!["-MaxinterpretCount:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -461,7 +461,7 @@ fn blue_102584_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-MaxinterpretCount:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -475,7 +475,7 @@ fn bug737451_js(#[case] variant: Variant) {
         baseline_path: Some("Bug737451.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -489,7 +489,7 @@ fn bug1153694_js(#[case] variant: Variant) {
         baseline_path: Some("Bug1153694.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -503,7 +503,7 @@ fn bug14859460_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -517,7 +517,7 @@ fn bug_os14763260_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -531,7 +531,7 @@ fn bug15992535_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -545,7 +545,7 @@ fn characterclass_with_range_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -559,7 +559,7 @@ fn control_character_escapes_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -572,5 +572,5 @@ fn regex_char_trie_stack_js(#[case] variant: Variant) {
         source_path: "regexCharTrieStack.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

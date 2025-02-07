@@ -15,7 +15,7 @@ fn depolymorph01_js(#[case] variant: Variant) {
         source_path: "depolymorph01.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn equiv_finaltypeandpoly_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxSimpleJitRunCount:2"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn equiv_missing_js(#[case] variant: Variant) {
         baseline_path: Some("equiv-missing.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn equiv_mismatch_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage", "-maxsimplejitruncount:2"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn equiv_mismatch2_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:rejit", "-off:bailonnoprofile"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn equiv_locktypeid_js(#[case] variant: Variant) {
         baseline_path: Some("equiv-locktypeid.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn equiv_needmonocheck_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxsimplejitruncount:4", "-force:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn equiv_needsmonocheck2_js(#[case] variant: Variant) {
         baseline_path: Some("equiv-needsmonocheck2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn fieldconstprop_ldmethodfld_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn fieldcopyprop_assign_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -157,7 +157,7 @@ fn fieldcopyprop_delete_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -171,7 +171,7 @@ fn fieldcopyprop_deletestrict_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -185,7 +185,7 @@ fn fieldhoist2_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -200,7 +200,7 @@ fn fieldhoist4_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -215,7 +215,7 @@ fn fieldhoist5_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -229,7 +229,7 @@ fn fieldhoist6_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -243,7 +243,7 @@ fn fieldhoist6b_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist6b.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -257,7 +257,7 @@ fn fieldhoist7_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist7.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -271,7 +271,7 @@ fn fieldhoist8_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist8.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -285,7 +285,7 @@ fn fieldhoist_nullfieldhoist_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -298,7 +298,7 @@ fn fieldhoist9_js(#[case] variant: Variant) {
         source_path: "fieldhoist9.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -312,7 +312,7 @@ fn fieldhoist_unreachable_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_unreachable.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -326,7 +326,7 @@ fn fieldhoist_typespec_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_typespec.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -341,7 +341,7 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec(#[case] variant: Variant) {
         compile_flags: vec!["-off:aggressiveIntTypeSpec"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -356,7 +356,7 @@ fn fieldhoist_typespec_js_aggressive_int_type_spec_off_inline(#[case] variant: V
         compile_flags: vec!["-off:aggressiveIntTypeSpec", "-off:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -370,7 +370,7 @@ fn fieldhoist_typespec2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -384,7 +384,7 @@ fn fieldhoist_typespec3_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -398,7 +398,7 @@ fn fieldhoist_undefined_global_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_undefined_global.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -412,7 +412,7 @@ fn fieldhoist_negzero_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_negzero.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -427,7 +427,7 @@ fn fieldhoist_negzero_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -441,7 +441,7 @@ fn fieldhoist_typeof_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_typeof.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -455,7 +455,7 @@ fn fieldhoist_sideeffect_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_sideeffect.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -470,7 +470,7 @@ fn fieldcopyprop_nonwritable_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -485,7 +485,7 @@ fn fieldcopyprop_primitive_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -500,7 +500,7 @@ fn fieldcopyprop_preventextensions_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -515,7 +515,7 @@ fn fieldcopyprop_freeze_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -529,7 +529,7 @@ fn redundanttype1_js(#[case] variant: Variant) {
         baseline_path: Some("redundanttype1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -543,7 +543,7 @@ fn fieldhoist_join_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_join.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -557,7 +557,7 @@ fn fieldhoist_slots_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_slots.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -571,7 +571,7 @@ fn fieldhoist_slots2_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_slots2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -585,7 +585,7 @@ fn fieldhoist_objptrcopyprop_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -599,7 +599,7 @@ fn fieldhoist_objptrcopyprop2_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_objptrcopyprop2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -613,7 +613,7 @@ fn fieldhoist_kills_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_kills.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -627,7 +627,7 @@ fn fieldhoist_stripbailouts_js(#[case] variant: Variant) {
         baseline_path: Some("fieldhoist_stripbailouts.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -641,7 +641,7 @@ fn redundanttype2_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -656,7 +656,7 @@ fn check_this_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:inline", "-force:checkthis"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -670,7 +670,7 @@ fn objptrcopyprop_bug_js(#[case] variant: Variant) {
         baseline_path: Some("objptrcopyprop_bug.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -683,7 +683,7 @@ fn objptrcopyprop_typescript_js(#[case] variant: Variant) {
         source_path: "objptrcopyprop_typescript.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -698,7 +698,7 @@ fn fieldcopyprop_typespec_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fieldcopyprop"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -712,7 +712,7 @@ fn fieldhoist_deletefld_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -726,7 +726,7 @@ fn forcefixdataprops_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:simplejit", "-force:fixdataprops"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -740,7 +740,7 @@ fn prop_object_pointer_copy_prop_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -754,7 +754,7 @@ fn redundanttype_kills_js(#[case] variant: Variant) {
         baseline_path: Some("redundanttype_kills.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -767,7 +767,7 @@ fn fieldhoist_copypropdep_js(#[case] variant: Variant) {
         source_path: "fieldhoist_copypropdep.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -780,7 +780,7 @@ fn fieldhoist_number_js(#[case] variant: Variant) {
         source_path: "fieldhoist_number.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -794,7 +794,7 @@ fn objtypespec1_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -808,7 +808,7 @@ fn objtypespec2_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -822,7 +822,7 @@ fn objtypespec3_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -841,7 +841,7 @@ fn objtypespec_fieldhoist_js(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -855,7 +855,7 @@ fn objtypespec_fieldhoist_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -869,7 +869,7 @@ fn objtypespec_proto_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -883,7 +883,7 @@ fn objtypespec_add_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simpleJit"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -897,7 +897,7 @@ fn objtypespec_add_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-loopInterpretCount:1"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -911,7 +911,7 @@ fn objtypespec_add_4_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -925,7 +925,7 @@ fn objtypespec_newobj_1_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -939,7 +939,7 @@ fn objtypespec_newobj_1_js_off_glob_opt(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -953,7 +953,7 @@ fn objtypespec_newobj_1_js_off_inline(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -967,7 +967,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -981,7 +981,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -999,7 +999,7 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1013,7 +1013,7 @@ fn objtypespec_newobj_1_js_off_fixed_methods(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2 -off:fixedMethods"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1027,7 +1027,7 @@ fn objtypespec_newobj_1_js_off_split_new_sc_object(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1045,7 +1045,7 @@ fn objtypespec_newobj_1_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1064,7 +1064,7 @@ fn objtypespec_newobj_1_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1078,7 +1078,7 @@ fn objtypespec_newobj_2_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1092,7 +1092,7 @@ fn objtypespec_newobj_2_js_off_glob_opt(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1106,7 +1106,7 @@ fn objtypespec_newobj_2_js_off_inline(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1120,7 +1120,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1134,7 +1134,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1152,7 +1152,7 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1166,7 +1166,7 @@ fn objtypespec_newobj_2_js_off_fixed_methods(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:fixedMethods"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1180,7 +1180,7 @@ fn objtypespec_newobj_2_js_off_split_new_sc_object(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1198,7 +1198,7 @@ fn objtypespec_newobj_2_js_off_obj_type_spec_new_obj_split_new_sc_object(#[case]
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1217,7 +1217,7 @@ fn objtypespec_newobj_2_js_off_fixed_new_obj_split_new_sc_object(#[case] variant
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1231,7 +1231,7 @@ fn objtypespec_newobj_invalidation_1_js1(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1245,7 +1245,7 @@ fn objtypespec_newobj_invalidation_1_js2(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1259,7 +1259,7 @@ fn objtypespec_newobj_invalidation_1_js3(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1273,7 +1273,7 @@ fn objtypespec_newobj_invalidation_1_js4(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1287,7 +1287,7 @@ fn objtypespec_newobj_invalidation_1_js5(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1305,7 +1305,7 @@ fn objtypespec_newobj_invalidation_1_js6(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1319,7 +1319,7 @@ fn objtypespec_newobj_invalidation_1_js7(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1337,7 +1337,7 @@ fn objtypespec_newobj_invalidation_1_js8(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1356,7 +1356,7 @@ fn objtypespec_newobj_invalidation_1_js9(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1370,7 +1370,7 @@ fn objtypespec_newobj_invalidation_2_js1(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1384,7 +1384,7 @@ fn objtypespec_newobj_invalidation_2_js2(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:globOpt"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1398,7 +1398,7 @@ fn objtypespec_newobj_invalidation_2_js3(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:inline"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1412,7 +1412,7 @@ fn objtypespec_newobj_invalidation_2_js4(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpec"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1426,7 +1426,7 @@ fn objtypespec_newobj_invalidation_2_js5(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:objTypeSpecNewObj"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1444,7 +1444,7 @@ fn objtypespec_newobj_invalidation_2_js6(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1458,7 +1458,7 @@ fn objtypespec_newobj_invalidation_2_js7(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-off:splitNewScObject"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1476,7 +1476,7 @@ fn objtypespec_newobj_invalidation_2_js8(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1495,7 +1495,7 @@ fn objtypespec_newobj_invalidation_2_js9(#[case] variant: Variant) {
         ],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1513,7 +1513,7 @@ fn field_hoist_max_interpret_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1527,7 +1527,7 @@ fn mark_temp_js(#[case] variant: Variant) {
         baseline_path: Some("markTemp.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1541,7 +1541,7 @@ fn root_obj_1_js(#[case] variant: Variant) {
         baseline_path: Some("rootObj-1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1556,7 +1556,7 @@ fn finaltypebug_js(#[case] variant: Variant) {
         compile_flags: vec!["-MaxSimpleJITRunCount:1", "-MaxinterpretCount:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1569,7 +1569,7 @@ fn finaltype2_js(#[case] variant: Variant) {
         source_path: "finaltype2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1583,7 +1583,7 @@ fn finaltype2_js_bgjit(#[case] variant: Variant) {
         compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1597,7 +1597,7 @@ fn finaltype_objheaderinlining1_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:simplejit", "-fja:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1610,7 +1610,7 @@ fn finaltype_objheaderinlining2_js(#[case] variant: Variant) {
         source_path: "finaltype-objheaderinlining2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1624,7 +1624,7 @@ fn finaltype_objheaderinlining3_js(#[case] variant: Variant) {
         compile_flags: vec!["-lic:1", "-bgjit-", "-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1638,7 +1638,7 @@ fn fieldhoist_accessorinlining1_js(#[case] variant: Variant) {
         compile_flags: vec!["-loopinterpretcount:1", "-bgjit-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1653,7 +1653,7 @@ fn fieldhoist_accessorinlining2_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:inlinegetters", "-off:fixedmethods"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1667,7 +1667,7 @@ fn fixedfieldmonocheck_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:fixdataprops"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1685,7 +1685,7 @@ fn fixedfieldmonocheck2_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1704,7 +1704,7 @@ fn fixedfieldmonocheck3_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1717,7 +1717,7 @@ fn fixedfieldmonocheck4_js(#[case] variant: Variant) {
         source_path: "fixedfieldmonocheck4.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1731,7 +1731,7 @@ fn fixedfieldmonocheck5_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:2", "-maxsimplejitruncount:6"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1744,7 +1744,7 @@ fn fixedfieldmonocheck6_js(#[case] variant: Variant) {
         source_path: "fixedfieldmonocheck6.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1758,7 +1758,7 @@ fn add_prop_to_dictionary_js(#[case] variant: Variant) {
         baseline_path: Some("add-prop-to-dictionary.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1771,7 +1771,7 @@ fn argobjlengthhoist_js(#[case] variant: Variant) {
         source_path: "argobjlengthhoist.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1789,5 +1789,5 @@ fn os23440664_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

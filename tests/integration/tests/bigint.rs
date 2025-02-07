@@ -15,7 +15,7 @@ fn comparison_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn global_object_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn increment_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn decrement_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -71,7 +71,7 @@ fn assign_by_value_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn add_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn subtract_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -113,7 +113,7 @@ fn mixed_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -127,7 +127,7 @@ fn strictly_equal_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -141,7 +141,7 @@ fn bitwise_not_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -155,5 +155,5 @@ fn multiply_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

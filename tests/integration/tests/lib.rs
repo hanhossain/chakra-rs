@@ -15,7 +15,7 @@ fn construct_js(#[case] variant: Variant) {
         baseline_path: Some("construct.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn getclass_js(#[case] variant: Variant) {
         baseline_path: Some("getclass1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn length2_js(#[case] variant: Variant) {
         baseline_path: Some("length.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn lib_length_js(#[case] variant: Variant) {
         baseline_path: Some("LibLength.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -71,7 +71,7 @@ fn noargs_js(#[case] variant: Variant) {
         baseline_path: Some("noargs_2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn tostring_js(#[case] variant: Variant) {
         baseline_path: Some("toString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn forin_lib_js(#[case] variant: Variant) {
         baseline_path: Some("forin_lib_v3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -113,7 +113,7 @@ fn uri_js(#[case] variant: Variant) {
         baseline_path: Some("uri.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -127,7 +127,7 @@ fn error_js(#[case] variant: Variant) {
         baseline_path: Some("error.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -141,7 +141,7 @@ fn workingset_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -155,5 +155,5 @@ fn proxyenum_js(#[case] variant: Variant) {
         baseline_path: Some("proxyenum.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

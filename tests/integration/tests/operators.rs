@@ -17,7 +17,7 @@ fn access_js(#[case] variant: Variant) {
         baseline_path: Some("access.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn add_js(#[case] variant: Variant) {
         baseline_path: Some("add.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn addcross_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -62,7 +62,7 @@ fn biops_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -76,7 +76,7 @@ fn binop_kills_js(#[case] variant: Variant) {
         baseline_path: Some("binop-kills.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -90,7 +90,7 @@ fn delete1_js(#[case] variant: Variant) {
         baseline_path: Some("delete1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -104,7 +104,7 @@ fn delete2_js(#[case] variant: Variant) {
         baseline_path: Some("delete2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -118,7 +118,7 @@ fn delete3_js(#[case] variant: Variant) {
         baseline_path: Some("delete3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -132,7 +132,7 @@ fn div_js(#[case] variant: Variant) {
         baseline_path: Some("div.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -146,7 +146,7 @@ fn equals_js(#[case] variant: Variant) {
         baseline_path: Some("equals.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -160,7 +160,7 @@ fn instanceof_js(#[case] variant: Variant) {
         baseline_path: Some("instanceof.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -173,7 +173,7 @@ fn inst_bug_js(#[case] variant: Variant) {
         source_path: "inst_bug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -186,7 +186,7 @@ fn isin_js(#[case] variant: Variant) {
         source_path: "isin.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -200,7 +200,7 @@ fn log_and_js(#[case] variant: Variant) {
         baseline_path: Some("logAnd.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -214,7 +214,7 @@ fn log_or_js(#[case] variant: Variant) {
         baseline_path: Some("logOr.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -228,7 +228,7 @@ fn mod_js(#[case] variant: Variant) {
         baseline_path: Some("mod.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -247,7 +247,7 @@ fn modopt_js(#[case] variant: Variant) {
             "require_backend",
         ]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -261,7 +261,7 @@ fn mul_js(#[case] variant: Variant) {
         baseline_path: Some("mul.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -274,7 +274,7 @@ fn op_eq_js(#[case] variant: Variant) {
         source_path: "OpEq.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -288,7 +288,7 @@ fn or_js(#[case] variant: Variant) {
         baseline_path: Some("or.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -305,7 +305,7 @@ fn property_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -319,7 +319,7 @@ fn relops_js(#[case] variant: Variant) {
         baseline_path: Some("relops.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -333,7 +333,7 @@ fn strictequal_js(#[case] variant: Variant) {
         baseline_path: Some("strictequal.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -347,7 +347,7 @@ fn unary_ops_js(#[case] variant: Variant) {
         baseline_path: Some("unaryOps.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -361,7 +361,7 @@ fn xor_js(#[case] variant: Variant) {
         baseline_path: Some("xor.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -375,7 +375,7 @@ fn new_js(#[case] variant: Variant) {
         baseline_path: Some("new.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -389,7 +389,7 @@ fn new_return_js(#[case] variant: Variant) {
         baseline_path: Some("newReturn.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -403,7 +403,7 @@ fn new_builtin_js(#[case] variant: Variant) {
         baseline_path: Some("newBuiltin.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -417,7 +417,7 @@ fn new_proto_js(#[case] variant: Variant) {
         baseline_path: Some("newProto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -431,7 +431,7 @@ fn prototype_inheritance_js(#[case] variant: Variant) {
         baseline_path: Some("prototypeInheritance.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -446,7 +446,7 @@ fn prototype_inheritance2_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -460,5 +460,5 @@ fn zero_js(#[case] variant: Variant) {
         baseline_path: Some("zero.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }

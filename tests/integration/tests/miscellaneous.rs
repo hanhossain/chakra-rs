@@ -16,7 +16,7 @@ fn has_only_writable_data_properties_cache_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -32,7 +32,7 @@ fn long_string_js(#[case] variant: Variant) {
         tags: std::collections::HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -46,7 +46,7 @@ fn eval_alias_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -60,7 +60,7 @@ fn set_timeout_js(#[case] variant: Variant) {
         baseline_path: Some("SetTimeout.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn monotonic_now_js(#[case] variant: Variant) {
         source_path: "monotonicNow.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -87,7 +87,7 @@ fn null_byte_comment_js(#[case] variant: Variant) {
         baseline_path: Some("nullByte-comment.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -101,7 +101,7 @@ fn null_byte_regex_js(#[case] variant: Variant) {
         baseline_path: Some("nullByte-regex.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -115,7 +115,7 @@ fn null_byte_string_js(#[case] variant: Variant) {
         baseline_path: Some("nullByte-string.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -129,7 +129,7 @@ fn may_have_side_effect_on_node_so_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -143,5 +143,5 @@ fn keep_context_in_super_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, common::DEFAULT_TAGS);
 }
