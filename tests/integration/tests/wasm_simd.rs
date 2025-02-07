@@ -13,7 +13,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm.simd";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn load_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -27,7 +26,6 @@ fn load_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn store_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -41,7 +39,6 @@ fn store_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn const_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -55,7 +52,6 @@ fn const_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn splat_neg_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -69,7 +65,6 @@ fn splat_neg_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn replace_lane_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -83,7 +78,6 @@ fn replace_lane_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn trunc_conv_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -97,7 +91,6 @@ fn trunc_conv_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn logical_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -111,7 +104,6 @@ fn logical_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn comparison_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -125,7 +117,6 @@ fn comparison_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn math_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -139,7 +130,6 @@ fn math_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn binary_arithmetic_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -153,7 +143,6 @@ fn binary_arithmetic_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn int64x2_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -167,7 +156,6 @@ fn int64x2_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn build_extract_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

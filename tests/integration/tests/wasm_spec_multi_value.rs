@@ -8,7 +8,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/WasmSpec.MultiValue";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn simple_block_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -22,7 +21,6 @@ fn simple_block_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn blocktypes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

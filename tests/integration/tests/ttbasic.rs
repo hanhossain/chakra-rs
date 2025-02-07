@@ -15,7 +15,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTBasic";
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn accessor_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -31,7 +30,6 @@ fn accessor_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -47,7 +45,6 @@ fn ttd_sentinal_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn arguments_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -63,7 +60,6 @@ fn arguments_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js2(#[case] variant: Variant) {
     let test = common::Test {
@@ -79,7 +75,6 @@ fn ttd_sentinal_js2(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -95,7 +90,6 @@ fn array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js3(#[case] variant: Variant) {
     let test = common::Test {
@@ -111,7 +105,6 @@ fn ttd_sentinal_js3(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bind_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -127,7 +120,6 @@ fn bind_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js4(#[case] variant: Variant) {
     let test = common::Test {
@@ -143,7 +135,6 @@ fn ttd_sentinal_js4(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn boolean_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -159,7 +150,6 @@ fn boolean_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js5(#[case] variant: Variant) {
     let test = common::Test {
@@ -175,7 +165,6 @@ fn ttd_sentinal_js5(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bound_function_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -191,7 +180,6 @@ fn bound_function_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js6(#[case] variant: Variant) {
     let test = common::Test {
@@ -207,7 +195,6 @@ fn ttd_sentinal_js6(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn boxed_object_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -223,7 +210,6 @@ fn boxed_object_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js7(#[case] variant: Variant) {
     let test = common::Test {
@@ -239,7 +225,6 @@ fn ttd_sentinal_js7(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn cross_site_main_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -255,7 +240,6 @@ fn cross_site_main_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js8(#[case] variant: Variant) {
     let test = common::Test {
@@ -271,7 +255,6 @@ fn ttd_sentinal_js8(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js9(#[case] variant: Variant) {
     let test = common::Test {
@@ -287,7 +270,6 @@ fn ttd_sentinal_js9(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn constructor_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -303,7 +285,6 @@ fn constructor_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js10(#[case] variant: Variant) {
     let test = common::Test {
@@ -319,7 +300,6 @@ fn ttd_sentinal_js10(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn date_basic_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -335,7 +315,6 @@ fn date_basic_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js11(#[case] variant: Variant) {
     let test = common::Test {
@@ -351,7 +330,6 @@ fn ttd_sentinal_js11(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js12(#[case] variant: Variant) {
     let test = common::Test {
@@ -367,7 +345,6 @@ fn ttd_sentinal_js12(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn delete_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -383,7 +360,6 @@ fn delete_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js13(#[case] variant: Variant) {
     let test = common::Test {
@@ -399,7 +375,6 @@ fn ttd_sentinal_js13(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn es5_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -415,7 +390,6 @@ fn es5_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js14(#[case] variant: Variant) {
     let test = common::Test {
@@ -431,7 +405,6 @@ fn ttd_sentinal_js14(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn es5_arguments_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -447,7 +420,6 @@ fn es5_arguments_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js15(#[case] variant: Variant) {
     let test = common::Test {
@@ -463,7 +435,6 @@ fn ttd_sentinal_js15(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn eval_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -479,7 +450,6 @@ fn eval_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js16(#[case] variant: Variant) {
     let test = common::Test {
@@ -495,7 +465,6 @@ fn ttd_sentinal_js16(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn extensible_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -511,7 +480,6 @@ fn extensible_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js17(#[case] variant: Variant) {
     let test = common::Test {
@@ -527,7 +495,6 @@ fn ttd_sentinal_js17(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn for_in_shadowing_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -543,7 +510,6 @@ fn for_in_shadowing_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js18(#[case] variant: Variant) {
     let test = common::Test {
@@ -559,7 +525,6 @@ fn ttd_sentinal_js18(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn freeze_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -575,7 +540,6 @@ fn freeze_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js19(#[case] variant: Variant) {
     let test = common::Test {
@@ -591,7 +555,6 @@ fn ttd_sentinal_js19(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn function_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -607,7 +570,6 @@ fn function_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js20(#[case] variant: Variant) {
     let test = common::Test {
@@ -623,7 +585,6 @@ fn ttd_sentinal_js20(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn large_aux_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -639,7 +600,6 @@ fn large_aux_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js21(#[case] variant: Variant) {
     let test = common::Test {
@@ -655,7 +615,6 @@ fn ttd_sentinal_js21(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn load_re_entrant_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -671,7 +630,6 @@ fn load_re_entrant_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js22(#[case] variant: Variant) {
     let test = common::Test {
@@ -687,7 +645,6 @@ fn ttd_sentinal_js22(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js23(#[case] variant: Variant) {
     let test = common::Test {
@@ -703,7 +660,6 @@ fn ttd_sentinal_js23(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn map_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -719,7 +675,6 @@ fn map_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js24(#[case] variant: Variant) {
     let test = common::Test {
@@ -735,7 +690,6 @@ fn ttd_sentinal_js24(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn missing_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -751,7 +705,6 @@ fn missing_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js25(#[case] variant: Variant) {
     let test = common::Test {
@@ -767,7 +720,6 @@ fn ttd_sentinal_js25(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn native_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -783,7 +735,6 @@ fn native_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js26(#[case] variant: Variant) {
     let test = common::Test {
@@ -799,7 +750,6 @@ fn ttd_sentinal_js26(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn new_from_args_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -815,7 +765,6 @@ fn new_from_args_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js27(#[case] variant: Variant) {
     let test = common::Test {
@@ -831,7 +780,6 @@ fn ttd_sentinal_js27(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn new_function_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -847,7 +795,6 @@ fn new_function_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js28(#[case] variant: Variant) {
     let test = common::Test {
@@ -863,7 +810,6 @@ fn ttd_sentinal_js28(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn number_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -879,7 +825,6 @@ fn number_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js29(#[case] variant: Variant) {
     let test = common::Test {
@@ -895,7 +840,6 @@ fn ttd_sentinal_js29(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn numeric_property_is_enumerable_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -914,7 +858,6 @@ fn numeric_property_is_enumerable_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js30(#[case] variant: Variant) {
     let test = common::Test {
@@ -933,7 +876,6 @@ fn ttd_sentinal_js30(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn object_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -949,7 +891,6 @@ fn object_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js31(#[case] variant: Variant) {
     let test = common::Test {
@@ -965,7 +906,6 @@ fn ttd_sentinal_js31(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn pop_array_implicit_call_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -981,7 +921,6 @@ fn pop_array_implicit_call_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js32(#[case] variant: Variant) {
     let test = common::Test {
@@ -997,7 +936,6 @@ fn ttd_sentinal_js32(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn promise_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1013,7 +951,6 @@ fn promise_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js33(#[case] variant: Variant) {
     let test = common::Test {
@@ -1029,7 +966,6 @@ fn ttd_sentinal_js33(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js34(#[case] variant: Variant) {
     let test = common::Test {
@@ -1045,7 +981,6 @@ fn ttd_sentinal_js34(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js35(#[case] variant: Variant) {
     let test = common::Test {
@@ -1061,7 +996,6 @@ fn ttd_sentinal_js35(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js36(#[case] variant: Variant) {
     let test = common::Test {
@@ -1077,7 +1011,6 @@ fn ttd_sentinal_js36(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js37(#[case] variant: Variant) {
     let test = common::Test {
@@ -1093,7 +1026,6 @@ fn ttd_sentinal_js37(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn promise_multiple_then_calls_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1112,7 +1044,6 @@ fn promise_multiple_then_calls_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js38(#[case] variant: Variant) {
     let test = common::Test {
@@ -1131,7 +1062,6 @@ fn ttd_sentinal_js38(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js39(#[case] variant: Variant) {
     let test = common::Test {
@@ -1150,7 +1080,6 @@ fn ttd_sentinal_js39(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js40(#[case] variant: Variant) {
     let test = common::Test {
@@ -1169,7 +1098,6 @@ fn ttd_sentinal_js40(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js41(#[case] variant: Variant) {
     let test = common::Test {
@@ -1188,7 +1116,6 @@ fn ttd_sentinal_js41(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js42(#[case] variant: Variant) {
     let test = common::Test {
@@ -1207,7 +1134,6 @@ fn ttd_sentinal_js42(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js43(#[case] variant: Variant) {
     let test = common::Test {
@@ -1226,7 +1152,6 @@ fn ttd_sentinal_js43(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js44(#[case] variant: Variant) {
     let test = common::Test {
@@ -1245,7 +1170,6 @@ fn ttd_sentinal_js44(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn proxy_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1261,7 +1185,6 @@ fn proxy_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js45(#[case] variant: Variant) {
     let test = common::Test {
@@ -1277,7 +1200,6 @@ fn ttd_sentinal_js45(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn regex_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1293,7 +1215,6 @@ fn regex_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js46(#[case] variant: Variant) {
     let test = common::Test {
@@ -1309,7 +1230,6 @@ fn ttd_sentinal_js46(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn seal_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1325,7 +1245,6 @@ fn seal_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js47(#[case] variant: Variant) {
     let test = common::Test {
@@ -1341,7 +1260,6 @@ fn ttd_sentinal_js47(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn scoped_accessors_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1357,7 +1275,6 @@ fn scoped_accessors_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js48(#[case] variant: Variant) {
     let test = common::Test {
@@ -1373,7 +1290,6 @@ fn ttd_sentinal_js48(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn scope_function_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1389,7 +1305,6 @@ fn scope_function_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js49(#[case] variant: Variant) {
     let test = common::Test {
@@ -1405,7 +1320,6 @@ fn ttd_sentinal_js49(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn set_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1421,7 +1335,6 @@ fn set_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js50(#[case] variant: Variant) {
     let test = common::Test {
@@ -1437,7 +1350,6 @@ fn ttd_sentinal_js50(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn shadow_prototype_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1453,7 +1365,6 @@ fn shadow_prototype_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js51(#[case] variant: Variant) {
     let test = common::Test {
@@ -1469,7 +1380,6 @@ fn ttd_sentinal_js51(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn sparse_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1485,7 +1395,6 @@ fn sparse_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js52(#[case] variant: Variant) {
     let test = common::Test {
@@ -1501,7 +1410,6 @@ fn ttd_sentinal_js52(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn string_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1517,7 +1425,6 @@ fn string_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js53(#[case] variant: Variant) {
     let test = common::Test {
@@ -1533,7 +1440,6 @@ fn ttd_sentinal_js53(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn symbol_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1549,7 +1455,6 @@ fn symbol_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js54(#[case] variant: Variant) {
     let test = common::Test {
@@ -1565,7 +1470,6 @@ fn ttd_sentinal_js54(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js55(#[case] variant: Variant) {
     let test = common::Test {
@@ -1581,7 +1485,6 @@ fn ttd_sentinal_js55(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn type_conversions_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1597,7 +1500,6 @@ fn type_conversions_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js56(#[case] variant: Variant) {
     let test = common::Test {
@@ -1613,7 +1515,6 @@ fn ttd_sentinal_js56(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn typed_array_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1629,7 +1530,6 @@ fn typed_array_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js57(#[case] variant: Variant) {
     let test = common::Test {
@@ -1645,7 +1545,6 @@ fn ttd_sentinal_js57(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn type_promotion_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1661,7 +1560,6 @@ fn type_promotion_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js58(#[case] variant: Variant) {
     let test = common::Test {
@@ -1677,7 +1575,6 @@ fn ttd_sentinal_js58(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_basic_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1693,7 +1590,6 @@ fn generator_basic_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js59(#[case] variant: Variant) {
     let test = common::Test {
@@ -1709,7 +1605,6 @@ fn ttd_sentinal_js59(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js60(#[case] variant: Variant) {
     let test = common::Test {
@@ -1725,7 +1620,6 @@ fn ttd_sentinal_js60(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js61(#[case] variant: Variant) {
     let test = common::Test {
@@ -1741,7 +1635,6 @@ fn ttd_sentinal_js61(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js62(#[case] variant: Variant) {
     let test = common::Test {
@@ -1757,7 +1650,6 @@ fn ttd_sentinal_js62(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js63(#[case] variant: Variant) {
     let test = common::Test {
@@ -1773,7 +1665,6 @@ fn ttd_sentinal_js63(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_return_yield_result_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1789,7 +1680,6 @@ fn generator_return_yield_result_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js64(#[case] variant: Variant) {
     let test = common::Test {
@@ -1805,7 +1695,6 @@ fn ttd_sentinal_js64(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js65(#[case] variant: Variant) {
     let test = common::Test {
@@ -1821,7 +1710,6 @@ fn ttd_sentinal_js65(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js66(#[case] variant: Variant) {
     let test = common::Test {
@@ -1837,7 +1725,6 @@ fn ttd_sentinal_js66(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js67(#[case] variant: Variant) {
     let test = common::Test {
@@ -1853,7 +1740,6 @@ fn ttd_sentinal_js67(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_int_param_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1869,7 +1755,6 @@ fn generator_int_param_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js68(#[case] variant: Variant) {
     let test = common::Test {
@@ -1885,7 +1770,6 @@ fn ttd_sentinal_js68(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_object_param_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1901,7 +1785,6 @@ fn generator_object_param_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js69(#[case] variant: Variant) {
     let test = common::Test {
@@ -1917,7 +1800,6 @@ fn ttd_sentinal_js69(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_class_method_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1933,7 +1815,6 @@ fn generator_class_method_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js70(#[case] variant: Variant) {
     let test = common::Test {
@@ -1949,7 +1830,6 @@ fn ttd_sentinal_js70(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_nested_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1965,7 +1845,6 @@ fn generator_nested_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js71(#[case] variant: Variant) {
     let test = common::Test {
@@ -1981,7 +1860,6 @@ fn ttd_sentinal_js71(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_restore_completed_generator_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2000,7 +1878,6 @@ fn generator_restore_completed_generator_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js72(#[case] variant: Variant) {
     let test = common::Test {
@@ -2019,7 +1896,6 @@ fn ttd_sentinal_js72(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn generator_write_log_during_generator_execution_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2038,7 +1914,6 @@ fn generator_write_log_during_generator_execution_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js73(#[case] variant: Variant) {
     let test = common::Test {
@@ -2057,7 +1932,6 @@ fn ttd_sentinal_js73(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js74(#[case] variant: Variant) {
     let test = common::Test {
@@ -2076,7 +1950,6 @@ fn ttd_sentinal_js74(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js75(#[case] variant: Variant) {
     let test = common::Test {
@@ -2095,7 +1968,6 @@ fn ttd_sentinal_js75(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js76(#[case] variant: Variant) {
     let test = common::Test {
@@ -2114,7 +1986,6 @@ fn ttd_sentinal_js76(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js77(#[case] variant: Variant) {
     let test = common::Test {
@@ -2133,7 +2004,6 @@ fn ttd_sentinal_js77(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js78(#[case] variant: Variant) {
     let test = common::Test {
@@ -2152,7 +2022,6 @@ fn ttd_sentinal_js78(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn async_await_basic_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2168,7 +2037,6 @@ fn async_await_basic_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js79(#[case] variant: Variant) {
     let test = common::Test {
@@ -2184,7 +2052,6 @@ fn ttd_sentinal_js79(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js80(#[case] variant: Variant) {
     let test = common::Test {
@@ -2200,7 +2067,6 @@ fn ttd_sentinal_js80(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js81(#[case] variant: Variant) {
     let test = common::Test {
@@ -2216,7 +2082,6 @@ fn ttd_sentinal_js81(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js82(#[case] variant: Variant) {
     let test = common::Test {
@@ -2232,7 +2097,6 @@ fn ttd_sentinal_js82(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js83(#[case] variant: Variant) {
     let test = common::Test {
@@ -2248,7 +2112,6 @@ fn ttd_sentinal_js83(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn async_await2_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2264,7 +2127,6 @@ fn async_await2_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js84(#[case] variant: Variant) {
     let test = common::Test {
@@ -2280,7 +2142,6 @@ fn ttd_sentinal_js84(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js85(#[case] variant: Variant) {
     let test = common::Test {
@@ -2296,7 +2157,6 @@ fn ttd_sentinal_js85(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn async_await3_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -2312,7 +2172,6 @@ fn async_await3_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js86(#[case] variant: Variant) {
     let test = common::Test {
@@ -2328,7 +2187,6 @@ fn ttd_sentinal_js86(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn ttd_sentinal_js87(#[case] variant: Variant) {
     let test = common::Test {

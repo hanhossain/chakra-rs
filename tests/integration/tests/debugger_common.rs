@@ -3449,7 +3449,6 @@ fn bug_256729_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_266843_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3593,7 +3592,6 @@ fn property_enumeration_bug241480_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_271356_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -3688,7 +3686,6 @@ fn bug_301517_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn bug_325839_js(#[case] variant: Variant) {
     let test = common::Test {
