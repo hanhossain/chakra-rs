@@ -35,8 +35,6 @@ jobs:
             features: compile-cpp,optimized-tests
     env:
       CARGO_TERM_COLOR: always
-      NEXTEST_FAILURE_OUTPUT: immediate-final
-      NEXTEST_RETRIES: 2
       RUSTFLAGS: -D warnings
     steps:
       - uses: actions/checkout@v4
