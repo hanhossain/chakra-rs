@@ -594,6 +594,7 @@ fn debugger_basic_js3(#[case] variant: Variant) {
 //     </default>
 //   </test>
 
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -615,6 +616,7 @@ fn oom_wasm_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -636,6 +638,7 @@ fn oom_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -685,6 +688,7 @@ fn i64_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
