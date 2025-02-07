@@ -5,8 +5,8 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;
 
-#[allow(dead_code)]
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
+pub const DEFAULT_TAGS: [&str; 0] = [];
 
 #[derive(Debug, Default)]
 pub struct Test {
@@ -67,7 +67,11 @@ struct VariantConfig<'a> {
     excluded_tags: HashSet<&'static str>,
 }
 
-pub fn run_test_variant(test: &Test, variant: Variant) {
+pub fn run_test_variant<const N: usize>(
+    test: &Test,
+    variant: Variant,
+    common_tags: [&'static str; N],
+) {
     test.validate();
 
     let mut variant_config = match variant {
@@ -89,6 +93,8 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
             ]),
         },
     };
+
+    variant_config.excluded_tags.extend(common_tags.iter());
 
     let exclude_build_type = if cfg!(feature = "optimized-tests") {
         "exclude_test"

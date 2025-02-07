@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>require_backend</tags>
-
+const COMMON_TAGS: [&str] = ["require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/PRE";
 
 #[rstest]
@@ -22,7 +21,7 @@ fn pre1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -36,5 +35,5 @@ fn bug0_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

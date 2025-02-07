@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>exclude_serialized,exclude_snap,require_backend</tags>
-
+const COMMON_TAGS: [&str] = ["exclude_serialized","exclude_snap","require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/PerfHint";
 
 #[rstest]
@@ -24,7 +23,7 @@ fn try_with_eval_perfhint_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -49,7 +48,7 @@ fn try_with_eval_perfhint_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -71,7 +70,7 @@ fn arguments1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -93,5 +92,5 @@ fn polymorphictest_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

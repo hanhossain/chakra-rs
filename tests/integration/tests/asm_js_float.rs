@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>exclude_serialized,require_backend,require_asmjs</tags>
-
+const COMMON_TAGS: [&str] = ["exclude_serialized", "require_backend", "require_asmjs"];
 const DIRECTORY: &str = "chakracore-cxx/test/AsmJSFloat";
 
 #[rstest]
@@ -24,7 +23,7 @@ fn basic_math_op_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -44,7 +43,7 @@ fn float64_loadand_store_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -64,7 +63,7 @@ fn ld_undef_from_heap_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -84,7 +83,7 @@ fn nested_math_lib_calls_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -104,7 +103,7 @@ fn not_operator_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -124,7 +123,7 @@ fn store_double_to_float32_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -144,7 +143,7 @@ fn store_float_to_float32_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -159,7 +158,7 @@ fn basic_math_op_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -174,7 +173,7 @@ fn float64_loadand_store_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -189,7 +188,7 @@ fn ld_undef_from_heap_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -204,7 +203,7 @@ fn nested_math_lib_calls_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -219,7 +218,7 @@ fn not_operator_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -234,7 +233,7 @@ fn store_double_to_float32_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -249,5 +248,5 @@ fn store_float_to_float32_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "require_backend", "require_asmjs"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

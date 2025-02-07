@@ -3,8 +3,12 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-
+const COMMON_TAGS: [&str] = [
+    "exclude_serialized",
+    "exclude_snap",
+    "require_debugger",
+    "exclude_sanitize_address",
+];
 const DIRECTORY: &str = "chakracore-cxx/test/DebuggerCommon";
 
 #[rstest]
@@ -25,7 +29,7 @@ fn arguments_map_es6_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -46,7 +50,7 @@ fn blockscope_fastdebug_es5_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -67,7 +71,7 @@ fn blockscope_fastdebug_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -91,7 +95,7 @@ fn blockscope_func_insidescopes_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -121,7 +125,7 @@ fn es6_intl_stepinto_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -142,7 +146,7 @@ fn es6_letconst_const_reassignment_fnscope_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -163,7 +167,7 @@ fn es6_letconst_eval_strict_fn_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -184,7 +188,7 @@ fn es6_letconst_redeclaration_indebugger_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -204,7 +208,7 @@ fn es6_letconst_shadow_evaluation_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -228,7 +232,7 @@ fn es6_letconst_shadow_eval_with_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -253,7 +257,7 @@ fn es6_forof_decl_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -278,7 +282,7 @@ fn es6_forof_decl_2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -303,7 +307,7 @@ fn es6_forof_decl_3_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -328,7 +332,7 @@ fn es6_forof_decl_4_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -353,7 +357,7 @@ fn es6_forof_decl_5_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -378,7 +382,7 @@ fn es6_forof_decl_6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -402,7 +406,7 @@ fn frames_values_map_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -422,7 +426,7 @@ fn step_in_es6_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -445,7 +449,7 @@ fn step_in_from_interpreted_function_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -465,7 +469,7 @@ fn step_in_from_jitted_function_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -490,7 +494,7 @@ fn step_in_only_debug_jit_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -513,7 +517,7 @@ fn step_out_direct_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -533,7 +537,7 @@ fn step_out_es5_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -558,7 +562,7 @@ fn step_out_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -582,7 +586,7 @@ fn step_out_from_catch_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -605,7 +609,7 @@ fn step_out_from_interpreted_function_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -628,7 +632,7 @@ fn step_out_from_jitted_function_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -648,7 +652,7 @@ fn step_out_only_debug_jit_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -671,7 +675,7 @@ fn step_over_es6_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -694,7 +698,7 @@ fn step_over_jitd_fn_from_intrprt_fn_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -720,7 +724,7 @@ fn temp_str_expr_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -755,7 +759,7 @@ fn frames_inspection_array_es5_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -780,7 +784,7 @@ fn shadow_with_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -805,7 +809,7 @@ fn blockscope_func_declaration_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -831,7 +835,7 @@ fn blockscope_func_expression_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -856,7 +860,7 @@ fn es6_letconst_eval_nonstrict_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -880,7 +884,7 @@ fn es6_letconst_for_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -904,7 +908,7 @@ fn es6_letconst_trycatch_simple_fast_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -929,7 +933,7 @@ fn es6_proto_chained_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -953,7 +957,7 @@ fn es6_proto_simple_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -977,7 +981,7 @@ fn es6_proto_user_defined_object_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1002,7 +1006,7 @@ fn es6_intl_stepinto_libexpandos_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1026,7 +1030,7 @@ fn es6_letconst_forin_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1049,7 +1053,7 @@ fn es6_letconst_const_usebeforedeclaration_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1072,7 +1076,7 @@ fn es6_proto_invalidation_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1095,7 +1099,7 @@ fn frames_letconst_reassignobjects_es6_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1120,7 +1124,7 @@ fn es6_letconst_const_reassignment_globalscope_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1145,7 +1149,7 @@ fn es6_letconst_redcl_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1166,7 +1170,7 @@ fn native_array_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1191,7 +1195,7 @@ fn argument_disp_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1216,7 +1220,7 @@ fn multiple_argumentsdisp_safeguard_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1236,7 +1240,7 @@ fn level_1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1256,7 +1260,7 @@ fn failedasm_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1281,7 +1285,7 @@ fn es6_spread_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1305,7 +1309,7 @@ fn specialproperties_fn_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1332,7 +1336,7 @@ fn es6_reg_exp_specialproperties_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1359,7 +1363,7 @@ fn es6_reg_exp_specialproperties_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1386,7 +1390,7 @@ fn es6_reg_exp_specialproperties_js3(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1412,7 +1416,7 @@ fn es6_reg_exp_specialproperties_js4(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1437,7 +1441,7 @@ fn specialproperties_level2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1461,7 +1465,7 @@ fn testdynamicattach1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1486,7 +1490,7 @@ fn testdynamicattach1_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1511,7 +1515,7 @@ fn targeted_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1531,7 +1535,7 @@ fn proto_test2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1552,7 +1556,7 @@ fn testdynamicattach2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1575,7 +1579,7 @@ fn defer_parse_detach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1598,7 +1602,7 @@ fn defer_parse_detach2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1622,7 +1626,7 @@ fn attach_with_defer_parse_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1645,7 +1649,7 @@ fn array_prototest_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1666,7 +1670,7 @@ fn breakpoints_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1686,7 +1690,7 @@ fn indexprop_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1710,7 +1714,7 @@ fn func_source_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1734,7 +1738,7 @@ fn evaluate_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1754,7 +1758,7 @@ fn attach_after_exception_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1777,7 +1781,7 @@ fn catch_inspection_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1797,7 +1801,7 @@ fn func_expr_name_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1817,7 +1821,7 @@ fn attachdetach_delaycapture_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1840,7 +1844,7 @@ fn global_func_vars_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1863,7 +1867,7 @@ fn block_scope_slot_array_capture_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1887,7 +1891,7 @@ fn block_scope_slot_array_capture_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1911,7 +1915,7 @@ fn block_scope_activation_object_capture_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1934,7 +1938,7 @@ fn block_scope_basic_let_const_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1958,7 +1962,7 @@ fn block_scope_activation_object_as_slot_array_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1981,7 +1985,7 @@ fn block_scope_basic_scoping_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2005,7 +2009,7 @@ fn block_scope_for_test_bug183991_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2029,7 +2033,7 @@ fn block_scope_nested_function_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2053,7 +2057,7 @@ fn block_scope_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2077,7 +2081,7 @@ fn block_scope_eval_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2100,7 +2104,7 @@ fn block_scope_global_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2125,7 +2129,7 @@ fn block_scope_for_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2149,7 +2153,7 @@ fn block_scope_with_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2174,7 +2178,7 @@ fn block_scope_switch_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2199,7 +2203,7 @@ fn block_scope_activation_object_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2224,7 +2228,7 @@ fn block_scope_reg_slot_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2249,7 +2253,7 @@ fn block_scope_slot_array_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2273,7 +2277,7 @@ fn block_scope_global_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2297,7 +2301,7 @@ fn block_scope_global_block_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2320,7 +2324,7 @@ fn block_scope_slot_array_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2344,7 +2348,7 @@ fn block_scope_slot_array_test_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2367,7 +2371,7 @@ fn block_scope_slot_array_sibling_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2391,7 +2395,7 @@ fn block_scope_global_slot_array_test_bug222631_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2414,7 +2418,7 @@ fn block_scope_sibling_bug263635_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2437,7 +2441,7 @@ fn block_scope_sibling_scope_tracked_in_non_debug_mode_bug321751_js(#[case] vari
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2461,7 +2465,7 @@ fn block_scope_function_declaration_reg_slot_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2485,7 +2489,7 @@ fn block_scope_function_declaration_slot_array_test_js(#[case] variant: Variant)
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2509,7 +2513,7 @@ fn block_scope_function_declaration_activation_object_test_js(#[case] variant: V
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2534,7 +2538,7 @@ fn block_scope_function_declaration_global_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2549,7 +2553,7 @@ fn block_scope_function_declaration_global_shadowing_test_bug305562_js(#[case] v
         tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
 ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2564,7 +2568,7 @@ fn block_scope_function_declaration_global_shadowing_test_bug308191_js(#[case] v
         tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
 ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2588,7 +2592,7 @@ fn block_scope_function_redeclaration_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2611,7 +2615,7 @@ fn block_scope_function_redeclaration_blue523098_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2631,7 +2635,7 @@ fn disablebp_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2651,7 +2655,7 @@ fn disablebp2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2675,7 +2679,7 @@ fn setframe_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2699,7 +2703,7 @@ fn func_expr_crash_150491_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[cfg(target_arch = "x86_64")]
@@ -2727,7 +2731,7 @@ fn jit_locals_at_native_frame1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[cfg(target_arch = "x86_64")]
@@ -2755,7 +2759,7 @@ fn jit_locals_at_native_frame2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2776,7 +2780,7 @@ fn bug594394_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2801,7 +2805,7 @@ fn fast_f12_bobranch_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2821,7 +2825,7 @@ fn negzerotest_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2841,7 +2845,7 @@ fn detach_basic_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2861,7 +2865,7 @@ fn detach_basic_test_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2882,7 +2886,7 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -2928,7 +2932,7 @@ fn jit_expr_eval1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2955,7 +2959,7 @@ fn jit_editvalue1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -2979,7 +2983,7 @@ fn jit_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3003,7 +3007,7 @@ fn stringkeyedtypehandler_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3026,7 +3030,7 @@ fn function_name_shows_in_scope_group_test_bug157127_js(#[case] variant: Variant
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3049,7 +3053,7 @@ fn function_name_shows_in_nested_scope_group_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3072,7 +3076,7 @@ fn block_scope_expression_no_write_of_const_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3096,7 +3100,7 @@ fn block_scope_reg_slot_shadowing_expression_evaluation_test_js(#[case] variant:
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3120,7 +3124,7 @@ fn block_scope_expression_simple_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3144,7 +3148,7 @@ fn block_scope_expression_equation_dead_zone_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3168,7 +3172,7 @@ fn block_scope_try_catch_test_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3192,7 +3196,7 @@ fn locals_inspection_on_non_top_frame_in_block_test_bug163347_js(#[case] variant
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3216,7 +3220,7 @@ fn jit_attach_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3239,7 +3243,7 @@ fn getter_inspection_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3262,7 +3266,7 @@ fn promise_defer_nested_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3286,7 +3290,7 @@ fn promise_defer_nested_attach_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3306,7 +3310,7 @@ fn bug_222633_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3329,7 +3333,7 @@ fn bug_149118_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3352,7 +3356,7 @@ fn bug_149118_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3372,7 +3376,7 @@ fn bug_204064_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3395,7 +3399,7 @@ fn bug_177146_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3419,7 +3423,7 @@ fn bug_177146_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3440,7 +3444,7 @@ fn bug_256729_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -3475,7 +3479,7 @@ fn bug_350674_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3500,7 +3504,7 @@ fn with_shadow_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3520,7 +3524,7 @@ fn var_shadow_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3544,7 +3548,7 @@ fn arraytoes5array_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3567,7 +3571,7 @@ fn property_enumeration_bug241480_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -3601,7 +3605,7 @@ fn bug_291582_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3625,7 +3629,7 @@ fn bug_355097_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3645,7 +3649,7 @@ fn bug_301517_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -3676,7 +3680,7 @@ fn defer_parse_210165_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3700,7 +3704,7 @@ fn qualified_names1_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3724,7 +3728,7 @@ fn qualified_names2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3744,7 +3748,7 @@ fn eval_detection_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3769,7 +3773,7 @@ fn bug_507528_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3793,7 +3797,7 @@ fn bug_543550_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3813,7 +3817,7 @@ fn bug_523101_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3833,7 +3837,7 @@ fn symbols_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3856,7 +3860,7 @@ fn qualified_names5_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3876,7 +3880,7 @@ fn bug_538163_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3896,7 +3900,7 @@ fn bug_575634_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3916,7 +3920,7 @@ fn nested_eval_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3936,7 +3940,7 @@ fn bug_592506_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3960,7 +3964,7 @@ fn permanent_arguments_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -3984,7 +3988,7 @@ fn source_info_mismatch_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4010,7 +4014,7 @@ fn spread_debugging_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4030,7 +4034,7 @@ fn bug_622304_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4054,7 +4058,7 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -4095,7 +4099,7 @@ fn delaycapture_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4119,7 +4123,7 @@ fn returnedvaluetests3_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4140,7 +4144,7 @@ fn returnedvaluetests4_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4164,7 +4168,7 @@ fn returnedvaluetests4_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4190,7 +4194,7 @@ fn bug_261867_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4214,7 +4218,7 @@ fn rest_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4238,7 +4242,7 @@ fn obj_lit_step_into_more_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4262,7 +4266,7 @@ fn obj_lit_step_into_out_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4286,7 +4290,7 @@ fn obj_lit_step_over_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4311,7 +4315,7 @@ fn generators_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4331,7 +4335,7 @@ fn async_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4354,7 +4358,7 @@ fn async_step_out_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4377,7 +4381,7 @@ fn async_step_over_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4401,7 +4405,7 @@ fn typed_array_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4424,7 +4428,7 @@ fn computed_property_names_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4447,7 +4451,7 @@ fn parented_dynamic_code2_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4470,7 +4474,7 @@ fn parented_dynamic_code3_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4490,7 +4494,7 @@ fn bug_os_2946365_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4511,7 +4515,7 @@ fn console_scope_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4535,7 +4539,7 @@ fn console_scope_pmspec_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4555,7 +4559,7 @@ fn infiniteloop_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4579,7 +4583,7 @@ fn destructuring_debug_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4604,7 +4608,7 @@ fn regex_symbols_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4624,7 +4628,7 @@ fn default_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4644,7 +4648,7 @@ fn default_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4667,7 +4671,7 @@ fn bug_vso5792108_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4690,7 +4694,7 @@ fn promise_display_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4710,7 +4714,7 @@ fn bug_os12814968_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -4730,5 +4734,5 @@ fn async_dynamic_attach_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

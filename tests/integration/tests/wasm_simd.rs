@@ -3,8 +3,8 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>require_wasm,exclude_serialized,require_backend,exclude_xplat</tags>
-
+const COMMON_TAGS: [&str] = ["require_wasm","exclude_serialized","require_backend","exclude_xplat",todo!(""
+)];
 const DIRECTORY: &str = "chakracore-cxx/test/wasm.simd";
 
 #[rstest]
@@ -18,7 +18,7 @@ fn loadTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -32,7 +32,7 @@ fn storeTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -46,7 +46,7 @@ fn constTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -60,7 +60,7 @@ fn splatNegTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -74,7 +74,7 @@ fn replaceLaneTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -88,7 +88,7 @@ fn truncConvTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -102,7 +102,7 @@ fn logicalTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -116,7 +116,7 @@ fn comparisonTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd -off:jitloopbody")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -130,7 +130,7 @@ fn mathTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -144,7 +144,7 @@ fn binaryArithmeticTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -158,7 +158,7 @@ fn int64x2Tests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -172,5 +172,5 @@ fn buildExtractTests_js(#[case] variant: Variant) {
         compile_flags: vec![todo!(" -wasm -wasmsimd")],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

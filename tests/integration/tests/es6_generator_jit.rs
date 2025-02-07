@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>require_backend</tags>
-
+const COMMON_TAGS: [&str] = ["require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/es6GeneratorJit";
 
 #[rstest]
@@ -18,7 +17,7 @@ fn generator_jit_bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -32,7 +31,7 @@ fn generator_jit_bugs_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -52,7 +51,7 @@ fn generator_jit_bugs_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -71,7 +70,7 @@ fn generator_jit_bugs_js4(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -85,7 +84,7 @@ fn async_jit_bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -99,7 +98,7 @@ fn async_jit_bugs_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -119,7 +118,7 @@ fn async_jit_bugs_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -138,7 +137,7 @@ fn async_jit_bugs_js4(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -151,7 +150,7 @@ fn async_jit_bugs_js5(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -165,7 +164,7 @@ fn new_test_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -179,7 +178,7 @@ fn new_test_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -192,7 +191,7 @@ fn new_test_js3(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -205,7 +204,7 @@ fn new_test_js4(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate

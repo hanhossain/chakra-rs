@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>Slow</tags>
-
+const COMMON_TAGS: [&str] = ["Slow"];
 const DIRECTORY: &str = "chakracore-cxx/test/Generated";
 
 #[rstest]
@@ -21,7 +20,7 @@ fn mul_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -38,7 +37,7 @@ fn mul0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -55,7 +54,7 @@ fn mul1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -72,7 +71,7 @@ fn mul2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -89,7 +88,7 @@ fn mul3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -106,7 +105,7 @@ fn div_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -123,7 +122,7 @@ fn div0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -140,7 +139,7 @@ fn div1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -157,7 +156,7 @@ fn div2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -174,7 +173,7 @@ fn div3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -191,7 +190,7 @@ fn mod_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -208,7 +207,7 @@ fn mod0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -225,7 +224,7 @@ fn mod1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -242,7 +241,7 @@ fn mod2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -259,7 +258,7 @@ fn mod3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -276,7 +275,7 @@ fn add_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -293,7 +292,7 @@ fn add0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -310,7 +309,7 @@ fn add1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -327,7 +326,7 @@ fn add2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -344,7 +343,7 @@ fn add3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -361,7 +360,7 @@ fn sub_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -378,7 +377,7 @@ fn sub0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -395,7 +394,7 @@ fn sub1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -412,7 +411,7 @@ fn sub2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -429,7 +428,7 @@ fn sub3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -446,7 +445,7 @@ fn lsh_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -463,7 +462,7 @@ fn lsh0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -480,7 +479,7 @@ fn lsh1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -497,7 +496,7 @@ fn lsh2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -514,7 +513,7 @@ fn lsh3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -531,7 +530,7 @@ fn rsh_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -548,7 +547,7 @@ fn rsh0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -565,7 +564,7 @@ fn rsh1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -582,7 +581,7 @@ fn rsh2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -599,7 +598,7 @@ fn rsh3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -616,7 +615,7 @@ fn rshu_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -633,7 +632,7 @@ fn rshu0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -650,7 +649,7 @@ fn rshu1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -667,7 +666,7 @@ fn rshu2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -684,7 +683,7 @@ fn rshu3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -701,7 +700,7 @@ fn lt_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -718,7 +717,7 @@ fn lt0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -735,7 +734,7 @@ fn lt1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -752,7 +751,7 @@ fn lt2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -769,7 +768,7 @@ fn lt3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -786,7 +785,7 @@ fn gt_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -803,7 +802,7 @@ fn gt0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -820,7 +819,7 @@ fn gt1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -837,7 +836,7 @@ fn gt2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -854,7 +853,7 @@ fn gt3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -871,7 +870,7 @@ fn le_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -888,7 +887,7 @@ fn le0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -905,7 +904,7 @@ fn le1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -922,7 +921,7 @@ fn le2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -939,7 +938,7 @@ fn le3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -956,7 +955,7 @@ fn ge_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -973,7 +972,7 @@ fn ge0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -990,7 +989,7 @@ fn ge1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1007,7 +1006,7 @@ fn ge2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1024,7 +1023,7 @@ fn ge3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1041,7 +1040,7 @@ fn eq_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1058,7 +1057,7 @@ fn eq0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1075,7 +1074,7 @@ fn eq1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1092,7 +1091,7 @@ fn eq2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1109,7 +1108,7 @@ fn eq3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1126,7 +1125,7 @@ fn ne_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1143,7 +1142,7 @@ fn ne0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1160,7 +1159,7 @@ fn ne1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1177,7 +1176,7 @@ fn ne2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1194,7 +1193,7 @@ fn ne3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1211,7 +1210,7 @@ fn seq_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1228,7 +1227,7 @@ fn seq0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1245,7 +1244,7 @@ fn seq1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1262,7 +1261,7 @@ fn seq2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1279,7 +1278,7 @@ fn seq3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1296,7 +1295,7 @@ fn sne_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1313,7 +1312,7 @@ fn sne0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1330,7 +1329,7 @@ fn sne1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1347,7 +1346,7 @@ fn sne2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1364,7 +1363,7 @@ fn sne3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1381,7 +1380,7 @@ fn and_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1398,7 +1397,7 @@ fn and0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1415,7 +1414,7 @@ fn and1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1432,7 +1431,7 @@ fn and2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1449,7 +1448,7 @@ fn and3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1466,7 +1465,7 @@ fn xor_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1483,7 +1482,7 @@ fn xor0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1500,7 +1499,7 @@ fn xor1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1517,7 +1516,7 @@ fn xor2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1534,7 +1533,7 @@ fn xor3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1551,7 +1550,7 @@ fn or_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1568,7 +1567,7 @@ fn or0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1585,7 +1584,7 @@ fn or1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1602,7 +1601,7 @@ fn or2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1619,7 +1618,7 @@ fn or3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1636,7 +1635,7 @@ fn land_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1653,7 +1652,7 @@ fn land0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1670,7 +1669,7 @@ fn land1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1687,7 +1686,7 @@ fn land2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1704,7 +1703,7 @@ fn land3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1721,7 +1720,7 @@ fn lor_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1738,7 +1737,7 @@ fn lor0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1755,7 +1754,7 @@ fn lor1_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1772,7 +1771,7 @@ fn lor2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1789,7 +1788,7 @@ fn lor3_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1806,7 +1805,7 @@ fn imul_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1823,7 +1822,7 @@ fn divbypow2_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1841,7 +1840,7 @@ fn b9aa6bbf_0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1859,7 +1858,7 @@ fn test6e55fa7a_0_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -1876,5 +1875,5 @@ fn attackoftheclones_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }

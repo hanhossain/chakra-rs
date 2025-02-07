@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>require_backend</tags>
-
+const COMMON_TAGS: [&str] = ["require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 
 #[rstest]
@@ -19,7 +18,7 @@ fn arg_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -117,7 +116,7 @@ fn inlined_constructor_bailout_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -131,7 +130,7 @@ fn inlining_with_arguments_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_arm"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -145,7 +144,7 @@ fn inlining_apply_target_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -158,7 +157,7 @@ fn apply_bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -172,7 +171,7 @@ fn apply_bailout_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -185,7 +184,7 @@ fn apply_bailout_args_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -203,7 +202,7 @@ fn bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -223,7 +222,7 @@ fn linenumber4_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -242,7 +241,7 @@ fn miscellaneous_max_interpret_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -255,7 +254,7 @@ fn no_prof_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -281,7 +280,7 @@ fn inline_built_ins_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -295,7 +294,7 @@ fn spread_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -314,7 +313,7 @@ fn poly_inlining_fixed_methods_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -328,7 +327,7 @@ fn bug650495_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -346,7 +345,7 @@ fn poly_inlining_bugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -367,7 +366,7 @@ fn poly_inlining_uninitialized_ret_val_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -380,7 +379,7 @@ fn call_target_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -397,7 +396,7 @@ fn bug594138_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -410,7 +409,7 @@ fn inlinee_argout_count_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -423,7 +422,7 @@ fn mark_temp_arg_out_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -437,7 +436,7 @@ fn bug1469518_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -451,7 +450,7 @@ fn bug1355201_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -465,7 +464,7 @@ fn recursive_inline_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -479,7 +478,7 @@ fn recursive_inline2_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -493,7 +492,7 @@ fn bug2328551_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -507,7 +506,7 @@ fn bug2269097_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -527,7 +526,7 @@ fn os_2733280_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -548,7 +547,7 @@ fn os_2733280_js2(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -562,7 +561,7 @@ fn built_in_apply_target_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -577,7 +576,7 @@ fn stack_trace_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -590,7 +589,7 @@ fn missing_inlinee_end_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -604,7 +603,7 @@ fn inlining_in_loop_body_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -617,7 +616,7 @@ fn bug9936017_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -630,7 +629,7 @@ fn bug11265991_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -643,7 +642,7 @@ fn profilingbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -656,7 +655,7 @@ fn bug12528802_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -670,7 +669,7 @@ fn call_to_dynamic_script_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -713,7 +712,7 @@ fn recursive_callbacks_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -727,7 +726,7 @@ fn argoptbugs_js(#[case] variant: Variant) {
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 // TODO (hanhossain): migrate

@@ -3,8 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
-// TODO (hanhossain): tags - <tags>exclude_serialized,require_backend,require_wasm</tags>
-
+const COMMON_TAGS: [&str] = ["exclude_serialized", "require_backend", "require_wasm"];
 const DIRECTORY: &str = "chakracore-cxx/test/WasmSpec.MultiValue";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -17,7 +16,7 @@ fn simple_block_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmMultiValue"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -31,5 +30,5 @@ fn blocktypes_js(#[case] variant: Variant) {
         compile_flags: vec!["-wasm", "-WasmMultiValue"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(&test, variant, COMMON_TAGS);
 }
