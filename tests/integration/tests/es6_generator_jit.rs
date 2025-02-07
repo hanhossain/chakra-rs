@@ -292,7 +292,7 @@ fn jit_module_loop_body_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jit_module_loop_body_js(#[case] variant: Variant) {
+fn jit_module_loop_body_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jit-module-loop-body.js",
