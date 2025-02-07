@@ -1,6 +1,7 @@
 use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
+#[cfg(not(feature = "optimized-tests"))]
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 2] = ["exclude_serialized", "require_backend"];
