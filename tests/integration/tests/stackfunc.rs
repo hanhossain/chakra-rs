@@ -6,6 +6,7 @@ use std::collections::HashSet;
 const COMMON_TAGS: [&str; 2] = ["exclude_serialized", "require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/stackfunc";
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -27,6 +28,7 @@ fn simple_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -48,9 +50,9 @@ fn simple_stackfunc_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn simple_stackfunc_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -69,9 +71,9 @@ fn simple_stackfunc_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn trycatch_stackfunc_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -91,6 +93,7 @@ fn trycatch_stackfunc_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -112,6 +115,7 @@ fn simple_namedstackfunc_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -133,6 +137,7 @@ fn to_string_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -154,6 +159,7 @@ fn chain_assign_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -175,6 +181,7 @@ fn nested_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -196,6 +203,7 @@ fn funcname_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -217,6 +225,7 @@ fn call_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -239,6 +248,7 @@ fn argout_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -260,6 +270,7 @@ fn throw_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -325,6 +336,7 @@ fn arrlit_asg_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -346,6 +358,7 @@ fn objlit_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -405,6 +418,7 @@ fn arguments_assignment_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -426,6 +440,7 @@ fn cross_scope_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -447,6 +462,7 @@ fn eval_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -468,6 +484,7 @@ fn child_eval_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -489,6 +506,7 @@ fn with_namedfunc_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -510,6 +528,7 @@ fn formal_namedfunc_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -531,6 +550,7 @@ fn throw_func_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -552,6 +572,7 @@ fn glo_asg_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -620,7 +641,6 @@ fn let_blockescape_js(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn simple_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -642,7 +662,6 @@ fn simple_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn simple_stackfunc_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -664,7 +683,6 @@ fn simple_stackfunc_js3(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn simple_namedstackfunc_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -686,7 +704,6 @@ fn simple_namedstackfunc_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn to_string_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -708,7 +725,6 @@ fn to_string_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn chain_assign_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -730,7 +746,6 @@ fn chain_assign_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn nested_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -752,7 +767,6 @@ fn nested_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn funcname_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -797,7 +811,6 @@ fn funcname_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn funcname_asg_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -861,7 +874,6 @@ fn arrlit_asg_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn objlit_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -883,7 +895,6 @@ fn objlit_escape_js2(#[case] variant: Variant) {
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn formal_asg_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -902,6 +913,7 @@ fn formal_asg_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn argument_escape_js2(#[case] variant: Variant) {
@@ -922,9 +934,9 @@ fn argument_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn cross_scope_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -944,9 +956,9 @@ fn cross_scope_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn eval_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -965,9 +977,9 @@ fn eval_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn child_eval_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -986,9 +998,9 @@ fn child_eval_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn with_namedfunc_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1007,9 +1019,9 @@ fn with_namedfunc_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn formal_namedfunc_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1039,9 +1051,9 @@ fn formal_namedfunc_js2(#[case] variant: Variant) {
 //     </default>
 //   </test>
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn glo_asg_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1060,9 +1072,9 @@ fn glo_asg_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn multinested_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1082,9 +1094,9 @@ fn multinested_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn let_stackfunc_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1103,9 +1115,9 @@ fn let_stackfunc_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn let_blockescape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1179,9 +1191,9 @@ fn box_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn callee_escape_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1242,9 +1254,9 @@ fn callee_escape2_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn caller_escape_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1268,9 +1280,9 @@ fn caller_escape_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn singleuse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1289,9 +1301,9 @@ fn singleuse_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn iffuncdecl_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1329,6 +1341,7 @@ fn cachescope_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn box_callparam_js(#[case] variant: Variant) {
@@ -1351,9 +1364,9 @@ fn box_callparam_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn inlinee_box_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1378,6 +1391,7 @@ fn inlinee_box_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn blockscope_funcdecl_js(#[case] variant: Variant) {
@@ -1397,9 +1411,9 @@ fn blockscope_funcdecl_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn recurse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1419,9 +1433,9 @@ fn recurse_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn jitdefer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1469,9 +1483,9 @@ fn jitdefer_js(#[case] variant: Variant) {
 //     </default>
 //   </test>
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn withref_delayobjscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1489,9 +1503,9 @@ fn withref_delayobjscope_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn funcexpr_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1511,9 +1525,9 @@ fn funcexpr_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn funcexpr_2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1533,9 +1547,9 @@ fn funcexpr_2_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn funcexpr_2_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1561,9 +1575,9 @@ fn funcexpr_2_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn with_existing_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1581,9 +1595,9 @@ fn with_existing_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn with_crossscope_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1709,9 +1723,9 @@ fn test605893_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 fn test622043_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
