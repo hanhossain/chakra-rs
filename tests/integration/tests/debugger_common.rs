@@ -3468,7 +3468,6 @@ fn bug_266843_js(#[case] variant: Variant) {
             "exclude_snap",
             "require_debugger",
             "exclude_sanitize_address",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -3613,7 +3612,6 @@ fn bug_271356_js(#[case] variant: Variant) {
             "exclude_snap",
             "require_debugger",
             "exclude_sanitize_address",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -3710,7 +3708,6 @@ fn bug_325839_js(#[case] variant: Variant) {
             "exclude_snap",
             "require_debugger",
             "exclude_sanitize_address",
-            todo!(""),
         ]),
         ..Default::default()
     };

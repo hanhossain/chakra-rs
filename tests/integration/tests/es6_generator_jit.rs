@@ -222,7 +222,6 @@ fn jit_gen_loop_body_js(#[case] variant: Variant) {
             "exclude_test",
             "exclude_nonative",
             "exclude_dynapogo",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -253,7 +252,6 @@ fn jit_async_loop_body_js(#[case] variant: Variant) {
             "exclude_test",
             "exclude_nonative",
             "exclude_dynapogo",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -284,7 +282,6 @@ fn jit_module_loop_body_js(#[case] variant: Variant) {
             "exclude_test",
             "exclude_nonative",
             "exclude_dynapogo",
-            todo!(""),
         ]),
         ..Default::default()
     };

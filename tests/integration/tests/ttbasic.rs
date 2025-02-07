@@ -23,12 +23,7 @@ fn accessor_js(#[case] variant: Variant) {
         source_path: "accessor.js",
         baseline_path: Some("accessorRecord.baseline"),
         compile_flags: vec!["-TTRecord=accessorTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -44,12 +39,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("accessorReplay.baseline"),
         compile_flags: vec!["-TTReplay=accessorTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -65,12 +55,7 @@ fn arguments_js(#[case] variant: Variant) {
         source_path: "arguments.js",
         baseline_path: Some("argumentsRecord.baseline"),
         compile_flags: vec!["-TTRecord=argumentsTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -86,12 +71,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("argumentsReplay.baseline"),
         compile_flags: vec!["-TTReplay=argumentsTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -107,12 +87,7 @@ fn array_js(#[case] variant: Variant) {
         source_path: "array.js",
         baseline_path: Some("arrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=arrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -128,12 +103,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("arrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=arrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -149,12 +119,7 @@ fn bind_js(#[case] variant: Variant) {
         source_path: "bind.js",
         baseline_path: Some("bindRecord.baseline"),
         compile_flags: vec!["-TTRecord=bindTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -170,12 +135,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("bindReplay.baseline"),
         compile_flags: vec!["-TTReplay=bindTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -191,12 +151,7 @@ fn boolean_js(#[case] variant: Variant) {
         source_path: "boolean.js",
         baseline_path: Some("booleanRecord.baseline"),
         compile_flags: vec!["-TTRecord=booleanTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -212,12 +167,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("booleanReplay.baseline"),
         compile_flags: vec!["-TTReplay=booleanTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -233,12 +183,7 @@ fn boundFunction_js(#[case] variant: Variant) {
         source_path: "boundFunction.js",
         baseline_path: Some("boundFunctionRecord.baseline"),
         compile_flags: vec!["-TTRecord=boundFunctionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -254,12 +199,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("boundFunctionReplay.baseline"),
         compile_flags: vec!["-TTReplay=boundFunctionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -275,12 +215,7 @@ fn boxedObject_js(#[case] variant: Variant) {
         source_path: "boxedObject.js",
         baseline_path: Some("boxedObjectRecord.baseline"),
         compile_flags: vec!["-TTRecord=boxedObjectTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -296,12 +231,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("boxedObjectReplay.baseline"),
         compile_flags: vec!["-TTReplay=boxedObjectTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -317,12 +247,7 @@ fn crossSiteMain_js(#[case] variant: Variant) {
         source_path: "crossSiteMain.js",
         baseline_path: Some("crossSiteRecord.baseline"),
         compile_flags: vec!["-TTRecord=crossSiteTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -338,12 +263,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("crossSiteReplay1.baseline"),
         compile_flags: vec!["-TTReplay=crossSiteTest"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -359,12 +279,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("crossSiteReplay2.baseline"),
         compile_flags: vec!["-TTReplay=crossSiteTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -380,12 +295,7 @@ fn constructor_js(#[case] variant: Variant) {
         source_path: "constructor.js",
         baseline_path: Some("constructorRecord.baseline"),
         compile_flags: vec!["-TTRecord=constructorTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -401,12 +311,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("constructorReplay.baseline"),
         compile_flags: vec!["-TTReplay=constructorTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -422,12 +327,7 @@ fn dateBasic_js(#[case] variant: Variant) {
         source_path: "dateBasic.js",
         baseline_path: Some("dateBasicRecord.baseline"),
         compile_flags: vec!["-TTRecord=dateBasicTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -443,12 +343,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("dateBasicReplay.baseline"),
         compile_flags: vec!["-TTReplay=dateBasicTest"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -464,12 +359,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("dateBasicReplay.baseline"),
         compile_flags: vec!["-TTReplay=dateBasicTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -485,12 +375,7 @@ fn deleteArray_js(#[case] variant: Variant) {
         source_path: "deleteArray.js",
         baseline_path: Some("deleteArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=deleteArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -506,12 +391,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("deleteArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=deleteArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -527,12 +407,7 @@ fn es5Array_js(#[case] variant: Variant) {
         source_path: "es5Array.js",
         baseline_path: Some("es5ArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=es5ArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -548,12 +423,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("es5ArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=es5ArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -569,12 +439,7 @@ fn es5Arguments_js(#[case] variant: Variant) {
         source_path: "es5Arguments.js",
         baseline_path: Some("es5ArgumentsRecord.baseline"),
         compile_flags: vec!["-TTRecord=es5ArgumentsTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -590,12 +455,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("es5ArgumentsReplay.baseline"),
         compile_flags: vec!["-TTReplay=es5ArgumentsTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -611,12 +471,7 @@ fn eval_js(#[case] variant: Variant) {
         source_path: "eval.js",
         baseline_path: Some("evalRecord.baseline"),
         compile_flags: vec!["-TTRecord=evalTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -632,12 +487,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("evalReplay.baseline"),
         compile_flags: vec!["-TTReplay=evalTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -653,12 +503,7 @@ fn extensible_js(#[case] variant: Variant) {
         source_path: "extensible.js",
         baseline_path: Some("extensibleRecord.baseline"),
         compile_flags: vec!["-TTRecord=extensibleTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -674,12 +519,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("extensibleReplay.baseline"),
         compile_flags: vec!["-TTReplay=extensibleTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -695,12 +535,7 @@ fn forInShadowing_js(#[case] variant: Variant) {
         source_path: "forInShadowing.js",
         baseline_path: Some("forInShadowingRecord.baseline"),
         compile_flags: vec!["-TTRecord=forInShadowingTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -716,12 +551,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("forInShadowingReplay.baseline"),
         compile_flags: vec!["-TTReplay=forInShadowingTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -737,12 +567,7 @@ fn freeze_js(#[case] variant: Variant) {
         source_path: "freeze.js",
         baseline_path: Some("freezeRecord.baseline"),
         compile_flags: vec!["-TTRecord=freezeTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -758,12 +583,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("freezeReplay.baseline"),
         compile_flags: vec!["-TTReplay=freezeTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -779,12 +599,7 @@ fn function_js(#[case] variant: Variant) {
         source_path: "function.js",
         baseline_path: Some("functionRecord.baseline"),
         compile_flags: vec!["-TTRecord=functionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -800,12 +615,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("functionReplay.baseline"),
         compile_flags: vec!["-TTReplay=functionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -821,12 +631,7 @@ fn largeAuxArray_js(#[case] variant: Variant) {
         source_path: "largeAuxArray.js",
         baseline_path: Some("largeAuxArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=largeAuxArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -842,12 +647,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("largeAuxArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=largeAuxArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -863,12 +663,7 @@ fn loadReEntrant_js(#[case] variant: Variant) {
         source_path: "loadReEntrant.js",
         baseline_path: Some("loadReEntrantRecord.baseline"),
         compile_flags: vec!["-TTRecord=loadReEntrantTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -884,12 +679,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("loadReEntrantReplay.baseline"),
         compile_flags: vec!["-TTReplay=loadReEntrantTest"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -905,12 +695,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("loadReEntrantReplay.baseline"),
         compile_flags: vec!["-TTReplay=loadReEntrantTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -926,12 +711,7 @@ fn map_js(#[case] variant: Variant) {
         source_path: "map.js",
         baseline_path: Some("mapRecord.baseline"),
         compile_flags: vec!["-TTRecord=mapTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -947,12 +727,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("mapReplay.baseline"),
         compile_flags: vec!["-TTReplay=mapTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -968,12 +743,7 @@ fn missingArray_js(#[case] variant: Variant) {
         source_path: "missingArray.js",
         baseline_path: Some("missingArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=missingArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -989,12 +759,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("missingArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=missingArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1010,12 +775,7 @@ fn nativeArray_js(#[case] variant: Variant) {
         source_path: "nativeArray.js",
         baseline_path: Some("nativeArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=nativeArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1031,12 +791,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("nativeArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=nativeArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1052,12 +807,7 @@ fn newFromArgs_js(#[case] variant: Variant) {
         source_path: "newFromArgs.js",
         baseline_path: Some("newFromArgsRecord.baseline"),
         compile_flags: vec!["-TTRecord=newFromArgsTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1073,12 +823,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("newFromArgsReplay.baseline"),
         compile_flags: vec!["-TTReplay=newFromArgsTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1094,12 +839,7 @@ fn newFunction_js(#[case] variant: Variant) {
         source_path: "newFunction.js",
         baseline_path: Some("newFunctionRecord.baseline"),
         compile_flags: vec!["-TTRecord=newFunctionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1115,12 +855,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("newFunctionReplay.baseline"),
         compile_flags: vec!["-TTReplay=newFunctionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1136,12 +871,7 @@ fn number_js(#[case] variant: Variant) {
         source_path: "number.js",
         baseline_path: Some("numberRecord.baseline"),
         compile_flags: vec!["-TTRecord=numberTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1157,12 +887,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("numberReplay.baseline"),
         compile_flags: vec!["-TTReplay=numberTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1181,12 +906,7 @@ fn numericPropertyIsEnumerable_js(#[case] variant: Variant) {
             "-TTRecord=numericPropertyIsEnumerableTest",
             "-TTSnapInterval=0",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1205,12 +925,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=numericPropertyIsEnumerableTest",
             "-TTDStartEvent=2",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1226,12 +941,7 @@ fn object_js(#[case] variant: Variant) {
         source_path: "object.js",
         baseline_path: Some("objectRecord.baseline"),
         compile_flags: vec!["-TTRecord=objectTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1247,12 +957,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("objectReplay.baseline"),
         compile_flags: vec!["-TTReplay=objectTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1268,12 +973,7 @@ fn popArrayImplicitCall_js(#[case] variant: Variant) {
         source_path: "popArrayImplicitCall.js",
         baseline_path: Some("popArrayImplicitCallRecord.baseline"),
         compile_flags: vec!["-TTRecord=popArrayImplicitCallTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1289,12 +989,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("popArrayImplicitCallReplay.baseline"),
         compile_flags: vec!["-TTReplay=popArrayImplicitCallTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1310,12 +1005,7 @@ fn promise_js(#[case] variant: Variant) {
         source_path: "promise.js",
         baseline_path: Some("promiseRecord.baseline"),
         compile_flags: vec!["-TTRecord=promiseTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1331,12 +1021,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("promiseReplay.baseline"),
         compile_flags: vec!["-TTReplay=promiseTest"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1352,12 +1037,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("promiseReplay.baseline"),
         compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1373,12 +1053,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("promiseReplay.baseline"),
         compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1394,12 +1069,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("promiseReplay.baseline"),
         compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=6"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1415,12 +1085,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("promiseReplay.baseline"),
         compile_flags: vec!["-TTReplay=promiseTest", "-TTDStartEvent=7"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1439,12 +1104,7 @@ fn promise_MultipleThenCalls_js(#[case] variant: Variant) {
             "-TTRecord=promise_MultipleThenCallsTest",
             "-TTSnapInterval=0",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1463,12 +1123,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=1",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1487,12 +1142,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=2",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1511,12 +1161,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=3",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1535,12 +1180,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=4",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1559,12 +1199,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=5",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1583,12 +1218,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=6",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1607,12 +1237,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=promise_MultipleThenCallsTest",
             "-TTDStartEvent=7",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1628,12 +1253,7 @@ fn proxy_js(#[case] variant: Variant) {
         source_path: "proxy.js",
         baseline_path: Some("proxyRecord.baseline"),
         compile_flags: vec!["-TTRecord=proxyTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1649,12 +1269,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("proxyReplay.baseline"),
         compile_flags: vec!["-TTReplay=proxyTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1670,12 +1285,7 @@ fn regex_js(#[case] variant: Variant) {
         source_path: "regex.js",
         baseline_path: Some("regexRecord.baseline"),
         compile_flags: vec!["-TTRecord=regexTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1691,12 +1301,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("regexReplay.baseline"),
         compile_flags: vec!["-TTReplay=regexTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1712,12 +1317,7 @@ fn seal_js(#[case] variant: Variant) {
         source_path: "seal.js",
         baseline_path: Some("sealRecord.baseline"),
         compile_flags: vec!["-TTRecord=sealTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1733,12 +1333,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("sealReplay.baseline"),
         compile_flags: vec!["-TTReplay=sealTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1754,12 +1349,7 @@ fn scopedAccessors_js(#[case] variant: Variant) {
         source_path: "scopedAccessors.js",
         baseline_path: Some("scopedAccessorsRecord.baseline"),
         compile_flags: vec!["-TTRecord=scopedAccessorsTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1775,12 +1365,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("scopedAccessorsReplay.baseline"),
         compile_flags: vec!["-TTReplay=scopedAccessorsTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1796,12 +1381,7 @@ fn scopeFunction_js(#[case] variant: Variant) {
         source_path: "scopeFunction.js",
         baseline_path: Some("scopeFunctionRecord.baseline"),
         compile_flags: vec!["-TTRecord=scopeFunctionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1817,12 +1397,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("scopeFunctionReplay.baseline"),
         compile_flags: vec!["-TTReplay=scopeFunctionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1838,12 +1413,7 @@ fn set_js(#[case] variant: Variant) {
         source_path: "set.js",
         baseline_path: Some("setRecord.baseline"),
         compile_flags: vec!["-TTRecord=setTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1859,12 +1429,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("setReplay.baseline"),
         compile_flags: vec!["-TTReplay=setTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1880,12 +1445,7 @@ fn shadowPrototype_js(#[case] variant: Variant) {
         source_path: "shadowPrototype.js",
         baseline_path: Some("shadowPrototypeRecord.baseline"),
         compile_flags: vec!["-TTRecord=shadowPrototypeTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1901,12 +1461,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("shadowPrototypeReplay.baseline"),
         compile_flags: vec!["-TTReplay=shadowPrototypeTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1922,12 +1477,7 @@ fn sparseArray_js(#[case] variant: Variant) {
         source_path: "sparseArray.js",
         baseline_path: Some("sparseArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=sparseArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1943,12 +1493,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("sparseArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=sparseArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1964,12 +1509,7 @@ fn string_js(#[case] variant: Variant) {
         source_path: "string.js",
         baseline_path: Some("stringRecord.baseline"),
         compile_flags: vec!["-TTRecord=stringTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1985,12 +1525,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("stringReplay.baseline"),
         compile_flags: vec!["-TTReplay=stringTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2006,12 +1541,7 @@ fn symbol_js(#[case] variant: Variant) {
         source_path: "symbol.js",
         baseline_path: Some("symbolRecord.baseline"),
         compile_flags: vec!["-TTRecord=symbolTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2027,12 +1557,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("symbolReplay.baseline"),
         compile_flags: vec!["-TTReplay=symbolTest"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2048,12 +1573,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("symbolReplay.baseline"),
         compile_flags: vec!["-TTReplay=symbolTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2069,12 +1589,7 @@ fn typeConversions_js(#[case] variant: Variant) {
         source_path: "typeConversions.js",
         baseline_path: Some("typeConversionsRecord.baseline"),
         compile_flags: vec!["-TTRecord=typeConversionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2090,12 +1605,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("typeConversionsReplay.baseline"),
         compile_flags: vec!["-TTReplay=typeConversionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2111,12 +1621,7 @@ fn typedArray_js(#[case] variant: Variant) {
         source_path: "typedArray.js",
         baseline_path: Some("typedArrayRecord.baseline"),
         compile_flags: vec!["-TTRecord=typedArrayTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2132,12 +1637,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("typedArrayReplay.baseline"),
         compile_flags: vec!["-TTReplay=typedArrayTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2153,12 +1653,7 @@ fn typePromotion_js(#[case] variant: Variant) {
         source_path: "typePromotion.js",
         baseline_path: Some("typePromotionRecord.baseline"),
         compile_flags: vec!["-TTRecord=typePromotionTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2174,12 +1669,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("typePromotionReplay.baseline"),
         compile_flags: vec!["-TTReplay=typePromotionTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2195,12 +1685,7 @@ fn generatorBasic_js(#[case] variant: Variant) {
         source_path: "generatorBasic.js",
         baseline_path: Some("generatorBasicRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorBasicTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2216,12 +1701,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorBasicReplay_1.baseline"),
         compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=1"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2237,12 +1717,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorBasicReplay_2.baseline"),
         compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2258,12 +1733,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorBasicReplay_3.baseline"),
         compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=3"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2279,12 +1749,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorBasicReplay_4.baseline"),
         compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2300,12 +1765,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorBasicReplay_5.baseline"),
         compile_flags: vec!["-TTReplay=generatorBasicTest", "-TTDStartEvent=5"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2321,12 +1781,7 @@ fn generatorReturnYieldResult_js(#[case] variant: Variant) {
         source_path: "generatorReturnYieldResult.js",
         baseline_path: Some("generatorReturnYieldResultRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorReturnYieldResult", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2342,12 +1797,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorReturnYieldResultReplay_1.baseline"),
         compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=1"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2363,12 +1813,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorReturnYieldResultReplay_2.baseline"),
         compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2384,12 +1829,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorReturnYieldResultReplay_3.baseline"),
         compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=3"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2405,12 +1845,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorReturnYieldResultReplay_4.baseline"),
         compile_flags: vec!["-TTReplay=generatorReturnYieldResult", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2426,12 +1861,7 @@ fn generatorIntParam_js(#[case] variant: Variant) {
         source_path: "generatorIntParam.js",
         baseline_path: Some("generatorIntParamRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorIntParamTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2447,12 +1877,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorIntParamReplay.baseline"),
         compile_flags: vec!["-TTReplay=generatorIntParamTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2468,12 +1893,7 @@ fn generatorObjectParam_js(#[case] variant: Variant) {
         source_path: "generatorObjectParam.js",
         baseline_path: Some("generatorObjectParamRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorObjectParamTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2489,12 +1909,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorObjectParamReplay.baseline"),
         compile_flags: vec!["-TTReplay=generatorObjectParamTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2510,12 +1925,7 @@ fn generatorClassMethod_js(#[case] variant: Variant) {
         source_path: "generatorClassMethod.js",
         baseline_path: Some("generatorClassMethodRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorClassMethodTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2531,12 +1941,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorClassMethodReplay.baseline"),
         compile_flags: vec!["-TTReplay=generatorClassMethodTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2552,12 +1957,7 @@ fn generatorNested_js(#[case] variant: Variant) {
         source_path: "generatorNested.js",
         baseline_path: Some("generatorNestedRecord.baseline"),
         compile_flags: vec!["-TTRecord=generatorNestedTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2573,12 +1973,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("generatorNestedReplay.baseline"),
         compile_flags: vec!["-TTReplay=generatorNestedTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2597,12 +1992,7 @@ fn generatorRestoreCompletedGenerator_js(#[case] variant: Variant) {
             "-TTRecord=generatorRestoreCompletedGeneratorTest",
             "-TTSnapInterval=0",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2621,12 +2011,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorRestoreCompletedGeneratorTest",
             "-TTDStartEvent=6",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2645,12 +2030,7 @@ fn generatorWriteLogDuringGeneratorExecution_js(#[case] variant: Variant) {
             "-TTRecord=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTSnapInterval=0",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2669,12 +2049,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=1",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2693,12 +2068,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=2",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2717,12 +2087,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=3",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2741,12 +2106,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=4",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2765,12 +2125,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=5",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2789,12 +2144,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
             "-TTReplay=generatorWriteLogDuringGeneratorExecutionTest",
             "-TTDStartEvent=6",
         ],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2810,12 +2160,7 @@ fn asyncAwaitBasic_js(#[case] variant: Variant) {
         source_path: "asyncAwaitBasic.js",
         baseline_path: Some("asyncAwaitBasicRecord.baseline"),
         compile_flags: vec!["-TTRecord=asyncAwaitBasicTest", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2831,12 +2176,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwaitBasicReplay_1.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=1"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2852,12 +2192,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwaitBasicReplay_2.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=2"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2873,12 +2208,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwaitBasicReplay_3.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=3"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2894,12 +2224,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwaitBasicReplay_4.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=4"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2915,12 +2240,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwaitBasicReplay_5.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwaitBasicTest", "-TTDStartEvent=5"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2936,12 +2256,7 @@ fn asyncAwait2_js(#[case] variant: Variant) {
         source_path: "asyncAwait2.js",
         baseline_path: Some("asyncAwait2Record.baseline"),
         compile_flags: vec!["-TTRecord=asyncAwait2Test", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2957,12 +2272,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwait2Replay_1.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwait2Test", "-TTDStartEvent=1"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2978,12 +2288,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwait2Replay_2.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwait2Test", "-TTDStartEvent=5"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2999,12 +2304,7 @@ fn asyncAwait3_js(#[case] variant: Variant) {
         source_path: "asyncAwait3.js",
         baseline_path: Some("asyncAwait3Record.baseline"),
         compile_flags: vec!["-TTRecord=asyncAwait3Test", "-TTSnapInterval=0"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -3020,12 +2320,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwait3Replay_1.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwait3Test", "-TTDStartEvent=1"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -3041,12 +2336,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
         source_path: "ttdSentinal.js",
         baseline_path: Some("asyncAwait3Replay_2.baseline"),
         compile_flags: vec!["-TTReplay=asyncAwait3Test", "-TTDStartEvent=5"],
-        tags: HashSet::from([
-            "exclude_dynapogo",
-            "exclude_snap",
-            "exclude_serialized",
-            todo!(""),
-        ]),
+        tags: HashSet::from(["exclude_dynapogo", "exclude_snap", "exclude_serialized"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);

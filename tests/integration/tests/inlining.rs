@@ -687,7 +687,6 @@ fn InlineCallbacks_js(#[case] variant: Variant) {
             "exclude_nonative",
             "exclude_forceserialized",
             "require_backend",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -709,7 +708,6 @@ fn InlineCallbackCallBailout_js(#[case] variant: Variant) {
             "exclude_nonative",
             "exclude_forceserialized",
             "require_backend",
-            todo!(""),
         ]),
         ..Default::default()
     };
@@ -735,7 +733,6 @@ fn InlineCallInstanceFunction_js(#[case] variant: Variant) {
             "exclude_nonative",
             "exclude_forceserialized",
             "require_backend",
-            todo!(""),
         ]),
         ..Default::default()
     };
