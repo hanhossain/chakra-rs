@@ -3,6 +3,8 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
+// TODO (hanhossain): tags - <tags>exclude_serialized,exclude_snap,require_backend</tags>
+
 const DIRECTORY: &str = "chakracore-cxx/test/PerfHint";
 
 #[rstest]

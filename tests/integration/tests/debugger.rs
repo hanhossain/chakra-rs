@@ -3,6 +3,8 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
+// TODO (hanhossain): tags - <tags>exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
+
 const DIRECTORY: &str = "chakracore-cxx/test/Debugger";
 
 #[rstest]

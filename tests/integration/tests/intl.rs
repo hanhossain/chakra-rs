@@ -3,6 +3,8 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
+// TODO (hanhossain): tags - <tags>exclude_noicu</tags>
+
 const DIRECTORY: &str = "chakracore-cxx/test/Intl";
 
 #[rstest]

@@ -3,6 +3,8 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
+// TODO (hanhossain): tags - <tags>require_backend</tags>
+
 const DIRECTORY: &str = "chakracore-cxx/test/inlining";
 
 #[rstest]
