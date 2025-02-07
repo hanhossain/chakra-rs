@@ -270,7 +270,7 @@ fn f32address_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn divByConstants_js(#[case] variant: Variant) {
+fn div_by_constants_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "divByConstants.js",
@@ -285,7 +285,7 @@ fn divByConstants_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn divByConstants_unsigned_js(#[case] variant: Variant) {
+fn div_by_constants_unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "divByConstants_unsigned.js",

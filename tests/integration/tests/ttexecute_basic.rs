@@ -17,7 +17,7 @@ const DIRECTORY: &str = "chakracore-cxx/test/TTExecuteBasic";
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn callbackSingle_js(#[case] variant: Variant) {
+fn callback_single_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "callbackSingle.js",
@@ -33,7 +33,7 @@ fn callbackSingle_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -49,7 +49,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn callbackSpread_js(#[case] variant: Variant) {
+fn callback_spread_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "callbackSpread.js",
@@ -65,7 +65,7 @@ fn callbackSpread_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -81,7 +81,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn callbackSequence_js(#[case] variant: Variant) {
+fn callback_sequence_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "callbackSequence.js",
@@ -97,7 +97,7 @@ fn callbackSequence_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -113,7 +113,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn callbackClear_js(#[case] variant: Variant) {
+fn callback_clear_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "callbackClear.js",
@@ -129,7 +129,7 @@ fn callbackClear_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -161,7 +161,7 @@ fn enumerable_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -177,7 +177,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn enumeratingWithES5_js(#[case] variant: Variant) {
+fn enumerating_with_es5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "enumeratingWithES5.js",
@@ -193,7 +193,7 @@ fn enumeratingWithES5_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -209,7 +209,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn enumerationAddDelete_js(#[case] variant: Variant) {
+fn enumeration_add_delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "enumerationAddDelete.js",
@@ -225,7 +225,7 @@ fn enumerationAddDelete_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -241,7 +241,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn forEach_js(#[case] variant: Variant) {
+fn for_each_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forEach.js",
@@ -257,7 +257,7 @@ fn forEach_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -273,7 +273,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn forInArrayAdd_js(#[case] variant: Variant) {
+fn for_in_array_add_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forInArrayAdd.js",
@@ -289,7 +289,7 @@ fn forInArrayAdd_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -305,7 +305,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn forInObjectAdd_js(#[case] variant: Variant) {
+fn for_in_object_add_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forInObjectAdd.js",
@@ -321,7 +321,7 @@ fn forInObjectAdd_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js10(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -337,7 +337,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn forInObjectAddDelete_js(#[case] variant: Variant) {
+fn for_in_object_add_delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forInObjectAddDelete.js",
@@ -353,7 +353,7 @@ fn forInObjectAddDelete_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js11(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -369,7 +369,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn forInObjectDelete_js(#[case] variant: Variant) {
+fn for_in_object_delete_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forInObjectDelete.js",
@@ -385,7 +385,7 @@ fn forInObjectDelete_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js12(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -401,7 +401,7 @@ fn ttdSentinal_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn symbolFor_js(#[case] variant: Variant) {
+fn symbol_for_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "symbolFor.js",
@@ -417,7 +417,7 @@ fn symbolFor_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js13(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -449,7 +449,7 @@ fn try_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ttdSentinal_js(#[case] variant: Variant) {
+fn ttd_sentinal_js14(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",

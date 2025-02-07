@@ -1,7 +1,6 @@
 use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
-use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 4] = [
     "require_wasm",
@@ -15,7 +14,7 @@ const DIRECTORY: &str = "chakracore-cxx/test/wasm.simd";
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn loadTests_js(#[case] variant: Variant) {
+fn load_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "loadTests.js",
@@ -29,7 +28,7 @@ fn loadTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn storeTests_js(#[case] variant: Variant) {
+fn store_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "storeTests.js",
@@ -43,7 +42,7 @@ fn storeTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn constTests_js(#[case] variant: Variant) {
+fn const_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "constTests.js",
@@ -57,7 +56,7 @@ fn constTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn splatNegTests_js(#[case] variant: Variant) {
+fn splat_neg_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "splatNegTests.js",
@@ -71,7 +70,7 @@ fn splatNegTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn replaceLaneTests_js(#[case] variant: Variant) {
+fn replace_lane_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "replaceLaneTests.js",
@@ -85,7 +84,7 @@ fn replaceLaneTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn truncConvTests_js(#[case] variant: Variant) {
+fn trunc_conv_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "truncConvTests.js",
@@ -99,7 +98,7 @@ fn truncConvTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn logicalTests_js(#[case] variant: Variant) {
+fn logical_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "logicalTests.js",
@@ -113,7 +112,7 @@ fn logicalTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn comparisonTests_js(#[case] variant: Variant) {
+fn comparison_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "comparisonTests.js",
@@ -127,7 +126,7 @@ fn comparisonTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn mathTests_js(#[case] variant: Variant) {
+fn math_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "mathTests.js",
@@ -141,7 +140,7 @@ fn mathTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn binaryArithmeticTests_js(#[case] variant: Variant) {
+fn binary_arithmetic_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binaryArithmeticTests.js",
@@ -155,7 +154,7 @@ fn binaryArithmeticTests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn int64x2Tests_js(#[case] variant: Variant) {
+fn int64x2_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "int64x2Tests.js",
@@ -169,7 +168,7 @@ fn int64x2Tests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn buildExtractTests_js(#[case] variant: Variant) {
+fn build_extract_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "buildExtractTests.js",
