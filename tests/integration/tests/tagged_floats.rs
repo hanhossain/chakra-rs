@@ -19,5 +19,5 @@ fn test_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_x86", "exclude_arm", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

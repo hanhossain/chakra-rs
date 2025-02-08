@@ -17,7 +17,7 @@ fn array_fastinit_js(#[case] variant: Variant) {
         baseline_path: Some("array_fastinit.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn array_at_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn array_flat_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -59,7 +59,7 @@ fn array_findlast_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn array_findlastindex_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn array_sort_order_js(#[case] variant: Variant) {
         source_path: "array_sort_order.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -103,7 +103,7 @@ fn array_init_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -118,7 +118,7 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -142,7 +142,7 @@ fn splice_btree_memory_corruption_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -162,7 +162,7 @@ fn slice_array_force_btree_bug616623_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -176,7 +176,7 @@ fn bug945376_seg_left_plus_size_greater_than_max_array_len_js(#[case] variant: V
         compile_flags: vec!["-ForceArrayBTree"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -189,7 +189,7 @@ fn bug1062870_js(#[case] variant: Variant) {
         source_path: "bug1062870.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -202,7 +202,7 @@ fn bug1065362_js(#[case] variant: Variant) {
         source_path: "bug1065362.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -216,7 +216,7 @@ fn bug11370283_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -230,7 +230,7 @@ fn bug4916987_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -244,7 +244,7 @@ fn bug6268659_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -259,7 +259,7 @@ fn array_btree_bad_code_gen_js(#[case] variant: Variant) {
         compile_flags: vec!["-ForceArrayBTree"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -273,7 +273,7 @@ fn slice_and_concat_alter_original_array_bug_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -291,7 +291,7 @@ fn raw_last_used_segment_bug_in_float_array_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -310,7 +310,7 @@ fn array_element_missing_value_set_to_zero_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -328,7 +328,7 @@ fn try_grow_head_segment_bug_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -342,7 +342,7 @@ fn array_init2_js(#[case] variant: Variant) {
         baseline_path: Some("array_init2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -356,7 +356,7 @@ fn array_ctr_js(#[case] variant: Variant) {
         baseline_path: Some("array_ctr.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -372,7 +372,7 @@ fn array_ctr_js_array_validate(#[case] variant: Variant) {
         compile_flags: vec!["-arrayValidate"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -385,7 +385,7 @@ fn arr_bailout_js(#[case] variant: Variant) {
         source_path: "arr_bailout.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -399,7 +399,7 @@ fn concat1_js(#[case] variant: Variant) {
         baseline_path: Some("concat1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -413,7 +413,7 @@ fn concat2_js(#[case] variant: Variant) {
         baseline_path: Some("concat2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -426,7 +426,7 @@ fn delete_js(#[case] variant: Variant) {
         source_path: "delete.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -440,7 +440,7 @@ fn es5array_push_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_push.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -453,7 +453,7 @@ fn ldindex_js(#[case] variant: Variant) {
         source_path: "ldindex.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -472,7 +472,7 @@ fn bug612012_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -490,7 +490,7 @@ fn segment_map_flag_reset_in_jsarray_constructor_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -508,7 +508,7 @@ fn last_used_segment_has_null_element_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -522,7 +522,7 @@ fn array_length_js(#[case] variant: Variant) {
         baseline_path: Some("array_length.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -536,7 +536,7 @@ fn join2_js(#[case] variant: Variant) {
         baseline_path: Some("join2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -550,7 +550,7 @@ fn missing_js(#[case] variant: Variant) {
         baseline_path: Some("missing.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -564,7 +564,7 @@ fn pop1_js(#[case] variant: Variant) {
         baseline_path: Some("pop1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -578,7 +578,7 @@ fn pop2_js(#[case] variant: Variant) {
         baseline_path: Some("pop2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -592,7 +592,7 @@ fn pop3_js(#[case] variant: Variant) {
         baseline_path: Some("pop3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -605,7 +605,7 @@ fn pop4_js(#[case] variant: Variant) {
         source_path: "pop4.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -618,7 +618,7 @@ fn pop5_js(#[case] variant: Variant) {
         source_path: "pop5.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -632,7 +632,7 @@ fn push1_js(#[case] variant: Variant) {
         baseline_path: Some("push1_2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -647,7 +647,7 @@ fn push2_js(#[case] variant: Variant) {
         compile_flags: vec!["-es6toLength"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -661,7 +661,7 @@ fn push3_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:nativearray", "-ForceES5Array"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -674,7 +674,7 @@ fn push4_traps_js(#[case] variant: Variant) {
         source_path: "push4_traps.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -688,7 +688,7 @@ fn reverse1_js(#[case] variant: Variant) {
         baseline_path: Some("reverse1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -702,7 +702,7 @@ fn reverse2_js(#[case] variant: Variant) {
         baseline_path: Some("reverse2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -716,7 +716,7 @@ fn shift_unshift_js(#[case] variant: Variant) {
         baseline_path: Some("shift_unshift.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -730,7 +730,7 @@ fn to_string_js(#[case] variant: Variant) {
         baseline_path: Some("toString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -746,7 +746,7 @@ fn to_string_js_force_es5_array(#[case] variant: Variant) {
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -760,7 +760,7 @@ fn to_locale_string_js(#[case] variant: Variant) {
         baseline_path: Some("toLocaleString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -776,7 +776,7 @@ fn to_locale_string_js_force_es5_array(#[case] variant: Variant) {
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -791,7 +791,7 @@ fn array_slice_js(#[case] variant: Variant) {
         baseline_path: Some("array_slice.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -805,7 +805,7 @@ fn array_slice2_js(#[case] variant: Variant) {
         baseline_path: Some("array_slice2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -819,7 +819,7 @@ fn array_sort_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -833,7 +833,7 @@ fn array_includes_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -847,7 +847,7 @@ fn array_splice_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -861,7 +861,7 @@ fn array_splice_double_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice_double.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -877,7 +877,7 @@ fn array_splice_js_array_validate(#[case] variant: Variant) {
         compile_flags: vec!["-arrayValidate"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -891,7 +891,7 @@ fn array_splice1_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -905,7 +905,7 @@ fn array_splice2_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -919,7 +919,7 @@ fn array_splice3_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice3_3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -933,7 +933,7 @@ fn array_splice4_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice4.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -947,7 +947,7 @@ fn sparsearray_js(#[case] variant: Variant) {
         baseline_path: Some("sparsearray.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -961,7 +961,7 @@ fn array_lastindexof_js(#[case] variant: Variant) {
         baseline_path: Some("array_lastindexof.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -975,7 +975,7 @@ fn array_index_of_js(#[case] variant: Variant) {
         baseline_path: Some("array_indexOf.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -990,7 +990,7 @@ fn array_index_of_js_force_array_btree(#[case] variant: Variant) {
         compile_flags: vec!["-ForceArrayBTree"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1005,7 +1005,7 @@ fn array_index_of_js_force_array_jsbuiltin(#[case] variant: Variant) {
         compile_flags: vec!["-JsBuiltIn-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1019,7 +1019,7 @@ fn array_index_of_sparse_js(#[case] variant: Variant) {
         baseline_path: Some("array_indexOfSparse.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1033,7 +1033,7 @@ fn negindex_js(#[case] variant: Variant) {
         baseline_path: Some("negindex.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1047,7 +1047,7 @@ fn array_forin_js(#[case] variant: Variant) {
         baseline_path: Some("array_forin.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1061,7 +1061,7 @@ fn array_literal_js(#[case] variant: Variant) {
         baseline_path: Some("array_literal.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -1079,7 +1079,7 @@ fn array_literal_js_recycler_stress(#[case] variant: Variant) {
         compile_flags: vec!["-recyclerStress"],
         tags: HashSet::from(["exclude_test", "Slow"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1093,7 +1093,7 @@ fn nativearray_gen1_js(#[case] variant: Variant) {
         baseline_path: Some("nativearray_gen1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1109,7 +1109,7 @@ fn nativearray_gen1_js_force_serialized(#[case] variant: Variant) {
         // exclude the serialized variants because we're using -forceserialized here.
         tags: HashSet::from(["exclude_serialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1122,7 +1122,7 @@ fn nativearray_gen2_js(#[case] variant: Variant) {
         source_path: "nativearray_gen2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1135,7 +1135,7 @@ fn nativearray_gen3_js(#[case] variant: Variant) {
         source_path: "nativearray_gen3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1149,7 +1149,7 @@ fn nativearray_gen4_js(#[case] variant: Variant) {
         baseline_path: Some("nativearray_gen4.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1162,7 +1162,7 @@ fn nativearray_gen5_js(#[case] variant: Variant) {
         source_path: "nativearray_gen5.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1176,7 +1176,7 @@ fn nativearray_gen6_js(#[case] variant: Variant) {
         compile_flags: vec!["-loopinterpretcount:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1190,7 +1190,7 @@ fn nativearray_gen7_js(#[case] variant: Variant) {
         baseline_path: Some("nativearray_gen7.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1204,7 +1204,7 @@ fn nativearray_gen8_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:jitloopbody"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1218,7 +1218,7 @@ fn arrlit_js(#[case] variant: Variant) {
         baseline_path: Some("arrlit.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1232,7 +1232,7 @@ fn proto_lookup_js(#[case] variant: Variant) {
         baseline_path: Some("protoLookup.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1246,7 +1246,7 @@ fn proto_lookup_native_js(#[case] variant: Variant) {
         baseline_path: Some("protoLookup_native.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1260,7 +1260,7 @@ fn proto_lookup_with_getters_js(#[case] variant: Variant) {
         baseline_path: Some("protoLookupWithGetters.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1274,7 +1274,7 @@ fn array_apply_js(#[case] variant: Variant) {
         baseline_path: Some("array_apply.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1293,7 +1293,7 @@ fn native_array_push_inlining_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1307,7 +1307,7 @@ fn reverse_native_js(#[case] variant: Variant) {
         baseline_path: Some("reverse_native.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1321,7 +1321,7 @@ fn native_float_array_shift_unshift_js(#[case] variant: Variant) {
         baseline_path: Some("nativeFloatArray_shift_unshift.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1335,7 +1335,7 @@ fn native_float_array_sort_js(#[case] variant: Variant) {
         baseline_path: Some("nativeFloatArray_sort.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1350,7 +1350,7 @@ fn missing_item_fast_path_check_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1364,7 +1364,7 @@ fn array_opts_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1383,7 +1383,7 @@ fn native_int_pop_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1402,7 +1402,7 @@ fn native_float_pop_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1421,7 +1421,7 @@ fn pop_implicit_call_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1435,7 +1435,7 @@ fn array_splice_515632_js(#[case] variant: Variant) {
         baseline_path: Some("array_splice_515632.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1450,7 +1450,7 @@ fn inline_array_pop_with_int_const_src_js(#[case] variant: Variant) {
         compile_flags: vec!["-maxinterpretcount:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1464,7 +1464,7 @@ fn fail_to_set_length_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1478,7 +1478,7 @@ fn foreach_nativearray_change_js(#[case] variant: Variant) {
         baseline_path: Some("foreach_nativearray_change.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1492,7 +1492,7 @@ fn newfromargs_js(#[case] variant: Variant) {
         baseline_path: Some("newfromargs.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1506,7 +1506,7 @@ fn bug945376size_bound_start_seg_js(#[case] variant: Variant) {
         compile_flags: vec!["-ForceArrayBTree"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -1521,7 +1521,7 @@ fn copy_on_access_array_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:copyonaccessarray"],
         tags: HashSet::from(["require_backend"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -1540,7 +1540,7 @@ fn copy_on_access_array_cache_index_overflow_js(#[case] variant: Variant) {
             "require_backend",
         ]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1554,7 +1554,7 @@ fn memop_lifetime_bug_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1574,7 +1574,7 @@ fn memset_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1591,7 +1591,7 @@ fn memset_invariant_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1605,7 +1605,7 @@ fn memset2_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:JITLoopBody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1626,7 +1626,7 @@ fn memcopy_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1650,7 +1650,7 @@ fn memcopy_js_float(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1664,7 +1664,7 @@ fn memcopy_length_bug_js(#[case] variant: Variant) {
         compile_flags: vec!["-bgjit-", "-lic:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1679,7 +1679,7 @@ fn memcopy_missing_values_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-", "-lic:1"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1693,7 +1693,7 @@ fn memop_alias_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-off:jitloopbody", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1707,7 +1707,7 @@ fn memop_field_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1721,7 +1721,7 @@ fn memop_slot_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1735,7 +1735,7 @@ fn memop_bounds_check_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit", "-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1749,7 +1749,7 @@ fn memop_missing_values_js(#[case] variant: Variant) {
         compile_flags: vec!["-mmoc:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1763,7 +1763,7 @@ fn bug4587739_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1782,7 +1782,7 @@ fn bug8159763_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1796,7 +1796,7 @@ fn array_type_confusion_bugs_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1810,7 +1810,7 @@ fn array_type_confusion_bugs_js_force_array_btree(#[case] variant: Variant) {
         compile_flags: vec!["-ForceArrayBTree", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1823,7 +1823,7 @@ fn bug_9575461_js(#[case] variant: Variant) {
         source_path: "bug_9575461.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1837,7 +1837,7 @@ fn bug_12044876_js(#[case] variant: Variant) {
         compile_flags: vec!["-forcearraybtree"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1850,7 +1850,7 @@ fn array_conv_src_js(#[case] variant: Variant) {
         source_path: "array_conv_src.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1863,7 +1863,7 @@ fn bug12340575_js(#[case] variant: Variant) {
         source_path: "bug12340575.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1876,7 +1876,7 @@ fn constructor_fastpath_js(#[case] variant: Variant) {
         source_path: "constructor_fastpath.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1889,7 +1889,7 @@ fn bug16717501_js(#[case] variant: Variant) {
         source_path: "bug16717501.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1902,7 +1902,7 @@ fn filter_with_typed_array_js(#[case] variant: Variant) {
         source_path: "FilterWithTypedArray.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(windows))]
@@ -1917,7 +1917,7 @@ fn bug_gh5667_js(#[case] variant: Variant) {
         compile_flags: vec!["-JsBuiltIn-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1931,7 +1931,7 @@ fn bug_gh6320_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_nonative"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -1945,5 +1945,5 @@ fn array_sort_random_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_disable_jit", "exclude_lite"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

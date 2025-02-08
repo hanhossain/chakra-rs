@@ -16,7 +16,7 @@ fn global_eval_js(#[case] variant: Variant) {
         baseline_path: Some("GlobalEval.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn basics_function_in_sm_js(#[case] variant: Variant) {
         baseline_path: Some("basics_function_in_SM.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn basics_function_in_sm_js_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -60,7 +60,7 @@ fn caller_or_args_no_access_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -74,7 +74,7 @@ fn stricteval_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -88,7 +88,7 @@ fn stricteval2_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -102,7 +102,7 @@ fn stricteval3_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -116,7 +116,7 @@ fn strictargs_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -130,7 +130,7 @@ fn strictargs2_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -144,7 +144,7 @@ fn strictargs3_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -158,7 +158,7 @@ fn evalargs_js(#[case] variant: Variant) {
         baseline_path: Some(""),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -174,7 +174,7 @@ fn evalargs_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -188,7 +188,7 @@ fn eval_this_js(#[case] variant: Variant) {
         baseline_path: Some("evalThis.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -202,7 +202,7 @@ fn eval_this2_js(#[case] variant: Variant) {
         baseline_path: Some("evalThis2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -216,7 +216,7 @@ fn eval_this_nested_js(#[case] variant: Variant) {
         baseline_path: Some("evalThisNested.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -230,7 +230,7 @@ fn formal_samename1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -244,7 +244,7 @@ fn formal_samename1_js_force_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -258,7 +258,7 @@ fn formal_samename2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -272,7 +272,7 @@ fn formal_samename2_js_force_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -286,7 +286,7 @@ fn multiunit_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -300,7 +300,7 @@ fn delete_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -314,7 +314,7 @@ fn delete_js_force_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -328,7 +328,7 @@ fn test01_octal_js(#[case] variant: Variant) {
         baseline_path: Some("01.octal.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -343,7 +343,7 @@ fn test01_octal_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -357,7 +357,7 @@ fn test01_octal_sm_js(#[case] variant: Variant) {
         baseline_path: Some("01.octal_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -371,7 +371,7 @@ fn test03_assign_js(#[case] variant: Variant) {
         baseline_path: Some("03.assign.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -386,7 +386,7 @@ fn test03_assign_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -402,7 +402,7 @@ fn test03_assign_js_deferparse_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -416,7 +416,7 @@ fn test03_assign_sm_js(#[case] variant: Variant) {
         baseline_path: Some("03.assign_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -432,7 +432,7 @@ fn test03_assign_sm_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -446,7 +446,7 @@ fn test04_eval_js(#[case] variant: Variant) {
         baseline_path: Some("04.eval.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -460,7 +460,7 @@ fn test05_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("05.arguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -475,7 +475,7 @@ fn test05_arguments_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -490,7 +490,7 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized", "-ForceStrictMode"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -506,7 +506,7 @@ fn test05_arguments_js_deferparse_strictmode(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -520,7 +520,7 @@ fn test05_arguments_sm_js(#[case] variant: Variant) {
         baseline_path: Some("05.arguments_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -535,7 +535,7 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -551,7 +551,7 @@ fn test05_arguments_sm_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -565,7 +565,7 @@ fn test06_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("06.arguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -580,7 +580,7 @@ fn test06_arguments_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -596,7 +596,7 @@ fn test06_arguments_js_force_strict_mode_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse", "-ForceStrictMode"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -612,7 +612,7 @@ fn test06_arguments_js_force_strict_mode_cachedscope(#[case] variant: Variant) {
         compile_flags: vec!["-force:cachedscope", "-ForceStrictMode"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -626,7 +626,7 @@ fn test06_arguments_sm_js(#[case] variant: Variant) {
         baseline_path: Some("06.arguments_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -642,7 +642,7 @@ fn test06_arguments_sm_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -658,7 +658,7 @@ fn test06_arguments_sm_js_cachedscope(#[case] variant: Variant) {
         compile_flags: vec!["--force:cachedscope"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -672,7 +672,7 @@ fn test07_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("07.arguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -686,7 +686,7 @@ fn test07_arguments_sm_js(#[case] variant: Variant) {
         baseline_path: Some("07.arguments_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -700,7 +700,7 @@ fn test08_object_literal_js(#[case] variant: Variant) {
         baseline_path: Some("08.ObjectLiteral.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -715,7 +715,7 @@ fn test08_object_literal_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -729,7 +729,7 @@ fn test08_object_literal_sm_js(#[case] variant: Variant) {
         baseline_path: Some("08.ObjectLiteral_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -743,7 +743,7 @@ fn test09_object_literal_js(#[case] variant: Variant) {
         baseline_path: Some("09.ObjectLiteral.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -758,7 +758,7 @@ fn test09_object_literal_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -772,7 +772,7 @@ fn test09_object_literal_sm_js(#[case] variant: Variant) {
         baseline_path: Some("09.ObjectLiteral_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -786,7 +786,7 @@ fn test10_eval_js(#[case] variant: Variant) {
         baseline_path: Some("10.eval.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -800,7 +800,7 @@ fn test10_eval_sm_js(#[case] variant: Variant) {
         baseline_path: Some("10.eval_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -814,7 +814,7 @@ fn test11_this_js(#[case] variant: Variant) {
         baseline_path: Some("11.this.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -829,7 +829,7 @@ fn test11_this_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -843,7 +843,7 @@ fn test11_this_sm_js(#[case] variant: Variant) {
         baseline_path: Some("11.this_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -857,7 +857,7 @@ fn test11_this_sm_js_max_interpret_count10(#[case] variant: Variant) {
         compile_flags: vec!["-maxInterpretCount:10"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -871,7 +871,7 @@ fn test12_delete_js(#[case] variant: Variant) {
         baseline_path: Some("12.delete.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -886,7 +886,7 @@ fn test12_delete_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -900,7 +900,7 @@ fn test12_delete_sm_js(#[case] variant: Variant) {
         baseline_path: Some("12.delete_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -915,7 +915,7 @@ fn test13_delete_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6RegExPrototypeProperties-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -929,7 +929,7 @@ fn test13_delete_sm_js(#[case] variant: Variant) {
         baseline_path: Some("13.delete_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -943,7 +943,7 @@ fn test14_var_js(#[case] variant: Variant) {
         baseline_path: Some("14.var.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -958,7 +958,7 @@ fn test14_var_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -972,7 +972,7 @@ fn test14_var_sm_js(#[case] variant: Variant) {
         baseline_path: Some("14.var_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -986,7 +986,7 @@ fn test15_with_js(#[case] variant: Variant) {
         baseline_path: Some("15.with.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1001,7 +1001,7 @@ fn test15_with_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1015,7 +1015,7 @@ fn test15_with_sm_js(#[case] variant: Variant) {
         baseline_path: Some("15.with_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1029,7 +1029,7 @@ fn test16_catch_js(#[case] variant: Variant) {
         baseline_path: Some("16.catch.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1044,7 +1044,7 @@ fn test16_catch_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1058,7 +1058,7 @@ fn test16_catch_sm_js(#[case] variant: Variant) {
         baseline_path: Some("16.catch_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1072,7 +1072,7 @@ fn test17_formal_js(#[case] variant: Variant) {
         baseline_path: Some("17.formal.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1087,7 +1087,7 @@ fn test17_formal_sm_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1101,7 +1101,7 @@ fn test17_formal_sm_js(#[case] variant: Variant) {
         baseline_path: Some("17.formal_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1115,7 +1115,7 @@ fn test18_formal_js(#[case] variant: Variant) {
         baseline_path: Some("18.formal.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1130,7 +1130,7 @@ fn test18_formal_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1144,7 +1144,7 @@ fn test18_formal_sm_js(#[case] variant: Variant) {
         baseline_path: Some("18.formal_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1158,7 +1158,7 @@ fn test19_function_js(#[case] variant: Variant) {
         baseline_path: Some("19.function.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1172,7 +1172,7 @@ fn test19_function_sm_js(#[case] variant: Variant) {
         baseline_path: Some("19.function_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1186,7 +1186,7 @@ fn test20_function_js(#[case] variant: Variant) {
         baseline_path: Some("20.function.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1201,7 +1201,7 @@ fn test20_function_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1215,7 +1215,7 @@ fn test20_function_sm_js(#[case] variant: Variant) {
         baseline_path: Some("20.function_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1229,7 +1229,7 @@ fn test21_function_declaration_js(#[case] variant: Variant) {
         baseline_path: Some("21.functionDeclaration.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1244,7 +1244,7 @@ fn test21_function_declaration_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1258,7 +1258,7 @@ fn test21_function_declaration_sm_js(#[case] variant: Variant) {
         baseline_path: Some("21.functionDeclaration_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1272,7 +1272,7 @@ fn test22_caller_callee_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("22.callerCalleeArguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1286,7 +1286,7 @@ fn test22_caller_callee_arguments_sm_js(#[case] variant: Variant) {
         baseline_path: Some("22.callerCalleeArguments_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1300,7 +1300,7 @@ fn test23_reserved_words_js(#[case] variant: Variant) {
         baseline_path: Some("23.reservedWords.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1314,7 +1314,7 @@ fn test23_reserved_words_sm_js(#[case] variant: Variant) {
         baseline_path: Some("23.reservedWords_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1328,7 +1328,7 @@ fn test24_properties_js(#[case] variant: Variant) {
         baseline_path: Some("24.properties.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1343,7 +1343,7 @@ fn test24_properties_js_force_strict_mode(#[case] variant: Variant) {
         compile_flags: vec!["-ForceStrictMode"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1357,7 +1357,7 @@ fn test24_properties_sm_js(#[case] variant: Variant) {
         baseline_path: Some("24.properties_sm.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1371,7 +1371,7 @@ fn strictkwd_js_force_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1385,7 +1385,7 @@ fn strictkwd_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1399,7 +1399,7 @@ fn strictkwd_deferred_js(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1414,7 +1414,7 @@ fn comma_bug219390_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1429,7 +1429,7 @@ fn nestedfnnameargs_js(#[case] variant: Variant) {
         compile_flags: vec!["-Off:Deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1443,7 +1443,7 @@ fn bug212755_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1457,7 +1457,7 @@ fn bug212755_js_force_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1470,7 +1470,7 @@ fn os_1362136_js(#[case] variant: Variant) {
         source_path: "OS_1362136.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1484,7 +1484,7 @@ fn non_simple_parameter_list_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -1498,5 +1498,5 @@ fn class_computed_property_name_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

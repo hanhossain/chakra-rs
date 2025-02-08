@@ -16,7 +16,7 @@ fn acid_js(#[case] variant: Variant) {
         baseline_path: Some("acid.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn assertion_js(#[case] variant: Variant) {
         baseline_path: Some("assertion.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -47,7 +47,7 @@ fn bug_fix_regression_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -65,7 +65,7 @@ fn bug_fix_regression_js2(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_serialized", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -79,7 +79,7 @@ fn captures_js(#[case] variant: Variant) {
         baseline_path: Some("captures.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -93,7 +93,7 @@ fn class_case_js(#[case] variant: Variant) {
         baseline_path: Some("class-case.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -107,7 +107,7 @@ fn crazy_js(#[case] variant: Variant) {
         baseline_path: Some("crazy.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -121,7 +121,7 @@ fn es5spec_examples_js(#[case] variant: Variant) {
         baseline_path: Some("es5SpecExamples.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -135,7 +135,7 @@ fn escapes_js(#[case] variant: Variant) {
         baseline_path: Some("escapes.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -149,7 +149,7 @@ fn fast_regex_captures_js(#[case] variant: Variant) {
         baseline_path: Some("fastRegexCaptures.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -166,7 +166,7 @@ fn last_index_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -180,7 +180,7 @@ fn lazy_vs_eager_last_index_js(#[case] variant: Variant) {
         baseline_path: Some("lazyVsEagerLastIndex.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -194,7 +194,7 @@ fn match_global_js(#[case] variant: Variant) {
         baseline_path: Some("match_global.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -208,7 +208,7 @@ fn multiline_js(#[case] variant: Variant) {
         baseline_path: Some("multiline.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -222,7 +222,7 @@ fn no_backtracking_chomp_js(#[case] variant: Variant) {
         baseline_path: Some("NoBacktrackingChomp.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -236,7 +236,7 @@ fn nul_character_js(#[case] variant: Variant) {
         baseline_path: Some("nul_character.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -250,7 +250,7 @@ fn prioritizedalternatives_js(#[case] variant: Variant) {
         baseline_path: Some("prioritizedalternatives.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -267,7 +267,7 @@ fn quantifiable_assertions_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -281,7 +281,7 @@ fn sets_js(#[case] variant: Variant) {
         baseline_path: Some("sets.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -295,7 +295,7 @@ fn split_js(#[case] variant: Variant) {
         baseline_path: Some("split.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(feature = "optimized-tests")]
@@ -313,7 +313,7 @@ fn woob1138949_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_debug", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -328,7 +328,7 @@ fn property_string_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -344,7 +344,7 @@ fn property_string_serialized_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -358,7 +358,7 @@ fn bug_fix_versioned_js(#[case] variant: Variant) {
         baseline_path: Some("bugFixVersioned.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -373,7 +373,7 @@ fn mru_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -387,7 +387,7 @@ fn source_to_string_js(#[case] variant: Variant) {
         baseline_path: Some("SourceToString.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -401,5 +401,5 @@ fn scanner_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

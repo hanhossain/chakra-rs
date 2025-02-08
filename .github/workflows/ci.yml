@@ -35,7 +35,6 @@ jobs:
             features: compile-cpp,optimized-tests
     env:
       CARGO_TERM_COLOR: always
-      NEXTEST_RETRIES: 2
       RUSTFLAGS: -D warnings
     steps:
       - uses: actions/checkout@v4
@@ -61,6 +60,8 @@ jobs:
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
       - name: Run slow tests
         run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
+        env:
+          CHAKRA_TEST_SLOW: true
 
   build-cmake:
     runs-on: ${{ matrix.os }}

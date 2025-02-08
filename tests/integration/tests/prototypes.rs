@@ -15,7 +15,7 @@ fn prototype_js(#[case] variant: Variant) {
         baseline_path: Some("Prototype.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -29,7 +29,7 @@ fn prototype2_js(#[case] variant: Variant) {
         baseline_path: Some("Prototype2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -43,7 +43,7 @@ fn deep_js(#[case] variant: Variant) {
         baseline_path: Some("deep.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -57,7 +57,7 @@ fn init_proto_js(#[case] variant: Variant) {
         baseline_path: Some("initProto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn change_prototype_js(#[case] variant: Variant) {
         compile_flags: vec!["-trace:TypeShareForChangePrototype", "-JsBuiltIn-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn read_only_js(#[case] variant: Variant) {
         source_path: "ReadOnly.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -98,7 +98,7 @@ fn shadow_js(#[case] variant: Variant) {
         source_path: "shadow.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -111,7 +111,7 @@ fn shadow2_js(#[case] variant: Variant) {
         source_path: "shadow2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -124,5 +124,5 @@ fn no_prototype_for_method_js(#[case] variant: Variant) {
         source_path: "NoPrototypeForMethod.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

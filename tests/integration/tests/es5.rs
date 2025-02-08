@@ -16,7 +16,7 @@ fn reserved_words_js(#[case] variant: Variant) {
         baseline_path: Some("reservedWords.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn lex_u3_js(#[case] variant: Variant) {
         compile_flags: vec!["-ES6Unicode-"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -45,7 +45,7 @@ fn array_every_js(#[case] variant: Variant) {
         baseline_path: Some("array_every.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -59,7 +59,7 @@ fn array_some_js(#[case] variant: Variant) {
         baseline_path: Some("array_some.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn array_for_each_js(#[case] variant: Variant) {
         baseline_path: Some("array_forEach.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn array_map_js(#[case] variant: Variant) {
         source_path: "array_map.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn array_filter_js(#[case] variant: Variant) {
         source_path: "array_filter.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -113,7 +113,7 @@ fn array_reduce_js(#[case] variant: Variant) {
         baseline_path: Some("array_reduce.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -127,7 +127,7 @@ fn array_reduceright_js(#[case] variant: Variant) {
         baseline_path: Some("array_reduceright.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -141,7 +141,7 @@ fn date_get_set9_js(#[case] variant: Variant) {
         baseline_path: Some("DateGetSet9.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -155,7 +155,7 @@ fn semicolon_after_block_es5_js(#[case] variant: Variant) {
         baseline_path: Some("SemicolonAfterBlockEs5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -169,7 +169,7 @@ fn exceptions_js(#[case] variant: Variant) {
         baseline_path: Some("exceptions3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -183,7 +183,7 @@ fn obj_lit_get_set_js(#[case] variant: Variant) {
         baseline_path: Some("ObjLitGetSet.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -196,7 +196,7 @@ fn obj_lit_get_set2_js(#[case] variant: Variant) {
         source_path: "objlitgetset2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -209,7 +209,7 @@ fn obj_lit_get_set3_js(#[case] variant: Variant) {
         source_path: "objlitgetset3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -223,7 +223,7 @@ fn obj_lit_get_set_parse_only_js(#[case] variant: Variant) {
         baseline_path: Some("ObjLitGetSetParseOnly.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -239,7 +239,7 @@ fn obj_lit_get_set_parse_only_js_deferparse(#[case] variant: Variant) {
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -253,7 +253,7 @@ fn obj_lit_init_fld_js(#[case] variant: Variant) {
         baseline_path: Some("ObjLitInitFld.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -266,7 +266,7 @@ fn seal_js(#[case] variant: Variant) {
         source_path: "seal.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -279,7 +279,7 @@ fn freeze_js(#[case] variant: Variant) {
         source_path: "freeze.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -293,7 +293,7 @@ fn extensible_js(#[case] variant: Variant) {
         baseline_path: Some("extensible.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -307,7 +307,7 @@ fn array_length_js(#[case] variant: Variant) {
         baseline_path: Some("array_length.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -323,7 +323,7 @@ fn array_length_js_forcees5array(#[case] variant: Variant) {
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(feature = "optimized-tests")]
@@ -340,7 +340,7 @@ fn es5array_index_list_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_debug", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -354,7 +354,7 @@ fn createdp_js(#[case] variant: Variant) {
         baseline_path: Some("createdp.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -368,7 +368,7 @@ fn define_property_js(#[case] variant: Variant) {
         baseline_path: Some("defineProperty.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -383,7 +383,7 @@ fn define_property_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -397,7 +397,7 @@ fn define_index_property_js(#[case] variant: Variant) {
         baseline_path: Some("defineIndexProperty.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -412,7 +412,7 @@ fn define_index_property_js_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -426,7 +426,7 @@ fn enumerable_js(#[case] variant: Variant) {
         baseline_path: Some("enumerable.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -440,7 +440,7 @@ fn has_item_js(#[case] variant: Variant) {
         baseline_path: Some("hasItem.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -454,7 +454,7 @@ fn regex_space_js(#[case] variant: Variant) {
         baseline_path: Some("regexSpace.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -468,7 +468,7 @@ fn enumerating_with_es5_js(#[case] variant: Variant) {
         baseline_path: Some("EnumeratingWithES5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -482,7 +482,7 @@ fn insufficient_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("InsufficientArguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -496,7 +496,7 @@ fn recursivesetter_js(#[case] variant: Variant) {
         baseline_path: Some("recursivesetter.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -510,7 +510,7 @@ fn valueof_js(#[case] variant: Variant) {
         baseline_path: Some("valueof5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -523,7 +523,7 @@ fn tostring_override_js(#[case] variant: Variant) {
         source_path: "tostring_override.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -536,7 +536,7 @@ fn valueof_override_js(#[case] variant: Variant) {
         source_path: "valueof_override.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -552,7 +552,7 @@ fn tostring_override_js_force_string_keyed_simple_dictionary_type_handler(
         compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -566,7 +566,7 @@ fn valueof_override_js_force_string_keyed_simple_dictionary_type_handler(#[case]
         compile_flags: vec!["-ForceStringKeyedSimpleDictionaryTypeHandler"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -580,7 +580,7 @@ fn type_conversions_js(#[case] variant: Variant) {
         baseline_path: Some("TypeConversions.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -594,7 +594,7 @@ fn reg_exp_strict_delete_js(#[case] variant: Variant) {
         baseline_path: Some("RegExpStrictDelete.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -608,7 +608,7 @@ fn setters_arguments_js(#[case] variant: Variant) {
         baseline_path: Some("settersArguments.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -625,7 +625,7 @@ fn setters_arguments_js_deferparse(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -639,7 +639,7 @@ fn augment_primitive_js(#[case] variant: Variant) {
         baseline_path: Some("augmentPrimitive.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -653,7 +653,7 @@ fn setget_js(#[case] variant: Variant) {
         baseline_path: Some("setget.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -667,7 +667,7 @@ fn es5array_objproto_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_objproto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -680,7 +680,7 @@ fn es5array_objproto_builtin_js(#[case] variant: Variant) {
         source_path: "es5array_objproto_builtin.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -694,7 +694,7 @@ fn es5array_arrayproto_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_arrayproto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -708,7 +708,7 @@ fn es5array_arrayproto_opt_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_arrayproto_opt.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -722,7 +722,7 @@ fn es5array_arrayproto_crosssite_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_arrayproto_crosssite.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -736,7 +736,7 @@ fn es5array_protoarr_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -750,7 +750,7 @@ fn es5array_protoobj_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -764,7 +764,7 @@ fn es5array_protoobj_crosssite_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_protoobj_crosssite.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -778,7 +778,7 @@ fn es5array_replaceprotoarr_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -792,7 +792,7 @@ fn es5array_replaceprotoobj_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_proto.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -805,7 +805,7 @@ fn resetproperty_js(#[case] variant: Variant) {
         source_path: "resetproperty.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -819,7 +819,7 @@ fn es5array_enum_edit_js(#[case] variant: Variant) {
         baseline_path: Some("es5array_enum_edit.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -832,7 +832,7 @@ fn es5_define_property_array_length_js(#[case] variant: Variant) {
         source_path: "es5_defineProperty_arrayLength.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -845,5 +845,5 @@ fn strictdefaultsetter_js(#[case] variant: Variant) {
         source_path: "strictdefaultsetter.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

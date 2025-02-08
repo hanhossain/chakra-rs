@@ -19,7 +19,7 @@ fn date_ctr_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -37,7 +37,7 @@ fn date_get_set_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_xplat", "slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -54,7 +54,7 @@ fn date_parse_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -72,7 +72,7 @@ fn date_parse2_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow", "exclude_xplat"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -85,7 +85,7 @@ fn date_parse3_js(#[case] variant: Variant) {
         source_path: "DateParse3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -99,7 +99,7 @@ fn to_iso_3_js(#[case] variant: Variant) {
         baseline_path: Some("toISO_3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -113,7 +113,7 @@ fn dateutc_js(#[case] variant: Variant) {
         baseline_path: Some("dateutc.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -127,7 +127,7 @@ fn dateutc_dategmt_same_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -141,7 +141,7 @@ fn millisecond_truncation_check_after_copy_constructor_js(#[case] variant: Varia
         baseline_path: Some("MillisecondTruncationCheckAfterCopyConstructor.es6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -166,7 +166,7 @@ fn conversions_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -191,7 +191,7 @@ fn conversions_js2(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -206,7 +206,7 @@ fn date_cache_bug_js(#[case] variant: Variant) {
         baseline_path: Some("date_cache_bug.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(unix)]
@@ -223,7 +223,7 @@ fn formatting_xplat_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow", "exclude_windows"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): migrate
@@ -257,7 +257,7 @@ fn marshalbug_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO (hanhossain): this should be all unix, but this takes way too long on mac. maybe it should be exclude_debug
@@ -275,7 +275,7 @@ fn xplat_interval_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow", "exclude_windows"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -288,7 +288,7 @@ fn military_time_zone_js(#[case] variant: Variant) {
         source_path: "MilitaryTimeZone.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -301,7 +301,7 @@ fn two_digit_years_js(#[case] variant: Variant) {
         source_path: "TwoDigitYears.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -319,7 +319,7 @@ fn to_string_and_to_utcstring_year_padding_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -334,7 +334,7 @@ fn parse_to_string_results_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -348,7 +348,7 @@ fn parse_to_utcstring_and_to_isostring_results_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -366,7 +366,7 @@ fn parse_invalid_iso_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow", "exclude_xplat"]),
         compile_flags: vec!["-args", "summary", "-endargs"],
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(windows)]
@@ -384,5 +384,5 @@ fn parse_invalid_iso2_js(#[case] variant: Variant) {
         tags: HashSet::from(["slow", "exclude_xplat"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -3,6 +3,7 @@ use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
 
+const COMMON_TAGS: [&str; 1] = ["exclude_noicu"];
 const DIRECTORY: &str = "chakracore-cxx/test/Intl";
 
 #[rstest]
@@ -17,7 +18,7 @@ fn collator_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -31,7 +32,7 @@ fn common_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -46,7 +47,7 @@ fn date_time_format_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -61,7 +62,7 @@ fn number_format_options_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -76,7 +77,7 @@ fn supported_locales_of_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -90,7 +91,7 @@ fn intl_hidden_internals_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -105,7 +106,7 @@ fn intl_tainting_tests_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -120,7 +121,7 @@ fn intl_tainting_pre_init_tests_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu", "exclude_drt"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -134,7 +135,7 @@ fn intl_built_ins_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -149,7 +150,7 @@ fn intl_identities_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(windows)]
@@ -169,7 +170,7 @@ fn intl_returned_value_tests_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu", "require_winglob"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -185,7 +186,7 @@ fn intl_internals_hidden_from_exception_stack_test_js(#[case] variant: Variant) 
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -201,7 +202,7 @@ fn intl_internals_hidden_from_first_chance_exception_stack_test_js(#[case] varia
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(unix)]
@@ -217,7 +218,7 @@ fn intl_platform_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu", "exclude_windows"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[cfg(unix)]
@@ -232,7 +233,7 @@ fn plural_rules_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu", "exclude_windows"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
 #[rstest]
@@ -249,5 +250,5 @@ fn tainting_prevention_tests_js(#[case] variant: Variant) {
         tags: HashSet::from(["Intl", "exclude_noicu", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, COMMON_TAGS);
 }

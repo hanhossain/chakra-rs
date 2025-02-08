@@ -15,5 +15,5 @@ fn reg_alloc_bug_0_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

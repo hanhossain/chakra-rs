@@ -15,7 +15,7 @@ fn rem_bailout_js(#[case] variant: Variant) {
         source_path: "remBailout.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -28,7 +28,7 @@ fn comparison_js(#[case] variant: Variant) {
         source_path: "comparison.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn addition_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -60,7 +60,7 @@ fn subtraction_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -73,7 +73,7 @@ fn div_min_int_js(#[case] variant: Variant) {
         source_path: "div_min_int.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -89,7 +89,7 @@ fn multiplication_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -102,7 +102,7 @@ fn divide_js(#[case] variant: Variant) {
         source_path: "divide.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -118,7 +118,7 @@ fn and_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -134,7 +134,7 @@ fn or_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -150,7 +150,7 @@ fn xor_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -163,7 +163,7 @@ fn not_js(#[case] variant: Variant) {
         source_path: "not.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -176,7 +176,7 @@ fn negate_js(#[case] variant: Variant) {
         source_path: "negate.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -189,7 +189,7 @@ fn signedshiftleft_js(#[case] variant: Variant) {
         source_path: "signedshiftleft.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -202,7 +202,7 @@ fn signedshiftright_js(#[case] variant: Variant) {
         source_path: "signedshiftright.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -215,7 +215,7 @@ fn unsignedshiftright_js(#[case] variant: Variant) {
         source_path: "unsignedshiftright.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -231,7 +231,7 @@ fn modulus_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -245,7 +245,7 @@ fn loopbounds_js(#[case] variant: Variant) {
         baseline_path: Some("loopbounds.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -258,7 +258,7 @@ fn not_1_js(#[case] variant: Variant) {
         source_path: "not_1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -271,7 +271,7 @@ fn shift_constants_js(#[case] variant: Variant) {
         source_path: "shift_constants.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -288,7 +288,7 @@ fn loops_js(#[case] variant: Variant) {
         tags: HashSet::from(["Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -301,7 +301,7 @@ fn predecrement_js(#[case] variant: Variant) {
         source_path: "predecrement.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -314,7 +314,7 @@ fn preincrement_js(#[case] variant: Variant) {
         source_path: "preincrement.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -335,7 +335,7 @@ fn comparison_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -358,7 +358,7 @@ fn addition_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -381,7 +381,7 @@ fn subtraction_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -404,7 +404,7 @@ fn multiplication_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -425,7 +425,7 @@ fn divide_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -448,7 +448,7 @@ fn and_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -471,7 +471,7 @@ fn or_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -494,7 +494,7 @@ fn xor_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -515,7 +515,7 @@ fn not_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -536,7 +536,7 @@ fn negate_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -559,7 +559,7 @@ fn signedshiftleft_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -582,7 +582,7 @@ fn signedshiftright_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -605,7 +605,7 @@ fn unsignedshiftright_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -628,7 +628,7 @@ fn modulus_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -650,7 +650,7 @@ fn loopbounds_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -664,7 +664,7 @@ fn arrays_js_dynamicprofilecache(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_serialized", "require_backend"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(disable_jit))]
@@ -688,7 +688,7 @@ fn arrays_js_dynamicprofilinput(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -709,7 +709,7 @@ fn not_1_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -730,7 +730,7 @@ fn shift_constants_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -753,7 +753,7 @@ fn loops_js2(#[case] variant: Variant) {
             "-off:typespec",
         ],
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -774,7 +774,7 @@ fn predecrement_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
@@ -795,5 +795,5 @@ fn preincrement_js2(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

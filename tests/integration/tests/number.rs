@@ -17,7 +17,7 @@ fn negative_na_n_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -32,7 +32,7 @@ fn negative_na_n_js_no_native(#[case] variant: Variant) {
         compile_flags: vec!["-NoNative"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 // TODO Investigate and re-enable this test on ARM64 macOS
@@ -48,7 +48,7 @@ fn to_string_js(#[case] variant: Variant) {
         baseline_path: Some("toString_3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -61,7 +61,7 @@ fn floatcmp_js(#[case] variant: Variant) {
         source_path: "floatcmp.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -74,7 +74,7 @@ fn na_n_js(#[case] variant: Variant) {
         source_path: "NaN.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -88,7 +88,7 @@ fn integer_js(#[case] variant: Variant) {
         baseline_path: Some("integer.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -103,7 +103,7 @@ fn to_uint16_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_drt"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -117,7 +117,7 @@ fn boundaries_js(#[case] variant: Variant) {
         baseline_path: Some("boundaries.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -132,7 +132,7 @@ fn no_sse_js(#[case] variant: Variant) {
         compile_flags: vec!["-sse:0"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -146,7 +146,7 @@ fn property_and_index_of_number_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -160,5 +160,5 @@ fn numeric_separator_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESNumericSeparator", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

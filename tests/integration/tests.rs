@@ -1,4 +1,11 @@
 mod array;
+#[cfg(not(disable_jit))]
+mod asm_js;
+#[cfg(not(disable_jit))]
+mod asm_js_float;
+#[cfg(not(disable_jit))]
+mod asm_js_parser;
+#[cfg(not(disable_jit))]
 mod bailout;
 mod basics;
 mod bigint;
@@ -10,6 +17,8 @@ mod config_parsing;
 mod control_flow;
 mod conversions;
 mod date;
+mod debugger;
+mod debugger_common;
 #[cfg(not(feature = "optimized-tests"))]
 mod dynamic_code;
 mod eh;
@@ -23,6 +32,8 @@ mod es7;
 mod fieldopts;
 #[cfg(not(disable_jit))]
 mod fixed_fields;
+#[cfg(not(disable_jit))]
+mod flow_graph;
 mod function;
 mod generated;
 mod global_functions;
@@ -41,13 +52,17 @@ mod operators;
 mod optimizer;
 #[cfg(not(disable_jit))]
 mod perf_hint;
+#[cfg(not(disable_jit))]
+mod pre;
 mod prototypes;
 mod reg_alloc;
 mod regex;
 mod rwc;
 mod scanner;
+#[cfg(feature = "compile-cpp")]
 mod smoke_tests;
 mod stack_trace;
+mod stackfunc;
 mod strict;
 mod strings;
 mod switch_statement;
@@ -57,7 +72,17 @@ mod tagged_integers;
 mod test262;
 mod test_loop;
 mod try_catch;
+// TODO (hanhossain): fix tests
+// mod ttbasic;
+// TODO (hanhossain): fix tests
+// mod ttexecute_basic;
 mod typed_array;
 mod unified_regex;
 mod unit_test_framework;
 mod utf8;
+mod wasm;
+#[cfg(all(not(disable_jit), windows))]
+mod wasm_simd;
+// TODO (hanhossain): migrate
+// mod wasm_spec;
+mod wasm_spec_multi_value;

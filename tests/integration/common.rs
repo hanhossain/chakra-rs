@@ -5,8 +5,8 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;
 
-#[allow(dead_code)]
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
+pub const DEFAULT_TAGS: [&str; 0] = [];
 
 #[derive(Debug, Default)]
 pub struct Test {
@@ -40,6 +40,18 @@ impl Test {
             .filter(|tag| tag.contains(','))
             .collect::<Vec<_>>();
         assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
+
+        if self
+            .tags
+            .iter()
+            .map(|t| t.to_lowercase())
+            .filter(|t| t == "slow")
+            .next()
+            .is_some()
+            && std::env::var("CHAKRA_TEST_SLOW").is_err()
+        {
+            panic!("Test is marked as slow but CHAKRA_TEST_SLOW is not set");
+        }
     }
 }
 
@@ -55,7 +67,12 @@ struct VariantConfig<'a> {
     excluded_tags: HashSet<&'static str>,
 }
 
-pub fn run_test_variant(test: &Test, variant: Variant) {
+pub fn run_test_variant<const N: usize>(
+    mut test: Test,
+    variant: Variant,
+    common_tags: [&'static str; N],
+) {
+    test.tags.extend(common_tags.iter());
     test.validate();
 
     let mut variant_config = match variant {
@@ -88,6 +105,22 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
         .excluded_tags
         .insert("exclude_icu62AndAboveTestFailures");
 
+    if cfg!(target_arch = "aarch64") {
+        variant_config.excluded_tags.insert("exclude_arm");
+        variant_config.excluded_tags.insert("exclude_arm64");
+        variant_config.excluded_tags.insert("require_asmjs");
+    } else if cfg!(target_arch = "x86_64") {
+        variant_config.excluded_tags.insert("exclude_x64");
+    }
+
+    if cfg!(unix) {
+        variant_config.excluded_tags.insert("exclude_xplat");
+        variant_config.excluded_tags.insert("require_winglob");
+        variant_config.excluded_tags.insert("require_simd");
+    } else if cfg!(windows) {
+        variant_config.excluded_tags.insert("exclude_windows");
+    }
+
     let both: HashSet<_> = variant_config
         .excluded_tags
         .intersection(&test.tags)
@@ -118,57 +151,61 @@ pub fn run_test_variant(test: &Test, variant: Variant) {
 
     let out_dir = PathBuf::from(env!("OUT_DIR"));
 
-    let mut ch = Command::new(out_dir.join("build/ch"));
-    ch.current_dir(test_dir)
-        .arg(source)
-        .arg("-ExtendedErrorStackForTestHost")
-        .arg("-BaselineMode")
-        .arg("-WERExceptionSupport")
-        .args(&test.compile_flags)
-        .args(&variant_config.compile_flags);
+    if cfg!(feature = "compile-cpp") {
+        let mut ch = Command::new(out_dir.join("build/ch"));
+        ch.current_dir(test_dir)
+            .arg(source)
+            .arg("-ExtendedErrorStackForTestHost")
+            .arg("-BaselineMode")
+            .arg("-WERExceptionSupport")
+            .args(&test.compile_flags)
+            .args(&variant_config.compile_flags);
 
-    if cfg!(unix) {
-        ch.env("TZ", "US/Pacific");
-    }
-
-    println!("Running command: {ch:#?}");
-    let output = ch.output().unwrap();
-
-    let mut out = String::from_utf8(output.stdout).unwrap();
-    let err = std::str::from_utf8(&output.stderr).unwrap();
-    out.push_str(err);
-
-    let actual = out
-        .lines()
-        .map(|s| trim_carriage_return(s))
-        .collect::<Vec<_>>();
-
-    if let Some(baseline_path) = test.baseline_path {
-        if !baseline_path.is_empty() {
-            let baseline = manifest_dir.join(test.directory).join(baseline_path);
-            let expected = read_to_string(baseline).unwrap();
-            let expected = expected
-                .lines()
-                .map(|s| trim_carriage_return(s))
-                .collect::<Vec<_>>();
-
-            assert_eq!(expected, actual);
+        if cfg!(unix) {
+            ch.env("TZ", "America/Los_Angeles");
         }
-    } else {
-        println!("Actual output: {:#?}", actual);
-        let mut passed = false;
-        for (index, line) in actual.iter().enumerate() {
-            let lower = line.to_lowercase();
-            if lower != "pass" && lower != "passed" && !lower.is_empty() {
-                panic!("Test can only print 'pass' or 'passed'. Index: {index}, output: {line}");
-            } else {
-                passed = true;
+
+        println!("Running command: {ch:#?}");
+        let output = ch.output().unwrap();
+
+        let mut out = String::from_utf8(output.stdout).unwrap();
+        let err = std::str::from_utf8(&output.stderr).unwrap();
+        out.push_str(err);
+
+        let actual = out
+            .lines()
+            .map(|s| trim_carriage_return(s))
+            .collect::<Vec<_>>();
+
+        if let Some(baseline_path) = test.baseline_path {
+            if !baseline_path.is_empty() {
+                let baseline = manifest_dir.join(test.directory).join(baseline_path);
+                let expected = read_to_string(baseline).unwrap();
+                let expected = expected
+                    .lines()
+                    .map(|s| trim_carriage_return(s))
+                    .collect::<Vec<_>>();
+
+                assert_eq!(expected, actual);
             }
+        } else {
+            println!("Actual output: {:#?}", actual);
+            let mut passed = false;
+            for (index, line) in actual.iter().enumerate() {
+                let lower = line.to_lowercase();
+                if lower != "pass" && lower != "passed" && !lower.is_empty() {
+                    panic!(
+                        "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
+                    );
+                } else {
+                    passed = true;
+                }
+            }
+            assert!(passed, "Test did not print 'pass' or 'passed'");
         }
-        assert!(passed, "Test did not print 'pass' or 'passed'");
-    }
 
-    assert!(output.status.success());
+        assert!(output.status.success());
+    }
 }
 
 fn trim_carriage_return(s: &str) -> &str {

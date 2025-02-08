@@ -15,5 +15,5 @@ fn test262(#[case] variant: Variant) {
         compile_flags: vec!["-ESSharedArrayBuffer", "-Test262"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

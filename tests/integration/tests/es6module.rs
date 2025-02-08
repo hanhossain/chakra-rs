@@ -30,7 +30,7 @@ fn test001_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -75,7 +75,7 @@ fn test002_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -89,7 +89,7 @@ fn moduletest1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -103,7 +103,7 @@ fn moduletest2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -123,7 +123,7 @@ fn module_syntax_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -138,7 +138,7 @@ fn module_syntax1_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -158,7 +158,7 @@ fn module_functionality_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -172,7 +172,7 @@ fn module_url_in_error_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -193,7 +193,7 @@ fn dynamic_module_functionality_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -215,7 +215,7 @@ fn dynamic_module_import_specifier_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -229,7 +229,7 @@ fn dynamic_import_promises_5796_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESDynamicImport"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -251,7 +251,7 @@ fn module_syntax_js_defer_parse(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -272,7 +272,7 @@ fn module_syntax1_js_defer_parse(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -297,7 +297,7 @@ fn module_namespace_js(#[case] variant: Variant) {
         ]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -317,7 +317,7 @@ fn module_bugfixes_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -331,7 +331,7 @@ fn export_binding_loader_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -346,7 +346,7 @@ fn test_bug_2645_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -367,7 +367,7 @@ fn bug_os12095746_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -381,7 +381,7 @@ fn bug_os14562349_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESDynamicImport", "-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -396,7 +396,7 @@ fn bug_issue_3076_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -411,7 +411,7 @@ fn bug_issue_3257_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESDynamicImport"],
         tags: HashSet::from(["exclude_sanitize_address"]),
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -426,7 +426,7 @@ fn bug_issue_5777_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -447,7 +447,7 @@ fn export_namespace_as_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -461,7 +461,7 @@ fn multiple_roots_circular_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -476,7 +476,7 @@ fn esdynamic_import_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -489,7 +489,7 @@ fn module_load_twice_js(#[case] variant: Variant) {
         source_path: "module-load-twice.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -503,7 +503,7 @@ fn passmodule_js(#[case] variant: Variant) {
         compile_flags: vec!["-module"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -518,7 +518,7 @@ fn bug_os17830745_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -537,7 +537,7 @@ fn bug_os18460517_js(#[case] variant: Variant) {
         ],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -551,7 +551,7 @@ fn import_meta_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs", "-esimportmeta"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -565,5 +565,5 @@ fn top_level_await_js(#[case] variant: Variant) {
         compile_flags: vec!["-ESDynamicImport", "-ESTopLevelAwait", "-module"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

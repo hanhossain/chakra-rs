@@ -16,7 +16,7 @@ fn t0_js(#[case] variant: Variant) {
         baseline_path: Some("t0.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -30,7 +30,7 @@ fn t1_js(#[case] variant: Variant) {
         baseline_path: Some("t1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn t2_js(#[case] variant: Variant) {
         baseline_path: Some("t2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn t3_js(#[case] variant: Variant) {
         baseline_path: Some("t3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn t4_js(#[case] variant: Variant) {
         baseline_path: Some("t4.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn t5_js(#[case] variant: Variant) {
         baseline_path: Some("t5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn test6_js(#[case] variant: Variant) {
         baseline_path: Some("test6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -115,7 +115,7 @@ fn type_property_cache_cross_context_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_jsrt"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn getter_sideeffect_js(#[case] variant: Variant) {
         source_path: "getter_sideeffect.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn prototype_chain_modifications_js(#[case] variant: Variant) {
         baseline_path: Some("prototypeChainModifications.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn inline_local_cache_without_property_js(#[case] variant: Variant) {
         baseline_path: Some("inlineLocalCacheWithoutProperty.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -169,7 +169,7 @@ fn writable1_js(#[case] variant: Variant) {
         source_path: "writable1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -182,7 +182,7 @@ fn writable2_js(#[case] variant: Variant) {
         source_path: "writable2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -195,7 +195,7 @@ fn writable3_js(#[case] variant: Variant) {
         source_path: "writable3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -208,7 +208,7 @@ fn defaultsetterbug_js(#[case] variant: Variant) {
         source_path: "defaultsetterbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -221,7 +221,7 @@ fn big_dictionary_type_handler_js(#[case] variant: Variant) {
         source_path: "BigDictionaryTypeHandler.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -235,7 +235,7 @@ fn add_fld_fast_path_js(#[case] variant: Variant) {
         baseline_path: Some("addFldFastPath.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -249,7 +249,7 @@ fn missing_property_cache1_js(#[case] variant: Variant) {
         baseline_path: Some("MissingPropertyCache1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -263,7 +263,7 @@ fn missing_property_cache2_js(#[case] variant: Variant) {
         baseline_path: Some("MissingPropertyCache2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -277,7 +277,7 @@ fn missing_property_cache3_js(#[case] variant: Variant) {
         baseline_path: Some("MissingPropertyCache3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -290,7 +290,7 @@ fn missing_property_cache4_js(#[case] variant: Variant) {
         source_path: "MissingPropertyCache4.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -303,7 +303,7 @@ fn missing_proto_inval_js(#[case] variant: Variant) {
         source_path: "MissingProtoInval.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -317,7 +317,7 @@ fn instance_of_cache_cross_registration_js(#[case] variant: Variant) {
         baseline_path: Some("instanceOfCacheCrossRegistration.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -331,5 +331,5 @@ fn bug_vso_os_1206083_js(#[case] variant: Variant) {
         baseline_path: Some("bug_vso_os_1206083.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

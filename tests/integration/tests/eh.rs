@@ -16,7 +16,7 @@ fn capture_js(#[case] variant: Variant) {
         baseline_path: Some("capture.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -31,7 +31,7 @@ fn capture_js_defer_parse(#[case] variant: Variant) {
         compile_flags: vec!["-force:deferparse"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -44,7 +44,7 @@ fn oos2_js(#[case] variant: Variant) {
         source_path: "oos2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -58,7 +58,7 @@ fn try1_js(#[case] variant: Variant) {
         baseline_path: Some("try1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -72,7 +72,7 @@ fn try2_js(#[case] variant: Variant) {
         baseline_path: Some("try2-es5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -86,7 +86,7 @@ fn try3_js(#[case] variant: Variant) {
         baseline_path: Some("try3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -100,7 +100,7 @@ fn try4_js(#[case] variant: Variant) {
         baseline_path: Some("try4.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -114,7 +114,7 @@ fn try5_es3_js(#[case] variant: Variant) {
         baseline_path: Some("try5-ES3.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -128,7 +128,7 @@ fn try6_js(#[case] variant: Variant) {
         baseline_path: Some("try6.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -142,7 +142,7 @@ fn try_bug188541_js(#[case] variant: Variant) {
         baseline_path: Some("try.bug188541.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -156,7 +156,7 @@ fn try_bug188541_v5_js(#[case] variant: Variant) {
         baseline_path: Some("try.bug188541.v5.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -169,7 +169,7 @@ fn so_js(#[case] variant: Variant) {
         source_path: "so.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -183,7 +183,7 @@ fn newso_js(#[case] variant: Variant) {
         baseline_path: Some("newso.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -196,7 +196,7 @@ fn trylabel_js(#[case] variant: Variant) {
         source_path: "trylabel.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -211,7 +211,7 @@ fn alignment_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:inline", "-checkalignment"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -225,7 +225,7 @@ fn test101832_js(#[case] variant: Variant) {
         baseline_path: Some("101832.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -239,7 +239,7 @@ fn early1_js(#[case] variant: Variant) {
         baseline_path: Some("early1.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -253,7 +253,7 @@ fn early2_js(#[case] variant: Variant) {
         baseline_path: Some("early2.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -267,7 +267,7 @@ fn tryfinallybug0_js(#[case] variant: Variant) {
         baseline_path: Some("tryfinallybug0.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -280,7 +280,7 @@ fn tryfinallytests_js(#[case] variant: Variant) {
         source_path: "tryfinallytests.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -294,7 +294,7 @@ fn tryfinallyldelembug_js(#[case] variant: Variant) {
         compile_flags: vec!["-off:arraycheckhoist"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -307,7 +307,7 @@ fn tryfinallybug1_js(#[case] variant: Variant) {
         source_path: "tryfinallybug1.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -321,7 +321,7 @@ fn tfinlinebug_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -334,7 +334,7 @@ fn inlinestackwalkbug_js(#[case] variant: Variant) {
         source_path: "inlinestackwalkbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -347,7 +347,7 @@ fn nestedinlinestackwalkbug_js(#[case] variant: Variant) {
         source_path: "nestedinlinestackwalkbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -360,7 +360,7 @@ fn tryfinallyinlinebug_js(#[case] variant: Variant) {
         source_path: "tryfinallyinlinebug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -374,7 +374,7 @@ fn asyncintrystackwalkbug_js(#[case] variant: Variant) {
         compile_flags: vec!["-CollectGarbage"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -387,7 +387,7 @@ fn ehinlinearmbug_js(#[case] variant: Variant) {
         source_path: "ehinlinearmbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -400,7 +400,7 @@ fn helperlabelbug_js(#[case] variant: Variant) {
         source_path: "helperlabelbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -413,7 +413,7 @@ fn helperlabelbug2_js(#[case] variant: Variant) {
         source_path: "helperlabelbug2.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -427,7 +427,7 @@ fn tryfinallyinlineswbug_js(#[case] variant: Variant) {
         compile_flags: vec!["-force:inline"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -441,7 +441,7 @@ fn has_bailed_out_bug_js(#[case] variant: Variant) {
         baseline_path: Some("hasBailedOutBug.baseline"),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -454,7 +454,7 @@ fn has_bailed_out_bug2_js(#[case] variant: Variant) {
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -467,7 +467,7 @@ fn has_bailed_out_bug3_js(#[case] variant: Variant) {
         source_path: "hasBailedOutBug3.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -480,7 +480,7 @@ fn has_bailed_out_bug4_js(#[case] variant: Variant) {
         source_path: "hasBailedOutBug4.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -493,7 +493,7 @@ fn stack_overflow_js(#[case] variant: Variant) {
         source_path: "StackOverflow.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -506,7 +506,7 @@ fn tfjitlooparmbug_js(#[case] variant: Variant) {
         source_path: "tfjitlooparmbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -519,7 +519,7 @@ fn tfjitloopbug_js(#[case] variant: Variant) {
         source_path: "tfjitloopbug.js",
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -533,7 +533,7 @@ fn optional_catch_binding_js(#[case] variant: Variant) {
         compile_flags: vec!["-args", "summary", "-endargs"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[rstest]
@@ -547,5 +547,5 @@ fn region_bug_spec_hoisting_js(#[case] variant: Variant) {
         compile_flags: vec!["-mic:1", "-off:simplejit"],
         ..Default::default()
     };
-    common::run_test_variant(&test, variant);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
