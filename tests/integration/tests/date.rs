@@ -226,23 +226,22 @@ fn formatting_xplat_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>formatting.js</files>
-//     <baseline>formatting.baseline</baseline>
-//     <compile-flags>-ForceOldDateAPI</compile-flags>
-//     <!-- on DST pass Win OldDateAPI jumps back to 01:00 after 01:59 -->
-//     <!-- todo: Do not force OLDDateAPI ? -->
-//     <tags>slow,exclude_xplat</tags>
-//   </default>
-//   <condition order="1" type="include">
-//     <os>win8</os>
-//     <override>
-//       <baseline>formatting.win8.baseline</baseline>
-//     </override>
-//   </condition>
-// </test>
+// TODO: on DST pass Win OldDateAPI jumps back to 01:00 after 01:59. Do not force OLDDateAPI?
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn formatting_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "formatting.js",
+        baseline_path: Some("formatting.baseline"),
+        compile_flags: vec!["-ForceOldDateAPI"],
+        tags: HashSet::from(["slow", "exclude_xplat"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
