@@ -787,23 +787,23 @@ fn funcname_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>call_escape.js</files>
 //       <baseline>call_escape.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
 //       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
 //       <tags>exclude_test,exclude_dynapogo</tags>
 //     </default>
 //   </test>
 
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>throw_escape.js</files>
 //       <baseline>throw_escape.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
 //       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
 //       <tags>exclude_test,exclude_dynapogo</tags>
 //     </default>
@@ -1041,12 +1041,12 @@ fn formal_namedfunc_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>throw_func.js</files>
 //       <baseline>throw_func.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
 //       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
 //       <tags>exclude_test,exclude_dynapogo</tags>
 //     </default>
@@ -1462,23 +1462,23 @@ fn jitdefer_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>box_bailout.js</files>
 //       <baseline>box_bailout.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
 //       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
 //       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64</tags>
 //     </default>
 //   </test>
 
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>box_inline_bailout.js</files>
 //       <baseline>box_inline_bailout.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
 //       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
 //       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64</tags>
 //     </default>

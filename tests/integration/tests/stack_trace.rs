@@ -178,20 +178,20 @@ fn stack_trace_limit_js(#[case] variant: Variant) {
 // TODO (hanhossain): migrate
 // <test>
 //   <default>
-//     <tags>StackTrace,xplat_verifymark_slow</tags>
 //     <files>StackTraceLimitOOS.js</files>
 //     <baseline>StackTraceLimitOOS.baseline</baseline>
 //     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
+//     <tags>StackTrace,xplat_verifymark_slow</tags>
 // </default>
 // </test>
 
 // TODO (hanhossain): migrate
 // <test>
 //   <default>
-//     <tags>StackTrace,xplat_verifymark_slow</tags>
 //     <files>StackTraceLimitOOS.js</files>
 //     <baseline>StackTraceLimitOOS.baseline</baseline>
 //     <compile-flags>-ExtendedErrorStackForTestHost -on:interruptprobe</compile-flags>
+//     <tags>StackTrace,xplat_verifymark_slow</tags>
 //   </default>
 // </test>
 

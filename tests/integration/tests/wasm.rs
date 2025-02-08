@@ -90,11 +90,11 @@ fn regress_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+// Variant running without tests using wabt for jshost
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>regress.js</files>
-//       <!-- Variant running without tests using wabt for jshost -->
 //       <compile-flags>-wasm -args --no-verbose --no-wabt -endargs</compile-flags>
 //     </default>
 //   </test>
@@ -363,8 +363,8 @@ fn table_imports_js(#[case] variant: Variant) {
 //   <test>
 //     <default>
 //       <files>table_signatures.js</files>
-//       <tags>exclude_drt,exclude_win7</tags>
 //       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
+//       <tags>exclude_drt,exclude_win7</tags>
 //     </default>
 //   </test>
 
@@ -498,8 +498,6 @@ fn params_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-//   TODO (hanhossain): migrate
-
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -518,8 +516,6 @@ fn debugger_basic_js(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
-
-//   TODO (hanhossain): migrate
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -543,8 +539,6 @@ fn debugger_basic_js2(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
-
-//   TODO (hanhossain): migrate
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -572,23 +566,21 @@ fn debugger_basic_js3(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-//   TODO (hanhossain): migrate
-
+// todo-xplat: Fix this! The test is flaky on XPLAT
 // TODO (hanhossain): migrate
 //     <test>
 //       <default>
 //         <files>wasmcctx.js</files>
 //         <compile-flags>-wasm -dbgbaseline:wasmcctx.js.dbg.baseline -InspectMaxStringLength:50</compile-flags>
-//         <!-- todo-xplat: Fix this! The test is flaky on XPLAT -->
 //         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger,exclude_xplat</tags>
 //       </default>
 //     </test>
 
+// These tests expect OOM, -EnableFatalErrorOnOOM- to disable fatal error for this test case. Bug will be filed to address this later
 // TODO (hanhossain): migrate
 //   <test>
 //     <default>
 //       <files>oom_wasm.js</files>
-//         <!-- These tests expect OOM, -EnableFatalErrorOnOOM- to disable fatal error for this test case. Bug will be filed to address this later -->
 //       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 0 16384 -endargs</compile-flags>
 //       <tags>exclude_x64</tags>
 //     </default>
