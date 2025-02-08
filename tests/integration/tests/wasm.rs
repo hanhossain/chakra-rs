@@ -875,35 +875,91 @@ fn polyinline_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --end 4 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn limits_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--end", "4", "-endargs"],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --start 4 --end 12 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn limits_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec![
+            "-wasm",
+            "-args",
+            "--no-verbose",
+            "--start",
+            "4",
+            "--end",
+            "12",
+            "-endargs",
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --start 12 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn limits_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec![
+            "-wasm",
+            "-args",
+            "--no-verbose",
+            "--start",
+            "12",
+            "-endargs",
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
