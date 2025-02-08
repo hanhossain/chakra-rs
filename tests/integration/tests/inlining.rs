@@ -22,76 +22,112 @@ fn arg_js(#[case] variant: Variant) {
 }
 
 // TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber1.js</files>
-//       <baseline>linenumber1.baseline</baseline>
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber1.js",
+        baseline_path: Some("linenumber1.baseline"),
+        compile_flags: vec!["-force:inline", "-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // Variant of test without -force:inline to ensure output is the same
 // TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
 // <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber1.js</files>
-//       <baseline>linenumber1.baseline</baseline>
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber1.js",
+        baseline_path: Some("linenumber1.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber2.js</files>
-//       <baseline>linenumber2.baseline</baseline>
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
-
-// Variant of test without -force:inline to ensure output is the same
-// TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
-// <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber2.js</files>
-//       <baseline>linenumber2.baseline</baseline>
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
-
-// TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber3.js</files>
-//       <baseline>linenumber3.baseline</baseline>
-//       <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber2.js",
+        baseline_path: Some("linenumber2.baseline"),
+        compile_flags: vec!["-force:inline", "-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // Variant of test without -force:inline to ensure output is the same
 // TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
 // <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>linenumber3.js</files>
-//       <baseline>linenumber3.baseline</baseline>
-//       <compile-flags>-ExtendedErrorStackForTestHost-</compile-flags>
-//       <tags>exclude_arm</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber2.js",
+        baseline_path: Some("linenumber2.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber3.js",
+        baseline_path: Some("linenumber3.baseline"),
+        compile_flags: vec!["-force:inline", "-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// Variant of test without -force:inline to ensure output is the same
+// TODO investigate why -ExtendedErrorStackForTestHost inserts tabs at the beginning of some frames (Microsoft/ChakraCore#3130)
+// <compile-flags>-force:inline -ExtendedErrorStackForTestHost-</compile-flags>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn linenumber3_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "linenumber3.js",
+        baseline_path: Some("linenumber3.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost-"],
+        tags: HashSet::from(["exclude_arm"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // TODO (hanhossain): migrate
 //   <test>

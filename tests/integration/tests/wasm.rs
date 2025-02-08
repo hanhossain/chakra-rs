@@ -91,13 +91,19 @@ fn regress_js(#[case] variant: Variant) {
 }
 
 // Variant running without tests using wabt for jshost
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>regress.js</files>
-//       <compile-flags>-wasm -args --no-verbose --no-wabt -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn regress_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regress.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--no-wabt", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -359,14 +365,20 @@ fn table_imports_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>table_signatures.js</files>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//       <tags>exclude_drt,exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn table_signatures_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "table_signatures.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -475,14 +487,20 @@ fn params_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inlining.js</files>
-//       <baseline>inlining.baseline</baseline>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn inlining_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inlining.js",
+        baseline_path: Some("inlining.baseline"),
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -567,30 +585,59 @@ fn debugger_basic_js3(#[case] variant: Variant) {
 }
 
 // todo-xplat: Fix this! The test is flaky on XPLAT
-// TODO (hanhossain): migrate
-//     <test>
-//       <default>
-//         <files>wasmcctx.js</files>
-//         <compile-flags>-wasm -dbgbaseline:wasmcctx.js.dbg.baseline -InspectMaxStringLength:50</compile-flags>
-//         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger,exclude_xplat</tags>
-//       </default>
-//     </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn wasmcctx_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "wasmcctx.js",
+        compile_flags: vec![
+            "-wasm",
+            "-dbgbaseline:wasmcctx.js.dbg.baseline",
+            "-InspectMaxStringLength:50",
+        ],
+        tags: HashSet::from([
+            "exclude_win7",
+            "exclude_drt",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_xplat",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 // These tests expect OOM, -EnableFatalErrorOnOOM- to disable fatal error for this test case. Bug will be filed to address this later
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>oom_wasm.js</files>
-//       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 0 16384 -endargs</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn oom_wasm_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "oom_wasm.js",
+        compile_flags: vec![
+            "-EnableFatalErrorOnOOM-",
+            "-wasm",
+            "-args",
+            "0",
+            "16384",
+            "-endargs",
+        ],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn oom_wasm_js(#[case] variant: Variant) {
+fn oom_wasm_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom_wasm.js",

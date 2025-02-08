@@ -361,14 +361,20 @@ fn set_js2(#[case] variant: Variant) {
 // }
 
 // TODO Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>crossthread.js</files>
-//       <baseline>crossthread_es6.baseline</baseline>
-//       <tags>typedarray,exclude_arm,exclude_debug</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn crossthread_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "crossthread.js",
+        baseline_path: Some("crossthread_es6.baseline"),
+        tags: HashSet::from(["typedarray", "exclude_arm", "exclude_debug"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
