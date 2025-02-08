@@ -98,14 +98,30 @@ fn blockscope_func_insidescopes_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <compile-flags>-debuglaunch -dbgbaseline:IntlInit.js.dbg.baseline -Intl</compile-flags>
-//       <files>IntlInit.js</files>
-//       <tags>Intl,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn intl_init_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "IntlInit.js",
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:IntlInit.js.dbg.baseline",
+            "-Intl",
+        ],
+        tags: HashSet::from([
+            "Intl",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -727,16 +743,33 @@ fn temp_str_expr_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ES6_intl_simple_attach.js</files>
-//       <baseline>ES6_intl_simple_attach.js.baseline</baseline>
-//       <compile-flags>-dbgbaseline:ES6_intl_simple_attach.js.dbg.baseline -Intl</compile-flags>
-//       <!-- This test is still require_winglob because it has winglob-specific output in the .dbg.baseline -->
-//       <tags>Intl,require_winglob,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[cfg(windows)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn es6_intl_simple_attach_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ES6_intl_simple_attach.js",
+        baseline_path: Some("ES6_intl_simple_attach.js.baseline"),
+        compile_flags: vec![
+            "-dbgbaseline:ES6_intl_simple_attach.js.dbg.baseline",
+            "-Intl",
+        ],
+        // This test is still require_winglob because it has winglob-specific output in the .dbg.baseline
+        tags: HashSet::from([
+            "Intl",
+            "require_winglob",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -2889,23 +2922,53 @@ fn testdynamicdetach1_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <compile-flags>-debuglaunch -nonative -dbgbaseline:jitStepping2.js.dbg.baseline</compile-flags>
-//       <files>jitStepping2.js</files>
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_stepping2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jitStepping2.js",
+        compile_flags: vec![
+            "-debuglaunch",
+            "-nonative",
+            "-dbgbaseline:jitStepping2.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <compile-flags>-debuglaunch -forcenative -dbgbaseline:jitStepping2.js.dbg.baseline</compile-flags>
-//       <files>jitStepping2.js</files>
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn jit_stepping2_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jitStepping2.js",
+        compile_flags: vec![
+            "-debuglaunch",
+            "-forcenative",
+            "-dbgbaseline:jitStepping2.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -4110,25 +4173,56 @@ fn returnedvaluetests_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>returnedvaluetests1.js</files>
-//       <compile-flags>-dbgbaseline:returnedvaluetests1.js.dbg.baseline</compile-flags>
-//       <!-- xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919) -->
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+// xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919)
+#[cfg(windows)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn returnedvaluetests1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "returnedvaluetests1.js",
+        compile_flags: vec!["-dbgbaseline:returnedvaluetests1.js.dbg.baseline"],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_xplat",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>returnedvaluetests2.js</files>
-//       <compile-flags>-debugLaunch -dbgbaseline:returnedvaluetests2.js.dbg.baseline</compile-flags>
-//       <!-- xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919) -->
-//       <tags>exclude_dynapogo,exclude_serialized,exclude_xplat,exclude_serialized,exclude_snap,require_debugger,exclude_sanitize_address</tags>
-//     </default>
-//   </test>
+// xplat-todo: enable on xplat when Intl is supported on xplat (Microsoft/ChakraCore#2919)
+#[cfg(windows)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::disable_jit(Variant::DisableJit)]
+fn returnedvaluetests2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "returnedvaluetests2.js",
+        compile_flags: vec![
+            "-debugLaunch",
+            "-dbgbaseline:returnedvaluetests2.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_dynapogo",
+            "exclude_serialized",
+            "exclude_xplat",
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

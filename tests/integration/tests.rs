@@ -83,6 +83,5 @@ mod utf8;
 mod wasm;
 #[cfg(all(not(disable_jit), windows))]
 mod wasm_simd;
-// TODO (hanhossain): migrate
-// mod wasm_spec;
+mod wasm_spec;
 mod wasm_spec_multi_value;

@@ -193,6 +193,29 @@ fn $1_js(#[case] variant: Variant) {
 }
 ```
 
+### files, baseline, and tags
+
+```re
+// TODO.*\n.*<test>\n.*<default>\n.*<files>(.*)\.js</files>\n.*<baseline>(.*)</baseline>\n.*<tags>(.*)</tags>\n.*</default>\n.*</test>
+```
+
+```rust
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn $1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "$1.js",
+        baseline_path: Some("$2"),
+        tags: HashSet::from([todo!("$3")]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+```
+
 ### files, compile flags, and baseline
 
 ```re
@@ -259,7 +282,7 @@ $1_
 ### remove empty todo
 
 ```re
-,\s*todo!\("\s*"\)
+,\n?\s*todo!\("\s*"\)
 ```
 
 ```rust
