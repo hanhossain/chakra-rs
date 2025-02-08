@@ -13,7 +13,6 @@ const DIRECTORY: &str = "chakracore-cxx/test/WasmSpec";
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn spec_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -34,9 +33,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -59,8 +56,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -83,8 +79,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -104,9 +99,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -129,8 +122,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -153,8 +145,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -173,9 +164,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -197,8 +186,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -217,9 +205,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js10(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -241,8 +227,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js11(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -260,9 +245,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js12(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -283,8 +266,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js13(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -304,8 +286,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js14(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -323,9 +304,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js15(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -346,8 +325,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js16(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -367,8 +345,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js17(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -381,9 +358,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js18(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -404,8 +379,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js19(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -426,8 +400,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js20(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -440,9 +413,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js21(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -463,8 +434,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js22(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -477,9 +447,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js23(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -500,8 +468,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js24(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -514,9 +481,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js25(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -537,8 +502,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js26(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -551,9 +515,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js27(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -574,8 +536,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js28(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -588,9 +549,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js29(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -611,8 +570,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js30(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -625,9 +583,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js31(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -648,8 +604,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js32(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -667,9 +622,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js33(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -690,8 +643,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js34(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -704,9 +656,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js35(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -727,8 +677,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js36(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -746,9 +695,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js37(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -769,8 +716,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js38(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -783,9 +729,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js39(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -806,8 +750,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js40(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -825,9 +768,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js41(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -848,8 +789,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js42(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -862,9 +802,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js43(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -885,8 +823,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js44(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -899,9 +836,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js45(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -922,8 +857,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js46(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -936,9 +870,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js47(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -959,8 +891,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js48(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -978,9 +909,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js49(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1001,8 +930,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js50(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1015,9 +943,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js51(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1038,8 +964,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js52(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1052,9 +977,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js53(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1075,8 +998,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js54(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1094,9 +1016,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js55(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1117,8 +1037,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js56(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1131,9 +1050,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js57(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1154,8 +1071,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js58(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1168,9 +1084,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js59(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1191,8 +1105,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js60(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1210,9 +1123,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js61(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1233,8 +1144,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js62(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1247,9 +1157,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js63(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1270,8 +1178,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js64(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1284,9 +1191,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js65(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1307,8 +1212,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js66(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1326,9 +1230,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js67(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1349,8 +1251,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js68(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1368,9 +1269,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js69(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1391,8 +1290,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js70(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1410,9 +1308,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js71(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1433,8 +1329,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js72(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1455,8 +1350,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js73(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1474,9 +1368,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js74(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1497,8 +1389,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js75(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1511,9 +1402,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js76(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1534,8 +1423,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js77(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1548,9 +1436,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js78(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1571,8 +1457,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js79(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1590,9 +1475,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js80(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1613,8 +1496,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js81(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1632,9 +1514,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js82(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1655,8 +1535,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js83(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1669,9 +1548,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js84(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1692,8 +1569,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js85(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1706,9 +1582,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js86(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1729,8 +1603,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js87(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1750,8 +1623,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js88(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1764,9 +1636,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js89(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1787,8 +1657,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js90(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1808,8 +1677,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js91(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1822,9 +1690,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js92(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1845,8 +1711,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js93(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1859,9 +1724,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js94(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1882,8 +1745,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js95(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1901,9 +1763,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js96(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1924,8 +1784,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js97(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1943,9 +1802,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js98(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1966,8 +1823,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js99(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -1987,8 +1843,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js100(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2006,9 +1861,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js101(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2029,8 +1882,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js102(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2043,9 +1895,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js103(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2066,8 +1916,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js104(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2085,9 +1934,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js105(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2108,8 +1955,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js106(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2122,9 +1968,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js107(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2145,8 +1989,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js108(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2159,9 +2002,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js109(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2182,8 +2023,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js110(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2196,9 +2036,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js111(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2219,8 +2057,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js112(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2233,9 +2070,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js113(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2256,8 +2091,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js114(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2278,8 +2112,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js115(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2297,9 +2130,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js116(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2320,8 +2151,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js117(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2339,9 +2169,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js118(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2362,8 +2190,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js119(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2381,9 +2208,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js120(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2404,8 +2229,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js121(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2426,8 +2250,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js122(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2440,9 +2263,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js123(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2463,8 +2284,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js124(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2477,9 +2297,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js125(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2500,8 +2318,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js126(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2514,9 +2331,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js127(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2537,8 +2352,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js128(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2556,9 +2370,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js129(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2579,8 +2391,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js130(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2598,9 +2409,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js131(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2621,8 +2430,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js132(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2635,9 +2443,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js133(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2658,8 +2464,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js134(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2672,9 +2477,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js135(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2695,8 +2498,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js136(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2709,9 +2511,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js137(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2732,8 +2532,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js138(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2746,9 +2545,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js139(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2769,8 +2566,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js140(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2788,9 +2584,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js141(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2811,8 +2605,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js142(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2825,9 +2618,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js143(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2848,8 +2639,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js144(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2862,9 +2652,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js145(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2885,8 +2673,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js146(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2907,8 +2694,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js147(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2928,8 +2714,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js148(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2942,9 +2727,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js149(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2965,8 +2748,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js150(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -2984,9 +2766,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js151(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3007,8 +2787,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js152(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3026,9 +2805,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js153(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3049,8 +2826,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js154(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3068,9 +2844,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js155(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3091,8 +2865,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js156(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3105,9 +2878,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js157(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3128,8 +2899,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js158(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3147,9 +2917,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js159(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3170,8 +2938,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js160(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3189,9 +2956,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js161(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3212,8 +2977,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js162(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3231,9 +2995,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js163(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3254,8 +3016,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js164(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3273,9 +3034,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js165(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -3296,7 +3055,6 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn jsapi_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -3315,9 +3073,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3338,8 +3094,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3357,9 +3112,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3380,8 +3133,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3401,9 +3153,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3426,8 +3176,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3445,9 +3194,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3468,8 +3215,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3487,9 +3233,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js10(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3510,8 +3254,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js11(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3529,9 +3272,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js12(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3552,8 +3293,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js13(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3571,9 +3311,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js14(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3594,8 +3332,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js15(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3613,9 +3350,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js16(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3636,8 +3371,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js17(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3655,9 +3389,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js18(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3678,8 +3410,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js19(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3699,9 +3430,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js20(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3724,8 +3453,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js21(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3743,9 +3471,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js22(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3766,8 +3492,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js23(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3785,9 +3510,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js24(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3808,8 +3531,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js25(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3827,9 +3549,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js26(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3850,8 +3570,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js27(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3869,9 +3588,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js28(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3892,8 +3609,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js29(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3911,9 +3627,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js30(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3934,8 +3648,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js31(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3953,9 +3666,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js32(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3976,8 +3687,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js33(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -3995,9 +3705,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js34(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4018,8 +3726,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js35(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4037,9 +3744,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js36(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4060,8 +3765,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js37(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4079,9 +3783,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js38(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4102,8 +3804,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js39(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4121,9 +3822,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js40(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4144,8 +3843,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js41(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4163,9 +3861,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js42(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4186,8 +3882,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js43(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4205,9 +3900,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js44(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4228,8 +3921,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js45(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4247,9 +3939,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js46(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4270,8 +3960,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js47(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4289,9 +3978,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js48(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4312,8 +3999,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js49(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4331,9 +4017,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js50(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4354,8 +4038,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js51(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4373,9 +4056,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js52(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4396,8 +4077,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js53(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4415,9 +4095,7 @@ fn jsapi_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn jsapi_js(#[case] variant: Variant) {
+fn jsapi_js54(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jsapi.js",
@@ -4438,8 +4116,7 @@ fn jsapi_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js166(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4458,9 +4135,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js167(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4482,8 +4157,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js168(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4502,9 +4176,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js169(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4526,8 +4198,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js170(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4546,9 +4217,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js171(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4570,8 +4239,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js172(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4591,9 +4259,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js173(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4616,8 +4282,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js174(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4640,8 +4305,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js175(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4661,9 +4325,7 @@ fn spec_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js176(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
@@ -4686,8 +4348,7 @@ fn spec_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn spec_js(#[case] variant: Variant) {
+fn spec_js177(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "spec.js",
