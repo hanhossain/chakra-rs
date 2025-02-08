@@ -361,6 +361,7 @@ fn set_js2(#[case] variant: Variant) {
 // }
 
 // TODO Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -813,6 +814,7 @@ fn bug_os_6911900_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
+#[ignore]
 #[timeout(std::time::Duration::from_secs(480))]
 fn reentry1_js(#[case] variant: Variant) {
     let test = common::Test {

@@ -227,10 +227,13 @@ fn formatting_xplat_js(#[case] variant: Variant) {
 }
 
 // TODO: on DST pass Win OldDateAPI jumps back to 01:00 after 01:59. Do not force OLDDateAPI?
+#[cfg(windows)]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn formatting_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

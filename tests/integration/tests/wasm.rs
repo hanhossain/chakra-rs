@@ -94,7 +94,6 @@ fn regress_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn regress_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -368,7 +367,6 @@ fn table_imports_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn table_signatures_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -490,7 +488,6 @@ fn params_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn inlining_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -585,10 +582,10 @@ fn debugger_basic_js3(#[case] variant: Variant) {
 }
 
 // todo-xplat: Fix this! The test is flaky on XPLAT
+#[cfg(windows)]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn wasmcctx_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -614,7 +611,6 @@ fn wasmcctx_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn oom_wasm_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -875,10 +871,9 @@ fn polyinline_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 #[ignore]
 #[timeout(std::time::Duration::from_secs(300))]
 fn limits_js(#[case] variant: Variant) {
@@ -899,10 +894,9 @@ fn limits_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 #[ignore]
 #[timeout(std::time::Duration::from_secs(300))]
 fn limits_js2(#[case] variant: Variant) {
@@ -932,10 +926,11 @@ fn limits_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn limits_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,

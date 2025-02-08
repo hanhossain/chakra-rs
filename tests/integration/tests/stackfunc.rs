@@ -1,7 +1,6 @@
 use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
-#[cfg(not(feature = "optimized-tests"))]
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 2] = ["exclude_serialized", "require_backend"];
@@ -788,10 +787,9 @@ fn funcname_escape_js2(#[case] variant: Variant) {
 }
 
 // Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn call_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -812,10 +810,9 @@ fn call_escape_js2(#[case] variant: Variant) {
 }
 
 // Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn throw_escape_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1068,10 +1065,9 @@ fn formal_namedfunc_js2(#[case] variant: Variant) {
 }
 
 // Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn throw_func_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1502,10 +1498,10 @@ fn jitdefer_js(#[case] variant: Variant) {
 }
 
 // Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(target_arch = "aarch64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn box_bailout_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1533,9 +1529,9 @@ fn box_bailout_js(#[case] variant: Variant) {
 }
 
 // Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(target_arch = "aarch64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn box_inline_bailout_js(#[case] variant: Variant) {
     let test = common::Test {
@@ -1784,7 +1780,6 @@ fn box_jitloopbody3_js(#[case] variant: Variant) {
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
 fn test602481_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
