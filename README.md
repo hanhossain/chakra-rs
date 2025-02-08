@@ -259,7 +259,7 @@ $1_
 ### remove empty todo
 
 ```re
-,\s*todo!\("\s*"\)
+,\n?\s*todo!\("\s*"\)
 ```
 
 ```rust
