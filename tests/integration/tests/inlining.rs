@@ -25,7 +25,6 @@ fn arg_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -44,7 +43,6 @@ fn linenumber1_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber1_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -61,7 +59,6 @@ fn linenumber1_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -80,7 +77,6 @@ fn linenumber2_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber2_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -97,7 +93,6 @@ fn linenumber2_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber3_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -116,7 +111,6 @@ fn linenumber3_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn linenumber3_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -132,7 +126,6 @@ fn linenumber3_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 #[ignore]
 #[timeout(std::time::Duration::from_secs(300))]
 fn inline_constructors_js(#[case] variant: Variant) {
@@ -794,7 +787,6 @@ fn argoptbugs_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn bug_gh6303_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
