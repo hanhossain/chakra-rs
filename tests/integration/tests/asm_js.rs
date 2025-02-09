@@ -455,10 +455,10 @@ fn write_fix_offset_js(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn array_view_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -473,10 +473,10 @@ fn array_view_js2(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_branching_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -491,10 +491,10 @@ fn basic_branching_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_comparison_double_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -509,10 +509,10 @@ fn basic_comparison_double_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_comparison_int_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -527,10 +527,10 @@ fn basic_comparison_int_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_comparison_uint_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -545,10 +545,10 @@ fn basic_comparison_uint_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_looping_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -563,10 +563,10 @@ fn basic_looping_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_math_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -581,10 +581,10 @@ fn basic_math_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_math_int_specific_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -599,10 +599,10 @@ fn basic_math_int_specific_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_math_unary_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -617,10 +617,10 @@ fn basic_math_unary_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn basic_switch_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -635,10 +635,10 @@ fn basic_switch_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn composition_math_unary_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -653,10 +653,10 @@ fn composition_math_unary_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn function_calls_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -671,10 +671,10 @@ fn function_calls_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn functiontablecalls_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -689,10 +689,10 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn math_builtins_call_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -707,10 +707,10 @@ fn math_builtins_call_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn module_var_read_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -725,10 +725,10 @@ fn module_var_read_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn module_var_write_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -743,10 +743,10 @@ fn module_var_write_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn read_array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -761,10 +761,10 @@ fn read_array_view_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn read_fix_offset_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -779,10 +779,10 @@ fn read_fix_offset_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn write_array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -797,10 +797,10 @@ fn write_array_view_js3(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn write_fix_offset_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1330,10 +1330,10 @@ fn const_test_js2(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn const_test_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1648,10 +1648,10 @@ fn unitybug_js2(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn unitybug_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1726,10 +1726,10 @@ fn clz32_js2(#[case] variant: Variant) {
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
 // <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn clz32_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -1988,7 +1988,6 @@ fn bug_gh2270_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn lots_of_locals_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
@@ -2029,7 +2028,6 @@ fn const_fold_tests_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
 fn lots_of_locals_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
