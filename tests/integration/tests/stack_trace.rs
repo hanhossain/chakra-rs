@@ -175,25 +175,37 @@ fn stack_trace_limit_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace,xplat_verifymark_slow</tags>
-//     <files>StackTraceLimitOOS.js</files>
-//     <baseline>StackTraceLimitOOS.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost</compile-flags>
-// </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stack_trace_limit_oos_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "StackTraceLimitOOS.js",
+        baseline_path: Some("StackTraceLimitOOS.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        tags: HashSet::from(["StackTrace", "xplat_verifymark_slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <tags>StackTrace,xplat_verifymark_slow</tags>
-//     <files>StackTraceLimitOOS.js</files>
-//     <baseline>StackTraceLimitOOS.baseline</baseline>
-//     <compile-flags>-ExtendedErrorStackForTestHost -on:interruptprobe</compile-flags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn stack_trace_limit_oos_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "StackTraceLimitOOS.js",
+        baseline_path: Some("StackTraceLimitOOS.baseline"),
+        compile_flags: vec!["-ExtendedErrorStackForTestHost", "-on:interruptprobe"],
+        tags: HashSet::from(["StackTrace", "xplat_verifymark_slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

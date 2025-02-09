@@ -227,14 +227,19 @@ fn jit_gen_loop_body_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-gen-loop-body.js</files>
-//     <baseline>jit-gen-loop-body-2.baseline</baseline>
-//     <tags>require_backend,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn jit_gen_loop_body_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-gen-loop-body.js",
+        baseline_path: Some("jit-gen-loop-body-2.baseline"),
+        tags: HashSet::from(["require_backend", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
@@ -256,14 +261,19 @@ fn jit_async_loop_body_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>jit-async-loop-body.js</files>
-//     <baseline>jit-async-loop-body-2.baseline</baseline>
-//     <tags>require_backend,exclude_nonative</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn jit_async_loop_body_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "jit-async-loop-body.js",
+        baseline_path: Some("jit-async-loop-body-2.baseline"),
+        tags: HashSet::from(["require_backend", "exclude_nonative"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]

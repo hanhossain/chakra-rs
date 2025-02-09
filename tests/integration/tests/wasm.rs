@@ -90,14 +90,19 @@ fn regress_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>regress.js</files>
-//       <!-- Variant running without tests using wabt for jshost -->
-//       <compile-flags>-wasm -args --no-verbose --no-wabt -endargs</compile-flags>
-//     </default>
-//   </test>
+// Variant running without tests using wabt for jshost
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn regress_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "regress.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--no-wabt", "-endargs"],
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -359,14 +364,19 @@ fn table_imports_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>table_signatures.js</files>
-//       <tags>exclude_drt,exclude_win7</tags>
-//       <compile-flags>-wasm -args --no-verbose -endargs</compile-flags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn table_signatures_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "table_signatures.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        tags: HashSet::from(["exclude_drt", "exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -475,14 +485,19 @@ fn params_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>inlining.js</files>
-//       <baseline>inlining.baseline</baseline>
-//       <tags>exclude_win7</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn inlining_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "inlining.js",
+        baseline_path: Some("inlining.baseline"),
+        tags: HashSet::from(["exclude_win7"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -497,8 +512,6 @@ fn params_js2(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
-
-//   TODO (hanhossain): migrate
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -518,8 +531,6 @@ fn debugger_basic_js(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
-
-//   TODO (hanhossain): migrate
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -543,8 +554,6 @@ fn debugger_basic_js2(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
-
-//   TODO (hanhossain): migrate
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -572,33 +581,60 @@ fn debugger_basic_js3(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-//   TODO (hanhossain): migrate
+// todo-xplat: Fix this! The test is flaky on XPLAT
+#[cfg(windows)]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn wasmcctx_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "wasmcctx.js",
+        compile_flags: vec![
+            "-wasm",
+            "-dbgbaseline:wasmcctx.js.dbg.baseline",
+            "-InspectMaxStringLength:50",
+        ],
+        tags: HashSet::from([
+            "exclude_win7",
+            "exclude_drt",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_xplat",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//     <test>
-//       <default>
-//         <files>wasmcctx.js</files>
-//         <compile-flags>-wasm -dbgbaseline:wasmcctx.js.dbg.baseline -InspectMaxStringLength:50</compile-flags>
-//         <!-- todo-xplat: Fix this! The test is flaky on XPLAT -->
-//         <tags>exclude_win7,exclude_drt,exclude_snap,require_debugger,exclude_xplat</tags>
-//       </default>
-//     </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>oom_wasm.js</files>
-//         <!-- These tests expect OOM, -EnableFatalErrorOnOOM- to disable fatal error for this test case. Bug will be filed to address this later -->
-//       <compile-flags>-EnableFatalErrorOnOOM- -wasm -args 0 16384 -endargs</compile-flags>
-//       <tags>exclude_x64</tags>
-//     </default>
-//   </test>
-
+// These tests expect OOM, -EnableFatalErrorOnOOM- to disable fatal error for this test case. Bug will be filed to address this later
 #[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 fn oom_wasm_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "oom_wasm.js",
+        compile_flags: vec![
+            "-EnableFatalErrorOnOOM-",
+            "-wasm",
+            "-args",
+            "0",
+            "16384",
+            "-endargs",
+        ],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn oom_wasm_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom_wasm.js",
@@ -836,35 +872,90 @@ fn polyinline_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --end 4 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[cfg(feature = "optimized-tests")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn limits_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--end", "4", "-endargs"],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --start 4 --end 12 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[cfg(feature = "optimized-tests")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn limits_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec![
+            "-wasm",
+            "-args",
+            "--no-verbose",
+            "--start",
+            "4",
+            "--end",
+            "12",
+            "-endargs",
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>limits.js</files>
-//       <compile-flags>-wasm -args --no-verbose --start 12 -endargs</compile-flags>
-//       <timeout>300</timeout>
-//       <tags>exclude_drt,exclude_win7,exclude_debug,exclude_dynapogo,exclude_x86,Slow</tags>
-//     </default>
-//   </test>
+#[cfg(feature = "optimized-tests")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn limits_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "limits.js",
+        compile_flags: vec![
+            "-wasm",
+            "-args",
+            "--no-verbose",
+            "--start",
+            "12",
+            "-endargs",
+        ],
+        tags: HashSet::from([
+            "exclude_drt",
+            "exclude_win7",
+            "exclude_debug",
+            "exclude_dynapogo",
+            "exclude_x86",
+            "Slow",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

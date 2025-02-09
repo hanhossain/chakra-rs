@@ -361,14 +361,21 @@ fn set_js2(#[case] variant: Variant) {
 // }
 
 // TODO Below test fails with difference in space. Investigate the cause and re-enable them (Microsoft/ChakraCore#3038)
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//       <files>crossthread.js</files>
-//       <baseline>crossthread_es6.baseline</baseline>
-//       <tags>typedarray,exclude_arm,exclude_debug</tags>
-//   </default>
-// </test>
+// #[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
+// #[rstest]
+// #[case::interpreted(Variant::Interpreted)]
+// #[case::dynapogo(Variant::Dynapogo)]
+// #[case::disable_jit(Variant::DisableJit)]
+// fn crossthread_js(#[case] variant: Variant) {
+//     let test = common::Test {
+//         directory: DIRECTORY,
+//         source_path: "crossthread.js",
+//         baseline_path: Some("crossthread_es6.baseline"),
+//         tags: HashSet::from(["typedarray", "exclude_arm", "exclude_debug"]),
+//         ..Default::default()
+//     };
+//     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+// }
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -515,23 +522,39 @@ fn dataview1_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>allocation.js</files>
-//     <tags>typedarray,exclude_arm,xplatslow,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn allocation_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "allocation.js",
+        tags: HashSet::from(["typedarray", "exclude_arm", "xplatslow", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>allocation2.js</files>
-//     <tags>typedarray,exclude_arm,xplatslow,Slow</tags>
-//     <timeout>300</timeout>
-//   </default>
-// </test>
+#[cfg(not(target_arch = "aarch64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(300))]
+fn allocation2_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "allocation2.js",
+        tags: HashSet::from(["typedarray", "exclude_arm", "xplatslow", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
@@ -787,14 +810,22 @@ fn bug_os_6911900_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-// TODO (hanhossain): migrate
-// <test>
-//   <default>
-//     <files>reentry1.js</files>
-//     <timeout>480</timeout> <!-- ARM64 takes ~8 min -->
-//     <tags>xplatslow,Slow</tags>
-//   </default>
-// </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+#[ignore]
+#[timeout(std::time::Duration::from_secs(480))]
+fn reentry1_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "reentry1.js",
+        // arm64 takes ~8 min
+        tags: HashSet::from(["xplatslow", "Slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

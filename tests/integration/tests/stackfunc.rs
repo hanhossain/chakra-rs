@@ -1,7 +1,6 @@
 use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
-#[cfg(not(feature = "optimized-tests"))]
 use std::collections::HashSet;
 
 const COMMON_TAGS: [&str; 2] = ["exclude_serialized", "require_backend"];
@@ -787,27 +786,51 @@ fn funcname_escape_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>call_escape.js</files>
-//       <baseline>call_escape.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
-//       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn call_escape_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "call_escape.js",
+        baseline_path: Some("call_escape.deferparse.baseline"),
+        compile_flags: vec![
+            "-DeferTopLevelTillFirstCall-",
+            "-testtrace:stackfunc",
+            "-off:redeferral",
+            "-off:simpleJit",
+            "-Force:Deferparse",
+            "-on:stackfunc",
+        ],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>throw_escape.js</files>
-//       <baseline>throw_escape.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
-//       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn throw_escape_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "throw_escape.js",
+        baseline_path: Some("throw_escape.deferparse.baseline"),
+        compile_flags: vec![
+            "-DeferTopLevelTillFirstCall-",
+            "-testtrace:stackfunc",
+            "-off:redeferral",
+            "-off:simpleJit",
+            "-Force:Deferparse",
+            "-on:stackfunc",
+        ],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
@@ -1041,16 +1064,28 @@ fn formal_namedfunc_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>throw_func.js</files>
-//       <baseline>throw_func.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
-//       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -Force:Deferparse -on:stackfunc</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo</tags>
-//     </default>
-//   </test>
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(not(feature = "optimized-tests"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn throw_func_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "throw_func.js",
+        baseline_path: Some("throw_func.deferparse.baseline"),
+        compile_flags: vec![
+            "-DeferTopLevelTillFirstCall-",
+            "-testtrace:stackfunc",
+            "-off:redeferral",
+            "-off:simpleJit",
+            "-Force:Deferparse",
+            "-on:stackfunc",
+        ],
+        tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(not(feature = "optimized-tests"))]
 #[rstest]
@@ -1462,27 +1497,65 @@ fn jitdefer_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_bailout.js</files>
-//       <baseline>box_bailout.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
-//       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64</tags>
-//     </default>
-//   </test>
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(all(not(target_arch = "aarch64"), not(feature = "optimized-tests")))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn box_bailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_bailout.js",
+        baseline_path: Some("box_bailout.deferparse.baseline"),
+        compile_flags: vec![
+            "-DeferTopLevelTillFirstCall-",
+            "-testtrace:stackfunc",
+            "-off:redeferral",
+            "-off:simpleJit",
+            "-on:stackfunc",
+            "-force:deferparse",
+            "-off:disablestackfuncondeferredescape",
+        ],
+        tags: HashSet::from([
+            "exclude_test",
+            "exclude_dynapogo",
+            "exclude_arm",
+            "exclude_nonative",
+            "exclude_arm64",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>box_inline_bailout.js</files>
-//       <baseline>box_inline_bailout.deferparse.baseline</baseline>
-//       <!--Top Level function parsing on first call to script is turned off here, as this tests order of functions executed-->
-//       <compile-flags>-DeferTopLevelTillFirstCall- -testtrace:stackfunc -off:redeferral -off:simpleJit -on:stackfunc -force:deferparse -off:disablestackfuncondeferredescape</compile-flags>
-//       <tags>exclude_test,exclude_dynapogo,exclude_arm,exclude_nonative,exclude_arm64</tags>
-//     </default>
-//   </test>
+// Top Level function parsing on first call to script is turned off here, as this tests order of functions executed
+#[cfg(all(not(target_arch = "aarch64"), not(feature = "optimized-tests")))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn box_inline_bailout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "box_inline_bailout.js",
+        baseline_path: Some("box_inline_bailout.deferparse.baseline"),
+        compile_flags: vec![
+            "-DeferTopLevelTillFirstCall-",
+            "-testtrace:stackfunc",
+            "-off:redeferral",
+            "-off:simpleJit",
+            "-on:stackfunc",
+            "-force:deferparse",
+            "-off:disablestackfuncondeferredescape",
+        ],
+        tags: HashSet::from([
+            "exclude_test",
+            "exclude_dynapogo",
+            "exclude_arm",
+            "exclude_nonative",
+            "exclude_arm64",
+        ]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[cfg(all(not(feature = "optimized-tests"), target_arch = "x86_64"))]
 #[rstest]
@@ -1703,13 +1776,17 @@ fn box_jitloopbody3_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>602481.js</files>
-//       <tags>exclude_dynapogo</tags>
-//     </default>
-//   </test>
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+fn test602481_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "602481.js",
+        tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

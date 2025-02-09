@@ -453,270 +453,370 @@ fn write_fix_offset_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ArrayView.js</files>
-//       <baseline>ArrayView.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicBranching.js</files>
-//       <baseline>BasicBranching.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonDouble.js</files>
-//       <baseline>basicComparisonDouble.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonInt.js</files>
-//       <baseline>basicComparisonInt.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicComparisonUInt.js</files>
-//       <baseline>basicComparisonUInt.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicLooping.js</files>
-//       <baseline>BasicLooping.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMath.js</files>
-//       <baseline>basicMath.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathIntSpecific.js</files>
-//       <baseline>basicMathIntSpecific.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>basicMathUnary.js</files>
-//       <baseline>basicMathUnary.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>BasicSwitch.js</files>
-//       <baseline>BasicSwitch.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>CompositionMathUnary.js</files>
-//       <baseline>CompositionMathUnary.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>FunctionCalls.js</files>
-//       <baseline>FunctionCalls.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>functiontablecalls.js</files>
-//       <baseline>functiontablecalls.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>MathBuiltinsCall.js</files>
-//       <baseline>MathBuiltinsCall.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarRead.js</files>
-//       <baseline>ModuleVarRead.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ModuleVarWrite.js</files>
-//       <baseline>ModuleVarWrite.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadArrayView.js</files>
-//       <baseline>ReadArrayView.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>ReadFixOffset.js</files>
-//       <baseline>ReadFixOffset.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteArrayView.js</files>
-//       <baseline>WriteArrayView.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>WriteFixOffset.js</files>
-//       <baseline>WriteFixOffset.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
-
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 fn array_view_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ArrayView.js",
+        baseline_path: Some("ArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_branching_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicBranching.js",
+        baseline_path: Some("BasicBranching.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_comparison_double_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonDouble.js",
+        baseline_path: Some("basicComparisonDouble.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_comparison_int_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonInt.js",
+        baseline_path: Some("basicComparisonInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_comparison_uint_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicComparisonUInt.js",
+        baseline_path: Some("basicComparisonUInt.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_looping_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicLooping.js",
+        baseline_path: Some("BasicLooping.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_math_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMath.js",
+        baseline_path: Some("basicMath.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_math_int_specific_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathIntSpecific.js",
+        baseline_path: Some("basicMathIntSpecific.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_math_unary_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "basicMathUnary.js",
+        baseline_path: Some("basicMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn basic_switch_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "BasicSwitch.js",
+        baseline_path: Some("BasicSwitch.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn composition_math_unary_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "CompositionMathUnary.js",
+        baseline_path: Some("CompositionMathUnary.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn function_calls_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "FunctionCalls.js",
+        baseline_path: Some("FunctionCalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn functiontablecalls_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "functiontablecalls.js",
+        baseline_path: Some("functiontablecalls.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn math_builtins_call_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "MathBuiltinsCall.js",
+        baseline_path: Some("MathBuiltinsCall.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn module_var_read_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarRead.js",
+        baseline_path: Some("ModuleVarRead.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn module_var_write_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ModuleVarWrite.js",
+        baseline_path: Some("ModuleVarWrite.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn read_array_view_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadArrayView.js",
+        baseline_path: Some("ReadArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn read_fix_offset_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ReadFixOffset.js",
+        baseline_path: Some("ReadFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn write_array_view_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteArrayView.js",
+        baseline_path: Some("WriteArrayView.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn write_fix_offset_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "WriteFixOffset.js",
+        baseline_path: Some("WriteFixOffset.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
+
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ArrayView.js",
@@ -731,7 +831,7 @@ fn array_view_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn basic_branching_js3(#[case] variant: Variant) {
+fn basic_branching_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BasicBranching.js",
@@ -916,7 +1016,7 @@ fn composition_math_unary_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn function_calls_js3(#[case] variant: Variant) {
+fn function_calls_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FunctionCalls.js",
@@ -931,7 +1031,7 @@ fn function_calls_js3(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn functiontablecalls_js2(#[case] variant: Variant) {
+fn functiontablecalls_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "functiontablecalls.js",
@@ -946,7 +1046,7 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn math_builtins_call_js3(#[case] variant: Variant) {
+fn math_builtins_call_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "MathBuiltinsCall.js",
@@ -1228,18 +1328,23 @@ fn const_test_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>constTest.js</files>
-//       <baseline>constTest.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn const_test_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "constTest.js",
+        baseline_path: Some("constTest.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1541,18 +1646,23 @@ fn unitybug_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>unitybug.js</files>
-//       <baseline>unitybug.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn unitybug_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "unitybug.js",
+        baseline_path: Some("unitybug.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1614,18 +1724,23 @@ fn clz32_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>clz32.js</files>
-//       <baseline>clz32.baseline</baseline>
-//       <tags>exclude_x64</tags>
-//       <!-- After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-//       <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
-//       -->
-//       <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
-//     </default>
-//   </test>
+// TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
+// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+#[cfg(not(target_arch = "x86_64"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn clz32_js3(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "clz32.js",
+        baseline_path: Some("clz32.baseline"),
+        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        tags: HashSet::from(["exclude_x64"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1870,13 +1985,19 @@ fn bug_gh2270_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>lotsOfLocals.js</files>
-//       <tags>exclude_debug,exclude_razzle</tags>
-//     </default>
-//   </test>
+#[cfg(feature = "optimized-tests")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn lots_of_locals_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lotsOfLocals.js",
+        tags: HashSet::from(["exclude_debug", "exclude_razzle"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1905,25 +2026,43 @@ fn const_fold_tests_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>lotsOfLocals.js</files>
-//       <tags>exclude_debug</tags>
-//     </default>
-//   </test>
+#[cfg(feature = "optimized-tests")]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+fn lots_of_locals_js2(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "lotsOfLocals.js",
+        tags: HashSet::from(["exclude_debug"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
-// TODO (hanhossain): migrate
-//   <test>
-//     <default>
-//       <files>params.js</files>
-//       <baseline>params.baseline</baseline>
-//       <compile-flags>-testtrace:asmjs -args 14000 -endargs -EnableFatalErrorOnOOM-</compile-flags>
-//       <!-- todo:: On unix platforms there is more stack available,
-//            so we need to find the right limit to test in order to not timeout -->
-//       <tags>exclude_dynapogo,exclude_mac,slow</tags>
-//     </default>
-//   </test>
+// TODO: On unix platforms there is more stack available, so we need to find the right limit to test in order to not timeout
+#[cfg(not(target_os = "macos"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
+fn params_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "params.js",
+        baseline_path: Some("params.baseline"),
+        compile_flags: vec![
+            "-testtrace:asmjs",
+            "-args",
+            "14000",
+            "-endargs",
+            "-EnableFatalErrorOnOOM-",
+        ],
+        tags: HashSet::from(["exclude_dynapogo", "exclude_mac", "slow"]),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, COMMON_TAGS);
+}
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

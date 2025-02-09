@@ -34,6 +34,17 @@ impl Test {
             "no commas allowed in compile flags"
         );
 
+        let trimmed_flags = self
+            .compile_flags
+            .iter()
+            .map(|flag| flag.trim())
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            self.compile_flags, trimmed_flags,
+            "compile flags must not have leading or trailing whitespace"
+        );
+
         let invalid_tags = self
             .tags
             .iter()
