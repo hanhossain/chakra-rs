@@ -2054,8 +2054,8 @@ fn params_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-testtrace:asmjs",
             "-args",
-            " 14000",
-            " -endargs",
+            "14000",
+            "-endargs",
             "-EnableFatalErrorOnOOM-",
         ],
         tags: HashSet::from(["exclude_dynapogo", "exclude_mac", "slow"]),
