@@ -1985,6 +1985,7 @@ fn bug_gh2270_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2025,6 +2026,7 @@ fn const_fold_tests_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
