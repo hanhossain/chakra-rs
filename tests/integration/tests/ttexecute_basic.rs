@@ -26,12 +26,7 @@ fn callback_single_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -56,12 +51,7 @@ fn callback_spread_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -86,12 +76,7 @@ fn callback_sequence_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -116,12 +101,7 @@ fn callback_clear_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -146,12 +126,7 @@ fn enumerable_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -176,12 +151,7 @@ fn enumerating_with_es5_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js6(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -206,12 +176,7 @@ fn enumeration_add_delete_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js7(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -236,12 +201,7 @@ fn for_each_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js8(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -266,12 +226,7 @@ fn for_in_array_add_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js9(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -296,12 +251,7 @@ fn for_in_object_add_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js10(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -326,12 +276,7 @@ fn for_in_object_add_delete_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js11(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -356,12 +301,7 @@ fn for_in_object_delete_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js12(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -386,12 +326,7 @@ fn symbol_for_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js13(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",
@@ -416,12 +351,7 @@ fn try_js(#[case] variant: Variant) {
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
-}
 
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::disable_jit(Variant::DisableJit)]
-fn ttd_sentinal_js14(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ttdSentinal.js",

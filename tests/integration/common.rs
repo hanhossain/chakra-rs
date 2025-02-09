@@ -66,7 +66,7 @@ impl Test {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum Variant {
     Interpreted,
     Dynapogo,
