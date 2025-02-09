@@ -507,7 +507,7 @@ fn spec_js26(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/br.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/br.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/br.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -648,7 +648,7 @@ fn spec_js34(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/call.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/call.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/call.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -828,7 +828,7 @@ fn spec_js44(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/data.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/data.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/data.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -862,7 +862,7 @@ fn spec_js46(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/elem.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/elem.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/elem.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -969,7 +969,7 @@ fn spec_js52(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/f32.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/f32.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/f32.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1076,7 +1076,7 @@ fn spec_js58(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/f64.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/f64.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/f64.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1183,7 +1183,7 @@ fn spec_js64(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/fac.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/fac.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/fac.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1428,7 +1428,7 @@ fn spec_js77(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/func.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/func.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/func.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1574,7 +1574,7 @@ fn spec_js85(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/i32.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/i32.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/i32.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1628,7 +1628,7 @@ fn spec_js88(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/i64.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/i64.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/i64.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1682,7 +1682,7 @@ fn spec_js91(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/if.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/if.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/if.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -1994,7 +1994,7 @@ fn spec_js108(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/load.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/load.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/load.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2028,7 +2028,7 @@ fn spec_js110(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/loop.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/loop.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/loop.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2255,7 +2255,7 @@ fn spec_js122(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/nop.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/nop.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/nop.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -2719,7 +2719,7 @@ fn spec_js148(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "spec.js",
         baseline_path: Some("baselines/testsuite/core/type.baseline"),
-        compile_flags: vec!["-wasm", "-args", "testsuite", "/core/type.wast", "-endargs"],
+        compile_flags: vec!["-wasm", "-args", "testsuite/core/type.wast", "-endargs"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
