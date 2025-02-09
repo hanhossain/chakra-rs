@@ -459,7 +459,7 @@ fn write_fix_offset_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ArrayView_js(#[case] variant: Variant) {
+fn array_view_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ArrayView.js",
@@ -477,7 +477,7 @@ fn ArrayView_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn BasicBranching_js(#[case] variant: Variant) {
+fn basic_branching_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BasicBranching.js",
@@ -495,7 +495,7 @@ fn BasicBranching_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicComparisonDouble_js(#[case] variant: Variant) {
+fn basic_comparison_double_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicComparisonDouble.js",
@@ -513,7 +513,7 @@ fn basicComparisonDouble_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicComparisonInt_js(#[case] variant: Variant) {
+fn basic_comparison_int_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicComparisonInt.js",
@@ -531,7 +531,7 @@ fn basicComparisonInt_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicComparisonUInt_js(#[case] variant: Variant) {
+fn basic_comparison_uint_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicComparisonUInt.js",
@@ -549,7 +549,7 @@ fn basicComparisonUInt_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn BasicLooping_js(#[case] variant: Variant) {
+fn basic_looping_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BasicLooping.js",
@@ -567,7 +567,7 @@ fn BasicLooping_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicMath_js(#[case] variant: Variant) {
+fn basic_math_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicMath.js",
@@ -585,7 +585,7 @@ fn basicMath_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicMathIntSpecific_js(#[case] variant: Variant) {
+fn basic_math_int_specific_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicMathIntSpecific.js",
@@ -603,7 +603,7 @@ fn basicMathIntSpecific_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn basicMathUnary_js(#[case] variant: Variant) {
+fn basic_math_unary_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "basicMathUnary.js",
@@ -621,7 +621,7 @@ fn basicMathUnary_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn BasicSwitch_js(#[case] variant: Variant) {
+fn basic_switch_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BasicSwitch.js",
@@ -639,7 +639,7 @@ fn BasicSwitch_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn CompositionMathUnary_js(#[case] variant: Variant) {
+fn composition_math_unary_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CompositionMathUnary.js",
@@ -657,7 +657,7 @@ fn CompositionMathUnary_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn FunctionCalls_js(#[case] variant: Variant) {
+fn function_calls_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FunctionCalls.js",
@@ -693,7 +693,7 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn MathBuiltinsCall_js(#[case] variant: Variant) {
+fn math_builtins_call_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "MathBuiltinsCall.js",
@@ -711,7 +711,7 @@ fn MathBuiltinsCall_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ModuleVarRead_js(#[case] variant: Variant) {
+fn module_var_read_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ModuleVarRead.js",
@@ -729,7 +729,7 @@ fn ModuleVarRead_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ModuleVarWrite_js(#[case] variant: Variant) {
+fn module_var_write_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ModuleVarWrite.js",
@@ -747,7 +747,7 @@ fn ModuleVarWrite_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ReadArrayView_js(#[case] variant: Variant) {
+fn read_array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ReadArrayView.js",
@@ -765,7 +765,7 @@ fn ReadArrayView_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn ReadFixOffset_js(#[case] variant: Variant) {
+fn read_fix_offset_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ReadFixOffset.js",
@@ -783,7 +783,7 @@ fn ReadFixOffset_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn WriteArrayView_js(#[case] variant: Variant) {
+fn write_array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "WriteArrayView.js",
@@ -801,7 +801,7 @@ fn WriteArrayView_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn WriteFixOffset_js(#[case] variant: Variant) {
+fn write_fix_offset_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "WriteFixOffset.js",
@@ -816,7 +816,7 @@ fn WriteFixOffset_js(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn array_view_js2(#[case] variant: Variant) {
+fn array_view_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ArrayView.js",
@@ -831,7 +831,7 @@ fn array_view_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn basic_branching_js3(#[case] variant: Variant) {
+fn basic_branching_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "BasicBranching.js",
@@ -1016,7 +1016,7 @@ fn composition_math_unary_js2(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn function_calls_js3(#[case] variant: Variant) {
+fn function_calls_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FunctionCalls.js",
@@ -1046,7 +1046,7 @@ fn functiontablecalls_js3(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn math_builtins_call_js3(#[case] variant: Variant) {
+fn math_builtins_call_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "MathBuiltinsCall.js",
@@ -1334,7 +1334,7 @@ fn const_test_js2(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn constTest_js(#[case] variant: Variant) {
+fn const_test_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "constTest.js",
@@ -1989,7 +1989,7 @@ fn bug_gh2270_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn lotsOfLocals_js(#[case] variant: Variant) {
+fn lots_of_locals_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lotsOfLocals.js",
@@ -2030,7 +2030,7 @@ fn const_fold_tests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn lotsOfLocals_js2(#[case] variant: Variant) {
+fn lots_of_locals_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lotsOfLocals.js",

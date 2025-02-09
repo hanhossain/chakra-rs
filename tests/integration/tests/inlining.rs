@@ -135,7 +135,7 @@ fn linenumber3_js2(#[case] variant: Variant) {
 #[case::disable_jit(Variant::DisableJit)]
 #[ignore]
 #[timeout(std::time::Duration::from_secs(300))]
-fn InlineConstructors_js(#[case] variant: Variant) {
+fn inline_constructors_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "InlineConstructors.js",
