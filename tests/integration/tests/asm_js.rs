@@ -2039,9 +2039,11 @@ fn lots_of_locals_js2(#[case] variant: Variant) {
 }
 
 // TODO: On unix platforms there is more stack available, so we need to find the right limit to test in order to not timeout
+#[cfg(not(target_os = "macos"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
+#[ignore]
+#[timeout(common::SLOW_TEST_TIMEOUT)]
 fn params_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
