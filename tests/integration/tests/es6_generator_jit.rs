@@ -231,7 +231,7 @@ fn jit_gen_loop_body_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jit_gen_loop_body_js(#[case] variant: Variant) {
+fn jit_gen_loop_body_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jit-gen-loop-body.js",
@@ -266,7 +266,7 @@ fn jit_async_loop_body_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn jit_async_loop_body_js(#[case] variant: Variant) {
+fn jit_async_loop_body_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "jit-async-loop-body.js",

@@ -675,7 +675,7 @@ fn FunctionCalls_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn functiontablecalls_js(#[case] variant: Variant) {
+fn functiontablecalls_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "functiontablecalls.js",
@@ -1031,7 +1031,7 @@ fn function_calls_js3(#[case] variant: Variant) {
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
-fn functiontablecalls_js2(#[case] variant: Variant) {
+fn functiontablecalls_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "functiontablecalls.js",
@@ -1652,7 +1652,7 @@ fn unitybug_js2(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn unitybug_js(#[case] variant: Variant) {
+fn unitybug_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unitybug.js",
@@ -1730,7 +1730,7 @@ fn clz32_js2(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn clz32_js(#[case] variant: Variant) {
+fn clz32_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "clz32.js",
@@ -2030,7 +2030,7 @@ fn const_fold_tests_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn lotsOfLocals_js(#[case] variant: Variant) {
+fn lotsOfLocals_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lotsOfLocals.js",

@@ -45,7 +45,7 @@ fn linenumber1_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn linenumber1_js(#[case] variant: Variant) {
+fn linenumber1_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "linenumber1.js",
@@ -81,7 +81,7 @@ fn linenumber2_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn linenumber2_js(#[case] variant: Variant) {
+fn linenumber2_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "linenumber2.js",
@@ -117,7 +117,7 @@ fn linenumber3_js(#[case] variant: Variant) {
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
-fn linenumber3_js(#[case] variant: Variant) {
+fn linenumber3_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "linenumber3.js",

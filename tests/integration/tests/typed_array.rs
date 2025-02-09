@@ -536,7 +536,7 @@ fn allocation_js(#[case] variant: Variant) {
         tags: HashSet::from(["typedarray", "exclude_arm", "xplatslow", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(target_arch = "aarch64"))]
@@ -553,7 +553,7 @@ fn allocation2_js(#[case] variant: Variant) {
         tags: HashSet::from(["typedarray", "exclude_arm", "xplatslow", "Slow"]),
         ..Default::default()
     };
-    common::run_test_variant(test, variant, COMMON_TAGS);
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
 #[cfg(not(feature = "optimized-tests"))]
