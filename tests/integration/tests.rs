@@ -72,10 +72,8 @@ mod tagged_integers;
 mod test262;
 mod test_loop;
 mod try_catch;
-// TODO (hanhossain): fix tests
-// mod ttbasic;
-// TODO (hanhossain): fix tests
-// mod ttexecute_basic;
+mod ttbasic;
+mod ttexecute_basic;
 mod typed_array;
 mod unified_regex;
 mod unit_test_framework;
