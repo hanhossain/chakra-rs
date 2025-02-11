@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
@@ -34,6 +35,7 @@
         $(MSBuildThisFileDirectory)..\..\lib\JITClient;
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories Condition="'$(BuildJIT)'!='false'">
         $(ChakraCoreRootDirectory)Lib\Backend;
         %(AdditionalIncludeDirectories);
@@ -79,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MsBuildThisFileDirectory)ChakraCore.rc">
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
         $(ChakraParserIntDir);

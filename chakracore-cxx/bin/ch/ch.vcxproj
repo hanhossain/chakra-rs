@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)Lib\Jsrt;
         %(AdditionalIncludeDirectories);
@@ -54,6 +55,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ResourceCompile Include="$(MsBuildThisFileDirectory)ch.rc">
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
         %(AdditionalIncludeDirectories)

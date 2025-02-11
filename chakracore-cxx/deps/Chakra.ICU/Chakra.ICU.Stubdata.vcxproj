@@ -27,6 +27,7 @@
         STUBDATA_BUILD=1
       </PreprocessorDefinitions>
 
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);
         $(IcuSourceDirectory)\common

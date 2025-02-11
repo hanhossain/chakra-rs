@@ -74,11 +74,13 @@
       </DisableSpecificWarnings>
       <!-- Use the debug CRT in debug build -->
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)\lib\common\placeholder;
         $(IntDir)..\CoreManifests;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories Condition="'$(IcuIncludeDirectories)'!=''">
         $(IcuIncludeDirectories);
         %(AdditionalIncludeDirectories)

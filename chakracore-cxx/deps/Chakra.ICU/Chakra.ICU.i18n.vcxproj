@@ -27,6 +27,7 @@
         U_I18N_IMPLEMENTATION=1
       </PreprocessorDefinitions>
 
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);
         $(IcuSourceDirectory)\common

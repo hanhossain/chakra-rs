@@ -12,6 +12,7 @@
       <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\lib\native\v140\x86\Release\ChakraCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>

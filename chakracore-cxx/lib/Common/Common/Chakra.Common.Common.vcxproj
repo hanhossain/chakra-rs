@@ -23,11 +23,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <!-- For windowsdatetimep.h -->
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ComIncPath)\winrt;
         %(AdditionalIncludeDirectories)

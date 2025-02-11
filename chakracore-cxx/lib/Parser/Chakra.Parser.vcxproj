@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
         $(MSBuildThisFileDirectory)..\Backend;
@@ -127,6 +128,7 @@
       <PreprocessToFile>true</PreprocessToFile>
       <PreprocessSuppressLineNumbers>true</PreprocessSuppressLineNumbers>
       <ObjectFileName>$(IntDir)jserr.rc2</ObjectFileName>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
       $(MSBuildThisFileDirectory);
       $(MSBuildThisFileDirectory)..\Common;
