@@ -55,6 +55,7 @@ else()
     )
 endif()
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
   ChakraCoreStatic PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}

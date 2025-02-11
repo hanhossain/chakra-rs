@@ -16,6 +16,7 @@ if(CC_TARGETS_AMD64)
 endif()
 
 if(CAN_BUILD_WABT)
+    # TODO (hanhossain): remove include_directories in favor of target_include_directories
     include_directories(
     ../../wabt/chakra
     )
@@ -139,5 +140,6 @@ endif()
 
 add_library (Chakra.Runtime.Library OBJECT ${CRLIB_SOURCE_CODES})
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.Library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

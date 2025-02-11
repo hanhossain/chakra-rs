@@ -114,6 +114,7 @@ add_library (Chakra.Backend OBJECT
     ${CC_BACKEND_ARCH_FILES}
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
     ${CC_BACKEND_ARCH_FOLDER}

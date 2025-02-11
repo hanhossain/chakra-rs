@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
         %(AdditionalIncludeDirectories)
@@ -36,6 +37,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Throw.cpp">
+      <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>..\..\lib\runtime;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemGroup>

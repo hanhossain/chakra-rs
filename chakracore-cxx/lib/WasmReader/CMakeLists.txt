@@ -12,6 +12,7 @@ add_library (Chakra.WasmReader OBJECT
     WasmSignature.cpp
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.WasmReader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
     ../JITIDL

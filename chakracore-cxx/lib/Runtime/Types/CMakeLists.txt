@@ -28,5 +28,6 @@ add_library (Chakra.Runtime.Types OBJECT
     UnscopablesWrapperObject.cpp
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.Types PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
