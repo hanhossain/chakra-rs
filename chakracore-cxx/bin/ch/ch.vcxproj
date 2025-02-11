@@ -25,7 +25,7 @@
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
         $(ChakraCoreRootDirectory)Lib\Runtime;
-        $(ChakraCoreRootDirectory)Bin\ChakraCore;
+        $(ChakraCoreRootDirectory)Bin;
         $(IntDir);
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
