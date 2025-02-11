@@ -16,5 +16,6 @@ add_library (Chakra.Common.DataStructures OBJECT
 # TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(..)
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Common.DataStructures PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -26,5 +26,6 @@ add_library (Chakra.Runtime.Debug OBJECT
     TTSupport.cpp
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.Debug PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -38,5 +38,6 @@ add_library (Chakra.Runtime.Base OBJECT
     jitprofiling.cpp
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.Base PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

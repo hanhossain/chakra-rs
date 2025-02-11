@@ -39,6 +39,7 @@ add_library (Chakra.Runtime.PlatformAgnostic OBJECT
   ${PL_SOURCE_FILES}
   )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
   Chakra.Runtime.PlatformAgnostic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
   )

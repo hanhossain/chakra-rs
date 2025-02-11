@@ -21,5 +21,6 @@ add_library (Chakra.Runtime.ByteCode OBJECT
     Symbol.cpp
     )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.ByteCode PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
