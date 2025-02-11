@@ -56,6 +56,7 @@ add_library (Chakra.Common.Memory OBJECT
     ${CCM_SOURCE_FILES}
     )
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(..)
 
 target_include_directories (

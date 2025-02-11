@@ -26,6 +26,7 @@ set_target_properties(ch
   POSITION_INDEPENDENT_CODE True
   )
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(..)
 
 if(CC_TARGETS_AMD64)

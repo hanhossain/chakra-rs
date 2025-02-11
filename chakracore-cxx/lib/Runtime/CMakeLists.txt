@@ -1,5 +1,6 @@
 project(CHAKRA_RUNTIME)
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(
     .
     ../JITIDL

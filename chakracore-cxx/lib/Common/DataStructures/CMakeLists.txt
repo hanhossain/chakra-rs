@@ -13,6 +13,7 @@ add_library (Chakra.Common.DataStructures OBJECT
     SizePolicy.cpp
     )
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(..)
 
 target_include_directories (
