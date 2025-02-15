@@ -25,6 +25,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)
+		add_link_options("-fuse-ld=lld")
 elseif(CMAKE_SYSTEM_NAME STREQUAL Darwin)
     set(CC_TARGET_OS_OSX 1)
 endif()
