@@ -28,7 +28,7 @@ jobs:
           - os: macos-latest
             deps: brew install ninja icu4c --quiet
           - os: ubuntu-latest
-            deps: sudo apt-get install -y ninja-build
+            deps: sudo apt-get install -y ninja-build lld
           - build-type: debug
             features: compile-cpp
           - build-type: test
@@ -83,7 +83,7 @@ jobs:
             deps: brew install ninja icu4c --quiet
             cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
           - os: ubuntu-latest
-            deps: sudo apt-get install -y ninja-build
+            deps: sudo apt-get install -y ninja-build lld
             cmake-flags: ''
           - build-type: debug
             cmake-build-type: Debug
