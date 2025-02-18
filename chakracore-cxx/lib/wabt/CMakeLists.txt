@@ -36,17 +36,11 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-
 # disable -Wunused-parameter: this is really common when implementing
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
 add_definitions(-fcolor-diagnostics)
-
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(src/prebuilt)
 
 # yyerror passes a non-string-literal to a printf-like function, which is a
 # warning.

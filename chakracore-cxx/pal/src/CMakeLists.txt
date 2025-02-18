@@ -7,8 +7,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 cmake_policy(SET CMP0042 NEW)
 
 # Include directories
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(include)
 
 # Compile options
 if(CC_TARGETS_AMD64)
