@@ -158,7 +158,7 @@ do { \
 #define ENABLE_TEST_HOOKS
 #endif
 
-#include "ChakraCore/TestHooks.h"
+#include "TestHooks.h"
 #include "ChakraRtInterface.h"
 #include "HostConfigFlags.h"
 #include "MessageQueue.h"

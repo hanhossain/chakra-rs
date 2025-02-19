@@ -26,14 +26,23 @@ set_target_properties(ch
   POSITION_INDEPENDENT_CODE True
   )
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
+include_directories(..)
+
 if(CC_TARGETS_AMD64)
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories (ch
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-    ..
+  ../ChakraCore
+  ../../lib/Common
+  ../../lib/Jsrt
+  ../../lib/Runtime
+  ../../lib/Parser
+  ${Wasm_dep}
   )
 
 if(CC_TARGET_OS_LINUX)

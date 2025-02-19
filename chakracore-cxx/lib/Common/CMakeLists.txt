@@ -1,5 +1,8 @@
 project(CHAKRA_COMMON)
 
+# TODO (hanhossain): remove include_directories in favor of target_include_directories
+include_directories(${CHAKRA_COMMON_SOURCE_DIR})
+
 add_subdirectory (Codex)
 add_subdirectory (Common)
 add_subdirectory (Core)
