@@ -3,6 +3,7 @@ project (CHAKRACORE)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
