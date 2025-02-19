@@ -107,7 +107,7 @@ jobs:
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Configure CMake
-        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja -DCMAKE_CXX_STANDARD=17 ..
       - name: Build
         run: ninja
 
