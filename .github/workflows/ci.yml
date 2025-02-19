@@ -69,7 +69,7 @@ jobs:
           CHAKRA_TEST_SLOW: true
 
   build-cmake:
-    name: c++ / ${{ matrix.os }} / ${{ matrix.build-type }}
+    name: cmake / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     defaults:
@@ -112,7 +112,7 @@ jobs:
         run: ninja
 
   build-msvc:
-    name: c++ / windows / ${{ matrix.build-type }}
+    name: msvc / windows / ${{ matrix.build-type }}
     runs-on: windows-latest
     timeout-minutes: 120
     defaults:
