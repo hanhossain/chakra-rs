@@ -112,6 +112,7 @@ jobs:
         run: ninja
 
   build-msvc:
+    name: c++ / windows / ${{ matrix.build-type }}
     runs-on: windows-latest
     timeout-minutes: 120
     defaults:
