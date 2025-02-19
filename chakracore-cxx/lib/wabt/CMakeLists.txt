@@ -43,8 +43,6 @@ include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DI
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
 
-add_definitions(-fcolor-diagnostics)
-
 # TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(src/prebuilt)
 

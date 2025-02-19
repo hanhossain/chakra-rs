@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project (CHAKRACORE)
 
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
 option(INTL_ICU "Enable Intl" ON)
@@ -126,8 +127,6 @@ endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     OR CMAKE_CXX_COMPILER_ID STREQUAL Clang
     OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    # Color diagnostics for g++ and clang++
-    add_definitions("-fdiagnostics-color=always")
 endif()
 
 # TODO (hanhossain): don't use add_definition for this, just use the CMake variable
