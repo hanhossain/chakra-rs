@@ -13,22 +13,27 @@ concurrency:
 
 jobs:
   build-rust:
-    runs-on: ${{ matrix.os }}
+    name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
+    runs-on: ${{ matrix.os-image }}
     strategy:
       fail-fast: false
       matrix:
         os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
+          - macos
+          - ubuntu
+          - windows
         build-type:
           - debug
           - test
         include:
-          - os: macos-latest
+          - os: macos
+            os-image: macos-latest
             deps: brew install ninja icu4c --quiet
-          - os: ubuntu-latest
+          - os: ubuntu
+            os-image: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
+          - os: windows
+            os-image: windows-latest
           - build-type: debug
             features: compile-cpp
           - build-type: test
@@ -40,19 +45,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
-        if: matrix.os != 'windows-latest'
+        if: runner.os != 'Windows'
         run: ${{ matrix.deps }}
       - name: Install cargo-nextest
         uses: taiki-e/install-action@v2
         with:
           tool: cargo-nextest
       - name: Add msbuild to PATH
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
       - name: Set timezone
-        if: matrix.os == 'windows-latest'
+        if: runner.os == 'Windows'
         run: tzutil /s "Pacific Standard time"
       - name: Build
         run: cargo build --features ${{ matrix.features }} --all-targets
