@@ -9,13 +9,13 @@ extern "C" void *amd64_CallWithFakeFrame(void *target,
                                          void *frame,
                                          size_t spillSize,
                                          size_t argsSize,
-                                         void *arg0 = nullptr) throw(...);
+                                         void *arg0 = nullptr) noexcept(false);
 #elif defined(_M_ARM)
-extern "C" void *arm_CallEhFrame(void *target, void *framePtr, void *localsPtr, size_t argsSize) throw(...);
-extern "C" void *arm_CallCatch(void *target, void *framePtr, void *localsPtr, size_t argsSize, void *catchObj) throw(...);
+extern "C" void *arm_CallEhFrame(void *target, void *framePtr, void *localsPtr, size_t argsSize) noexcept(false);
+extern "C" void *arm_CallCatch(void *target, void *framePtr, void *localsPtr, size_t argsSize, void *catchObj) noexcept(false);
 #elif defined(_M_ARM64)
-extern "C" void *arm64_CallEhFrame(void *target, void *framePtr, void *localsPtr, size_t argsSize) throw(...);
-extern "C" void *arm64_CallCatch(void *target, void *framePtr, void *localsPtr, size_t argsSize, void *catchObj) throw(...);
+extern "C" void *arm64_CallEhFrame(void *target, void *framePtr, void *localsPtr, size_t argsSize) noexcept(false);
+extern "C" void *arm64_CallCatch(void *target, void *framePtr, void *localsPtr, size_t argsSize, void *catchObj) noexcept(false);
 #endif
 
 namespace Js

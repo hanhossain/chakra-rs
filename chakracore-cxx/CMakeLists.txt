@@ -158,7 +158,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
         -D__STDC_WANT_LIB_EXT1__=1
         )
 
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17)
 
     # todo: fix general visibility of the interface
     # do not set to `fvisibility=hidden` as it is going to
