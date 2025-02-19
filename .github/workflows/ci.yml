@@ -69,7 +69,8 @@ jobs:
           CHAKRA_TEST_SLOW: true
 
   build-cmake:
-    runs-on: ${{ matrix.os }}
+    name: c++ / ${{ matrix.os }} / ${{ matrix.build-type }}
+    runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     defaults:
       run:
@@ -78,18 +79,19 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-latest
-          - ubuntu-latest
+          - macos
+          - ubuntu
         build-type:
           - debug
           - test
         include:
-          - os: macos-latest
+          - os: macos
+            os-image: macos-latest
             deps: brew install ninja icu4c --quiet
             cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
-          - os: ubuntu-latest
+          - os: ubuntu
+            os-image: ubuntu-latest
             deps: sudo apt-get install -y ninja-build
-            cmake-flags: ''
           - build-type: debug
             cmake-build-type: Debug
           - build-type: test
