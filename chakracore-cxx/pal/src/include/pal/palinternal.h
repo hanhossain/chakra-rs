@@ -308,12 +308,6 @@ function_name() to call the system's implementation
 #ifdef __real_type_class
 #undef __real_type_class
 #endif
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
 
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
