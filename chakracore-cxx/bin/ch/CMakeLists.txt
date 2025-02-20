@@ -48,7 +48,6 @@ target_include_directories (ch
 if(CC_TARGET_OS_LINUX)
   set(LINKER_START_GROUP -pie -Wl,--start-group)
   set(LINKER_END_GROUP -Wl,--end-group)
-  set(LINKER_END_GROUP "${LINKER_END_GROUP} -static-libstdc++")
 elseif(CC_TARGET_OS_OSX)
   set(LINKER_START_GROUP -Wl,-force_load,)
 endif()
