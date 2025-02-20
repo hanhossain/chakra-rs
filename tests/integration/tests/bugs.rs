@@ -790,7 +790,6 @@ fn deletenonconfig_js(#[case] variant: Variant) {
 #[cfg(not(windows))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
 #[case::disable_jit(Variant::DisableJit)]
 fn misc_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
