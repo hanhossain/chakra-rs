@@ -21,7 +21,26 @@ Abstract:
 
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
+
+#ifdef min
+#define TEMP_MIN min
+#undef min
+#endif
+#ifdef max
+#define TEMP_MAX max
+#undef max
+#endif
+
 #include <math.h>
+
+#ifdef TEMP_MIN
+#define min TEMP_MIN
+#undef TEMP_MIN
+#endif
+#ifdef TEMP_MAX
+#define max TEMP_MAX
+#undef TEMP_MAX
+#endif
 
 #if HAVE_IEEEFP_H
 #include <ieeefp.h>
