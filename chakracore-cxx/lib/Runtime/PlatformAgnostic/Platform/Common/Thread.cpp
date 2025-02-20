@@ -4,7 +4,18 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimePlatformAgnosticPch.h"
+
+#ifdef __in
+#define TEMP_IN __in
+#undef __in
+#endif
+
 #include "CommonPal.h"
+
+#ifdef TEMP_IN
+#define __in TEMP_IN
+#undef TEMP_IN
+#endif
 
 #include <stdint.h>
 
