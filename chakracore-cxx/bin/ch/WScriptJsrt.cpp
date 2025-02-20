@@ -14,7 +14,16 @@
 #include <vector>
 #include <ctime>
 #include <ratio>
+
+#ifdef __valid
+#define TEMP_VALID __valid
+#undef __valid
+#endif
 #include <chrono>
+#ifdef TEMP_VALID
+#define __valid TEMP_VALID
+#undef TEMP_VALID
+#endif
 
 #if defined(_X86_) || defined(_M_IX86)
 #define CPU_ARCH_TEXT "x86"
