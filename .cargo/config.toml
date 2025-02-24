@@ -8,4 +8,4 @@ nt = "nextest run --features compile-cpp"
 ntt = "nextest run --features compile-cpp,optimized-tests"
 
 [build]
-rustflags = ["-W", "rust-2024-compatibility warning"]
+rustflags = ["-W", "rust-2024-compatibility"]
