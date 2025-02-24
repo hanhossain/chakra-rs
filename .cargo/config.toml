@@ -6,6 +6,3 @@ t = "test --features compile-cpp"
 tt = "test --features compile-cpp,optimized-tests"
 nt = "nextest run --features compile-cpp"
 ntt = "nextest run --features compile-cpp,optimized-tests"
-
-[build]
-rustflags = ["-W", "rust-2024-compatibility"]

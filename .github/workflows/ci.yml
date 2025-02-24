@@ -40,7 +40,7 @@ jobs:
             features: compile-cpp,optimized-tests
     env:
       CARGO_TERM_COLOR: always
-      RUSTFLAGS: -D warnings -W rust-2024-compatibility
+      RUSTFLAGS: -D warnings
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
