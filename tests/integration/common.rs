@@ -188,31 +188,34 @@ pub fn run_test_variant<const N: usize>(
             .map(|s| trim_carriage_return(s))
             .collect::<Vec<_>>();
 
-        if let Some(baseline_path) = test.baseline_path {
-            if !baseline_path.is_empty() {
-                let baseline = manifest_dir.join(test.directory).join(baseline_path);
-                let expected = read_to_string(baseline).unwrap();
-                let expected = expected
-                    .lines()
-                    .map(|s| trim_carriage_return(s))
-                    .collect::<Vec<_>>();
+        match test.baseline_path {
+            Some(baseline_path) => {
+                if !baseline_path.is_empty() {
+                    let baseline = manifest_dir.join(test.directory).join(baseline_path);
+                    let expected = read_to_string(baseline).unwrap();
+                    let expected = expected
+                        .lines()
+                        .map(|s| trim_carriage_return(s))
+                        .collect::<Vec<_>>();
 
-                assert_eq!(expected, actual);
-            }
-        } else {
-            println!("Actual output: {:#?}", actual);
-            let mut passed = false;
-            for (index, line) in actual.iter().enumerate() {
-                let lower = line.to_lowercase();
-                if lower != "pass" && lower != "passed" && !lower.is_empty() {
-                    panic!(
-                        "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
-                    );
-                } else {
-                    passed = true;
+                    assert_eq!(expected, actual);
                 }
             }
-            assert!(passed, "Test did not print 'pass' or 'passed'");
+            _ => {
+                println!("Actual output: {:#?}", actual);
+                let mut passed = false;
+                for (index, line) in actual.iter().enumerate() {
+                    let lower = line.to_lowercase();
+                    if lower != "pass" && lower != "passed" && !lower.is_empty() {
+                        panic!(
+                        "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
+                    );
+                    } else {
+                        passed = true;
+                    }
+                }
+                assert!(passed, "Test did not print 'pass' or 'passed'");
+            }
         }
 
         assert!(output.status.success());
