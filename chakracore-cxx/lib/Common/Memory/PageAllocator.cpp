@@ -2273,9 +2273,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
     // incorrect representation of current used bytes in the process. We've determined that this is an
     // acceptable issue, which will be mitigated at the level of the application consuming the event.
     JS_ETW(EventWriteJSCRIPT_PAGE_ALLOCATOR_USED_SIZE(lastTotalUsedBytes + bytes));
-#ifndef ENABLE_JS_ETW
     Unused(lastTotalUsedBytes);
-#endif
 
 #ifdef PERF_COUNTERS
     GetUsedSizeCounter() += bytes;
@@ -2302,9 +2300,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
     // incorrect representation of current used bytes in the process. We've determined that this is an
     // acceptable issue, which will be mitigated at the level of the application consuming the event.
     JS_ETW(EventWriteJSCRIPT_PAGE_ALLOCATOR_USED_SIZE(lastTotalUsedBytes - bytes));
-#ifndef ENABLE_JS_ETW
     Unused(lastTotalUsedBytes);
-#endif
 
 #ifdef PERF_COUNTERS
     GetUsedSizeCounter() -= bytes;

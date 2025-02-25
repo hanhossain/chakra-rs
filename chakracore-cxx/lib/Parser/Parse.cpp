@@ -7658,11 +7658,6 @@ void Parser::FinishFncDecl(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, bool fL
         pnodeFnc->ichLim = this->GetScanner()->IchLimTok();
         pnodeFnc->cbLim = this->GetScanner()->IecpLimTok();
     }
-
-#ifdef ENABLE_JS_ETW
-    int32 astSize = *m_pCurrentAstSize - startAstSize;
-    EventWriteJSCRIPT_PARSE_METHOD_STOP(m_sourceContextInfo->dwHostSourceContext, GetScriptContext(), pnodeFnc->functionId, astSize, m_parseType, name);
-#endif
 }
 
 ParseNodeVar * Parser::CreateSpecialVarDeclNode(ParseNodeFnc * pnodeFnc, IdentPtr pid)

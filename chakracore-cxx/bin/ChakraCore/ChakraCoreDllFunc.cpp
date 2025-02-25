@@ -15,9 +15,6 @@
 #ifdef VTUNE_PROFILING
 #include "Base/VTuneChakraProfile.h"
 #endif
-#ifdef ENABLE_JS_ETW
-#include "Base/EtwTrace.h"
-#endif
 
 extern HANDLE g_hInstance;
 static ATOM  lockedDll = 0;
@@ -50,9 +47,6 @@ static BOOL AttachProcess(HANDLE hmod)
         ConfigParser::ParseOnModuleLoad(parser, hmod);
     }
 
-#ifdef ENABLE_JS_ETW
-    EtwTrace::Register();
-#endif
 #ifdef VTUNE_PROFILING
     VTuneChakraProfile::Register();
 #endif
@@ -135,10 +129,6 @@ EXTERN_C BOOL WINAPI DllMain(HINSTANCE hmod, DWORD dwReason, PVOID pvReserved)
 
 #ifdef DYNAMIC_PROFILE_STORAGE
         DynamicProfileStorage::Uninitialize();
-#endif
-#ifdef ENABLE_JS_ETW
-        // Do this before DetachProcess() so that we won't have ETW rundown callbacks while destroying threadContexts.
-        EtwTrace::UnRegister();
 #endif
 #ifdef VTUNE_PROFILING
         VTuneChakraProfile::UnRegister();

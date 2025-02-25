@@ -741,12 +741,6 @@ private:
         CollectionState _exitState;
     };
 
-#if defined(ENABLE_JS_ETW)
-    ETWEventGCActivationTrigger collectionStartReason;
-    CollectionFlags collectionStartFlags;
-    ETWEventGCActivationTrigger collectionFinishReason;
-#endif
-
     class CollectionStateChangedObserver : public ObservableValueObserver<CollectionState>
     {
     private:
@@ -1837,19 +1831,6 @@ private:
     void NotifyFree(T * heapBlock);
 
     void CleanupPendingUnroot();
-
-#ifdef ENABLE_JS_ETW
-    ULONG EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
-    void FlushFreeRecord();
-    void AppendFreeMemoryETWRecord(__in char *address, size_t size);
-    static const uint BulkFreeMemoryCount = 400;
-    uint bulkFreeMemoryWrittenCount;
-    struct ETWFreeRecord {
-        char* memoryAddress;
-        uint32 objectSize;
-    };
-    ETWFreeRecord etwFreeRecords[BulkFreeMemoryCount];
-#endif
 
     template <ObjectInfoBits attributes>
     bool IntegrateBlock(char * blockAddress, PageSegment * segment, size_t allocSize, size_t objectSize);

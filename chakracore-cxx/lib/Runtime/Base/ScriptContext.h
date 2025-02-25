@@ -452,11 +452,6 @@ namespace Js
         void InitializeRemoteScriptContext();
 #endif
 
-#ifdef ENABLE_JS_ETW
-        void EmitStackTraceEvent(__in UINT64 operationID, __in USHORT maxFrameCount, bool emitV2AsyncStackEvent);
-        static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
-#endif
-
         void SetPrivilegeLevel(ScriptContextPrivilegeLevel level) { this->scriptContextPrivilegeLevel = level; }
         ScriptContextPrivilegeLevel GetPrivilegeLevel() { return this->scriptContextPrivilegeLevel; }
         void SetIsDiagnosticsScriptContext(bool);
@@ -1663,10 +1658,6 @@ private:
         Js::PropertyId GetFunctionNumber(JavascriptMethod entryPoint);
 
         static const char16* CopyString(const char16* str, size_t charCount, ArenaAllocator* alloc);
-
-#ifdef ENABLE_JS_ETW
-        static charcount_t AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const WCHAR* sourceString, charcount_t sourceStringLen, WCHAR escapeChar, WCHAR charToEscape);
-#endif
 
     public:
 #if DYNAMIC_INTERPRETER_THUNK

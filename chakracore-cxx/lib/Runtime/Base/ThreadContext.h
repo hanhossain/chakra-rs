@@ -1149,10 +1149,6 @@ public:
     Js::PropertyRecord const * UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR> const& propertyName, bool bind, bool isSymbol = false);
     Js::PropertyRecord const * UncheckedAddPropertyId(__in LPCWSTR propertyName, __in int propertyNameLength, bool bind = false, bool isSymbol = false);
 
-#ifdef ENABLE_JS_ETW
-    void EtwLogPropertyIdList();
-#endif
-
 private:
     const Js::PropertyRecord * GetOrAddPropertyRecordImpl(JsUtil::CharacterBuffer<char16> propertyName, bool bind);
     void AddPropertyRecordInternal(const Js::PropertyRecord * propertyRecord);
