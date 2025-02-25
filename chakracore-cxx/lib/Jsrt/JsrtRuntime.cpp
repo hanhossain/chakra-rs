@@ -70,10 +70,6 @@ void JsrtRuntime::Uninitialize()
         // Other closing contexts / finalizers having trouble with current
         // runtime/context.
         RentalThreadContextManager::DestroyThreadContext(tmpThreadContext);
-#else
-        currentRuntime->CloseContexts();
-        RentalThreadContextManager::DestroyThreadContext(tmpThreadContext);
-        HeapDelete(currentRuntime);
 #endif
     }
 }
