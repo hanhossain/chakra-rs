@@ -61,7 +61,6 @@ void JsrtRuntime::Uninitialize()
     while (currentThreadContext)
     {
         Assert(!currentThreadContext->IsScriptActive());
-        JsrtRuntime* currentRuntime = static_cast<JsrtRuntime*>(currentThreadContext->GetJSRTRuntime());
         tmpThreadContext = currentThreadContext;
         currentThreadContext = currentThreadContext->Next();
 
