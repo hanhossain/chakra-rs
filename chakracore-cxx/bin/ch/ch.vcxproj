@@ -20,13 +20,18 @@
     <ClCompile>
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
-        $(ChakraCoreRootDirectory)Lib\Jsrt;
-        %(AdditionalIncludeDirectories);
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
+        $(ChakraCoreRootDirectory)Lib\Parser;
+        $(ChakraCoreRootDirectory)Lib\WasmReader;
         $(ChakraCoreRootDirectory)Lib\Runtime;
+        $(ChakraCoreRootDirectory)Lib\CodeGenClient;
+        $(ChakraCoreRootDirectory)Lib\Runtime\ByteCode;
+        $(ChakraCoreRootDirectory)Lib\Jsrt;
         $(ChakraCoreRootDirectory)Bin\ChakraCore;
         $(IntDir);
+        $(ChakraJITIDLIntDir);
+        $(ChakraCoreRootDirectory)Lib\JITClient;
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
     </ClCompile>
