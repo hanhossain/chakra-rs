@@ -34,6 +34,11 @@
         $(ChakraCoreRootDirectory)Lib\JITClient;
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
+      <!-- TODO (hanhossain): remove most directory paths -->
+      <AdditionalIncludeDirectories Condition="'$(BuildJIT)'!='false'">
+        $(ChakraCoreRootDirectory)Lib\Backend;
+        %(AdditionalIncludeDirectories);
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>ch.def</ModuleDefinitionFile>
