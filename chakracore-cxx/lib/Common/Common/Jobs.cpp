@@ -1355,13 +1355,6 @@ namespace JsUtil
         }
 #endif
 
-#ifdef GENERATE_DUMP
-        if (Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag))
-        {
-            Js::Throw::GenerateDump(pEP, Js::Configuration::Global.flags.DumpOnCrash);
-        }
-#endif
-
 #if DBG && _M_IX86
         int callerEBP = *((int*)pEP->ContextRecord->Ebp);
 

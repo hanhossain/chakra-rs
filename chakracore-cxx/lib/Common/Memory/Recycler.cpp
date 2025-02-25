@@ -5975,13 +5975,6 @@ Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
     }
 #endif
 
-#ifdef GENERATE_DUMP
-    if (Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag))
-    {
-        Js::Throw::GenerateDump(pEP, Js::Configuration::Global.flags.DumpOnCrash);
-    }
-#endif
-
 #if DBG && _M_IX86
     int callerEBP = *((int*)pEP->ContextRecord->Ebp);
 
@@ -8628,12 +8621,6 @@ Recycler::CheckLeaks(char16 const * header)
 
             char16 * buffer = Output::CaptureEnd();
             MemoryLeakCheck::AddLeakDump(buffer, param.stats.markData.markBytes, param.stats.markData.markCount);
-#ifdef GENERATE_DUMP
-            if (GetRecyclerFlagsTable().IsEnabled(Js::DumpOnLeakFlag))
-            {
-                Js::Throw::GenerateDump(GetRecyclerFlagsTable().DumpOnLeak);
-            }
-#endif
         }
         else
         {

@@ -502,11 +502,6 @@
 #ifdef DBG
 #define VALIDATE_ARRAY
 #define ENABLE_ENTRYPOINT_CLEANUP_TRACE 1
-
-// xplat-todo: Do we need dump generation for non-Win32 platforms?
-#ifdef _WIN32
-#define GENERATE_DUMP
-#endif
 #endif
 
 #if DBG_DUMP

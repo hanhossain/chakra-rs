@@ -37,19 +37,6 @@ namespace Js {
 
         static bool ReportAssert(__in LPCSTR fileName, uint lineNumber, __in LPCSTR error, __in LPCSTR message);
         static void LogAssert();
-#ifdef GENERATE_DUMP
-        static int GenerateDump(PEXCEPTION_POINTERS exceptInfo, LPCWSTR filePath, int ret = EXCEPTION_CONTINUE_SEARCH, bool needLock = false);
-        static void GenerateDump(LPCWSTR filePath, bool terminate = false, bool needLock = false);
-        static void GenerateDumpForAssert(LPCWSTR filePath);
-    private:
-        static CriticalSection csGenerateDump;
-#ifdef STACK_BACK_TRACE
-        THREAD_LOCAL static  StackBackTrace * stackBackTrace;
-
-        static const int StackToSkip = 2;
-        static const int StackTraceDepth = 40;
-#endif
-#endif
     };
 
     // Info:        Verify the result or throw catastrophic
