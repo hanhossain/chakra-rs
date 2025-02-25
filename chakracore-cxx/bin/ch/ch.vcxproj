@@ -73,6 +73,7 @@
     <ClInclude Include="RuntimeThreadData.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WScriptJsrt.h" />
+    <ClCompile Include="..\ChakraCore\TestHooks.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ch.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="JITProcessManager.cpp" />
     <ClCompile Include="RuntimeThreadData.cpp" />
     <ClCompile Include="WScriptJsrt.cpp" />
+    <ClCompile Include="..\ChakraCore\TestHooks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DbgController.js">
@@ -98,30 +100,9 @@
     </BinplaceGenerated>
   </ItemGroup>
   <ItemGroup>
-    <!-- for u_getVersion() referenced in PlatformAgnostic::ICUHelpers::GetICUMajorVersion -->
-    <!--
-    <ProjectReference Condition="'$(ChakraICU)'=='static' OR '$(ChakraICU)'=='shared'" Include="..\..\deps\Chakra.ICU\Chakra.ICU.Common.vcxproj">
-      <Project>{EE2A3111-4D85-427C-B0AB-E6B0EA7FFB44}</Project>
-    </ProjectReference>
-    -->
-  </ItemGroup>
-  <ItemGroup>
     <None Include="262.js" />
     <None Include="ch.def" />
   </ItemGroup>
-  <!--
-  <ItemGroup>
-    <ProjectReference Include="..\..\lib\Common\Codex\Chakra.Common.Codex.vcxproj">
-      <Project>{1876e800-ad77-48c4-a2f7-e5265f24ac38}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\lib\Common\Core\Chakra.Common.Core.vcxproj">
-      <Project>{cc4153ff-ac3e-4734-b562-cc23812df31b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\lib\Jsrt\Chakra.Jsrt.vcxproj">
-      <Project>{706083f7-6aa4-4558-a153-6352ef9220f5}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  -->
   <ItemGroup>
     <ProjectReference Include="..\..\lib\JITClient\Chakra.JITClient.vcxproj">
       <Project>{ffd0fa88-7a39-407e-a92d-d3a06273e1ac}</Project>
@@ -207,6 +188,9 @@
     <ProjectReference Condition="'$(ChakraICU)'=='static' OR '$(ChakraICU)'=='shared'" Include="..\..\deps\Chakra.ICU\Chakra.ICU.Data.vcxproj">
       <Project>{347824B1-7100-4EE6-8A6B-4FF64E66B0C0}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestHooks.h" />
   </ItemGroup>
   <!-- Conditionally include the group of files to sign because MBv2 knows what to do with this but the old build definition gets confused. -->
   <ItemGroup Condition="'$(VSO_MICROBUILD_V2)'=='True' AND '$(POGO_TYPE)'!='PGI'">
