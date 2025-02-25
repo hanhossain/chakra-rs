@@ -58,10 +58,6 @@ using namespace Memory;
 #pragma warning(pop)
 #endif // GENERATE_DUMP
 
-extern "C"{
-    BOOLEAN IsMessageBoxWPresent();
-}
-
 namespace Js {
 #if defined(GENERATE_DUMP) && defined(STACK_BACK_TRACE)
     THREAD_LOCAL StackBackTrace * Throw::stackBackTrace = nullptr;
@@ -329,7 +325,7 @@ namespace Js {
         // Then if DumpOncrashFlag is not specified it directly returns,
         // otherwise if will raise a non-continuable exception, generate the dump and terminate the process.
         // the popup message box might be useful when testing in IE
-        if (Js::Configuration::Global.flags.AssertPopUp && IsMessageBoxWPresent())
+        if (Js::Configuration::Global.flags.AssertPopUp)
         {
             char16 buff[1024];
 
