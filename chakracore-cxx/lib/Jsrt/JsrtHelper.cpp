@@ -19,11 +19,9 @@
 #include "Language/DynamicProfileStorage.h"
 #endif
 
-#if !defined(_WIN32) || defined(CHAKRA_STATIC_LIBRARY)
 #include "Core/ConfigParser.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 
-#ifdef CHAKRA_STATIC_LIBRARY
 bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) LPWSTR buffer, size_t cchBufferSize, __in LPWSTR moduleName)
 {
     return false;
@@ -37,8 +35,6 @@ LPCWSTR JsUtil::ExternalApi::GetFeatureKeyName()
 {
     return _u("");
 }
-#endif // CHAKRA_STATIC_LIBRARY
-#endif
 
 JsrtCallbackState::JsrtCallbackState(ThreadContext* currentThreadContext)
 {
@@ -84,7 +80,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
     callback(object, callbackState);
 }
 
-#if !defined(_WIN32) || defined(CHAKRA_STATIC_LIBRARY)
     void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
     {
         autoSystemInfo->buildDateHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__DATE__, _countof(__DATE__));
@@ -110,7 +105,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
 
     // setup the cleanup
     // we do not track the main thread. When it exits do the cleanup below
-#if defined(CHAKRA_STATIC_LIBRARY) || !defined(_WIN32)
     atexit([]() {
         ThreadBoundThreadContextManager::DestroyContextAndEntryForCurrentThread();
 
@@ -124,7 +118,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         ThreadContextTLSEntry::CleanupThread();
         ThreadContextTLSEntry::CleanupProcess();
     });
-#endif
 
 #ifndef _WIN32
         PAL_InitializeChakraCore();
@@ -192,4 +185,3 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         pthread_setspecific(s_threadLocalDummy, malloc(1));
 #endif
     }
-#endif

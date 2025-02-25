@@ -1077,9 +1077,7 @@ bool WScriptJsrt::Initialize()
 {
     HRESULT hr = S_OK;
     char CH_BINARY_LOCATION[2048];
-#ifdef CHAKRA_STATIC_LIBRARY
     const char* LINK_TYPE = "static";
-#endif
 #ifdef HAS_ICU
     int icuVersion = PlatformAgnostic::ICUHelpers::GetICUMajorVersion();
 #else

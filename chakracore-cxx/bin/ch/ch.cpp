@@ -1222,7 +1222,7 @@ int _cdecl wmain(int argc, __in_ecount(argc) LPWSTR argv[])
     argInfo = { argc, argv, PrintUsage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
 
-#if defined(CHAKRA_STATIC_LIBRARY) && !defined(NDEBUG)
+#if !defined(NDEBUG)
     // handle command line flags
     OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
 #endif

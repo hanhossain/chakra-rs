@@ -15,6 +15,4 @@ private:
     JsrtContext* originalJsrtContext;
 };
 
-#if defined(CHAKRA_STATIC_LIBRARY) || !defined(_WIN32)
 _NOINLINE void VALIDATE_ENTER_CURRENT_THREAD();
-#endif
