@@ -83,7 +83,7 @@
     <ClInclude Include="RuntimeThreadData.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WScriptJsrt.h" />
-    <ClCompile Include="..\ChakraCore\TestHooks.h" />
+    <ClInclude Include="..\ChakraCore\TestHooks.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ch.cpp" />
