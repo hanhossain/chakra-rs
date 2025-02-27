@@ -277,8 +277,6 @@ endif()
 
 # TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(
-    .
-    lib/Common
     lib/Common/PlaceHolder
     pal
     pal/inc
