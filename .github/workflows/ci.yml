@@ -156,7 +156,7 @@ jobs:
       - run: ninja Chakra.Pal
         if: ${{ !cancelled() }}
       - run: ninja Chakra.LTTng
-        if: ${{ !cancelled() && matrix.os != 'macos' }}
+        if: ${{ !cancelled() && matrix.os != 'macos' && matrix.os != 'ubuntu' }}
       - run: ninja ChakraCoreStatic
         if: ${{ !cancelled() }}
       - run: ninja ch
