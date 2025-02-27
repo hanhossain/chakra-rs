@@ -12,12 +12,12 @@ add_library (Chakra.SCACore OBJECT
 
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-    Chakra.SCACore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-    ../Parser
-    ../Common
-    ../Backend
-    ../JITIDL
-    ../Runtime
-    ../Runtime/ByteCode
-    )
+# target_include_directories (
+#     Chakra.SCACore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+#     ../Parser
+#     ../Common
+#     ../Backend
+#     ../JITIDL
+#     ../Runtime
+#     ../Runtime/ByteCode
+#     )

@@ -18,14 +18,14 @@ add_library (Chakra.Jsrt OBJECT
 add_subdirectory(Core)
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-    Chakra.Jsrt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-    ../Backend
-    ../JITIDL
-    ../Runtime
-    ../Runtime/Base
-    ../Runtime/ByteCode
-    ../Runtime/Debug
-    ../Parser
-    ../SCACore
-    )
+# target_include_directories (
+#     Chakra.Jsrt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+#     ../Backend
+#     ../JITIDL
+#     ../Runtime
+#     ../Runtime/Base
+#     ../Runtime/ByteCode
+#     ../Runtime/Debug
+#     ../Parser
+#     ../SCACore
+#     )

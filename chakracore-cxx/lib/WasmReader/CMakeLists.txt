@@ -13,11 +13,11 @@ add_library (Chakra.WasmReader OBJECT
     )
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-    Chakra.WasmReader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-    ../JITIDL
-    ../Backend
-    ../Runtime
-    ../Runtime/ByteCode
-    ../Parser
-    )
+# target_include_directories (
+#     Chakra.WasmReader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+#     ../JITIDL
+#     ../Backend
+#     ../Runtime
+#     ../Runtime/ByteCode
+#     ../Parser
+#     )

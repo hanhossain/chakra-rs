@@ -56,19 +56,19 @@ else()
 endif()
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-  ChakraCoreStatic PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CHAKRACORE_SOURCE_DIR}/lib/Backend
-  ${CHAKRACORE_SOURCE_DIR}/lib/Common
-  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
-  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
-  ${CHAKRACORE_SOURCE_DIR}/lib/Parser
-  ${CHAKRACORE_SOURCE_DIR}/lib/Jsrt
-  ${CHAKRACORE_SOURCE_DIR}/lib/SCACore
-  ${wasm_includes}
-  ${wabt_includes}
-  )
+# target_include_directories (
+#   ChakraCoreStatic PUBLIC
+#   ${CMAKE_CURRENT_SOURCE_DIR}
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Common
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Parser
+#   ${CHAKRACORE_SOURCE_DIR}/lib/Jsrt
+#   ${CHAKRACORE_SOURCE_DIR}/lib/SCACore
+#   ${wasm_includes}
+#   ${wabt_includes}
+#   )
 
 if(BuildJIT)
     add_subdirectory (Backend)

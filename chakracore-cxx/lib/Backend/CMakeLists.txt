@@ -115,13 +115,13 @@ add_library (Chakra.Backend OBJECT
     )
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-    Chakra.Backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CC_BACKEND_ARCH_FOLDER}
-    ../Common
-    ../JITIDL
-    ../Runtime
-    ../Runtime/ByteCode
-    ../Runtime/Math
-    ../Parser
-    )
+# target_include_directories (
+#     Chakra.Backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+#     ${CC_BACKEND_ARCH_FOLDER}
+#     ../Common
+#     ../JITIDL
+#     ../Runtime
+#     ../Runtime/ByteCode
+#     ../Runtime/Math
+#     ../Parser
+#     )

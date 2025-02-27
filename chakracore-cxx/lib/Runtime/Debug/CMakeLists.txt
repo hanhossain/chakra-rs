@@ -27,5 +27,5 @@ add_library (Chakra.Runtime.Debug OBJECT
     )
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (
-    Chakra.Runtime.Debug PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# target_include_directories (
+#     Chakra.Runtime.Debug PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

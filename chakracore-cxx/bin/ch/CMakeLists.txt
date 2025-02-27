@@ -31,16 +31,16 @@ if(CC_TARGETS_AMD64)
 endif()
 
 # TODO (hanhossain): remove most directory paths
-target_include_directories (ch
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ../ChakraCore
-  ../../lib/Common
-  ../../lib/Jsrt
-  ../../lib/Runtime
-  ../../lib/Parser
-  ${Wasm_dep}
-  )
+# target_include_directories (ch
+#   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+#   ${CMAKE_CURRENT_BINARY_DIR}
+#   ../ChakraCore
+#   ../../lib/Common
+#   ../../lib/Jsrt
+#   ../../lib/Runtime
+#   ../../lib/Parser
+#   ${Wasm_dep}
+#   )
 
 if(CC_TARGET_OS_LINUX)
   set(LINKER_START_GROUP -pie -Wl,--start-group)
