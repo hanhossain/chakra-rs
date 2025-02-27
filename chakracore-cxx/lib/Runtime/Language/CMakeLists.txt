@@ -83,11 +83,6 @@ endif()
 
 add_library (Chakra.Runtime.Language OBJECT ${CRL_SOURCE_FILES})
 
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories (
-    ../Math
-    )
-
 # TODO (hanhossain): remove most directory paths
 target_include_directories (
     Chakra.Runtime.Language PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
