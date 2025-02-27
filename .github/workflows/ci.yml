@@ -110,57 +110,57 @@ jobs:
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
       - run: ninja Chakra.Backend
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Codex
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Common
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Core
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.DataStructures
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Exceptions
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Memory
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Util
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Jsrt
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Jsrt.Core
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Parser
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Base
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.ByteCode
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Debug
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Language
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Library
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Math
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.PlatformAgnostic
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Types
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.SCACore
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja libwabt
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.WasmReader
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Pal
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.LTTng
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja ChakraCoreStatic
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - run: ninja ch
-        continue-on-error: true
+        if: ${{ !cancelled() }}
       - name: Build
         run: ninja
 
