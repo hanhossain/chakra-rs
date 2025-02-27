@@ -1,4 +1,4 @@
-add_library (Chakra.Common.Codex OBJECT
+add_library (Chakra.Common.Codex STATIC
     Utf8Codex.cpp)
 
 # TODO (hanhossain): remove most directory paths

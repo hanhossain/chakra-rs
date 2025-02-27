@@ -52,7 +52,7 @@ elseif(CC_TARGETS_ARM64)
     )
 endif()
 
-add_library (Chakra.Common.Memory OBJECT
+add_library (Chakra.Common.Memory STATIC
     ${CCM_SOURCE_FILES}
     )
 

@@ -1,4 +1,4 @@
-add_library (Chakra.SCACore OBJECT
+add_library (Chakra.SCACore STATIC
     SCACore.cpp
     SCACorePch.cpp
     SCADeserialization.cpp

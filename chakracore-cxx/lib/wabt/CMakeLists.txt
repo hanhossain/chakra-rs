@@ -53,7 +53,7 @@ set(WAST_LEXER_GEN_CC src/prebuilt/wast-lexer-gen.cc)
 
 add_custom_target(everything)
 
-add_library(libwabt OBJECT
+add_library(libwabt STATIC
   chakra/wabtapi.cc
   src/apply-names.cc
   src/binary.cc
