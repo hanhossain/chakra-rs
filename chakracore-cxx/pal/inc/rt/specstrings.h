@@ -46,7 +46,7 @@
 
 #endif
 
-#include <sal.h>
+#include "sal.h"
 
 #ifndef __SAL_H_FULL_VER
 #define __SAL_H_FULL_VER 140050727
@@ -495,7 +495,7 @@ void __pfx_assume(int, const char *);
 * Must avoid redfinitions of macros to workaround rc.exe issues.
 ***************************************************************************/
 #if !(defined(RC_INVOKED) || defined(SORTPP_PASS))
-#include <specstrings_strict.h>
+#include "specstrings_strict.h"
 #endif /* if !(defined(RC_INVOKED) || defined(SORTPP_PASS)) */
 
 /*
@@ -529,7 +529,7 @@ void __pfx_assume(int, const char *);
  to make all of SAL 2 no-ops to ensure no build failures. 
 */
 #if (!defined(_Outptr_) || _MSC_VER <= 1600) && !( defined( MIDL_PASS ) || defined(__midl) || defined(RC_INVOKED) ) && !( defined( _SDV_ ) ) /*IFSTRIP=IGN*/
-#include <no_sal2.h>
+#include "no_sal2.h"
 #endif /* !defined(_Outptr_) || _MSC_VER <= 1600 */
 
 #endif /* #ifndef SPECSTRINGS_H */

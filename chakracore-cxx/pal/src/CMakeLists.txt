@@ -159,3 +159,8 @@ add_library(Chakra.Pal
   ${PLATFORM_SOURCES}
   ${ARCH_SOURCES}
 )
+
+target_include_directories(Chakra.Pal
+    PRIVATE include
+    PUBLIC ../inc
+)
