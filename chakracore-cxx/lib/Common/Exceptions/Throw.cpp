@@ -2,8 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-
-#include "CommonExceptionsPch.h"
+#include "CommonPal.h"
 
 #ifndef USING_PAL_STDLIB
 // === C Runtime Header Files ===

@@ -4,7 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonBasic.h"
-
 #include "Exceptions/ExceptionBase.h"
 
+namespace Js {
+
+    class OperationAbortedException : public ExceptionBase
+    {
+    };
+
+} // namespace Js

@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "assert_only.h"
+
 #ifdef EXCEPTION_CHECK
 
 enum ExceptionType

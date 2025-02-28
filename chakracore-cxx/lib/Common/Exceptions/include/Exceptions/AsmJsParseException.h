@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/ExceptionBase.h"
+
 namespace Js {
 
     class AsmJsParseException : public ExceptionBase

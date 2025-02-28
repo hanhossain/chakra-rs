@@ -4,9 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/ExceptionBase.h"
+
 namespace Js {
 
-    class ScriptAbortException : public ExceptionBase
+    class StackOverflowException : public ExceptionBase
     {
     };
 

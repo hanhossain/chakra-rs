@@ -4,9 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/ExceptionBase.h"
+
 namespace Js {
 
-    class EvalDisabledException : public ExceptionBase
+    class NotImplementedException : public ExceptionBase
     {
     };
 

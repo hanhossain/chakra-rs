@@ -2,10 +2,8 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonExceptionsPch.h"
-
 #ifdef EXCEPTION_CHECK
-#include "ExceptionCheck.h"
+#include "Exceptions/ExceptionCheck.h"
 
 THREAD_LOCAL ExceptionCheck::Data ExceptionCheck::data;
 
