@@ -109,10 +109,20 @@ jobs:
         run: ${{ matrix.deps }}
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
-      - run: ninja Chakra.Backend
-        if: ${{ !cancelled() && matrix.os != 'macos' }}
+
+      # fixed
+      - run: ninja Chakra.Common.Util
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Pal
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.PlatformAgnostic
+        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Codex
         if: ${{ !cancelled() }}
+
+      # in progress
+      - run: ninja Chakra.Backend
+        if: ${{ !cancelled() && matrix.os != 'macos' }}
       - run: ninja Chakra.Common.Common
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Core
@@ -122,8 +132,6 @@ jobs:
       - run: ninja Chakra.Common.Exceptions
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Memory
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.Util
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Jsrt
         if: ${{ !cancelled() }}
@@ -143,8 +151,6 @@ jobs:
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Math
         if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.PlatformAgnostic
-        if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Types
         if: ${{ !cancelled() }}
       - run: ninja Chakra.SCACore
@@ -153,12 +159,11 @@ jobs:
         if: ${{ !cancelled() && matrix.os != 'macos' }}
       - run: ninja Chakra.WasmReader
         if: ${{ !cancelled() && matrix.os != 'macos' }}
-      - run: ninja Chakra.Pal
-        if: ${{ !cancelled() }}
       - run: ninja Chakra.LTTng
         if: ${{ !cancelled() && matrix.os != 'macos' && matrix.os != 'ubuntu' }}
       - run: ninja ChakraCoreStatic
         if: ${{ !cancelled() }}
+
       - run: ninja ch
         if: ${{ !cancelled() }}
       - name: Build
