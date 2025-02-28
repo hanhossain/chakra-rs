@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "Core/CommonTypedefs.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 
 namespace PlatformAgnostic
 {

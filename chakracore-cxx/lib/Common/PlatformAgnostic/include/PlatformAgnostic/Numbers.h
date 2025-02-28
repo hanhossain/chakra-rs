@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonPal.h"
+
 namespace PlatformAgnostic
 {
 namespace Numbers

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "PlatformAgnostic/DateTimeInternal.h"
+#include "PlatformAgnostic/CommonPal.h"
 
 namespace PlatformAgnostic
 {
