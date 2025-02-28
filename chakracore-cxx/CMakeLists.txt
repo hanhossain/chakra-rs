@@ -277,9 +277,6 @@ endif()
 
 # TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(
-    pal
-    pal/inc
-    pal/inc/rt
     ${ICU_INCLUDE_PATH}
     )
 
