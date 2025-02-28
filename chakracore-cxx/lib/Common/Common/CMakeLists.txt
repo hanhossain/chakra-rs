@@ -4,7 +4,6 @@ endif()
 
 add_library (Chakra.Common.Common STATIC
     CfgLogger.cpp
-    CommonCommonPch.cpp
     DateUtilities.cpp
     Event.cpp
     Int32Math.cpp
@@ -23,3 +22,5 @@ add_library (Chakra.Common.Common STATIC
 # TODO (hanhossain): remove most directory paths
 # target_include_directories (
 #     Chakra.Common.Common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Chakra.Common.Common PUBLIC include)
+target_link_libraries(Chakra.Common.Common PUBLIC Chakra.Common.Pal)

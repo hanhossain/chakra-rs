@@ -2,13 +2,13 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonCommonPch.h"
-#include "RejitReason.h"
+#include "Common/CommonTypedefs.h"
+#include "Common/RejitReason.h"
 
 const char *const RejitReasonNames[] =
 {
     #define REJIT_REASON(n) "" STRINGIZE(n) "",
-    #include "RejitReasons.h"
+    #include "Common/RejitReasons.h"
     #undef REJIT_REASON
 };
 const char* const GetRejitReasonName(RejitReason reason)

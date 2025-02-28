@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "CommonTypedefs.h"
+
 template <class T>
 struct SignedTypeTraits
 {
