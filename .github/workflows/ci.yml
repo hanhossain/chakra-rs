@@ -115,8 +115,6 @@ jobs:
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Pal
         if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.PlatformAgnostic
-        if: ${{ !cancelled() }}
       - run: ninja Chakra.Common.Codex
         if: ${{ !cancelled() }}
 
@@ -150,6 +148,8 @@ jobs:
       - run: ninja Chakra.Runtime.Library
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Math
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.PlatformAgnostic
         if: ${{ !cancelled() }}
       - run: ninja Chakra.Runtime.Types
         if: ${{ !cancelled() }}
