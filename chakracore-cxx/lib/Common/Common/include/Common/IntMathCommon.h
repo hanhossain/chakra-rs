@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonTypedefs.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 
 template <class T>
 struct SignedTypeTraits

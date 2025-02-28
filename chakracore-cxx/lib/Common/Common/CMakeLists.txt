@@ -23,4 +23,4 @@ add_library (Chakra.Common.Common STATIC
 # target_include_directories (
 #     Chakra.Common.Common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(Chakra.Common.Common PUBLIC include)
-target_link_libraries(Chakra.Common.Common PUBLIC Chakra.Common.Pal)
+target_link_libraries(Chakra.Common.Common PUBLIC Chakra.Common.PlatformAgnostic)

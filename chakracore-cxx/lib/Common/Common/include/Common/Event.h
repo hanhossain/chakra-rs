@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonDefines.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
+
 class Event
 {
 private:

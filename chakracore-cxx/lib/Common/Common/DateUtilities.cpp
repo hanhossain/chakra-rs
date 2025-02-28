@@ -2,10 +2,9 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonCommonPch.h"
 #define ENABLE_INTSAFE_SIGNED_FUNCTIONS 1
-#include <intsafe.h>
-
+#include "PlatformAgnostic/CommonTypedefs.h"
+#include "PlatformAgnostic/DateTime.h"
 #include "Common/DateUtilities.h"
 #include "Common/Int64Math.h"
 
