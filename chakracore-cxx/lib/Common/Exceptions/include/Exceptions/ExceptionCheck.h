@@ -4,7 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "assert_only.h"
+#include "Primitives/CommonDefines.h"
+#include "Primitives/CommonTypedefs.h"
 
 #ifdef EXCEPTION_CHECK
 

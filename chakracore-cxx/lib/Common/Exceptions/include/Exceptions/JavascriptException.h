@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Exceptions/ExceptionBase.h"
+#include "PlatformAgnostic/EnumHelp.h"
 
 class ThreadContext;
 

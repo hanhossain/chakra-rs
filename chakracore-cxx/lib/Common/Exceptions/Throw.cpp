@@ -2,7 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonPal.h"
+#include "Exceptions/Throw.h"
 
 #ifndef USING_PAL_STDLIB
 // === C Runtime Header Files ===
@@ -12,14 +12,14 @@
 #pragma warning(pop)
 #endif
 
-#include "StackOverflowException.h"
-#include "AsmJsParseException.h"
-#include "OutOfMemoryException.h"
-#include "NotImplementedException.h"
+#include "Exceptions/StackOverflowException.h"
+#include "Exceptions/AsmJsParseException.h"
+#include "Exceptions/OutOfMemoryException.h"
+#include "Exceptions/NotImplementedException.h"
 
 // Header files required before including ConfigFlagsTable.h
 
-#include "EnumHelp.h"
+#include "PlatformAgnostic/EnumHelp.h"
 #include "Common/MathUtil.h"
 #include "Core/AllocSizeMath.h"
 #include "Core/FaultInjection.h"

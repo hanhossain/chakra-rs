@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonDefines.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
+
 enum ErrorReason
 {
     JavascriptDispatch_OUTOFMEMORY = 1,
