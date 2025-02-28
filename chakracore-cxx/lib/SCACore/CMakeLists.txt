@@ -20,4 +20,9 @@ target_include_directories (
     ../JITIDL
     ../Runtime
     ../Runtime/ByteCode
+    ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal/src
+    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
     )

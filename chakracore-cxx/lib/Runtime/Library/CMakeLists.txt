@@ -142,4 +142,9 @@ add_library (Chakra.Runtime.Library OBJECT ${CRLIB_SOURCE_CODES})
 
 # TODO (hanhossain): remove most directory paths
 target_include_directories (
-    Chakra.Runtime.Library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    Chakra.Runtime.Library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal/src
+    ${CHAKRACORE_SOURCE_DIR}/pal/src/include)

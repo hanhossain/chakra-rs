@@ -98,3 +98,10 @@ add_library(libwabt OBJECT
   src/wat-writer.cc
   ${WAST_LEXER_GEN_CC}
 )
+
+target_include_directories(libwabt PUBLIC
+    ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal/src
+    ${CHAKRACORE_SOURCE_DIR}/pal/src/include)

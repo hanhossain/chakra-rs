@@ -68,6 +68,11 @@ target_include_directories (
   ${CHAKRACORE_SOURCE_DIR}/lib/SCACore
   ${wasm_includes}
   ${wabt_includes}
+  ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal/src
+    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
   )
 
 if(BuildJIT)
