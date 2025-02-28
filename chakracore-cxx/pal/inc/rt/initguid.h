@@ -6,5 +6,5 @@
 
 #ifndef INITGUID
 #define INITGUID
-#include <guiddef.h>
+#include "guiddef.h"
 #endif
