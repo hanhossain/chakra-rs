@@ -3,7 +3,6 @@ add_library (Chakra.Common.Core STATIC
     BinaryFeatureControl.cpp
     CmdParser.cpp
     CodexAssert.cpp
-    CommonCorePch.cpp
     ConfigFlagsTable.cpp
     ConfigParser.cpp
     CRC.cpp
@@ -25,3 +24,7 @@ add_library (Chakra.Common.Core STATIC
 # TODO (hanhossain): remove most directory paths
 # target_include_directories (
 #     Chakra.Common.Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Chakra.Common.Core
+    PUBLIC include)
+target_link_libraries(Chakra.Common.Core
+    PUBLIC Chakra.Pal)

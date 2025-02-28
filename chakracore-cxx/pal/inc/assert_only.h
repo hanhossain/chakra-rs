@@ -9,6 +9,9 @@
 // PAL free Assert definitions
 #ifdef DEBUG
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #if !defined(CHAKRACORE_STRINGIZE)
 #define CHAKRACORE_STRINGIZE_IMPL(x) #x
 #define CHAKRACORE_STRINGIZE(x) CHAKRACORE_STRINGIZE_IMPL(x)
