@@ -16,7 +16,7 @@
 #pragma once
 #endif
 
-#include <specstrings.h>    // for IN, etc.
+#include "specstrings.h"    // for IN, etc.
 
 
 #if defined(_AMD64_)

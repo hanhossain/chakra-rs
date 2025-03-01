@@ -6,10 +6,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 cmake_policy(SET CMP0042 NEW)
 
-# Include directories
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(include)
-
 # Compile options
 if(CC_TARGETS_AMD64)
     add_definitions(-D_AMD64_)
@@ -163,3 +159,22 @@ add_library(Chakra.Pal
   ${PLATFORM_SOURCES}
   ${ARCH_SOURCES}
 )
+
+target_include_directories(Chakra.Pal PUBLIC
+  ${CHAKRACORE_SOURCE_DIR}/pal
+  ${CHAKRACORE_SOURCE_DIR}/pal/inc
+  ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+  ${CHAKRACORE_SOURCE_DIR}/pal/src
+  ${CHAKRACORE_SOURCE_DIR}/pal/src/include
+  ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+  ${CHAKRACORE_SOURCE_DIR}/bin
+  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
+  ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
+  ${CHAKRACORE_SOURCE_DIR}/lib/Common
+  ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+  ${CHAKRACORE_SOURCE_DIR}/lib/Parser
+  ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
+  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
+  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
+  )

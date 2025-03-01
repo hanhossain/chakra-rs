@@ -36,15 +36,9 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(chakra ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-
 # disable -Wunused-parameter: this is really common when implementing
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
-
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
-include_directories(src/prebuilt)
 
 # yyerror passes a non-string-literal to a printf-like function, which is a
 # warning.
@@ -98,3 +92,24 @@ add_library(libwabt OBJECT
   src/wat-writer.cc
   ${WAST_LEXER_GEN_CC}
 )
+
+target_include_directories(libwabt PUBLIC
+    ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal/src
+    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+    ${CHAKRACORE_SOURCE_DIR}/bin
+    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
+    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+    ${CHAKRACORE_SOURCE_DIR}/lib/Parser
+    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
+    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
+    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
+    src/prebuilt
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR})
