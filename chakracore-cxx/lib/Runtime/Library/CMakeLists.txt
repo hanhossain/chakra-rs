@@ -15,13 +15,6 @@ if(CC_TARGETS_AMD64)
     )
 endif()
 
-if(CAN_BUILD_WABT)
-    # TODO (hanhossain): remove include_directories in favor of target_include_directories
-    include_directories(
-    ../../wabt/chakra
-    )
-endif()
-
 set(CRLIB_SOURCE_CODES
     ArgumentsObject.cpp
     ArgumentsObjectEnumerator.cpp
@@ -159,3 +152,7 @@ target_include_directories (
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math)
+
+if(CAN_BUILD_WABT)
+    target_include_directories(Chakra.Runtime.Library PUBLIC ../../wabt/chakra)
+endif()

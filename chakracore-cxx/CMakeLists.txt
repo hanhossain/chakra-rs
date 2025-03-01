@@ -275,7 +275,6 @@ if(CC_TARGETS_ARM64)
     endif()
 endif()
 
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(
     ${ICU_INCLUDE_PATH}
     )
@@ -287,7 +286,6 @@ if(ICU_INCLUDE_PATH)
 endif()
 
 # detect features
-# TODO (hanhossain): remove include_directories in favor of target_include_directories
 include_directories(SYSTEM /usr/local/include)
 include(pal/src/configure.cmake)
 
