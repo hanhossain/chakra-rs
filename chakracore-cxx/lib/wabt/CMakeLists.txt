@@ -110,4 +110,5 @@ target_include_directories(libwabt PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
-    src/prebuilt)
+    src/prebuilt
+    ${CMAKE_CURRENT_SOURCE_DIR})
