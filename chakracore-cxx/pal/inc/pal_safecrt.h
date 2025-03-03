@@ -45,7 +45,7 @@ Wrapper for including SafeCRT for Mac build of CoreCLR
 #endif
 
 // Include the safecrt implementation
-#include "../../palrt/inc/safecrt.h"
+#include "safecrt.h"
 
 #if defined(SAFECRT_IN_PAL)
 

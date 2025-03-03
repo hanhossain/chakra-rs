@@ -563,7 +563,7 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/JavascriptAsyncFunction.h"
 #include "Library/JavascriptAsyncGeneratorFunction.h"
 
-#include "../WasmReader/WasmReader.h"
+#include "WasmReader/WasmReader.h"
 
 #include "Language/AsmJsTypes.h"
 #include "Language/AsmJsModule.h"

@@ -670,7 +670,7 @@ ENTRY(builtInCallInstanceFunction)
 #define GlobalBuiltIn(global, method) ENTRY(builtIn##global##Entry##method)
 #define BuiltInRaiseException(exceptionType, exceptionID) ENTRY(raise##exceptionID)
 #define EngineInterfaceBuiltIn2(propId, nativeMethod) ENTRY(propId)
-#include "../Library/EngineInterfaceObjectBuiltIns.h"
+#include "Library/EngineInterfaceObjectBuiltIns.h"
 
 // SymbolFunctionNameId: for RuntimeFunction nameId
 
