@@ -114,19 +114,20 @@ add_library (Chakra.Backend STATIC
     ${CC_BACKEND_ARCH_FILES}
     )
 
+# TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Backend PUBLIC
-    ${CC_BACKEND_ARCH_FOLDER}
-    ${CHAKRACORE_SOURCE_DIR}/pal
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
-    ${CHAKRACORE_SOURCE_DIR}/lib/Common
-    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
-    ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
-    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
-    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
-    ${CHAKRACORE_SOURCE_DIR}/lib/Parser
-    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
+    # ${CC_BACKEND_ARCH_FOLDER}
+    # ${CHAKRACORE_SOURCE_DIR}/pal
+    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
+    # ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
+    # ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Parser
+    # ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 )

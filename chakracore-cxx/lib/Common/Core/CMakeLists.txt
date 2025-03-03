@@ -22,10 +22,11 @@ add_library (Chakra.Common.Core STATIC
     SysInfo.cpp
 )
 
+# TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Common.Core PUBLIC
-    ${CHAKRACORE_SOURCE_DIR}/pal
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
-    ${CHAKRACORE_SOURCE_DIR}/lib/Common
-    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+    # ${CHAKRACORE_SOURCE_DIR}/pal
+    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    # ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 )
