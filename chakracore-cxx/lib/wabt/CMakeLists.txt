@@ -53,7 +53,7 @@ set(WAST_LEXER_GEN_CC src/prebuilt/wast-lexer-gen.cc)
 
 add_custom_target(everything)
 
-add_library(libwabt OBJECT
+add_library(libwabt STATIC
   chakra/wabtapi.cc
   src/apply-names.cc
   src/binary.cc
@@ -93,23 +93,24 @@ add_library(libwabt OBJECT
   ${WAST_LEXER_GEN_CC}
 )
 
-target_include_directories(libwabt PUBLIC
-    ${CHAKRACORE_SOURCE_DIR}/pal
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
-    ${CHAKRACORE_SOURCE_DIR}/pal/src
-    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
-    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
-    ${CHAKRACORE_SOURCE_DIR}/bin
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
-    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
-    ${CHAKRACORE_SOURCE_DIR}/lib/Common
-    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
-    ${CHAKRACORE_SOURCE_DIR}/lib/Parser
-    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
-    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
-    src/prebuilt
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR})
+#target_include_directories(libwabt PUBLIC
+#    ${CHAKRACORE_SOURCE_DIR}/pal
+#    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+#    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+#    ${CHAKRACORE_SOURCE_DIR}/pal/src
+#    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+#    ${CHAKRACORE_SOURCE_DIR}/bin
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
+#    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Common
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Parser
+#    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
+#    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
+#    src/prebuilt
+#    ${CMAKE_CURRENT_SOURCE_DIR}
+#    ${CMAKE_CURRENT_BINARY_DIR}
+#)
