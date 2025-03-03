@@ -29,6 +29,7 @@
         $(MSBuildThisFileDirectory)..\JITIDL;
         $(MSBuildThisFileDirectory)..\Runtime;
         $(MSBuildThisFileDirectory)..\Runtime\ByteCode;
+        $(MSBuildThisFileDirectory)..\Runtime\Language;
         $(ChakraJITIDLIntDir);
         $(ChakraManifestsIncludeDirectory);
         %(AdditionalIncludeDirectories)
