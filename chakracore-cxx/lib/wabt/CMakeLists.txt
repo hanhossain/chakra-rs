@@ -93,6 +93,7 @@ add_library(libwabt OBJECT
   ${WAST_LEXER_GEN_CC}
 )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories(libwabt PUBLIC
 #    ${CHAKRACORE_SOURCE_DIR}/pal
 #    ${CHAKRACORE_SOURCE_DIR}/pal/inc

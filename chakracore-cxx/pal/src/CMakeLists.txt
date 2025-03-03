@@ -160,6 +160,7 @@ add_library(Chakra.Pal
   ${ARCH_SOURCES}
 )
 
+# TODO (hanhossain): remove most directory paths
 target_include_directories(Chakra.Pal PUBLIC
 #  ${CHAKRACORE_SOURCE_DIR}/pal
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
