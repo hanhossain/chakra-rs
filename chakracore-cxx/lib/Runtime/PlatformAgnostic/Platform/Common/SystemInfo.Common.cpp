@@ -4,9 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimePlatformAgnosticPch.h"
-#include "../../Common/Core/CommonTypedefs.h"
-#include "../../Common/PlatformAgnostic/SystemInfo.h"
-#include "../../../../Common/Codex/Utf8Codex.h"
+#include "Core/CommonTypedefs.h"
+#include "PlatformAgnostic/SystemInfo.h"
+#include "Codex/Utf8Codex.h"
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h> // _NSGetExecutablePath

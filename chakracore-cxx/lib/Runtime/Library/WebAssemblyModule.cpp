@@ -7,7 +7,7 @@
 
 #ifdef ENABLE_WASM
 
-#include "../WasmReader/WasmReaderPch.h"
+#include "WasmReaderPch.h"
 #include "Language/WebAssemblySource.h"
 
 namespace Js

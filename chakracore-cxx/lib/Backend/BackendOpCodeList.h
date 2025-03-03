@@ -22,13 +22,13 @@ DEF_OP(MDStart, Empty, None, OpDbgAttr_BackEndOnly)
 #define MACRO(opcode, layout, attr, ...) DEF_OP(opcode, layout, attr, OpDbgAttr_BackEndOnly)
 
 #ifdef _M_AMD64
-    #include "../../Backend/amd64/MdOpCodes.h"
+    #include "amd64/MdOpCodes.h"
 #elif defined(_M_IX86)
-    #include "../../Backend/i386/MdOpCodes.h"
+    #include "i386/MdOpCodes.h"
 #elif defined(_M_ARM)
-    #include "../../Backend/arm/MdOpCodes.h"
+    #include "arm/MdOpCodes.h"
 #elif defined(_M_ARM64)
-    #include "../../Backend/arm64/MdOpCodes.h"
+    #include "arm64/MdOpCodes.h"
 #endif
 
 #undef MACRO

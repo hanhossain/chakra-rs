@@ -126,7 +126,7 @@ enum IRDumpFlags
 #include "NativeCodeData.h"
 #include "IRType.h"
 #include "md.h"
-#include "../Runtime/ByteCode/BackendOpCodeAttr.h"
+#include "BackendOpCodeAttr.h"
 #include "BackendOpCodeAttrAsmJs.h"
 
 #include "JnHelperMethod.h"

@@ -5,7 +5,7 @@
 #include "RuntimeLibraryPch.h"
 
 #ifdef ENABLE_WABT
-#include "../WasmReader/WasmReaderPch.h"
+#include "WasmReaderPch.h"
 #include "wabtapi.h"
 #include "Codex/Utf8Helper.h"
 

@@ -57,7 +57,7 @@ struct JitHelperUtils
 #define HELPERCALLCHK(Name, Address, Attributes) \
     static const bool helper##Name##_implemented;\
     static constexpr HelperMethodAttribute helper##Name##_attributes = (HelperMethodAttribute)(Attributes);
-#include "../Backend/JnHelperMethodList.h"
+#include "JnHelperMethodList.h"
 };
 
 #else

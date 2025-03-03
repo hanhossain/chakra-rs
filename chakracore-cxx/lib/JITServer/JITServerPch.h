@@ -7,7 +7,7 @@
 
 #include "Common.h"
 
-#include "../JITIDL/JITTypes.h"
+#include "JITTypes.h"
 #include "ChakraJIT.h"
 
 #include "Runtime.h"

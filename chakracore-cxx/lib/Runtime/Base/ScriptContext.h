@@ -286,7 +286,7 @@ namespace Js
 #define FORWARD_THREAD_CONFIG(flag) inline bool flag() const { return threadConfig->flag(); }
 #define FLAG(threadFlag, globalFlag) FORWARD_THREAD_CONFIG(threadFlag)
 #define FLAG_RELEASE(threadFlag, globalFlag) FORWARD_THREAD_CONFIG(threadFlag)
-#include "../Base/ThreadConfigFlagsList.h"
+#include "Base/ThreadConfigFlagsList.h"
 #undef FLAG_RELEASE
 #undef FLAG
 #undef FORWARD_THREAD_CONFIG

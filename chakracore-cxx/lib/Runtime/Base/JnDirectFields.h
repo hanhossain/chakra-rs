@@ -519,7 +519,7 @@ ENTRY(__proto__)
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) ENTRY(id)
-#include "../Library/IntlExtensionObjectBuiltIns.h"
+#include "Library/IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 ENTRY(Common)
 ENTRY(__initializedIntlObject)

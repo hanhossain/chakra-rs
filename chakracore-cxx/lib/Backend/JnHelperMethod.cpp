@@ -499,7 +499,7 @@ struct ValidateHelperHeaders
 #define HELPERCALL(Name, Address, Attributes)
 #define HELPERCALLCHK(Name, Address, Attributes) \
         Assert(JitHelperUtils::helper##Name##_implemented);
-#include "../Backend/JnHelperMethodList.h"
+#include "JnHelperMethodList.h"
     }
 };
 ValidateHelperHeaders validateHelperHeaders;
