@@ -12,87 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-rust-macos:
-    runs-on: macos-latest
-    needs:
-      - build-cmake-macos
-    env:
-      CARGO_TERM_COLOR: always
-      RUSTFLAGS: -D warnings
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Install dependencies
-        run: brew install ninja icu4c --quiet
-      - name: Install cargo-nextest
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-nextest
-      - name: Build
-        run: cargo build --features compile-cpp --all-targets
-      - name: Run tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp
-      - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp -- --ignored
-        env:
-          CHAKRA_TEST_SLOW: true
-
-  build-rust-ubuntu:
-    runs-on: ubuntu-latest
-    needs:
-      - build-cmake-ubuntu
-    env:
-      CARGO_TERM_COLOR: always
-      RUSTFLAGS: -D warnings
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Install dependencies
-        run: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
-      - name: Install cargo-nextest
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-nextest
-      - name: Build
-        run: cargo build --features compile-cpp --all-targets
-      - name: Run tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp
-      - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp -- --ignored
-        env:
-          CHAKRA_TEST_SLOW: true
-
-  build-rust-windows:
-    runs-on: windows-latest
-    needs:
-      - build-msvc
-    strategy:
-      fail-fast: false
-    env:
-      CARGO_TERM_COLOR: always
-      RUSTFLAGS: -D warnings
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Install cargo-nextest
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-nextest
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
-        with:
-          msbuild-architecture: x64
-      - name: Set timezone
-        run: tzutil /s "Pacific Standard time"
-      - name: Build
-        run: cargo build --features compile-cpp --all-targets
-      - name: Run tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp
-      - name: Run slow tests
-        run: cargo nextest run --no-fail-fast --features compile-cpp -- --ignored
-        env:
-          CHAKRA_TEST_SLOW: true
-
   build-cmake-macos:
     name: macos / ${{ matrix.cmake-target }}
     runs-on: macos-latest
@@ -124,6 +43,7 @@ jobs:
           - Chakra.Runtime.PlatformAgnostic
           - Chakra.Runtime.Types
           - Chakra.SCACore
+          - ChakraCoreStatic
     env:
       CXX: clang++
       CC: clang
@@ -137,6 +57,8 @@ jobs:
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=Debug -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON -GNinja ..
       - run: ninja ${{ matrix.cmake-target }}
+      - run: ninja ch
+        if: success() && matrix.cmake-target == 'ChakraCoreStatic'
 
   build-cmake-ubuntu:
     name: ubuntu / ${{ matrix.cmake-target }}
@@ -172,6 +94,7 @@ jobs:
           - Chakra.SCACore
           - libwabt
           - Chakra.WasmReader
+          - ChakraCoreStatic
     env:
       CXX: clang++
       CC: clang
@@ -185,6 +108,8 @@ jobs:
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=Debug -GNinja ..
       - run: ninja ${{ matrix.cmake-target }}
+      - run: ninja ch
+        if: success() && matrix.cmake-target == 'ChakraCoreStatic'
 
   build-msvc:
     name: msvc / windows / ${{ matrix.build-type }}
