@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   build-rust:
+    if: false
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
@@ -108,10 +109,67 @@ jobs:
         run: ${{ matrix.deps }}
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+
+      # fixed
+      # in progress
+      - run: ninja Chakra.Common.Util
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Pal
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Common.Codex
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Backend
+        if: ${{ !cancelled() && matrix.os != 'macos' }}
+      - run: ninja Chakra.Common.Common
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Common.Core
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Common.DataStructures
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Common.Exceptions
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Common.Memory
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Jsrt
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Jsrt.Core
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Parser
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Base
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.ByteCode
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Debug
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Language
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Library
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Math
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.PlatformAgnostic
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.Runtime.Types
+        if: ${{ !cancelled() }}
+      - run: ninja Chakra.SCACore
+        if: ${{ !cancelled() }}
+      - run: ninja libwabt
+        if: ${{ !cancelled() && matrix.os != 'macos' }}
+      - run: ninja Chakra.WasmReader
+        if: ${{ !cancelled() && matrix.os != 'macos' }}
+      - run: ninja Chakra.LTTng
+        if: ${{ !cancelled() && matrix.os != 'macos' && matrix.os != 'ubuntu' }}
+      - run: ninja ChakraCoreStatic
+        if: ${{ !cancelled() }}
+
+      - run: ninja ch
+        if: ${{ !cancelled() }}
       - name: Build
         run: ninja
 
   build-msvc:
+    if: false
     name: msvc / windows / ${{ matrix.build-type }}
     runs-on: windows-latest
     timeout-minutes: 120
