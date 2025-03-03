@@ -30,19 +30,9 @@ if(CC_TARGETS_AMD64)
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
-# TODO (hanhossain): remove most directory paths
 target_include_directories (ch PUBLIC
-#  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-#  ../ChakraCore
-#  ../../lib/Common
-#  ../../lib/Jsrt
-#  ../../lib/Runtime
-#  ../../lib/Parser
-#  ${Wasm_dep}
-#  ${CHAKRACORE_SOURCE_DIR}/lib/Common
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
-#  ${CHAKRACORE_SOURCE_DIR}/bin
   ${CHAKRACORE_SOURCE_DIR}/pal
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
   ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
@@ -56,8 +46,6 @@ target_include_directories (ch PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/lib/Parser
   ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
   ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
-#  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
-#  ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
   )
 
 if(CC_TARGET_OS_LINUX)
