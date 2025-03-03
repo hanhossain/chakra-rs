@@ -34,6 +34,7 @@
         $(MSBuildThisFileDirectory)..\..\WasmReader;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
         $(ChakraJITIDLIntDir);
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

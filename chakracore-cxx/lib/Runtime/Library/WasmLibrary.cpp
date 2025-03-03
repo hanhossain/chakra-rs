@@ -5,7 +5,7 @@
 #include "RuntimeLibraryPch.h"
 
 #ifdef ENABLE_WASM
-#include "../WasmReader/WasmReaderPch.h"
+#include "WasmReaderPch.h"
 // Included for AsmJsDefaultEntryThunk
 #include "Language/InterpreterStackFrame.h"
 

@@ -126,5 +126,9 @@ jobs:
           - test
     steps:
       - uses: actions/checkout@v4
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
       - name: Build
-        run: test\ci.buildone.cmd x64 ${{ matrix.build-type }}
+        run: msbuild /p:Platform=x64 /p:Configuration=${{ matrix.build-type }} Build/Chakra.Core.sln

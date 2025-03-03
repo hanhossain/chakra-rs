@@ -370,8 +370,8 @@ enum tagDEBUG_EVENT_INFO_TYPE
 } DEBUG_EVENT_INFO_TYPE;
 #endif
 
-#include "../JITIDL/JITTypes.h"
-#include "../JITClient/JITManager.h"
+#include "JITTypes.h"
+#include "JITManager.h"
 
 #include "Base/SourceHolder.h"
 #include "Base/LineOffsetCache.h"
@@ -563,7 +563,7 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/JavascriptAsyncFunction.h"
 #include "Library/JavascriptAsyncGeneratorFunction.h"
 
-#include "../WasmReader/WasmReader.h"
+#include "WasmReader.h"
 
 #include "Language/AsmJsTypes.h"
 #include "Language/AsmJsModule.h"

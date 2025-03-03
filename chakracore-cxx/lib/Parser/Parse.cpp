@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "ParserPch.h"
 #include "FormalsUtil.h"
-#include "../Runtime/Language/SourceDynamicProfileManager.h"
+#include "SourceDynamicProfileManager.h"
 
 #include "ByteCode/ByteCodeSerializer.h"
 

@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimeByteCodePch.h"
-#include "../../WasmReader/WasmParseTree.h"
+#include "WasmParseTree.h"
 
 #if defined(ASMJS_PLAT) || defined(ENABLE_WASM)
 

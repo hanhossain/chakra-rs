@@ -30,6 +30,7 @@
         $(MSBuildThisFileDirectory)..\..\WasmReader;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>

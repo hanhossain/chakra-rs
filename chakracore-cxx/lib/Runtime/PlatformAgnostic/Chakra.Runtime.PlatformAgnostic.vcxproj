@@ -30,6 +30,8 @@
         $(MSBuildThisFileDirectory)..\..\Backend;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
+        $(MSBuildThisFileDirectory)..\..\WasmReader;
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory);
         %(AdditionalIncludeDirectories)

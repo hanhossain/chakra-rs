@@ -29,10 +29,12 @@
         $(ChakraCoreRootDirectory)Lib\Runtime;
         $(ChakraCoreRootDirectory)Lib\CodeGenClient;
         $(ChakraCoreRootDirectory)Lib\Runtime\ByteCode;
+        $(ChakraCoreRootDirectory)Lib\Runtime\Debug;
         $(ChakraCoreRootDirectory)Lib\Jsrt;
         $(IntDir);
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\..\lib\JITClient;
+        $(MSBuildThisFileDirectory)..\..\lib\JITIDL;
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
       <!-- TODO (hanhossain): remove most directory paths -->

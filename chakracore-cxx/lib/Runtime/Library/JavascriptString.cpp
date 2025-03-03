@@ -10,7 +10,7 @@
 #include "Library/IntlEngineInterfaceExtensionObject.h"
 
 #if ENABLE_NATIVE_CODEGEN
-#include "../Backend/JITRecyclableObject.h"
+#include "JITRecyclableObject.h"
 #endif
 
 namespace Js

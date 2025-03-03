@@ -28,6 +28,8 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory);
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
+        $(MSBuildThisFileDirectory)..\..\Parser;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..;
         %(AdditionalIncludeDirectories)

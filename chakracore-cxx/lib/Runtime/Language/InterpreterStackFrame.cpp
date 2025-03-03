@@ -16,7 +16,7 @@
 #include "Library/JavascriptGeneratorFunction.h"
 #include "Library/ForInObjectEnumerator.h"
 #include "Library/AtomicsOperations.h"
-#include "../../WasmReader/WasmParseTree.h"
+#include "WasmParseTree.h"
 ///----------------------------------------------------------------------------
 ///
 /// macros PROCESS_INtoOUT

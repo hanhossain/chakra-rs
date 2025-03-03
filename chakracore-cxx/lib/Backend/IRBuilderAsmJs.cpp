@@ -6,7 +6,7 @@
 #include "Backend.h"
 #ifdef ASMJS_PLAT
 #include "ByteCode/OpCodeUtilAsmJs.h"
-#include "../../WasmReader/WasmParseTree.h"
+#include "WasmParseTree.h"
 
 void
 IRBuilderAsmJs::Build()

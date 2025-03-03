@@ -5,7 +5,7 @@
 #pragma once
 
 #ifdef ENABLE_WASM
-#include "../WasmReader/WasmParseTree.h"
+#include "WasmParseTree.h"
 
 namespace Wasm
 {

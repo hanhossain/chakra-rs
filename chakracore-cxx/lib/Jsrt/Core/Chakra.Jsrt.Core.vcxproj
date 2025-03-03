@@ -27,7 +27,9 @@
         $(MSBuildThisFileDirectory)..\..\Runtime;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
+        $(MSBuildThisFileDirectory)..\..\Runtime\Debug;
         $(MSBuildThisFileDirectory)..\..\Common;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\SCACore;

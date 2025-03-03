@@ -4,8 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "../Core/Assertions.h"
-#include "../Memory/Allocator.h"
+#include "Core/Assertions.h"
+#include "Memory/Allocator.h"
 
 /*
  * ClusterLists are intended to solve the problem of determining what connected set

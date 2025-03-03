@@ -4,4 +4,4 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "../Math/JavascriptMath.inl"
+#include "JavascriptMath.inl"

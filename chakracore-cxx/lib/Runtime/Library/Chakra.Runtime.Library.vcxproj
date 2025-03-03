@@ -34,6 +34,7 @@
         $(MSBuildThisFileDirectory)..\..\wabt\chakra;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\Math;
         $(ChakraManifestsIncludeDirectory);

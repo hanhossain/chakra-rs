@@ -29,6 +29,7 @@
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\..\Backend;
         $(MSBuildThisFileDirectory)..\..\JITClient;
+        $(MSBuildThisFileDirectory)..\..\JITIDL;
         $(ChakraJITIDLIntDir);
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

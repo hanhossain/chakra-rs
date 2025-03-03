@@ -22,7 +22,7 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #include "Exceptions/ExceptionBase.h"
 #include "Exceptions/OutOfMemoryException.h"
 
-#include "../Parser/rterror.h"
+#include "rterror.h"
 
 // Other Memory headers
 #include "Memory/LeakReport.h"
