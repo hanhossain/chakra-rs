@@ -143,7 +143,6 @@ jobs:
         if: success() && matrix.cmake-target == 'ChakraCoreStatic'
 
   build-msvc:
-    if: false
     name: msvc / windows / ${{ matrix.build-type }}
     runs-on: windows-latest
     timeout-minutes: 120
