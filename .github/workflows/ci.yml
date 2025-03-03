@@ -12,57 +12,65 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-cmake-macos:
-    name: macos / ${{ matrix.cmake-target }}
-    runs-on: macos-latest
-    timeout-minutes: 120
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
+  build-rust:
+    name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
+    runs-on: ${{ matrix.os-image }}
     strategy:
       fail-fast: false
       matrix:
-        cmake-target:
-          - Chakra.Common.Util
-          - Chakra.Pal
-          - Chakra.Common.Codex
-          - Chakra.Common.Common
-          - Chakra.Common.Core
-          - Chakra.Common.DataStructures
-          - Chakra.Common.Exceptions
-          - Chakra.Common.Memory
-          - Chakra.Jsrt
-          - Chakra.Jsrt.Core
-          - Chakra.Parser
-          - Chakra.Runtime.Base
-          - Chakra.Runtime.ByteCode
-          - Chakra.Runtime.Debug
-          - Chakra.Runtime.Language
-          - Chakra.Runtime.Library
-          - Chakra.Runtime.Math
-          - Chakra.Runtime.PlatformAgnostic
-          - Chakra.Runtime.Types
-          - Chakra.SCACore
-          - ChakraCoreStatic
+        os:
+          - macos
+          - ubuntu
+          - windows
+        build-type:
+          - debug
+          - test
+        include:
+          - os: macos
+            os-image: macos-latest
+            deps: brew install ninja icu4c --quiet
+          - os: ubuntu
+            os-image: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
+          - os: windows
+            os-image: windows-latest
+          - build-type: debug
+            features: compile-cpp
+          - build-type: test
+            features: compile-cpp,optimized-tests
     env:
-      CXX: clang++
-      CC: clang
+      CARGO_TERM_COLOR: always
+      RUSTFLAGS: -D warnings
     steps:
       - uses: actions/checkout@v4
-      - name: Create build directory
-        working-directory: ${{ github.workspace }}/chakracore-cxx
-        run: mkdir -p cmake-build
+      - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
-        run: brew install ninja icu4c --quiet
-      - name: Configure CMake
-        run: cmake -DCMAKE_BUILD_TYPE=Debug -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON -GNinja ..
-      - run: ninja ${{ matrix.cmake-target }}
-      - run: ninja ch
-        if: success() && matrix.cmake-target == 'ChakraCoreStatic'
+        if: runner.os != 'Windows'
+        run: ${{ matrix.deps }}
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+      - name: Add msbuild to PATH
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+      - name: Set timezone
+        if: runner.os == 'Windows'
+        run: tzutil /s "Pacific Standard time"
+      - name: Build
+        run: cargo build --features ${{ matrix.features }} --all-targets
+      - name: Run tests
+        run: cargo nextest run --no-fail-fast --features ${{ matrix.features }}
+      - name: Run slow tests
+        run: cargo nextest run --no-fail-fast --features ${{ matrix.features }} -- --ignored
+        env:
+          CHAKRA_TEST_SLOW: true
 
-  build-cmake-ubuntu:
-    name: ubuntu / ${{ matrix.cmake-target }}
-    runs-on: ubuntu-latest
+  build-cmake:
+    name: cmake / ${{ matrix.os }} / ${{ matrix.build-type }}
+    runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     defaults:
       run:
@@ -70,31 +78,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cmake-target:
-          - Chakra.Common.Util
-          - Chakra.Pal
-          - Chakra.Common.Codex
-          - Chakra.Backend
-          - Chakra.Common.Common
-          - Chakra.Common.Core
-          - Chakra.Common.DataStructures
-          - Chakra.Common.Exceptions
-          - Chakra.Common.Memory
-          - Chakra.Jsrt
-          - Chakra.Jsrt.Core
-          - Chakra.Parser
-          - Chakra.Runtime.Base
-          - Chakra.Runtime.ByteCode
-          - Chakra.Runtime.Debug
-          - Chakra.Runtime.Language
-          - Chakra.Runtime.Library
-          - Chakra.Runtime.Math
-          - Chakra.Runtime.PlatformAgnostic
-          - Chakra.Runtime.Types
-          - Chakra.SCACore
-          - libwabt
-          - Chakra.WasmReader
-          - ChakraCoreStatic
+        os:
+          - macos
+          - ubuntu
+        build-type:
+          - debug
+          - test
+        include:
+          - os: macos
+            os-image: macos-latest
+            deps: brew install ninja icu4c --quiet
+            cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
+          - os: ubuntu
+            os-image: ubuntu-latest
+            deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
+          - build-type: debug
+            cmake-build-type: Debug
+          - build-type: test
+            cmake-build-type: RelWithDebInfo
     env:
       CXX: clang++
       CC: clang
@@ -104,12 +105,11 @@ jobs:
         working-directory: ${{ github.workspace }}/chakracore-cxx
         run: mkdir -p cmake-build
       - name: Install dependencies
-        run: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
+        run: ${{ matrix.deps }}
       - name: Configure CMake
-        run: cmake -DCMAKE_BUILD_TYPE=Debug -GNinja ..
-      - run: ninja ${{ matrix.cmake-target }}
-      - run: ninja ch
-        if: success() && matrix.cmake-target == 'ChakraCoreStatic'
+        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+      - name: Build
+        run: ninja
 
   build-msvc:
     name: msvc / windows / ${{ matrix.build-type }}
@@ -123,6 +123,7 @@ jobs:
       matrix:
         build-type:
           - debug
+          - test
     steps:
       - uses: actions/checkout@v4
       - name: Add msbuild to PATH
