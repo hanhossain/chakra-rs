@@ -34,7 +34,7 @@ target_include_directories (Chakra.WasmReader PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
-#    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
+    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math

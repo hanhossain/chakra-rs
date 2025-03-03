@@ -36,7 +36,7 @@ target_include_directories (Chakra.Common.Core PUBLIC
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
 #    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Common
-#    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
+    ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Parser
 #    ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
