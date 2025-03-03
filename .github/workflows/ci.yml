@@ -84,7 +84,38 @@ jobs:
           - ubuntu
         build-type:
           - debug
-          - test
+        cmake-target:
+          - Chakra.Common.Util
+          - Chakra.Pal
+          - Chakra.Common.Codex
+          - Chakra.Backend
+          - Chakra.Common.Common
+          - Chakra.Common.Core
+          - Chakra.Common.DataStructures
+          - Chakra.Common.Exceptions
+          - Chakra.Common.Memory
+          - Chakra.Jsrt
+          - Chakra.Jsrt.Core
+          - Chakra.Parser
+          - Chakra.Runtime.Base
+          - Chakra.Runtime.ByteCode
+          - Chakra.Runtime.Debug
+          - Chakra.Runtime.Language
+          - Chakra.Runtime.Library
+          - Chakra.Runtime.Math
+          - Chakra.Runtime.PlatformAgnostic
+          - Chakra.Runtime.Types
+          - Chakra.SCACore
+          - libwabt
+          - Chakra.WasmReader
+          - ChakraCoreStatic
+        exclude:
+          - cmake-target: Chakra.Backend
+            os: macos
+          - cmake-target: libwabt
+            os: macos
+          - cmake-target: Chakra.WasmReader
+            os: macos
         include:
           - os: macos
             os-image: macos-latest
@@ -95,8 +126,6 @@ jobs:
             deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
           - build-type: debug
             cmake-build-type: Debug
-          - build-type: test
-            cmake-build-type: RelWithDebInfo
     env:
       CXX: clang++
       CC: clang
@@ -110,63 +139,9 @@ jobs:
       - name: Configure CMake
         run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
 
-      # fixed
-      # in progress
-      - run: ninja Chakra.Common.Util
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Pal
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.Codex
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Backend
-        if: ${{ !cancelled() && matrix.os != 'macos' }}
-      - run: ninja Chakra.Common.Common
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.Core
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.DataStructures
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.Exceptions
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Common.Memory
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Jsrt
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Jsrt.Core
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Parser
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Base
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.ByteCode
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Debug
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Language
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Library
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Math
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.PlatformAgnostic
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.Runtime.Types
-        if: ${{ !cancelled() }}
-      - run: ninja Chakra.SCACore
-        if: ${{ !cancelled() }}
-      - run: ninja libwabt
-        if: ${{ !cancelled() && matrix.os != 'macos' }}
-      - run: ninja Chakra.WasmReader
-        if: ${{ !cancelled() && matrix.os != 'macos' }}
-      - run: ninja Chakra.LTTng
-        if: ${{ !cancelled() && matrix.os != 'macos' && matrix.os != 'ubuntu' }}
-      - run: ninja ChakraCoreStatic
-        if: ${{ !cancelled() }}
-
+      - run: ninja ${{ matrix.cmake-target }}
       - run: ninja ch
-        if: ${{ !cancelled() }}
-      - name: Build
-        run: ninja
+        if: success() && matrix.cmake-target == 'ChakraCoreStatic'
 
   build-msvc:
     if: false
