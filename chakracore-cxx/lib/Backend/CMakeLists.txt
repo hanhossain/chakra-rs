@@ -31,7 +31,7 @@ elseif(CC_TARGETS_ARM64)
     )
 endif()
 
-add_library (Chakra.Backend STATIC
+add_library (Chakra.Backend OBJECT
     AsmJsJITInfo.cpp
     Backend.cpp
     BackendApi.cpp

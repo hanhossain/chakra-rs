@@ -154,7 +154,7 @@ set(SOURCES
 )
 
 add_library(Chakra.Pal
-  STATIC
+  OBJECT
   ${SOURCES}
   ${PLATFORM_SOURCES}
   ${ARCH_SOURCES}

@@ -1,4 +1,4 @@
-add_library (Chakra.Common.Util STATIC
+add_library (Chakra.Common.Util OBJECT
     Pinned.cpp)
 
 # TODO (hanhossain): remove most directory paths

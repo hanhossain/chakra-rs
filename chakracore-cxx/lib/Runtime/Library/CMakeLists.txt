@@ -131,7 +131,7 @@ elseif(CC_TARGETS_ARM64)
     )
 endif()
 
-add_library (Chakra.Runtime.Library STATIC ${CRLIB_SOURCE_CODES})
+add_library (Chakra.Runtime.Library OBJECT ${CRLIB_SOURCE_CODES})
 
 # TODO (hanhossain): remove most directory paths
 #target_include_directories (

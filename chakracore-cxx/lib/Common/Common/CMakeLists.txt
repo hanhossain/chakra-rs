@@ -2,7 +2,7 @@ if(CC_TARGETS_ARM64)
     set(ARCH_SOURCES arm64/arm64_GET_CURRENT_FRAME.S)
 endif()
 
-add_library (Chakra.Common.Common STATIC
+add_library (Chakra.Common.Common OBJECT
     CfgLogger.cpp
     CommonCommonPch.cpp
     DateUtilities.cpp

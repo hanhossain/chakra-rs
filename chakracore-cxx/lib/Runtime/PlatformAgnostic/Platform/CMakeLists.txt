@@ -35,7 +35,7 @@ elseif(CC_TARGET_OS_OSX)
     )
 endif()
 
-add_library (Chakra.Runtime.PlatformAgnostic STATIC
+add_library (Chakra.Runtime.PlatformAgnostic OBJECT
   ${PL_SOURCE_FILES}
   )
 
