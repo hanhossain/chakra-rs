@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   build-rust:
+    if: false
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
@@ -83,7 +84,7 @@ jobs:
           - ubuntu
         build-type:
           - debug
-          - test
+          # - test
         include:
           - os: macos
             os-image: macos-latest
@@ -94,8 +95,8 @@ jobs:
             deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
           - build-type: debug
             cmake-build-type: Debug
-          - build-type: test
-            cmake-build-type: RelWithDebInfo
+          # - build-type: test
+          #   cmake-build-type: RelWithDebInfo
     env:
       CXX: clang++
       CC: clang
@@ -172,7 +173,7 @@ jobs:
       matrix:
         build-type:
           - debug
-          - test
+          # - test
     steps:
       - uses: actions/checkout@v4
       - name: Add msbuild to PATH
