@@ -93,7 +93,7 @@ add_library(libwabt OBJECT
   ${WAST_LEXER_GEN_CC}
 )
 
-#target_include_directories(libwabt PUBLIC
+target_include_directories(libwabt PUBLIC
 #    ${CHAKRACORE_SOURCE_DIR}/pal
 #    ${CHAKRACORE_SOURCE_DIR}/pal/inc
 #    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
@@ -111,6 +111,6 @@ add_library(libwabt OBJECT
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 #    src/prebuilt
-#    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
 #    ${CMAKE_CURRENT_BINARY_DIR}
-#)
+)

@@ -29,7 +29,7 @@ target_include_directories (Chakra.Common.Common PUBLIC
 #    ${CHAKRACORE_SOURCE_DIR}/pal/src
 #    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
-#    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
 #    ${CHAKRACORE_SOURCE_DIR}/bin
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
 #    ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
