@@ -13,9 +13,11 @@ concurrency:
 
 jobs:
   build-rust:
-    if: false
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
+    needs:
+      - build-cmake
+      - build-msvc
     strategy:
       fail-fast: false
       matrix:
@@ -25,7 +27,6 @@ jobs:
           - windows
         build-type:
           - debug
-          - test
         include:
           - os: macos
             os-image: macos-latest
@@ -37,8 +38,6 @@ jobs:
             os-image: windows-latest
           - build-type: debug
             features: compile-cpp
-          - build-type: test
-            features: compile-cpp,optimized-tests
     env:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings
@@ -156,7 +155,6 @@ jobs:
       matrix:
         build-type:
           - debug
-          - test
     steps:
       - uses: actions/checkout@v4
       - name: Build
