@@ -43,6 +43,7 @@
         $(MSBuildThisFileDirectory)..\Common;
         $(MSBuildThisFileDirectory)..\Parser;
         $(MSBuildThisFileDirectory)..\JITClient;
+        $(MSBuildThisFileDirectory)..\JITIDL;
         $(MSBuildThisFileDirectory)..\Runtime;
         $(MSBuildThisFileDirectory)..\Runtime\Math;
         $(MSBuildThisFileDirectory)..\Runtime\ByteCode;

@@ -33,6 +33,7 @@
         $(IntDir);
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..\..\lib\JITClient;
+        $(MSBuildThisFileDirectory)..\..\lib\JITIDL;
         %(AdditionalIncludeDirectories);
       </AdditionalIncludeDirectories>
       <!-- TODO (hanhossain): remove most directory paths -->

@@ -27,6 +27,7 @@
         $(MSBuildThisFileDirectory)..\Backend;
         $(MSBuildThisFileDirectory)..\WasmReader;
         $(MSBuildThisFileDirectory)..\JITClient;
+        $(MSBuildThisFileDirectory)..\JITIDL;
         $(MSBuildThisFileDirectory)..\Runtime;
         $(MSBuildThisFileDirectory)..\Runtime\ByteCode;
         $(ChakraManifestsIncludeDirectory);
