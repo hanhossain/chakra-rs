@@ -70,7 +70,7 @@ jobs:
           CHAKRA_TEST_SLOW: true
 
   build-cmake:
-    name: cmake / ${{ matrix.os }} / ${{ matrix.build-type }}
+    name: cmake / ${{ matrix.os }} / ${{ matrix.cmake-target }}
     runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     defaults:
