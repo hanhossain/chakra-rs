@@ -21,14 +21,14 @@ add_library (Chakra.Common.Common OBJECT
 )
 
 # TODO (hanhossain): remove most directory paths
-#target_include_directories (
+target_include_directories (Chakra.Common.Common PUBLIC
 #    Chakra.Common.Common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-#    ${CHAKRACORE_SOURCE_DIR}/pal
-#    ${CHAKRACORE_SOURCE_DIR}/pal/inc
-#    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
+    ${CHAKRACORE_SOURCE_DIR}/pal
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc
+    ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
 #    ${CHAKRACORE_SOURCE_DIR}/pal/src
 #    ${CHAKRACORE_SOURCE_DIR}/pal/src/include
-#    ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
 #    ${CHAKRACORE_SOURCE_DIR}/bin
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
@@ -40,4 +40,4 @@ add_library (Chakra.Common.Common OBJECT
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
 #    ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
-#    )
+    )
