@@ -26,7 +26,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
-        $(MSBuildThisFileDirectory)..\Backend;
+        $(MSBuildThisFileDirectory)..\..\Backend;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <!-- For windowsdatetimep.h -->
