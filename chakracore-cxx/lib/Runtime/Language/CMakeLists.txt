@@ -81,7 +81,7 @@ elseif(CC_TARGETS_ARM64)
     )
 endif()
 
-add_library (Chakra.Runtime.Language OBJECT ${CRL_SOURCE_FILES})
+add_library (Chakra.Runtime.Language STATIC ${CRL_SOURCE_FILES})
 
 target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

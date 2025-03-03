@@ -1,2 +1,2 @@
-add_library (Chakra.Common.Util OBJECT
+add_library (Chakra.Common.Util STATIC
     Pinned.cpp)

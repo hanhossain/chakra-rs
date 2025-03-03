@@ -1,4 +1,4 @@
-add_library (Chakra.Common.Core OBJECT
+add_library (Chakra.Common.Core STATIC
     Api.cpp
     BinaryFeatureControl.cpp
     CmdParser.cpp

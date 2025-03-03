@@ -1,4 +1,4 @@
-add_library (Chakra.WasmReader OBJECT
+add_library (Chakra.WasmReader STATIC
     WasmParseTree.cpp
     WasmBinaryReader.cpp
     WasmByteCodeGenerator.cpp

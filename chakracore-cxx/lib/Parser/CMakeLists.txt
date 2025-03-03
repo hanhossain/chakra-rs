@@ -1,4 +1,4 @@
-add_library (Chakra.Parser OBJECT
+add_library (Chakra.Parser STATIC
     Alloc.cpp
     BackgroundParser.cpp
     BGParseManager.cpp

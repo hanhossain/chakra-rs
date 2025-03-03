@@ -1,4 +1,4 @@
-add_library (Chakra.Jsrt OBJECT
+add_library (Chakra.Jsrt STATIC
     Jsrt.cpp
     JsrtDebugUtils.cpp
     JsrtDebugManager.cpp

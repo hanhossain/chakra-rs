@@ -1,4 +1,4 @@
-add_library (Chakra.Common.DataStructures OBJECT
+add_library (Chakra.Common.DataStructures STATIC
     BigUInt.cpp
     BufferBuilder.cpp
     CommonDataStructuresPch.cpp
