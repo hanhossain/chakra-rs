@@ -147,13 +147,14 @@ target_include_directories (Chakra.Runtime.Library PUBLIC
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 )
 
-if(CAN_BUILD_WABT)
-    # TODO: (hanhossain): cleanup
-    target_include_directories (Chakra.Runtime.Library PUBLIC
-        # ${CHAKRACORE_SOURCE_DIR}/lib/wabt/chakra
-    )
-endif()
-
 target_link_libraries(Chakra.Runtime.Library PUBLIC
     Chakra.Pal
 )
+
+if(CAN_BUILD_WABT)
+    # TODO: (hanhossain): cleanup
+    target_include_directories (Chakra.Runtime.Library PUBLIC
+    )
+    target_link_libraries(Chakra.Runtime.Library PUBLIC
+        libwabt)
+endif()
