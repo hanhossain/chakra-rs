@@ -5,5 +5,5 @@ add_library (Chakra.Common.Codex STATIC
 target_include_directories (Chakra.Common.Codex PUBLIC)
 
 target_link_libraries(Chakra.Common.Codex PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

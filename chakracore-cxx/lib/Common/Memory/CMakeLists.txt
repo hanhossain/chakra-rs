@@ -65,5 +65,5 @@ target_include_directories (Chakra.Common.Memory PUBLIC
 )
 
 target_link_libraries(Chakra.Common.Memory PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

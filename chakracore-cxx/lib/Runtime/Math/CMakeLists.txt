@@ -17,5 +17,5 @@ target_include_directories (Chakra.Runtime.Math PUBLIC
 )
 
 target_link_libraries(Chakra.Runtime.Math PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

@@ -26,5 +26,5 @@ target_include_directories (Chakra.WasmReader PUBLIC
 )
 
 target_link_libraries(Chakra.WasmReader PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

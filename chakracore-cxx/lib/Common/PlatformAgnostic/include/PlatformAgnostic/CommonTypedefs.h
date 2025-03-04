@@ -6,6 +6,8 @@
 
 #include <limits.h>
 
+#include "PlatformAgnostic/CommonPal.h"
+
 #ifdef _WIN32
 typedef WCHAR char16;
 #define _u(s) L##s

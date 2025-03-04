@@ -19,5 +19,5 @@ target_include_directories (Chakra.Common.DataStructures PUBLIC
 )
 
 target_link_libraries(Chakra.Common.DataStructures PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

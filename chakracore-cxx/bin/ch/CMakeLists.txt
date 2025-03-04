@@ -85,7 +85,7 @@ if(CC_TARGET_OS_LINUX)
 endif()
 
 target_link_libraries (ch
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
   ${lib_target}
   )
 

@@ -35,5 +35,5 @@ target_include_directories (Chakra.Runtime.ByteCode PUBLIC
 )
 
 target_link_libraries(Chakra.Runtime.ByteCode PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

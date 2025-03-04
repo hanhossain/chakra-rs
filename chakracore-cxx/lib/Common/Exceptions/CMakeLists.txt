@@ -12,5 +12,5 @@ target_include_directories (Chakra.Common.Exceptions PUBLIC
 )
 
 target_link_libraries(Chakra.Common.Exceptions PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

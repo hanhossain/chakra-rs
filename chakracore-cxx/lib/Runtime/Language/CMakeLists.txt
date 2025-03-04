@@ -99,5 +99,5 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
 )
 
 target_link_libraries(Chakra.Runtime.Language PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

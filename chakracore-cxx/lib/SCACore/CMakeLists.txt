@@ -25,5 +25,5 @@ target_include_directories (Chakra.SCACore PUBLIC
     )
 
 target_link_libraries(Chakra.SCACore PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

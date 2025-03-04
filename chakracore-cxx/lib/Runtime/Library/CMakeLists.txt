@@ -148,7 +148,7 @@ target_include_directories (Chakra.Runtime.Library PUBLIC
 )
 
 target_link_libraries(Chakra.Runtime.Library PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )
 
 if(CAN_BUILD_WABT)

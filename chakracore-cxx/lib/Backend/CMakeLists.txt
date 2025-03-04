@@ -130,5 +130,5 @@ target_include_directories (Chakra.Backend PUBLIC
 )
 
 target_link_libraries(Chakra.Backend PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

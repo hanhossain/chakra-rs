@@ -34,5 +34,5 @@ target_include_directories (Chakra.Jsrt PUBLIC
 )
 
 target_link_libraries(Chakra.Jsrt PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )

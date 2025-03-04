@@ -40,5 +40,5 @@ target_include_directories (Chakra.Runtime.Debug PUBLIC
 )
 
 target_link_libraries(Chakra.Runtime.Debug PUBLIC
-    Chakra.Pal
+    Chakra.Common.PlatformAgnostic
 )
