@@ -4,6 +4,8 @@
 graph TD
     
     Chakra.Common.Util
+    Chakra.Pal
+    Chakra.Common.PlatformAgnostic --> Chakra.Pal
 ```
 
 Remaining:
