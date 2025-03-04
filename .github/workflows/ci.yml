@@ -158,8 +158,6 @@ jobs:
         if: ${{ !cancelled() && matrix.os != 'macos' }}
       - run: ninja Chakra.WasmReader
         if: ${{ !cancelled() && matrix.os != 'macos' }}
-      - run: ninja Chakra.Common.PlatformAgnostic
-        if: ${{ !cancelled() }}
       - run: ninja Chakra.Pal
         if: ${{ !cancelled() }}
 
