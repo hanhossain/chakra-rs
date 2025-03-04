@@ -117,9 +117,6 @@ add_library (Chakra.Backend STATIC
 # TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Backend PUBLIC
     # ${CC_BACKEND_ARCH_FOLDER}
-    # ${CHAKRACORE_SOURCE_DIR}/pal
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     # ${CHAKRACORE_SOURCE_DIR}/lib/Common
     # ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
@@ -130,4 +127,8 @@ target_include_directories (Chakra.Backend PUBLIC
     # ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
+)
+
+target_link_libraries(Chakra.Backend PUBLIC
+    Chakra.Pal
 )

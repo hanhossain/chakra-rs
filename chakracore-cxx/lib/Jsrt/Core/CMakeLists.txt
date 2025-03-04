@@ -5,9 +5,6 @@ add_library (Chakra.Jsrt.Core STATIC
 
 # TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Jsrt.Core PUBLIC
-    # ${CHAKRACORE_SOURCE_DIR}/pal
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     # ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
     # ${CHAKRACORE_SOURCE_DIR}/lib/Jsrt
@@ -20,4 +17,8 @@ target_include_directories (Chakra.Jsrt.Core PUBLIC
     # ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Debug
+)
+
+target_link_libraries(Chakra.Jsrt.Core PUBLIC
+    Chakra.Pal
 )

@@ -135,9 +135,6 @@ add_library (Chakra.Runtime.Library STATIC ${CRLIB_SOURCE_CODES})
 
 # TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Runtime.Library PUBLIC
-    # ${CHAKRACORE_SOURCE_DIR}/pal
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     # ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
     # ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
@@ -156,3 +153,7 @@ if(CAN_BUILD_WABT)
         # ${CHAKRACORE_SOURCE_DIR}/lib/wabt/chakra
     )
 endif()
+
+target_link_libraries(Chakra.Runtime.Library PUBLIC
+    Chakra.Pal
+)

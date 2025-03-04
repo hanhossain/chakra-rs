@@ -40,9 +40,6 @@ add_library (Chakra.Runtime.Base STATIC
 
 # TODO: (hanhossain): cleanup
 target_include_directories (Chakra.Runtime.Base PUBLIC
-    # ${CHAKRACORE_SOURCE_DIR}/pal
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc
-    # ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     # ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
     # ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
@@ -52,4 +49,8 @@ target_include_directories (Chakra.Runtime.Base PUBLIC
     # ${CHAKRACORE_SOURCE_DIR}/lib/Parser
     # ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     # ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
+)
+
+target_link_libraries(Chakra.Runtime.Base PUBLIC
+    Chakra.Pal
 )
