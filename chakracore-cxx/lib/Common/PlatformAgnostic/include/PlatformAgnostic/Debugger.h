@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonTypedefs.h"
+
 #ifndef _WIN32
 
 #define ACTIVPROF_E_PROFILER_PRESENT        0x0200

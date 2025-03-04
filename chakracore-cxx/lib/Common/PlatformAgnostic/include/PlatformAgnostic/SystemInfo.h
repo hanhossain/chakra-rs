@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonTypedefs.h"
+
 namespace PlatformAgnostic
 {
     class SystemInfo
