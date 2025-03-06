@@ -142,6 +142,8 @@ function_name() to call the system's implementation
 #ifndef _PAL_INTERNAL_H_
 #define _PAL_INTERNAL_H_
 
+include <sys/types.h>
+
 #define PAL_IMPLEMENTATION
 
 /* Include our configuration information so it's always present when
@@ -170,6 +172,8 @@ function_name() to call the system's implementation
 #endif
 #endif // __IOS__ ?
 #endif // __APPLE__ ?
+
+// TODO (hanhossain): remove all defines and undefs
 
 /* C runtime functions needed to be renamed to avoid duplicate definition
    of those functions when including standard C header files */
@@ -552,7 +556,6 @@ function_name() to call the system's implementation
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <pwd.h>
 #include <unistd.h>
 #include <fcntl.h>

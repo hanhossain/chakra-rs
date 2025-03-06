@@ -49,6 +49,8 @@ Abstract:
 #include <ctype.h>
 #endif
 
+#include <stdint.h>
+
 #if !defined(static_assert)
 #define static_assert _Static_assert
 #endif
@@ -238,6 +240,8 @@ BOOL
 PALAPI
 PAL_IsDebuggerPresent();
 
+// TODO (hanhossain): remove all the defines
+
 #define MAXIMUM_SUSPEND_COUNT  MAXCHAR
 
 #define CHAR_BIT      8
@@ -260,15 +264,12 @@ PAL_IsDebuggerPresent();
 
 #define LONGLONG_MIN    (-9223372036854775807i64 - 1)
 #define LONG64_MIN      (-9223372036854775807i64 - 1)
-#define INT64_MIN       (-9223372036854775807i64 - 1)
 #define LONGLONG_MAX    9223372036854775807i64
 #define LONG64_MAX      9223372036854775807i64
-#define INT64_MAX       9223372036854775807i64
 #define ULONGLONG_MAX   0xffffffffffffffffui64
 #define DWORDLONG_MAX   0xffffffffffffffffui64
 #define ULONG64_MAX     0xffffffffffffffffui64
 #define DWORD64_MAX     0xffffffffffffffffui64
-#define UINT64_MAX      0xffffffffffffffffui64
 
 #define FLT_MAX 3.402823466e+38F
 #define DBL_MAX 1.7976931348623157e+308
