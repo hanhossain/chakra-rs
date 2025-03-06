@@ -93,7 +93,7 @@ namespace Js
 
         static uint32 &LuHiDbl(double &dbl);
         static uint32 &LuLoDbl(double &dbl);
-        static INT64 TryToInt64(double d);
+        static int64_t TryToInt64(double d);
         static bool IsValidTryToInt64(__int64 value);   // Whether TryToInt64 resulted in a valid value.
 
         static int CbitZeroLeft(uint32 lu);

@@ -17,19 +17,19 @@ namespace Js
     // Utility methods to manipulate various date formats
     class DateUtilities
     {
-        static const INT64 ticksPerSecond;
-        static const INT64 ticksPerMinute;
-        static const INT64 ticksPerHour;
-        static const INT64 ticksPerDay;
-        static const INT64 jsEpochTicks;
+        static const int64_t ticksPerSecond;
+        static const int64_t ticksPerMinute;
+        static const int64_t ticksPerHour;
+        static const int64_t ticksPerDay;
+        static const int64_t jsEpochTicks;
 
     public:
 
-        static const INT64 ticksPerMillisecond;
+        static const int64_t ticksPerMillisecond;
         static const double ticksPerMillisecondDouble;
-        static const INT64 jsEpochMilliseconds;
+        static const int64_t jsEpochMilliseconds;
 #ifdef INTL_WINGLOB
-        static HRESULT ES5DateToWinRTDate(double es5Date, __out INT64* pResult);
+        static HRESULT ES5DateToWinRTDate(double es5Date, __out int64_t* pResult);
 #endif
         static double TimeFromSt(SYSTEMTIME *pst);
         static double DayTimeFromSt(SYSTEMTIME *pst);

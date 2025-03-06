@@ -160,7 +160,7 @@ void PAL_printf_arg_remover(va_list *ap, INT Width, INT Precision, INT Type, INT
     }
     else if (Type == PFF_TYPE_INT && Prefix == PFF_PREFIX_LONGLONG)
     {
-        (void)va_arg(*ap, INT64);
+        (void)va_arg(*ap, int64_t);
     }
     else if (Type == PFF_TYPE_INT || Type == PFF_TYPE_CHAR)
     {

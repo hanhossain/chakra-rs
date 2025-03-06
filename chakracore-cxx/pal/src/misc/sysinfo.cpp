@@ -266,7 +266,7 @@ GlobalMemoryStatusEx(
     // Get the Physical memory size
     mib[0] = CTL_HW;
     mib[1] = HW_MEMSIZE;
-    length = sizeof(INT64);
+    length = sizeof(int64_t);
     int rc = sysctl(mib, 2, &physical_memory, &length, NULL, 0);
     if (rc != 0)
     {
@@ -289,11 +289,11 @@ GlobalMemoryStatusEx(
     {
 #if defined(__ANDROID__)
         lpBuffer->ullAvailPhys = sysconf(_SC_AVPHYS_PAGES) * sysconf( _SC_PAGE_SIZE );
-        INT64 used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
+        int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
         lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__LINUX__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
-        INT64 used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
+        int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
         lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__APPLE__)
         vm_size_t page_size;
@@ -307,7 +307,7 @@ GlobalMemoryStatusEx(
             if (KERN_SUCCESS == host_statistics(mach_port, HOST_VM_INFO, (host_info_t)&vm_stats, &count))
             {
                 lpBuffer->ullAvailPhys = (int64_t)vm_stats.free_count * (int64_t)page_size;
-                INT64 used_memory = ((INT64)vm_stats.active_count + (INT64)vm_stats.inactive_count + (INT64)vm_stats.wire_count) *  (INT64)page_size;
+                int64_t used_memory = ((int64_t)vm_stats.active_count + (int64_t)vm_stats.inactive_count + (int64_t)vm_stats.wire_count) *  (int64_t)page_size;
                 lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
             }
         }

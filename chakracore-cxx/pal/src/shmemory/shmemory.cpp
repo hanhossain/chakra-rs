@@ -230,7 +230,7 @@ enum SHM_POOL_SIZES
     SPS_LAST
 };
 /* Block size associated to each SPS identifier */
-static const int block_sizes[SPS_LAST] = {16,32,64,roundup((MAX_LONGPATH+1)*2, sizeof(INT64))};
+static const int block_sizes[SPS_LAST] = {16,32,64,roundup((MAX_LONGPATH+1)*2, sizeof(int64_t))};
 
 /*
 SHM_POOL_INFO
@@ -445,10 +445,10 @@ BOOL SHMInitialize(void)
         /* Initialize memory pools */
 
         /* first pool starts right after header */
-        pool_start = roundup(sizeof(SHM_FIRST_HEADER), sizeof(INT64));
+        pool_start = roundup(sizeof(SHM_FIRST_HEADER), sizeof(int64_t));
 
         /* Same size for each pool, ensuring alignment is correct */
-        size = ((segment_size-pool_start)/SPS_LAST) & ~(sizeof(INT64)-1);
+        size = ((segment_size-pool_start)/SPS_LAST) & ~(sizeof(int64_t)-1);
 
         for (sps = static_cast<SHM_POOL_SIZES>(0); sps < SPS_LAST;
              sps = static_cast<SHM_POOL_SIZES>(sps + 1))
@@ -857,7 +857,7 @@ LPVOID SHMPtrToPtr(SHMPTR shmptr)
     /* Make sure the offset doesn't point in the segment's header */
     if(segment == 0)
     {
-        if (static_cast<size_t>(offset) < roundup(sizeof(SHM_FIRST_HEADER), sizeof(INT64)))
+        if (static_cast<size_t>(offset) < roundup(sizeof(SHM_FIRST_HEADER), sizeof(int64_t)))
         {
             ASSERT("Offset %d is in segment header! returning NULL\n", offset);
             return NULL;
@@ -1178,12 +1178,12 @@ static BOOL SHMAddSegment(void)
      */
 
     /* Add the new segment to the total amount of SHM memory */
-    new_size = segment_size-roundup(sizeof(SHM_SEGMENT_HEADER), sizeof(INT64));
+    new_size = segment_size-roundup(sizeof(SHM_SEGMENT_HEADER), sizeof(int64_t));
 
     /* Calculate value of first SHMPTR in the new segment : segment is
        shm_numsegments (not yet incremented); offset is the first byte after
        the segment header */
-    first_shmptr = MAKE_SHMPTR(shm_numsegments,roundup(sizeof(SHM_SEGMENT_HEADER), sizeof(INT64)));
+    first_shmptr = MAKE_SHMPTR(shm_numsegments,roundup(sizeof(SHM_SEGMENT_HEADER), sizeof(int64_t)));
 
     TRACE("Updating SHM pool information; Total memory used is %d bytes; "
           "we are adding %d bytes\n", used_size, new_size);

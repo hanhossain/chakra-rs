@@ -136,7 +136,7 @@ namespace WAsmJs
         switch (type)
         {
         case INT32  : return sizeof(int32);
-        case INT64  : return sizeof(int64);
+        case INT64  : return sizeof(int64_t);
         case FLOAT32: return sizeof(float);
         case FLOAT64: return sizeof(double);
         case SIMD   : return sizeof(AsmJsSIMDValue);

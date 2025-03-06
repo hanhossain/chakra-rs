@@ -11,14 +11,14 @@
 
 namespace Js
 {
-    const INT64 DateUtilities::ticksPerMillisecond = 10000;
+    const int64_t DateUtilities::ticksPerMillisecond = 10000;
     const double DateUtilities::ticksPerMillisecondDouble = 10000.0;
-    const INT64 DateUtilities::ticksPerSecond = ticksPerMillisecond * 1000;
-    const INT64 DateUtilities::ticksPerMinute = ticksPerSecond * 60;
-    const INT64 DateUtilities::ticksPerHour = ticksPerMinute * 60;
-    const INT64 DateUtilities::ticksPerDay = ticksPerHour * 24;
-    const INT64 DateUtilities::jsEpochMilliseconds = 11644473600000;
-    const INT64 DateUtilities::jsEpochTicks = jsEpochMilliseconds * ticksPerMillisecond;
+    const int64_t DateUtilities::ticksPerSecond = ticksPerMillisecond * 1000;
+    const int64_t DateUtilities::ticksPerMinute = ticksPerSecond * 60;
+    const int64_t DateUtilities::ticksPerHour = ticksPerMinute * 60;
+    const int64_t DateUtilities::ticksPerDay = ticksPerHour * 24;
+    const int64_t DateUtilities::jsEpochMilliseconds = 11644473600000;
+    const int64_t DateUtilities::jsEpochTicks = jsEpochMilliseconds * ticksPerMillisecond;
 
     // The day numbers for the months of a leap year.
     static const int g_rgday[12] =
@@ -75,7 +75,7 @@ namespace Js
     // If we return a failure HRESULT other than E_INVALIDARG, the es5 date can't be expressed
     // in the WinRT scheme
     //
-    HRESULT DateUtilities::ES5DateToWinRTDate(double es5Date, __out INT64* pRet)
+    HRESULT DateUtilities::ES5DateToWinRTDate(double es5Date, __out int64_t* pRet)
     {
         Assert(pRet != NULL);
 
@@ -84,15 +84,15 @@ namespace Js
             return E_INVALIDARG;
         }
 
-        INT64 es5DateAsInt64 = NumberUtilities::TryToInt64(es5Date);
+        int64_t es5DateAsInt64 = NumberUtilities::TryToInt64(es5Date);
 
         if (!NumberUtilities::IsValidTryToInt64(es5DateAsInt64)) return INTSAFE_E_ARITHMETIC_OVERFLOW;
 
         // First, we rebase it to the WinRT epoch, then we convert the time in milliseconds to ticks
-        INT64 numTicks;
+        int64_t numTicks;
         if (!Int64Math::Add(es5DateAsInt64, jsEpochMilliseconds, &numTicks))
         {
-            INT64 adjustedTicks = 0;
+            int64_t adjustedTicks = 0;
             if (!Int64Math::Mul(numTicks, ticksPerMillisecond, &adjustedTicks))
             {
                 (*pRet) = adjustedTicks;

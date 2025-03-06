@@ -128,7 +128,7 @@ inline bool FitsIn(Src val)
 // minimum and maximum values of that type, respectively.  Returns "true" iff
 // "val" can be represented in the range [DstMin..DstMax] (allowing loss of precision, but
 // not truncation).
-template <INT64 DstMin, UINT64 DstMax>
+template <int64_t DstMin, UINT64 DstMax>
 inline bool FloatFitsInIntType(float val)
 {
     float DstMinF = static_cast<float>(DstMin);
@@ -136,7 +136,7 @@ inline bool FloatFitsInIntType(float val)
     return DstMinF <= val && val <= DstMaxF;
 }
 
-template <INT64 DstMin, UINT64 DstMax>
+template <int64_t DstMin, UINT64 DstMax>
 inline bool DoubleFitsInIntType(double val)
 {
     double DstMinD = static_cast<double>(DstMin);
@@ -156,7 +156,7 @@ inline bool DoubleFitsInIntType(double val)
 #define ovadd3_gt(a, b, c, rhs) (((a) + (b) + (c) > (rhs)) || ((a) + (b) < (a)) || ((a) + (b) + (c) < (c)))
 
 #if defined(_TARGET_X86_) && defined( _MSC_VER )
-#define S_SIZE_T_WP64BUG(v)  S_SIZE_T( static_cast<UINT32>( v ) )
+#define S_SIZE_T_WP64BUG(v)  S_SIZE_T( static_cast<uint32_t>( v ) )
 #else
 #define S_SIZE_T_WP64BUG(v)  S_SIZE_T( v )
 #endif

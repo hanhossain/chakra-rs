@@ -35,10 +35,10 @@ BOOL doTTReplay = false;
 const size_t ttUriBufferLength = MAX_PATH * 3;
 char ttUri[ttUriBufferLength];
 size_t ttUriLength = 0;
-UINT32 snapInterval = MAXUINT32;
-UINT32 snapHistoryLength = MAXUINT32;
+uint32_t snapInterval = MAXUINT32;
+uint32_t snapHistoryLength = MAXUINT32;
 LPCWSTR connectionUuidString = NULL;
-UINT32 startEventCount = 1;
+uint32_t startEventCount = 1;
 
 HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName);
 
@@ -1183,17 +1183,17 @@ int _cdecl wmain(int argc, __in_ecount(argc) LPWSTR argv[])
         else if(wcsstr(argv[i], _u("-TTSnapInterval=")) == argv[i])
         {
             LPCWSTR intervalStr = argv[i] + wcslen(_u("-TTSnapInterval="));
-            snapInterval = (UINT32)_wtoi(intervalStr);
+            snapInterval = (uint32_t)_wtoi(intervalStr);
         }
         else if(wcsstr(argv[i], _u("-TTHistoryLength=")) == argv[i])
         {
             LPCWSTR historyStr = argv[i] + wcslen(_u("-TTHistoryLength="));
-            snapHistoryLength = (UINT32)_wtoi(historyStr);
+            snapHistoryLength = (uint32_t)_wtoi(historyStr);
         }
         else if(wcsstr(argv[i], _u("-TTDStartEvent=")) == argv[i])
         {
             LPCWSTR startEventStr = argv[i] + wcslen(_u("-TTDStartEvent="));
-            startEventCount = (UINT32)_wtoi(startEventStr);
+            startEventCount = (uint32_t)_wtoi(startEventStr);
         }
         else
         {
