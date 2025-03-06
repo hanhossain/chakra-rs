@@ -142,7 +142,7 @@ function_name() to call the system's implementation
 #ifndef _PAL_INTERNAL_H_
 #define _PAL_INTERNAL_H_
 
-include <sys/types.h>
+#include <sys/types.h>
 
 #define PAL_IMPLEMENTATION
 
