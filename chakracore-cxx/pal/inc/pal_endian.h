@@ -14,6 +14,8 @@
 #ifndef __PAL_ENDIAN_H__
 #define __PAL_ENDIAN_H__
 
+#include <cstdint>
+
 #ifdef __cplusplus
 extern "C++" {
 inline UINT16 SWAP16(UINT16 x)
