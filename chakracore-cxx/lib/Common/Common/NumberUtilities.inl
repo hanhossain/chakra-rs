@@ -69,7 +69,7 @@ namespace Js
     }
 
 #if defined(_M_X64) && defined(_MSC_VER) && !defined(__clang__)
-    NUMBER_UTIL_INLINE INT64 NumberUtilities::TryToInt64(double T1)
+    NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
     {
         // _mm_cvttsd_si64x will result in 0x8000000000000000 if the value is NaN Inf or Zero, or overflows int64
         __m128d a;
@@ -77,9 +77,9 @@ namespace Js
         return _mm_cvttsd_si64x(a);
     }
 #else
-    NUMBER_UTIL_INLINE INT64 NumberUtilities::TryToInt64(double T1)
+    NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
     {
-        INT64 T4_64;
+        int64_t T4_64;
 #if defined(_M_IX86)
         // If SSE3 is available use FISTPP.  VC (dev10) generates a FISTP, but needs to
         // first change the FPU rounding, which is very slow...
@@ -115,7 +115,7 @@ namespace Js
 #endif
         {
             // The cast will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows int64
-            T4_64 = static_cast<INT64>(T1);
+            T4_64 = static_cast<int64_t>(T1);
         }
 
 #if defined(_M_ARM32_OR_ARM64)

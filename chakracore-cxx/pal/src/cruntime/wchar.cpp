@@ -73,19 +73,19 @@ Function:
 
 Parameters:
   value
-    - INT64 value to be converted to a string
+    - int64_t value to be converted to a string
   string
     - out buffer to place interger string
   radix
     - numeric base to convert to
   isI64
-    - TRUE if value is INT64, FALSE if value is a long
+    - TRUE if value is int64_t, FALSE if value is a long
 
 Note:
   - only a radix of ten (and value < 0) will result in a negative
     sign in the output buffer
 *******************************************************************************/
-LPWSTR Internal_i64tow(INT64 value, LPWSTR string, int radix, BOOL isI64)
+LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
 {
     int length = 0;
     int n;

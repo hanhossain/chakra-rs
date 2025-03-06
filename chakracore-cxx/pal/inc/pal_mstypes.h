@@ -267,7 +267,6 @@ typedef unsigned __int16 UINT16;
 typedef signed __int16 INT16;
 typedef signed __int32 INT32, *PINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
-typedef signed __int64 INT64, *PINT64;
 
 typedef unsigned __int32 ULONG32, *PULONG32;
 typedef signed __int32 LONG32, *PLONG32;
