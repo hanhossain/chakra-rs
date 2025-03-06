@@ -3283,7 +3283,7 @@ namespace Js
         return true;
     }
 
-    bool FunctionBody::GetStatementIndexAndLengthAt(int byteCodeOffset, UINT32* statementIndex, UINT32* statementLength)
+    bool FunctionBody::GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength)
     {
         Assert(statementIndex != nullptr);
         Assert(statementLength != nullptr);

@@ -16,7 +16,7 @@ using namespace Js;
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
     // Redeclare static constants
     const UINT64 NumberConstantsBase::k_Nan;
-    const UINT32 NumberConstantsBase::k_Nan32;
+    const uint32_t NumberConstantsBase::k_Nan32;
     const UINT64 NumberConstantsBase::k_NegativeNan;
     const INT64 NumberUtilitiesBase::Pos_InvalidInt64;
     const INT64 NumberUtilitiesBase::Neg_InvalidInt64;

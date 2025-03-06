@@ -31,7 +31,7 @@ namespace Js
             HSTRING hString;
             HSTRING_HEADER hStringHdr;
             LPCWSTR factoryName = _u("Windows.Foundation.Diagnostics.AsyncCausalityTracer");
-            UINT32 factoryNameLen = _countof(_u("Windows.Foundation.Diagnostics.AsyncCausalityTracer")) - 1;
+            uint32_t factoryNameLen = _countof(_u("Windows.Foundation.Diagnostics.AsyncCausalityTracer")) - 1;
             IID factoryIID = __uuidof(IAsyncCausalityTracerStatics);
 
             IfFailReturnNULL(GetWinRtStringLibrary(scriptContext)->WindowsCreateStringReference(factoryName, factoryNameLen, &hStringHdr, &hString));
@@ -83,7 +83,7 @@ namespace Js
             return E_OUTOFMEMORY;
         }
 
-        IFFAILRET(GetWinRtStringLibrary(scriptContext)->WindowsCreateStringReference(operationName, static_cast<UINT32>(operationNameLen), &hStringHdr, &hString));
+        IFFAILRET(GetWinRtStringLibrary(scriptContext)->WindowsCreateStringReference(operationName, static_cast<uint32_t>(operationNameLen), &hStringHdr, &hString));
 
         IAsyncCausalityTracerStatics* tracerStatics = GetAsyncCausalityTracerStatics(scriptContext);
 

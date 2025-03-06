@@ -22,7 +22,7 @@ SetProcessValidCallTargets(
 
 namespace Js
 {
-    HRESULT DelayLoadWinRtString::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, UINT32 length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    HRESULT DelayLoadWinRtString::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         if (m_hModule)
         {
@@ -44,7 +44,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    HRESULT DelayLoadWinRtString::WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR *sourceString, UINT32 length, _Out_ HSTRING_HEADER *hstringHeader, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    HRESULT DelayLoadWinRtString::WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR *sourceString, uint32_t length, _Out_ HSTRING_HEADER *hstringHeader, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         if (m_hModule)
         {
@@ -88,7 +88,7 @@ namespace Js
         return E_NOTIMPL;
     }
 
-    PCWSTR DelayLoadWinRtString::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ UINT32 * length)
+    PCWSTR DelayLoadWinRtString::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length)
     {
         if (m_hModule)
         {
@@ -237,7 +237,7 @@ namespace Js
         }
     }
 
-    HRESULT DelayLoadWindowsGlobalization::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, UINT32 length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    HRESULT DelayLoadWindowsGlobalization::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         //If winRtStringLibrary isn't nullptr, that means it is available and we are on Win8+
         if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
@@ -247,7 +247,7 @@ namespace Js
 
         return DelayLoadWinRtString::WindowsCreateString(sourceString, length, string);
     }
-    HRESULT DelayLoadWindowsGlobalization::WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR * sourceString, UINT32 length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
+    HRESULT DelayLoadWindowsGlobalization::WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
     {
         //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
         //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
@@ -267,7 +267,7 @@ namespace Js
         }
         return DelayLoadWinRtString::WindowsDeleteString(string);
     }
-    PCWSTR DelayLoadWindowsGlobalization::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ UINT32 * length)
+    PCWSTR DelayLoadWindowsGlobalization::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length)
     {
         //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
         //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.

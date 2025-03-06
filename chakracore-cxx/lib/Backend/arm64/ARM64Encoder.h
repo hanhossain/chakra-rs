@@ -901,7 +901,7 @@ EmitBranchCommon(
     Arm64CodeEmitter &Emitter,
     ArmBranchLinker &Linker,
     BRANCH_CLASS Class,
-    UINT32 Opcode
+    uint32_t Opcode
     )
 {
     Linker.SetInstructionAddressAndClass(Emitter, Class);
@@ -1054,8 +1054,8 @@ EmitAddSubRegisterCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64RegisterParam Src2,
-    UINT32 Opcode,
-    UINT32 ExtendedOpcode
+    uint32_t Opcode,
+    uint32_t ExtendedOpcode
     )
 {
     Assert(Src2.ShiftType() != SHIFT_ROR);
@@ -1204,7 +1204,7 @@ EmitAdcSbcRegisterCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    UINT32 Opcode
+    uint32_t Opcode
     )
 
 {
@@ -1849,7 +1849,7 @@ EmitShiftRegisterCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    UINT32 Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src2.RawRegister() << 16) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -3539,7 +3539,7 @@ EmitLdrStrRegisterCommon(
     Arm64SimpleRegisterParam Addr,
     Arm64RegisterParam Index,
     int AccessShift,
-    UINT32 Opcode
+    uint32_t Opcode
     )
 {
 
