@@ -14,7 +14,7 @@
 #ifndef __PAL_ENDIAN_H__
 #define __PAL_ENDIAN_H__
 
-#include <cstdint>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C++" {

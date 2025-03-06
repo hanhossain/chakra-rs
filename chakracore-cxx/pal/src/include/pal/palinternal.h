@@ -317,7 +317,6 @@ function_name() to call the system's implementation
 // To avoid redefinition problems, undefine those macros.
 
 #define ptrdiff_t PAL_ptrdiff_t
-#define intptr_t PAL_intptr_t
 #define uintptr_t PAL_uintptr_t
 #define timeval PAL_timeval
 #define FILE PAL_FILE
@@ -464,7 +463,6 @@ function_name() to call the system's implementation
 #undef modff
 
 #undef ptrdiff_t
-#undef intptr_t
 #undef uintptr_t
 #undef timeval
 #undef fpos_t
