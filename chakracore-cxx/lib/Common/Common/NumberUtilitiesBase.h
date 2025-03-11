@@ -13,14 +13,14 @@ namespace Js
     {
     public:
         static const UINT64 k_Nan = 0x7FF8000000000000ull;
-        static const UINT32 k_Nan32 = 0x7FC00000ul;
+        static const uint32_t k_Nan32 = 0x7FC00000ul;
         static const UINT64 k_NegativeNan = 0xFFF8000000000000ull;
     };
 
     class NumberUtilitiesBase
     {
     protected:
-        static const INT64 Pos_InvalidInt64 = 0x8000000000000000ll;  // Used for positive infinity/overflow.
-        static const INT64 Neg_InvalidInt64 = 0x7fffffffffffffffll;  // Used for negative infinity/overflow.
+        static const int64_t Pos_InvalidInt64 = 0x8000000000000000ll;  // Used for positive infinity/overflow.
+        static const int64_t Neg_InvalidInt64 = 0x7fffffffffffffffll;  // Used for negative infinity/overflow.
     };
 }

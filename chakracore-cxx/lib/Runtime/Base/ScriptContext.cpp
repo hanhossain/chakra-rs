@@ -6664,7 +6664,7 @@ ScriptContext::GetJitFuncRangeCache()
             {
                 ULONG lineNumber = 0;
                 LONG columnNumber = 0;
-                UINT32 methodIdOrNameId = 0;
+                uint32_t methodIdOrNameId = 0;
                 UINT8 isFrameIndex = 0; // FALSE
                 const WCHAR* name = nullptr;
                 if (function->IsScriptFunction() && !function->IsLibraryCode())
@@ -6696,8 +6696,8 @@ ScriptContext::GetJitFuncRangeCache()
                 }
 
                 StackFrameInfo frame((DWORD_PTR)function->GetScriptContext(),
-                    (UINT32)lineNumber,
-                    (UINT32)columnNumber,
+                    (uint32_t)lineNumber,
+                    (uint32_t)columnNumber,
                     methodIdOrNameId,
                     isFrameIndex);
 

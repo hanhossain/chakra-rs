@@ -667,7 +667,7 @@ BOOL PALAPI FileTimeToSystemTime( CONST FILETIME * lpFileTime,
         struct tm timeBuf;
 #endif  /* HAVE_GMTIME_R */
         /* Convert file time to unix time. */
-        if (((INT64)FileTime) < 0)
+        if (((int64_t)FileTime) < 0)
         {
             UnixFileTime =  -1 - ( ( -FileTime - 1 ) / 10000000 );            
         }

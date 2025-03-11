@@ -253,9 +253,9 @@ namespace Js
     {
         StackFrameInfo() { }
         StackFrameInfo(DWORD_PTR _scriptContextID
-            , UINT32 _sourceLocationLineNumber
-            , UINT32 _sourceLocationColumnNumber
-            , UINT32 _methodIDOrNameIndex
+            , uint32_t _sourceLocationLineNumber
+            , uint32_t _sourceLocationColumnNumber
+            , uint32_t _methodIDOrNameIndex
             , UINT8 _isFrameIndex)
             : scriptContextID(_scriptContextID)
             , sourceLocationLineNumber(_sourceLocationLineNumber)
@@ -265,9 +265,9 @@ namespace Js
         { }
 
         DWORD_PTR scriptContextID;
-        UINT32 sourceLocationLineNumber;
-        UINT32 sourceLocationColumnNumber;
-        UINT32 methodIDOrNameIndex;
+        uint32_t sourceLocationLineNumber;
+        uint32_t sourceLocationColumnNumber;
+        uint32_t methodIDOrNameIndex;
         UINT8  isFrameIndex;
     };
 #pragma pack(pop)

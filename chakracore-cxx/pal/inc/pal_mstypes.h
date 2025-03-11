@@ -5,7 +5,7 @@
 
 /*++
 
-
+// TODO (hanhossain): reduce usage of mstypes
 
 
 
@@ -166,6 +166,7 @@ extern "C" {
 #define __int64     long long
 #endif // BIT64
 
+// TODO (hanhossain): remove for int32_t
 #define __int32     int
 #define __int16     short int
 #define __int8      char        // assumes char is signed
@@ -264,10 +265,8 @@ typedef unsigned __int8 UINT8;
 typedef signed __int8 INT8;
 typedef unsigned __int16 UINT16;
 typedef signed __int16 INT16;
-typedef unsigned __int32 UINT32, *PUINT32;
 typedef signed __int32 INT32, *PINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
-typedef signed __int64 INT64, *PINT64;
 
 typedef unsigned __int32 ULONG32, *PULONG32;
 typedef signed __int32 LONG32, *PLONG32;
