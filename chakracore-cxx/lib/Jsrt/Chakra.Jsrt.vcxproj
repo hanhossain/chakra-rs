@@ -39,7 +39,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>JsrtPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
