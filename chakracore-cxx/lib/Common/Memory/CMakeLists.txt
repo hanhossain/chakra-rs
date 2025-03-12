@@ -65,3 +65,5 @@ target_include_directories (Chakra.Common.Memory PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
 )
+
+target_precompile_headers(Chakra.Common.Memory PUBLIC CommonMemoryPch.h)

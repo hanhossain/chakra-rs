@@ -26,7 +26,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>CommonDataStructuresPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

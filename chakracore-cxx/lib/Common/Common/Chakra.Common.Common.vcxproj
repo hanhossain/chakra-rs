@@ -36,7 +36,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>CommonCommonPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

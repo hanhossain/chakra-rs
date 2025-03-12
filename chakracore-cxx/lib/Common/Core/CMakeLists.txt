@@ -29,3 +29,5 @@ target_include_directories (Chakra.Common.Core PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 )
+
+target_precompile_headers(Chakra.Common.Core PUBLIC CommonCorePch.h)
