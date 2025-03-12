@@ -32,7 +32,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WINVER=$(Win32_WinNTVersion)</PreprocessorDefinitions>
     </Midl>
     <ClCompile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);NOMINMAX;USE_EDGEMODE_JSRT</PreprocessorDefinitions>
       <!-- Some of our STDMETHOD can throw
            TODO: Code review STDMETHOD and separate out API that can throw and those that can't -->
