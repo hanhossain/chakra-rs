@@ -34,7 +34,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>SCACorePch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

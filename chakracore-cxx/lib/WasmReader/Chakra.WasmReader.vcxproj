@@ -34,7 +34,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>WasmReaderPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

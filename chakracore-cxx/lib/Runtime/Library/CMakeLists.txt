@@ -152,3 +152,5 @@ target_include_directories (Chakra.Runtime.Library PUBLIC
 if(CAN_BUILD_WABT)
    target_include_directories(Chakra.Runtime.Library PUBLIC ${CHAKRACORE_SOURCE_DIR}/lib/wabt/chakra)
 endif()
+
+target_precompile_headers(Chakra.Runtime.Library PUBLIC RuntimeLibraryPch.h)
