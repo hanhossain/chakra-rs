@@ -211,8 +211,7 @@ if(CLR_CMAKE_PLATFORM_XPLAT)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
         ${CXX_DO_NOT_OPTIMIZE_SIBLING_CALLS} \
-        -fno-omit-frame-pointer \
-        -fdelayed-template-parsing"
+        -fno-omit-frame-pointer"
         )
 
     # CXX / CC COMPILER FLAGS
