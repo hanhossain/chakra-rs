@@ -35,7 +35,6 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>ParserPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

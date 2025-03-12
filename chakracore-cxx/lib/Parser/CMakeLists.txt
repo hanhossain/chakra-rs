@@ -43,3 +43,5 @@ target_include_directories (Chakra.Parser PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Language
 )
+
+target_precompile_headers(Chakra.Parser PUBLIC ParserPch.h)
