@@ -40,6 +40,7 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <!-- TODO (hanhossain): cmake precompile header file -->
       <PrecompiledHeaderFile>RuntimeLanguagePch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
