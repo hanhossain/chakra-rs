@@ -89,6 +89,7 @@ endif()
 target_link_libraries (ch
   ${lib_target}
   )
+target_precompile_headers(ch PRIVATE stdafx.h)
 
 # Add a post build event to the ch target
 # which executes a command to copy ch to
