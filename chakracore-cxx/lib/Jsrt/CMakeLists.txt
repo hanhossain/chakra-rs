@@ -34,3 +34,5 @@ target_include_directories (Chakra.Jsrt PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Base
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Debug
 )
+
+target_precompile_headers(Chakra.Jsrt PUBLIC JsrtPch.h)

@@ -26,3 +26,5 @@ target_include_directories (Chakra.WasmReader PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
+
+target_precompile_headers(Chakra.WasmReader PUBLIC WasmReaderPch.h)

@@ -17,3 +17,5 @@ target_include_directories (Chakra.Runtime.Math PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
+
+target_precompile_headers(Chakra.Runtime.Math PUBLIC RuntimeMathPch.h)

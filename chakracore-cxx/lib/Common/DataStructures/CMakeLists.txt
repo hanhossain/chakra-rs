@@ -19,3 +19,5 @@ target_include_directories (Chakra.Common.DataStructures PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
 )
+
+target_precompile_headers(Chakra.Common.DataStructures PUBLIC CommonDataStructuresPch.h)

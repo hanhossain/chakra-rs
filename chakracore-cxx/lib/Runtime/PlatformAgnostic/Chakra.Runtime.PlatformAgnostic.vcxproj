@@ -37,6 +37,8 @@
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <!-- TODO (hanhossain): cmake precompile header file.
+      Not trivial to convert to PCH because of horrendous include ordering -->
       <PrecompiledHeaderFile>RuntimePlatformAgnosticPch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
