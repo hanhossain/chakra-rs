@@ -27,6 +27,7 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)..\Interface;
+        $(MSBuildThisFileDirectory)..\PlatformAgnostic;
         $(MSBuildThisFileDirectory)..\..\Backend;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

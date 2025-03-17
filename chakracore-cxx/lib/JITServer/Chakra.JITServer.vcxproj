@@ -42,6 +42,7 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
         $(MSBuildThisFileDirectory)..\Common\Interface;
+        $(MSBuildThisFileDirectory)..\Common\PlatformAgnostic;
         $(MSBuildThisFileDirectory)..\Parser;
         $(MSBuildThisFileDirectory)..\JITClient;
         $(MSBuildThisFileDirectory)..\WasmReader;

@@ -30,6 +30,7 @@
         $(MSBuildThisFileDirectory)..\..\Backend;
         $(MSBuildThisFileDirectory)..\..\Common;
         $(MSBuildThisFileDirectory)..\..\Common\Interface;
+        $(MSBuildThisFileDirectory)..\..\Common\PlatformAgnostic;
         $(MSBuildThisFileDirectory)..\..\Language;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\WasmReader;

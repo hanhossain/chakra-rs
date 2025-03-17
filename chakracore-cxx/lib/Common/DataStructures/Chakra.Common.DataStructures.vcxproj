@@ -24,6 +24,7 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)..\Interface;
+        $(MSBuildThisFileDirectory)..\PlatformAgnostic;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>

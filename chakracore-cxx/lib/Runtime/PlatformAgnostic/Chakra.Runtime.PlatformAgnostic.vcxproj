@@ -26,6 +26,7 @@
         $(MSBuildThisFileDirectory)..\..\Common;
         $(MSBuildThisFileDirectory)..\..\Common\Core;
         $(MSBuildThisFileDirectory)..\..\Common\Interface;
+        $(MSBuildThisFileDirectory)..\..\Common\PlatformAgnostic;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\..\Backend;

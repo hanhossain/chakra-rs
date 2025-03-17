@@ -25,6 +25,7 @@
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
         $(ChakraCoreRootDirectory)Lib\Common\Interface;
+        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic;
         $(ChakraCoreRootDirectory)Lib\Runtime;
         $(ChakraCoreRootDirectory)Bin\ChakraCore;
         $(IntDir);
