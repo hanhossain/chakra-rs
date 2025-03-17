@@ -28,6 +28,7 @@ target_include_directories (Chakra.Common.Common PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 )
 
