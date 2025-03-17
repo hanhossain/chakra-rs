@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimePlatformAgnosticPch.h"
-#include "Core/CommonTypedefs.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 #include "PlatformAgnostic/SystemInfo.h"
 #include "Codex/Utf8Codex.h"
 
