@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonExceptionsPch.h"
+#include "Exceptions/ReportError.h"
 
 // Disable inline so that _ReturnAddress() will get the address of the calling function.
 _NOINLINE
