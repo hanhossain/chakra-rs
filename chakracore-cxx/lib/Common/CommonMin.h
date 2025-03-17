@@ -20,6 +20,7 @@
 // === Core Header Files ===
 #include "Interface/EnumHelp.h"
 #include "Core/Assertions.h"
+#include "Core/CriticalSection.h"
 #include "Core/SysInfo.h"
 
 #include "Core/PerfCounter.h"
