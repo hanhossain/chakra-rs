@@ -64,6 +64,7 @@ target_include_directories (Chakra.Common.Memory PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
 )
 

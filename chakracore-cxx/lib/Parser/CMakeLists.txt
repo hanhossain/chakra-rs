@@ -38,6 +38,7 @@ target_include_directories (Chakra.Parser PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
     ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader

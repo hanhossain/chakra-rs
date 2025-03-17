@@ -42,6 +42,7 @@ target_include_directories (ch PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
   ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
   ${CHAKRACORE_SOURCE_DIR}/lib/Common
+  ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface
   ${CHAKRACORE_SOURCE_DIR}/bin/ChakraCore
   ${CHAKRACORE_SOURCE_DIR}/lib/Backend
   ${CHAKRACORE_SOURCE_DIR}/lib/Parser

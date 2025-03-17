@@ -87,6 +87,6 @@ add_custom_command(TARGET ChakraCoreStatic POST_BUILD
         "${CMAKE_CURRENT_SOURCE_DIR}/Jsrt/ChakraDebug.h"
         "${CMAKE_BINARY_DIR}/include"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/Common/ChakraCoreVersion.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Common/Interface/ChakraCoreVersion.h"
         "${CMAKE_BINARY_DIR}/include"
 )
