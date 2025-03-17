@@ -3,6 +3,7 @@ add_library (Chakra.Jsrt.Core OBJECT
     JsrtCore.cpp
     )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Jsrt.Core PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

@@ -17,6 +17,7 @@ add_library (Chakra.Jsrt OBJECT
 
 add_subdirectory(Core)
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Jsrt PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/pal

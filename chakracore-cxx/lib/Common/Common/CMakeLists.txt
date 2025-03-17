@@ -20,6 +20,7 @@ add_library (Chakra.Common.Common OBJECT
     ${ARCH_SOURCES}
 )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Common.Common PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

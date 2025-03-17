@@ -38,6 +38,7 @@ add_library (Chakra.Runtime.Base OBJECT
     jitprofiling.cpp
     )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Base PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

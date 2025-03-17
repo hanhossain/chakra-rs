@@ -133,6 +133,7 @@ endif()
 
 add_library (Chakra.Runtime.Library OBJECT ${CRLIB_SOURCE_CODES})
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Library PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
@@ -150,6 +151,7 @@ target_include_directories (Chakra.Runtime.Library PUBLIC
 )
 
 if(CAN_BUILD_WABT)
+   # TODO (hanhossain): cleanup includes
    target_include_directories(Chakra.Runtime.Library PUBLIC ${CHAKRACORE_SOURCE_DIR}/lib/wabt/chakra)
 endif()
 

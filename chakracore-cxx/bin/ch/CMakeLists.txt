@@ -30,6 +30,7 @@ if(CC_TARGETS_AMD64)
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (ch PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
