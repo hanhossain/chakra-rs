@@ -53,4 +53,3 @@ using std::type_info;
 #include "PlatformAgnostic/CommonTypedefs.h"
 #include "Core/Api.h"
 #include "Core/CriticalSection.h"
-#include "Core/Assertions.h"
