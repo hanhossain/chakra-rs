@@ -15,7 +15,7 @@
 #include "Exceptions/OutOfMemoryException.h"
 #include "Exceptions/StackOverflowException.h"
 
-#include "TemplateParameter.h"
+#include "Interface/TemplateParameter.h"
 #include "DataStructures/DoublyLinkedListElement.h"
 #include "DataStructures/DoublyLinkedList.h"
 #include "DataStructures/DoublyLinkedListElement.inl"

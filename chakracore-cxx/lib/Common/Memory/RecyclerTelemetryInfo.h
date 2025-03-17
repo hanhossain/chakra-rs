@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "CommonDefines.h"
+#include "Interface/CommonDefines.h"
 #include "CollectionFlags.h"
 #include "RecyclerWaitReason.h"
 #include "Common/Tick.h"

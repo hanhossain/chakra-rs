@@ -27,7 +27,7 @@
 //
 
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 #pragma warning(push)

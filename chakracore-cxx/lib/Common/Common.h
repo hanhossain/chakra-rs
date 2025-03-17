@@ -42,10 +42,10 @@ namespace Js
 
 // Header files
 #include "Core/BinaryFeatureControl.h"
-#include "TemplateParameter.h"
+#include "Interface/TemplateParameter.h"
 
 #include "Common/vtinfo.h"
-#include "EnumClassHelp.h"
+#include "Interface/EnumClassHelp.h"
 #include "Common/Tick.h"
 
 #include "Common/IntMathCommon.h"

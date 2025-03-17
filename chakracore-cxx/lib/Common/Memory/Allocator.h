@@ -18,7 +18,7 @@ enum PageHeapMode : byte
 };
 
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 #if DBG || defined(RECYCLER_FREE_MEM_FILL)

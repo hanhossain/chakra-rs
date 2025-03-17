@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "CommonDefines.h"
+#include "Interface/CommonDefines.h"
 
 #ifdef __midl
 import "wtypes.idl";

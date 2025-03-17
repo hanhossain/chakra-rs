@@ -32,7 +32,7 @@
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..;
-        $(MSBuildThisFileDirectory)..\Interface;
+        $(MSBuildThisFileDirectory)..\Interface\include;
         $(MSBuildThisFileDirectory)..\PlatformAgnostic\include;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

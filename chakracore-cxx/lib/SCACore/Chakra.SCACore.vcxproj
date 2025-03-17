@@ -23,7 +23,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
-        $(MSBuildThisFileDirectory)..\Common\Interface;
+        $(MSBuildThisFileDirectory)..\Common\Interface\include;
         $(MSBuildThisFileDirectory)..\Common\PlatformAgnostic\include;
         $(MSBuildThisFileDirectory)..\Parser;
         $(MSBuildThisFileDirectory)..\Backend;

@@ -18,7 +18,7 @@
 #endif
 
 // === Core Header Files ===
-#include "EnumHelp.h"
+#include "Interface/EnumHelp.h"
 #include "Core/Assertions.h"
 #include "Core/SysInfo.h"
 

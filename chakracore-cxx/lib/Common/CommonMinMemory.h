@@ -5,7 +5,7 @@
 #pragma once
 
 #include "CommonMin.h"
-#include "TemplateParameter.h"
+#include "Interface/TemplateParameter.h"
 
 // === Recycler Memory Header Files ===
 class FinalizableObject;

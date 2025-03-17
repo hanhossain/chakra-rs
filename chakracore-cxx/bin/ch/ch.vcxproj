@@ -24,7 +24,7 @@
         %(AdditionalIncludeDirectories);
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
-        $(ChakraCoreRootDirectory)Lib\Common\Interface;
+        $(ChakraCoreRootDirectory)Lib\Common\Interface\include;
         $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic\include;
         $(ChakraCoreRootDirectory)Lib\Runtime;
         $(ChakraCoreRootDirectory)Bin\ChakraCore;
@@ -60,7 +60,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
-        $(ChakraCoreRootDirectory)lib\common\Interface;
+        $(ChakraCoreRootDirectory)lib\common\Interface\include;
         $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic\include;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

@@ -58,7 +58,7 @@ struct TestHooks
 #define FLAG_NumberPairSet(name)
 #define FLAG_NumberTrioSet(name)
 #define FLAG_NumberRange(name)
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #undef FLAG
 #undef FLAG_String
 #undef FLAG_Boolean

@@ -5,7 +5,7 @@
 #pragma once
 
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 template<typename T>
