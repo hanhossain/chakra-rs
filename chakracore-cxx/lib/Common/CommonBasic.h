@@ -45,7 +45,7 @@ using std::type_info;
 #endif
 #endif
 
-#include "CommonPal.h"
+#include "PlatformAgnostic/CommonPal.h"
 
 #include "Core/CommonMinMax.h"
 

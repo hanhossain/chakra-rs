@@ -25,7 +25,7 @@
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
         $(ChakraCoreRootDirectory)Lib\Common\Interface;
-        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic;
+        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic\include;
         $(ChakraCoreRootDirectory)Lib\Runtime;
         $(ChakraCoreRootDirectory)Bin\ChakraCore;
         $(IntDir);
@@ -61,7 +61,7 @@
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
         $(ChakraCoreRootDirectory)lib\common\Interface;
-        $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic;
+        $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic\include;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
     </ResourceCompile>

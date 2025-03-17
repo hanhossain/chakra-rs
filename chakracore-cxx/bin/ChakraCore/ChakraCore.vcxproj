@@ -25,7 +25,7 @@
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
         $(ChakraCoreRootDirectory)Lib\Common\Interface;
-        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic;
+        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic\include;
         $(ChakraCoreRootDirectory)Lib\Parser;
         $(ChakraCoreRootDirectory)Lib\WasmReader;
         $(ChakraCoreRootDirectory)Lib\Runtime;
@@ -89,7 +89,7 @@
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
         $(ChakraCoreRootDirectory)lib\common\Interface;
-        $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic;
+        $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic\include;
         $(ChakraParserIntDir);
         $(IntDir)..\CoreManifests\;
         %(AdditionalIncludeDirectories)

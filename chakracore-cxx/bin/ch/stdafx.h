@@ -29,7 +29,7 @@
 #include <map>
 #include <string>
 
-#include <CommonPal.h>
+#include "PlatformAgnostic/CommonPal.h"
 
 #include <stdarg.h>
 #ifdef _MSC_VER

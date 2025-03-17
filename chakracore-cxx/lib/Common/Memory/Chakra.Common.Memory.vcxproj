@@ -33,7 +33,7 @@
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)..\Interface;
-        $(MSBuildThisFileDirectory)..\PlatformAgnostic;
+        $(MSBuildThisFileDirectory)..\PlatformAgnostic\include;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>

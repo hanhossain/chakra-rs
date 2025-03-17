@@ -20,7 +20,7 @@ using namespace Windows::Globalization;
 #endif
 
 #ifdef INTL_ICU
-#include <CommonPal.h>
+#include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/ChakraICU.h"
 using namespace PlatformAgnostic::ICUHelpers;
 

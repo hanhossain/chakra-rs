@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "Backend.h"
-#include "CommonPal.h"
+#include "PlatformAgnostic/CommonPal.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DebuggingFlags.h"
 #include "Debug/DiagProbe.h"
