@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/Throw.h"
 #include "Exceptions/ExceptionCheck.h"
 
 // Disable the warning about no matching operator delete found, we don't need those for the Arena and Recycler

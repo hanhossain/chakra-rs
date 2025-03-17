@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "CommonExceptionsPch.h"
+#include "Exceptions/Throw.h"
 
 #ifndef USING_PAL_STDLIB
 // === C Runtime Header Files ===

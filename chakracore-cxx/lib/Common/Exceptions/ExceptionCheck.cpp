@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonExceptionsPch.h"
+#include "Exceptions/Throw.h"
 
 #ifdef EXCEPTION_CHECK
 #include "ExceptionCheck.h"
