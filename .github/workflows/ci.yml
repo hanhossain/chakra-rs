@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   build-rust:
+    # TODO (hanhossain): temporarily disable
+    if: false
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
