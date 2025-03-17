@@ -29,6 +29,7 @@
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)..\..\Backend;
         $(MSBuildThisFileDirectory)..\..\Common;
+        $(MSBuildThisFileDirectory)..\..\Common\Interface;
         $(MSBuildThisFileDirectory)..\..\Language;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\WasmReader;

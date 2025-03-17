@@ -24,6 +24,7 @@
         %(AdditionalIncludeDirectories);
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
+        $(ChakraCoreRootDirectory)Lib\Common\Interface;
         $(ChakraCoreRootDirectory)Lib\Runtime;
         $(ChakraCoreRootDirectory)Bin\ChakraCore;
         $(IntDir);

@@ -24,6 +24,7 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)..\..\Common;
+        $(MSBuildThisFileDirectory)..\..\Common\Interface;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\WasmReader;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;

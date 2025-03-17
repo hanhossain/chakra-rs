@@ -26,6 +26,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..;
+        $(MSBuildThisFileDirectory)..\Interface;
         $(MSBuildThisFileDirectory)..\..\Backend;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>

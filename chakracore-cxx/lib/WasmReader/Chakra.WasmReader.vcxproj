@@ -24,6 +24,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
+        $(MSBuildThisFileDirectory)..\Common\Interface;
         $(MSBuildThisFileDirectory)..\Runtime;
         $(MSBuildThisFileDirectory)..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\Parser;

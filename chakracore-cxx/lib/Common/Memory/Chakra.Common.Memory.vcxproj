@@ -32,6 +32,7 @@
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(ChakraJITIDLIntDir);
         $(MSBuildThisFileDirectory)..;
+        $(MSBuildThisFileDirectory)..\Interface;
         %(AdditionalIncludeDirectories)
       </AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>

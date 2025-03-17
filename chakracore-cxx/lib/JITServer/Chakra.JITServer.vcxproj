@@ -41,6 +41,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
+        $(MSBuildThisFileDirectory)..\Common\Interface;
         $(MSBuildThisFileDirectory)..\Parser;
         $(MSBuildThisFileDirectory)..\JITClient;
         $(MSBuildThisFileDirectory)..\WasmReader;

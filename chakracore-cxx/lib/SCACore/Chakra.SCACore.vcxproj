@@ -23,6 +23,7 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\Common;
+        $(MSBuildThisFileDirectory)..\Common\Interface;
         $(MSBuildThisFileDirectory)..\Parser;
         $(MSBuildThisFileDirectory)..\Backend;
         $(MSBuildThisFileDirectory)..\WasmReader;
