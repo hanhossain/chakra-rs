@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonBasic.h"
+#include "Interface/CommonBasic.h"
 
 #include "Exceptions/ExceptionBase.h"
 
