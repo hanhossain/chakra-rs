@@ -7,6 +7,7 @@
 
 #include "AuxPtrs.h"
 #include "CompactCounters.h"
+#include "Core/CommonMinMax.h"
 
 // Where should I include this file?
 #include "FunctionExecutionStateMachine.h"

@@ -9,6 +9,7 @@
 
 // NOTE: For now, we are only tracking reserved page count.
 // Consider whether we should also (or maybe only) track committed page count.
+#include "Core/CommonMinMax.h"
 
 class AllocationPolicyManager
 {
