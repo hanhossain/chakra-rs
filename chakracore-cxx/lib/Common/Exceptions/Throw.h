@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/CriticalSection.h"
+
 #ifdef STACK_BACK_TRACE
 class StackBackTrace;
 #endif
