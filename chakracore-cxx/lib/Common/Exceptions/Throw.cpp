@@ -6,7 +6,6 @@
 #include "CommonExceptionsPch.h"
 #include "Exceptions/Throw.h"
 #include "Core/Assertions.h"
-#include "Core/CriticalSection.h"
 
 #ifndef USING_PAL_STDLIB
 // === C Runtime Header Files ===
