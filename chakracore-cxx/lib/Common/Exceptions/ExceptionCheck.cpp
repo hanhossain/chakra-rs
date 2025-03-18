@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonExceptionsPch.h"
 #include "Exceptions/Throw.h"
+#include "Core/Api.h"
 
 #ifdef EXCEPTION_CHECK
 #include "ExceptionCheck.h"
