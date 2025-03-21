@@ -5,6 +5,7 @@
 
 #include "JITClientPch.h"
 #include "Core/GlobalSecurityPolicy.h"
+#include "Core/ConfigFlagsTable.h"
 
 _Must_inspect_result_
 _Ret_maybenull_ _Post_writable_byte_size_(size)
