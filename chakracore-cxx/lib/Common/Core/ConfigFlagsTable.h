@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "DataStructures/BaseDictionary.h"
+#include "DataStructures/SList.h"
 
 namespace Js
 {

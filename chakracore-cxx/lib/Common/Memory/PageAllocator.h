@@ -7,6 +7,7 @@
 #include "Exceptions/ExceptionBase.h"
 #include "Memory/AllocationPolicyManager.h"
 #include "Memory/VirtualAllocWrapper.h"
+#include "DataStructures/DList.h"
 
 #ifdef ENABLE_BASIC_TELEMETRY
 #include "AllocatorTelemetryStats.h"

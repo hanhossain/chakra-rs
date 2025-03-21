@@ -51,5 +51,3 @@ using namespace Memory;
 #include "DataStructures/Comparer.h"
 #include "DataStructures/SizePolicy.h"
 #include "DataStructures/BitVector.h"
-#include "DataStructures/SList.h"
-#include "DataStructures/DList.h"
