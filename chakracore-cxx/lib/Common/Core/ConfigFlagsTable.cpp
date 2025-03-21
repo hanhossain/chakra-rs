@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "Memory/PageHeapBlockTypeFilter.h"
+#include "Core/ConfigFlagsTable.h"
 
 #include <initguid.h>
 
