@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "Memory/VirtualAllocWrapper.h"
+#include "Core/GlobalSecurityPolicy.h"
 
 /*
 * class VirtualAllocWrapper

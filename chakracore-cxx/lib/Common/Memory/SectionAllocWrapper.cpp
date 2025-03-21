@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "Memory/SectionAllocWrapper.h"
+#include "Core/GlobalSecurityPolicy.h"
 
 #if _WIN32
 #if ENABLE_OOP_NATIVE_CODEGEN

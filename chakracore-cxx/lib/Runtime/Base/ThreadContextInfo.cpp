@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimeBasePch.h"
+#include "Core/GlobalSecurityPolicy.h"
 
 // Originally defined in ntstatus.h, define here because including windows.h (via PCH
 // above) with ntstatus.h causes macro redefinition errors for the common errors defined
