@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/ClusterList.h"
+
 class BasicBlock;
 class FlowEdge;
 class Loop;
