@@ -26,6 +26,8 @@
 // Enables custom comparisons for TKey and TValue. For example, for strings we use string comparison instead of comparing pointers.
 //
 
+#include "DataStructures/DictionaryEntry.h"
+
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
 #endif

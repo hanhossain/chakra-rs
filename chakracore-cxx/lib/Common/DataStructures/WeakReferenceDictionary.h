@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/DictionaryEntry.h"
+
 namespace JsUtil
 {
     interface IWeakReferenceDictionary
