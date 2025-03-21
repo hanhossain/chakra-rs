@@ -27,6 +27,7 @@
 //
 
 #include "DataStructures/DictionaryEntry.h"
+#include "DataStructures/KeyValuePair.h"
 
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
