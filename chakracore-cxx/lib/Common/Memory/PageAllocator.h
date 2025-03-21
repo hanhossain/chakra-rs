@@ -5,6 +5,7 @@
 #pragma once
 #include "PageAllocatorDefines.h"
 #include "Exceptions/ExceptionBase.h"
+#include "Memory/AllocationPolicyManager.h"
 
 #ifdef ENABLE_BASIC_TELEMETRY
 #include "AllocatorTelemetryStats.h"
