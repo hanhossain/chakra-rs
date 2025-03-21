@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CommonMin.h"
+#include "Memory/ArenaAllocator.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)

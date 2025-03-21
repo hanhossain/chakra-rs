@@ -9,6 +9,7 @@
 #include "RecyclerWaitReason.h"
 #include "Common/ObservableValue.h"
 #include "CollectionFlags.h"
+#include "Memory/ArenaAllocator.h"
 
 namespace Js
 {

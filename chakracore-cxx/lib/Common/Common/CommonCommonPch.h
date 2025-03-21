@@ -5,6 +5,7 @@
 #pragma once
 
 #include "CommonMin.h"
+#include "Memory/ArenaAllocator.h"
 
 // === C Runtime Header Files ===
 #if defined(_UCRT)
