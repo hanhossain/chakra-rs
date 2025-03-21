@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Memory/PageAllocator.h"
+#include "Memory/MemoryTracking.h"
 
 #ifdef PROFILE_MEM
 struct ArenaMemoryData;
