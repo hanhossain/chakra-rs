@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "Memory/PageAllocator.h"
+#include "Memory/SectionAllocWrapper.h"
 
 #define UpdateMinimum(dst, src) if (dst > src) { dst = src; }
 
