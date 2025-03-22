@@ -30,6 +30,7 @@
 #include "DataStructures/KeyValuePair.h"
 #include "DataStructures/SizePolicy.h"
 #include "DataStructures/DefaultContainerLockPolicy.h"
+#include "Memory/RecyclerPointers.h"
 
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
