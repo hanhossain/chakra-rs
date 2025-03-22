@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Core/FinalizableObject.h"
+#include "Memory/SmallLeafHeapBlock.h"
 
 namespace Memory
 {

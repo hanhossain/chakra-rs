@@ -10,6 +10,8 @@
 #include "Common/ObservableValue.h"
 #include "CollectionFlags.h"
 #include "Memory/ArenaAllocator.h"
+#include "DataStructures/SimpleHashTable.h"
+#include "Memory/RecyclerWriteBarrierManager.h"
 
 namespace Js
 {

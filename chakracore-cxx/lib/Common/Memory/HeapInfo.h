@@ -5,6 +5,8 @@
 
 #pragma once
 #include "Memory/RecyclerPageAllocator.h"
+#include "Memory/RecyclerWriteBarrierManager.h"
+#include "Memory/LargeHeapBucket.h"
 
 namespace Memory
 {

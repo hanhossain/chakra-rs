@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Interface/CommonDefines.h"
+#include "Memory/HeapInfoManager.h"
 
 namespace Memory
 {

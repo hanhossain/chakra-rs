@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Core/FaultInjection.h"
+#include "Memory/HeapBlock.h"
 
 namespace Memory
 {
