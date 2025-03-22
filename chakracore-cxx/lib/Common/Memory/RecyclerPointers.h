@@ -6,6 +6,7 @@
 
 #include "WriteBarrierMacros.h"
 #include "DataStructures/QuickSort.h"
+#include "Memory/Allocator.h"
 
 namespace Memory
 {

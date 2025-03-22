@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/Throw.h"
+
 
 #define UNKNOWN_MOD_INDEX 75 // count of the known mod array (under SizePolicy.cpp)
 
