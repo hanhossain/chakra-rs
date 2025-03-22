@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Interface/CommonDefines.h"
+#include "Memory/RecyclerPointers.h"
 
 #ifdef __midl
 import "wtypes.idl";
