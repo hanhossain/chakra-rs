@@ -5,6 +5,7 @@
 #pragma once
 #include "DataStructures/BaseDictionary.h"
 #include "DataStructures/SList.h"
+#include "Memory/HeapAllocator.h"
 
 namespace Js
 {
