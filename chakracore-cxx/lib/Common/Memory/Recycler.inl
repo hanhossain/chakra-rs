@@ -4,7 +4,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-
+#include "Core/FaultInjection.h"
+#include "Core/PerfCounterSet.h"
 
 template <ObjectInfoBits attributes>
 bool

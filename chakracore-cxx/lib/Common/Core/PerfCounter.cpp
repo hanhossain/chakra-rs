@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "PerfCounterImpl.cpp"
+#include "PerfCounter.h"
 
 #ifdef PERF_COUNTERS
 namespace PerfCounter

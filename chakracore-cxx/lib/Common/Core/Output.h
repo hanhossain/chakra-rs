@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/AutoFile.h"
 
 // xplat-todo: error: ISO C++ forbids forward references to 'enum' types
 #if defined(ENABLE_TRACE) 

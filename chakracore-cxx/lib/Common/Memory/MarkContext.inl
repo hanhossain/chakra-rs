@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Core/Output.h"
+#include "Core/FaultInjection.h"
 
 inline
 bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)

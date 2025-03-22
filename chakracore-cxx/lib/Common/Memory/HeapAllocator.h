@@ -5,6 +5,7 @@
 #pragma once
 #include "Exceptions/Throw.h"
 #include "Exceptions/ReportError.h"
+#include "Core/AllocSizeMath.h"
 
 #define HeapNew(T, ...) AllocatorNew(HeapAllocator, &HeapAllocator::Instance, T, __VA_ARGS__)
 #define HeapNewZ(T, ...) AllocatorNewZ(HeapAllocator, &HeapAllocator::Instance, T, __VA_ARGS__)
