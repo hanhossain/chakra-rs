@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMin.h"
+#include "Interface/CommonBasic.h"
 #include "Memory/ArenaAllocator.h"
 
 // === C Runtime Header Files ===

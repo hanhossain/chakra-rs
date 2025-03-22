@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMin.h"
+#include "Interface/CommonBasic.h"
 #include "Interface/TemplateParameter.h"
 
 // === Recycler Memory Header Files ===
