@@ -114,6 +114,8 @@ jobs:
         run: ninja
 
   build-msvc:
+    # TODO (hanhossain): remove windows support
+    if: false
     name: msvc / windows / ${{ matrix.build-type }}
     runs-on: windows-latest
     timeout-minutes: 120
