@@ -28,6 +28,7 @@
 
 #include "DataStructures/DictionaryEntry.h"
 #include "DataStructures/KeyValuePair.h"
+#include "DataStructures/SizePolicy.h"
 
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
