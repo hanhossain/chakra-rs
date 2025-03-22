@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Core/PerfCounterSet.h"
+#include "Memory/HeapBlock.h"
+#include "Memory/SmallFinalizableHeapBucket.h"
 
 namespace Memory
 {

@@ -23,6 +23,7 @@
 #include "Language/InterpreterStackFrame.h"
 #include "Language/JavascriptStackWalker.h"
 #include "Base/ScriptMemoryDumper.h"
+#include "Memory/RecyclerWatsonTelemetry.h"
 
 #if DBG
 #include "Memory/StressTest.h"

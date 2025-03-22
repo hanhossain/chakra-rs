@@ -5,6 +5,8 @@
 
 #include "CommonMemoryPch.h"
 #include "Recycler.h"
+#include "Memory/RecyclerWatsonTelemetry.h"
+#include "Memory/RecyclerObjectDumper.h"
 
 #ifdef _M_AMD64
 #include "Interface/amd64.h"

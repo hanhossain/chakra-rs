@@ -5,6 +5,8 @@
 #include "CommonDataStructuresPch.h"
 #include "DataStructures/CharacterBuffer.h"
 #include "DataStructures/InternalString.h"
+#include "Memory/ArenaAllocator.h"
+#include "Memory/Recycler.h"
 
 namespace Js
 {

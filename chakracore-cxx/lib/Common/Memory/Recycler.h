@@ -12,6 +12,8 @@
 #include "Memory/ArenaAllocator.h"
 #include "DataStructures/SimpleHashTable.h"
 #include "Memory/RecyclerWriteBarrierManager.h"
+#include "Memory/RecyclerHeuristic.h"
+#include "Memory/MarkContextWrapper.h"
 
 namespace Js
 {
