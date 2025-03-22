@@ -29,6 +29,7 @@
 #include "DataStructures/DictionaryEntry.h"
 #include "DataStructures/KeyValuePair.h"
 #include "DataStructures/SizePolicy.h"
+#include "DataStructures/DefaultContainerLockPolicy.h"
 
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"

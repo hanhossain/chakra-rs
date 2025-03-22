@@ -47,4 +47,3 @@ using namespace Memory;
 
 // === Data structures Header Files ===
 #include "DataStructures/QuickSort.h"
-#include "DataStructures/DefaultContainerLockPolicy.h"
