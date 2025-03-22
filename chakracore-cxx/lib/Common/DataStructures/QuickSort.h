@@ -8,6 +8,7 @@ namespace Memory
 {
     struct _write_barrier_policy;
 }
+using namespace Memory;
 
 namespace JsUtil
 {
