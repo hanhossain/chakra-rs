@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "SmallHeapBlockAllocator.h"
 
 template <typename TBlockType>
 SmallHeapBlockAllocator<TBlockType>::SmallHeapBlockAllocator() :

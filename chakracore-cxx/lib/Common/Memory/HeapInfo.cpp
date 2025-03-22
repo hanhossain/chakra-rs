@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "Memory/PageHeapBlockTypeFilter.h"
+#include "HeapInfo.h"
+
 #if defined(TARGET_32)
 #include "ValidPointersMap/vpm.32b.h"
 #elif defined(TARGET_64)

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "HeapBlockMap.h"
 
 // The VS2013 linker treats this as a redefinition of an already
 // defined constant and complains. So skip the declaration if we're compiling

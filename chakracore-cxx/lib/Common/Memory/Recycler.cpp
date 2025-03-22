@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "CommonMemoryPch.h"
+#include "Recycler.h"
 
 #ifdef _M_AMD64
 #include "Interface/amd64.h"
