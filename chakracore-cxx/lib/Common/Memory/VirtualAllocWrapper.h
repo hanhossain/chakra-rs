@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/BitVector.h"
+
 namespace Memory
 {
 
