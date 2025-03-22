@@ -50,4 +50,3 @@ using namespace Memory;
 #include "DataStructures/DefaultContainerLockPolicy.h"
 #include "DataStructures/Comparer.h"
 #include "DataStructures/SizePolicy.h"
-#include "DataStructures/BitVector.h"

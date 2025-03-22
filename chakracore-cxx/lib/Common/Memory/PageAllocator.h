@@ -8,6 +8,7 @@
 #include "Memory/AllocationPolicyManager.h"
 #include "Memory/VirtualAllocWrapper.h"
 #include "DataStructures/DList.h"
+#include "DataStructures/BitVector.h"
 
 #ifdef ENABLE_BASIC_TELEMETRY
 #include "AllocatorTelemetryStats.h"
