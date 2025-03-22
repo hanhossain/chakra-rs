@@ -4,12 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-// === Recycler Memory Header Files ===
-class FinalizableObject;
-
-#include "Memory/FreeObject.h"
-#include "Memory/PagePool.h"
-
 #include "DataStructures/SimpleHashTable.h"
 #include "DataStructures/PageStack.h"
 #include "DataStructures/ContinuousPageStack.h"

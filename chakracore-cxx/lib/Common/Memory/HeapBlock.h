@@ -7,6 +7,7 @@
 
 #include "HeapBucketStats.h"
 #include "Memory/IdleDecommitPageAllocator.h"
+#include "Memory/FreeObject.h"
 
 class ScriptMemoryDumper;
 

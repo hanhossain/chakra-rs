@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/FinalizableObject.h"
+
 namespace Memory
 {
 template <class TBlockAttributes> class SmallFinalizableHeapBucketT;
