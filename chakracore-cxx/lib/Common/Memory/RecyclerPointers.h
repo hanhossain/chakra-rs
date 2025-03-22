@@ -5,6 +5,7 @@
 #pragma once
 
 #include "WriteBarrierMacros.h"
+#include "DataStructures/QuickSort.h"
 
 namespace Memory
 {

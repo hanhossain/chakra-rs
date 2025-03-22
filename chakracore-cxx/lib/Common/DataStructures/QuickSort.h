@@ -4,6 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+namespace Memory
+{
+    struct _write_barrier_policy;
+}
+
 namespace JsUtil
 {
 
