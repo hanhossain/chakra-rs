@@ -72,18 +72,3 @@ template<> struct IntMath<int64> { using Type = Int64Math; };
 
 #include "Common/RejitReason.h"
 #include "Common/ThreadService.h"
-
-// Exceptions
-#include "Exceptions/ExceptionBase.h"
-#include "Exceptions/JavascriptException.h"
-#include "Exceptions/OutOfMemoryException.h"
-#include "Exceptions/OperationAbortedException.h"
-#include "Exceptions/RejitException.h"
-#include "Exceptions/ScriptAbortException.h"
-#include "Exceptions/StackOverflowException.h"
-#include "Exceptions/NotImplementedException.h"
-#include "Exceptions/AsmJsParseException.h"
-
-#include "Memory/AutoPtr.h"
-#include "Memory/AutoAllocatorObjectPtr.h"
-#include "Memory/LeakReport.h"

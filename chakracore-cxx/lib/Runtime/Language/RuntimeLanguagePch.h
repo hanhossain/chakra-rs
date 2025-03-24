@@ -64,3 +64,12 @@
 // .inl files
 #include "Language/CacheOperators.inl"
 #include "Language/JavascriptMathOperators.inl"
+#include "Exceptions/ExceptionBase.h"
+#include "Exceptions/JavascriptException.h"
+#include "Exceptions/OutOfMemoryException.h"
+#include "Exceptions/OperationAbortedException.h"
+#include "Exceptions/RejitException.h"
+#include "Exceptions/ScriptAbortException.h"
+#include "Exceptions/StackOverflowException.h"
+#include "Exceptions/NotImplementedException.h"
+#include "Exceptions/AsmJsParseException.h"

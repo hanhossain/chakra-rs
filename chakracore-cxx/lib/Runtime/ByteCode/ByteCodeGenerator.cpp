@@ -6,6 +6,7 @@
 #include "RuntimeByteCodePch.h"
 #include "FormalsUtil.h"
 #include "Library/StackScriptFunction.h"
+#include "Language/JavascriptStackWalker.h"
 
 #if DBG
 #include "pnodewalk.h"

@@ -29,6 +29,9 @@
 #include "Language/InterpreterStackFrame.h"
 
 #include "Library/StackScriptFunction.h"
+#include "Exceptions/RejitException.h"
+#include "Exceptions/StackOverflowException.h"
+#include "Exceptions/AsmJsParseException.h"
 
 // SIMD
 #include "Language/SimdOps.h"
