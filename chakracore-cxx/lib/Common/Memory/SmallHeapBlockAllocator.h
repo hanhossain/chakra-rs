@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/FaultInjection.h"
+#include "Memory/HeapBlock.h"
+
 namespace Memory
 {
 template <typename TBlockType>

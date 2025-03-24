@@ -29,6 +29,8 @@
         $(MSBuildThisFileDirectory)..\JITIDL;
         $(MSBuildThisFileDirectory)..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\Common;
+        $(MSBuildThisFileDirectory)..\Common\Interface\include;
+        $(MSBuildThisFileDirectory)..\Common\PlatformAgnostic\include;
         $(MSBuildThisFileDirectory)..\Runtime\Base;
         $(MSBuildThisFileDirectory)..\Runtime\Debug;
         $(MSBuildThisFileDirectory)..\Parser;

@@ -9,14 +9,14 @@
 #include "DebugWriter.h"
 #include "RegexStats.h"
 
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #include "ByteCode/ByteCodeApi.h"
 #include "Library/ProfileString.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DiagHelperMethodWrapper.h"
 #endif
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 #include "Base/ScriptContextProfiler.h"
@@ -41,6 +41,8 @@
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
 #include "Common/CompressionUtilities.h"
+
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 #ifdef _M_IX86
 #ifdef _CONTROL_FLOW_GUARD

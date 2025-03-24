@@ -4,8 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "Banned.h"
-#include "CommonDefines.h"
+#include "Interface/Banned.h"
+#include "Interface/CommonDefines.h"
 #define _CRT_RAND_S         // Enable rand_s in the CRT
 
 #ifndef __has_feature
@@ -45,17 +45,5 @@ using std::type_info;
 #endif
 #endif
 
-#include "CommonPal.h"
-
-#include "Core/CommonMinMax.h"
-
-// === Core Header Files ===
-#include "Core/CommonTypedefs.h"
-#include "Core/Api.h"
-#include "Core/CriticalSection.h"
-#include "Core/Assertions.h"
-
-// === Exceptions Header Files ===
-#include "Exceptions/Throw.h"
-#include "Exceptions/ExceptionCheck.h"
-#include "Exceptions/ReportError.h"
+#include "PlatformAgnostic/CommonPal.h"
+#include "PlatformAgnostic/CommonTypedefs.h"

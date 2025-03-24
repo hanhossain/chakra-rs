@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimePlatformAgnosticPch.h"
-#include "Common.h"
+#include "Common/Common.h"
 #include <process.h>
 
 namespace PlatformAgnostic

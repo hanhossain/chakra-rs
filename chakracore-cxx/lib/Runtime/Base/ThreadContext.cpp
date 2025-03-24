@@ -6,6 +6,7 @@
 #include "RuntimeBasePch.h"
 #include "ThreadServiceWrapper.h"
 #include "Types/TypePropertyCache.h"
+#include "Util/Pinned.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DebuggingFlags.h"
 #include "Debug/DiagProbe.h"
@@ -23,6 +24,7 @@
 #include "Language/InterpreterStackFrame.h"
 #include "Language/JavascriptStackWalker.h"
 #include "Base/ScriptMemoryDumper.h"
+#include "Memory/RecyclerWatsonTelemetry.h"
 
 #if DBG
 #include "Memory/StressTest.h"

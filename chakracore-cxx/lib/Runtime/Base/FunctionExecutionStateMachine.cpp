@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
 #include "FunctionExecutionStateMachine.h"
-#include "Warnings.h"
+#include "Interface/Warnings.h"
 
 namespace Js
 {

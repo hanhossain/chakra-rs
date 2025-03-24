@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLanguagePch.h"
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 #if ENABLE_NATIVE_CODEGEN
 namespace Js

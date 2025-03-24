@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "DataStructures/List.h"
 
 //This file contains definitions for general-ish purpose structures/algorithms that we use in the TTD system
 //We may want to replace them with other versions (e.g. that are already in the codebase) at some later time

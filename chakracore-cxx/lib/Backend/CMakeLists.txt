@@ -114,13 +114,16 @@ add_library (Chakra.Backend OBJECT
     ${CC_BACKEND_ARCH_FILES}
     )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Backend PUBLIC
     ${CC_BACKEND_ARCH_FOLDER}
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime
     ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL

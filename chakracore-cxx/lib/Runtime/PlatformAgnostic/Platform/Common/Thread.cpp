@@ -10,7 +10,7 @@
 #undef __in
 #endif
 
-#include "CommonPal.h"
+#include "PlatformAgnostic/CommonPal.h"
 
 #ifdef TEMP_IN
 #define __in TEMP_IN

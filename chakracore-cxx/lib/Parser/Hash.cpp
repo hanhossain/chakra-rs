@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "ParserPch.h"
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 

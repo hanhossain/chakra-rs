@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
+#include "PerfCounterSet.h"
 
 #ifdef PERF_COUNTERS
 // Initialization order

@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/CommonMinMax.h"
+
 namespace Js
 {
     template<typename T>

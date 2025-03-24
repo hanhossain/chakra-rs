@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "Memory/PageAllocator.h"
+#include "Memory/SectionAllocWrapper.h"
+#include "Core/GlobalSecurityPolicy.h"
 
 #define UpdateMinimum(dst, src) if (dst > src) { dst = src; }
 

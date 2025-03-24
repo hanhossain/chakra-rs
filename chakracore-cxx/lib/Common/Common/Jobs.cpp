@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
+#include "Common/Jobs.h"
 #ifdef _WIN32
 #include <process.h>
 #endif
@@ -15,7 +16,7 @@
 #include "Exceptions/OutOfMemoryException.h"
 #include "Exceptions/StackOverflowException.h"
 
-#include "TemplateParameter.h"
+#include "Interface/TemplateParameter.h"
 #include "DataStructures/DoublyLinkedListElement.h"
 #include "DataStructures/DoublyLinkedList.h"
 #include "DataStructures/DoublyLinkedListElement.inl"

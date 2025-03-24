@@ -10,3 +10,4 @@
 
 #include "Runtime.h"
 #include "JsrtContext.h"
+#include "Core/EtwTraceCore.h"

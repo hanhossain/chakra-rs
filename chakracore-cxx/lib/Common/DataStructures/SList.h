@@ -12,6 +12,11 @@
 
 #pragma once
 
+namespace Memory
+{
+    class ArenaAllocator;
+}
+
 class FakeCount
 {
 protected:

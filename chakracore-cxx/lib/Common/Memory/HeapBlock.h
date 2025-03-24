@@ -6,10 +6,11 @@
 #pragma once
 
 #include "HeapBucketStats.h"
+#include "Memory/IdleDecommitPageAllocator.h"
+#include "Memory/FreeObject.h"
+#include "Memory/HeapConstants.h"
 
 class ScriptMemoryDumper;
-
-#include "HeapBucketStats.h"
 
 namespace Memory
 {

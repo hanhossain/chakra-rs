@@ -7,6 +7,9 @@
 //
 
 #pragma once
+#include "DataStructures/List.h"
+#include "Common/vtinfo.h"
+#include "DataStructures/ContinuousPageStack.h"
 
 namespace UnifiedRegex
 {

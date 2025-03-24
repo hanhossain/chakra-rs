@@ -13,6 +13,7 @@
 #include "BGParseManager.h"
 #include "Base/ScriptContext.h"
 #include "ByteCodeSerializer.h"
+#include "Util/Pinned.h"
 
 #define BGPARSE_FLAGS (fscrGlobalCode | fscrWillDeferFncParse | fscrCanDeferFncParse | fscrCreateParserState)
 

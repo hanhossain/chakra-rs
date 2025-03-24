@@ -5,6 +5,7 @@
 #include "Backend.h"
 #include "Language/SourceDynamicProfileManager.h"
 #include "NativeEntryPointData.h"
+#include "Core/EtwTraceCore.h"
 
 CodeGenWorkItem::CodeGenWorkItem(
     JsUtil::JobManager *const manager,

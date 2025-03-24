@@ -11,6 +11,7 @@
 #include "RegexCompileTime.h"
 #include "RegexParser.h"
 #include "RegexPattern.h"
+#include "Common/UInt16Math.h"
 
 namespace Js
 {

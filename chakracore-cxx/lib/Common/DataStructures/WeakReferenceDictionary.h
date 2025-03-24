@@ -4,6 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/DictionaryEntry.h"
+#include "Memory/RecyclerWeakReference.h"
+#include "Memory/Recycler.h"
+#include "Common/vtinfo.h"
+
 namespace JsUtil
 {
     interface IWeakReferenceDictionary

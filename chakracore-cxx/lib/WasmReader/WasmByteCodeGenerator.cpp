@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "WasmReaderPch.h"
+#include "Core/CmdParser.h"
 
 #ifdef ENABLE_WASM
 #include "Language/WebAssemblySource.h"

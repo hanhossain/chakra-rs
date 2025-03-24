@@ -6,7 +6,7 @@
 #pragma once
 
 // Parser Includes
-#include "Common.h"
+#include "Common/Common.h"
 #include "Runtime.h"
 #include "WasmReader.h"
 

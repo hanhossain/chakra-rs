@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Interface/EnumHelp.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Template implementation of dictionary based on .NET BCL implementation.
@@ -26,8 +27,14 @@
 // Enables custom comparisons for TKey and TValue. For example, for strings we use string comparison instead of comparing pointers.
 //
 
+#include "DataStructures/DictionaryEntry.h"
+#include "DataStructures/KeyValuePair.h"
+#include "DataStructures/SizePolicy.h"
+#include "DataStructures/DefaultContainerLockPolicy.h"
+#include "Memory/RecyclerPointers.h"
+
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 #endif
 
 #pragma warning(push)

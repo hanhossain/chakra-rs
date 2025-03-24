@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonDataStructuresPch.h"
 #if PROFILE_DICTIONARY
-#include "DictionaryStats.h"
+#include "Interface/DictionaryStats.h"
 
 DictionaryType* DictionaryStats::dictionaryTypes = NULL;
 CriticalSection DictionaryStats::dictionaryTypesCriticalSection;

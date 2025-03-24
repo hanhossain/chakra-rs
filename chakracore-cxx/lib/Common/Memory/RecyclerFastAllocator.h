@@ -3,7 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-
+#include "Core/PerfCounterSet.h"
+#include "Memory/HeapBlock.h"
+#include "Memory/SmallFinalizableHeapBucket.h"
 
 namespace Memory
 {

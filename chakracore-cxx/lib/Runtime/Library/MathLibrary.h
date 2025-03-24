@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/DelayLoadLibrary.h"
 
 class UCrtC99MathApis : protected DelayLoadLibrary
 {

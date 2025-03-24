@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Interface/CommonBasic.h"
+
 namespace Memory
 {
 struct FreeObject

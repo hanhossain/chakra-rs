@@ -7,6 +7,7 @@
 // Routines called to allow tracking memory. These routines are empty for RET
 // builds but allow external tools (such as Memspect) to track arena allocations individually
 // for CHK and TEST builds. Requires the appropriate configuration flag, e.g. -MemspectEnabled.
+#pragma once
 
 namespace Memory
 {

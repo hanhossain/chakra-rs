@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "CommonCorePch.h"
+#include "Core/GlobalSecurityPolicy.h"
 
 #ifdef _WIN32
 

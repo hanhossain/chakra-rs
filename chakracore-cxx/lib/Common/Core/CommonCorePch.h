@@ -4,7 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMin.h"
+#include "Interface/CommonBasic.h"
+#include "Memory/ArenaAllocator.h"
 
 #ifdef _MSC_VER
 #pragma warning(push)

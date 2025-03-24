@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Interface/CommonBasic.h"
 
 template<class T> inline
 _Post_equal_to_(a < b ? a : b) _Post_satisfies_(return <= a && return <= b)

@@ -6,6 +6,7 @@
 //----------------------------------------------------------------------------
 // Automatic system info getter at startup
 //----------------------------------------------------------------------------
+#pragma once
 
 class AutoSystemInfo : public SYSTEM_INFO
 {

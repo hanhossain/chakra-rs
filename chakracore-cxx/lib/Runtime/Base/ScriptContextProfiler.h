@@ -5,6 +5,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/ProfileInstrument.h"
+
 class ServerScriptContext;
 class NativeCodeGenerator;
 namespace Js

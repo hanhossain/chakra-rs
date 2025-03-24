@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/FaultInjection.h"
+#include "DataStructures/Stack.h"
+#include "DataStructures/Dictionary.h"
 
 namespace Js
 {
@@ -288,7 +291,7 @@ private:
     {
         // If a ES6 flag is disabled using compile flag don't enable it
 #define FLAG_REGOVR_EXP(type, name, ...) m_##name## = COMPILE_DISABLE_##name## ? false : true;
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #undef FLAG_REGOVR_EXP
     }
 
@@ -296,7 +299,7 @@ private:
     {
         // If a flag was overridden using config/command line it should take precedence
 #define FLAG_REGOVR_EXP(type, name, ...) if(CONFIG_ISENABLED(Js::Flag::##name##Flag)) { m_##name## = CONFIG_FLAG_RELEASE(##name##); }
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #undef FLAG_REGOVR_EXP
     }
 };

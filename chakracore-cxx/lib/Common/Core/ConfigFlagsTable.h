@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "DataStructures/BaseDictionary.h"
+#include "DataStructures/SList.h"
+#include "Memory/HeapAllocator.h"
 
 namespace Js
 {
@@ -46,7 +49,7 @@ namespace Js
     {
 #define FLAG(type, name, ...) name##Flag,
 
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
         FlagCount,
         InvalidFlag,
         NoParentFlag,
@@ -69,7 +72,7 @@ namespace Js
     enum Phase: unsigned short
     {
 #define PHASE(name) name##Phase,
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
         PhaseCount,
         InvalidPhase
 #undef PHASE
@@ -487,7 +490,7 @@ namespace Js
             \
             type name;                      \
 
-        #include "ConfigFlagsList.h"
+        #include "Interface/ConfigFlagsList.h"
 
                 bool            flagPresent[FlagCount];
 
@@ -873,7 +876,7 @@ struct PhaseIsEnabled
         static bool name##Phase() { return PHASE_ON1(Js::name##Phase); } \
         template<typename FUNC> static bool name##Phase(FUNC func) { return PHASE_ON(Js::name##Phase, func); } \
         static bool name##Phase(uint sourceId, Js::LocalFunctionId functionId) { return PHASE_ON_RAW(Js::name##Phase, sourceId, functionId); }
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
     };
 
 ///----------------------------------------------------------------------------

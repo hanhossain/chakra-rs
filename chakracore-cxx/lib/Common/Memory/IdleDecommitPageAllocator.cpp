@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "IdleDecommitPageAllocator.h"
 
 IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * policyManager, PageAllocatorType type,
     Js::ConfigFlagsTable& flagTable,

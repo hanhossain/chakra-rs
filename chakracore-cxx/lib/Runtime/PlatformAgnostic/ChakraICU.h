@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonDefines.h"
+#include "Interface/CommonDefines.h"
 
 #ifdef HAS_ICU
 #ifdef WINDOWS10_ICU

@@ -3,10 +3,15 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "DataStructures/DoublyLinkedListElement.h"
+#include "DataStructures/DoublyLinkedList.h"
+#include "Common/Event.h"
+#include "Common/ThreadService.h"
 
 // Undefine name #define in OS headers
 #undef AddJob
 #undef GetJob
+
 #include "Memory/AutoPtr.h"
 
 class Parser;

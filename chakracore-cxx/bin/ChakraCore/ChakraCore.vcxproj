@@ -24,6 +24,8 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory);
         $(ChakraCoreRootDirectory)Lib\Common;
+        $(ChakraCoreRootDirectory)Lib\Common\Interface\include;
+        $(ChakraCoreRootDirectory)Lib\Common\PlatformAgnostic\include;
         $(ChakraCoreRootDirectory)Lib\Parser;
         $(ChakraCoreRootDirectory)Lib\WasmReader;
         $(ChakraCoreRootDirectory)Lib\Runtime;
@@ -86,6 +88,8 @@
       <!-- TODO (hanhossain): remove most directory paths -->
       <AdditionalIncludeDirectories>
         $(ChakraCoreRootDirectory)lib\common;
+        $(ChakraCoreRootDirectory)lib\common\Interface\include;
+        $(ChakraCoreRootDirectory)lib\common\PlatformAgnostic\include;
         $(ChakraParserIntDir);
         $(IntDir)..\CoreManifests\;
         %(AdditionalIncludeDirectories)

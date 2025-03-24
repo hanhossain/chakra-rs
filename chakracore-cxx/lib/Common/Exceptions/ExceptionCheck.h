@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/Assertions.h"
+
 #ifdef EXCEPTION_CHECK
 
 enum ExceptionType

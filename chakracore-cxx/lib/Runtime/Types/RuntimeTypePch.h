@@ -18,6 +18,7 @@
 #include "Types/DictionaryPropertyDescriptor.h"
 #include "Types/DictionaryTypeHandler.h"
 #include "Types/ES5ArrayTypeHandler.h"
+#include "Util/Pinned.h"
 
 // .inl files
 #include "Language/CacheOperators.inl"

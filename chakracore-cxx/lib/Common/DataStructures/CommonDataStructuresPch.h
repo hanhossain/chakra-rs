@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMinMemory.h"
+#include "DataStructures/ContinuousPageStack.h"
 
 // === C Runtime Header Files ===
 #ifndef USING_PAL_STDLIB
@@ -16,7 +16,7 @@
 #include <math.h>
 #endif
 #else
-#include "CommonPal.h"
+#include "PlatformAgnostic/CommonPal.h"
 #endif
 
 // === Codex Header Files ===

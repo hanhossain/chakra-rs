@@ -56,6 +56,7 @@ add_library (Chakra.Common.Memory OBJECT
     ${CCM_SOURCE_FILES}
     )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Common.Memory PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/pal
@@ -63,6 +64,8 @@ target_include_directories (Chakra.Common.Memory PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
 )
 

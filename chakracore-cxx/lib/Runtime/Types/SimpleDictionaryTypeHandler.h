@@ -16,6 +16,7 @@
 //
 
 #pragma once
+#include "Interface/TemplateParameter.h"
 
 namespace Js
 {

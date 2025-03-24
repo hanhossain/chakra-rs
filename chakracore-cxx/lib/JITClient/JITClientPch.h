@@ -5,6 +5,6 @@
 
 #pragma once
 
-#include "CommonMin.h"
+#include "Interface/CommonBasic.h"
 
 #include "JITClient.h"

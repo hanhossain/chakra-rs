@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Util/Pinned.h"
 
 #ifndef IsJsDiag
 #include "Parser.h"
@@ -109,3 +110,13 @@
 #else
 #define JS_DIAG_INLINE
 #endif
+#include "Exceptions/ExceptionBase.h"
+#include "Exceptions/JavascriptException.h"
+#include "Exceptions/OutOfMemoryException.h"
+#include "Exceptions/OperationAbortedException.h"
+#include "Exceptions/RejitException.h"
+#include "Exceptions/ScriptAbortException.h"
+#include "Exceptions/StackOverflowException.h"
+#include "Exceptions/NotImplementedException.h"
+#include "Exceptions/AsmJsParseException.h"
+#include "Core/EtwTraceCore.h"

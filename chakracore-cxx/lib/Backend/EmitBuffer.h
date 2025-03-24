@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Memory/CustomHeap.h"
 
 //---------------------------------------------------------------------------------
 // One allocation chunk from CustomHeap + PData if needed, tracked as a linked list

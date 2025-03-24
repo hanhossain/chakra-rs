@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "HeapBlock.h"
 #if defined(__clang__) && !defined(_MSC_VER)
 #include <cxxabi.h>
 #endif

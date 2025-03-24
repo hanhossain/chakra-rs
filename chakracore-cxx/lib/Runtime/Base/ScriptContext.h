@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Memory/LeakReport.h"
+#include "Common/RejitReason.h"
 
 #if defined(_WIN32) && defined(ENABLE_SCRIPT_PROFILING)
 #include "activprof.h"

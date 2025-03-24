@@ -30,6 +30,7 @@ if(CC_TARGETS_AMD64)
     set(Wasm_dep ../../lib/WasmReader)
 endif()
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (ch PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
@@ -41,6 +42,8 @@ target_include_directories (ch PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
   ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
   ${CHAKRACORE_SOURCE_DIR}/lib/Common
+  ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
+  ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
   ${CHAKRACORE_SOURCE_DIR}/bin/ChakraCore
   ${CHAKRACORE_SOURCE_DIR}/lib/Backend
   ${CHAKRACORE_SOURCE_DIR}/lib/Parser

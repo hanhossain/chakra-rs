@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
+#include "RecyclerPageAllocator.h"
 
 RecyclerPageAllocator::RecyclerPageAllocator(HeapInfo * heapInfo, AllocationPolicyManager * policyManager,
     Js::ConfigFlagsTable& flagTable, uint maxFreePageCount, uint maxAllocPageCount, bool enableWriteBarrier)

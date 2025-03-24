@@ -25,6 +25,8 @@
       <AdditionalIncludeDirectories>
         $(MSBuildThisFileDirectory)..\..\Common;
         $(MSBuildThisFileDirectory)..\..\Common\Core;
+        $(MSBuildThisFileDirectory)..\..\Common\Interface\include;
+        $(MSBuildThisFileDirectory)..\..\Common\PlatformAgnostic\include;
         $(MSBuildThisFileDirectory)..\..\Parser;
         $(MSBuildThisFileDirectory)..\..\Runtime\ByteCode;
         $(MSBuildThisFileDirectory)..\..\Backend;

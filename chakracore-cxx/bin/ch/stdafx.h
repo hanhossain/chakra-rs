@@ -25,11 +25,11 @@
 #define IfFalseGo(expr) do { if(!(expr)) { hr = E_FAIL; goto Error; } } while(0)
 #define IfFalseGoLabel(expr, label) do { if(!(expr)) { hr = E_FAIL; goto label; } } while(0)
 
-#include "CommonDefines.h"
+#include "Interface/CommonDefines.h"
 #include <map>
 #include <string>
 
-#include <CommonPal.h>
+#include "PlatformAgnostic/CommonPal.h"
 
 #include <stdarg.h>
 #ifdef _MSC_VER
@@ -78,7 +78,7 @@ if (!(exp)) \
 #define Assert(exp)             AssertMsg(exp, #exp)
 #define _JSRT_
 #include "ChakraCore.h"
-#include "Core/CommonTypedefs.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 #include "TestHooksRt.h"
 
 typedef void * Var;

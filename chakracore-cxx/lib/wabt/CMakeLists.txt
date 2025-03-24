@@ -93,6 +93,7 @@ add_library(libwabt OBJECT
   ${WAST_LEXER_GEN_CC}
 )
 
+# TODO (hanhossain): cleanup includes
 target_include_directories(libwabt PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}

@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/Comparer.h"
+#include "Core/Assertions.h"
+
 namespace JsUtil
 {
     namespace

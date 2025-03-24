@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "CommonExceptionsPch.h"
+#include "Exceptions/Throw.h"
+#include "Core/Assertions.h"
 
 #ifndef USING_PAL_STDLIB
 // === C Runtime Header Files ===
@@ -20,7 +22,7 @@
 
 // Header files required before including ConfigFlagsTable.h
 
-#include "EnumHelp.h"
+#include "Interface/EnumHelp.h"
 #include "Common/MathUtil.h"
 #include "Core/AllocSizeMath.h"
 #include "Core/FaultInjection.h"

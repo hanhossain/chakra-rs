@@ -30,6 +30,8 @@
         $(MSBuildThisFileDirectory)..;
         $(MSBuildThisFileDirectory)\$(PlatformPathNameAlt);
         $(MSBuildThisFileDirectory)..\Common;
+        $(MSBuildThisFileDirectory)..\Common\Interface\include;
+        $(MSBuildThisFileDirectory)..\Common\PlatformAgnostic\include;
         $(MSBuildThisFileDirectory)..\Runtime;
         $(MSBuildThisFileDirectory)..\JITClient;
         $(MSBuildThisFileDirectory)..\JITIDL;

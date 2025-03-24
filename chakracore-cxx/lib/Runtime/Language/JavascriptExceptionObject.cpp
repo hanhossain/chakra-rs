@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLanguagePch.h"
 #include "Library/StackScriptFunction.h"
+#include "Core/StackBackTrace.h"
 
 namespace Js
 {

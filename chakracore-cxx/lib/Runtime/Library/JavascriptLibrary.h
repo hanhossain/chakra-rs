@@ -5,6 +5,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/Cache.h"
+#include "Memory/RecyclerFastAllocator.h"
+
 #define InlineSlotCountIncrement (HeapConstants::ObjectGranularity / sizeof(Var))
 
 #define MaxPreInitializedObjectTypeInlineSlotCount 16

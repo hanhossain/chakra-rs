@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Core/CommonTypedefs.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 
 enum RecyclerWaitReason : uint8
 {

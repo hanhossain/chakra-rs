@@ -83,6 +83,7 @@ endif()
 
 add_library (Chakra.Runtime.Language OBJECT ${CRL_SOURCE_FILES})
 
+# TODO (hanhossain): cleanup includes
 target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CHAKRACORE_SOURCE_DIR}/pal
@@ -93,6 +94,8 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
     ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader

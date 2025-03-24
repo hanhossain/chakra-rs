@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "Memory/PageHeapBlockTypeFilter.h"
+#include "Core/ConfigFlagsTable.h"
 
 #include <initguid.h>
 
@@ -257,7 +258,7 @@ namespace Js
     const char16* const FlagNames[FlagCount + 1] =
     {
     #define FLAG(type, name, ...) _u(#name),
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
         NULL
     #undef FLAG
     };
@@ -270,7 +271,7 @@ namespace Js
     const char16* const PhaseNames[PhaseCount + 1] =
     {
     #define PHASE(name) _u(#name),
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
         NULL
     #undef PHASE
     };
@@ -282,7 +283,7 @@ namespace Js
     const char16* const FlagDescriptions[FlagCount + 1] =
     {
     #define FLAG(type, name, description, ...) _u(description),
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
         NULL
     #undef FLAG
     };
@@ -293,7 +294,7 @@ namespace Js
     const Flag FlagParents[FlagCount + 1] =
     {
     #define FLAG(type, name, description, defaultValue, parentName, ...) parentName##Flag,
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
         InvalidFlag
     #undef FLAG
     };
@@ -323,7 +324,7 @@ namespace Js
         name ## ( ## defaultValue ##), \
 
     ConfigFlagsTable::ConfigFlagsTable():
-        #include "ConfigFlagsList.h"
+        #include "Interface/ConfigFlagsList.h"
 #undef FLAG
         nDummy(0)
     {
@@ -333,7 +334,7 @@ namespace Js
         ZeroMemory(this->flagIsParent, sizeof(this->flagIsParent));
 #define FLAG(type, name, description, defaultValue, parentName, ...) \
         if ((int)parentName##Flag < FlagCount) this->flagIsParent[(int) parentName##Flag] = true;
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #undef FLAG
 
         // set all parent flags to their default (setting all child flags to their right values)
@@ -482,7 +483,7 @@ namespace Js
         }
         #define FLAGRA(Type, Name, Acronym, ...) FLAGNRA(Type, Name, Acronym, __VA_ARGS__)
     #endif
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
     }
 
     void ConfigFlagsTable::TranslateFlagConfiguration()
@@ -944,7 +945,7 @@ namespace Js
             case name##Flag : \
                 return Flag##type; \
 
-    #include "ConfigFlagsList.h"
+    #include "Interface/ConfigFlagsList.h"
 
             default:
                 return InvalidFlagType;
@@ -972,7 +973,7 @@ namespace Js
             case name##Flag : \
                 return reinterpret_cast<void*>(const_cast<type*>(&##name)); \
 
-        #include "ConfigFlagsList.h"
+        #include "Interface/ConfigFlagsList.h"
 
             default:
                 return NULL;
@@ -1010,7 +1011,7 @@ namespace Js
             Output::Print(_u("\n")); \
         }
 
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 #undef FLAG
     }
 
@@ -1045,7 +1046,7 @@ namespace Js
             retValue = (Boolean) defaultValue; \
             break; \
 
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 
 #undef FLAGDEFAULTBoolean
 #undef FLAGDEFAULTNumberRange
@@ -1141,7 +1142,7 @@ namespace Js
             //   * and those we do care about
 #define FLAGDOCALLBACKBoolean(name)       if( flag == name##Flag ) this->FlagSetCallback_##name(value);
 
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
 
 #undef FLAGDOCALLBACKBoolean
 #undef FLAGDOCALLBACKNumberRange
@@ -1253,7 +1254,7 @@ namespace Js
     {
         AutoCriticalSection autocs(&csExperimentalFlags);
 #define FLAG_EXPERIMENTAL(type, name, ...) this->SetAsBoolean(Js::Flag::name##Flag, true);
-#include "ConfigFlagsList.h"
+#include "Interface/ConfigFlagsList.h"
     }
 
     //
