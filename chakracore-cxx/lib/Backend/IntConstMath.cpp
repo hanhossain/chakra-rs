@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "Backend.h"
+#include "IntConstMath.h"
+#include "Common/Int64Math.h"
 
 bool IntConstMath::IsValid(IntConstType val, IRType type)
 {
