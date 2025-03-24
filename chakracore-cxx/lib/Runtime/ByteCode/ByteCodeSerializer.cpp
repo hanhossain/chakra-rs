@@ -18,6 +18,7 @@
 
 #include "Language/AsmJsModule.h"
 #include "Library/ES5Array.h"
+#include "Util/Pinned.h"
 
 void ChakraBinaryBuildDateTimeHash(DWORD * buildDateHash, DWORD * buildTimeHash);
 

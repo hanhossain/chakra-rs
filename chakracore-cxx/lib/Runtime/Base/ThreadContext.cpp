@@ -6,6 +6,7 @@
 #include "RuntimeBasePch.h"
 #include "ThreadServiceWrapper.h"
 #include "Types/TypePropertyCache.h"
+#include "Util/Pinned.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "Debug/DebuggingFlags.h"
 #include "Debug/DiagProbe.h"
