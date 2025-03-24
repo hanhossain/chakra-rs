@@ -9,6 +9,7 @@
 #include "ChakraPlatform.h"
 #include "Common/DateUtilities.h"
 #include "Core/Assertions.h"
+#include "Exceptions/Throw.h"
 
 namespace PlatformAgnostic
 {
