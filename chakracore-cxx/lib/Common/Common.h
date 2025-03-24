@@ -54,10 +54,3 @@ namespace Js
 #include "Common/UInt16Math.h"
 #include "Common/UInt32Math.h"
 #include "Common/Int64Math.h"
-
-template<typename T> struct IntMath { using Type = void; };
-template<> struct IntMath<int16> { using Type = Int16Math; };
-template<> struct IntMath<int32> { using Type = Int32Math; };
-template<> struct IntMath<uint16> { using Type = UInt16Math; };
-template<> struct IntMath<uint32> { using Type = UInt32Math; };
-template<> struct IntMath<int64> { using Type = Int64Math; };
