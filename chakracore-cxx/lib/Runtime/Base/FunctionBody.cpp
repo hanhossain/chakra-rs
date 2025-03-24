@@ -13,6 +13,8 @@
 
 #include "ByteCode/ScopeInfo.h"
 #include "Base/EtwTrace.h"
+#include "Core/StackBackTrace.h"
+
 #ifdef VTUNE_PROFILING
 #include "Base/VTuneChakraProfile.h"
 #endif
