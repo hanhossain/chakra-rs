@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Memory/ArenaAllocator.h"
 
 // StaticSym contains a string literal at the end (flexible array) and is
 // meant to be initialized statically. However, flexible array initialization
