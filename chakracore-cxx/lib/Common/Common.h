@@ -48,7 +48,6 @@ namespace Js
 #include "Interface/EnumClassHelp.h"
 #include "Common/Tick.h"
 
-#include "Common/IntMathCommon.h"
 #include "Common/Int16Math.h"
 #include "Common/Int32Math.h"
 #include "Common/UInt16Math.h"

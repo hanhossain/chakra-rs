@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Common/IntMathCommon.h"
 
 class Int64Math: public IntMathCommon<int64>
 {
