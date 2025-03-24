@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Exceptions/Throw.h"
+#include "Common/UInt16Math.h"
 #include "Common/MathUtil.h"
 #include "Core/Assertions.h"
 

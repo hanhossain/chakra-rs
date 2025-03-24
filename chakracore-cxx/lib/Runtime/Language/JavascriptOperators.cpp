@@ -20,6 +20,7 @@
 #include "Types/SimpleDictionaryPropertyDescriptor.h"
 #include "Types/SimpleDictionaryTypeHandler.h"
 #include "Language/ModuleNamespace.h"
+#include "Common/UInt16Math.h"
 
 #ifndef SCRIPT_DIRECT_TYPE
 typedef enum JsNativeValueType: int

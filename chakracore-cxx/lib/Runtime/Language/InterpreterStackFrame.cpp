@@ -8,6 +8,7 @@
 #include "RuntimeMathPch.h"
 #include "EHBailoutData.h"
 #include "Library/JavascriptRegularExpression.h"
+#include "Common/UInt16Math.h"
 #if DBG_DUMP
 #include "ByteCode/OpCodeUtilAsmJs.h"
 #endif

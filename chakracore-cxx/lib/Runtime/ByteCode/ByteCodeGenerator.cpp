@@ -7,6 +7,7 @@
 #include "FormalsUtil.h"
 #include "Library/StackScriptFunction.h"
 #include "Language/JavascriptStackWalker.h"
+#include "Common/UInt16Math.h"
 
 #if DBG
 #include "pnodewalk.h"

@@ -47,5 +47,3 @@ namespace Js
 #include "Common/vtinfo.h"
 #include "Interface/EnumClassHelp.h"
 #include "Common/Tick.h"
-
-#include "Common/UInt16Math.h"
