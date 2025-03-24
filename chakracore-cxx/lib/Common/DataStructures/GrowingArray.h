@@ -7,6 +7,7 @@
 
 
 #pragma once
+#include "Common/UInt32Math.h"
 
 #ifdef DIAG_MEM
 extern int listFreeAmount;

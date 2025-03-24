@@ -49,4 +49,3 @@ namespace Js
 #include "Common/Tick.h"
 
 #include "Common/UInt16Math.h"
-#include "Common/UInt32Math.h"
