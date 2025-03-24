@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "Common.h"
+#include "Common/Common.h"
 #include "DataStructures/WeakReferenceDictionary.h"
 
 //========================

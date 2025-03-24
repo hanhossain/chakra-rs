@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Common.h"
+#include "Common/Common.h"
 
 #include "JITTypes.h"
 #include "ChakraJIT.h"

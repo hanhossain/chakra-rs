@@ -6,7 +6,7 @@
 
 #define REGEX_TRIGRAMS 1
 
-#include "Common.h"
+#include "Common/Common.h"
 
 // FORWARD
 namespace Js
