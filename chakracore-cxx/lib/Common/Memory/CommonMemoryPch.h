@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMinMemory.h"
+#include "DataStructures/ContinuousPageStack.h"
 
 typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)

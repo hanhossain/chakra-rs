@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "CommonMinMemory.h"
+#include "DataStructures/ContinuousPageStack.h"
 
 // === C Runtime Header Files ===
 #ifndef USING_PAL_STDLIB
