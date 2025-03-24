@@ -6,6 +6,7 @@
 #pragma once
 #include "Core/FaultInjection.h"
 #include "Core/PerfCounterSet.h"
+#include "Core/ProfileMemory.h"
 
 template <ObjectInfoBits attributes>
 bool

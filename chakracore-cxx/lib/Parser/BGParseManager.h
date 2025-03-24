@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Common/Jobs.h"
+#include "Common/Event.h"
+
 // This files contains the declarations of BGParseManager and BGParseWorkItem and build upon the Job and
 // JobManager classes that do work on background threads. This enables the host to offload parser work
 // from the UI and execution that doesn't have strict thread dependencies. Thus, both classes are

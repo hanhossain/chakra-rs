@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
+#include "Common/Jobs.h"
 #ifdef _WIN32
 #include <process.h>
 #endif

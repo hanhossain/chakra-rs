@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Common/vtregistry.h"
+
 // static
 template <typename T>
 inline INT_PTR VirtualTableInfo<T>::RegisterVirtualTable()
