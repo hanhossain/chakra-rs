@@ -5,6 +5,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/Cache.h"
+
 #define InlineSlotCountIncrement (HeapConstants::ObjectGranularity / sizeof(Var))
 
 #define MaxPreInitializedObjectTypeInlineSlotCount 16

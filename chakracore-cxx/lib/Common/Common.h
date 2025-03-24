@@ -128,26 +128,3 @@ template<> struct IntMath<int64> { using Type = Int64Math; };
 #include "Common/Jobs.h"
 
 #include "Common/vtregistry.h" // Depends on SimpleHashTable.h
-#include "DataStructures/Cache.h" // Depends on config flags
-#include "DataStructures/MruDictionary.h" // Depends on DoublyLinkedListElement
-
-#include "Common/SmartFpuControl.h"
-
-
-
-// This class is only used by AutoExp.dat
-class AutoExpDummyClass
-{
-};
-
-#pragma warning(push)
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(HEAP_TRACK_ALLOC) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-#ifdef _MSC_VER
-#ifdef _UCRT
-#include <typeinfo>
-#else
-#include <typeinfo.h>
-#endif
-#endif
-#endif
-#pragma warning(pop)
