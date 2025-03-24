@@ -5,6 +5,8 @@
 #pragma once
 #include "DataStructures/DoublyLinkedListElement.h"
 #include "DataStructures/DoublyLinkedList.h"
+#include "Common/Event.h"
+#include "Common/ThreadService.h"
 
 // Undefine name #define in OS headers
 #undef AddJob
