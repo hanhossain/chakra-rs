@@ -6,6 +6,7 @@
 #include "Common.h"
 #include "ChakraPlatform.h"
 #include <locale.h>
+#include "Core/Assertions.h"
 
 namespace PlatformAgnostic
 {
