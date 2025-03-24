@@ -6,6 +6,7 @@
 #include "Backend.h"
 
 #define INLINEEMETAARG_COUNT 3
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 BackwardPass::BackwardPass(Func * func, GlobOpt * globOpt, Js::Phase tag)
     : func(func), globOpt(globOpt), tag(tag), currentPrePassLoop(nullptr), tempAlloc(nullptr),

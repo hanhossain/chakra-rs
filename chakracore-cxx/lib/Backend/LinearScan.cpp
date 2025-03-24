@@ -7,6 +7,7 @@
 #include "Backend.h"
 
 #include "SccLiveness.h"
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 #if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
 char const * const RegNames[RegNumCount] =

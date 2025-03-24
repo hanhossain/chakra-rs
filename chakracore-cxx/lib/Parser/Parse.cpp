@@ -8,7 +8,7 @@
 #include "SourceDynamicProfileManager.h"
 
 #include "ByteCode/ByteCodeSerializer.h"
-
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 #if DBG_DUMP
 void PrintPnodeWIndent(ParseNode *pnode, int indentAmt);

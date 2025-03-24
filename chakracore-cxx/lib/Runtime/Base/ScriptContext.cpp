@@ -42,6 +42,8 @@
 #include "Core/CRC.h"
 #include "Common/CompressionUtilities.h"
 
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
+
 #ifdef _M_IX86
 #ifdef _CONTROL_FLOW_GUARD
 extern "C" PVOID __guard_check_icall_fptr;

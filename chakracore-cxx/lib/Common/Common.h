@@ -37,5 +37,3 @@ namespace Js
     typedef int32 PropertyId;
     typedef uint32 ModuleID;
 }
-
-#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))

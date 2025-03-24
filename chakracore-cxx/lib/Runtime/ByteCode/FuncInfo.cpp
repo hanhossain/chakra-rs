@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeByteCodePch.h"
+#define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 FuncInfo::FuncInfo(
     const char16 *name,
