@@ -8,6 +8,7 @@
 
 #pragma once
 #include "DataStructures/List.h"
+#include "Common/vtinfo.h"
 
 namespace UnifiedRegex
 {

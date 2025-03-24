@@ -39,11 +39,3 @@ namespace Js
 }
 
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
-
-// Header files
-#include "Core/BinaryFeatureControl.h"
-#include "Interface/TemplateParameter.h"
-
-#include "Common/vtinfo.h"
-#include "Interface/EnumClassHelp.h"
-#include "Common/Tick.h"
