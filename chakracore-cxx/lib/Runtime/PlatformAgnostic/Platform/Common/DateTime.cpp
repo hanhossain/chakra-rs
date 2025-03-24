@@ -5,6 +5,7 @@
 
 #include "Common.h"
 #include "ChakraPlatform.h"
+#include "Common/DateUtilities.h"
 
 namespace PlatformAgnostic
 {

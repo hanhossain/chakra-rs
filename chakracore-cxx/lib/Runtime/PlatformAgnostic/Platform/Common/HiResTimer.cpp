@@ -7,6 +7,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include "ChakraPlatform.h"
+#include "Common/DateUtilities.h"
 
 namespace PlatformAgnostic
 {

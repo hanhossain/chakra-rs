@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Memory/ArenaAllocator.h"
+#include "Codex/Utf8Codex.h"
 
 // StaticSym contains a string literal at the end (flexible array) and is
 // meant to be initialized statically. However, flexible array initialization

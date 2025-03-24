@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-
+#include "Common/NumberUtilities.h"
 
 //Helpers
 static inline BOOL FBigChar(codepoint_t ch) { return ch >= 128u; }
