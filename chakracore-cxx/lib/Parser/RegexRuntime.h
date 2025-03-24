@@ -7,6 +7,7 @@
 //
 
 #pragma once
+#include "DataStructures/List.h"
 
 namespace UnifiedRegex
 {

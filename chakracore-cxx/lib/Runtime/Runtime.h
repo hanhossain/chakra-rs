@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Common.h"
+#include "DataStructures/WeakReferenceDictionary.h"
 
 //========================
 // Parser includes

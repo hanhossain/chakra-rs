@@ -9,6 +9,8 @@
 #include "CompactCounters.h"
 #include "Core/CommonMinMax.h"
 #include "Core/PerfCounterSet.h"
+#include "DataStructures/Interval.h"
+#include "DataStructures/GrowingArray.h"
 
 // Where should I include this file?
 #include "FunctionExecutionStateMachine.h"

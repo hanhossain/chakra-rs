@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "DataStructures/Queue.h"
 
 //This file contains definitions for data structures that track info about the runtime (ThreadContext and ScriptContexts) 
 //that are needed by other parts of the TTD system

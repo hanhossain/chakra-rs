@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/CmdParser.h"
+
 // API for methods that the ConfigParser can call
 // Implement these methods to customize what happens when the configuration is loaded
 class ConfigParserAPI

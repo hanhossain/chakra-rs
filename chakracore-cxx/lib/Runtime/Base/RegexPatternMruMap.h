@@ -5,6 +5,7 @@
 #pragma once
 
 #include "DataStructures/MruDictionary.h"
+#include "DataStructures/RegexKey.h"
 
 namespace Js
 {

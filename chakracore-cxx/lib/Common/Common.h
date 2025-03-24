@@ -98,25 +98,3 @@ template<> struct IntMath<int64> { using Type = Int64Math; };
 #include "Memory/RecyclerRootPtr.h"
 #include "Memory/RecyclerFastAllocator.h"
 #include "Util/Pinned.h"
-
-// Data Structures 2
-
-#include "DataStructures/QuickSort.h"
-#include "DataStructures/StringBuilder.h"
-#include "DataStructures/WeakReferenceDictionary.h"
-#include "DataStructures/LeafValueDictionary.h"
-#include "DataStructures/Dictionary.h"
-#include "DataStructures/List.h"
-#include "DataStructures/Stack.h"
-#include "DataStructures/Queue.h"
-#include "DataStructures/CharacterBuffer.h"
-#include "DataStructures/InternalString.h"
-#include "DataStructures/Interval.h"
-#include "DataStructures/InternalStringNoCaseComparer.h"
-#include "DataStructures/SparseArray.h"
-#include "DataStructures/GrowingArray.h"
-#include "DataStructures/EvalMapString.h"
-#include "DataStructures/RegexKey.h"
-
-#include "Core/ICustomConfigFlags.h"
-#include "Core/CmdParser.h"

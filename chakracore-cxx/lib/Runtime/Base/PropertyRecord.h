@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "DataStructures/InternalStringNoCaseComparer.h"
 
 #ifdef PROPERTY_RECORD_TRACE
 #define PropertyRecordTrace(...) \

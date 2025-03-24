@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include "Core/FaultInjection.h"
+#include "DataStructures/Stack.h"
+#include "DataStructures/Dictionary.h"
 
 namespace Js
 {
