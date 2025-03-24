@@ -119,3 +119,4 @@
 #include "Exceptions/StackOverflowException.h"
 #include "Exceptions/NotImplementedException.h"
 #include "Exceptions/AsmJsParseException.h"
+#include "Core/EtwTraceCore.h"
