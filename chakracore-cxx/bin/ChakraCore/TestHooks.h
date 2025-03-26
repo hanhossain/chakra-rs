@@ -8,21 +8,15 @@
 #include <oaidl.h>
 interface ICustomConfigFlags;
 
-#if defined(_WIN32) || defined(_MSC_VER)
-#define TESTHOOK_CALL __stdcall
-#else
-#define TESTHOOK_CALL
-#endif // defined(_WIN32) || defined(_MSC_VER)
-
 struct TestHooks
 {
-    typedef HRESULT(TESTHOOK_CALL *SetConfigFlagsPtr)(int argc, LPWSTR argv[], ICustomConfigFlags* customConfigFlags);
-    typedef HRESULT(TESTHOOK_CALL *SetConfigFilePtr)(LPWSTR strConfigFile);
-    typedef HRESULT(TESTHOOK_CALL *PrintConfigFlagsUsageStringPtr)(void);
-    typedef HRESULT(TESTHOOK_CALL *SetAssertToConsoleFlagPtr)(bool flag);
-    typedef HRESULT(TESTHOOK_CALL *SetEnableCheckMemoryLeakOutputPtr)(bool flag);
-    typedef void(TESTHOOK_CALL * NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
-    typedef int(TESTHOOK_CALL *LogicalStringCompareImpl)(const char16* p1, int p1size, const char16* p2, int p2size);
+    typedef HRESULT(*SetConfigFlagsPtr)(int argc, LPWSTR argv[], ICustomConfigFlags* customConfigFlags);
+    typedef HRESULT(*SetConfigFilePtr)(LPWSTR strConfigFile);
+    typedef HRESULT(*PrintConfigFlagsUsageStringPtr)(void);
+    typedef HRESULT(*SetAssertToConsoleFlagPtr)(bool flag);
+    typedef HRESULT(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
+    typedef void(* NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
+    typedef int(*LogicalStringCompareImpl)(const char16* p1, int p1size, const char16* p2, int p2size);
 
     SetConfigFlagsPtr pfSetConfigFlags;
     SetConfigFilePtr  pfSetConfigFile;
@@ -32,26 +26,26 @@ struct TestHooks
     LogicalStringCompareImpl pfLogicalCompareStringImpl;
 
     // Javasscript Bigint hooks
-    typedef digit_t(TESTHOOK_CALL *AddDigit)(digit_t a, digit_t b, digit_t* carry);
-    typedef digit_t(TESTHOOK_CALL *SubDigit)(digit_t a, digit_t b, digit_t* borrow);
-    typedef digit_t(TESTHOOK_CALL *MulDigit)(digit_t a, digit_t b, digit_t* high);
+    typedef digit_t(*AddDigit)(digit_t a, digit_t b, digit_t* carry);
+    typedef digit_t(*SubDigit)(digit_t a, digit_t b, digit_t* borrow);
+    typedef digit_t(*MulDigit)(digit_t a, digit_t b, digit_t* high);
     AddDigit pfAddDigit;
     SubDigit pfSubDigit;
     MulDigit pfMulDigit;
 
 #define FLAG(type, name, description, defaultValue, ...) FLAG_##type##(name)
 #define FLAG_String(name) \
-    bool (TESTHOOK_CALL *pfIsEnabled##name##Flag)(); \
-    HRESULT (TESTHOOK_CALL *pfGet##name##Flag)(BSTR *flag); \
-    HRESULT (TESTHOOK_CALL *pfSet##name##Flag)(BSTR flag);
+    bool (*pfIsEnabled##name##Flag)(); \
+    HRESULT (*pfGet##name##Flag)(BSTR *flag); \
+    HRESULT (*pfSet##name##Flag)(BSTR flag);
 #define FLAG_Boolean(name) \
-    bool (TESTHOOK_CALL *pfIsEnabled##name##Flag)(); \
-    HRESULT (TESTHOOK_CALL *pfGet##name##Flag)(bool *flag); \
-    HRESULT (TESTHOOK_CALL *pfSet##name##Flag)(bool flag);
+    bool (*pfIsEnabled##name##Flag)(); \
+    HRESULT (*pfGet##name##Flag)(bool *flag); \
+    HRESULT (*pfSet##name##Flag)(bool flag);
 #define FLAG_Number(name) \
-    bool (TESTHOOK_CALL *pfIsEnabled##name##Flag)(); \
-    HRESULT (TESTHOOK_CALL *pfGet##name##Flag)(int *flag); \
-    HRESULT (TESTHOOK_CALL *pfSet##name##Flag)(int flag);
+    bool (*pfIsEnabled##name##Flag)(); \
+    HRESULT (*pfGet##name##Flag)(int *flag); \
+    HRESULT (*pfSet##name##Flag)(int flag);
     // skipping other types
 #define FLAG_Phases(name)
 #define FLAG_NumberSet(name)

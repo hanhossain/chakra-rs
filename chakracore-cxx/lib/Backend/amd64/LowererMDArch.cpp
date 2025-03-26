@@ -884,9 +884,6 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
     // e.g. args:   int, double, int, double, int, double
     //  Windows:    int0, xmm1, int2, xmm3, stack, stack
     //  Sys V:      int0, xmm0, int1, xmm1, int2, xmm2
-#ifdef _WIN32
-#define _V_ARG_INDEX(index) index
-#else
     uint16 _vindex[MaxArgumentsToHelper];
     {
         uint16 intIndex = 1, doubleIndex = 1, stackIndex = IntArgRegsCount + 1;
@@ -919,7 +916,6 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
         }
     }
 #define _V_ARG_INDEX(index) _vindex[(index) - 1]
-#endif
 
     // xplat NOTE: Lower often loads "known args" with LoadHelperArgument() and
     // variadic JS runtime args with LowerCallArgs(). So the full args length is
@@ -941,7 +937,6 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
         --argsLeft;
     }
 
-#ifndef _WIN32
     // Manually home args
     if (shouldHomeParams)
     {
@@ -969,7 +964,6 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32 argCount)
         }
     }
     this->xplatCallArgs.Reset();
-#endif // !_WIN32
 
     //
     // load the address into a register because we cannot directly access 64 bit constants
@@ -1043,12 +1037,10 @@ LowererMDArch::GetArgSlotOpnd(uint16 index, StackSym * argSym, bool isHelper /*=
     IRType type = argSym ? argSym->GetType() : TyMachReg;
     const bool isFloatArg = IRType_IsFloat(type) || IRType_IsSimd128(type);
     RegNum reg = GetRegFromArgPosition(isFloatArg, argPosition);
-#ifndef _WIN32
     if (isFloatArg && argPosition <= XmmArgRegsCount)
     {
         this->xplatCallArgs.SetFloat(argPosition);
     }
-#endif
 
     if (reg != RegNOREG)
     {
@@ -1064,14 +1056,12 @@ LowererMDArch::GetArgSlotOpnd(uint16 index, StackSym * argSym, bool isHelper /*=
             argSym = this->m_func->m_symTable->GetArgSlotSym(index);
         }
 
-#ifndef _WIN32
         // helper does not home args, adjust stack offset
         if (isHelper)
         {
             const uint16 argIndex = index - IntArgRegsCount;
             argSym->m_offset = (argIndex - 1) * MachPtr;
         }
-#endif
 
         argSlotOpnd = IR::SymOpnd::New(argSym, type, this->m_func);
     }
@@ -1202,13 +1192,9 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
     }
 #endif
 
-#ifdef _WIN32
-    // For x64, bound checks are required only for SIMD loads.
-    if (isSimdLoad)
-#else
     // xplat: Always do bound check. We don't support out-of-bound access violation recovery.
+    // TODO (hanhossain): remove condition since we always do the bounds check
     if (true)
-#endif
     {
         IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
         IR::LabelInstr * loadLabel = Lowerer::InsertLabel(false, instr);
@@ -1296,13 +1282,9 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
 
     Assert(isSimdStore == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 
-#ifdef _WIN32
-    // For x64, bound checks are required only for SIMD loads.
-    if (isSimdStore)
-#else
     // xplat: Always do bound check. We don't support out-of-bound access violation recovery.
+    // TODO (hanhossain): remove condition since we always do the bounds check
     if (true)
-#endif
     {
         IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
         IR::LabelInstr * storeLabel = Lowerer::InsertLabel(false, instr);
@@ -1790,97 +1772,6 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
     //
     firstPrologInstr->InsertBefore(IR::PragmaInstr::New(Js::OpCode::PrologStart, 0, m_func));
     lastPrologInstr->InsertAfter(IR::PragmaInstr::New(Js::OpCode::PrologEnd, 0, m_func));
-
-#ifdef _WIN32 // home registers
-    //
-    // Now store all the arguments in the register in the stack slots
-    //
-    if (m_func->GetJITFunctionBody()->IsAsmJsMode() && !m_func->IsLoopBody())
-    {
-        uint16 offset = 2;
-        this->MovArgFromReg2Stack(entryInstr, RegRCX, 1);
-        for (uint16 i = 0; i < m_func->GetJITFunctionBody()->GetAsmJsInfo()->GetArgCount() && i < 3; i++)
-        {
-            switch (m_func->GetJITFunctionBody()->GetAsmJsInfo()->GetArgType(i))
-            {
-            case Js::AsmJsVarType::Int:
-                this->MovArgFromReg2Stack(entryInstr, i == 0 ? RegRDX : i == 1 ? RegR8 : RegR9, offset, TyInt32);
-                offset++;
-                break;
-            case Js::AsmJsVarType::Int64:
-                this->MovArgFromReg2Stack(entryInstr, i == 0 ? RegRDX : i == 1 ? RegR8 : RegR9, offset, TyInt64);
-                offset++;
-                break;
-            case Js::AsmJsVarType::Float:
-                // registers we need are contiguous, so calculate it from XMM1
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TyFloat32);
-                offset++;
-                break;
-            case Js::AsmJsVarType::Double:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TyFloat64);
-                offset++;
-                break;
-            case Js::AsmJsVarType::Float32x4:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128F4);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Int32x4:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128I4);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Int16x8:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128I8);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Int8x16:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128I16);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Uint32x4:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128U4);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Uint16x8:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128U8);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Uint8x16:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128U16);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Bool32x4:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128B4);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Bool16x8:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128B8);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Bool8x16:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128B16);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Float64x2:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128D2);
-                offset += 2;
-                break;
-            case Js::AsmJsVarType::Int64x2:
-                this->MovArgFromReg2Stack(entryInstr, (RegNum)(RegXMM1 + i), offset, TySimd128I2);
-                offset += 2;
-                break;
-            default:
-                Assume(UNREACHED);
-            }
-        }
-    }
-    else if (argSlotsForFunctionsCalled)
-    {
-        this->MovArgFromReg2Stack(entryInstr, RegRCX, 1);
-        this->MovArgFromReg2Stack(entryInstr, RegRDX, 2);
-        this->MovArgFromReg2Stack(entryInstr, RegR8, 3);
-        this->MovArgFromReg2Stack(entryInstr, RegR9, 4);
-    }
-#endif  // _WIN32
 
     IntConstType frameSize = Js::Constants::MinStackJIT + stackArgsSize + stackLocalsSize + savedRegSize;
     this->GeneratePrologueStackProbe(entryInstr, frameSize);

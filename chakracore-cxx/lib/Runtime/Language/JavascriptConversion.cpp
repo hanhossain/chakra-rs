@@ -1388,12 +1388,10 @@ CommonNumber:
     }
 
     // Windows x64 version implemented in masm to work around precision limitation
-#if !defined(_WIN32 ) || !defined(_M_X64)
     double JavascriptConversion::ULongToDouble(unsigned __int64 aValue)
     {
         return static_cast<double>(aValue);
     }
-#endif
 
     float JavascriptConversion::LongToFloat(__int64 aValue)
     {

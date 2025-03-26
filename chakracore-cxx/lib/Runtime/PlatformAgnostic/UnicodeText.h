@@ -37,7 +37,7 @@ namespace PlatformAgnostic
         //            //   and all compatibility characters to their equivalents.
         //     Other, // Not supported
         // };
-#if !defined(HAS_ICU) && !_WIN32
+#if !defined(HAS_ICU)
         enum NormalizationForm
         {
             C,
@@ -45,15 +45,6 @@ namespace PlatformAgnostic
             KC,
             KD,
             Other
-        };
-#elif !defined(HAS_ICU) && _WIN32
-        enum NormalizationForm
-        {
-            C = NORM_FORM::NormalizationC,
-            D = NORM_FORM::NormalizationD,
-            KC = NORM_FORM::NormalizationKC,
-            KD = NORM_FORM::NormalizationKD,
-            Other = NORM_FORM::NormalizationOther
         };
 #else
         // ICU does not have specific enums for KC and KD

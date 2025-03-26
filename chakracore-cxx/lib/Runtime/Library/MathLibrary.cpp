@@ -146,20 +146,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_acos]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::acos(x);
         }
@@ -200,20 +186,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_asin]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::asin(x);
         }
@@ -253,20 +225,6 @@ namespace Js
     double Math::Atan(double x)
     {
         double result;
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_atan]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::atan(x);
         }
@@ -305,22 +263,6 @@ namespace Js
     double Math::Atan2( double x, double y )
     {
         double result;
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm
-            {
-                movsd xmm0, x
-                movsd xmm1, y
-                call dword ptr[__libm_sse2_atan2]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::atan2(x, y);
         }
@@ -363,7 +305,7 @@ namespace Js
 #endif
 
 #if (defined(_M_IX86) || defined(_M_X64)) \
-    && (__SSE4_1__ || _WIN32) // _mm_ceil_sd needs this
+    && (__SSE4_1__) // _mm_ceil_sd needs this
             if (AutoSystemInfo::Data.SSE4_1Available())
             {
                 __m128d input, output;
@@ -447,20 +389,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_cos]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::cos(x);
         }
@@ -500,20 +428,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_exp]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::exp(x);
         }
@@ -664,20 +578,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_log]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::log(x);
         }
@@ -890,43 +790,7 @@ namespace Js
     {
         double result = 0;
 
-#if defined(_M_IX86) && defined(_WIN32) // TODO: xplat support
-        // We can't just use "if (0 == y)" because NaN compares
-        // equal to 0 according to our compilers.
-        if( 0 == NumberUtilities::LuLoDbl( y ) && 0 == ( NumberUtilities::LuHiDbl( y ) & 0x7FFFFFFF ) )
-        {
-            // Result is 1 even if x is NaN.
-            result = 1;
-        }
-        else if( 1.0 == Math::Abs( x ) && !NumberUtilities::IsFinite( y ) )
-        {
-            result = JavascriptNumber::NaN;
-        }
-        else
-        {
-            int32 intY;
-            // range [-8, 8] is from JavascriptNumber::DirectPowDoubleInt
-            if (JavascriptNumber::TryGetInt32Value(y, &intY) && intY >= -8 && intY <= 8)
-            {
-                result = JavascriptNumber::DirectPowDoubleInt(x, intY);
-            }
-            else if( AutoSystemInfo::Data.SSE2Available() )
-            {
-                _asm {
-                    movsd xmm0, x
-                    movsd xmm1, y
-                    call dword ptr[__libm_sse2_pow]
-                    movsd result, xmm0
-                }
-            }
-            else
-            {
-                result = ::pow( x, y );
-            }
-        }
-#else
         result = JavascriptNumber::DirectPow( x, y );
-#endif
         return result;
     }
 
@@ -1040,20 +904,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_sin]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::sin(x);
         }
@@ -1126,20 +976,6 @@ namespace Js
     double Math::Tan( double x )
     {
         double result = 0;
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if( AutoSystemInfo::Data.SSE2Available() )
-        {
-            _asm {
-                movsd xmm0, x
-                    call dword ptr[__libm_sse2_tan]
-                    movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::tan( x );
         }
@@ -1180,20 +1016,6 @@ namespace Js
     {
         double result;
 
-#if defined(_M_IX86) && defined(_WIN32)
-        // This is for perf, not for functionality
-        // If non Win32 CRT implementation already support SSE2,
-        // then we get most of the perf already.
-        if (AutoSystemInfo::Data.SSE2Available())
-        {
-            _asm {
-                movsd xmm0, x
-                call dword ptr [__libm_sse2_log10]
-                movsd result, xmm0
-            }
-        }
-        else
-#endif
         {
             result = ::log10(x);
         }
@@ -1230,15 +1052,7 @@ namespace Js
 
     double Math::Log2(double x, ScriptContext* scriptContext)
     {
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
         return ::log2( x );
-#else
-        // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-        UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-        return ucrtC99MathApis->IsAvailable() ?
-            ucrtC99MathApis->log2(x) :
-            Math::Log( x ) / Math::LN2;
-#endif
     }
 
 
@@ -1261,15 +1075,7 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::log1p(x);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            double result = ucrtC99MathApis->IsAvailable() ?
-                ucrtC99MathApis->log1p(x):
-                (JavascriptNumber::IsNegZero(x)) ? x : Math::Log(1.0 + x);
-#endif
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
         }
@@ -1298,15 +1104,7 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::expm1(x);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            double result = ucrtC99MathApis->IsAvailable() ?
-                ucrtC99MathApis->expm1(x) :
-                (JavascriptNumber::IsNegZero(x)) ? x : Math::Exp(x) - 1.0;
-#endif
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
         }
@@ -1422,31 +1220,9 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::acosh(x);
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            if (ucrtC99MathApis->IsAvailable())
-            {
-                return JavascriptNumber::ToVarNoCheck(ucrtC99MathApis->acosh(x), scriptContext);
-            }
-            else if (x >= 1.0)
-            {
-                // Can be smarter about large values of x, e.g. as x -> Infinity, sqrt(x^2 - 1) -> x
-                // Therefore for large x, log(x+x) is sufficient, but how to decide what a large x is?
-                // Also ln(x+x) = ln 2x = ln 2 + ln x
-                double result = (x == 1.0) ? 0.0 : Math::Log(x + ::sqrt(x*x - 1.0));
-
-                return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-            }
-            else
-            {
-                return scriptContext->GetLibrary()->GetNaN();
-            }
-#endif
         }
         else
         {
@@ -1473,27 +1249,9 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::asinh(x);
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            if (ucrtC99MathApis->IsAvailable())
-            {
-                return JavascriptNumber::ToVarNoCheck(ucrtC99MathApis->asinh(x), scriptContext);
-            }
-            else
-            {
-                double result = JavascriptNumber::IsNegZero(x) ? x :
-                    JavascriptNumber::IsPosInf(x) ? JavascriptNumber::POSITIVE_INFINITY :
-                    JavascriptNumber::IsNegInf(x) ? JavascriptNumber::NEGATIVE_INFINITY :
-                    Math::Log(x + ::sqrt(x*x + 1.0));
-
-                return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-            }
-#endif
         }
         else
         {
@@ -1520,37 +1278,9 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::atanh(x);
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            if (ucrtC99MathApis->IsAvailable())
-            {
-                return JavascriptNumber::ToVarNoCheck(ucrtC99MathApis->atanh(x), scriptContext);
-            }
-            else if (Math::Abs(x) < 1.0)
-            {
-                double result = (JavascriptNumber::IsNegZero(x)) ? x : Math::Log((1.0 + x) / (1.0 - x)) / 2.0;
-
-                return JavascriptNumber::ToVarNoCheck(result, scriptContext);
-            }
-            else
-            {
-                if (x == -1.0)
-                {
-                    return scriptContext->GetLibrary()->GetNegativeInfinite();
-                }
-                else if (x == 1.0)
-                {
-                    return scriptContext->GetLibrary()->GetPositiveInfinite();
-                }
-
-                return scriptContext->GetLibrary()->GetNaN();
-            }
-#endif
         }
         else
         {
@@ -1693,15 +1423,7 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::trunc(x);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            double result = ucrtC99MathApis->IsAvailable() ?
-                ucrtC99MathApis->trunc(x) :
-                (x < 0.0) ? ::ceil(x) : ::floor(x);
-#endif
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
         }
@@ -1768,30 +1490,7 @@ namespace Js
         {
             double x = JavascriptConversion::ToNumber(args[1], scriptContext);
 
-#if defined(WHEN_UCRT_IS_LINKED_IN_BUILD) || !defined(_WIN32)
             double result = ::cbrt(x);
-#else
-            // TODO: THE FALLBACK IS NOT ACCURATE; Universal CRT is available on Threshold so we should never fallback but ideally we would link at build time to these APIs instead of loading them at runtime
-            UCrtC99MathApis* ucrtC99MathApis = scriptContext->GetThreadContext()->GetUCrtC99MathApis();
-            if (ucrtC99MathApis->IsAvailable())
-            {
-                return JavascriptNumber::ToVarNoCheck(ucrtC99MathApis->cbrt(x), scriptContext);
-            }
-
-            bool isNeg = x < 0.0;
-
-            if (isNeg)
-            {
-                x = -x;
-            }
-
-            double result = (x == 0.0) ? x : Math::Exp(Math::Log(x) / 3.0);
-
-            if (isNeg)
-            {
-                result = -result;
-            }
-#endif
 
             return JavascriptNumber::ToVarNoCheck(result, scriptContext);
         }

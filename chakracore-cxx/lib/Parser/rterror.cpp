@@ -29,7 +29,6 @@ C_ASSERT(JSPUBLICERR_CantExecute == _HRESULT_TYPEDEF_(0x89020001L));
 
 //------------------------------------------------------------------------------
 // xplat: simulate resource strings
-#ifndef _WIN32
 #include <rterrors_limits.h>
 
 struct _ResourceStr
@@ -99,5 +98,3 @@ const char16* LoadResourceStr(UINT id)
 
     return p ? reinterpret_cast<const _ResourceStr*>(p)->str : nullptr;
 }
-
-#endif

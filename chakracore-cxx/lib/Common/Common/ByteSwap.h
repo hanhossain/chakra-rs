@@ -21,34 +21,6 @@ extern "C" {
 #define RtlUshortByteSwap(_x)    _byteswap_ushort((USHORT)(_x))
 #define RtlUlongByteSwap(_x)     _byteswap_ulong((_x))
 #define RtlUlonglongByteSwap(_x) _byteswap_uint64((_x))
-#elif defined(_WIN32)
-#if (NTDDI_VERSION >= NTDDI_WIN2K)
-NTSYSAPI
-USHORT
-FASTCALL
-RtlUshortByteSwap(
-    _In_ USHORT Source
-    );
-#endif
-
-#if (NTDDI_VERSION >= NTDDI_WIN2K)
-NTSYSAPI
-ULONG
-FASTCALL
-RtlUlongByteSwap(
-    _In_ ULONG Source
-    );
-#endif
-
-#if (NTDDI_VERSION >= NTDDI_WIN2K)
-NTSYSAPI
-ULONGLONG
-FASTCALL
-RtlUlonglongByteSwap(
-    _In_ ULONGLONG Source
-    );
-#endif
-
 #elif defined(__APPLE__)
 #include <libkern/OSByteOrder.h>
 

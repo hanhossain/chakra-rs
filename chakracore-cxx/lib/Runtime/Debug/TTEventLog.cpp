@@ -2618,9 +2618,7 @@ namespace TTD
         writer.WriteString(NSTokens::Key::arch, archString);
 
         TTString platformString;
-#if defined(_WIN32)
-        this->m_miscSlabAllocator.CopyNullTermStringInto(_u("Windows"), platformString);
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
         this->m_miscSlabAllocator.CopyNullTermStringInto(_u("macOS"), platformString);
 #else
         this->m_miscSlabAllocator.CopyNullTermStringInto(_u("Linux"), platformString);

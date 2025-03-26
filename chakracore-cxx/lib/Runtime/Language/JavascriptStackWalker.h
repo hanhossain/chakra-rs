@@ -9,9 +9,6 @@
 typedef Js::X86StackFrame StackFrame;
 #elif defined(_M_X64)
 #include "Language/amd64/StackFrame.h"
-#ifdef _WIN32 // xplat-todo
-#include "Language/amd64/StackFrame.inl"
-#endif
 typedef Js::Amd64StackFrame StackFrame;
 #elif defined(_M_ARM)
 #include "Language/arm/StackFrame.h"

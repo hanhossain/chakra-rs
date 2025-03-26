@@ -444,13 +444,9 @@ void AssertValue(void * mem, T value, uint byteCount)
 }
 }
 
-#ifndef _WIN32
 #define NO_EXPORT(x) \
     __attribute__((visibility("hidden"))) \
     x
-#else
-#define NO_EXPORT(x) x
-#endif
 
 #include <new>
 

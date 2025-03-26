@@ -13,9 +13,7 @@
 extern int AssertCount;
 extern int AssertsToConsole;
 
-#if _WIN32
-_declspec(thread, selectany) int IsInAssert = false;
-#elif !defined(__IOS__)
+#if !defined(__IOS__)
 extern __declspec(thread) int IsInAssert;
 #else
  // todo: implement thread local variable for iOS ??

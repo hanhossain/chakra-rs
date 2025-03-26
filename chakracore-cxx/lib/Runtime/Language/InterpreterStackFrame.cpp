@@ -1815,14 +1815,10 @@ skipThunk:
     }
 #endif
 
-#if defined(_M_ARM64) && defined(_WIN32)
-    // Language\arm64\arm64_Thunks.asm
-#else
     Var InterpreterStackFrame::StaticInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...)
     {
         return InterpreterThunk((JavascriptCallStackLayout*)&function);
     }
-#endif
 #pragma optimize("", on)
 
     Var InterpreterStackFrame::InterpreterThunk(JavascriptCallStackLayout* layout)
@@ -3091,10 +3087,6 @@ skipThunk:
         // Move the arguments to the right location
         ArgSlot argCount = info->GetArgCount();
 
-#if _M_X64 && _WIN32
-        uint homingAreaSize = 0;
-#endif
-
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         const bool tracingFunc = PHASE_TRACE(AsmjsFunctionEntryPhase, functionBody);
         if (tracingFunc)
@@ -3110,105 +3102,6 @@ skipThunk:
         uintptr_t argAddress = (uintptr_t)m_inParams;
         for (ArgSlot i = 0; i < argCount; i++)
         {
-#if _M_X64 && _WIN32
-            // 3rd Argument should be at the end of the homing area.
-            Assert(i != 3 || argAddress == (uintptr_t)m_inParams + homingAreaSize);
-            if (i < 3)
-            {
-                // for x64 we spill the first 3 floating point args below the rest of the arguments on the stack
-                // m_inParams will be from DynamicInterpreterThunk's frame. Floats are in InterpreterAsmThunk's frame. Stack will be set up like so:
-                // DIT arg2 <- first scriptArg, m_inParams points here
-                // DIT arg1
-                // padding
-                // IAT r9 home
-                // IAT r8 home
-                // IAT rdx home
-                // IAT rcx home
-                // IAT return address
-                // IAT push rbp
-                // IAT padding
-                // IAT xmm3 spill
-                // IAT xmm2 spill
-                // IAT xmm1 spill <- floatSpillAddress for arg1
-
-#define FLOAT_SPILL_ADDRESS_OFFSET_WORDS 15
-                // floats are spilled as xmmwords
-                uintptr_t floatSpillAddress = (uintptr_t)m_inParams - MachPtr * (FLOAT_SPILL_ADDRESS_OFFSET_WORDS - 2 * i);
-
-                if (info->GetArgType(i).isInt())
-                {
-                    *intArg = *(int*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                    if (tracingFunc)
-                    {
-                        Output::Print(_u("%d, "), *intArg);
-                    }
-#endif
-                    ++intArg;
-                    homingAreaSize += MachPtr;
-                }
-                else if (info->GetArgType(i).isInt64())
-                {
-                    *int64Arg = *(int64*)argAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                    if (tracingFunc)
-                    {
-                        Output::Print(_u("%lld, "), *int64Arg);
-                    }
-#endif
-                    ++int64Arg;
-                    homingAreaSize += MachPtr;
-                }
-                else if (info->GetArgType(i).isFloat())
-                {
-                    *floatArg = *(float*)floatSpillAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                    if (tracingFunc)
-                    {
-                        Output::Print(_u("%.2f, "), *floatArg);
-                    }
-#endif
-                    ++floatArg;
-                    homingAreaSize += MachPtr;
-                }
-                else if (info->GetArgType(i).isDouble())
-                {
-                    *doubleArg = *(double*)floatSpillAddress;
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                    if (tracingFunc)
-                    {
-                        Output::Print(_u("%.2f, "), *doubleArg);
-                    }
-#endif
-                    ++doubleArg;
-                    homingAreaSize += MachPtr;
-                }
-                else
-                {
-#ifdef ENABLE_WASM_SIMD
-                    Assert(info->GetArgType(i).isSIMD());
-                    *simdArg = *(AsmJsSIMDValue*)floatSpillAddress;
-                    ++simdArg;
-                    homingAreaSize += sizeof(AsmJsSIMDValue);
-#else
-                    Assert(UNREACHED);
-#endif
-                }
-
-                if (Wasm::Simd::IsEnabled() && i == 2) // last argument ?
-                {
-                    // If we have simd arguments, the homing area in m_inParams can be larger than 3 64-bit slots. This is because SIMD values are unboxed there too.
-                    // After unboxing, the homing area is overwritten by rdx, r8 and r9, and we read/skip 64-bit slots from the homing area (argAddress += MachPtr).
-                    // After the last argument of the 3 is read, we need to advance argAddress to skip over the possible extra space and to the start of the rest of the arguments.
-                    argAddress = (uintptr_t)m_inParams + homingAreaSize;
-                }
-                else
-                {
-                    argAddress += MachPtr;
-                }
-            }
-            else
-#endif
                 if (info->GetArgType(i).isInt())
                 {
                     *intArg = *(int*)argAddress;
@@ -3819,23 +3712,7 @@ skipThunk:
         AsmJsScriptFunction* scriptFunc = VarTo<AsmJsScriptFunction>(function);
         AsmJsFunctionInfo* asmInfo = scriptFunc->GetFunctionBody()->GetAsmJsFunctionInfo();
         uint alignedArgsSize = ::Math::Align<uint32>(asmInfo->GetArgByteSize(), 16);
-#if _M_X64 && _WIN32
-        // convention is to always allocate spill space for rcx,rdx,r8,r9
-        if (alignedArgsSize < 0x20) alignedArgsSize = 0x20;
-        uint* argSizes = asmInfo->GetArgsSizesArray();
-        Assert(asmInfo->GetArgSizeArrayLength() >= 2);
-        byte* curOutParams = (byte*)m_outParams + sizeof(Var);
-        Assert(curOutParams + argSizes[0] + argSizes[1] + 16 <= (byte*)this->m_outParamsEnd);
-
-        // Prepare in advance the possible arguments that will need to be put in register
-        byte _declspec(align(16)) reg[3 * 16];
-        CompileAssert((FunctionBody::MinAsmJsOutParams() * sizeof(Var)) == (sizeof(Var) * 2 + sizeof(reg)));
-        js_memcpy_s(reg, 16, curOutParams, 16);
-        js_memcpy_s(reg + 16, 16, curOutParams + argSizes[0], 16);
-        js_memcpy_s(reg + 32, 16, curOutParams + argSizes[0] + argSizes[1], 16);
-#else
         byte* reg = nullptr;
-#endif
 
         ScriptContext * scriptContext = function->GetScriptContext();
         Js::FunctionEntryPointInfo* entrypointInfo = (Js::FunctionEntryPointInfo*)function->GetEntryPointInfo();
@@ -3874,19 +3751,6 @@ skipThunk:
         case AsmJsRetType::Uint32x4:
         case AsmJsRetType::Uint16x8:
         case AsmJsRetType::Uint8x16:
-#if _WIN32 //WASM.SIMD ToDo: Enable thunk for Xplat
-#if _M_X64
-#if !defined(__clang__)
-            X86SIMDValue simdVal;
-            simdVal.m128_value = JavascriptFunction::CallAsmJsFunction<__m128>(function, jsMethod, m_outParams, alignedArgsSize, reg);
-            m_localSimdSlots[returnReg] = X86SIMDValue::ToSIMDValue(simdVal);
-#else
-            AssertOrFailFastMsg(false, "This particular path causes linking issues in clang on windows; potential difference in name mangling?");
-#endif // !defined(__clang__)
-#else
-            m_localSimdSlots[returnReg] = JavascriptFunction::CallAsmJsFunction<AsmJsSIMDValue>(function, jsMethod, m_outParams, alignedArgsSize, reg);
-#endif // _M_X64
-#endif // _WIN32
             break;
 #endif // ENABLE_WASM_SIMD
         default:

@@ -6,7 +6,7 @@
 
 #include "JsrtPch.h"
 
-#if !defined(_WIN32) && !defined(__ANDROID__)
+#if !defined(__ANDROID__)
 #include <pthread.h>
 #endif
 
@@ -19,7 +19,6 @@
 #include "Language/DynamicProfileStorage.h"
 #endif
 
-#if !defined(_WIN32) || defined(CHAKRA_STATIC_LIBRARY)
 #include "Core/ConfigParser.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 
@@ -38,7 +37,6 @@ LPCWSTR JsUtil::ExternalApi::GetFeatureKeyName()
     return _u("");
 }
 #endif // CHAKRA_STATIC_LIBRARY
-#endif
 
 JsrtCallbackState::JsrtCallbackState(ThreadContext* currentThreadContext)
 {
@@ -84,16 +82,13 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
     callback(object, callbackState);
 }
 
-#if !defined(_WIN32) || defined(CHAKRA_STATIC_LIBRARY)
     void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
     {
         autoSystemInfo->buildDateHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__DATE__, _countof(__DATE__));
         autoSystemInfo->buildTimeHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__TIME__, _countof(__TIME__));
     }
 
-#ifndef _WIN32
     static pthread_key_t s_threadLocalDummy;
-#endif
     static THREAD_LOCAL bool s_threadWasEntered = false;
 
     _NOINLINE void DISPOSE_CHAKRA_CORE_THREAD(void *_)
@@ -104,13 +99,10 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
 
     _NOINLINE bool InitializeProcess()
     {
-#if !defined(_WIN32)
         pthread_key_create(&s_threadLocalDummy, DISPOSE_CHAKRA_CORE_THREAD);
-#endif
 
     // setup the cleanup
     // we do not track the main thread. When it exits do the cleanup below
-#if defined(CHAKRA_STATIC_LIBRARY) || !defined(_WIN32)
     atexit([]() {
         ThreadBoundThreadContextManager::DestroyContextAndEntryForCurrentThread();
 
@@ -124,11 +116,8 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         ThreadContextTLSEntry::CleanupThread();
         ThreadContextTLSEntry::CleanupProcess();
     });
-#endif
 
-#ifndef _WIN32
         PAL_InitializeChakraCore();
-#endif
 
         HMODULE mod = GetModuleHandleW(NULL);
         AutoSystemInfo::SaveModuleFileName(mod);
@@ -187,9 +176,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         HeapAllocator::InitializeThread();
     #endif
 
-#ifndef _WIN32
         // put something into key to make sure destructor is going to be called
         pthread_setspecific(s_threadLocalDummy, malloc(1));
-#endif
     }
-#endif

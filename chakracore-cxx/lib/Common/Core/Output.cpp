@@ -37,11 +37,6 @@ unsigned int Output::s_traceEntryId = 0;
 #endif
 
 THREAD_ST FILE*    Output::s_file = nullptr;
-#ifdef _WIN32
-THREAD_ST char16* Output::buffer = nullptr;
-THREAD_ST size_t   Output::bufferAllocSize = 0;
-THREAD_ST size_t   Output::bufferFreeSize = 0;
-#endif
 THREAD_ST size_t   Output::s_Column  = 0;
 THREAD_ST WORD     Output::s_color = 0;
 THREAD_ST bool     Output::s_hasColor = false;
@@ -162,17 +157,7 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
 {
     size_t retValue = 0;
 
-#if CONFIG_RICH_TRACE_FORMAT
-    if (CONFIG_FLAG(RichTraceFormat))
-    {
-        InterlockedIncrement(&s_traceEntryId);
-        retValue += Output::Print(_u("[%d ~%d %s] "), s_traceEntryId, ::GetCurrentThreadId(), prefix);
-    }
-    else
-#endif
-    {
-        retValue += Output::Print(shortPrefixFormat, prefix);
-    }
+    retValue += Output::Print(shortPrefixFormat, prefix);
     retValue += Output::VPrint(form, argptr);
 
 #ifdef STACK_BACK_TRACE
@@ -397,58 +382,7 @@ Output::PrintBuffer(const char16 * buf, size_t size)
     {
         if (s_file == nullptr || Output::s_capture)
         {
-#ifdef _WIN32
-            bool addToBuffer = true;
-            if (Output::bufferFreeSize < size + 1)
-            {
-                if (Output::bufferAllocSize > MAX_OUTPUT_BUFFER_SIZE && !Output::s_capture)
-                {
-                    Output::Flush();
-                    if (Output::bufferFreeSize < size + 1)
-                    {
-                        DirectPrint(buf);
-                        addToBuffer = false;
-                    }
-                }
-                else
-                {
-                    size_t oldBufferSize = bufferAllocSize - bufferFreeSize;
-                    size_t newBufferAllocSize = (bufferAllocSize + size + 1) * 4 / 3;
-                    char16 * newBuffer = (char16 *)realloc(buffer, (newBufferAllocSize * sizeof(char16)));
-                    if (newBuffer == nullptr)
-                    {
-                        // See if I can just flush it and print directly
-                        Output::Flush();
-
-                        // Reset the buffer
-                        free(Output::buffer);
-                        Output::buffer = nullptr;
-                        Output::bufferAllocSize = 0;
-                        Output::bufferFreeSize = 0;
-
-                        // Print it directly
-                        DirectPrint(buf);
-                        addToBuffer = false;
-                    }
-                    else
-                    {
-                        bufferAllocSize = newBufferAllocSize;
-                        buffer = newBuffer;
-                        bufferFreeSize = bufferAllocSize - oldBufferSize;
-                    }
-                }
-            }
-            if (addToBuffer)
-            {
-                Assert(Output::bufferFreeSize >= size + 1);
-                memcpy_s(Output::buffer + Output::bufferAllocSize - Output::bufferFreeSize, Output::bufferFreeSize * sizeof(char16),
-                    buf, size * sizeof(char16));
-                bufferFreeSize -= size;
-                Output::buffer[Output::bufferAllocSize - Output::bufferFreeSize] = _u('\0');  // null terminate explicitly
-            }
-#else
             DirectPrint(buf);
-#endif
         }
         else
         {
@@ -472,13 +406,6 @@ void Output::Flush()
     {
         return;
     }
-#ifdef _WIN32
-    if (bufferFreeSize != bufferAllocSize)
-    {
-        DirectPrint(Output::buffer);
-        bufferFreeSize = bufferAllocSize;
-    }
-#endif
     if(s_outputFile != nullptr)
     {
         fflush(s_outputFile);
@@ -490,33 +417,7 @@ void Output::DirectPrint(char16 const * string)
 {
     AutoCriticalSection autocs(&s_critsect);
 
-    // xplat-todo: support console color
-#ifdef _WIN32
-    WORD oldValue = 0;
-    BOOL restoreColor = FALSE;
-    HANDLE hConsole = NULL;
-    if (Output::s_hasColor)
-    {
-        _CONSOLE_SCREEN_BUFFER_INFO info;
-        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-        if (hConsole && GetConsoleScreenBufferInfo(hConsole, &info))
-        {
-            oldValue = info.wAttributes;
-            restoreColor = SetConsoleTextAttribute(hConsole, Output::s_color);
-        }
-    }
-#endif // _WIN32
-
     fwprintf(stdout, _u("%s"), string);
-
-    // xplat-todo: support console color
-#ifdef _WIN32
-    if (restoreColor)
-    {
-        SetConsoleTextAttribute(hConsole, oldValue);
-    }
-#endif // _WIN32
 }
 ///----------------------------------------------------------------------------
 ///
@@ -620,21 +521,6 @@ WORD
 Output::SetConsoleForeground(WORD color)
 {
     AutoCriticalSection autocs(&s_critsect);
-
-    // xplat-todo: support console color
-#ifdef _WIN32
-    _CONSOLE_SCREEN_BUFFER_INFO info;
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    if (hConsole && GetConsoleScreenBufferInfo(hConsole, &info))
-    {
-        Output::Flush();
-        Output::s_color = color | (info.wAttributes & ~15);
-        Output::s_hasColor = Output::s_color != info.wAttributes;
-        return info.wAttributes;
-    }
-#endif // _WIN32
-
     return 0;
 }
 
@@ -651,15 +537,7 @@ Output::CaptureEnd()
 {
     Assert(s_capture);
     s_capture = false;
-#ifdef _WIN32
-    bufferFreeSize = 0;
-    bufferAllocSize = 0;
-    char16 * returnBuffer = buffer;
-    buffer = nullptr;
-#else
     char16 * returnBuffer = nullptr;
-#endif
-
     return returnBuffer;
 }
 

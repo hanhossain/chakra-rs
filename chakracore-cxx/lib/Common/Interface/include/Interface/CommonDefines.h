@@ -13,11 +13,6 @@
 #include "Interface/Warnings.h"
 #include "Interface/ChakraCoreVersion.h"
 
-// CFG was never enabled for ARM32 and requires WIN10 SDK
-#if !defined(_M_ARM) && defined(_WIN32) && defined(NTDDI_WIN10)
-#define _CONTROL_FLOW_GUARD 1
-#endif
-
 //----------------------------------------------------------------------------------------------------
 // Default debug/fretest/release flags values
 //  - Set the default values of debug/fretest/release flags if it is not set by the command line
@@ -100,31 +95,19 @@
 // Config options
 #define CONFIG_PARSE_CONFIG_FILE 1
 
-#ifdef _WIN32
-#define CONFIG_CONSOLE_AVAILABLE 1
-#define CONFIG_RICH_TRACE_FORMAT 1
-#else
-#define CONFIG_CONSOLE_AVAILABLE 0
-#define CONFIG_RICH_TRACE_FORMAT 0
-#endif
-
 // ByteCode
 #define VARIABLE_INT_ENCODING 1                     // Byte code serialization variable size int field encoding
 #define BYTECODE_BRANCH_ISLAND                      // Byte code short branch and branch island
-#if defined(_WIN32) || defined(HAS_REAL_ICU)
+#if defined(HAS_REAL_ICU)
 #define ENABLE_UNICODE_API 1                        // Enable use of Unicode-related APIs
 #endif
 
 // Language features
-#if !defined(CHAKRACORE_LITE) && (defined(_WIN32) || defined(INTL_ICU))
+#if !defined(CHAKRACORE_LITE) && defined(INTL_ICU)
 #define ENABLE_INTL_OBJECT                          // Intl support
 #endif
 
 #define ENABLE_JS_BUILTINS                          // Built In functions support
-
-#if defined(_WIN32) && !defined(HAS_ICU)
-#define INTL_WINGLOB 1
-#endif
 
 #define ENABLE_ES6_CHAR_CLASSIFIER                  // ES6 Unicode character classifier support
 
@@ -139,17 +122,6 @@
 #define SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 #endif
 
-
-// xplat-todo: revisit these features
-#ifdef _WIN32
-// dep: TIME_ZONE_INFORMATION, DaylightTimeHelper, Windows.Globalization
-#define ENABLE_GLOBALIZATION
-// dep: IActiveScriptProfilerCallback, IActiveScriptProfilerHeapEnum
-// #ifndef __clang__
-// xplat-todo: change DISABLE_SEH to ENABLE_SEH and move here
-// #endif
-#define ENABLE_CUSTOM_ENTROPY
-#endif
 
 // dep: IDebugDocumentContext
 #if !BUILD_WITHOUT_SCRIPT_DEBUG
@@ -171,22 +143,9 @@
 #define USE_FEWER_PAGES_PER_BLOCK 1
 
 #define ENABLE_CONCURRENT_GC 1
-#ifdef _WIN32
-#define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 1 // Only takes effect when ENABLE_CONCURRENT_GC is enabled.
-#else
 #define ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP 0 // Needs ENABLE_CONCURRENT_GC to be enabled for this to be enabled.
-#endif
 
-#ifdef _WIN32
-#define SYSINFO_IMAGE_BASE_AVAILABLE 1
-#define SUPPORT_WIN32_SLIST 1
-#ifndef CHAKRACORE_LITE
-#define ENABLE_JS_ETW                               // ETW support
-#endif
-#else
 #define SYSINFO_IMAGE_BASE_AVAILABLE 0
-#define SUPPORT_WIN32_SLIST 0
-#endif
 
 #ifdef CHAKRACORE_LITE
 #define USE_VPM_TABLE 0
@@ -212,17 +171,10 @@
 // recycler allocated class will take effect if GLOBAL_ENABLE_WRITE_BARRIER is 1, otherwise only the class declared
 // with FieldWithBarrier annotations use the WriteBarrierPtr<>, see WriteBarrierMacros.h and RecyclerPointers.h for detail
 #define RECYCLER_WRITE_BARRIER                      // Write Barrier support
-#ifdef _WIN32
-#define RECYCLER_WRITE_WATCH                        // Support hardware write watch
-#endif
 
 #ifdef RECYCLER_WRITE_BARRIER
 #if !GLOBAL_ENABLE_WRITE_BARRIER
-#ifdef _WIN32
-#define GLOBAL_ENABLE_WRITE_BARRIER 0
-#else
 #define GLOBAL_ENABLE_WRITE_BARRIER 1
-#endif
 #endif
 #endif
 
@@ -240,11 +192,6 @@
 #if ENABLE_BACKGROUND_PAGE_ZEROING && !ENABLE_BACKGROUND_PAGE_FREEING
 #error "Background page zeroing can't be turned on if freeing pages in the background is disabled"
 #endif
-
-#if defined(_WIN32) && !GLOBAL_ENABLE_WRITE_BARRIER
-#define RECYCLER_VISITED_HOST
-#endif
-
 
 #define ENABLE_WEAK_REFERENCE_REGIONS 1
 
@@ -289,14 +236,8 @@
 #endif
 
 #if ENABLE_NATIVE_CODEGEN
-#ifdef _WIN32
-#define ENABLE_OOP_NATIVE_CODEGEN 1     // Out of process JIT
-#endif
 
 // ToDo (SaAgarwa): Disable VirtualTypedArray on ARM64 till we make sure it works correctly
-#if defined(_WIN32) && defined(TARGET_64) && !defined(_M_ARM64)
-#define ENABLE_FAST_ARRAYBUFFER 1
-#endif
 #endif
 
 // Other features
@@ -304,12 +245,7 @@
 # define CHAKRA_CORE_DOWN_COMPAT 1
 #endif
 
-// todo:: Enable vectorcall on NTBUILD. OS#13609380
-#if defined(_WIN32) && !defined(NTBUILD) && defined(_M_IX86)
-#define VECTORCALL __vectorcall
-#else
 #define VECTORCALL
-#endif
 
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS) || defined(CHAKRA_CORE_DOWN_COMPAT)
 #define DELAYLOAD_SET_CFG_TARGET 1
@@ -495,9 +431,6 @@
 
 // xplat-todo: revive FaultInjection on non-Win32 platforms
 // currently depends on io.h
-#ifdef _WIN32
-#define FAULT_INJECTION
-#endif
 #define RECYCLER_NO_PAGE_REUSE
 #ifdef NTBUILD
 #define INTERNAL_MEM_PROTECT_HEAP_ALLOC
@@ -510,9 +443,6 @@
 #define ENABLE_ENTRYPOINT_CLEANUP_TRACE 1
 
 // xplat-todo: Do we need dump generation for non-Win32 platforms?
-#ifdef _WIN32
-#define GENERATE_DUMP
-#endif
 #endif
 
 #if DBG_DUMP
@@ -527,9 +457,6 @@
 #define MISSING_PROPERTY_STATS
 #define EXCEPTION_RECOVERY 1
 #define EXCEPTION_CHECK                     // Check exception handling.
-#ifdef _WIN32
-#define PROFILE_EXEC
-#endif
 #if !(defined(__clang__) && defined(_M_IX86))
 // todo: implement this for clang x86
 #define PROFILE_MEM
@@ -567,14 +494,12 @@
 #define ARENA_MEMORY_VERIFY
 #define SEPARATE_ARENA
 
-#ifndef _WIN32
 #ifdef _X64_OR_ARM64
 #define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 #else
 #define MAX_NATURAL_ALIGNMENT sizeof(DWORD)
 #define MEMORY_ALLOCATION_ALIGNMENT 8
-#endif
 #endif
 
 #define HEAP_TRACK_ALLOC
@@ -719,9 +644,7 @@
 #endif
 #endif
 
-#ifndef _WIN32
 #define DISABLE_SEH 1
-#endif
 
 //----------------------------------------------------------------------------------------------------
 // Dependent flags
@@ -754,9 +677,6 @@
 #endif
 
 #if defined(STACK_BACK_TRACE) || defined(CONTROL_FLOW_GUARD_LOGGER)
-#ifdef _WIN32
-#define DBGHELP_SYMBOL_MANAGER
-#endif
 #endif
 
 #if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)

@@ -129,7 +129,6 @@ namespace PlatformAgnostic
         }
 
 // Platform\Windows\UnicodeText.cpp has a more accurate version of this function for Windows
-#if !_WIN32
         CharacterClassificationType GetLegacyCharacterClassificationType(char16 character)
         {
             auto charTypeMask = U_GET_GC_MASK(character);
@@ -158,7 +157,6 @@ namespace PlatformAgnostic
 
             return CharacterClassificationType::Invalid;
         }
-#endif
 
         // ICU implementation of platform-agnostic Unicode interface
         int32 NormalizeString(NormalizationForm normalizationForm, const char16* sourceString, uint32 sourceLength, char16* destString, int32 destLength, ApiError* pErrorOut)
@@ -266,12 +264,10 @@ namespace PlatformAgnostic
             return u_hasBinaryProperty(ch, UCHAR_ID_CONTINUE);
         }
 
-#ifndef _WIN32
         int LogicalStringCompare(const char16* string1, int str1size, const char16* string2, int str2size)
         {
             return PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl(string1, str1size, string2, str2size);
         }
-#endif
 
         bool IsExternalUnicodeLibraryAvailable()
         {

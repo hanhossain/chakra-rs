@@ -2017,10 +2017,5 @@ JsGetEmbedderData(_In_ JsValueRef instance, _Out_ JsValueRef* embedderData);
 CHAKRA_API
 JsSetEmbedderData(_In_ JsValueRef instance, _In_ JsValueRef embedderData);
 
-#ifdef _WIN32
-#include "ChakraCoreWindows.h"
-#endif // _WIN32
-
-
 #endif // _CHAKRACOREBUILD
 #endif // _CHAKRACORE_H_

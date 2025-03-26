@@ -4,21 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Utf8Codex.h"
 
-#ifndef _WIN32
 #undef _Analysis_assume_
 #define _Analysis_assume_(expr)
-#endif
-
-#ifdef _MSC_VER
-//=============================
-// Disabled Warnings
-//=============================
-
-#pragma warning(push)
-
-#pragma warning(disable: 4127)  // constant expression for template parameter
-#pragma warning(disable: 26451) // size-conversion/arithmetic-operation ordering
-#endif
 
 namespace utf8
 {
@@ -617,7 +604,3 @@ LSlowPath:
     }
 
 } // namespace utf8
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif

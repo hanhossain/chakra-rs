@@ -2569,14 +2569,6 @@ IRBuilderAsmJs::BuildInt3(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot 
         src2Opnd->SetType(TyUint32);
         // Fall through for trap
     case Js::OpCodeAsmJs::Div_Trap_Int:
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmMathExFilter))
-        {
-            // Do not emit traps, but make sure we don't remove the div
-            dstOpnd->m_dontDeadStore = true;
-        }
-        else
-#endif
         {
             src2Opnd = BuildTrapIfZero(src2Opnd, offset);
             if (newOpcode == Js::OpCodeAsmJs::Div_Trap_Int)
@@ -2599,14 +2591,6 @@ IRBuilderAsmJs::BuildInt3(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot 
         src2Opnd->SetType(TyUint32);
         // Fall through for trap
     case Js::OpCodeAsmJs::Rem_Trap_Int:
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmMathExFilter))
-        {
-            // Do not emit traps, but make sure we don't remove the rem
-            dstOpnd->m_dontDeadStore = true;
-        }
-        else
-#endif
         {
             src2Opnd = BuildTrapIfZero(src2Opnd, offset);
         }
@@ -3191,14 +3175,6 @@ IRBuilderAsmJs::BuildLong3(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot
         // Fall Through for trap
     case Js::OpCodeAsmJs::Div_Trap_Long:
     {
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmMathExFilter))
-        {
-            // Do not emit traps, but make sure we don't remove the div
-            dstOpnd->m_dontDeadStore = true;
-        }
-        else
-#endif
         {
             src2Opnd = BuildTrapIfZero(src2Opnd, offset);
             if (newOpcode == Js::OpCodeAsmJs::Div_Trap_Long)
@@ -3216,14 +3192,6 @@ IRBuilderAsmJs::BuildLong3(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot
         // Fall Through for trap
     case Js::OpCodeAsmJs::Rem_Trap_Long:
     {
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmMathExFilter))
-        {
-            // Do not emit traps, but make sure we don't remove the rem
-            dstOpnd->m_dontDeadStore = true;
-        }
-        else
-#endif
         {
             src2Opnd = BuildTrapIfZero(src2Opnd, offset);
         }

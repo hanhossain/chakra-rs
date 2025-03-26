@@ -57,23 +57,9 @@ X64WriteBarrierCardTableManager::OnThreadInit()
 
     // ToDo (SaAgarwa) __readgsqword is not on ARM64?
     // xplat-todo: Replace this on Windows too with GetCurrentThreadStackBounds
-#if defined(_WIN32) && defined(_M_X64) && !defined(_M_ARM64)
-    // check StackProber.cpp for the stack pages layout information
-    NT_TIB* teb = (NT_TIB*) ::NtCurrentTeb();
-    char* stackBase = (char*) teb->StackBase;
-    char* stackEnd = (char*)__readgsqword(0x1478); // 0x1478 is offset of DeallocationStack field on ntdll!_TEB on x64
-                                                   // this is undocumented, verifying with following code
-#if DBG
-    MEMORY_BASIC_INFORMATION memInfo;
-    VirtualQuery((LPCVOID)teb->StackLimit, &memInfo, sizeof(memInfo));
-    Assert((char*)memInfo.AllocationBase == stackEnd);
-    Assert(memInfo.AllocationProtect == PAGE_READWRITE);
-#endif // DBG
-#else // defined(_WIN32) && defined(_M_X64) && !defined(_M_ARM64)
     ULONG_PTR stackBase = 0;
     ULONG_PTR stackEnd = 0;
     ::GetCurrentThreadStackLimits(&stackEnd, &stackBase);
-#endif // defined(_WIN32) && defined(_M_X64) && !defined(_M_ARM64)
 
 #ifdef X64_WB_DIAG
     this->_stackbase = (char*)stackBase;

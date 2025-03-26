@@ -10,18 +10,11 @@ CompileAssert(false)
 // ARM64 TODO: this is nearly identical to AMD64, consider merging in the future
 namespace Memory
 {
-#ifdef _WIN32
-#define XDATA_SIZE (100)
-#else
 #define XDATA_SIZE (0x80)
-#endif
 
     struct XDataAllocation : public SecondaryAllocation
     {
         XDataAllocation()
-#ifdef _WIN32
-            :functionTable(nullptr)
-#endif
         {}
 
         bool IsFreed() const
@@ -33,10 +26,6 @@ namespace Memory
             address = nullptr;
         }
 
-#ifdef _WIN32
-        RUNTIME_FUNCTION pdata;
-        FunctionTableHandle functionTable;
-#endif
     };
 
     //
@@ -85,7 +74,6 @@ namespace Memory
     private:
         BYTE* End() { return start + size; }
 
-#ifndef _WIN32
         // Read .eh_frame data head (length record). 0 means empty.
         static uint32 ReadHead(const void* p)
         {
@@ -97,7 +85,6 @@ namespace Memory
         {
             *reinterpret_cast<uint32*>(p) = 0;
         }
-#endif
 
         void ClearFreeList();
     };

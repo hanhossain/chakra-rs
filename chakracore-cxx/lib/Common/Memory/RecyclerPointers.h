@@ -537,12 +537,7 @@ struct _QuickSortImpl
     template<class T, class Comparer>
     static void Sort(T* arr, size_t count, const Comparer& comparer, void* context, size_t elementSize = sizeof(T))
     {
-#ifndef _WIN32
         JsUtil::QuickSort<Policy, char, Comparer>::Sort((char*)arr, count, elementSize, comparer, context);
-#else
-        // by default use system qsort_s
-        ::qsort_s(arr, count, elementSize, comparer, context);
-#endif
     }
 };
 #ifdef RECYCLER_WRITE_BARRIER
@@ -567,7 +562,6 @@ void qsort_s(T* arr, size_t count, const Comparer& comparer, void* context)
     _QuickSortImpl<Policy>::Sort(arr, count, comparer, context);
 }
 
-#ifndef _WIN32
 // on xplat we use our custom qsort_s
 template<class T, class PolicyType = T, class Allocator = Recycler, class Comparer>
 void qsort_s(T* arr, size_t count, size_t size, const Comparer& comparer, void* context)
@@ -576,7 +570,6 @@ void qsort_s(T* arr, size_t count, size_t size, const Comparer& comparer, void* 
     typedef typename AllocatorWriteBarrierPolicy<Allocator, ItemPolicy>::Policy Policy;
     _QuickSortImpl<Policy>::Sort(arr, count, comparer, context, size);
 }
-#endif
 
 template<class T, class Comparer>
 void qsort_s(WriteBarrierPtr<T>* _Base, size_t _NumOfElements, size_t _SizeOfElements,

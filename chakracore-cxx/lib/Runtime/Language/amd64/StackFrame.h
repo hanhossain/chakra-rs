@@ -79,55 +79,6 @@
 namespace Js {
     class ScriptContext;
 
-#ifdef _WIN32
-    class Amd64StackFrame {
-    public:
-        Amd64StackFrame();
-        ~Amd64StackFrame();
-
-        bool InitializeByFrameId(void * returnAddress, ScriptContext* scriptContext) { return InitializeByReturnAddress(returnAddress, scriptContext); }
-        bool InitializeByReturnAddress(void * returnAddress, ScriptContext* scriptContext);
-
-        bool Next();
-
-        void *GetInstructionPointer();
-        void **GetArgv(bool isCurrentContextNative = false, bool shouldCheckForNativeAddr = true);
-        void *GetReturnAddress(bool isCurrentContextNative = false, bool shouldCheckForNativeAddr = true);
-        void *GetAddressOfReturnAddress(bool isCurrentContextNative = false, bool shouldCheckForNativeAddr = true);
-        void *GetAddressOfInstructionPointer() { return this->addressOfCodeAddr; }
-        bool SkipToFrame(void * returnAddress);
-        void *GetFrame() const;
-        size_t GetStackCheckCodeHeight() { return this->stackCheckCodeHeight; }
-        static bool IsInStackCheckCode(void *entry, void * codeAddr, size_t stackCheckCodeHeight);
-
-    private:
-        void*            addressOfCodeAddr;
-        ScriptContext    *scriptContext;
-        ULONG64           imageBase;
-        RUNTIME_FUNCTION *functionEntry;
-        CONTEXT          *currentContext;
-
-        // We store the context of the caller the first time we retrieve it so that
-        // consecutive operations that need the caller context don't have to retrieve
-        // it again. The callerContext is only valid if hasCallerContext is true. When
-        // currentContext is changed, callerContext must be invalidated by calling
-        // OnCurrentContextUpdated().
-        bool              hasCallerContext;
-        CONTEXT          *callerContext;
-        size_t            stackCheckCodeHeight;
-
-        inline void EnsureFunctionEntry();
-        inline bool EnsureCallerContext(bool isCurrentContextNative);
-        inline void OnCurrentContextUpdated();
-
-        static bool NextFromNativeAddress(CONTEXT * context);
-        static bool Next(CONTEXT *context, ULONG64 imageBase, RUNTIME_FUNCTION *runtimeFunction);
-        static const size_t stackCheckCodeHeightThreadBound = StackFrameConstants::StackCheckCodeHeightThreadBound;
-        static const size_t stackCheckCodeHeightNotThreadBound = StackFrameConstants::StackCheckCodeHeightNotThreadBound;
-        static const size_t stackCheckCodeHeightWithInterruptProbe = StackFrameConstants::StackCheckCodeHeightWithInterruptProbe;
-    };
-#else
-
     // Models a stack frame based on SystemV ABI for AMD64
     // This is very similar to the model for x86
     class Amd64StackFrame
@@ -164,39 +115,9 @@ namespace Js {
         static const size_t stackCheckCodeHeightWithInterruptProbe = StackFrameConstants::StackCheckCodeHeightWithInterruptProbe;
     };
 
-#endif
-
     class Amd64ContextsManager
     {
     public:
         Amd64ContextsManager();
-
-#ifdef _WIN32
-    private:
-        static const int CONTEXT_PAIR_COUNT = 2;
-
-        enum
-        {
-            GENERAL_CONTEXT = 0,
-            OOM_CONTEXT = 1,
-            NUM_CONTEXTS = 2
-        };
-        typedef int ContextsIndex;
-
-        CONTEXT contexts[CONTEXT_PAIR_COUNT * NUM_CONTEXTS];
-
-        _Field_range_(GENERAL_CONTEXT, NUM_CONTEXTS)
-        ContextsIndex curIndex;
-
-        _Ret_writes_(CONTEXT_PAIR_COUNT) CONTEXT* InternalGet(
-            _In_range_(GENERAL_CONTEXT, OOM_CONTEXT) ContextsIndex index);
-
-    private:
-        friend class Amd64StackFrame;
-
-        _Ret_writes_(CONTEXT_PAIR_COUNT) CONTEXT* Allocate();
-        void Release(_In_ CONTEXT* contexts);
-#endif
     };
-
 };

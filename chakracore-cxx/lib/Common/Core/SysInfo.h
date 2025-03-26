@@ -41,10 +41,6 @@ public:
     DWORD GetNumberOfLogicalProcessors() const { return this->dwNumberOfProcessors; }
     DWORD GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
-#ifdef _WIN32
-    bool IsCRTModulePointer(uintptr_t ptr);
-#endif
-
 #if SYSINFO_IMAGE_BASE_AVAILABLE
     UINT_PTR GetChakraBaseAddr() const;
 #endif
@@ -60,9 +56,6 @@ public:
 #endif
 #if SYSINFO_IMAGE_BASE_AVAILABLE
     static bool IsJscriptModulePointer(void * ptr);
-#endif
-#ifdef _WIN32
-    static HMODULE GetCRTHandle();
 #endif
 #if defined(__APPLE__) && defined(_M_ARM64)
     static DWORD const PageSize = 16384;

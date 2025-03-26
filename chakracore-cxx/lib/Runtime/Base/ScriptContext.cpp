@@ -671,26 +671,6 @@ namespace Js
 
                 if (hasFunctions)
                 {
-#if ENABLE_NATIVE_CODEGEN
-#if PDATA_ENABLED && defined(_WIN32)
-                    struct AutoReset
-                    {
-                        AutoReset(ThreadContext* threadContext)
-                            :threadContext(threadContext)
-                        {
-                            // indicate background thread that we need help to delete the xData
-                            threadContext->GetJobProcessor()->StartExtraWork();
-                        }
-                        ~AutoReset()
-                        {
-                            threadContext->GetJobProcessor()->EndExtraWork();
-                        }
-
-                        ThreadContext* threadContext;
-                    } autoReset(this->GetThreadContext());
-#endif
-#endif
-
                     // We still need to walk through all the function bodies and call cleanup
                     // because otherwise ETW events might not get fired if a GC doesn't happen
                     // and the thread context isn't shut down cleanly (process detach case)
@@ -3592,30 +3572,6 @@ ExitTempAllocator:
     {
         OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerAttached: start 0x%p\n"), this);
 
-#if ENABLE_NATIVE_CODEGEN
-#if PDATA_ENABLED && defined(_WIN32)
-        // in case of debugger attaching, we have a new code generator and when deleting old code generator,
-        // the xData is not put in the delay list yet. clear the list now so the code addresses are ready to reuse
-        struct AutoReset
-        {
-            AutoReset(ThreadContext* threadContext)
-                :threadContext(threadContext)
-            {
-                // indicate background thread that we need help to delete the xData
-                threadContext->GetJobProcessor()->StartExtraWork();
-            }
-            ~AutoReset()
-            {
-                threadContext->GetJobProcessor()->EndExtraWork();
-                // in case the background thread didn't clear all the function tables
-                DelayDeletingFunctionTable::Clear();
-            }
-
-            ThreadContext* threadContext;
-        } autoReset(this->GetThreadContext());
-#endif
-#endif
-
         Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
         if (stepController->IsActive())
         {
@@ -3649,13 +3605,6 @@ ExitTempAllocator:
 
         // Disable QC while functions are re-parsed as this can be time consuming
         AutoDisableInterrupt autoDisableInterrupt(this->threadContext, false /* explicitCompletion */);
-
-#if ENABLE_NATIVE_CODEGEN
-#if PDATA_ENABLED && defined(_WIN32)
-        // RundownSourcesAndReparse can cause code generation immediately, clear the leftovers if background thread didn't finish the work
-        DelayDeletingFunctionTable::Clear();
-#endif
-#endif
 
         hr = this->GetDebugContext()->RundownSourcesAndReparse(shouldPerformSourceRundown, /*shouldReparseFunctions*/ true);
 
@@ -3730,30 +3679,6 @@ ExitTempAllocator:
     {
         OUTPUT_TRACE(Js::DebuggerPhase, _u("ScriptContext::OnDebuggerDetached: start 0x%p\n"), this);
 
-#if ENABLE_NATIVE_CODEGEN
-#if PDATA_ENABLED && defined(_WIN32)
-        // in case of debugger detaching, we have a new code generator and when deleting old code generator,
-        // the xData is not put in the delay list yet. clear the list now so the code addresses are ready to reuse
-        struct AutoReset
-        {
-            AutoReset(ThreadContext* threadContext)
-                :threadContext(threadContext)
-            {
-                // indicate background thread that we need help to delete the xData
-                threadContext->GetJobProcessor()->StartExtraWork();
-            }
-            ~AutoReset()
-            {
-                threadContext->GetJobProcessor()->EndExtraWork();
-                // in case the background thread didn't clear all the function tables
-                DelayDeletingFunctionTable::Clear();
-            }
-
-            ThreadContext* threadContext;
-        } autoReset(this->GetThreadContext());
-#endif
-#endif
-
         Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
         if (stepController->IsActive())
         {
@@ -3782,13 +3707,6 @@ ExitTempAllocator:
 
         // Disable QC while functions are re-parsed as this can be time consuming
         AutoDisableInterrupt autoDisableInterrupt(this->threadContext, false /* explicitCompletion */);
-
-#if ENABLE_NATIVE_CODEGEN
-#if PDATA_ENABLED && defined(_WIN32)
-        // RundownSourcesAndReparse can cause code generation immediately, clear the leftovers if background thread didn't finish the work
-        DelayDeletingFunctionTable::Clear();
-#endif
-#endif
 
         // Force a reparse so that indirect function caches are updated.
         hr = this->GetDebugContext()->RundownSourcesAndReparse(/*shouldPerformSourceRundown*/ false, /*shouldReparseFunctions*/ true);

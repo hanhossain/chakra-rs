@@ -344,12 +344,8 @@ const Js::ModuleID kmodGlobal = 0;
 
 class SourceContextInfo;
 
-#if defined(ENABLE_SCRIPT_DEBUGGING) && defined(_WIN32)
-#include "activdbg100.h"
-#else
 #define SCRIPT_E_RECORDED                _HRESULT_TYPEDEF_(0x86664004L)
 #define NEED_DEBUG_EVENT_INFO_TYPE
-#endif
 
 #ifndef NTDDI_WIN10
 // These are only defined for the Win10 SDK and above
@@ -461,14 +457,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 
 #include "Library/WasmLibrary.h"
 #include "Library/WabtInterface.h"
-// xplat-todo: We should get rid of this altogether and move the functionality it
-// encapsulates to the Platform Agnostic Interface
-#ifdef _WIN32
-#if defined(ENABLE_GLOBALIZATION) || ENABLE_UNICODE_API
-#include "Base/WindowsGlobalizationAdapter.h"
-#include "Base/WindowsFoundationAdapter.h"
-#endif
-#endif
 #include "Base/Debug.h"
 
 #ifdef _M_X64

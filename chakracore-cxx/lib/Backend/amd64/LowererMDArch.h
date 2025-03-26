@@ -29,7 +29,6 @@ private:
     int                 helperCallArgsCount;
     IR::Opnd *          helperCallArgs[MaxArgumentsToHelper];
 
-#ifndef _WIN32
     class XPlatRegArgList
     {
     public:
@@ -52,7 +51,6 @@ private:
         IRType args [XmmArgRegsCount + 1];
     };
     XPlatRegArgList     xplatCallArgs;
-#endif
 public:
 
     LowererMDArch(Func* function):

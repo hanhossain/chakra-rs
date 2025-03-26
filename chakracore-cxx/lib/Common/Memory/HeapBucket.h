@@ -230,12 +230,6 @@ protected:
     void DeleteHeapBlockList(TBlockType * list);
     static void DeleteEmptyHeapBlockList(TBlockType * list);
     static void DeleteHeapBlockList(TBlockType * list, Recycler * recycler);
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP && SUPPORT_WIN32_SLIST
-    static bool PushHeapBlockToSList(PSLIST_HEADER list, TBlockType * heapBlock);
-    static TBlockType * PopHeapBlockFromSList(PSLIST_HEADER list);
-    static ushort QueryDepthInterlockedSList(PSLIST_HEADER list);
-    static void FlushInterlockedSList(PSLIST_HEADER list);
-#endif
 
     // Small allocators
     void UpdateAllocators();
@@ -309,22 +303,6 @@ protected:
     TBlockType * fullBlockList;      // list of blocks that are fully allocated
     TBlockType * heapBlockList;      // list of blocks that has free objects
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP
-#if SUPPORT_WIN32_SLIST
-    PSLIST_HEADER allocableHeapBlockListHead;
-    TBlockType * lastKnownNextAllocableBlockHead;
-#if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
-    // This lock is needed only in the debug mode while we verify block counts. Not needed otherwise, as this list is never accessed concurrently.
-    // Items are added to it by the allocator when allocations are allowed during concurrent sweep. The list is drained during the next sweep while
-    // allocation are stopped.
-    mutable CriticalSection debugSweepableHeapBlockListLock;
-#endif
-    // This is the list of blocks that we allocated from during concurrent sweep. These blocks will eventually get processed during the next sweep and either go into
-    // the fullBlockList.
-    TBlockType * sweepableHeapBlockList;
-#endif
-#endif
-
     FreeObject* explicitFreeList; // List of objects that have been explicitly freed
     TBlockAllocatorType * lastExplicitFreeListAllocator;
 #ifdef RECYCLER_PAGE_HEAP
@@ -373,9 +351,6 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep, Fn sweepFn)
         // We should only queue up pending sweep if we are doing partial collect
         Assert(recyclerSweep.GetPendingSweepBlockList(this) == nullptr);
 
-#if ENABLE_ALLOCATIONS_DURING_CONCURRENT_SWEEP && SUPPORT_WIN32_SLIST
-        if (!this->AllocationsStartedDuringConcurrentSweep())
-#endif
 #endif
         {
             // Every thing is swept immediately in non partial collect, so we can allocate

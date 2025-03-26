@@ -16,58 +16,6 @@ namespace {
 // public.  The latter option seems the less objectionable, so that's what I've done here.
 
 #ifdef _M_X64
-#ifdef _WIN32
-constexpr BYTE FunctionInfoOffset = 23;
-constexpr BYTE FunctionProxyOffset = 27;
-constexpr BYTE DynamicThunkAddressOffset = 31;
-constexpr BYTE CallBlockStartAddrOffset = 41;
-constexpr BYTE ThunkSizeOffset = 55;
-constexpr BYTE ErrorOffset = 64;
-constexpr BYTE ThunkAddressOffset = 81;
-
-constexpr BYTE PrologSize = 80;
-constexpr BYTE StackAllocSize = 0x28;
-
-//
-// Home the arguments onto the stack and pass a pointer to the base of the stack location to the inner thunk
-//
-// Calling convention requires that caller should allocate at least 0x20 bytes and the stack be 16 byte aligned.
-// Hence, we allocate 0x28 bytes of stack space for the callee to use. The callee uses 8 bytes to push the first
-// argument and the rest 0x20 ensures alignment is correct.
-//
-constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
-    0x48, 0x89, 0x54, 0x24, 0x10,                                  // mov         qword ptr [rsp+10h],rdx
-    0x48, 0x89, 0x4C, 0x24, 0x08,                                  // mov         qword ptr [rsp+8],rcx
-    0x4C, 0x89, 0x44, 0x24, 0x18,                                  // mov         qword ptr [rsp+18h],r8
-    0x4C, 0x89, 0x4C, 0x24, 0x20,                                  // mov         qword ptr [rsp+20h],r9
-    0x48, 0x8B, 0x41, 0x00,                                        // mov         rax, qword ptr [rcx+FunctionInfoOffset]
-    0x48, 0x8B, 0x48, 0x00,                                        // mov         rcx, qword ptr [rax+FunctionProxyOffset]
-    0x48, 0x8B, 0x51, 0x00,                                        // mov         rdx, qword ptr [rcx+DynamicThunkAddressOffset]
-                                                                   // Range Check for Valid call target
-    0x48, 0x83, 0xE2, 0xF8,                                        // and         rdx, 0xFFFFFFFFFFFFFFF8h  ;Force 8 byte alignment
-    0x48, 0x8b, 0xca,                                              // mov         rcx, rdx
-    0x48, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,    // mov         rax, CallBlockStartAddress
-    0x48, 0x2b, 0xc8,                                              // sub         rcx, rax
-    0x48, 0x81, 0xf9, 0x00, 0x00, 0x00, 0x00,                      // cmp         rcx, ThunkSize
-    0x76, 0x09,                                                    // jbe         $safe
-    0x48, 0xc7, 0xc1, 0x00, 0x00, 0x00, 0x00,                      // mov         rcx, errorcode
-    0xcd, 0x29,                                                    // int         29h
-
-    // $safe:
-    0x48, 0x8D, 0x4C, 0x24, 0x08,                                  // lea         rcx, [rsp+8]                ;Load the address to stack
-    0x48, 0x83, 0xEC, StackAllocSize,                              // sub         rsp,28h
-    0x48, 0xB8, 0x00, 0x00, 0x00 ,0x00, 0x00, 0x00, 0x00, 0x00,    // mov         rax, <thunk>
-    0xFF, 0xE2,                                                    // jmp         rdx
-    0xCC, 0xCC, 0xCC, 0xCC, 0xCC                                   // int         3                           ;for alignment to size of 8 we are adding this
-};
-
-constexpr BYTE Epilog[] = {
-    0x48, 0x83, 0xC4, StackAllocSize,                              // add         rsp,28h
-    0xC3                                                           // ret
-};
-
-#else  // Sys V AMD64
-
 constexpr BYTE FunctionInfoOffset = 7;
 constexpr BYTE FunctionProxyOffset = 11;
 constexpr BYTE DynamicThunkAddressOffset = 15;
@@ -106,7 +54,6 @@ constexpr BYTE Epilog[] = {
     0x5d,                                                       // pop    rbp
     0xc3                                                        // ret
 };
-#endif
 #elif defined(_M_ARM)
 
 constexpr BYTE ThunkAddressOffset = 8;
@@ -158,31 +105,15 @@ constexpr BYTE Epilog[] = {
 };
 #elif defined(_M_ARM64)
 
-#ifdef _WIN32
-constexpr BYTE FunctionInfoOffset = 24;
-constexpr BYTE FunctionProxyOffset = 28;
-constexpr BYTE DynamicThunkAddressOffset = 32;
-constexpr BYTE ThunkAddressOffset = 36;
-#else
 constexpr BYTE FunctionInfoOffset = 8;
 constexpr BYTE FunctionProxyOffset = 12;
 constexpr BYTE DynamicThunkAddressOffset = 16;
 constexpr BYTE ThunkAddressOffset = 20;
-#endif
 
 //TODO: saravind :Implement Range Check for ARM64
 constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
-#ifdef _WIN32
-    0xFD, 0x7B, 0xBB, 0xA9,                                         //stp         fp, lr, [sp, #-80]!   ;Prologue
-    0xFD, 0x03, 0x00, 0x91,                                         //mov         fp, sp                ;update frame pointer to the stack pointer
-    0xE0, 0x07, 0x01, 0xA9,                                         //stp         x0, x1, [sp, #16]     ;Prologue again; save all registers
-    0xE2, 0x0F, 0x02, 0xA9,                                         //stp         x2, x3, [sp, #32]
-    0xE4, 0x17, 0x03, 0xA9,                                         //stp         x4, x5, [sp, #48]
-    0xE6, 0x1F, 0x04, 0xA9,                                         //stp         x6, x7, [sp, #64]
-#else
     0xFD, 0x7B, 0xBF, 0xA9,                                         //stp         fp, lr, [sp, #-16]!   ;Prologue
     0xFD, 0x03, 0x00, 0x91,                                         //mov         fp, sp                ;update frame pointer to the stack pointer
-#endif
     0x02, 0x00, 0x40, 0xF9,                                         //ldr         x2, [x0, #0x00]       ;offset will be replaced with Offset of FunctionInfo
     0x40, 0x00, 0x40, 0xF9,                                         //ldr         x0, [x2, #0x00]       ;offset will be replaced with Offset of FunctionProxy
     0x03, 0x00, 0x40, 0xF9,                                         //ldr         x3, [x0, #0x00]       ;offset will be replaced with offset of DynamicInterpreterThunk
@@ -204,11 +135,7 @@ constexpr BYTE Call[] = {
 };
 
 constexpr BYTE Epilog[] = {
-#ifdef _WIN32
-    0xfd, 0x7b, 0xc5, 0xa8,                                         // ldp         fp, lr, [sp], #80
-#else
     0xfd, 0x7b, 0xc1, 0xa8,                                         // ldp         fp, lr, [sp], #16
-#endif
     0xc0, 0x03, 0x5f, 0xd6                                          // ret
 };
 #else // x86

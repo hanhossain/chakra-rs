@@ -122,15 +122,6 @@ namespace Js
             return nullptr;
         }
 
-#if DBG && ENABLE_NATIVE_CODEGEN && defined(_WIN32)
-        // the lock for work item queue should not be locked while accessing AuxPtrs in background thread
-        auto jobProcessor = this->GetScriptContext()->GetThreadContext()->GetJobProcessor();
-        auto jobProcessorCS = jobProcessor->GetCriticalSection();
-
-        // ->IsLocked is not supported on xplat
-        Assert(!jobProcessorCS || !jobProcessor->ProcessesInBackground() || !jobProcessorCS->IsLocked());
-#endif
-
         AutoCriticalSection autoCS(this->GetScriptContext()->GetThreadContext()->GetFunctionBodyLock());
         return AuxPtrsT::GetAuxPtr(this, e);
     }

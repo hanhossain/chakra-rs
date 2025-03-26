@@ -177,11 +177,6 @@ void HeapAllocator::DestroyPrivateHeap()
 {
     if (this->m_privateHeap != nullptr)
     {
-        // xplat-todo: PAL no HeapDestroy?
-#ifdef _WIN32
-        BOOL success = HeapDestroy(this->m_privateHeap);
-        Assert(success);
-#endif
         this->m_privateHeap = nullptr;
     }
 }

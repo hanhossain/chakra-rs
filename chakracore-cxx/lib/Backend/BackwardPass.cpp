@@ -172,16 +172,7 @@ BackwardPass::DoTrackNegativeZero() const
 bool
 BackwardPass::DoTrackBitOpsOrNumber() const
 {
-#if defined(_WIN32) && defined(TARGET_64)
-    return
-        !PHASE_OFF1(Js::TypedArrayVirtualPhase) &&
-        tag == Js::BackwardPhase &&
-        func->DoGlobOpt() &&
-        !IsPrePass() &&
-        !func->IsJitInDebugMode();
-#else
     return false;
-#endif
 }
 
 bool

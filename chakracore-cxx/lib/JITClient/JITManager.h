@@ -5,7 +5,7 @@
 
 #pragma once
 
-// We need real JITManager code when on _WIN32 or explict ENABLE_OOP_NATIVE_CODEGEN.
+// We need real JITManager code when on windows or explict ENABLE_OOP_NATIVE_CODEGEN.
 // Otherwise we use a dummy JITManager which disables OOP JIT to reduce code noise.
 
 enum class RemoteCallType
@@ -17,7 +17,7 @@ enum class RemoteCallType
     MemFree
 };
 
-#if _WIN32 || ENABLE_OOP_NATIVE_CODEGEN
+#if ENABLE_OOP_NATIVE_CODEGEN
 class JITManager
 {
 public:
