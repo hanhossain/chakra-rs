@@ -68,18 +68,6 @@ struct BVSparseNode
     BVSparseNode(BVIndex beginIndex, BVSparseNode * nextNode);
 
     void init(BVIndex beginIndex, BVSparseNode * nextNode);
-
-    // Needed for the NatVis Extension for visualizing BitVectors
-    // in Visual Studio
-#ifdef _WIN32
-    bool ToString(
-        __out_ecount(strSize) char *const str,
-        const size_t strSize,
-        size_t *const writtenLengthRef = nullptr,
-        const bool isInSequence = false,
-        const bool isFirstInSequence = false,
-        const bool isLastInSequence = false) const;
-#endif
 };
 
 template <class TAllocator>
@@ -186,12 +174,6 @@ public:
     // this & bv != empty
     bool            Test(BVSparse const * bv) const;
 
-    // Needed for the VS NatVis Extension
-#ifdef _WIN32
-    void            ToString(__out_ecount(strSize) char *const str, const size_t strSize) const;
-    template<class F> void ToString(__out_ecount(strSize) char *const str, const size_t strSize, const F ReadNode) const;
-#endif
-
     TAllocator *    GetAllocator() const { return alloc; }
 #if DBG_DUMP
     void            Dump() const;
@@ -221,84 +203,6 @@ void BVSparseNode<TAllocator>::init(BVIndex beginIndex, BVSparseNode<TAllocator>
     this->data = 0;
     this->next = nextNode;
 }
-
-#ifdef _WIN32
-template <class TAllocator>
-bool BVSparseNode<TAllocator>::ToString(
-    __out_ecount(strSize) char *const str,
-    const size_t strSize,
-    size_t *const writtenLengthRef,
-    const bool isInSequence,
-    const bool isFirstInSequence,
-    const bool isLastInSequence) const
-{
-    Assert(str);
-    Assert(!isFirstInSequence || isInSequence);
-    Assert(!isLastInSequence || isInSequence);
-
-    if (strSize == 0)
-    {
-        if (writtenLengthRef)
-        {
-            *writtenLengthRef = 0;
-        }
-        return false;
-    }
-    str[0] = '\0';
-
-    const size_t reservedLength = _countof(", ...}");
-    if (strSize <= reservedLength)
-    {
-        if (writtenLengthRef)
-        {
-            *writtenLengthRef = 0;
-        }
-        return false;
-    }
-
-    size_t length = 0;
-    if (!isInSequence || isFirstInSequence)
-    {
-        str[length++] = '{';
-    }
-
-    bool insertComma = isInSequence && !isFirstInSequence;
-    char tempStr[13];
-    for (BVIndex i = data.GetNextBit(); i != BVInvalidIndex; i = data.GetNextBit(i + 1))
-    {
-        const size_t copyLength = sprintf_s(tempStr, insertComma ? ", %u" : "%u", startIndex + i);
-        Assert(static_cast<int>(copyLength) > 0);
-
-        Assert(strSize > length);
-        Assert(strSize - length > reservedLength);
-        if (strSize - length - reservedLength <= copyLength)
-        {
-            strcpy_s(&str[length], strSize - length, insertComma ? ", ...}" : "...}");
-            if (writtenLengthRef)
-            {
-                *writtenLengthRef = length + (insertComma ? _countof(", ...}") : _countof("...}"));
-            }
-            return false;
-        }
-
-        strcpy_s(&str[length], strSize - length - reservedLength, tempStr);
-        length += copyLength;
-        insertComma = true;
-    }
-    if (!isInSequence || isLastInSequence)
-    {
-        Assert(_countof("}") < strSize - length);
-        strcpy_s(&str[length], strSize - length, "}");
-        length += _countof("}");
-    }
-    if (writtenLengthRef)
-    {
-        *writtenLengthRef = length;
-    }
-    return true;
-}
-#endif
-
 
 #if DBG_DUMP
 template <typename T> void Dump(T const& t);
@@ -1086,74 +990,6 @@ BVSparse<TAllocator>::Test(BVSparse const * bv) const
 
     return false;
 }
-
-#ifdef _WIN32
-
-template<class TAllocator>
-template<class F>
-void BVSparse<TAllocator>::ToString(__out_ecount(strSize) char *const str, const size_t strSize, const F ReadNode) const
-{
-    Assert(str);
-
-    if (strSize == 0)
-    {
-        return;
-    }
-    str[0] = '\0';
-
-    bool empty = true;
-    bool isFirstInSequence = true;
-    size_t length = 0;
-    BVSparseNode *nodePtr = head;
-    while (nodePtr)
-    {
-        bool readSuccess;
-        const BVSparseNode node(ReadNode(nodePtr, &readSuccess));
-        if (!readSuccess)
-        {
-            str[0] = '\0';
-            return;
-        }
-        if (node.data.IsEmpty())
-        {
-            nodePtr = node.next;
-            continue;
-        }
-        empty = false;
-
-        size_t writtenLength;
-        if (!node.ToString(&str[length], strSize - length, &writtenLength, true, isFirstInSequence, !node.next))
-        {
-            return;
-        }
-        length += writtenLength;
-
-        isFirstInSequence = false;
-        nodePtr = node.next;
-    }
-
-    if (empty && _countof("{}") < strSize)
-    {
-        strcpy_s(str, strSize, "{}");
-    }
-}
-
-template<class TAllocator>
-void BVSparse<TAllocator>::ToString(__out_ecount(strSize) char *const str, const size_t strSize) const
-{
-    ToString(
-        str,
-        strSize,
-        [](BVSparseNode *const nodePtr, bool *const successRef) -> BVSparseNode
-    {
-        Assert(nodePtr);
-        Assert(successRef);
-
-        *successRef = true;
-        return *nodePtr;
-    });
-}
-#endif
 
 #if DBG_DUMP
 
