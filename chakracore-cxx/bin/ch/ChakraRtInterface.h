@@ -124,10 +124,6 @@ struct JsAPIHooks
     typedef JsErrorCode(WINAPI *JsrtTTDMoveToTopLevelEventPtr)(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, int64_t snapshotStartTime, int64_t eventTime);
     typedef JsErrorCode(WINAPI *JsrtTTDReplayExecutionPtr)(JsTTDMoveMode* moveMode, int64_t* rootEventTime);
 
-#ifdef _WIN32
-    typedef JsErrorCode(WINAPI *JsrtConnectJITProcess)(HANDLE processHandle, void* serverSecurityDescriptor, UUID connectionId);
-#endif
-
     typedef JsErrorCode(WINAPI *JsrtVarSerializerPtr)(ReallocateBufferMemoryFunc reallocateBufferMemory, WriteHostObjectFunc writeHostObject, void * callbackState, JsVarSerializerHandle *serializerHandle);
     typedef JsErrorCode(WINAPI *JsrtVarSerializerSetTransferableVarsPtr)(JsVarSerializerHandle serializerHandle, JsValueRef *transferableVars, size_t transferableVarsCount);
     typedef JsErrorCode(WINAPI *JsrtVarSerializerWriteValuePtr)(JsVarSerializerHandle serializerHandle, JsValueRef rootObject);
@@ -275,14 +271,7 @@ struct JsAPIHooks
     JsrtDetachArrayBufferPtr pfJsrtDetachArrayBuffer;
     JsrtGetArrayBufferFreeFunction pfJsrtGetArrayBufferFreeFunction;
     JsrtExternalizeArrayBufferPtr pfJsrtExternalizeArrayBuffer;
-#ifdef _WIN32
-    JsrtConnectJITProcess pfJsrtConnectJITProcess;
-#endif
 };
-
-#ifdef _WIN32
-LPCWSTR GetChakraDllNameW();
-#endif
 
 class ChakraRTInterface
 {
@@ -514,9 +503,6 @@ public:
     static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, DWORD* dwBgParseCookie) { return HOOK_JS_API(QueueBackgroundParse_Experimental)(contents, dwBgParseCookie);  }
     static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(DWORD dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return HOOK_JS_API(DiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer)); }
     static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(DWORD dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, WCHAR *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return HOOK_JS_API(ExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result)); }
-#ifdef _WIN32
-    static JsErrorCode WINAPI JsConnectJITProcess(HANDLE processHandle, void* serverSecurityDescriptor, UUID connectionId) { return HOOK_JS_API(ConnectJITProcess(processHandle, serverSecurityDescriptor, connectionId)); }
-#endif
 
     static JsErrorCode WINAPI JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return HOOK_JS_API(GetArrayBufferFreeFunction(buffer, freeFn)); }
     static JsErrorCode WINAPI JsExternalizeArrayBuffer(JsValueRef buffer) { return HOOK_JS_API(ExternalizeArrayBuffer(buffer)); }

@@ -92,10 +92,6 @@ NativeCodeGenerator::~NativeCodeGenerator()
 {
     Assert(this->IsClosed());
 
-#if PDATA_ENABLED && defined(_WIN32)
-    DelayDeletingFunctionTable::Clear();
-#endif
-
 #ifdef PROFILE_EXEC
     if (this->foregroundCodeGenProfiler != nullptr)
     {
@@ -3340,9 +3336,6 @@ NativeCodeGenerator::FreeNativeCodeGenAllocation(void* codeAddress)
 {
     if (JITManager::GetJITManager()->IsOOPJITEnabled())
     {
-#if PDATA_ENABLED && defined(_WIN32)
-        DelayDeletingFunctionTable::Clear();
-#endif
         HRESULT hr = JITManager::GetJITManager()->FreeAllocation(this->scriptContext->GetRemoteScriptAddr(), (intptr_t)codeAddress);
         JITManager::HandleServerCallResult(hr, RemoteCallType::MemFree);
     }
@@ -3784,66 +3777,3 @@ bool NativeCodeGenerator::TryAggressiveInlining(Js::FunctionBody *const topFunct
 #endif
     return true;
 }
-
-#if _WIN32
-bool
-JITManager::HandleServerCallResult(HRESULT hr, RemoteCallType callType)
-{
-    // handle the normal hresults
-    switch (hr)
-    {
-    case S_OK:
-        return true;
-    case E_ABORT:
-        throw Js::OperationAbortedException();
-    case 0x800705af: // = HRESULT_FROM_WIN32(ERROR_COMMITMENT_LIMIT) some of our tooling does not yet support constexpr switch labels.
-    case E_OUTOFMEMORY:
-        if (callType == RemoteCallType::MemFree)
-        {
-            // if freeing memory fails due to OOM, it means we failed to fill with debug breaks -- so failfast
-            RpcFailure_unrecoverable_error(hr);
-        }
-        else
-        {
-            Js::Throw::OutOfMemory();
-        }
-    case VBSERR_OutOfStack:
-        throw Js::StackOverflowException();
-    default:
-        break;
-    }
-
-    if (CONFIG_FLAG(CrashOnOOPJITFailure))
-    {
-        RpcFailure_unrecoverable_error(hr);
-    }
-    // we only expect to see these hresults in case server has been closed. failfast otherwise
-    if (hr != HRESULT_FROM_WIN32(RPC_S_CALL_FAILED) &&
-        hr != HRESULT_FROM_WIN32(RPC_S_CALL_FAILED_DNE))
-    {
-        RpcFailure_unrecoverable_error(hr);
-    }
-
-    // if JIT process is gone, record that and stop trying to call it
-    GetJITManager()->SetJITFailed(hr);
-
-    switch (callType)
-    {
-    case RemoteCallType::CodeGen:
-        // inform job manager that JIT work item has been cancelled
-        throw Js::OperationAbortedException();
-#if DBG
-    case RemoteCallType::HeapQuery:
-#endif
-    case RemoteCallType::ThunkCreation:
-    case RemoteCallType::StateUpdate:
-    case RemoteCallType::MemFree:
-        // if server process is gone, we can ignore failures updating its state
-        return false;
-    default:
-        Assert(UNREACHED);
-        RpcFailure_unrecoverable_error(hr);
-    }
-    return false;
-}
-#endif

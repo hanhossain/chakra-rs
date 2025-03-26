@@ -818,7 +818,6 @@ EmitDiv0Exception(
 //
 // MRS dest, systemreg
 //
-#ifndef _WIN32
 #define ARM64_SYSREG(op0, op1, crn, crm, op2) \
         ( ((op0 & 1) << 14) | \
           ((op1 & 7) << 11) | \
@@ -828,7 +827,6 @@ EmitDiv0Exception(
 
 #define ARM64_FPCR              ARM64_SYSREG(3, 3, 4, 4, 0)   // Floating point control register (EL0)
 #define ARM64_FPSR              ARM64_SYSREG(3, 3, 4, 4, 1)   // Floating point status register (EL0)
-#endif
 
 #define ARM64_NZCV              ARM64_SYSREG(3,3, 4, 2,0)   // Flags (EL0); arm64_x.h
 #define ARM64_CNTVCT            ARM64_SYSREG(3,3,14, 0,2)   // Generic Timer virtual count

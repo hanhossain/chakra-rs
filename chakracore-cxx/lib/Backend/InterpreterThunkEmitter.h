@@ -61,19 +61,11 @@ class InterpreterThunkEmitter
 public:
     // InterpreterThunkSize must be public to be accessible to all code in InterpreterThunkEmitter.cpp.
 #ifdef _M_X64
-#ifdef _WIN32
-    static constexpr size_t InterpreterThunkSize = 96;
-#else  // Sys V AMD64
     static constexpr size_t InterpreterThunkSize = 72;
-#endif
 #elif defined(_M_ARM)
     static constexpr size_t InterpreterThunkSize = 72;
 #elif defined(_M_ARM64)
-#ifdef _WIN32
-    static constexpr size_t InterpreterThunkSize = 64;
-#else
     static constexpr size_t InterpreterThunkSize = 48;
-#endif
 #else
     static constexpr size_t InterpreterThunkSize = 56;
 #endif

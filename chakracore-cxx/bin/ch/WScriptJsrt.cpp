@@ -37,9 +37,6 @@
 
 // do not change the order below
 // otherwise, i.e. android system can be marked as posix? etc..
-#ifdef _WIN32
-#define DEST_PLATFORM_TEXT "win32"
-#else // ! _WIN32
 #if defined(__APPLE__)
 #ifdef __IOS__
 #define DEST_PLATFORM_TEXT "ios"
@@ -53,13 +50,10 @@
 #elif defined(__FreeBSD__) || defined(__unix__)
 #define DEST_PLATFORM_TEXT "bsd"
 #endif // FreeBSD or unix ?
-#endif // _WIN32 ?
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 #ifdef HAS_ICU
 #define INTL_LIBRARY_TEXT "icu"
-#elif defined(_WIN32)
-#define INTL_LIBRARY_TEXT "winglob"
 #else
 #define INTL_LIBRARY_TEXT ""
 #endif

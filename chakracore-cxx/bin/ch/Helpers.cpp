@@ -7,14 +7,8 @@
 
 #define MAX_URI_LENGTH 512
 
-//TODO: x-plat definitions
-#ifdef _WIN32
-#define TTD_MAX_FILE_LENGTH MAX_PATH
-#define TTD_HOST_PATH_SEP "\\"
-#else
 #define TTD_MAX_FILE_LENGTH MAX_URI_LENGTH
 #define TTD_HOST_PATH_SEP "/"
-#endif
 
 void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t bufferLength)
 {
@@ -41,43 +35,6 @@ void TTDHostBuildCurrentExeDirectory(char* path, size_t* pathLength, size_t buff
     path[*pathLength] = '\0';
 }
 
-#ifdef _WIN32
-int TTDHostMKDir(const char* path, size_t pathLength)
-{
-    char16 cpath[MAX_PATH];
-    LPCUTF8 pathbase = (LPCUTF8)path;
-
-    if(MAX_PATH <= pathLength) //<= to account for null terminator
-    {
-        wprintf(_u("Don't overflow path buffer during conversion"));
-        exit(1);
-    }
-    utf8::DecodeUnitsIntoAndNullTerminate(cpath, pathbase, pathbase + pathLength);
-
-    return _wmkdir(cpath);
-}
-
-JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
-{
-    char16 wpath[MAX_PATH];
-    LPCUTF8 pathbase = (LPCUTF8)path;
-
-    if(MAX_PATH <= pathLength) //<= to account for null terminator
-    {
-        wprintf(_u("Don't overflow path buffer during conversion"));
-        exit(1);
-    }
-    utf8::DecodeUnitsIntoAndNullTerminate(wpath, pathbase, pathbase + pathLength);
-
-    FILE* res = nullptr;
-    _wfopen_s(&res, wpath, isWrite ? _u("w+b") : _u("r+b"));
-
-    return (JsTTDStreamHandle)res;
-}
-
-#define TTDHostRead(buff, size, handle) fread_s(buff, size, 1, size, (FILE*)handle);
-#define TTDHostWrite(buff, size, handle) fwrite(buff, 1, size, (FILE*)handle)
-#else
 int TTDHostMKDir(const char* path, size_t pathLength)
 {
     return mkdir(path, 0700);
@@ -90,7 +47,6 @@ JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
 
 #define TTDHostRead(buff, size, handle) fread(buff, 1, size, (FILE*)handle)
 #define TTDHostWrite(buff, size, handle) fwrite(buff, 1, size, (FILE*)handle)
-#endif
 
 int GetPathNameLocation(LPCSTR filename)
 {
@@ -113,7 +69,6 @@ int GetPathNameLocation(LPCSTR filename)
 
 inline void pathcpy(char * target, LPCSTR src, uint length)
 {
-#ifndef _WIN32
     for (int i = 0; i < length; i++)
     {
         if (src[i] == '\\')
@@ -125,9 +80,6 @@ inline void pathcpy(char * target, LPCSTR src, uint length)
             target[i] = src[i];
         }
     }
-#else
-    memcpy(target, src, length);
-#endif
 }
 
 uint ConcatPath(LPCSTR filenameLeft, uint posPathSep, LPCSTR filenameRight, char* buffer, uint bufferLength)
@@ -218,23 +170,8 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
         {
             if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled && !shouldMute)
             {
-#ifdef _WIN32
-                DWORD lastError = GetLastError();
-                char16 wszBuff[MAX_URI_LENGTH];
-                fprintf(stderr, "Error in opening file '%s' ", filename);
-                wszBuff[0] = 0;
-                if (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                    nullptr,
-                    lastError,
-                    0,
-                    wszBuff,
-                    _countof(wszBuff),
-                    nullptr))
-                {
-                    fwprintf(stderr, _u(": %s"), wszBuff);
-                }
-                fwprintf(stderr, _u("\n"));
-#elif defined(_POSIX_VERSION)
+// TODO (hanhossain): may want to include <unistd.h> to import _POSIX_VERSION
+#if defined(_POSIX_VERSION)
                 fprintf(stderr, "Error in opening file: ");
                 perror(filename);
 #endif
@@ -451,21 +388,6 @@ HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, UINT& lengthB
         if (printFileOpenError)
         {
             fprintf(stderr, "Error in opening file '%s' ", filename);
-#ifdef _WIN32
-            DWORD lastError = GetLastError();
-            char16 wszBuff[MAX_URI_LENGTH];
-            wszBuff[0] = 0;
-            if (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                nullptr,
-                lastError,
-                0,
-                wszBuff,
-                _countof(wszBuff),
-                nullptr))
-            {
-                fwprintf(stderr, _u(": %s"), wszBuff);
-            }
-#endif
             fprintf(stderr, "\n");
         }
         return E_FAIL;
@@ -510,15 +432,7 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
 {
     if(!ok)
     {
-#ifdef _WIN32
-        DWORD lastError = GetLastError();
-        LPTSTR pTemp = NULL;
-        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, lastError, 0, (LPTSTR)&pTemp, 0, NULL);
-        fwprintf(stderr, _u("Error is: %s\n"), pTemp);
-        LocalFree(pTemp);
-#else
         fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
-#endif
         fprintf(stderr, "Message is: %s\n", msg);
 
         AssertMsg(false, "IO Error!!!");

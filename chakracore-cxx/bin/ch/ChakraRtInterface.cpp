@@ -5,16 +5,11 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 
-#ifdef _WIN32
-LPCSTR chakraDllName = "chakracore.dll";
-LPCWSTR chakraDllNameW = _u("chakracore.dll");
-#else
 #include <dlfcn.h>
 #ifdef __APPLE__
 LPCSTR chakraDllName = "libChakraCore.dylib";
 #else
 LPCSTR chakraDllName = "libChakraCore.so";
-#endif
 #endif
 
 bool ChakraRTInterface::m_testHooksSetup = false;
@@ -24,13 +19,6 @@ bool ChakraRTInterface::m_usageStringPrinted = false;
 ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
 JsAPIHooks ChakraRTInterface::m_jsApiHooks = { 0 };
-
-#ifdef _WIN32
-LPCWSTR GetChakraDllNameW()
-{
-    return chakraDllNameW;
-}
-#endif
 
 // Wrapper functions to abstract out loading ChakraCore
 // and resolving its symbols
@@ -203,10 +191,6 @@ bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo, HINSTANCE *outLibrary)
     m_jsApiHooks.pfJsrtDetachArrayBuffer = (JsAPIHooks::JsrtDetachArrayBufferPtr)GetChakraCoreSymbol(library, "JsDetachArrayBuffer");
     m_jsApiHooks.pfJsrtGetArrayBufferFreeFunction = (JsAPIHooks::JsrtGetArrayBufferFreeFunction)GetChakraCoreSymbol(library, "JsGetArrayBufferFreeFunction");
     m_jsApiHooks.pfJsrtExternalizeArrayBuffer = (JsAPIHooks::JsrtExternalizeArrayBufferPtr)GetChakraCoreSymbol(library, "JsExternalizeArrayBuffer");
-
-#ifdef _WIN32
-    m_jsApiHooks.pfJsrtConnectJITProcess = (JsAPIHooks::JsrtConnectJITProcess)GetChakraCoreSymbol(library, "JsConnectJITProcess");
-#endif
 #endif
 
     return true;
@@ -222,9 +206,6 @@ void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
     {
         pDllCanUnloadNow();
     }
-#ifdef _WIN32
-    UnloadChakraCore(library);
-#else  // !_WIN32
     // PAL thread shutdown needs more time after execution completion.
     // Do not FreeLibrary. Invoke DllMain(DLL_PROCESS_DETACH) directly.
     typedef BOOL (__stdcall *PDLLMAIN)(HINSTANCE, DWORD, LPVOID);
@@ -233,7 +214,6 @@ void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
     {
         pDllMain(library, DLL_PROCESS_DETACH, NULL);
     }
-#endif
 #endif
 }
 

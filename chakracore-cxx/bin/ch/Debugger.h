@@ -4,14 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef _WIN32
-static const char controllerScript[] = {
-#include "DbgController.js.encoded"
-    '\0'
-};
-#else
 #include "DbgController.js.h"
-#endif
 
 class Debugger
 {

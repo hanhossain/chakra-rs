@@ -208,12 +208,6 @@ void CodeGenWorkItem::OnWorkItemProcessFail(NativeCodeGenerator* codeGen)
         this->allocation->allocation->isNotExecutableBecauseOOM = true;
 #endif
 
-#if PDATA_ENABLED & defined(_WIN32)
-        if (this->entryPointInfo)
-        {
-            this->entryPointInfo->GetNativeEntryPointData()->CleanupXDataInfo();
-        }
-#endif
         codeGen->FreeNativeCodeGenAllocation(this->allocation->allocation->address);
     }
 }
