@@ -15,11 +15,6 @@
 #endif
 #include "CustomHeap.h"
 
-#if PDATA_ENABLED && defined(_WIN32)
-#include "Core/DelayLoadLibrary.h"
-#include <malloc.h>
-#endif
-
 namespace Memory
 {
 namespace CustomHeap

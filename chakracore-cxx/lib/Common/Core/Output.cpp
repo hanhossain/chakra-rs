@@ -157,17 +157,7 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
 {
     size_t retValue = 0;
 
-#if CONFIG_RICH_TRACE_FORMAT
-    if (CONFIG_FLAG(RichTraceFormat))
-    {
-        InterlockedIncrement(&s_traceEntryId);
-        retValue += Output::Print(_u("[%d ~%d %s] "), s_traceEntryId, ::GetCurrentThreadId(), prefix);
-    }
-    else
-#endif
-    {
-        retValue += Output::Print(shortPrefixFormat, prefix);
-    }
+    retValue += Output::Print(shortPrefixFormat, prefix);
     retValue += Output::VPrint(form, argptr);
 
 #ifdef STACK_BACK_TRACE

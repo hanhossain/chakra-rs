@@ -26,14 +26,8 @@ bool MarkContext::AddMarkedObject(void * objectAddress, size_t objectSize)
 
     MarkCandidate markCandidate;
 
-#if defined(_WIN32) && defined(_M_X64)
-    // Enabling store forwards. The intrinsic generates stores matching the load in size.
-    // This enables skipping caches and forwarding the store data to the following load.
-    *(__m128i *)&markCandidate = _mm_set_epi64x(objectSize, (__int64)objectAddress);
-#else
     markCandidate.obj = (void**)objectAddress;
     markCandidate.byteCount = objectSize;
-#endif
     return markStack.Push(markCandidate);
 }
 

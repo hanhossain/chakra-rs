@@ -11,9 +11,7 @@ CompileAssert(false)
 #include "XDataAllocator.h"
 #include "Core/DelayLoadLibrary.h"
 
-#ifndef _WIN32
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
-#endif
 
 XDataAllocator::XDataAllocator(BYTE* address, uint size)
 {
@@ -64,48 +62,15 @@ void XDataAllocator::Release(const SecondaryAllocation& allocation)
 /* static */
 void XDataAllocator::Register(XDataAllocation * xdataInfo, DWORD functionStart, DWORD functionSize)
 {
-#ifdef _WIN32
-    RUNTIME_FUNCTION* pdataArray = xdataInfo->GetPdataArray();
-    for (ushort i = 0; i < xdataInfo->pdataCount; i++)
-    {
-        RUNTIME_FUNCTION* pdata = pdataArray + i;
-        Assert(pdata->UnwindData != 0);
-        Assert(pdata->BeginAddress != 0);
-        pdata->BeginAddress = pdata->BeginAddress - (DWORD)functionStart;
-        if (pdata->Flag != 1) // if it is not packed unwind data
-        {
-            pdata->UnwindData = pdata->UnwindData - (DWORD)functionStart;
-        }
-    }
-    Assert(xdataInfo->functionTable == nullptr);
-
-    // Since we do not expect many thunk functions to be created, we are using 1 table/function
-    // for now. This can be optimized further if needed.
-    NTSTATUS status = NtdllLibrary::Instance->AddGrowableFunctionTable(&xdataInfo->functionTable,
-        pdataArray,
-        /*MaxEntryCount*/ xdataInfo->pdataCount,
-        /*Valid entry count*/ xdataInfo->pdataCount,
-        /*RangeBase*/ functionStart,
-        /*RangeEnd*/ functionStart + functionSize);
-
-    if (!NT_SUCCESS(status))
-    {
-        Js::Throw::XDataRegistrationError(status, functionStart);
-    }
-
-#else  // !_WIN32
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __REGISTER_FRAME(xdataInfo->address);
-#endif
 }
 
 /* static */
 void XDataAllocator::Unregister(XDataAllocation * xdataInfo)
 {
-#ifndef _WIN32
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __DEREGISTER_FRAME(xdataInfo->address);
-#endif
 }
 
 bool XDataAllocator::CanAllocate()

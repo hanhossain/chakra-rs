@@ -202,50 +202,6 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 
     GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
 
-    // Win32 specific console creation code
-    // xplat-todo: Consider having this mechanism available on other
-    // platforms
-    // Not a pressing need since ChakraCore runs only in consoles by
-    // default so we don't need to allocate a second console for this
-#if CONFIG_CONSOLE_AVAILABLE
-    if (Js::Configuration::Global.flags.Console)
-    {
-        int fd;
-        FILE *fp;
-
-        // fail usually means there is an existing console. We don't really care.
-        if (AllocConsole())
-        {
-            fd = _open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), O_TEXT);
-            fp = _wfdopen(fd, _u("w"));
-
-            if (fp != nullptr)
-            {
-                *stdout = *fp;                
-                setvbuf(stdout, nullptr, _IONBF, 0);
-
-                fd = _open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE), O_TEXT);
-                fp = _wfdopen(fd, _u("w"));
-
-                if (fp != nullptr)
-                {
-                    *stderr = *fp;
-                    setvbuf(stderr, nullptr, _IONBF, 0);
-
-                    char16 buffer[_MAX_PATH + 70];
-
-                    if (ConfigParserAPI::FillConsoleTitle(buffer, _MAX_PATH + 20, modulename))
-                    {
-                        SetConsoleTitle(buffer);
-                    }
-
-                    hasOutput = true;
-                }
-            }
-        }
-    }
-#endif
-
     if (Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag)
         && Js::Configuration::Global.flags.OutputFile != nullptr)
     {

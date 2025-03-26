@@ -1513,13 +1513,6 @@ void Recycler::TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBl
  * FindRoots
  *------------------------------------------------------------------------------------------------*/
 
-// xplat-todo: Unify these two variants of GetStackBase
-#ifdef _WIN32
-static void* GetStackBase()
-{
-    return ((NT_TIB *)NtCurrentTeb())->StackBase;
-}
-#else
 static void* GetStackBase()
 {
     ULONG_PTR highLimit = 0;
@@ -1527,7 +1520,6 @@ static void* GetStackBase()
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     return (void*) highLimit;
 }
-#endif
 
 #if _M_IX86
 // REVIEW: For x86, do we care about scanning esp/ebp?
@@ -6551,17 +6543,6 @@ Recycler::FinishSweepPrep()
 void
 Recycler::FinishConcurrentSweep()
 {
-#if SUPPORT_WIN32_SLIST
-    GCETW_INTERNAL(GC_START, (this, ETWEvent_ConcurrentSweep_FinishTwoPassSweep));
-    GCETW_INTERNAL(GC_START2, (this, ETWEvent_ConcurrentSweep_FinishTwoPassSweep, this->collectionStartReason, this->collectionStartFlags));
-    if (CONFIG_FLAG_RELEASE(EnableConcurrentSweepAlloc))
-    {
-        AssertMsg(this->allowAllocationsDuringConcurrentSweepForCollection, "Two pass concurrent sweep must be turned on.");
-        this->autoHeap.FinishConcurrentSweep();
-    }
-    GCETW_INTERNAL(GC_STOP, (this, ETWEvent_ConcurrentSweep_FinishTwoPassSweep));
-    GCETW_INTERNAL(GC_STOP2, (this, ETWEvent_ConcurrentSweep_FinishTwoPassSweep, this->collectionStartReason, this->collectionStartFlags));
-#endif
 }
 #endif
 

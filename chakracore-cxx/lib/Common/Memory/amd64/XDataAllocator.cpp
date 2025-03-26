@@ -12,9 +12,7 @@ CompileAssert(false)
 #include "XDataAllocator.h"
 #include "Core/DelayLoadLibrary.h"
 
-#ifndef _WIN32
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
-#endif
 
 XDataAllocator::XDataAllocator(BYTE* address, uint size) :
     freeList(nullptr),
@@ -72,12 +70,10 @@ bool XDataAllocator::Alloc(ULONG_PTR functionStart, DWORD functionSize,
         OUTPUT_TRACE(Js::XDataAllocatorPhase, _u("No space for XDATA.\n"));
     }
 
-#ifndef _WIN32
     if (xdata->address)
     {
         ClearHead(xdata->address);  // mark empty .eh_frame
     }
-#endif
 
     return xdata->address != nullptr;
 }
@@ -118,65 +114,13 @@ void XDataAllocator::ClearFreeList()
 /* static */
 void XDataAllocator::Register(XDataAllocation * xdataInfo, ULONG_PTR functionStart, DWORD functionSize)
 {
-#ifdef _WIN32
-    ULONG_PTR baseAddress = functionStart;
-    xdataInfo->pdata.BeginAddress = (DWORD)(functionStart - baseAddress);
-    xdataInfo->pdata.EndAddress = (DWORD)(xdataInfo->pdata.BeginAddress + functionSize);
-    xdataInfo->pdata.UnwindInfoAddress = (DWORD)((intptr_t)xdataInfo->address - baseAddress);
-
-    HRESULT hr = S_OK;
-    BOOLEAN success = FALSE;
-    if (AutoSystemInfo::Data.IsWin8OrLater())
-    {
-        NTSTATUS status = NtdllLibrary::Instance->AddGrowableFunctionTable(&xdataInfo->functionTable,
-            &xdataInfo->pdata,
-            /*MaxEntryCount*/ 1,
-            /*Valid entry count*/ 1,
-            /*RangeBase*/ functionStart,
-            /*RangeEnd*/ functionStart + functionSize);
-        success = NT_SUCCESS(status);
-        hr = status;
-        
-    }
-    else
-    {
-        success = RtlAddFunctionTable(&xdataInfo->pdata, 1, functionStart);
-        if (!success)
-        {
-            hr = E_OUTOFMEMORY; // only OOM error can happen for RtlAddFunctionTable
-        }
-    }
-
-    if (!success)
-    {
-        Js::Throw::XDataRegistrationError(hr, functionStart);
-    }
-
-#if DBG
-    // Validate that the PDATA registration succeeded
-    ULONG64            imageBase = 0;
-    RUNTIME_FUNCTION  *runtimeFunction = RtlLookupFunctionEntry((DWORD64)functionStart, &imageBase, nullptr);
-    Assert(runtimeFunction != NULL);
-#endif
-
-#else  // !_WIN32
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __REGISTER_FRAME(xdataInfo->address);
-#endif
 }
 
 /* static */
 void XDataAllocator::Unregister(XDataAllocation * xdataInfo)
 {
-#ifdef _WIN32
-    if (!AutoSystemInfo::Data.IsWin8OrLater())
-    {
-        BOOLEAN success = RtlDeleteFunctionTable(&xdataInfo->pdata);
-        Assert(success);
-    }
-
-#else  // !_WIN32
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __DEREGISTER_FRAME(xdataInfo->address);
-#endif
 }

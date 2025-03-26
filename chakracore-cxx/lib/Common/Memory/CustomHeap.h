@@ -142,21 +142,6 @@ public:
 #endif
     }
 
-#if _WIN32
-    CodePageAllocators(AllocationPolicyManager * policyManager, bool allocXdata, SectionAllocWrapper * sectionAllocator, PreReservedSectionAllocWrapper * virtualAllocator, HANDLE processHandle) :
-        pageAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, sectionAllocator, processHandle),
-        preReservedHeapAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, virtualAllocator, processHandle),
-        cs(4000),
-        secondaryAllocStateChangedCount(0),
-        processHandle(processHandle)
-    {
-#if DBG
-        this->preReservedHeapAllocator.ClearConcurrentThreadId();
-        this->pageAllocator.ClearConcurrentThreadId();
-#endif
-    }
-#endif
-
     bool AllocXdata()
     {
         // Simple immutable data access, no need for lock
@@ -393,9 +378,6 @@ private:
 };
 
 typedef CodePageAllocators<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcCodePageAllocators;
-#if _WIN32
-typedef CodePageAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper> OOPCodePageAllocators;
-#endif
 /*
  * Simple free-listing based heap allocator
  *
@@ -575,9 +557,6 @@ private:
 };
 
 typedef Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcHeap;
-#if _WIN32
-typedef Heap<SectionAllocWrapper, PreReservedSectionAllocWrapper> OOPHeap;
-#endif
 // Helpers
 unsigned int log2(size_t number);
 BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
