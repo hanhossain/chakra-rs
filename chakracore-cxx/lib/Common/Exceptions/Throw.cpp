@@ -128,20 +128,6 @@ namespace Js {
         throw OutOfMemoryException();
     }
 
-#if !defined(_M_IX86) && defined(_WIN32)
-    void Throw::XDataRegistrationError(HRESULT hr, ULONG_PTR funcStart)
-    {
-        ULONG_PTR            imageBase = 0;
-        RUNTIME_FUNCTION  *runtimeFunction = RtlLookupFunctionEntry(funcStart, &imageBase, nullptr);
-
-        if (JsUtil::ExternalApi::GetCurrentThreadContextId())
-        {
-            XDataRegistration_unrecoverable_error(hr, (ULONG_PTR)runtimeFunction);
-        }
-        throw OutOfMemoryException();
-    }
-#endif
-
     void Throw::StackOverflow(ScriptContext *scriptContext, PVOID returnAddress)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
@@ -325,32 +311,6 @@ namespace Js {
 #endif
         }
 
-        // The following code is applicable only when we are hosted in an
-        // GUI environment
-#if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && defined(_WIN32)
-        // Then if DumpOncrashFlag is not specified it directly returns,
-        // otherwise if will raise a non-continuable exception, generate the dump and terminate the process.
-        // the popup message box might be useful when testing in IE
-        if (Js::Configuration::Global.flags.AssertPopUp && IsMessageBoxWPresent())
-        {
-            char16 buff[1024];
-
-            swprintf_s(buff, _countof(buff), _u("%S (%u)\n%S\n%S"), fileName, lineNumber, message, error);
-            buff[_countof(buff)-1] = 0;
-
-            int ret = MessageBox(nullptr, buff, CHAKRA_ASSERT_CAPTION, MB_ABORTRETRYIGNORE);
-
-            switch (ret)
-            {
-            case IDIGNORE:
-                return true;
-            case IDABORT:
-                Throw::FatalInternalError();
-            default:
-                return false;
-            }
-        }
-#endif
         return false;
     }
 

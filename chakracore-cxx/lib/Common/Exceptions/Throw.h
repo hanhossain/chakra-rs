@@ -34,10 +34,6 @@ namespace Js {
         static void __declspec(noreturn) FatalJsBuiltInError();
 #endif
 
-#if !defined(_M_IX86) && defined(_WIN32)
-        static void XDataRegistrationError(HRESULT hr, ULONG_PTR funcStart);
-#endif
-
         static bool ReportAssert(__in LPCSTR fileName, uint lineNumber, __in LPCSTR error, __in LPCSTR message);
         static void LogAssert();
 #ifdef GENERATE_DUMP
