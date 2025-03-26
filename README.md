@@ -47,6 +47,8 @@ No longer support preprocessor directives:
   - [ ] `NTBUILD`
   - [ ] `_CONTROL_FLOW_GUARD`
   - [ ] `SUPPORT_WIN32_SLIST`
+  - [ ] `HAVE_WIN32_VT100`
+  - [ ] `COMPILER_IS_MSVC`
 - [ ] `__IOS__`
 - [ ] `__ANDROID__`
 
