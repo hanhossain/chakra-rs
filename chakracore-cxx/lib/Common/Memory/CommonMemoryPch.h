@@ -12,11 +12,7 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 
 // === C Runtime Header Files ===
 #include <time.h>
-#if defined(_UCRT)
-#include <cmath>
-#else
 #include <math.h>
-#endif
 
 // Exceptions
 #include "Exceptions/ExceptionBase.h"
@@ -38,11 +34,7 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #ifdef _MSC_VER
 #pragma warning(push)
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(HEAP_TRACK_ALLOC) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-#ifdef _UCRT
-#include <typeinfo>
-#else
 #include <typeinfo.h>
-#endif
 #endif
 #pragma warning(pop)
 #endif

@@ -6359,7 +6359,6 @@ Recycler::ThreadProc()
 {
     Assert(this->IsConcurrentEnabled());
 
-#if !defined(_UCRT)
     // We do this before we set the concurrentWorkDoneEvent because GetModuleHandleEx requires
     // getting the loader lock. We could have the following case:
     //    Thread A => Initialize Concurrent Thread (C)
@@ -6375,7 +6374,6 @@ Recycler::ThreadProc()
     {
         dllHandle = NULL;
     }
-#endif
 
 #if defined(ENABLE_JS_ETW)
     // LTTng has no concept of EventActivityIdControl
@@ -6467,13 +6465,11 @@ Recycler::ThreadProc()
     while (true);
     SetEvent(this->concurrentWorkDoneEvent);
 
-#if !defined(_UCRT)
     if (dllHandle)
     {
         FreeLibraryAndExitThread(dllHandle, 0);
     }
     else
-#endif
     {
         return 0;
     }
@@ -6999,13 +6995,11 @@ RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
 
         Assert(recycler->IsConcurrentEnabled());
 
-#if !defined(_UCRT)
         HMODULE dllHandle = NULL;
         if (!GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)&RecyclerParallelThread::StaticThreadProc, &dllHandle))
         {
             dllHandle = NULL;
         }
-#endif
 #if defined(ENABLE_JS_ETW)
         // LTTng has no concept of EventActivityIdControl
         // Create an ETW ActivityId for this thread, to help tools correlate ETW events we generate
@@ -7046,12 +7040,10 @@ RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
         // because the main thread may have torn it down already.
         SetEvent(parallelThread->concurrentWorkDoneEvent);
 
-#if !defined(_UCRT)
         if (dllHandle)
         {
             FreeLibraryAndExitThread(dllHandle, 0);
         }
-#endif
         ret = 0;
 #if !DISABLE_SEH
     }

@@ -17,18 +17,6 @@
 #include "ServerThreadContext.h"
 #endif
 
-#if defined(_UCRT) && _CONTROL_FLOW_GUARD
-# if _MSC_VER >= 1913
-#  include <cfguard.h>
-# else
-   extern "C" void __fastcall _guard_check_icall(_In_ uintptr_t _Target);
-# endif
-
-# ifndef _GUARD_CHECK_ICALL
-#  define _GUARD_CHECK_ICALL _guard_check_icall
-# endif
-#endif
-
 ThreadContextInfo::ThreadContextInfo() :
     m_isAllJITCodeInPreReservedRegion(true),
     m_isClosed(false)

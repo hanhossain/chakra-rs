@@ -49,7 +49,6 @@ Preprocessor directives to remove:
   - `SUPPORT_WIN32_SLIST`
   - `HAVE_WIN32_VT100`
   - `COMPILER_IS_MSVC`
-  - `_UCRT`
 - ios
   - `__IOS__`
 - android
