@@ -4,16 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "Core/Api.h"
-#ifdef _WIN32
-#include <wchar.h> // wmemcpy_s
-#endif
 
 int AssertCount = 0;
 int AssertsToConsole = false;
 
-#if _WIN32
- // IsInAssert defined in header
-#elif !defined(__IOS__)
+#if !defined(__IOS__)
  __declspec(thread) int IsInAssert = false;
 #else
 int IsInAssert = false;

@@ -4,36 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef _WIN32
-#include <suppress.h>
-#endif
-
 class CriticalSection
-#ifndef _WIN32
 : public CCLock
 {
 public:
     CriticalSection(DWORD spincount = 0): CCLock(true) { }
 };
-#else // _WIN32
-{
-public:
-    CriticalSection(DWORD spincount = 0)
-    {
-#pragma prefast(suppress:6031, "InitializeCriticalSectionAndSpinCount always succeed since Vista. No need to check return value");
-        ::InitializeCriticalSectionAndSpinCount(&cs, spincount);
-    }
-    ~CriticalSection() { ::DeleteCriticalSection(&cs); }
-    _Success_(return) BOOL _Acquires_lock_(this->cs) TryEnter() { return ::TryEnterCriticalSection(&cs); }
-    void _Acquires_lock_(this->cs) Enter() { ::EnterCriticalSection(&cs); }
-    void _Releases_lock_(this->cs) Leave() { ::LeaveCriticalSection(&cs); }
-#if DBG
-    bool IsLocked() const { return cs.OwningThread == (HANDLE)::GetCurrentThreadId(); }
-#endif
-private:
-    CRITICAL_SECTION cs;
-};
-#endif
 
 //FakeCriticalSection mimics CriticalSection apis
 class FakeCriticalSection

@@ -28,7 +28,7 @@ unsigned int CalculateCRC32(const char* in)
 
 uint CalculateCRC(uint bufferCRC, size_t data)
 {
-#if defined(_WIN32) || defined(__SSE4_2__)
+#if defined(__SSE4_2__)
 #if defined(_M_IX86)
     if (AutoSystemInfo::Data.SSE4_2Available())
     {

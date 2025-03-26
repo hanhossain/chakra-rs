@@ -6,11 +6,9 @@
 
 #ifdef STACK_BACK_TRACE
 
-#ifndef _WIN32
 #include <execinfo.h>
 #define CaptureStackBackTrace(FramesToSkip, FramesToCapture, buffer, hash) \
     backtrace(buffer, FramesToCapture)
-#endif  // !_WIN32
 
 class StackBackTrace
 {
@@ -177,7 +175,7 @@ struct _TraceRingFrame
 //              Use embedded buffer instead of dynamically allocate. This may
 //              be helpful to avoid static data initialization problem.
 //  SKIP_TOP_FRAMES:
-//              Top stack frames to skip for each capture (only on _WIN32).
+//              Top stack frames to skip for each capture (only on windows).
 //
 //  Usage: Following captures the last 100 stacks that changes
 //  scriptContext->debuggerMode:

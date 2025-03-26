@@ -60,317 +60,15 @@ void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hmod)
     // 'parser' destructor post-processes some configuration
 }
 
+// TODO (hanhossain): remove
 void ConfigParser::ParseRegistry(CmdLineArgsParser &parser)
 {
-#ifdef _WIN32
-    HKEY hk;
-    bool includeUserHive = true;
-
-    if (NOERROR == RegOpenKeyExW(HKEY_LOCAL_MACHINE, JsUtil::ExternalApi::GetFeatureKeyName(), 0, KEY_READ, &hk))
-    {
-        DWORD dwValue;
-        DWORD dwSize = sizeof(dwValue);
-
-        ParseRegistryKey(hk, parser);
-
-        // HKLM can prevent user config from being read.
-        if (NOERROR == RegGetValueW(hk, nullptr, _u("AllowUserConfig"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize) && dwValue == 0)
-        {
-            includeUserHive = false;
-        }
-
-        RegCloseKey(hk);
-    }
-
-    if (includeUserHive && NOERROR == RegOpenKeyExW(HKEY_CURRENT_USER, JsUtil::ExternalApi::GetFeatureKeyName(), 0, KEY_READ, &hk))
-    {
-        ParseRegistryKey(hk, parser);
-        RegCloseKey(hk);
-    }
-#endif // _WIN32
 }
 
+// TODO (hanhossain): remove
 void ConfigParser::ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser)
 {
-#ifdef _WIN32
-    DWORD dwSize;
-    DWORD dwValue;
-
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-    char16 regBuffer[MaxRegSize];
-    dwSize = sizeof(regBuffer);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("JScript9"), RRF_RT_REG_SZ, nullptr, (LPBYTE)regBuffer, &dwSize))
-    {
-        LPWSTR regValue = regBuffer, nextValue = nullptr;
-        regValue = wcstok_s(regBuffer, _u(" "), &nextValue);
-        while (regValue != nullptr)
-        {
-            int err = 0;
-            if ((err = parser.Parse(regValue)) != 0)
-            {
-                break;
-            }
-            regValue = wcstok_s(nullptr, _u(" "), &nextValue);
-        }
-    }
-#endif
-
-    // MemSpect - This setting controls whether MemSpect instrumentation is enabled.
-    // The value is treated as a bit field with the following bits:
-    //   0x01 - Track Arena memory
-    //   0x02 - Track Recycler memory
-    //   0x04 - Track Page allocations
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == ::RegGetValueW(hk, nullptr, _u("MemSpect"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        if (dwValue & 0x01)
-        {
-            ArenaMemoryTracking::Activate();
-        }
-        if (dwValue & 0x02)
-        {
-            RecyclerMemoryTracking::Activate();
-        }
-        if (dwValue & 0x04)
-        {
-            PageTracking::Activate();
-        }
-    }
-
-    // JScriptJIT - This setting controls the JIT/interpretation of Jscript code.
-    // The legal values are as follows:
-    //      1- Force JIT code to be generated for everything.
-    //      2- Force interpretation without profiling (turn off JIT)
-    //      3- Default
-    //      4- Interpreter, simple JIT, and full JIT run a predetermined number of times. Requires >= 3 calls to functions.
-    //      5- Interpreter, simple JIT, and full JIT run a predetermined number of times. Requires >= 4 calls to functions.
-    //      6- Force interpretation with profiling
-    //
-    // This reg key is present in released builds.  The QA team's tests use these switches to
-    // get reliable JIT coverage in servicing runs done by IE/Windows.  Because this reg key is
-    // released, the number of possible values is limited to reduce surface area.
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("JScriptJIT"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        Js::ConfigFlagsTable &configFlags = Js::Configuration::Global.flags;
-        switch (dwValue)
-        {
-        case 1:
-            configFlags.Enable(Js::ForceNativeFlag);
-            configFlags.ForceNative = true;
-            break;
-
-        case 6:
-            configFlags.Enable(Js::ForceDynamicProfileFlag);
-            configFlags.ForceDynamicProfile = true;
-            // fall through
-
-        case 2:
-            configFlags.Enable(Js::NoNativeFlag);
-            configFlags.NoNative = true;
-            break;
-
-        case 3:
-            break;
-
-        case 4:
-            configFlags.Enable(Js::AutoProfilingInterpreter0LimitFlag);
-            configFlags.Enable(Js::ProfilingInterpreter0LimitFlag);
-            configFlags.Enable(Js::AutoProfilingInterpreter1LimitFlag);
-            configFlags.Enable(Js::SimpleJitLimitFlag);
-            configFlags.Enable(Js::ProfilingInterpreter1LimitFlag);
-            configFlags.Enable(Js::EnforceExecutionModeLimitsFlag);
-
-            configFlags.AutoProfilingInterpreter0Limit = 0;
-            configFlags.AutoProfilingInterpreter1Limit = 0;
-            if (
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                configFlags.NewSimpleJit
-#else
-                DEFAULT_CONFIG_NewSimpleJit
-#endif
-                )
-            {
-                configFlags.ProfilingInterpreter0Limit = 0;
-                configFlags.SimpleJitLimit = 0;
-                configFlags.ProfilingInterpreter1Limit = 2;
-            }
-            else
-            {
-                configFlags.ProfilingInterpreter0Limit = 1;
-                configFlags.SimpleJitLimit = 1;
-                configFlags.ProfilingInterpreter1Limit = 0;
-            }
-            configFlags.EnforceExecutionModeLimits = true;
-            break;
-
-        case 5:
-            configFlags.Enable(Js::AutoProfilingInterpreter0LimitFlag);
-            configFlags.Enable(Js::ProfilingInterpreter0LimitFlag);
-            configFlags.Enable(Js::AutoProfilingInterpreter1LimitFlag);
-            configFlags.Enable(Js::SimpleJitLimitFlag);
-            configFlags.Enable(Js::ProfilingInterpreter1LimitFlag);
-            configFlags.Enable(Js::EnforceExecutionModeLimitsFlag);
-
-            configFlags.AutoProfilingInterpreter0Limit = 0;
-            configFlags.ProfilingInterpreter0Limit = 0;
-            configFlags.AutoProfilingInterpreter1Limit = 1;
-            if (
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-                configFlags.NewSimpleJit
-#else
-                DEFAULT_CONFIG_NewSimpleJit
-#endif
-                )
-            {
-                configFlags.SimpleJitLimit = 0;
-                configFlags.ProfilingInterpreter1Limit = 2;
-            }
-            else
-            {
-                configFlags.SimpleJitLimit = 2;
-                configFlags.ProfilingInterpreter1Limit = 0;
-            }
-            configFlags.EnforceExecutionModeLimits = true;
-            break;
-        }
-    }
-
-    // ES6 feature control
-    // This setting allows enabling\disabling es6 features
-    //     0 - Enable ES6 flag - Also default behavior
-    //     1 - Disable ES6 flag
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("DisableES6"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        Js::ConfigFlagsTable &configFlags = Js::Configuration::Global.flags;
-        if (dwValue == 1)
-        {
-            configFlags.Enable(Js::ES6Flag);
-            configFlags.SetAsBoolean(Js::ES6Flag, false);
-        }
-    }
-
-    // WebAssembly experimental feature control
-    //     1 - Enable WebAssembly Experimental features
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("EnableWasmExperimental"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        if (dwValue == 1)
-        {
-            Js::ConfigFlagsTable &configFlags = Js::Configuration::Global.flags;
-            configFlags.Enable(Js::WasmExperimentalFlag);
-            configFlags.SetAsBoolean(Js::WasmExperimentalFlag, true);
-        }
-    }
-
-    // BgParse feature control
-    //     0 - Disable BgParse
-    //     1 - Enable BgParse
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("EnableBgParse"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        Js::ConfigFlagsTable &configFlags = Js::Configuration::Global.flags;
-        configFlags.Enable(Js::BgParseFlag);
-        if (dwValue == 0)
-        {
-            configFlags.SetAsBoolean(Js::BgParseFlag, false);
-        }
-        else if (dwValue == 1)
-        {
-            configFlags.SetAsBoolean(Js::BgParseFlag, true);
-        }
-
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-        Output::Print(_u("BgParse controlled by registry: %u\n"), dwValue);
-#endif
-    }
-
-    // Spectre mitigation feature control
-    // This setting allows enabling\disabling spectre mitigations
-    //     0 - Disable Spectre mitigations
-    //     1 - Enable Spectre mitigations - Also default behavior
-    dwValue = 0;
-    dwSize = sizeof(dwValue);
-    if (NOERROR == RegGetValueW(hk, nullptr, _u("MitigateSpectre"), RRF_RT_DWORD, nullptr, (LPBYTE)&dwValue, &dwSize))
-    {
-        Js::ConfigFlagsTable &configFlags = Js::Configuration::Global.flags;
-        configFlags.Enable(Js::MitigateSpectreFlag);
-        if (dwValue == 0)
-        {
-            configFlags.SetAsBoolean(Js::MitigateSpectreFlag, false);
-        }
-        else if (dwValue == 1)
-        {
-            configFlags.SetAsBoolean(Js::MitigateSpectreFlag, true);
-        }
-    }
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    SetConfigStringFromRegistry(hk, _u("Telemetry"), _u("Discriminator1"), Js::Configuration::Global.flags.TelemetryDiscriminator1);
-    SetConfigStringFromRegistry(hk, _u("Telemetry"), _u("Discriminator2"), Js::Configuration::Global.flags.TelemetryDiscriminator2);
-    SetConfigStringFromRegistry(hk, _u("Telemetry"), _u("RunType"), Js::Configuration::Global.flags.TelemetryRunType);
-#endif
-
-#endif // _WIN32
 }
-
-#ifdef _WIN32
-
-void ConfigParser::SetConfigStringFromRegistry(_In_ HKEY hk, _In_z_ const char16* subKeyName, _In_z_ const char16* valName, _Inout_ Js::String& str)
-{
-    const char16* regValue = nullptr;
-    DWORD len = 0;
-    ReadRegistryString(hk, subKeyName, valName, &regValue, &len);
-    if (regValue != nullptr)
-    {
-        str = regValue;
-        // Js::String  makes a copy of buffer so delete here
-        NoCheckHeapDeleteArray(len, regValue);
-    }
-}
-
-/**
- * Read a string from the registry.  Will return nullptr if string registry entry 
- * doesn't exist, or if we can't allocate memory.  
- * Will allocate a char16* buffer on the heap. Caller is responsible for freeing.
- */
-void ConfigParser::ReadRegistryString(_In_ HKEY hk, _In_z_ const char16* subKeyName, _In_z_ const char16* valName, _Outptr_result_maybenull_z_ const char16** sz, _Out_ DWORD* length)
-{
-    DWORD bufLength = 0;
-    *length = 0;
-    *sz = nullptr;
-
-    // first read to get size of string
-    DWORD result = RegGetValueW(hk, subKeyName, valName, RRF_RT_REG_SZ, nullptr, nullptr, &bufLength);
-    if (NOERROR == result)
-    {
-        if (bufLength > 0)
-        {
-            byte* buf = NoCheckHeapNewArrayZ(byte, bufLength);
-            if (buf != nullptr)
-            {
-                result = RegGetValueW(hk, subKeyName, valName, RRF_RT_REG_SZ, nullptr, buf, &bufLength);
-                if (NOERROR == result)
-                {
-                    // if successful, bufLength won't include null terminator so add 1
-                    *length = (bufLength / sizeof(char16)) + 1;
-                    *sz = reinterpret_cast<char16*>(buf);
-                }
-                else
-                {
-                    NoCheckHeapDeleteArray(bufLength, buf);
-                }
-            }
-        }
-    }
-}
-#endif // _WIN32
 
 void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16* strCustomConfigFile)
 {
@@ -401,25 +99,6 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     _wmakepath_s(filename, drive, dir, configFileName, configFileExt);
 
     FILE* configFile;
-#ifdef _WIN32
-    if (_wfopen_s(&configFile, filename, _u("r, ccs=UNICODE")) != 0 || configFile == nullptr)
-    {
-        WCHAR configFileFullName[MAX_PATH];
-
-        StringCchPrintf(configFileFullName, MAX_PATH, _u("%s%s"), configFileName, configFileExt);
-
-        // try the one in the current working directory (Desktop)
-        if (_wfullpath(filename, configFileFullName, _MAX_PATH) == nullptr)
-        {
-            return;
-        }
-
-        if (_wfopen_s(&configFile, filename, _u("r, ccs=UNICODE")) != 0 || configFile == nullptr)
-        {
-            return;
-        }
-    }
-#else
     // Two-pathed for a couple reasons
     // 1. PAL doesn't like the ccs option passed in.
     // 2. _wfullpath is not implemented in the PAL.
@@ -442,22 +121,14 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
             return;
         }
     }
-#endif
 
     char16 configBuffer[MaxTokenSize];
     int index = 0;
 
-#ifdef _WIN32
-#define ReadChar(file) fgetwc(file)
-#define UnreadChar(c, file) ungetwc(c, file)
-#define CharType wint_t
-#define EndChar WEOF
-#else
 #define ReadChar(file) fgetc(file)
 #define UnreadChar(c, file) ungetc(c, file)
 #define CharType int
 #define EndChar EOF
-#endif
 
     // We don't expect the token to overflow- if it does
     // the simplest thing to do would be to ignore the

@@ -4,9 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 #include "SysInfo.h"
-#ifdef _WIN32
-#include <psapi.h>
-#endif
 #include <wincrypt.h>
 #include <VersionHelpers.h>
 #ifdef __APPLE__
@@ -65,11 +62,9 @@ void
 AutoSystemInfo::Initialize()
 {
     Assert(!initialized);
-#ifndef _WIN32
     PAL_InitializeChakraCore();
     majorVersion = CHAKRA_CORE_MAJOR_VERSION;
     minorVersion = CHAKRA_CORE_MINOR_VERSION;
-#endif
 
     processHandle = GetCurrentProcess();
     GetSystemInfo(this);
@@ -131,12 +126,6 @@ bool
 AutoSystemInfo::InitPhysicalProcessorCount()
 {
     DWORD countPhysicalProcessor = 0;
-#ifdef _WIN32
-    DWORD size = 0;
-    PSYSTEM_LOGICAL_PROCESSOR_INFORMATION pBufferCurrent;
-    PSYSTEM_LOGICAL_PROCESSOR_INFORMATION pBufferStart;
-    BOOL bResult;
-#endif // _WIN32
     Assert(!this->initialized);
 
     // Initialize physical processor to number of logical processors.
@@ -144,45 +133,7 @@ AutoSystemInfo::InitPhysicalProcessorCount()
 
     this->dwNumberOfPhysicalProcessors = this->dwNumberOfProcessors;
 
-#if defined(_WIN32)
-    bResult = GetLogicalProcessorInformation(NULL, &size);
-
-    if (bResult || GetLastError() != ERROR_INSUFFICIENT_BUFFER || !size)
-    {
-        return false;
-    }
-
-    DWORD count = (size) / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-    if (size != count * sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION))
-    {
-        Assert(false);
-        return false;
-    }
-
-    pBufferCurrent = pBufferStart = NoCheckHeapNewArray(SYSTEM_LOGICAL_PROCESSOR_INFORMATION, (size_t)count);
-    if (!pBufferCurrent)
-    {
-        return false;
-    }
-
-    bResult = GetLogicalProcessorInformation(pBufferCurrent, &size);
-    if (!bResult)
-    {
-        NoCheckHeapDeleteArray(count, pBufferStart);
-        return false;
-    }
-
-    while (pBufferCurrent < (pBufferStart + count))
-    {
-        if (pBufferCurrent->Relationship == RelationProcessorCore)
-        {
-            countPhysicalProcessor++;
-        }
-        pBufferCurrent++;
-    }
-
-    NoCheckHeapDeleteArray(count, pBufferStart);
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
     std::size_t szCount = sizeof(countPhysicalProcessor);
     sysctlbyname("hw.physicalcpu", &countPhysicalProcessor, &szCount, nullptr, 0);
 
@@ -256,11 +207,7 @@ AutoSystemInfo::SSE2Available() const
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     return true;
 #elif defined(_M_IX86)
-#if defined(_WIN32)
-    return VirtualSseAvailable(2) && (CPUInfo[3] & (1 << 26));
-#else
     return false; // TODO: xplat support
-#endif
 #else
     return false;
 #endif
@@ -365,34 +312,14 @@ AutoSystemInfo::CheckForAtom() const
 bool
 AutoSystemInfo::IsWin8OrLater()
 {
-#if defined(WINVER) && WINVER >= _WIN32_WINNT_WIN8
-    return true;
-#else
     return isWindows8OrGreater;
-#endif
 }
 
 bool
 AutoSystemInfo::IsWin8Point1OrLater()
 {
-#if defined(WINVER) && WINVER >= _WIN32_WINNT_WINBLUE
-    return true;
-#else
     return isWindows8Point1OrGreater;
-#endif
 }
-
-#if defined(_CONTROL_FLOW_GUARD)
-bool
-AutoSystemInfo::IsWinThresholdOrLater()
-{
-#if defined(_M_ARM64) || (defined(WINVER) && WINVER >= _WIN32_WINNT_WIN10)
-    return true;
-#else
-    return IsWindowsThresholdOrGreater();
-#endif
-}
-#endif
 
 DWORD AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
 {
@@ -403,31 +330,6 @@ LPCWSTR AutoSystemInfo::GetJscriptDllFileName()
 {
     return (LPCWSTR)Data.binaryName;
 }
-
-#ifdef _WIN32
-/* static */
-HMODULE AutoSystemInfo::GetCRTHandle()
-{
-    return GetModuleHandle(_u("msvcrt.dll"));
-}
-
-bool
-AutoSystemInfo::IsCRTModulePointer(uintptr_t ptr)
-{
-    HMODULE base = GetCRTHandle();
-    if (Data.crtSize == 0)
-    {
-        MODULEINFO info;
-        if (!GetModuleInformation(GetCurrentProcess(), base, &info, sizeof(MODULEINFO)))
-        {
-            AssertOrFailFast(UNREACHED);
-        }
-        Data.crtSize = info.SizeOfImage;
-        Assert(base == info.lpBaseOfDll);
-    }
-    return (ptr >= (uintptr_t)base && ptr < (uintptr_t)base + Data.crtSize);
-}
-#endif
 
 bool AutoSystemInfo::IsLowMemoryProcess()
 {
@@ -496,60 +398,8 @@ HRESULT AutoSystemInfo::GetJscriptFileVersion(DWORD* majorVersion, DWORD* minorV
 //
 HRESULT AutoSystemInfo::GetVersionInfo(__in LPCWSTR pszPath, DWORD* majorVersion, DWORD* minorVersion)
 {
-#ifdef _WIN32
-    DWORD   dwTemp;
-    DWORD   cbVersionSz;
-    HRESULT hr = E_FAIL;
-    BYTE*    pVerBuffer = NULL;
-    VS_FIXEDFILEINFO* pFileInfo = NULL;
-    cbVersionSz = GetFileVersionInfoSizeEx(FILE_VER_GET_LOCALISED, pszPath, &dwTemp);
-    if(cbVersionSz > 0)
-    {
-        pVerBuffer = NoCheckHeapNewArray(BYTE, cbVersionSz);
-        if(pVerBuffer)
-        {
-            if(GetFileVersionInfoEx(FILE_VER_GET_LOCALISED|FILE_VER_GET_NEUTRAL, pszPath, 0, cbVersionSz, pVerBuffer))
-            {
-                UINT    uiSz = sizeof(VS_FIXEDFILEINFO);
-                if(!VerQueryValue(pVerBuffer, _u("\\"), (LPVOID*)&pFileInfo, &uiSz))
-                {
-                    hr = HRESULT_FROM_WIN32(GetLastError());
-                }
-                else
-                {
-                    hr = S_OK;
-                }
-            }
-            else
-            {
-                hr = HRESULT_FROM_WIN32(GetLastError());
-            }
-        }
-        else
-        {
-            hr = E_OUTOFMEMORY;
-        }
-    }
-
-    if(SUCCEEDED(hr))
-    {
-        *majorVersion = pFileInfo->dwFileVersionMS;
-        *minorVersion = pFileInfo->dwFileVersionLS;
-    }
-    else
-    {
-        *majorVersion = INVALID_VERSION;
-        *minorVersion = INVALID_VERSION;
-    }
-    if(pVerBuffer)
-    {
-        NoCheckHeapDeleteArray(cbVersionSz, pVerBuffer);
-    }
-    return hr;
-#else // !_WIN32
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;
     *minorVersion = INVALID_VERSION;
     return NOERROR;
-#endif
 }
