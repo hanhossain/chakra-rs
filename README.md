@@ -35,22 +35,30 @@ open graph.svg
 
 ## TODO
 
-No longer support preprocessor directives:
-- [x] `_WIN32`
-  - [ ] `_MSC_VER`
-  - [ ] `__MSC_FULL_VER`
-  - [ ] `WIN32`
-  - [ ] `__WIN32__`
-  - [ ] `__MINGW32__`
-  - [ ] `WINVER`
-  - [ ] `_WIN32_WINNT`
-  - [ ] `NTBUILD`
-  - [ ] `_CONTROL_FLOW_GUARD`
-  - [ ] `SUPPORT_WIN32_SLIST`
-  - [ ] `HAVE_WIN32_VT100`
-  - [ ] `COMPILER_IS_MSVC`
-- [ ] `__IOS__`
-- [ ] `__ANDROID__`
+Preprocessor directives to remove:
+- windows
+  - `_MSC_VER`
+  - `__MSC_FULL_VER`
+  - `WIN32`
+  - `__WIN32__`
+  - `__MINGW32__`
+  - `WINVER`
+  - `_WIN32_WINNT`
+  - `NTBUILD`
+  - `_CONTROL_FLOW_GUARD`
+  - `SUPPORT_WIN32_SLIST`
+  - `HAVE_WIN32_VT100`
+  - `COMPILER_IS_MSVC`
+  - `_UCRT`
+- ios
+  - `__IOS__`
+- android
+  - `__ANDROID__`
+- x86
+  - `_M_IX86`
+- arm32
+  - `_ARM32`
+  - `_M_ARM`
 
 Files to remove:
 - chakracore-cxx/lib/Common/Common/CompressionUtilities.cpp
