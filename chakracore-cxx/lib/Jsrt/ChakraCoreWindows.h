@@ -3,10 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#ifdef _MSC_VER
-#pragma once
-#endif // _MSC_VER
-
 #ifndef _CHAKRACOREWINDOWS_H_
 #define _CHAKRACOREWINDOWS_H_
 

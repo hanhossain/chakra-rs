@@ -787,15 +787,11 @@ void * InPlaceFreeListPolicy::Allocate(void * policy, size_t size)
         freeObjectLists[index] = freeObject->next;
 
 #ifdef ARENA_MEMORY_VERIFY
-#ifndef _MSC_VER
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsizeof-pointer-memaccess"
-#endif
         // Make sure the next pointer bytes are also DbgFreeMemFill-ed.
         memset(freeObject, DbgFreeMemFill, sizeof(freeObject->next));
-#ifndef _MSC_VER
 #pragma clang diagnostic pop
-#endif
 #endif
     }
 

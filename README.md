@@ -52,11 +52,11 @@ Preprocessor directives to remove:
   - `__IOS__`
 - android
   - `__ANDROID__`
-- x86
+- any arch that's not x64 or arm64
   - `_M_IX86`
-- arm32
   - `_ARM32`
   - `_M_ARM`
+  - `TARGET_32`
 
 Files to remove:
 - chakracore-cxx/lib/Common/Common/CompressionUtilities.cpp

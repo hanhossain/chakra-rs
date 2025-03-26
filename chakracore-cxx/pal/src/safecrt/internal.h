@@ -37,10 +37,6 @@ extern "C" {
  */
 #include <windows.h>
 
-#ifdef _MSC_VER
-#pragma pack(push,_CRT_PACKING)
-#endif  /* _MSC_VER */
-
 /* Define function types used in several startup sources */
 
 typedef void (__cdecl *_PVFV)(void);
@@ -1090,9 +1086,5 @@ BOOL __cdecl _IsNonwritableInCurrentImage(PBYTE pTarget);
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
-
-#ifdef _MSC_VER
-#pragma pack(pop)
-#endif  /* _MSC_VER */
 
 #endif  /* _INC_INTERNAL */

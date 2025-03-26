@@ -54,9 +54,7 @@ import "wtypes.idl";
 #endif
 
 #ifndef __midl
-#ifndef _MSC_VER
 typedef unsigned char boolean;
-#endif
 #endif
 
 #ifdef __midl

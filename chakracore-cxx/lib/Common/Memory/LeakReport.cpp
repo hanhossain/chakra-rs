@@ -137,11 +137,7 @@ LeakReport::EnsureLeakReportFile()
     if (filename == nullptr)
     {
         // xplat-todo: Implement swprintf_s in the PAL
-#ifdef _MSC_VER
-        swprintf_s(defaultFilename, _u("jsleakreport-%u.txt"), ::GetCurrentProcessId());
-#else
         _snwprintf(defaultFilename, _countof(defaultFilename), _u("jsleakreport-%u.txt"), ::GetCurrentProcessId());
-#endif
 
         filename = defaultFilename;
         openMode = _u("a+");   // append mode

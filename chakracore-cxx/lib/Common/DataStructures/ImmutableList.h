@@ -749,11 +749,7 @@ namespace regex
             return result;
         }
 
-#ifndef _MSC_VER
        bool __attribute__((noinline)) CheckEq(void* obj1, void *obj2) { return obj1 == obj2; }
-#else
-#define CheckEq(a, b) (a) == (b)
-#endif
 
         // Info:        Return true if the list is empty.
         bool IsEmpty()

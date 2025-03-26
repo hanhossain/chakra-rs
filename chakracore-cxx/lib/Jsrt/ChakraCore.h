@@ -14,10 +14,6 @@
 ///
 /// This file contains a flat C API layer. This is the API exported by ChakraCore.dll.
 
-#ifdef _MSC_VER
-#pragma once
-#endif // _MSC_VER
-
 #ifndef _CHAKRACORE_H_
 #define _CHAKRACORE_H_
 

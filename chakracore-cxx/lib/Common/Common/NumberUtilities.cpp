@@ -10,10 +10,6 @@
 
 using namespace Js;
 
-    // The VS2013 linker treats this as a redefinition of an already
-    // defined constant and complains. So skip the declaration if we're compiling
-    // with VS2013 or below.
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
     // Redeclare static constants
     const UINT64 NumberConstantsBase::k_Nan;
     const uint32_t NumberConstantsBase::k_Nan32;
@@ -55,7 +51,6 @@ using namespace Js;
     const uint32 NumberConstants::k_Float32TwoTo31;
     const uint32 NumberConstants::k_Float32NegTwoTo31;
     const uint32 NumberConstants::k_Float32TwoTo32;
-#endif
 
     const double NumberConstants::MAX_VALUE = *(double*)(&NumberConstants::k_PosMax);
     const double NumberConstants::MIN_VALUE = *(double*)(&NumberConstants::k_PosMin);

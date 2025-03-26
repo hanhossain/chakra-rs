@@ -21,9 +21,6 @@
 ******************************************************************/
 #ifndef _STRSAFE_H_INCLUDED_
 #define _STRSAFE_H_INCLUDED_
-#ifdef _MSC_VER
-#pragma once
-#endif
 
 #if defined(PLATFORM_UNIX) && !defined (FEATURE_PAL)
 #define _NATIVE_WCHAR_T_DEFINED

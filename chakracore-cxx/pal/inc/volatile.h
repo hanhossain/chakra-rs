@@ -434,19 +434,6 @@ public:
 // to redefine offsetof such that it does not use volatile, if we're building with VC++.
 //
 #include <stddef.h>
-#ifdef _MSC_VER
-#undef offsetof
-#ifdef  _WIN64
-#define offsetof(s,m)   (size_t)( (ptrdiff_t)&reinterpret_cast<const char&>((((s *)0)->m)) )
-#else
-#define offsetof(s,m)   (size_t)&reinterpret_cast<const char&>((((s *)0)->m))
-#endif //_WIN64
-
-// These also use volatile, so we'll include them here.
-//#include <intrin.h>
-//#include <memory>
-
-#endif //_MSC_VER
 
 //
 // From here on out, we ban the use of the "volatile" keyword.  If you found this while trying to define

@@ -489,11 +489,7 @@ DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
 #define _NOEXCEPT_ noexcept
 #endif
 
-#ifdef _MSC_VER
-extern "C" PVOID _ReturnAddress(VOID);
-#pragma intrinsic(_ReturnAddress)
-extern "C" void * _AddressOfReturnAddress(void);
-#elif defined(__GNUC__) || defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__)
 #define _ReturnAddress() __builtin_return_address(0)
 #if !__has_builtin(_AddressOfReturnAddress)
 __forceinline void * _AddressOfReturnAddress()
@@ -507,8 +503,7 @@ extern "C" void * _AddressOfReturnAddress(void);
 #error _AddressOfReturnAddress and _ReturnAddress not defined for this platform
 #endif
 
-// Define strsafe related types and defines for non-VC++ compilers
-#ifndef _MSC_VER
+// ----- START: Define strsafe related types and defines for non-VC++ compilers -----
 // xplat-todo: figure out why strsafe.h includes stdio etc
 // which prevents me from directly including PAL's strsafe.h
 #ifdef __cplusplus
@@ -539,10 +534,9 @@ STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* psz
 #define STRSAFE_E_INSUFFICIENT_BUFFER       ((HRESULT)0x8007007AL)  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
 #define STRSAFE_E_INVALID_PARAMETER         ((HRESULT)0x80070057L)  // 0x57 =  87L = ERROR_INVALID_PARAMETER
 #define STRSAFE_E_END_OF_FILE               ((HRESULT)0x80070026L)  // 0x26 =  38L = ERROR_HANDLE_EOF
-#endif
+// ----- END: Define strsafe related types and defines for non-VC++ compilers -----
 
 // Provide the definitions for non-windows platforms
-#ifndef _MSC_VER
 STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr = S_OK;
@@ -604,7 +598,6 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 
     return hr;
 }
-#endif
 
 __inline
 HRESULT ULongMult(ULONG ulMultiplicand, ULONG ulMultiplier, ULONG* pulResult);

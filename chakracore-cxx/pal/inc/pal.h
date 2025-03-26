@@ -121,8 +121,6 @@ extern "C" {
 
 /******************* Processor-specific glue  *****************************/
 
-#ifndef _MSC_VER
-
 #if defined(__i586__) && !defined(_M_IX86)
 #define _M_IX86 500
 #elif defined(__i486__) && !defined(_M_IX86)
@@ -170,8 +168,6 @@ extern "C" {
 #elif defined(_M_ARM64) && !defined(_ARM64_)
 #define _ARM64_
 #endif
-
-#endif // !_MSC_VER
 
 /******************* ABI-specific glue *******************************/
 
@@ -6531,11 +6527,7 @@ PALIMPORT errno_t __cdecl rand_s(unsigned int*);
 PALIMPORT int __cdecl printf(const char *, ...);
 PALIMPORT int __cdecl vprintf(const char *, va_list);
 
-#ifdef _MSC_VER
-#define PAL_get_caller _MSC_VER
-#else
 #define PAL_get_caller 0
-#endif
 
 PALIMPORT PAL_FILE * __cdecl PAL_get_stdout(int caller);
 PALIMPORT PAL_FILE * __cdecl PAL_get_stdin(int caller);

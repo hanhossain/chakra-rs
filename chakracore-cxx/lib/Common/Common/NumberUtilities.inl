@@ -16,16 +16,6 @@
 #endif
 
 #if !defined(__BIG_ENDIAN__) && !defined(__LITTLE_ENDIAN__)
-#if defined(_MSC_VER) // WINDOWS
-
-#ifdef BIG_ENDIAN
-#define __BIG_ENDIAN__
-#else
-#define __LITTLE_ENDIAN__
-#endif
-
-#else // NOT WINDOWS
-
 #ifdef __BYTE_ORDER
 #define X_BYTE_ORDER __BYTE_ORDER
 #define X_LITTLE_ENDIAN __LITTLE_ENDIAN
@@ -44,8 +34,6 @@
 
 #undef X_BYTE_ORDER
 #undef X_LITTLE_ENDIAN
-
-#endif // defined(_MSC_VER)
 #endif // !defined(__BIG_ENDIAN__) && !defined(__LITTLE_ENDIAN__)
 
 namespace Js
@@ -68,15 +56,6 @@ namespace Js
 #endif //!BIG_ENDIAN
     }
 
-#if defined(_M_X64) && defined(_MSC_VER) && !defined(__clang__)
-    NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
-    {
-        // _mm_cvttsd_si64x will result in 0x8000000000000000 if the value is NaN Inf or Zero, or overflows int64
-        __m128d a;
-        a = _mm_load_sd(&T1);
-        return _mm_cvttsd_si64x(a);
-    }
-#else
     NUMBER_UTIL_INLINE int64_t NumberUtilities::TryToInt64(double T1)
     {
         int64_t T4_64;
@@ -130,7 +109,6 @@ namespace Js
 
         return T4_64;
     }
-#endif
 
     // Returns true <=> TryToInt64() call resulted in a valid value.
     NUMBER_UTIL_INLINE bool NumberUtilities::IsValidTryToInt64(__int64 value)
