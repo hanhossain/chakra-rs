@@ -4,23 +4,13 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef _WIN32
-#include <windows.h>
-#include <wtypes.h>
-#else
 // TODO: Abstract out into it's own file
 #include "pal.h"
 #include "inc/rt/palrt.h"
 #include <stdint.h>
-#endif
 
 // Utf8Codex.h needs to be self contained, so these type defs are duplicated from CommonTypeDefs.h
-#ifdef _WIN32
-typedef WCHAR char16;
-#define _u(s) L##s
-#else
 #define _u(s) u##s
-#endif
 
 typedef char16 wchar;
 
@@ -31,17 +21,6 @@ typedef char16 wchar;
 extern void CodexAssert(bool condition);
 extern void CodexAssertOrFailFast(bool condition);
 
-#ifdef _MSC_VER
-//=============================
-// Disabled Warnings
-//=============================
-
-#pragma warning(push)
-
-#pragma warning(disable: 4127)  // constant expression for template parameter
-#endif
-
-#ifndef _WIN32
 // Templates are defined here in order to avoid a dependency on C++
 // <type_traits> header file,
 // or on compiler-specific contructs.
@@ -88,8 +67,6 @@ inline ENUMTYPE operator ~ (ENUMTYPE a) { return ENUMTYPE(~((_ENUM_FLAG_SIZED_IN
 inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
 inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) ^= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
 }
-
-#endif
 
 typedef unsigned __int32 uint32;
 // charcount_t represents a count of characters in a String
@@ -470,7 +447,3 @@ namespace utf8
     // Convert byte index into character index
     charcount_t ByteIndexIntoCharacterIndex(__in_ecount(cbIndex) LPCUTF8 pch, size_t cbIndex, DecodeOptions options = doDefault);
 }
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif

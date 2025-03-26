@@ -4,9 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
 #include "Common/Jobs.h"
-#ifdef _WIN32
-#include <process.h>
-#endif
 
 #include "Core/EtwTraceCore.h"
 
@@ -642,9 +639,6 @@ namespace JsUtil
         threadService(threadService),
         threadCount(0),
         maxThreadCount(0)
-#if PDATA_ENABLED && defined(_WIN32)
-        ,hasExtraWork(0)
-#endif
     {
         if (!threadService->HasCallback())
         {
@@ -706,10 +700,6 @@ namespace JsUtil
         //Wait for 1 sec on jobReady and shutdownBackgroundThread events.
         unsigned int result = WaitForMultipleObjectsEx(_countof(handles), handles, false, 1000, false);
 
-#if PDATA_ENABLED && defined(_WIN32)
-        DoExtraWork();
-#endif
-
         while (result == WAIT_TIMEOUT)
         {
             if (threadData->CanDecommit())
@@ -735,17 +725,6 @@ namespace JsUtil
 
         return result == WAIT_OBJECT_0;
     }
-
-#if PDATA_ENABLED && defined(_WIN32)
-    void BackgroundJobProcessor::DoExtraWork()
-    {
-        while (InterlockedExchangeAdd(&hasExtraWork, 0) > 0)
-        {
-            DelayDeletingFunctionTable::Clear();
-            Sleep(50);
-        }        
-    }
-#endif
 
     bool BackgroundJobProcessor::WaitWithThreadForThreadStartedOrClosingEvent(ParallelThreadData *parallelThreadData, const unsigned int milliseconds)
     {
@@ -1164,11 +1143,6 @@ namespace JsUtil
             }
             criticalSection.Leave();
 
-#if PDATA_ENABLED && defined(_WIN32)
-            // flush the function tables in background thread after closed and before shutting down thread
-            DelayDeletingFunctionTable::Clear();
-#endif
-
             EDGE_ETW_INTERNAL(EventWriteJSCRIPT_NATIVECODEGEN_STOP(this, 0));
         }
     }
@@ -1348,14 +1322,6 @@ namespace JsUtil
 #ifndef DISABLE_SEH
     int BackgroundJobProcessor::ExceptFilter(LPEXCEPTION_POINTERS pEP)
     {
-#if DBG && defined(_WIN32)
-        // Assert exception code
-        if (pEP->ExceptionRecord->ExceptionCode == STATUS_ASSERTION_FAILURE)
-        {
-            return EXCEPTION_CONTINUE_SEARCH;
-        }
-#endif
-
 #ifdef GENERATE_DUMP
         if (Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag))
         {
@@ -1468,21 +1434,6 @@ namespace JsUtil
         pageAllocator->ClearConcurrentThreadId();
 #endif
     }
-
-#if PDATA_ENABLED && defined(_WIN32)
-    void BackgroundJobProcessor::StartExtraWork()
-    {
-        InterlockedIncrement(&hasExtraWork);
-
-        // Signal the background thread to wake up and process the extra work.
-        jobReady.Set();
-    }
-    void BackgroundJobProcessor::EndExtraWork()
-    {
-        LONG newValue = InterlockedDecrement(&hasExtraWork);
-        Assert(newValue >= 0);
-    }
-#endif
 
 #if DBG_DUMP
     //Just for debugging purpose
