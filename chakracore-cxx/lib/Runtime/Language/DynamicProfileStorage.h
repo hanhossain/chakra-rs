@@ -50,13 +50,8 @@ private:
     static char16 catalogFilename[_MAX_PATH];
     static DWORD const MagicNumber;
     static DWORD const FileFormatVersion;
-#ifdef _WIN32
-    typedef DWORD TimeType;
-    static inline TimeType GetCreationTime() { return _time32(NULL); }
-#else
     typedef time_t TimeType;
     static inline TimeType GetCreationTime() { return time(NULL); }
-#endif
     static TimeType creationTime;
     static int32 lastOffset;
     static HANDLE mutex;

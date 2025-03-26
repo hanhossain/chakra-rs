@@ -3744,41 +3744,6 @@ JsErrorCode RunScriptCore(const WCHAR *script, JsSourceContext sourceContext,
         parseAttributes, isSourceModule, result);
 }
 
-#ifdef _WIN32
-CHAKRA_API JsParseScript(_In_z_ const WCHAR * script, _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl, _Out_ JsValueRef * result)
-{
-    return RunScriptCore(script, sourceContext, sourceUrl, true,
-        JsParseScriptAttributeNone, false /*isModule*/, result);
-}
-
-CHAKRA_API JsParseScriptWithAttributes(
-    _In_z_ const WCHAR *script,
-    _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl,
-    _In_ JsParseScriptAttributes parseAttributes,
-    _Out_ JsValueRef *result)
-{
-    return RunScriptCore(script, sourceContext, sourceUrl, true,
-        parseAttributes, false /*isModule*/, result);
-}
-
-CHAKRA_API JsRunScript(_In_z_ const WCHAR * script, _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl, _Out_ JsValueRef * result)
-{
-    return RunScriptCore(script, sourceContext, sourceUrl, false,
-        JsParseScriptAttributeNone, false /*isModule*/, result);
-}
-
-CHAKRA_API JsExperimentalApiRunModule(_In_z_ const WCHAR * script,
-    _In_ JsSourceContext sourceContext, _In_z_ const WCHAR *sourceUrl,
-    _Out_ JsValueRef * result)
-{
-    return RunScriptCore(script, sourceContext, sourceUrl, false,
-        JsParseScriptAttributeNone, true, result);
-}
-#endif
-
 JsErrorCode GetScriptBufferDetails(
     _In_ JsValueRef scriptVal,
     _In_ JsParseScriptAttributes parseAttributes,
@@ -4096,59 +4061,6 @@ static void CHAKRA_CALLBACK DummyScriptUnloadCallback(_In_ JsSourceContext sourc
 {
     // Do nothing
 }
-
-#ifdef _WIN32
-static bool CHAKRA_CALLBACK DummyScriptLoadSourceCallback(_In_ JsSourceContext sourceContext, _Outptr_result_z_ const WCHAR** scriptBuffer)
-{
-    // sourceContext is actually the script source pointer
-    *scriptBuffer = reinterpret_cast<const WCHAR*>(sourceContext);
-    return true;
-}
-
-CHAKRA_API JsParseSerializedScript(_In_z_ const WCHAR * script, _In_ unsigned char *buffer,
-    _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl,
-    _Out_ JsValueRef * result)
-{
-    return RunSerializedScriptCore(
-        DummyScriptLoadSourceCallback, DummyScriptUnloadCallback,
-        reinterpret_cast<JsSourceContext>(script), // use script source pointer as scriptLoadSourceContext
-        buffer, nullptr, sourceContext, sourceUrl, 0, true, false, result, Js::Constants::InvalidSourceIndex);
-}
-
-CHAKRA_API JsRunSerializedScript(_In_z_ const WCHAR * script, _In_ unsigned char *buffer,
-    _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl,
-    _Out_ JsValueRef * result)
-{
-    return RunSerializedScriptCore(
-        DummyScriptLoadSourceCallback, DummyScriptUnloadCallback,
-        reinterpret_cast<JsSourceContext>(script), // use script source pointer as scriptLoadSourceContext
-        buffer, nullptr, sourceContext, sourceUrl, 0, false, false, result, Js::Constants::InvalidSourceIndex);
-}
-
-CHAKRA_API JsParseSerializedScriptWithCallback(_In_ JsSerializedScriptLoadSourceCallback scriptLoadCallback,
-    _In_ JsSerializedScriptUnloadCallback scriptUnloadCallback,
-    _In_ unsigned char *buffer, _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl, _Out_ JsValueRef * result)
-{
-    return RunSerializedScriptCore(
-        scriptLoadCallback, scriptUnloadCallback,
-        sourceContext, // use the same user provided sourceContext as scriptLoadSourceContext
-        buffer, nullptr, sourceContext, sourceUrl, 0, true, false, result, Js::Constants::InvalidSourceIndex);
-}
-
-CHAKRA_API JsRunSerializedScriptWithCallback(_In_ JsSerializedScriptLoadSourceCallback scriptLoadCallback,
-    _In_ JsSerializedScriptUnloadCallback scriptUnloadCallback,
-    _In_ unsigned char *buffer, _In_ JsSourceContext sourceContext,
-    _In_z_ const WCHAR *sourceUrl, _Out_opt_ JsValueRef * result)
-{
-    return RunSerializedScriptCore(
-        scriptLoadCallback, scriptUnloadCallback,
-        sourceContext, // use the same user provided sourceContext as scriptLoadSourceContext
-        buffer, nullptr, sourceContext, sourceUrl, 0, false, false, result, Js::Constants::InvalidSourceIndex);
-}
-#endif // _WIN32
 
 /////////////////////
 

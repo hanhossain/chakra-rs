@@ -16,25 +16,8 @@
 ///
 /// This file contains a flat C API layer. This is the API exported by chakra.dll.
 
-#ifdef _MSC_VER
-#pragma once
-#endif  // _MSC_VER
-
 #ifndef _CHAKRACOMMON_H_
 #define _CHAKRACOMMON_H_
-
-// Platform specific code
-#if defined(_WIN32) && defined(_MSC_VER)
-#include <windows.h>
-
-// Header macros
-#define CHAKRA_CALLBACK CALLBACK
-#define CHAKRA_API STDAPI_(JsErrorCode)
-
-typedef unsigned char byte;
-typedef DWORD_PTR ChakraCookie;
-typedef BYTE* ChakraBytePtr;
-#else // Non-Windows VC++
 
 // SAL compat
 #define _Return_type_success_(x)
@@ -63,11 +46,7 @@ typedef BYTE* ChakraBytePtr;
 #define CHAKRA_CALLBACK
 #endif // __i386__
 
-#ifndef _WIN32
 #define SET_API_VISIBILITY __attribute__((visibility("default")))
-#else
-#define SET_API_VISIBILITY
-#endif
 
 #ifdef __cplusplus
 #define CHAKRA_API extern "C" SET_API_VISIBILITY JsErrorCode
@@ -90,8 +69,6 @@ typedef BYTE byte;
 typedef uint32_t DWORD;
 typedef unsigned short WCHAR;
 #endif
-
-#endif //  defined(_WIN32) && defined(_MSC_VER)
 
 #if (defined(_MSC_VER) && _MSC_VER <= 1900) || (!defined(_MSC_VER) && __cplusplus <= 199711L) // !C++11
 typedef unsigned short uint16_t;
@@ -2505,7 +2482,4 @@ typedef unsigned short uint16_t;
             _In_ JsValueRef parserState,
             _Out_ JsValueRef *result);
 
-#ifdef _WIN32
-#include "ChakraCommonWindows.h"
-#endif // _WIN32
 #endif // _CHAKRACOMMON_H_

@@ -8,12 +8,7 @@
 // To extract variadic args array after known args list:
 //      argx, callInfo, ...
 // NOTE: The last known arg name is hard-coded to "callInfo".
-#ifdef _WIN32
-#define DECLARE_ARGS_VARARRAY(va, ...)                              \
-    va_list _vl;                                                    \
-    va_start(_vl, callInfo);                                        \
-    Js::Var* va = (Js::Var*)_vl
-#else
+
 // We use a custom calling convention to invoke JavascriptMethod based on
 // System ABI. At entry of JavascriptMethod the stack layout is:
 //      [Return Address] [function] [callInfo] [arg0] [arg1] ...
@@ -66,13 +61,9 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
 {
     return 6;
 }
-#endif
 
 
-#ifdef _WIN32
-#define CALL_ENTRYPOINT_NOASSERT(entryPoint, function, callInfo, ...) \
-    entryPoint(function, callInfo, ##__VA_ARGS__)
-#elif defined(_M_X64) || defined(_M_IX86)
+#if defined(_M_X64) || defined(_M_IX86)
 // Call an entryPoint (JavascriptMethod) with custom calling convention.
 //  RDI == function, RSI == callInfo, (RDX/RCX/R8/R9==null/unused),
 //  all parameters on stack.

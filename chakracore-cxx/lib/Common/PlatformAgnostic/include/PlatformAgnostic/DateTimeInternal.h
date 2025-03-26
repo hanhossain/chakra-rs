@@ -20,80 +20,6 @@ namespace DateTime
     #define DateTimeTicks_PerNonLeapYear (DateTimeTicks_PerDay * 365)
     #define DateTimeTicks_PerSafeEndOfYear (DateTimeTicks_PerNonLeapYear - DateTimeTicks_PerLargestTZOffset)
 
-#ifdef _WIN32
-    class TimeZoneInfo // DateTime.cpp
-    {
-    public:
-        double daylightDate;
-        double standardDate;
-        double january1;
-        double nextJanuary1;
-
-        int32 daylightBias;
-        int32 standardBias;
-        int32 bias;
-        uint32 lastUpdateTickCount;
-
-        bool isDaylightTimeApplicable;
-        bool isJanuary1Critical;
-
-        TimeZoneInfo();
-        bool IsValid(const double time);
-        void Update(const double time);
-    };
-
-    class DaylightTimeHelperPlatformData // DaylightHelper.cpp
-    {
-    public:
-        TimeZoneInfo cache1, cache2;
-        bool useFirstCache;
-
-        DaylightTimeHelperPlatformData() :
-            useFirstCache(true)
-        {
-        }
-    };
-
-    class UtilityPlatformData
-    {
-    public:
-        TIME_ZONE_INFORMATION timeZoneInfo;
-        uint32 lastTimeZoneUpdateTickCount;
-
-        void UpdateTimeZoneInfo();
-        UtilityPlatformData() : lastTimeZoneUpdateTickCount(0) { GetTimeZoneInformation(&timeZoneInfo); }
-    };
-
-    class HiresTimerPlatformData
-    {
-    public:
-        double dBaseTime;
-        double dLastTime;
-        double dAdjustFactor;
-        uint64 baseMsCount;
-        uint64 freq;
-
-        bool fReset;
-        bool fInit;
-        bool fHiResAvailable;
-
-        HiresTimerPlatformData() :
-            dBaseTime(0),
-            dLastTime(0),
-            dAdjustFactor(1),
-            baseMsCount(0),
-            freq(0),
-            fReset(true),
-            fInit(false),
-            fHiResAvailable(true)
-        {
-        }
-
-        void Reset() { fReset = true; }
-    };
-
-#else // ! _WIN32
-
     typedef void* DaylightTimeHelperPlatformData;
 
     #define __CC_PA_TIMEZONE_ABVR_NAME_LENGTH 32
@@ -115,7 +41,6 @@ namespace DateTime
         void Reset() { /* dummy method for interface compatiblity */ }
     };
 
-#endif // ! _WIN32
 
 } // namespace DateTime
 } // namespace PlatformAgnostic

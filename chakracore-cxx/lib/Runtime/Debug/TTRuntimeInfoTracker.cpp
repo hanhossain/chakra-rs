@@ -21,14 +21,10 @@ namespace TTD
 
         if(debugMode)
         {
-#ifdef _WIN32
-            ctx->InitializeDebugging();
-#else
             //
             //TODO: x-plat does not like some parts of initiallize debugging so just set the flag we need
             //
             ctx->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::Debugging);
-#endif
         }
 
         ctx->InitializeCoreImage_TTD();

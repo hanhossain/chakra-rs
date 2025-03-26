@@ -67,11 +67,5 @@ StackProber::Initialize()
 #endif
 
     Assert(stackBottom);
-
-#ifdef _WIN32
-    // Calling this API with stackGuarantee == 0 *gets* current stack guarantee.
-    SetThreadStackGuarantee(&stackGuarantee);
-#endif
-
     stackLimit = stackBottom + guardPageSize + stackGuarantee + stackOverflowBuffer;
 }

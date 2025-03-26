@@ -6,12 +6,7 @@
 
 #include <limits.h>
 
-#ifdef _WIN32
-typedef WCHAR char16;
-#define _u(s) L##s
-#else
 #define _u(s) u##s
-#endif
 
 typedef char16 wchar;
 typedef unsigned int uint;

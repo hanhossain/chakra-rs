@@ -110,17 +110,6 @@ const MHR g_rgmhr[] =
     /*0x800401F3*/ MAPHR(CO_E_CLASSSTRING, VBSERR_CantCreateObject),
     /*0x800401F5*/ MAPHR(CO_E_APPNOTFOUND, VBSERR_CantCreateObject),
     /*0x800401FE*/ MAPHR(CO_E_APPDIDNTREG, VBSERR_CantCreateObject),
-
-#if _WIN32
-    // FACILITY_WIN32 errors
-    /*0x80070005*/ MAPHR(E_ACCESSDENIED, VBSERR_PermissionDenied),
-    /*0x8007000E*/ MAPHR(E_OUTOFMEMORY, VBSERR_OutOfMemory),
-    /*0x80070057*/ MAPHR(E_INVALIDARG, VBSERR_IllegalFuncCall),
-    /*0x800706BA*/ MAPHR(_HRESULT_TYPEDEF_(0x800706BA), VBSERR_ServerNotFound),
-
-    // FACILITY_WINDOWS
-    /*0x80080005*/ MAPHR(CO_E_SERVER_EXEC_FAILURE, VBSERR_CantCreateObject),
-#endif // _WIN32
 };
 const int32 kcmhr = sizeof(g_rgmhr) / sizeof(g_rgmhr[0]);
 

@@ -5,26 +5,6 @@
 #include "RuntimeLibraryPch.h"
 #include "AtomicsOperations.h"
 
-#ifdef _WIN32
-#define InterlockedExchangeAdd8 _InterlockedExchangeAdd8
-#define InterlockedExchangeAdd16 _InterlockedExchangeAdd16
-
-#define InterlockedAnd8 _InterlockedAnd8
-#define InterlockedAnd16 _InterlockedAnd16
-
-#define InterlockedOr8 _InterlockedOr8
-#define InterlockedOr16 _InterlockedOr16
-
-#define InterlockedXor8 _InterlockedXor8
-#define InterlockedXor16 _InterlockedXor16
-
-#define InterlockedCompareExchange8 _InterlockedCompareExchange8
-#define InterlockedCompareExchange16 _InterlockedCompareExchange16
-
-#define InterlockedExchange8 _InterlockedExchange8
-#define InterlockedExchange16 _InterlockedExchange16
-#endif
-
 #define InterlockedExchangeAdd32 InterlockedExchangeAdd
 #define InterlockedAnd32 InterlockedAnd
 #define InterlockedOr32 InterlockedOr

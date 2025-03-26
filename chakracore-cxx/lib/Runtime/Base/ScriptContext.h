@@ -6,10 +6,6 @@
 #include "Memory/LeakReport.h"
 #include "Common/RejitReason.h"
 
-#if defined(_WIN32) && defined(ENABLE_SCRIPT_PROFILING)
-#include "activprof.h"
-#endif
-
 #if DBG || ENABLE_REGEX_CONFIG_OPTIONS || defined(PROFILE_STRINGS)
 #define NEED_MISC_ALLOCATOR
 #endif

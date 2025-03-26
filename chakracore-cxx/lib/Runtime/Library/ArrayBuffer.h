@@ -31,47 +31,11 @@ namespace Js
             Js::Throw::FatalInternalError();
         }
 #endif
-#ifdef _WIN32
-        static void* __cdecl AllocWrapper(DECLSPEC_GUARD_OVERFLOW size_t length, size_t MaxVirtualSize)
-        {
-            LPVOID address = VirtualAlloc(nullptr, MaxVirtualSize, MEM_RESERVE, PAGE_NOACCESS);
-            //throw out of memory
-            if (!address)
-            {
-                return nullptr;
-            }
-
-            if (length == 0)
-            {
-                return address;
-            }
-
-            LPVOID arrayAddress = VirtualAlloc(address, length, MEM_COMMIT, PAGE_READWRITE);
-            if (!arrayAddress)
-            {
-                VirtualFree(address, 0, MEM_RELEASE);
-                return nullptr;
-            }
-            return arrayAddress;
-        }
-        template<size_t MaxVirtualSize>
-        static void* __cdecl AllocWrapper(DECLSPEC_GUARD_OVERFLOW size_t length)
-        {
-            return AllocWrapper(length, MaxVirtualSize);
-        }
-
-        static void __cdecl FreeMemAlloc(Var ptr)
-        {
-            BOOL fSuccess = VirtualFree((LPVOID)ptr, 0, MEM_RELEASE);
-            Assert(fSuccess);
-        }
-#else
         static void __cdecl FreeMemAlloc(Var ptr)
         {
             // This free function should never be used
             Js::Throw::FatalInternalError();
         }
-#endif
     public:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayBufferBase, DynamicObject);
 

@@ -82,30 +82,6 @@
 #define __has_builtin(x) 0
 #endif
 
-#ifdef _WIN32
-#pragma warning(push)
-#pragma warning(disable: 4995) /* 'function': name was marked as #pragma deprecated */
-
-// === Windows Header Files ===
-#define WIN32_LEAN_AND_MEAN 1
-#define INC_OLE2                 /* for windows.h */
-#define CONST_VTABLE             /* for objbase.h */
-#include <windows.h>
-
-/* Don't want GetObject and GetClassName to be defined to GetObjectW and GetClassNameW */
-#undef GetObject
-#undef GetClassName
-#undef Yield /* winbase.h defines this but we want to use it for Js::OpCode::Yield; it is Win16 legacy, no harm undef'ing it */
-#pragma warning(pop)
-
-// xplat-todo: get a better name for this macro
-#define _u(s) L##s
-#define INIT_PRIORITY(x)
-
-#define get_cpuid __cpuid
-
-#else // !_WIN32
-
 #define USING_PAL_STDLIB 1
 #define STRSAFE_INLINE   1
 
@@ -494,16 +470,10 @@ DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
 #define StringCchPrintf  StringCchPrintfW
 #endif
 
-#endif // _WIN32
 
 
 // Use intsafe.h for internal builds (currently missing some files with stdint.h)
-#if defined(_WIN32) && defined(NTBUILD)
-#define ENABLE_INTSAFE_SIGNED_FUNCTIONS 1
-#include <intsafe.h>
-#else
 #include <stdint.h>
-#endif
 
 // `typename QualifiedName` declarations outside of template code not supported before MSVC 2015 update 1
 #if defined(_MSC_VER) && _MSC_VER < 1910 && !defined(__clang__)
@@ -636,10 +606,8 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 }
 #endif
 
-#ifndef _WIN32
 __inline
 HRESULT ULongMult(ULONG ulMultiplicand, ULONG ulMultiplier, ULONG* pulResult);
-#endif
 
 /* **** WARNING : finallyFunc is not allowed to raise exception *****
  * **** DO NOT ADD stack probe or memory allocations within the finallyFunc ****

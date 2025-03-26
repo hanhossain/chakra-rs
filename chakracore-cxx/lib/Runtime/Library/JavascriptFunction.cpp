@@ -3478,24 +3478,6 @@ LABEL1:
         HRESULT hr = JitFromEncodedWorkItem(scriptContext->GetNativeCodeGenerator(), buffer, size);
         if (FAILED(hr))
         {
-#ifdef _WIN32
-            char16* lpMsgBuf = nullptr;
-            DWORD bufLen = FormatMessageW(
-                FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                FORMAT_MESSAGE_FROM_SYSTEM |
-                FORMAT_MESSAGE_IGNORE_INSERTS,
-                NULL,
-                hr,
-                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                (LPTSTR)&lpMsgBuf,
-                0, NULL);
-            if (bufLen)
-            {
-                JavascriptString* string = JavascriptString::NewCopyBuffer(lpMsgBuf, bufLen, scriptContext);
-                LocalFree(lpMsgBuf);
-                JavascriptExceptionOperators::OP_Throw(string, scriptContext);
-            }
-#endif
             return JavascriptNumber::New(hr, scriptContext);
         }
         return scriptContext->GetLibrary()->GetUndefined();

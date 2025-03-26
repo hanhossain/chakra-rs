@@ -94,8 +94,6 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
 
 LError:
 
-#if !defined(_WIN32)
-
     //
     // Unlock/FreeResource non-essential on win32/64.
     //
@@ -106,7 +104,6 @@ LError:
         FreeResource(hgl);
     }
 
-#endif // !defined(_WIN32)
 #endif // ENABLE_GLOBALIZATION
     return fRet;
 }
@@ -123,15 +120,6 @@ BSTR BstrGetResourceString(int32 isz)
 {
     // NOTE - isz is expected to be HRESULT
 
-#ifdef _WIN32
-    OLECHAR szT[1024];
-
-    if (!FGetResourceString(isz, szT,
-        sizeof(szT) / sizeof(szT[0]) - 1))
-    {
-        return NULL;
-    }
-#else
     const char16* LoadResourceStr(UINT id);
 
     UINT id = (WORD)isz;
@@ -140,8 +128,6 @@ BSTR BstrGetResourceString(int32 isz)
     {
         return NULL;
     }
-
-#endif
 
     return SysAllocString(szT);
 }

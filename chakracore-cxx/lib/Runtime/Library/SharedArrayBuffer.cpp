@@ -488,39 +488,6 @@ namespace Js
 
     void WebAssemblySharedArrayBuffer::ValidateBuffer()
     {
-#if DBG && _WIN32
-        if (CONFIG_FLAG(WasmSharedArrayVirtualBuffer))
-        {
-            MEMORY_BASIC_INFORMATION info = { 0 };
-            size_t size = 0;
-            size_t allocationSize = 0;
-            // Make sure the beggining of the buffer is committed memory to the expected size
-            if (sharedContents->bufferLength > 0)
-            {
-                size = VirtualQuery((LPCVOID)sharedContents->buffer, &info, sizeof(info));
-                Assert(size > 0);
-                allocationSize = info.RegionSize + ((uintptr_t)info.BaseAddress - (uintptr_t)info.AllocationBase);
-                Assert(allocationSize == sharedContents->bufferLength && info.State == MEM_COMMIT && info.Type == MEM_PRIVATE);
-            }
-
-            // Make sure the end of the buffer is reserved memory to the expected size
-            size_t expectedAllocationSize = sharedContents->maxBufferLength;
-#if ENABLE_FAST_ARRAYBUFFER
-            if (CONFIG_FLAG(WasmFastArray))
-            {
-                expectedAllocationSize = MAX_WASM__ARRAYBUFFER_LENGTH;
-            }
-#endif
-            // If the whole buffer has been committed, no need to verify this
-            if (expectedAllocationSize > sharedContents->bufferLength)
-            {
-                size = VirtualQuery((LPCVOID)(sharedContents->buffer + sharedContents->bufferLength), &info, sizeof(info));
-                Assert(size > 0);
-                allocationSize = info.RegionSize + ((uintptr_t)info.BaseAddress - (uintptr_t)info.AllocationBase);
-                Assert(allocationSize == expectedAllocationSize && info.State == MEM_RESERVE && info.Type == MEM_PRIVATE);
-            }
-        }
-#endif
     }
 
     WebAssemblySharedArrayBuffer* WebAssemblySharedArrayBuffer::Create(uint32 length, uint32 maxLength, DynamicType * type)
@@ -548,12 +515,6 @@ namespace Js
     {
 #if ENABLE_FAST_ARRAYBUFFER
         if (CONFIG_FLAG(WasmFastArray))
-        {
-            return true;
-        }
-#endif
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmSharedArrayVirtualBuffer))
         {
             return true;
         }
@@ -610,12 +571,6 @@ namespace Js
         if (CONFIG_FLAG(WasmFastArray))
         {
             return (BYTE*)WasmVirtualAllocator(length);
-        }
-#endif
-#ifdef _WIN32
-        if (CONFIG_FLAG(WasmSharedArrayVirtualBuffer))
-        {
-            return (BYTE*)AllocWrapper(length, maxLength);
         }
 #endif
         AssertOrFailFast(maxLength >= length);
@@ -692,40 +647,12 @@ namespace Js
 
     bool _Requires_lock_held_(csForAccess.cs) WaiterList::AddAndSuspendWaiter(DWORD_PTR waiter, uint32 timeout)
     {
-#ifdef _WIN32
-        Assert(m_waiters != nullptr);
-        Assert(waiter != NULL);
-        Assert(!Contains(waiter));
-
-        AgentOfBuffer agent(waiter, CreateEvent(NULL, TRUE, FALSE, NULL));
-        m_waiters->Add(agent);
-
-        csForAccess.Leave();
-        DWORD result = WaitForSingleObject(agent.event, timeout);
-        csForAccess.Enter();
-        return result == WAIT_OBJECT_0;
-#else
         // TODO for xplat
         return false;
-#endif
     }
 
     void WaiterList::RemoveWaiter(DWORD_PTR waiter)
     {
-#ifdef _WIN32
-        Assert(m_waiters != nullptr);
-        for (int i = m_waiters->Count() - 1; i >= 0; i--)
-        {
-            if (m_waiters->Item(i).identity == waiter)
-            {
-                CloseHandle(m_waiters->Item(i).event);
-                m_waiters->RemoveAt(i);
-                return;
-            }
-        }
-
-        Assert(false);
-#endif
         // TODO for xplat
     }
 
@@ -734,16 +661,6 @@ namespace Js
         Assert(m_waiters != nullptr);
         Assert(count >= 0);
         uint32 removed = 0;
-#ifdef _WIN32
-        while (count > 0 && m_waiters->Count() > 0)
-        {
-            AgentOfBuffer agent = m_waiters->Item(0);
-            m_waiters->RemoveAt(0);
-            count--; removed++;
-            SetEvent(agent.event);
-            // This agent will be closed when their respective call to wait has returned
-        }
-#endif
         return removed;
     }
 

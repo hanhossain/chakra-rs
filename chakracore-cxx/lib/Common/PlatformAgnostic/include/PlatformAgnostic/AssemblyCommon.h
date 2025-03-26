@@ -5,8 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifndef _WIN32
-
 extern "C" void __register_frame(const void* ehframe);
 extern "C" void __deregister_frame(const void* ehframe);
 
@@ -38,5 +36,3 @@ void mac_fde_wrapper(const char *dataStart, mac_fde_reg_op reg_op);
 #elif defined(_M_ARM64)
 #define __iso_volatile_load64(x) (*(const volatile __int64*)x)
 #endif
-
-#endif // !_WIN32

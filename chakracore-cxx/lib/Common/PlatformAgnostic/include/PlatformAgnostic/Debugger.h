@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifndef _WIN32
-
 #define ACTIVPROF_E_PROFILER_PRESENT        0x0200
 #define ACTIVPROF_E_PROFILER_ABSENT         0x0201
 #define ACTIVPROF_E_UNABLE_TO_APPLY_ACTION  0x0202
@@ -127,5 +125,3 @@ public:
 
 #define IActiveScriptProfilerCallback2 IActiveScriptProfilerCallback
 #define IActiveScriptProfilerCallback3 IActiveScriptProfilerCallback
-
-#endif // !_WIN32
