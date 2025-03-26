@@ -22,13 +22,6 @@
 #include <cstdio>
 #include <cstring>
 
-#if COMPILER_IS_MSVC
-#include <fcntl.h>
-#include <io.h>
-#include <stdlib.h>
-#define PATH_MAX _MAX_PATH
-#endif
-
 namespace wabt {
 
 Reloc::Reloc(RelocType type, Offset offset, Index index, int32_t addend)
@@ -87,16 +80,6 @@ Result ReadFile(string_view filename, std::vector<uint8_t>* out_data) {
 }
 
 void InitStdio() {
-#if COMPILER_IS_MSVC
-  int result = _setmode(_fileno(stdout), _O_BINARY);
-  if (result == -1) {
-    perror("Cannot set mode binary to stdout");
-  }
-  result = _setmode(_fileno(stderr), _O_BINARY);
-  if (result == -1) {
-    perror("Cannot set mode binary to stderr");
-  }
-#endif
 }
 
 }  // namespace wabt

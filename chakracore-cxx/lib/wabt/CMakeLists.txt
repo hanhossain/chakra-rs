@@ -65,7 +65,6 @@ add_library(libwabt OBJECT
   src/binding-hash.cc
   src/color.cc
   src/common.cc
-  src/config.cc
   src/error-formatter.cc
   src/expr-visitor.cc
   src/feature.cc
