@@ -19,6 +19,6 @@
 #include "PlatformAgnostic/DateTime.h"
 #include "PlatformAgnostic/AssemblyCommon.h"
 
-#if !defined(_WIN32) && defined(DEBUG)
+#if defined(DEBUG)
 #include <signal.h> // raise(SIGINT)
 #endif

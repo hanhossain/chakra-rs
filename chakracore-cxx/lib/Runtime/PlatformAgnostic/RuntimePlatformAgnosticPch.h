@@ -4,26 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef _WIN32
-#include "Interface/CommonBasic.h"
-#else
 #include "pal.h"
-#endif
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(HEAP_TRACK_ALLOC) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-#ifdef _UCRT
-#include <typeinfo>
-#else
-#include <typeinfo.h>
-#endif
-#endif
-#pragma warning(pop)
-#endif
 
 // Minimal definitions to use AssertMsg in the PAL
-#ifndef _WIN32
 #define DbgRaiseAssertionFailure() __builtin_trap()
 #define __analysis_assume(x)
 #define __in
@@ -54,4 +37,3 @@ public:
 }
 
 #include <Core/Assertions.h>
-#endif
