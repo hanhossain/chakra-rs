@@ -10,11 +10,7 @@
 #ifndef USING_PAL_STDLIB
 #include <wchar.h>
 
-#if defined(_UCRT)
-#include <cmath>
-#else
 #include <math.h>
-#endif
 #else
 #include "PlatformAgnostic/CommonPal.h"
 #endif

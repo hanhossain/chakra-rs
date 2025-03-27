@@ -195,9 +195,6 @@ public:
             void            GenerateNumberAllocation(IR::RegOpnd * opndDst, IR::Instr * instrInsert, bool isHelper);
 #endif
             void            GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, IR::Instr* insertionPointInstr, IR::LabelInstr* allocHelperLabel, IR::LabelInstr* allocDoneLabel);
-#ifdef _CONTROL_FLOW_GUARD
-            void            GenerateCFGCheck(IR::Opnd * entryPointOpnd, IR::Instr * insertBeforeInstr);
-#endif
 
             void            GenerateCopysign(IR::Instr * instr);
 

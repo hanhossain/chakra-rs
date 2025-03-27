@@ -121,8 +121,6 @@ extern "C" {
 
 /******************* Processor-specific glue  *****************************/
 
-#ifndef _MSC_VER
-
 #if defined(__i586__) && !defined(_M_IX86)
 #define _M_IX86 500
 #elif defined(__i486__) && !defined(_M_IX86)
@@ -170,8 +168,6 @@ extern "C" {
 #elif defined(_M_ARM64) && !defined(_ARM64_)
 #define _ARM64_
 #endif
-
-#endif // !_MSC_VER
 
 /******************* ABI-specific glue *******************************/
 
@@ -223,11 +219,7 @@ extern "C" {
 #define UNALIGNED
 
 #ifndef FORCEINLINE
-#if _MSC_VER < 1200
 #define FORCEINLINE inline
-#else
-#define FORCEINLINE __forceinline
-#endif
 #endif
 
 #define PAL_GLOBAL __attribute__((init_priority(200)))
@@ -313,11 +305,7 @@ PAL_IsDebuggerPresent();
 #ifndef PAL_STDCPP_COMPAT
 typedef ULONG64   fpos_t;
 
-#if _WIN64 || _MSC_VER >= 1400
 typedef __int64 time_t;
-#else
-typedef long time_t;
-#endif
 #define _TIME_T_DEFINED
 #endif // !PAL_STDCPP_COMPAT
 
@@ -6401,15 +6389,7 @@ PALIMPORT void * __cdecl PAL_realloc(void *, size_t);
 #endif
 PALIMPORT char * __cdecl _strdup(const char *);
 
-#if defined(_MSC_VER)
-#define alloca _alloca
-#elif defined(PLATFORM_UNIX)
 #define _alloca alloca
-#else
-// MingW
-#define _alloca __builtin_alloca
-#define alloca __builtin_alloca
-#endif //_MSC_VER
 
 #if defined(__GNUC__) && defined(PLATFORM_UNIX)
 // we set -fno-builtin on the command line. This requires that if
@@ -6531,11 +6511,7 @@ PALIMPORT errno_t __cdecl rand_s(unsigned int*);
 PALIMPORT int __cdecl printf(const char *, ...);
 PALIMPORT int __cdecl vprintf(const char *, va_list);
 
-#ifdef _MSC_VER
-#define PAL_get_caller _MSC_VER
-#else
 #define PAL_get_caller 0
-#endif
 
 PALIMPORT PAL_FILE * __cdecl PAL_get_stdout(int caller);
 PALIMPORT PAL_FILE * __cdecl PAL_get_stdin(int caller);

@@ -40,11 +40,7 @@
 
 #ifndef THREAD_LOCAL
 #ifndef __APPLE__
-#if defined(_MSC_VER) && _MSC_VER <= 1800 // VS2013?
-#define THREAD_LOCAL __declspec(thread)
-#else // VS2015+, linux Clang etc.
 #define THREAD_LOCAL thread_local
-#endif // VS2013?
 #else // __APPLE__
 #ifndef __IOS__
 #define THREAD_LOCAL _Thread_local
@@ -54,16 +50,7 @@
 #endif // __APPLE__
 #endif // THREAD_LOCAL
 
-// VS2015 RTM has bugs with constexpr, so require min of VS2015 Update 3 (known good version)
-#if !defined(_MSC_VER) || _MSC_FULL_VER >= 190024210
-#define HAS_CONSTEXPR 1
-#endif
-
-#ifdef HAS_CONSTEXPR
 #define OPT_CONSTEXPR constexpr
-#else
-#define OPT_CONSTEXPR
-#endif
 
 #ifdef __clang__
 #define CLANG_WNO_BEGIN_(x) \
@@ -476,24 +463,11 @@ DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
 #include <stdint.h>
 
 // `typename QualifiedName` declarations outside of template code not supported before MSVC 2015 update 1
-#if defined(_MSC_VER) && _MSC_VER < 1910 && !defined(__clang__)
-#define _TYPENAME
-#else
 #define _TYPENAME typename
-#endif
 
-#if (defined(_MSC_VER) && _MSC_VER < 1900) || defined(NTBUILD)
-// "noexcept" not supported before VS 2015
-#define _NOEXCEPT_ throw()
-#else
 #define _NOEXCEPT_ noexcept
-#endif
 
-#ifdef _MSC_VER
-extern "C" PVOID _ReturnAddress(VOID);
-#pragma intrinsic(_ReturnAddress)
-extern "C" void * _AddressOfReturnAddress(void);
-#elif defined(__GNUC__) || defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__)
 #define _ReturnAddress() __builtin_return_address(0)
 #if !__has_builtin(_AddressOfReturnAddress)
 __forceinline void * _AddressOfReturnAddress()
@@ -507,8 +481,7 @@ extern "C" void * _AddressOfReturnAddress(void);
 #error _AddressOfReturnAddress and _ReturnAddress not defined for this platform
 #endif
 
-// Define strsafe related types and defines for non-VC++ compilers
-#ifndef _MSC_VER
+// ----- START: Define strsafe related types and defines for non-VC++ compilers -----
 // xplat-todo: figure out why strsafe.h includes stdio etc
 // which prevents me from directly including PAL's strsafe.h
 #ifdef __cplusplus
@@ -539,10 +512,9 @@ STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* psz
 #define STRSAFE_E_INSUFFICIENT_BUFFER       ((HRESULT)0x8007007AL)  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
 #define STRSAFE_E_INVALID_PARAMETER         ((HRESULT)0x80070057L)  // 0x57 =  87L = ERROR_INVALID_PARAMETER
 #define STRSAFE_E_END_OF_FILE               ((HRESULT)0x80070026L)  // 0x26 =  38L = ERROR_HANDLE_EOF
-#endif
+// ----- END: Define strsafe related types and defines for non-VC++ compilers -----
 
 // Provide the definitions for non-windows platforms
-#ifndef _MSC_VER
 STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr = S_OK;
@@ -604,7 +576,6 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 
     return hr;
 }
-#endif
 
 __inline
 HRESULT ULongMult(ULONG ulMultiplicand, ULONG ulMultiplier, ULONG* pulResult);

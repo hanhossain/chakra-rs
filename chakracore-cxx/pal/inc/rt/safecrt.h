@@ -99,11 +99,7 @@
 
 /* _W64 */
 #if !defined(_W64)
-#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
-#define _W64 __w64
-#else
 #define _W64
-#endif
 #endif
 
 /* uintptr_t */
@@ -116,7 +112,7 @@ typedef _W64 unsigned int   uintptr_t;
 #define _UINTPTR_T_DEFINED
 #endif
 
-#if defined(_MSC_VER) || (defined(__GNUC__) && (__GNUC__ >= 3))
+#if (defined(__GNUC__) && (__GNUC__ >= 3))
 #define SAFECRT_DEPRECATED __declspec(deprecated)
 #else
 #define SAFECRT_DEPRECATED
@@ -357,13 +353,6 @@ void __cdecl _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionNam
 _SAFECRT__INLINE
 void __cdecl _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const WCHAR *_FileName, unsigned int _LineNumber, uintptr_t _Reserved)
 {
-#ifdef _MSC_VER
-    (_Message);
-    (_FunctionName);
-    (_FileName);
-    (_LineNumber);
-    (_Reserved);
-#endif
     /* invoke Watson */
     RaiseException((DWORD)STATUS_INVALID_PARAMETER, 0, 0, nullptr);
 }

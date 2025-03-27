@@ -731,14 +731,6 @@ LowererMDArch::GeneratePreCall(IR::Instr * callInstr, IR::Opnd  *functionObjOpnd
     // entryPointRegOpnd(RAX) = CALL entryPointRegOpnd(RAX)
     callInstr->SetSrc1(entryPointRegOpnd);
 
-#if defined(_CONTROL_FLOW_GUARD)
-    // verify that the call target is valid (CFG Check)
-    if (!PHASE_OFF(Js::CFGInJitPhase, this->m_func))
-    {
-        this->lowererMD->GenerateCFGCheck(entryPointRegOpnd, insertBeforeInstrForCFGCheck);
-    }
-#endif
-
     // Setup the first call argument - pointer to the function being called.
     IR::Instr * instrMovArg1 = IR::Instr::New(Js::OpCode::MOV, GetArgSlotOpnd(1), functionObjOpnd, m_func);
     callInstr->InsertBefore(instrMovArg1);

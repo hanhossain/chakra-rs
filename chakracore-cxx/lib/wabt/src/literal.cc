@@ -401,12 +401,6 @@ Result FloatParser<T>::Parse(LiteralType literal_type,
                              const char* s,
                              const char* end,
                              Uint* out_bits) {
-#if COMPILER_IS_MSVC
-  if (literal_type == LiteralType::Int && StringStartsWith(s, end, "0x")) {
-    // Some MSVC crt implementation of strtof doesn't support hex strings
-    literal_type = LiteralType::Hexfloat;
-  }
-#endif
   switch (literal_type) {
     case LiteralType::Int:
     case LiteralType::Float:

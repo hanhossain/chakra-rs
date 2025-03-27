@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
 #include "HeapBlock.h"
-#if defined(__clang__) && !defined(_MSC_VER)
+#if defined(__clang__)
 #include <cxxabi.h>
 #endif
 
@@ -885,7 +885,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
     if (Recycler::DoProfileAllocTracker())
     {
         // need CheckMemoryLeak or KeepRecyclerTrackData flag to have the tracker data and show following detailed info
-#if  defined(__clang__) && !defined(_MSC_VER)
+#if  defined(__clang__)
         auto getDemangledName = [](const type_info* typeinfo) ->const char*
         {
             int status;

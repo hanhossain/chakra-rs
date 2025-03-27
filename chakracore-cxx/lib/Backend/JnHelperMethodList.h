@@ -650,10 +650,6 @@ HELPERCALL(AtomicStore64, nullptr, AttrCanNotBeReentrant)
 HELPERCALL(MemoryBarrier, nullptr, AttrCanNotBeReentrant)
 #endif
 
-#ifdef _CONTROL_FLOW_GUARD
-HELPERCALLCRT(GuardCheckCall, AttrCanNotBeReentrant)
-#endif
-
 // This is statically initialized.
 #ifdef _M_IX86
 HELPERCALL( CRT_chkstk, _chkstk, AttrCanNotBeReentrant)

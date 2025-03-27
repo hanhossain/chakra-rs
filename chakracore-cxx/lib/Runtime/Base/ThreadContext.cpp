@@ -174,15 +174,9 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     thunkPageAllocators(allocationPolicyManager, /* allocXData */ false, /* virtualAllocator */ nullptr, GetCurrentProcess()),
 #endif
     codePageAllocators(allocationPolicyManager, ALLOC_XDATA, GetPreReservedVirtualAllocator(), GetCurrentProcess()),
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    jitThunkEmitter(this, &VirtualAllocWrapper::Instance , GetCurrentProcess()),
-#endif
 #endif
     dynamicObjectEnumeratorCacheMap(&HeapAllocator::Instance, 16),
     //threadContextFlags(ThreadContextFlagNoFlag),
-#ifdef NTBUILD
-    telemetryBlock(&localTelemetryBlock),
-#endif
     configuration(enableExperimentalFeatures),
     jsrtRuntime(nullptr),
     propertyMap(nullptr),
@@ -249,10 +243,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     this->threadId = ::GetCurrentThreadId();
 #endif
 
-#ifdef NTBUILD
-    memset(&localTelemetryBlock, 0, sizeof(localTelemetryBlock));
-#endif
-
     AutoCriticalSection autocs(ThreadContext::GetCriticalSection());
     ThreadContext::LinkToBeginning(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
 #if DBG
@@ -280,18 +270,6 @@ void ThreadContext::InitAvailableCommit()
     if (!success)
     {
         commit = (ULONG64)-1;
-#ifdef NTBUILD
-        APP_MEMORY_INFORMATION AppMemInfo;
-        success = GetWinCoreProcessThreads()->GetProcessInformation(
-            GetCurrentProcess(),
-            ProcessAppMemoryInfo,
-            &AppMemInfo,
-            sizeof(AppMemInfo));
-        if (success)
-        {
-            commit = AppMemInfo.AvailableCommit;
-        }
-#endif
         AutoSystemInfo::Data.SetAvailableCommit(commit);
     }
 }
@@ -652,47 +630,27 @@ public:
 
 LPFILETIME ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetLastScriptExecutionEndTime() const
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return &(tc->telemetryBlock->lastScriptEndTime);
-#else
     return nullptr;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerTelemetryStats(rti);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerHeapUsage(totalHeapBytes, usedHeapBytes, heapUsedRatio);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsTelemetryProviderEnabled() const
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::IsTelemetryProviderEnabled();
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerTelemetryError(rti, msg);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const
@@ -1556,11 +1514,7 @@ ThreadContext::IsOnStack(void const *ptr)
         return true;
     }
 
-#if defined(_M_IX86) && defined(_MSC_VER)
-    return ptr < (void*)__readfsdword(0x4) && ptr >= (void*)__readfsdword(0xE0C);
-#elif defined(_M_AMD64) && defined(_MSC_VER)
-    return ptr < (void*)__readgsqword(0x8) && ptr >= (void*)__readgsqword(0x1478);
-#elif defined(_M_ARM)
+#if defined(_M_ARM)
     ULONG lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
@@ -1570,12 +1524,8 @@ ThreadContext::IsOnStack(void const *ptr)
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
-#elif !defined(_MSC_VER)
-    return ::IsAddressOnStack((ULONG_PTR) ptr);
 #else
-    AssertMsg(FALSE, "IsOnStack -- not implemented yet case");
-    Js::Throw::NotImplemented();
-    return false;
+    return ::IsAddressOnStack((ULONG_PTR) ptr);
 #endif
 }
 
@@ -1683,7 +1633,7 @@ ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext
         Js::Throw::StackOverflow(scriptContext, returnAddress);
     }
 
-#if defined(NTBUILD) || defined(__IOS__) || defined(__ANDROID__)
+#if defined(__IOS__) || defined(__ANDROID__)
     // Use every Nth stack probe as a QC trigger.
     if (AutoSystemInfo::ShouldQCMoreFrequently() && this->HasInterruptPoller() && this->IsScriptActive())
     {
@@ -4407,15 +4357,6 @@ uint ThreadContext::GetRandomNumber()
     return randomNumber;
 #endif
 }
-
-#if defined(ENABLE_JS_ETW) && defined(NTBUILD)
-void ThreadContext::EtwLogPropertyIdList()
-{
-    propertyMap->Map([&](const Js::PropertyRecord* propertyRecord){
-        EventWriteJSCRIPT_HOSTING_PROPERTYID_LIST(propertyRecord, propertyRecord->GetBuffer());
-    });
-}
-#endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)

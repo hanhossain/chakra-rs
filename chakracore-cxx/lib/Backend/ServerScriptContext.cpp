@@ -34,9 +34,6 @@ ServerScriptContext::ServerScriptContext(ScriptContextDataIDL * contextData, Ser
     m_isClosed(false)
 {
 
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-    m_codeGenAlloc.canCreatePreReservedSegment = threadContextInfo->CanCreatePreReservedSegment();
-#endif
 }
 
 ServerScriptContext::~ServerScriptContext()

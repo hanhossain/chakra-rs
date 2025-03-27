@@ -52,9 +52,6 @@ public:
     static const uint PreReservedAllocationSegmentCount = 4096; //(4096 * 64K) == 256MB, if 64k is the AllocationGranularity
 #endif
 
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-    static const unsigned MaxPreReserveSegment = 6;
-#endif
 public:
     PreReservedVirtualAllocWrapper();
     ~PreReservedVirtualAllocWrapper();
@@ -70,9 +67,6 @@ public:
 
     LPVOID      GetPreReservedEndAddress();
     static LPVOID GetPreReservedEndAddress(void * regionStart);
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-    static int  NumPreReservedSegment() { return numPreReservedSegment; }
-#endif
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
     bool        IsPreReservedEndAddress(LPVOID address)
@@ -88,9 +82,6 @@ private:
     BVStatic<PreReservedAllocationSegmentCount>     freeSegments;
     LPVOID                                          preReservedStartAddress;
     CriticalSection                                 cs;
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-    static uint  numPreReservedSegment;
-#endif
 };
 
 #endif

@@ -17,18 +17,6 @@
 #include "ServerThreadContext.h"
 #endif
 
-#if defined(_UCRT) && _CONTROL_FLOW_GUARD
-# if _MSC_VER >= 1913
-#  include <cfguard.h>
-# else
-   extern "C" void __fastcall _guard_check_icall(_In_ uintptr_t _Target);
-# endif
-
-# ifndef _GUARD_CHECK_ICALL
-#  define _GUARD_CHECK_ICALL _guard_check_icall
-# endif
-#endif
-
 ThreadContextInfo::ThreadContextInfo() :
     m_isAllJITCodeInPreReservedRegion(true),
     m_isClosed(false)
@@ -402,17 +390,6 @@ ThreadContextInfo::ResetIsAllJITCodeInPreReservedRegion()
     m_isAllJITCodeInPreReservedRegion = false;
 }
 
-#ifdef ENABLE_GLOBALIZATION
-# if defined(_CONTROL_FLOW_GUARD)
-Js::DelayLoadWinCoreProcessThreads *
-ThreadContextInfo::GetWinCoreProcessThreads()
-{
-    m_delayLoadWinCoreProcessThreads.EnsureFromSystemDirOnly();
-    return &m_delayLoadWinCoreProcessThreads;
-}
-# endif
-#endif
-
 //Masking bits according to AutoSystemInfo::PageSize
 #define PAGE_START_ADDR(address) ((size_t)(address) & ~(size_t)(AutoSystemInfo::PageSize - 1))
 #define IS_16BYTE_ALIGNED(address) (((size_t)(address) & 0xF) == 0)
@@ -428,110 +405,6 @@ ThreadContextInfo::SetValidCallTargetInternal(
 {
     AnalysisAssert(!useFileAPI || fileHandle);
     AnalysisAssert(!useFileAPI || viewBase);
-#ifdef _CONTROL_FLOW_GUARD
-    if (GlobalSecurityPolicy::IsCFGEnabled())
-    {
-#ifdef _M_ARM
-        AssertMsg(((uintptr_t)callTargetAddress & 0x1) != 0, "on ARM we expect the thumb bit to be set on anything we use as a call target");
-        AssertMsg(IS_16BYTE_ALIGNED((uintptr_t)callTargetAddress & ~0x1), "callTargetAddress is not 16-byte page aligned?");
-#else
-        AssertMsg(IS_16BYTE_ALIGNED(callTargetAddress), "callTargetAddress is not 16-byte page aligned?");
-#endif
-
-        // If SetProcessValidCallTargets is not allowed by global policy (e.g.
-        // OOP JIT is in use in the client), then generate a fast fail
-        // exception as state has been corrupted and attempt is being made to
-        // illegally call SetProcessValidCallTargets.
-        if (!GlobalSecurityPolicy::IsSetProcessValidCallTargetsAllowed())
-        {
-            RaiseFailFastException(nullptr, nullptr, FAIL_FAST_GENERATE_EXCEPTION_ADDRESS);
-        }
-
-        CFG_CALL_TARGET_INFO callTargetInfo[1];
-        BOOL isCallTargetRegistrationSucceed;
-        PVOID startAddr = nullptr;
-        if (useFileAPI)
-        {
-            // Fall back to old CFG registration API, since new API seems broken
-            SetValidCallTargetForCFG(callTargetAddress, isSetValid);
-            return;
-#if 0
-            Assert(JITManager::GetJITManager()->IsJITServer());
-            size_t codeOffset = (uintptr_t)callTargetAddress - (uintptr_t)viewBase;
-            size_t regionSize = codeOffset + 1;
-
-            callTargetInfo[0].Offset = codeOffset;
-            callTargetInfo[0].Flags = (isSetValid ? CFG_CALL_TARGET_VALID : 0);
-
-            startAddr = viewBase;
-
-            isCallTargetRegistrationSucceed = GetWinCoreMemoryLibrary()->SetProcessCallTargetsForMappedView(GetProcessHandle(), viewBase, regionSize, 1, callTargetInfo, fileHandle, 0);
-#if ENABLE_DEBUG_CONFIG_OPTIONS
-            if (!isCallTargetRegistrationSucceed)
-            {
-                // Fall back to old CFG registration API for test builds, so that they can run on older OSes
-                SetValidCallTargetForCFG(callTargetAddress, isSetValid);
-                return;
-            }
-#endif
-#endif
-        }
-        else
-        {
-            PVOID startAddressOfPage = (PVOID)(PAGE_START_ADDR(callTargetAddress));
-            size_t codeOffset = OFFSET_ADDR_WITHIN_PAGE(callTargetAddress);
-
-            callTargetInfo[0].Offset = codeOffset;
-            callTargetInfo[0].Flags = (isSetValid ? CFG_CALL_TARGET_VALID : 0);
-
-            startAddr = startAddressOfPage;
-
-            AssertMsg((size_t)callTargetAddress - (size_t)startAddressOfPage <= AutoSystemInfo::PageSize - 1, "Only last bits corresponding to PageSize should be masked");
-            AssertMsg((size_t)startAddressOfPage + (size_t)codeOffset == (size_t)callTargetAddress, "Wrong masking of address?");
-
-            isCallTargetRegistrationSucceed = GlobalSecurityPolicy::SetProcessValidCallTargets(GetProcessHandle(), startAddressOfPage, AutoSystemInfo::PageSize, 1, callTargetInfo);
-        }
-        if (!isCallTargetRegistrationSucceed)
-        {
-            DWORD gle = GetLastError();
-            if (gle == ERROR_COMMITMENT_LIMIT)
-            {
-                //Throw OOM, if there is not enough virtual memory for paging (required for CFG BitMap)
-                Js::Throw::OutOfMemory();
-            }
-            else if (gle == ERROR_ACCESS_DENIED)
-            {
-                // When this error is set, the target process may be exiting and thus cannot proceed with
-                // JIT output. Throw this exception to safely abort this call.
-                throw Js::OperationAbortedException();
-            }
-            else
-            {
-                Js::Throw::InternalError();
-            }
-        }
-#if DBG
-        if (isSetValid
-#if ENABLE_OOP_NATIVE_CODEGEN
-            && !JITManager::GetJITManager()->IsOOPJITEnabled()
-#endif
-            )
-        {
-            _GUARD_CHECK_ICALL((uintptr_t)callTargetAddress);
-        }
-
-        if (PHASE_TRACE1(Js::CFGPhase))
-        {
-            if (!isSetValid)
-            {
-                Output::Print(_u("DEREGISTER:"));
-            }
-            Output::Print(_u("CFGRegistration: StartAddr: 0x%p , Offset: 0x%x, TargetAddr: 0x%x \n"), (char*)startAddr, callTargetInfo[0].Offset, ((size_t)startAddr + (size_t)callTargetInfo[0].Offset));
-            Output::Flush();
-        }
-#endif
-    }
-#endif // _CONTROL_FLOW_GUARD
 }
 
 void

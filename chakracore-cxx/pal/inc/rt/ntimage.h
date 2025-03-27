@@ -26,10 +26,6 @@
 #ifndef _NTIMAGE_
 #define _NTIMAGE_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 //
 // Define the linker version number.
 
@@ -466,22 +462,6 @@ typedef PIMAGE_NT_HEADERS32                 PIMAGE_NT_HEADERS;
 #define IMAGE_DIRECTORY_ENTRY_IAT            12   // Import Address Table
 #define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   // Delay Load Import Descriptors
 #define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
-
-#ifdef _MSC_VER
-//
-// Non-COFF Object file header
-//
-
-typedef struct ANON_OBJECT_HEADER {
-    USHORT  Sig1;            // Must be IMAGE_FILE_MACHINE_UNKNOWN
-    USHORT  Sig2;            // Must be 0xffff
-    USHORT  Version;         // >= 1 (implies the CLSID field is present)
-    USHORT  Machine;
-    ULONG   TimeDateStamp;
-    CLSID   ClassID;         // Used to invoke CoCreateInstance
-    ULONG   SizeOfData;      // Size of data that follows the header
-} ANON_OBJECT_HEADER;
-#endif
 
 //
 // Section header format.
@@ -1259,15 +1239,6 @@ typedef IMAGE_THUNK_DATA32 * PIMAGE_THUNK_DATA32;
 //
 // Thread Local Storage
 //
-
-#ifdef _MSC_VER
-typedef VOID
-(NTAPI *PIMAGE_TLS_CALLBACK) (
-    PVOID DllHandle,
-    ULONG Reason,
-    PVOID Reserved
-    );
-#endif
 
 typedef struct _IMAGE_TLS_DIRECTORY64 {
     ULONGLONG   StartAddressOfRawData;

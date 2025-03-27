@@ -13,11 +13,6 @@ extern "C"
 #endif
 }
 
-#ifdef _CONTROL_FLOW_GUARD
-extern "C" PVOID __guard_check_icall_fptr;
-#endif
-
-
 namespace IR
 {
 enum JnHelperMethod

@@ -32,10 +32,6 @@
 #include "PlatformAgnostic/CommonPal.h"
 
 #include <stdarg.h>
-#ifdef _MSC_VER
-#include <stdio.h>
-#include <io.h>
-#endif // _MSC_VER
 
 #if defined(_DEBUG)
 #define _DEBUG_WAS_DEFINED

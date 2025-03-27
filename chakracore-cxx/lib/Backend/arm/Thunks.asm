@@ -14,10 +14,6 @@
     ;Js::JavascriptMethod NativeCodeGenerator::CheckCodeGen(Js::JavascriptFunction * function)
     IMPORT  |?CheckCodeGen@NativeCodeGenerator@@SAP6APAXPAVRecyclableObject@Js@@UCallInfo@3@ZZPAVScriptFunction@3@@Z|
 
-#if defined(_CONTROL_FLOW_GUARD)
-    IMPORT __guard_check_icall_fptr
-#endif
-
     TEXTAREA
 
 ;;============================================================================================================
@@ -30,17 +26,7 @@
 
     bl   |?CheckCodeGen@NativeCodeGenerator@@SAP6APAXPAVRecyclableObject@Js@@UCallInfo@3@ZZPAVScriptFunction@3@@Z|  ; call  NativeCodeGenerator::CheckCodeGen
 
-#if defined(_CONTROL_FLOW_GUARD)
-    mov     r4, r0                ; save entryPoint in r4
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r12, r4               ; restore entryPoint in R12
-#else
     mov     r12, r0               ; back up entryPoint in R12
-#endif
 
     EPILOG_POP r0-r5,r11,lr       ; restore arguments and return address
 

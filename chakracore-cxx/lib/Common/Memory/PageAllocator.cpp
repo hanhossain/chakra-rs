@@ -2666,17 +2666,6 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
         return FALSE;
     }
 
-    /*Verify if we always pass the PAGE_TARGETS_NO_UPDATE flag, if the protect flag is EXECUTE*/
-#if defined(_CONTROL_FLOW_GUARD)
-    if (GlobalSecurityPolicy::IsCFGEnabled() &&
-        (dwVirtualProtectFlags & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)) &&
-        ((dwVirtualProtectFlags & PAGE_TARGETS_NO_UPDATE) == 0))
-    {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
-        return FALSE;
-    }
-#endif
-
 #if defined(ENABLE_JIT_CLAMP)
     bool makeExecutable = (dwVirtualProtectFlags & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)) ? true : false;
 

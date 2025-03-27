@@ -43,9 +43,7 @@ namespace Js
 #endif
         callerUtf8SourceInfo(nullptr),
         boundedPropertyRecordHashSet(scriptContext->GetRecycler())
-#ifndef NTBUILD
         ,sourceRef(scriptSource)
-#endif
     {
 #ifdef ENABLE_SCRIPT_DEBUGGING
         if (!sourceHolder->IsDeferrable())
@@ -97,9 +95,7 @@ namespace Js
         ClearDebugDocument();
         this->debugModeSource = nullptr;
 #endif
-#ifndef NTBUILD
         this->sourceRef = nullptr;
-#endif
     };
 
     enum
@@ -416,22 +412,6 @@ namespace Js
 
             this->m_debugDocument = nullptr;
         }
-    }
-#endif
-
-#ifdef NTBUILD
-    bool Utf8SourceInfo::GetDebugDocumentName(BSTR * sourceName)
-    {
-        if (this->HasDebugDocument() && this->GetDebugDocument()->HasDocumentText())
-        {
-            // ToDo (SaAgarwa): Fix for JsRT debugging
-            IDebugDocumentText *documentText = static_cast<IDebugDocumentText *>(this->GetDebugDocument()->GetDocumentText());
-            if (documentText->GetName(DOCUMENTNAMETYPE_URL, sourceName) == S_OK)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 #endif
 }

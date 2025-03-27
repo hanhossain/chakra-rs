@@ -78,7 +78,6 @@ namespace Js
         sourceContext = NULL;
     }
 
-#ifndef NTBUILD // ChakraCore Only
     template <>
     class JsrtSourceHolderPolicy<JsSerializedLoadScriptCallback>
     {
@@ -245,5 +244,4 @@ namespace Js
 
 template class JsrtSourceHolder<JsSerializedLoadScriptCallback, JsSerializedScriptUnloadCallback>;
 
-#endif // NTBUILD
 };

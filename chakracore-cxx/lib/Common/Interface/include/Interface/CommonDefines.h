@@ -79,11 +79,7 @@
 #endif
 
 // Memory Protections
-#ifdef _CONTROL_FLOW_GUARD
-#define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ | PAGE_TARGETS_INVALID)
-#else
 #define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ)
-#endif
 
 //----------------------------------------------------------------------------------------------------
 // Enabled features
@@ -136,7 +132,7 @@
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
 #endif
 
-#if defined(NTBUILD) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
+#if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
 #endif
 
@@ -155,11 +151,7 @@
 
 
 // templatized code
-#if defined(_MSC_VER) && !defined(__clang__)
-#define USE_STATIC_VPM 1 // Disable to force generation at runtime
-#else
 #define USE_STATIC_VPM 0
-#endif
 
 
 #if ENABLE_CONCURRENT_GC
@@ -255,20 +247,8 @@
 #define PERFMAP_SIGNAL SIGUSR2
 #endif
 
-#ifndef NTBUILD
 #define DELAYLOAD_SECTIONAPI 1
 #define DELAYLOAD_UNLOCKMEMORY 1
-#endif
-
-#ifdef NTBUILD
-#define ENABLE_FOUNDATION_OBJECT
-#define ENABLE_WININET_PROFILE_DATA_CACHE
-#define ENABLE_COMPRESSION_UTILITIES
-#define ENABLE_BASIC_TELEMETRY
-#define EDIT_AND_CONTINUE
-#define ENABLE_JIT_CLAMP
-#define ENABLE_SCRIPT_PROFILING
-#endif
 
 // Telemetry flags
 #ifdef ENABLE_BASIC_TELEMETRY
@@ -339,16 +319,6 @@
 #define VTUNE_PROFILING
 #endif
 
-
-#ifdef NTBUILD
-#define PERF_COUNTERS
-#define ENABLE_MUTATION_BREAKPOINT
-#endif
-
-#ifdef _CONTROL_FLOW_GUARD
-#define CONTROL_FLOW_GUARD_LOGGER
-#endif
-
 #ifndef ENABLE_TEST_HOOKS
 #define ENABLE_TEST_HOOKS
 #endif
@@ -357,7 +327,7 @@
 ////////
 //Time Travel flags
 //Include TTD code in the build when building for Chakra (except NT/Edge) or for debug/test builds
-#if defined(ENABLE_SCRIPT_DEBUGGING) && (!defined(NTBUILD) || defined(ENABLE_DEBUG_CONFIG_OPTIONS))
+#if defined(ENABLE_SCRIPT_DEBUGGING)
 #define ENABLE_TTD 1
 #else
 #define ENABLE_TTD 0
@@ -432,10 +402,6 @@
 // xplat-todo: revive FaultInjection on non-Win32 platforms
 // currently depends on io.h
 #define RECYCLER_NO_PAGE_REUSE
-#ifdef NTBUILD
-#define INTERNAL_MEM_PROTECT_HEAP_ALLOC
-#define INTERNAL_MEM_PROTECT_HEAP_CMDLINE
-#endif
 #endif
 
 #ifdef DBG
@@ -674,9 +640,6 @@
 // (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
 #if ENABLE_DEBUG_CONFIG_OPTIONS && defined(STACK_BACK_TRACE)
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
-#endif
-
-#if defined(STACK_BACK_TRACE) || defined(CONTROL_FLOW_GUARD_LOGGER)
 #endif
 
 #if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)

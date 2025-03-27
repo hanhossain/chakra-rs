@@ -28,11 +28,5 @@ inline INT_PTR VirtualTableInfo<T>::RegisterVirtualTable()
 template <typename T>
 inline void VirtualTableInfo<T>::SetVirtualTable(void * ptr)
 {
-    VirtualTableInfoBase::SetVirtualTable(ptr,
-#ifdef _MSC_VER  // work around VC linker bug
-        *(INT_PTR const*)&T(VirtualTableInfoCtorValue)
-#else
-        Address
-#endif
-    );
+    VirtualTableInfoBase::SetVirtualTable(ptr, Address);
 }

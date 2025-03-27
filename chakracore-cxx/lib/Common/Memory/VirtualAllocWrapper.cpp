@@ -37,40 +37,6 @@ LPVOID VirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageCount, DWORD
 
     AutoEnableDynamicCodeGen enableCodeGen(makeExecutable);
 #endif
-
-#if defined(_CONTROL_FLOW_GUARD)
-    DWORD oldProtectFlags = 0;
-    if (GlobalSecurityPolicy::IsCFGEnabled() && isCustomHeapAllocation)
-    {
-        //We do the allocation in two steps - CFG Bitmap in kernel will be created only on allocation with EXECUTE flag.
-        //We again call VirtualProtect to set to the requested protectFlags.
-        DWORD allocProtectFlags = 0;
-        if (GlobalSecurityPolicy::IsCFGEnabled())
-        {
-            allocProtectFlags = PAGE_EXECUTE_RW_TARGETS_INVALID;
-        }
-        else
-        {
-            allocProtectFlags = PAGE_EXECUTE_READWRITE;
-        }
-
-        address = VirtualAlloc(lpAddress, dwSize, allocationType, allocProtectFlags);
-        if (address == nullptr)
-        {
-            MemoryOperationLastError::RecordLastError();
-            return nullptr;
-        }
-        else if ((allocationType & MEM_COMMIT) == MEM_COMMIT) // The access protection value can be set only on committed pages.
-        {
-            BOOL result = VirtualProtect(address, dwSize, protectFlags, &oldProtectFlags);
-            if (result == FALSE)
-            {
-                CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
-            }
-        }
-    }
-    else
-#endif
     {
         address = VirtualAlloc(lpAddress, dwSize, allocationType, protectFlags);
         if (address == nullptr)
@@ -96,9 +62,6 @@ BOOL VirtualAllocWrapper::Free(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType
 /*
 * class PreReservedVirtualAllocWrapper
 */
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-uint PreReservedVirtualAllocWrapper::numPreReservedSegment = 0;
-#endif
 
 PreReservedVirtualAllocWrapper::PreReservedVirtualAllocWrapper() :
     preReservedStartAddress(nullptr),
@@ -118,11 +81,6 @@ PreReservedVirtualAllocWrapper::~PreReservedVirtualAllocWrapper()
         {
             // OOP JIT TODO: check if we need to cleanup the context related to this content process
         }
-
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-        Assert(numPreReservedSegment > 0);
-        InterlockedDecrement(&PreReservedVirtualAllocWrapper::numPreReservedSegment);
-#endif
     }
 }
 
@@ -227,42 +185,6 @@ LPVOID PreReservedVirtualAllocWrapper::EnsurePreReservedRegionInternal()
         return startAddress;
     }
 
-#if defined(_CONTROL_FLOW_GUARD)
-    bool supportPreReservedRegion = true;
-#if !TARGET_64
-#if _M_IX86
-    // We want to restrict the number of prereserved segment for 32-bit process so that we don't use up the address space
-
-    // Note: numPreReservedSegment is for the whole process, and access and update to it is not protected by a global lock.
-    // So we may allocate more than the maximum some of the time if multiple thread check it simutaniously and allocate pass the limit.
-    // It doesn't affect functionally, and it should be OK if we exceed.
-
-    if (PreReservedVirtualAllocWrapper::numPreReservedSegment > PreReservedVirtualAllocWrapper::MaxPreReserveSegment)
-    {
-        supportPreReservedRegion = false;
-    }
-#else
-    // TODO: fast check for prereserved segment is not implementated in ARM yet, so it is only enabled for x86
-    supportPreReservedRegion = false;
-#endif // _M_IX86
-#endif
-
-    if (GlobalSecurityPolicy::IsCFGEnabled() && supportPreReservedRegion)
-    {
-        startAddress = VirtualAlloc(NULL, bytes, MEM_RESERVE, PAGE_READWRITE);
-        PreReservedHeapTrace(_u("Reserving PreReservedSegment For the first time(CFG Enabled). Address: 0x%p\n"), preReservedStartAddress);
-        preReservedStartAddress = startAddress;
-
-#if !TARGET_64
-        if (startAddress)
-        {
-            InterlockedIncrement(&PreReservedVirtualAllocWrapper::numPreReservedSegment);
-        }
-#endif
-    }
-#endif
-
-
     return startAddress;
 }
 
@@ -360,31 +282,6 @@ LPVOID PreReservedVirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageC
             AutoEnableDynamicCodeGen enableCodeGen;
 #endif
 
-#if defined(_CONTROL_FLOW_GUARD)
-            if (GlobalSecurityPolicy::IsCFGEnabled())
-            {
-                DWORD oldProtect = 0;
-                DWORD allocProtectFlags = 0;
-
-                allocProtectFlags = PAGE_EXECUTE_RW_TARGETS_INVALID;
-
-                allocatedAddress = (char *)VirtualAlloc(addressToReserve, dwSize, MEM_COMMIT, allocProtectFlags);
-                if (allocatedAddress != nullptr)
-                {
-                    BOOL result = VirtualProtect(allocatedAddress, dwSize, protectFlags, &oldProtect);
-                    if (result == FALSE)
-                    {
-                        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
-                    }
-                    AssertMsg(oldProtect == (PAGE_EXECUTE_READWRITE), "CFG Bitmap gets allocated and bits will be set to invalid only upon passing these flags.");
-                }
-                else
-                {
-                    MemoryOperationLastError::RecordLastError();
-                }
-            }
-            else
-#endif
             {
                 allocatedAddress = (char *)VirtualAlloc(addressToReserve, dwSize, MEM_COMMIT, protectFlags);
                 if (allocatedAddress == nullptr)

@@ -101,7 +101,7 @@ inline void SwapGuid(GUID *pGuid)
 #define VALPTR(x) VAL32(x)
 #endif
 
-#if defined(ALIGN_ACCESS) && !defined(_MSC_VER)
+#if defined(ALIGN_ACCESS)
 
 #ifdef __cplusplus
 extern "C++" {

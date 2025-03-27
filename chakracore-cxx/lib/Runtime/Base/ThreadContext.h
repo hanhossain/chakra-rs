@@ -191,14 +191,6 @@ enum RecyclerCollectCallBackFlags
 };
 typedef void (__cdecl *RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
 
-#ifdef NTBUILD
-struct ThreadContextWatsonTelemetryBlock
-{
-    FILETIME lastScriptStartTime;
-    FILETIME lastScriptEndTime;
-};
-#endif
-
 class NativeLibraryEntryRecord
 {
 public:
@@ -702,9 +694,6 @@ private:
     CustomHeap::InProcCodePageAllocators thunkPageAllocators;
 #endif
     CustomHeap::InProcCodePageAllocators codePageAllocators;
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    InProcJITThunkEmitter jitThunkEmitter;
-#endif
 #endif
 
     RecyclerRootPtr<RecyclableData> recyclableData;
@@ -821,11 +810,6 @@ private:
     typedef JsUtil::BaseDictionary<Js::DynamicType const *, void *, HeapAllocator, PowerOf2SizePolicy> DynamicObjectEnumeratorCacheMap;
     DynamicObjectEnumeratorCacheMap dynamicObjectEnumeratorCacheMap;
 
-#ifdef NTBUILD
-    ThreadContextWatsonTelemetryBlock localTelemetryBlock;
-    ThreadContextWatsonTelemetryBlock * telemetryBlock;
-#endif
-
     NativeLibraryEntryRecord nativeLibraryEntry;
 
     UCrtC99MathApis ucrtC99MathApis;
@@ -875,9 +859,6 @@ public:
 #endif
     CustomHeap::InProcCodePageAllocators * GetCodePageAllocators() { return &codePageAllocators; }
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    InProcJITThunkEmitter * GetJITThunkEmitter() { return &jitThunkEmitter; }
-#endif
 #endif // ENABLE_NATIVE_CODEGEN
 
     CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }
@@ -1104,10 +1085,6 @@ public:
     ThreadConfiguration const * GetConfig() const { return &configuration; }
 
 public:
-#ifdef NTBUILD
-    void SetTelemetryBlock(ThreadContextWatsonTelemetryBlock * telemetryBlock) { this->telemetryBlock = telemetryBlock; }
-#endif
-
     static ThreadContext* GetContextForCurrentThread();
 
     Recycler* GetRecycler() { return recycler; }

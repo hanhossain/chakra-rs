@@ -106,15 +106,10 @@ enum FileVersionScheme : byte
     // Same version number for Chakra and ChakraCore doesn't mean they are the same.
     // Give the versioning scheme different value, so that byte code generate from one won't be use in the other.
     LibraryByteCodeVersioningScheme = 0,
-#ifdef NTBUILD
-    EngineeringVersioningScheme = 10,
-    ReleaseVersioningScheme = 20,
-#else
     EngineeringVersioningScheme = 11,
     ReleaseVersioningScheme = 21,
-#endif
 
-#if (defined(NTBUILD) && CHAKRA_VERSION_RELEASE) || (!defined(NTBUILD) && CHAKRA_CORE_VERSION_RELEASE)
+#if CHAKRA_CORE_VERSION_RELEASE
     CurrentFileVersionScheme = ReleaseVersioningScheme
 #else
     CurrentFileVersionScheme = EngineeringVersioningScheme

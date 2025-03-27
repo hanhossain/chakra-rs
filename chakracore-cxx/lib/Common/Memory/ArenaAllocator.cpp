@@ -10,9 +10,7 @@
 // The VS2013 linker treats this as a redefinition of an already
 // defined constant and complains. So skip the declaration if we're compiling
 // with VS2013 or below.
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const uint Memory::StandAloneFreeListPolicy::MaxEntriesGrowth;
-#endif
 
 // We need this function to be inlined for perf
 template _ALWAYSINLINE BVSparseNode<JitArenaAllocator> * BVSparse<JitArenaAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, JitArenaAllocator)** prevNextFieldOut, bool create);
@@ -787,15 +785,11 @@ void * InPlaceFreeListPolicy::Allocate(void * policy, size_t size)
         freeObjectLists[index] = freeObject->next;
 
 #ifdef ARENA_MEMORY_VERIFY
-#ifndef _MSC_VER
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsizeof-pointer-memaccess"
-#endif
         // Make sure the next pointer bytes are also DbgFreeMemFill-ed.
         memset(freeObject, DbgFreeMemFill, sizeof(freeObject->next));
-#ifndef _MSC_VER
 #pragma clang diagnostic pop
-#endif
 #endif
     }
 

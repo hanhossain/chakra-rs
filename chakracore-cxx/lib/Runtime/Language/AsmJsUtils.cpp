@@ -443,9 +443,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
             }
@@ -456,9 +453,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
                 mov ival, eax
@@ -472,9 +466,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
                 mov iLow, eax;
@@ -496,9 +487,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
                 movsd dval, xmm0
@@ -511,9 +499,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
                 movss fval, xmm0
@@ -539,9 +524,6 @@ namespace Js
             __asm
             {
                 mov  ecx, asmJSEntryPoint
-#ifdef _CONTROL_FLOW_GUARD
-                call[__guard_check_icall_fptr]
-#endif
                 push func
                 call ecx
                 movups simdVal, xmm0

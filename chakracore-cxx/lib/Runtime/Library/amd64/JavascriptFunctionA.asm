@@ -7,65 +7,6 @@ include ksamd64.inc
         _TEXT SEGMENT
 
 extrn __chkstk: PROC
-ifdef _CONTROL_FLOW_GUARD
-extrn __guard_check_icall_fptr:QWORD
-extrn __guard_dispatch_icall_fptr:QWORD
-
-        subttl  "Control Flow Guard ICall Check Stub"
-;++
-;
-; Routine Description:
-;
-;   This routine is a stub that is called for the CFG icall check.  Its
-;   function is to create a new stack frame for (*__guard_check_icall_fptr)
-;   which performs the actual indirect call check.
-;
-;   N.B. A new stack frame is required since amd64_CallFunction requires the
-;         parameter home area of the icall check subroutine to be preserved.
-;         (The saved non-volatiles in amd64_CallFunction would overlap with
-;          the *guard_check_icall_fptr home parameter region.)
-;
-;   N.B. The (*guard_check_icall_fptr) call is guaranteed to preserve rcx.
-;        This stub preserves that behavior, allowing callers to assume rcx
-;        is preserved across the call.
-;
-; Arguments:
-;
-;   ICallTarget (rcx) - Supplies a pointer to a function to check.
-;
-; Implicit Arguments:
-;
-;   (rsp+08h - rsp+30h)  - Supplies the preserved home area.
-;
-; Return Value:
-;
-;   None.  Should the indirect call check fail, a fast fail event is raised.
-;
-;--
-
-IcFrame struct
-        P1Home  dq ?                    ; child function parameter home addresses
-        P2Home  dq ?                    ;
-        P3Home  dq ?                    ;
-        P4Home  dq ?                    ;
-        Fill    dq ?                    ;
-IcFrame ends
-
-        NESTED_ENTRY amd64_CheckICall, _TEXT$00
-
-        alloc_stack (sizeof IcFrame)    ; allocate stack frame
-
-        END_PROLOGUE
-
-        call    [__guard_check_icall_fptr] ; verify that the call target is valid
-
-        add     rsp, (sizeof IcFrame)   ; deallocate stack frame
-
-        ret                             ; return to dispatch invoke
-
-        NESTED_END amd64_CheckICall, _TEXT$00
-
-endif
 
 align 16
 amd64_CallFunction PROC FRAME
@@ -198,12 +139,8 @@ setup_args_done:
         ;; allocate args register spill
         sub rsp, 20h
 
-ifdef _CONTROL_FLOW_GUARD
-        call    [__guard_dispatch_icall_fptr]
-else
         ;; (C) callsite
         call rax
-endif
 done:
         mov rsp, rbp
         pop rbp
@@ -315,11 +252,7 @@ stack_alloc:
         mov r9, qword ptr [r10 + 20h]
         movaps xmm3, xmmword ptr [r10 + 20h]
 
-ifdef _CONTROL_FLOW_GUARD
-        call    [__guard_dispatch_icall_fptr]
-else
         call rax
-endif
 
         lea rsp, [rbp]
         pop rbp
@@ -353,12 +286,6 @@ align 16
         lea rcx, [rsp + 30h]
         call ?DeferredParse@JavascriptFunction@Js@@SAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAPEAVScriptFunction@2@@Z
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
-
         add rsp, 20h
 
         lea rsp, [rbp]
@@ -390,12 +317,6 @@ align 16
 
         sub rsp, 20h
         call ?DeferredDeserialize@JavascriptFunction@Js@@SAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAVScriptFunction@2@@Z
-
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
 
         add rsp, 20h
 

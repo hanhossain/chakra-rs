@@ -12,7 +12,6 @@ public:
         IR::LabelInstr * labelHelper, IR::LabelInstr * labelBooleanCmp, Lowerer * lowerer, bool isStrictBr, bool isInHelper);
 };
 
-#if !NTBUILD
 // ChakraCore default implementation doesn't have anything external type to check
 inline bool
 ExternalLowerer::TryGenerateFastExternalEqTest(IR::Opnd * src1, IR::Opnd * src2, IR::Instr * instrBranch,
@@ -20,4 +19,3 @@ ExternalLowerer::TryGenerateFastExternalEqTest(IR::Opnd * src1, IR::Opnd * src2,
 {
     return false;
 }
-#endif

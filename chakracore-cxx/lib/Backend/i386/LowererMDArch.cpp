@@ -669,12 +669,6 @@ LowererMDArch::GeneratePreCall(IR::Instr * callInstr, IR::Opnd  *functionObjOpnd
     IR::Instr * hoistedCallSrcInstr = nullptr;
     hoistedCallSrcInstr = callInstr->HoistSrc1(Js::OpCode::MOV);
 
-#if defined(_CONTROL_FLOW_GUARD)
-    if (!PHASE_OFF(Js::CFGInJitPhase, this->m_func))
-    {
-        this->lowererMD->GenerateCFGCheck(hoistedCallSrcInstr->GetDst(), callInstr);
-    }
-#endif
 }
 
 IR::Instr *
@@ -856,14 +850,7 @@ LowererMDArch::LowerAsmJsCallI(IR::Instr * callInstr)
     // Atom prefers "CALL reg" over "CALL [reg]"
     IR::Instr * hoistedCallSrcInstr = callInstr->HoistSrc1(Js::OpCode::MOV);
 
-#if defined(_CONTROL_FLOW_GUARD)
-    if (!PHASE_OFF(Js::CFGInJitPhase, this->m_func))
-    {
-        this->lowererMD->GenerateCFGCheck(hoistedCallSrcInstr->GetDst(), callInstr);
-    }
-#else
     Unused(hoistedCallSrcInstr);
-#endif
 
     IR::Instr * retInstr = callInstr;
     callInstr->m_opcode = Js::OpCode::CALL;

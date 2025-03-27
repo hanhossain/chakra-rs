@@ -12,11 +12,7 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 
 // === C Runtime Header Files ===
 #include <time.h>
-#if defined(_UCRT)
-#include <cmath>
-#else
 #include <math.h>
-#endif
 
 // Exceptions
 #include "Exceptions/ExceptionBase.h"
@@ -35,18 +31,6 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #include "Core/ProfileMemory.h"
 #include "Core/StackBackTrace.h"
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(HEAP_TRACK_ALLOC) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-#ifdef _UCRT
-#include <typeinfo>
-#else
-#include <typeinfo.h>
-#endif
-#endif
-#pragma warning(pop)
-#endif
-
 // Inl files
 #include "Memory/Recycler.inl"
 #include "Memory/MarkContext.inl"
@@ -57,12 +41,6 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 
 
 // Memory Protections
-#ifdef _CONTROL_FLOW_GUARD
-#define PAGE_EXECUTE_RW_TARGETS_INVALID   (PAGE_EXECUTE_READWRITE | PAGE_TARGETS_INVALID)
-#define PAGE_EXECUTE_RW_TARGETS_NO_UPDATE (PAGE_EXECUTE_READWRITE | PAGE_TARGETS_NO_UPDATE)
-#define PAGE_EXECUTE_RO_TARGETS_NO_UPDATE (PAGE_EXECUTE_READ      | PAGE_TARGETS_NO_UPDATE)
-#else
 #define PAGE_EXECUTE_RW_TARGETS_INVALID   (PAGE_EXECUTE_READWRITE)
 #define PAGE_EXECUTE_RW_TARGETS_NO_UPDATE (PAGE_EXECUTE_READWRITE)
 #define PAGE_EXECUTE_RO_TARGETS_NO_UPDATE (PAGE_EXECUTE_READ)
-#endif

@@ -1145,28 +1145,7 @@ Func::IsAggressiveIntTypeSpecDisabled() const
 
 bool Func::CanAllocInPreReservedHeapPageSegment ()
 {
-#ifdef _CONTROL_FLOW_GUARD
-    return PHASE_FORCE1(Js::PreReservedHeapAllocPhase) || (!PHASE_OFF1(Js::PreReservedHeapAllocPhase) &&
-        !IsJitInDebugMode()
-#if _M_IX86
-        && m_workItem->GetJitMode() == ExecutionMode::FullJit
-
-#if ENABLE_OOP_NATIVE_CODEGEN
-        && (JITManager::GetJITManager()->IsJITServer()
-            ? GetOOPCodeGenAllocators()->canCreatePreReservedSegment
-            : GetInProcCodeGenAllocators()->canCreatePreReservedSegment)
-#else
-        && GetInProcCodeGenAllocators()->canCreatePreReservedSegment
-#endif
-        );
-#elif TARGET_64
-        && true);
-#else
-        && false); //Not yet implemented for architectures other than x86 and amd64.
-#endif  //_M_ARCH
-#else
     return false;
-#endif//_CONTROL_FLOW_GUARD
 }
 
 ///----------------------------------------------------------------------------

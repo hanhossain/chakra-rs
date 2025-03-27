@@ -103,7 +103,6 @@
     JsGetRuntime
     JsIdle
     JsSetPromiseContinuationCallback
-#ifndef NTBUILD
     JsAllocRawData
     JsCloneObject
     JsConnectJITProcess
@@ -175,4 +174,3 @@
     JsVarSerializerSetTransferableVars
     JsVarSerializerWriteRawBytes
     JsVarSerializerWriteValue
-#endif

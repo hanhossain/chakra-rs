@@ -35,20 +35,16 @@ open graph.svg
 
 ## TODO
 
-No longer support preprocessor directives:
-- [x] `_WIN32`
-  - [ ] `_MSC_VER`
-  - [ ] `__MSC_FULL_VER`
-  - [ ] `WIN32`
-  - [ ] `__WIN32__`
-  - [ ] `__MINGW32__`
-  - [ ] `WINVER`
-  - [ ] `_WIN32_WINNT`
-  - [ ] `NTBUILD`
-  - [ ] `_CONTROL_FLOW_GUARD`
-  - [ ] `SUPPORT_WIN32_SLIST`
-- [ ] `__IOS__`
-- [ ] `__ANDROID__`
+Preprocessor directives to remove:
+- ios
+  - `__IOS__`
+- android
+  - `__ANDROID__`
+- any arch that's not x64 or arm64
+  - `_M_IX86`
+  - `_ARM32`
+  - `_M_ARM`
+  - `TARGET_32`
 
 Files to remove:
 - chakracore-cxx/lib/Common/Common/CompressionUtilities.cpp
@@ -56,3 +52,4 @@ Files to remove:
 - chakracore-cxx/lib/Common/Memory/DelayDeletingFunctionTable.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.h
+- any files with // TODO (hanhossain): remove file

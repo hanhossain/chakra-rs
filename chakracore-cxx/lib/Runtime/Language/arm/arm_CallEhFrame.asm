@@ -51,9 +51,6 @@
 
     TTL Lib\Common\arm\arm_CallEhFrame.asm
 
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-    IMPORT __guard_check_icall_fptr
-#endif
 
     IMPORT __chkstk
     EXPORT  arm_CallEhFrame
@@ -87,20 +84,6 @@
     cmp r3,4096
     bge chkstk_call
     sub sp,r3
-
-    ; Verify that the call target is valid
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-    ; we have used the r1-r3 info to set up the fake frame
-    ; they aren't needed by the jitted code that we're going to thunk to
-    ; so we don't preserve them across the __guard_check_icall_fptr call
-    mov     r5, r0
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r5
-#endif
 
     ; Thunk to the jitted code (and don't return)
     bx  r0
@@ -154,20 +137,6 @@
     cmp r3,4096
     bge chkstk_call_catch
     sub sp,r3
-
-    ; Verify that the call target is valid
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-    ; we have used the r1-r3 info to set up the fake frame
-    ; they aren't needed by the jitted code that we're going to thunk to
-    ; so we don't preserve them across the __guard_check_icall_fptr call
-    mov     r5, r0
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r5
-#endif
 
     ; Thunk to the jitted code (and don't return)
     bx  r0

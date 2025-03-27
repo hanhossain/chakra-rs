@@ -15,10 +15,6 @@
 *
 ****/
 
-#if _MSC_VER > 1000
-#pragma once
-#endif  /* _MSC_VER > 1000 */
-
 #ifndef _INC_INTERNAL
 #define _INC_INTERNAL
 
@@ -37,21 +33,11 @@ extern "C" {
  */
 #include <windows.h>
 
-#ifdef _MSC_VER
-#pragma pack(push,_CRT_PACKING)
-#endif  /* _MSC_VER */
-
 /* Define function types used in several startup sources */
 
 typedef void (__cdecl *_PVFV)(void);
 typedef int  (__cdecl *_PIFV)(void);
 typedef void (__cdecl *_PVFI)(int);
-
-#if _MSC_VER >= 1400 && defined(_M_CEE)
-typedef const void* (__clrcall *_PVFVM)(void);
-typedef int (__clrcall *_PIFVM)(void);
-typedef void (__clrcall *_CPVFV)(void);
-#endif  /* _MSC_VER >= 1400 && defined(_M_CEE) */
 
 #if defined (_M_CEE_PURE) || (defined (_DLL) && defined (_M_IX86))
 /* Retained for compatibility with VC++ 5.0 and earlier versions */
@@ -370,14 +356,6 @@ typedef int (__cdecl * _PNH)( size_t );
 #define _PNH_DEFINED
 #endif  /* _PNH_DEFINED */
 
-#if _MSC_VER >= 1400 && defined(_M_CEE)
-#ifndef __MPNH_DEFINED
-typedef int (__clrcall * __MPNH)( size_t );
-#define __MPNH_DEFINED
-#endif  /* __MPNH_DEFINED */
-#endif  /* _MSC_VER >= 1400 && defined(_M_CEE) */
-
-
 /* calls the currently installed new handler */
 int __cdecl _callnewh(__in size_t _Size);
 
@@ -538,11 +516,7 @@ extern Volatile<unsigned int> __native_vcclrit_reason;
 
 #pragma warning(push)
 #pragma warning(disable: 4483)
-#if _MSC_FULL_VER >= 140050415
-#define _NATIVE_STARTUP_NAMESPACE  __identifier("<CrtImplementationDetails>")
-#else  /* _MSC_FULL_VER >= 140050415 */
 #define _NATIVE_STARTUP_NAMESPACE __CrtImplementationDetails
-#endif  /* _MSC_FULL_VER >= 140050415 */
 
 namespace _NATIVE_STARTUP_NAMESPACE
 {
@@ -1090,9 +1064,5 @@ BOOL __cdecl _IsNonwritableInCurrentImage(PBYTE pTarget);
 #ifdef __cplusplus
 }
 #endif  /* __cplusplus */
-
-#ifdef _MSC_VER
-#pragma pack(pop)
-#endif  /* _MSC_VER */
 
 #endif  /* _INC_INTERNAL */

@@ -537,14 +537,6 @@ LowererMD::GeneratePreCall(IR::Instr * callInstr, IR::Opnd  *functionObjOpnd, IR
     // targetAddrOpnd is the address we'll call.
     callInstr->SetSrc1(entryPointRegOpnd);
 
-#if defined(_CONTROL_FLOW_GUARD)
-    // verify that the call target is valid (CFG Check)
-    if (!PHASE_OFF(Js::CFGInJitPhase, this->m_func))
-    {
-        this->GenerateCFGCheck(entryPointRegOpnd, insertBeforeInstrForCFGCheck);
-    }
-#endif
-
     return stackParamInsert;
 }
 
@@ -7240,89 +7232,5 @@ void LowererMD::GenerateDebugBreak( IR::Instr * insertInstr )
 {
     IR::Instr *int3 = IR::Instr::New(Js::OpCode::DEBUGBREAK, insertInstr->m_func);
     insertInstr->InsertBefore(int3);
-}
-#endif
-
-#ifdef _CONTROL_FLOW_GUARD
-void
-LowererMD::GenerateCFGCheck(IR::Opnd * entryPointOpnd, IR::Instr * insertBeforeInstr)
-{
-    bool useJITTrampoline = CONFIG_FLAG(UseJITTrampoline);
-    IR::LabelInstr * callLabelInstr = nullptr;
-    uintptr_t jitThunkStartAddress = NULL;
-
-    if (useJITTrampoline)
-    {
-#if ENABLE_OOP_NATIVE_CODEGEN
-        if (m_func->IsOOPJIT())
-        {
-            OOPJITThunkEmitter * jitThunkEmitter = m_func->GetOOPThreadContext()->GetJITThunkEmitter();
-            jitThunkStartAddress = jitThunkEmitter->EnsureInitialized();
-        }
-        else
-#endif
-        {
-            InProcJITThunkEmitter * jitThunkEmitter = m_func->GetInProcThreadContext()->GetJITThunkEmitter();
-            jitThunkStartAddress = jitThunkEmitter->EnsureInitialized();
-        }
-        if (jitThunkStartAddress)
-        {
-            uintptr_t endAddressOfSegment = jitThunkStartAddress + InProcJITThunkEmitter::TotalThunkSize;
-            Assert(endAddressOfSegment > jitThunkStartAddress);
-            // Generate instructions for local Pre-Reserved Segment Range check
-
-            IR::AddrOpnd * endAddressOfSegmentConstOpnd = IR::AddrOpnd::New(endAddressOfSegment, IR::AddrOpndKindDynamicMisc, m_func);
-            IR::RegOpnd *resultOpnd = IR::RegOpnd::New(TyMachReg, this->m_func);
-
-            callLabelInstr = IR::LabelInstr::New(Js::OpCode::Label, m_func);
-            IR::LabelInstr * cfgLabelInstr = IR::LabelInstr::New(Js::OpCode::Label, m_func, true);
-
-            // resultOpnd = SUB endAddressOfSegmentConstOpnd, entryPointOpnd
-            // CMP resultOpnd, TotalThunkSize
-            // BHS $cfgLabel
-            // AND entryPointOpnd,  ~(ThunkSize-1)
-            // JMP $callLabel
-            m_lowerer->InsertSub(false, resultOpnd, endAddressOfSegmentConstOpnd, entryPointOpnd, insertBeforeInstr);
-            m_lowerer->InsertCompareBranch(resultOpnd, IR::IntConstOpnd::New(InProcJITThunkEmitter::TotalThunkSize, TyMachReg, m_func, true), Js::OpCode::BrGe_A, true, cfgLabelInstr, insertBeforeInstr);
-            m_lowerer->InsertAnd(entryPointOpnd, entryPointOpnd, IR::IntConstOpnd::New(InProcJITThunkEmitter::ThunkAlignmentMask, TyMachReg, m_func, true), insertBeforeInstr);
-            m_lowerer->InsertBranch(Js::OpCode::Br, callLabelInstr, insertBeforeInstr);
-
-            insertBeforeInstr->InsertBefore(cfgLabelInstr);
-        }
-    }
-    //MOV  x15, entryPoint
-    IR::RegOpnd * entryPointRegOpnd = IR::RegOpnd::New(nullptr, RegR15, TyMachReg, this->m_func);
-    entryPointRegOpnd->m_isCallArg = true;
-    IR::Instr *movInstrEntryPointToRegister = Lowerer::InsertMove(entryPointRegOpnd, entryPointOpnd, insertBeforeInstr);
-
-    //Generate CheckCFG CALL here
-    IR::HelperCallOpnd *cfgCallOpnd = IR::HelperCallOpnd::New(IR::HelperGuardCheckCall, this->m_func);
-    IR::Instr* cfgCallInstr = IR::Instr::New(Js::OpCode::BLR, this->m_func);
-    this->m_func->SetHasCallsOnSelfAndParents();
-
-    //mov x16, __guard_check_icall_fptr
-    IR::RegOpnd *targetOpnd = IR::RegOpnd::New(nullptr, RegR16, TyMachPtr, this->m_func);
-    IR::Instr   *movInstr = Lowerer::InsertMove(targetOpnd, cfgCallOpnd, insertBeforeInstr);
-    Legalize(movInstr);
-
-    //call x16
-    cfgCallInstr->SetSrc1(targetOpnd);
-
-    //CALL cfg(x15)
-    insertBeforeInstr->InsertBefore(cfgCallInstr);
-
-    if (jitThunkStartAddress)
-    {
-        Assert(callLabelInstr);
-        if (CONFIG_FLAG(ForceJITCFGCheck))
-        {
-            // Always generate CFG check to make sure that the address is still valid
-            movInstrEntryPointToRegister->InsertBefore(callLabelInstr);
-        }
-        else
-        {
-            insertBeforeInstr->InsertBefore(callLabelInstr);
-        }
-    }
 }
 #endif

@@ -12,10 +12,6 @@
 #ifndef _INTSAFE_H_INCLUDED_
 #define _INTSAFE_H_INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "specstrings.h"    // for IN, etc.
 
 
@@ -23,9 +19,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#ifdef _MSC_VER
-#pragma intrinsic(_umul128)
-#endif // _MSC_VER
 #ifdef __cplusplus
 }
 #endif
@@ -120,13 +113,8 @@ typedef LONG HRESULT;
 #define LONG_ERROR      (-1L)
 #define UINT_ERROR      (0xffffffff)
 #define ULONG_ERROR     (0xffffffffUL)
-#ifdef _MSC_VER
-#define ULONGLONG_ERROR (0xffffffffffffffffui64)
-#define HIDWORD_MASK (0xffffffff00000000ui64)
-#else // _MSC_VER
 #define ULONGLONG_ERROR (0xffffffffffffffffULL)
 #define HIDWORD_MASK (0xffffffff00000000ULL)
-#endif // _MSC_VER
 #ifdef _WIN64
 #define SIZET_ERROR     ULONGLONG_ERROR
 #else

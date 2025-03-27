@@ -69,7 +69,7 @@
 // support new compilers and/or CPUs.  Here we enforce that we can only compile using
 // VC++, or GCC on x86 or AMD64.
 // 
-#if !defined(_MSC_VER) && !defined(__GNUC__)
+#if !defined(__GNUC__)
 #error The Volatile type is currently only defined for Visual C++ and GNU C++
 #endif
 
@@ -434,19 +434,6 @@ public:
 // to redefine offsetof such that it does not use volatile, if we're building with VC++.
 //
 #include <stddef.h>
-#ifdef _MSC_VER
-#undef offsetof
-#ifdef  _WIN64
-#define offsetof(s,m)   (size_t)( (ptrdiff_t)&reinterpret_cast<const char&>((((s *)0)->m)) )
-#else
-#define offsetof(s,m)   (size_t)&reinterpret_cast<const char&>((((s *)0)->m))
-#endif //_WIN64
-
-// These also use volatile, so we'll include them here.
-//#include <intrin.h>
-//#include <memory>
-
-#endif //_MSC_VER
 
 //
 // From here on out, we ban the use of the "volatile" keyword.  If you found this while trying to define
@@ -465,10 +452,6 @@ public:
 #define RAW_KEYWORD(x) x
 
 // Disable use of Volatile<T> for GC/HandleTable code except on platforms where it's absolutely necessary.
-#if defined(_MSC_VER) && !defined(_ARM_)
-#define VOLATILE(T) T RAW_KEYWORD(volatile)
-#else
 #define VOLATILE(T) Volatile<T>
-#endif
 
 #endif //_VOLATILE_H_

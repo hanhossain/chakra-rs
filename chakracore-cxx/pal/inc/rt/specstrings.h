@@ -20,10 +20,6 @@
 * See specstrings_strict.h for documentation of all user visible macros.
 *************************************************************************/
 
-#if _MSC_VER
-#pragma once
-#endif
-
 #if !defined(_SAL_VERSION_SAL2)
 
  #if defined(__BUILDMACHINE__) || defined(_USE_SAL2_ONLY)
@@ -59,32 +55,6 @@ extern "C" {
 /* version specific fixes to bring sal.h upto date */
 #if __SAL_H_FULL_VER <= 140050727
 
-#if !defined(__midl) && defined(_PREFAST_) && _MSC_VER >= 1000 // [
-
-/* Missing from RTM sal.h */
-#define __inner_bound                     _SA_annotes0(SAL_bound)
-#define __inner_range(lb,ub)              _SA_annotes2(SAL_range,lb,ub)
-#define __inner_assume_bound_dec          __inline __nothrow void __AssumeBoundInt(_Post_ __inner_bound int i) {i;}
-#define __inner_assume_bound(i)           __AssumeBoundInt(i);
-#define __inner_allocator                 _SA_annotes0(SAL_allocator)
-
-#define __static_context(ctx, annotes) \
-    _SA_annotes1(SAL_context,ctx) _Group_(__nop_impl(annotes))
-
-#define __failure(x) __static_context(SAL_return_convention, \
-    _SA_annotes1(SAL_failure,x))
-
-__ANNOTATION(SAL_valueUndefined());
-#define __valueUndefined _SA_annotes0(SAL_valueUndefined)
-
-enum __SAL_failureKind{__failureUnspecified = 0, __failureUndefined = 1};
-
-__ANNOTATION(SAL_failureDefault(enum __SAL_failureKind));
-#define __failureDefault(kind) __static_context(SAL_return_convention,  \
-        _SA_annotes1(SAL_failureDefault,kind))
-
-#else // ][
-
 #define __inner_bound
 #define __inner_range(lb,ub)
 #define __inner_assume_bound_dec
@@ -95,8 +65,6 @@ __ANNOTATION(SAL_failureDefault(enum __SAL_failureKind));
 #define __failure(x)
 #define __valueUndefined
 #define __failureDefault(x)
-
-#endif // ]
 
 #define __xcount(size)                                          __notnull __inexpressible_writableTo(size)
 #define __in_xcount(size)                                       __in _Pre_ __inexpressible_readableTo(size)
@@ -208,42 +176,6 @@ __ANNOTATION(SAL_failureDefault(enum __SAL_failureKind));
  New extensions to sal.h follow here.
 *************************************************************************/
 
-#if (_MSC_VER >= 1000) && !defined(__midl) && defined(_PREFAST_)
-
-#define __file_parser(typ)                  _SA_annotes2(SAL_file_parser,"function",typ)
-#define __file_parser_class(typ)            _SA_annotes2(SAL_file_parser,"class",typ)
-#define __file_parser_library(typ)          extern int _SA_annotes2(SAL_file_parser, "library", typ) __iSALFileParserLibrary##typ;
-#define __source_code_content(typ)          extern int _SA_annotes1(SAL_source_code_content, typ) __iSAL_Source_Code_Content##typ;
-#define __class_code_content(typ)           _SA_annotes1(SAL_class_code_content, typ)
-#define __analysis_assert(e)                __assume(e)
-#define __analysis_hint(hint)               _SA_annotes1(SAL_analysisHint, hint)
-// For "breakpoint": doesn't return as far as analysis is concerned.
-#define __analysis_noreturn                 __declspec(noreturn)
-/* Internal defintions */
-#define __inner_data_source(src_raw)        _SA_annotes1(SAL_untrusted_data_source,src_raw)
-#define __inner_this_data_source(src_raw)   _SA_annotes1(SAL_untrusted_data_source_this,src_raw)
-#define __inner_out_validated(typ_raw)      _Post_ _SA_annotes1(SAL_validated,typ_raw)
-#define __inner_this_out_validated(typ_raw) _SA_annotes1(SAL_validated_this,typ_raw)
-#define __inner_assume_validated_dec        __inline __nothrow void __AssumeValidated(__inner_out_validated("BY_DESIGN") const void *p) {p;}
-#define __inner_assume_validated(p)         __AssumeValidated(p)
-#define __inner_transfer(formal)            _SA_annotes1(SAL_transfer_adt_property_from,formal)
-#define __inner_encoded                     _SA_annotes0(SAL_encoded)
-
-#if defined(_MSC_EXTENSIONS) || defined(_PREFAST_) || defined(OACR)
-#define __inner_adt_prop(adt,prop)               _SA_annotes2(SAL_adt, adt,prop)
-#define __inner_adt_add_prop(adt,prop)           _SA_annotes2(SAL_add_adt_property,adt,prop)
-#define __inner_adt_remove_prop(adt,prop)        _SA_annotes2(SAL_remove_adt_property,adt,prop)
-#define __inner_adt_transfer_prop(arg)           _SA_annotes1(SAL_transfer_adt_property_from,arg)
-#define __inner_adt_type_props(typ)              _SA_annotes1(SAL_post_type,typ)
-#define __inner_volatile                         _SA_annotes0(SAL_volatile)
-#define __inner_nonvolatile                      _SA_annotes0(SAL_nonvolatile)
-#define __inner_possibly_notnullterminated       _SA_annotes1(SAL_nullTerminated,__maybe)
-#define __inner_analysis_assume_nullterminated_dec __inline __nothrow void __AnalysisAssumeNullterminated(_Post_ __nullterminated void *p) {*(char*)p=0;}
-#define __inner_analysis_assume_nullterminated(x) __AnalysisAssumeNullterminated(x);
-#endif
-
-#else
-
 #define __file_parser(typ)
 #define __file_parser_class(typ)
 #define __file_parser_library(typ)
@@ -271,8 +203,6 @@ __ANNOTATION(SAL_failureDefault(enum __SAL_failureKind));
 #define __inner_possibly_notnullterminated
 #define __inner_analysis_assume_nullterminated_dec
 #define __inner_analysis_assume_nullterminated(x)
-
-#endif // #if (_MSC_VER >= 1000) && !defined(__midl) && defined(_PREFAST_)
 
 #define __field_ecount(size)                __notnull __elem_writableTo(size)
 #define __field_bcount(size)                __notnull __byte_writableTo(size)
@@ -509,12 +439,10 @@ void __pfx_assume(int, const char *);
  or we will end up referencing SAL 2 implementation symbols and cause
  build failures.
 */
-#if (!defined(_Outptr_) || _MSC_VER <= 1600) && !( defined( MIDL_PASS ) || defined(__midl) || defined(RC_INVOKED) ) /*IFSTRIP=IGN*/
 #undef __ANNOTATION
 #define __ANNOTATION(fun) /* fun */
 #undef __PRIMOP
 #define __PRIMOP(type, fun)
-#endif /* !defined(_Outptr_) || _MSC_VER <= 1600 */
 
 // ROTOR doesn't need driverspecs.h
 // #include <driverspecs.h>
@@ -528,9 +456,7 @@ void __pfx_assume(int, const char *);
  If we are in a downlevel environment, we can go ahead and include no_sal2.h
  to make all of SAL 2 no-ops to ensure no build failures. 
 */
-#if (!defined(_Outptr_) || _MSC_VER <= 1600) && !( defined( MIDL_PASS ) || defined(__midl) || defined(RC_INVOKED) ) && !( defined( _SDV_ ) ) /*IFSTRIP=IGN*/
 #include "no_sal2.h"
-#endif /* !defined(_Outptr_) || _MSC_VER <= 1600 */
 
 #endif /* #ifndef SPECSTRINGS_H */
 

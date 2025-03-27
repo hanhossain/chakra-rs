@@ -584,30 +584,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 #else
         library->AddMember(intlNativeInterfaces, Js::PropertyIds::winglob, library->GetFalse());
 
-#if defined(NTBUILD)
-        // when using ICU, we can call ulocdata_getCLDRVersion to ensure that ICU is functioning properly before allowing Intl to continue.
-        // ulocdata_getCLDRVersion will cause the data file to be loaded, and if we don't have enough memory to do so, we can throw OutOfMemory here.
-        // This is to protect against spurious U_MISSING_RESOURCE_ERRORs and U_FILE_ACCESS_ERRORs coming from early-lifecycle
-        // functions that require ICU data.
-        // See OS#16897150, OS#16896933, and others relating to bad statuses returned by GetLocaleData and IsLocaleAvailable
-        // This was initially attempted using u_init, however u_init does not work with Node's default small-icu data file
-        // because it contains no converters.
-        UErrorCode status = U_ZERO_ERROR;
-        UVersionInfo cldrVersion;
-        ulocdata_getCLDRVersion(cldrVersion, &status);
-        if (status == U_MEMORY_ALLOCATION_ERROR || status == U_FILE_ACCESS_ERROR || status == U_MISSING_RESOURCE_ERROR)
-        {
-            // Trace that this happens in case there are build system changes that actually cause the data file to be not found
-            INTL_TRACE("Could not initialize ICU - ulocdata_getCLDRVersion returned status %S", u_errorName(status));
-            Throw::OutOfMemory();
-        }
-        else
-        {
-            INTL_TRACE("Using CLDR version %d.%d.%d.%d", cldrVersion[0], cldrVersion[1], cldrVersion[2], cldrVersion[3]);
-        }
-
-        AssertOrFailFastMsg(U_SUCCESS(status), "ulocdata_getCLDRVersion returned non-OOM failure");
-#endif // defined(NTBUILD)
 #endif // else !INTL_WINGLOB
 
         // Add a reference to the built-in Intl object that can be referenced from the init code in Intl.js.

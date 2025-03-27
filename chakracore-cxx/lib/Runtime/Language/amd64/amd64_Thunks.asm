@@ -6,10 +6,6 @@ include ksamd64.inc
 
         _TEXT SEGMENT
 
-ifdef _CONTROL_FLOW_GUARD
-    extrn __guard_check_icall_fptr:QWORD
-    extrn __guard_dispatch_icall_fptr:QWORD
-endif
 extrn __chkstk: PROC
 
 ifdef _ENABLE_DYNAMIC_THUNKS
@@ -38,12 +34,6 @@ align 16
 
         sub rsp, 20h                            ;allocate stack space for the callee params(min 4 slots is mandate)
         call ?EnsureDynamicInterpreterThunk@InterpreterStackFrame@Js@@CAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAVScriptFunction@2@@Z
-
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
 
         add rsp, 20h                            ;de-allocate stack space for the callee params(min 4 slots is mandate)
 
@@ -99,11 +89,6 @@ align 16
         call ?EnsureDynamicInterpreterThunk@InterpreterStackFrame@Js@@CAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAVScriptFunction@2@@Z
 skipThunk:
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
         ; restore potential floating point arguments from stack
         movaps xmm1, xmmword ptr [rsp + 30h]
         movaps xmm2, xmmword ptr [rsp + 40h]
@@ -147,12 +132,6 @@ align 16
         sub rsp, 20h
         call ?EnsureDynamicProfileInfo@DynamicProfileInfo@Js@@CAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAVScriptFunction@2@@Z
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
-
         add rsp, 20h
 
         lea rsp, [rbp]
@@ -195,11 +174,6 @@ align 16
         lea rcx, [rsp + 30h]
         call ?ProfileModeDeferredParse@ScriptContext@Js@@SAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAPEAVScriptFunction@2@@Z
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
         add rsp, 20h
 
         lea rsp, [rbp]
@@ -242,11 +216,6 @@ align 16
         sub rsp, 20h
         call ?ProfileModeDeferredDeserialize@ScriptContext@Js@@SAP6APEAXPEAVRecyclableObject@2@UCallInfo@2@ZZPEAVScriptFunction@2@@Z
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
         add rsp, 20h
 
         lea rsp, [rbp]
@@ -295,11 +264,6 @@ align 16
 
         call ?GetAsmJsInterpreterEntryPoint@InterpreterStackFrame@Js@@SAPEAXPEAUAsmJsCallStackLayout@2@@Z
 
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx                            ;restore call target
-endif
 
         mov rcx, qword ptr [rsp + 70h] ; restore rcx
 
@@ -427,9 +391,6 @@ stack_alloc:
         pop rsi
         pop rdi
 
-ifdef _CONTROL_FLOW_GUARD
-        call    [__guard_dispatch_icall_fptr]
-else
         ; call entry point
         call rax
 endif

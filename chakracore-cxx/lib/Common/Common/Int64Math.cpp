@@ -6,9 +6,7 @@
 #include "Common/Int64Math.h"
 
 #if defined(_M_X64)
-#if defined(_MSC_VER) && !defined(__clang__)
-    #pragma intrinsic(_mul128)
-#elif !(__has_builtin(__builtin_mul_overflow) && !(defined(_ARM_) && defined(__clang__))) // _ARM_ && __clang__ linker fails
+#if !(__has_builtin(__builtin_mul_overflow) && !(defined(_ARM_) && defined(__clang__))) // _ARM_ && __clang__ linker fails
     static int64 _mul128(const int64 left, const int64 right, int64 *high) noexcept
     {
         int64 low;

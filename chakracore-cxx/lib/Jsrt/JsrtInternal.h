@@ -14,10 +14,6 @@ typedef TTD::TTDJsRTActionResultAutoRecorder TTDRecorder;
 typedef struct {} TTDRecorder;
 #endif
 
-#ifdef NTBUILD // non-browser
-#define JSRT_VERIFY_RUNTIME_STATE
-#endif
-
 // JSRT Unsafe mode leaves runtime health-state responsibility to the host
 #ifndef JSRT_VERIFY_RUNTIME_STATE
 #define JSRT_MAYBE_TRUE false

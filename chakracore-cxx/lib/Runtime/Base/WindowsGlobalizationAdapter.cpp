@@ -15,13 +15,8 @@
 
 #include <wrl\implements.h>
 
-#ifdef NTBUILD
-using namespace Windows::Globalization;
-using namespace Windows::Foundation::Collections;
-#else
 using namespace ABI::Windows::Globalization;
 using namespace ABI::Windows::Foundation::Collections;
-#endif
 
 #endif // INTL_WINGLOB
 

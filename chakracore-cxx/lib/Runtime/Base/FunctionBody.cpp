@@ -46,12 +46,7 @@
 
 namespace Js
 {
-    // The VS2013 linker treats this as a redefinition of an already
-    // defined constant and complains. So skip the declaration if we're compiling
-    // with VS2013 or below.
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
     uint const ScopeSlots::MaxEncodedSlotCount;
-#endif
 
 #ifdef FIELD_ACCESS_STATS
     void FieldAccessStats::Add(FieldAccessStats* other)
@@ -2717,21 +2712,6 @@ namespace Js
         return GetIsGlobalFunc() && !(flags & fscrGlobalCode);
     }
 
-#ifdef NTBUILD
-    bool ParseableFunctionInfo::GetExternalDisplaySourceName(BSTR* sourceName)
-    {
-        Assert(sourceName);
-
-        if (IsDynamicScript() && GetUtf8SourceInfo()->GetDebugDocumentName(sourceName))
-        {
-            return true;
-        }
-
-        *sourceName = ::SysAllocString(GetSourceName());
-        return *sourceName != nullptr;
-    }
-#endif
-
     const char16* FunctionProxy::WrapWithBrackets(const char16* name, charcount_t sz, ScriptContext* scriptContext)
     {
         char16 * wrappedName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, sz + 3); //[]\0
@@ -3577,18 +3557,7 @@ namespace Js
     {
 #if ENABLE_NATIVE_CODEGEN
         JavascriptMethod originalEntryPoint = this->GetOriginalEntryPoint_Unchecked();
-        return
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-            (
-#if ENABLE_OOP_NATIVE_CODEGEN
-            JITManager::GetJITManager()->IsOOPJITEnabled()
-                ? JITThunkEmitter<SectionAllocWrapper>::IsInThunk(this->GetScriptContext()->GetThreadContext()->GetJITThunkStartAddr(), (uintptr_t)originalEntryPoint)
-                :
-#endif
-                this->GetScriptContext()->GetThreadContext()->GetJITThunkEmitter()->IsInThunk((uintptr_t)originalEntryPoint)
-            ) ||
-#endif
-            this->GetScriptContext()->IsNativeAddress((void*)originalEntryPoint);
+        return this->GetScriptContext()->IsNativeAddress((void*)originalEntryPoint);
 #else
         return false;
 #endif

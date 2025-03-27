@@ -17,10 +17,8 @@ namespace Js
         FieldNoBarrier(TUnloadCallback) scriptUnloadCallback;
         Field(JsSourceContext) sourceContext;
 
-#ifndef NTBUILD
         Field(JsValueRef) mappedScriptValue;
         Field(DetachedStateBase*) mappedSerializedScriptValue;
-#endif
         Field(utf8char_t const *) mappedSource;
         Field(size_t) mappedSourceByteLength;
         Field(size_t) mappedAllocLength;
@@ -50,10 +48,8 @@ namespace Js
             scriptLoadCallback(scriptLoadCallback),
             scriptUnloadCallback(scriptUnloadCallback),
             sourceContext(sourceContext),
-#ifndef NTBUILD
             mappedScriptValue(nullptr),
             mappedSerializedScriptValue(serializedScriptValue == nullptr ? nullptr : serializedScriptValue->DetachAndGetState(false /*queueForDelayFree*/)),
-#endif
             mappedSourceByteLength(0),
             mappedSource(nullptr)
         {
@@ -89,7 +85,6 @@ namespace Js
 
         virtual void Dispose(bool isShutdown) override
         {
-#ifndef NTBUILD
             if (this->mappedSerializedScriptValue != nullptr)
             {
                 // We have to extend the buffer data's lifetime until Dispose because
@@ -97,7 +92,6 @@ namespace Js
                 // FunctionEntryPointInfo which wants to log its name.
                 this->mappedSerializedScriptValue->CleanUp();
             }
-#endif
         }
 
         virtual void Mark(Recycler * recycler) override

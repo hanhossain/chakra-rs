@@ -57,9 +57,6 @@ public:
     virtual ptrdiff_t GetChakraBaseAddressDifference() const override;
     virtual ptrdiff_t GetCRTBaseAddressDifference() const override;
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    OOPJITThunkEmitter * GetJITThunkEmitter();
-#endif
     CustomHeap::OOPCodePageAllocators * GetThunkPageAllocators();
     CustomHeap::OOPCodePageAllocators  * GetCodePageAllocators();
     SectionAllocWrapper * GetSectionAllocator();
@@ -86,9 +83,6 @@ private:
     SectionAllocWrapper m_sectionAllocator;
     CustomHeap::OOPCodePageAllocators m_thunkPageAllocators;
     CustomHeap::OOPCodePageAllocators  m_codePageAllocators;
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    OOPJITThunkEmitter m_jitThunkEmitter;
-#endif
     // only allocate with this from foreground calls (never from CodeGen calls)
     PageAllocator m_pageAlloc;
     ThreadContextDataIDL m_threadContextData;

@@ -407,14 +407,6 @@ typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
 #endif
 
 //----------------------------------------
-// Default operator new/delete overrides
-//----------------------------------------
-#if defined(NTBUILD) && !defined(USED_IN_STATIC_LIB)
-_Ret_maybenull_ void * __cdecl operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize);
-_Ret_maybenull_ void * __cdecl operator new[](DECLSPEC_GUARD_OVERFLOW size_t byteSize);
-#endif
-
-//----------------------------------------
 // HeapAllocator overrides
 //----------------------------------------
 inline void __cdecl

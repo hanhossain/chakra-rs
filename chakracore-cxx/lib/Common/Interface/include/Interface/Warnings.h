@@ -61,11 +61,9 @@
 #pragma warning(disable:26454)      // arithmetic overflow at compile time (due to us doing "0 - 1" intentionally)
 #pragma warning(disable:26495)      // member not initialized (generally due to our heavy use of out-of-thread-zeroing allocators)
 
-#ifndef NTBUILD
 // Would be nice to clean these up.
 #pragma warning(disable:6054)       // String 'dumpName' might not be zero-terminated.
 #pragma warning(disable:6244)       // Local declaration of 'Completed' hides previous declaration at line '76'
 #pragma warning(disable:6246)       // Local declaration of 'i' hides declaration of the same name in outer scope.
 #pragma warning(disable:6326)       // Potential comparison of a constant with another constant.
-#endif
 #endif // _PREFAST_

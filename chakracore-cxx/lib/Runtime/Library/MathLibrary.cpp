@@ -480,47 +480,6 @@ namespace Js
     Var inline Math::FloorDouble(double d, ScriptContext *scriptContext)
     {
             // xplat-todo: use intrinsics here on linux
-#ifdef _MSC_VER
-#if defined(_M_IX86) || defined(_M_X64)
-        if (AutoSystemInfo::Data.SSE4_1Available())
-        {
-            __m128d input, output;
-
-            int intResult;
-
-            input = _mm_load_sd(&d);
-            if (d >= 0.0)
-            {
-                output = input;
-            }
-            else
-            {
-                output = _mm_floor_sd(input, input);
-            }
-            intResult = _mm_cvttsd_si32(output);
-
-            if (TaggedInt::IsOverflow(intResult) || intResult == 0x80000000 || JavascriptNumber::IsNegZero(d))
-            {
-                double dblResult;
-                if (d >= 0.0)
-                {
-                    output = _mm_floor_sd(output, input);
-                }
-                _mm_store_sd(&dblResult, output);
-
-                Assert(dblResult == ::floor(d) || Js::JavascriptNumber::IsNan(dblResult));
-
-                return JavascriptNumber::ToVarNoCheck(dblResult, scriptContext);
-            }
-            else
-            {
-                Assert(intResult == (int)::floor(d));
-                return JavascriptNumber::ToVar(intResult, scriptContext);
-            }
-        }
-        else
-#endif
-#endif
         {
             intptr_t intResult;
 

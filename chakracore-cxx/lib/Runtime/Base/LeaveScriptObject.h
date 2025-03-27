@@ -9,11 +9,7 @@
 //----------------------------------
 // EnterScriptStart/EnterScriptEnd
 //----------------------------------
-#if defined(DBG) && defined(_M_IX86) && defined(_MSC_VER)
-#define SAVE_FS0()  __entryExitRecord.scriptEntryFS0 = (void*)__readfsdword(0)
-#else
 #define SAVE_FS0()
-#endif
 
 
 #define BEGIN_ENTER_SCRIPT_EX(scriptContext, doCleanup, isCallRoot, hasCaller, isScript) \

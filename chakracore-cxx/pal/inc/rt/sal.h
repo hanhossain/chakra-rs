@@ -162,23 +162,14 @@
 #undef _USE_ATTRIBUTES_FOR_SAL
 #define _USE_ATTRIBUTES_FOR_SAL 0
 #elif !defined(_USE_ATTRIBUTES_FOR_SAL) // ][
-#if _MSC_VER >= 1400 /*IFSTRIP=IGN*/ // [
-#define _USE_ATTRIBUTES_FOR_SAL 1
-#else // ][
 #define _USE_ATTRIBUTES_FOR_SAL 0
-#endif // ]
 #endif // ]
 
 
 #if !_USE_DECLSPECS_FOR_SAL // [
 #if !_USE_ATTRIBUTES_FOR_SAL // [
-#if _MSC_VER >= 1400 /*IFSTRIP=IGN*/ // [
-#undef _USE_ATTRIBUTES_FOR_SAL
-#define _USE_ATTRIBUTES_FOR_SAL 1
-#else // ][
 #undef _USE_DECLSPECS_FOR_SAL
 #define _USE_DECLSPECS_FOR_SAL  1
-#endif // ]
 #endif // ]
 #endif // ]
 
@@ -1701,23 +1692,10 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
 #define __writeaccess_impl_notref Access=SA_Write,Notref=1
 #define __allaccess_impl_notref   Access=SA_ReadWrite,Notref=1
 
-#if _MSC_VER >= 1610 /*IFSTRIP=IGN*/ // [
-
-// For SAL2, we need to expect general expressions.
-
-#define __cap_impl(size)          WritableElements="\n"#size
-#define __bytecap_impl(size)      WritableBytes="\n"#size
-#define __bytecount_impl(size)    ValidBytes="\n"#size
-#define __count_impl(size)        ValidElements="\n"#size
-
-#else // ][
-
 #define __cap_impl(size)          WritableElements=#size
 #define __bytecap_impl(size)      WritableBytes=#size
 #define __bytecount_impl(size)    ValidBytes=#size
 #define __count_impl(size)        ValidElements=#size
-
-#endif // ]
 
 #define __cap_c_impl(size)        WritableElementsConst=size
 #define __cap_c_one_notref_impl   WritableElementsConst=1,Notref=1
@@ -1881,175 +1859,6 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
 
 #define __inner_typefix(ctype)             _SA_annotes1(SAL_typefix, ctype)
 #define __inner_exceptthat                 _SA_annotes0(SAL_except)
-
-#elif defined(_MSC_EXTENSIONS) && !defined( MIDL_PASS ) && !defined(__midl) && !defined(RC_INVOKED) && defined(_PFT_VER) && _MSC_VER >= 1400 /*IFSTRIP=IGN*/ // ][
-
-// minimum attribute expansion for foreground build
-
-#pragma push_macro( "SA" )
-#pragma push_macro( "REPEATABLE" )
-
-#ifdef __cplusplus // [
-#define SA( id ) id
-#define REPEATABLE [repeatable]
-#else  // !__cplusplus // ][
-#define SA( id ) SA_##id
-#define REPEATABLE
-#endif  // !__cplusplus // ]
-
-REPEATABLE
-[source_annotation_attribute( SA( Parameter ) )]
-struct __P_impl
-{
-#ifdef __cplusplus // [
-    __P_impl();
-#endif // ]
-   int __d_;
-};
-typedef struct __P_impl __P_impl;
-
-REPEATABLE
-[source_annotation_attribute( SA( ReturnValue ) )]
-struct __R_impl
-{
-#ifdef __cplusplus // [
-    __R_impl();
-#endif // ]
-   int __d_;
-};
-typedef struct __R_impl __R_impl;
-
-[source_annotation_attribute( SA( Method ) )]
-struct __M_
-{
-#ifdef __cplusplus // [
-    __M_();
-#endif // ]
-   int __d_;
-};
-typedef struct __M_ __M_;
-
-[source_annotation_attribute( SA( All ) )]
-struct __A_
-{
-#ifdef __cplusplus // [
-    __A_();
-#endif // ]
-   int __d_;
-};
-typedef struct __A_ __A_;
-
-[source_annotation_attribute( SA( Field ) )]
-struct __F_
-{
-#ifdef __cplusplus // [
-    __F_();
-#endif // ]
-   int __d_;
-};
-typedef struct __F_ __F_;
-
-#pragma pop_macro( "REPEATABLE" )
-#pragma pop_macro( "SA" )
-
-
-#define _SAL_nop_impl_
-
-#define _At_impl_(target, annos)        [__A_(__d_=0)]
-#define _At_buffer_impl_(target, iter, bound, annos)  [__A_(__d_=0)]
-#define _When_impl_(expr, annos)        annos
-#define _Group_impl_(annos)             annos
-#define _GrouP_impl_(annos)             annos
-#define _Use_decl_anno_impl_            [__M_(__d_=0)]
-
-#define _Points_to_data_impl_           [__P_impl(__d_=0)]
-#define _Literal_impl_                  [__P_impl(__d_=0)]
-#define _Notliteral_impl_               [__P_impl(__d_=0)]
-
-#define _Pre_valid_impl_                [__P_impl(__d_=0)]
-#define _Post_valid_impl_               [__P_impl(__d_=0)]
-#define _Ret_valid_impl_                [__R_impl(__d_=0)]
-
-#define _Check_return_impl_             [__R_impl(__d_=0)]
-#define _Must_inspect_impl_             [__R_impl(__d_=0)]
-
-#define _Success_impl_(expr)            [__M_(__d_=0)]
-#define _On_failure_impl_(expr)         [__M_(__d_=0)]
-#define _Always_impl_(expr)             [__M_(__d_=0)]
-
-#define _Printf_format_string_impl_     [__P_impl(__d_=0)]
-#define _Scanf_format_string_impl_      [__P_impl(__d_=0)]
-#define _Scanf_s_format_string_impl_    [__P_impl(__d_=0)]
-
-#define _Raises_SEH_exception_impl_         [__M_(__d_=0)]
-#define _Maybe_raises_SEH_exception_impl_   [__M_(__d_=0)]
-
-#define _In_bound_impl_                 [__P_impl(__d_=0)]
-#define _Out_bound_impl_                [__P_impl(__d_=0)]
-#define _Ret_bound_impl_                [__R_impl(__d_=0)]
-#define _Deref_in_bound_impl_           [__P_impl(__d_=0)]
-#define _Deref_out_bound_impl_          [__P_impl(__d_=0)]
-#define _Deref_ret_bound_impl_          [__R_impl(__d_=0)]
-
-#define _Range_impl_(min,max)           [__P_impl(__d_=0)]
-#define _In_range_impl_(min,max)        [__P_impl(__d_=0)]
-#define _Out_range_impl_(min,max)       [__P_impl(__d_=0)]
-#define _Ret_range_impl_(min,max)       [__R_impl(__d_=0)]
-#define _Deref_in_range_impl_(min,max)  [__P_impl(__d_=0)]
-#define _Deref_out_range_impl_(min,max) [__P_impl(__d_=0)]
-#define _Deref_ret_range_impl_(min,max) [__R_impl(__d_=0)]
-
-#define _Field_range_impl_(min,max)     [__F_(__d_=0)]
-
-#define _Pre_satisfies_impl_(cond)      [__A_(__d_=0)]
-#define _Post_satisfies_impl_(cond)     [__A_(__d_=0)]
-#define _Satisfies_impl_(cond)          [__A_(__d_=0)]
-
-#define _Null_impl_                     [__A_(__d_=0)]
-#define _Notnull_impl_                  [__A_(__d_=0)]
-#define _Maybenull_impl_                [__A_(__d_=0)]
-
-#define _Valid_impl_                    [__A_(__d_=0)]
-#define _Notvalid_impl_                 [__A_(__d_=0)]
-#define _Maybevalid_impl_               [__A_(__d_=0)]
-
-#define _Readable_bytes_impl_(size)     [__A_(__d_=0)]
-#define _Readable_elements_impl_(size)  [__A_(__d_=0)]
-#define _Writable_bytes_impl_(size)     [__A_(__d_=0)]
-#define _Writable_elements_impl_(size)  [__A_(__d_=0)]
-
-#define _Null_terminated_impl_          [__A_(__d_=0)]
-#define _NullNull_terminated_impl_      [__A_(__d_=0)]
-
-#define _Pre_impl_                      [__P_impl(__d_=0)]
-#define _Pre1_impl_(p1)                 [__P_impl(__d_=0)]
-#define _Pre2_impl_(p1,p2)              [__P_impl(__d_=0)]
-#define _Pre3_impl_(p1,p2,p3)           [__P_impl(__d_=0)]
-
-#define _Post_impl_                     [__P_impl(__d_=0)]
-#define _Post1_impl_(p1)                [__P_impl(__d_=0)]
-#define _Post2_impl_(p1,p2)             [__P_impl(__d_=0)]
-#define _Post3_impl_(p1,p2,p3)          [__P_impl(__d_=0)]
-
-#define _Ret1_impl_(p1)                 [__R_impl(__d_=0)]
-#define _Ret2_impl_(p1,p2)              [__R_impl(__d_=0)]
-#define _Ret3_impl_(p1,p2,p3)           [__R_impl(__d_=0)]
-
-#define _Deref_pre1_impl_(p1)           [__P_impl(__d_=0)]
-#define _Deref_pre2_impl_(p1,p2)        [__P_impl(__d_=0)]
-#define _Deref_pre3_impl_(p1,p2,p3)     [__P_impl(__d_=0)]
-
-#define _Deref_post1_impl_(p1)          [__P_impl(__d_=0)]
-#define _Deref_post2_impl_(p1,p2)       [__P_impl(__d_=0)]
-#define _Deref_post3_impl_(p1,p2,p3)    [__P_impl(__d_=0)]
-
-#define _Deref_ret1_impl_(p1)           [__R_impl(__d_=0)]
-#define _Deref_ret2_impl_(p1,p2)        [__R_impl(__d_=0)]
-#define _Deref_ret3_impl_(p1,p2,p3)     [__R_impl(__d_=0)]
-
-#define _Deref2_pre1_impl_(p1)          //[__P_impl(__d_=0)]
-#define _Deref2_post1_impl_(p1)         //[__P_impl(__d_=0)]
-#define _Deref2_ret1_impl_(p1)          //[__P_impl(__d_=0)]
 
 #else // ][
 

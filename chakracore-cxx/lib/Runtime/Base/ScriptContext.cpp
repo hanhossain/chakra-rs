@@ -44,12 +44,6 @@
 
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
-#ifdef _M_IX86
-#ifdef _CONTROL_FLOW_GUARD
-extern "C" PVOID __guard_check_icall_fptr;
-#endif
-#endif
-
 namespace Js
 {
     ScriptContext * ScriptContext::New(ThreadContext * threadContext)
@@ -1966,7 +1960,6 @@ namespace Js
         else
         {
             // We do not own the memory passed into DefaultLoadScriptUtf8. We need to save it so we copy the memory.
-#ifndef NTBUILD
             if (loadScriptFlag & LoadScriptFlag_ExternalArrayBuffer)
             {
                 *ppSourceInfo = Utf8SourceInfo::NewWithNoCopy(this,
@@ -1974,7 +1967,6 @@ namespace Js
                     scriptSource);
             }
             else
-#endif
             {
                 // The 'length' here is not correct (we will get the length from the parser) however parser isn't done yet.
                 // Once the parser is done we will update the utf8sourceinfo's length correctly
@@ -4242,12 +4234,6 @@ ExitTempAllocator:
                     lea eax, [esp + 8]
                     push eax
                     call ScriptContext::ProfileModeDeferredParse
-#ifdef _CONTROL_FLOW_GUARD
-                    // verify that the call target is valid
-                    mov  ecx, eax
-                    call[__guard_check_icall_fptr]
-                    mov eax, ecx
-#endif
                     pop ebp
                     // Although we don't restore ESP here on WinCE, this is fine because script profiler is not shipped for WinCE.
                     jmp eax
@@ -4304,12 +4290,6 @@ ExitTempAllocator:
                     mov ebp, esp
                     push[esp + 8]
                     call ScriptContext::ProfileModeDeferredDeserialize
-#ifdef _CONTROL_FLOW_GUARD
-                    // verify that the call target is valid
-                    mov  ecx, eax
-                    call[__guard_check_icall_fptr]
-                    mov eax, ecx
-#endif
                     pop ebp
                     // Although we don't restore ESP here on WinCE, this is fine because script profiler is not shipped for WinCE.
                     jmp eax
@@ -5305,9 +5285,7 @@ ScriptContext::GetJitFuncRangeCache()
             allowPrereserveAlloc = false;
         }
 #endif
-#ifndef _CONTROL_FLOW_GUARD
         allowPrereserveAlloc = false;
-#endif
         // The EnsureJITThreadContext() call could fail if the JIT Server process has died. In such cases, we should not try to do anything further in the client process.
         if (!this->GetThreadContext()->EnsureJITThreadContext(allowPrereserveAlloc))
         {

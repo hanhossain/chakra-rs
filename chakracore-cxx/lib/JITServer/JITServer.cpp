@@ -146,38 +146,6 @@ ServerConnectProcessWithProcessHandle(
     return ProcessContextManager::RegisterNewProcess(clientPid, targetHandle, chakraBaseAddress, crtBaseAddress);
 }
 
-#if !(WINVER >= _WIN32_WINNT_WINBLUE)
-HRESULT
-ServerConnectProcess(
-    handle_t binding,
-    intptr_t chakraBaseAddress,
-    intptr_t crtBaseAddress
-)
-{
-    // Should use ServerConnectProcessWithProcessHandle on 8.1+
-    if (AutoSystemInfo::Data.IsWin8Point1OrLater())
-    {
-        Assert(UNREACHED);
-        return E_ACCESSDENIED;
-    }
-
-    DWORD clientPid;
-    HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
-    if (FAILED(hr))
-    {
-        return hr;
-    }
-    HANDLE targetHandle = nullptr;
-    targetHandle = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION, false, clientPid);
-    if (!targetHandle)
-    {
-        Assert(UNREACHED);
-        return E_ACCESSDENIED;
-    }
-    return ProcessContextManager::RegisterNewProcess(clientPid, targetHandle, chakraBaseAddress, crtBaseAddress);
-}
-#endif
-
 #pragma warning(push)
 #pragma warning(disable:6387 28196) // PREFast does not understand the out context can be null here
 HRESULT
@@ -241,17 +209,6 @@ ServerInitializeThreadContext(
         }
 
         *threadContextInfoAddress = (PTHREADCONTEXT_HANDLE)EncodePointer(contextInfo);
-
-#if defined(_CONTROL_FLOW_GUARD)
-        if (!PHASE_OFF1(Js::PreReservedHeapAllocPhase))
-        {
-            *prereservedRegionAddr = (intptr_t)contextInfo->GetPreReservedSectionAllocator()->EnsurePreReservedRegion();
-            contextInfo->SetCanCreatePreReservedSegment(*prereservedRegionAddr != 0);
-        }
-#if !defined(_M_ARM)
-        *jitThunkAddr = (intptr_t)contextInfo->GetJITThunkEmitter()->EnsureInitialized();
-#endif
-#endif
 
         return hr;
     });

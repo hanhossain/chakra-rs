@@ -31,10 +31,6 @@
     ;JavascriptMethod ScriptContext::ProfileModeDeferredDeserialize(ScriptFunction *function)
     IMPORT  |?ProfileModeDeferredDeserialize@ScriptContext@Js@@SAP6APAXPAVRecyclableObject@2@UCallInfo@2@ZZPAVScriptFunction@2@@Z|
 
-#if defined(_CONTROL_FLOW_GUARD)
-    IMPORT __guard_check_icall_fptr
-#endif
-
     TEXTAREA
 
 #ifdef _ENABLE_DYNAMIC_THUNKS
@@ -47,16 +43,6 @@
     PROLOG_PUSH r0-r5,r11,lr      ; save volatile registers and non-volatile registers; r5 is pushed for aligned purposes
 
     bl   |?EnsureDynamicInterpreterThunk@InterpreterStackFrame@Js@@CAP6APAXPAVRecyclableObject@2@UCallInfo@2@ZZPAVScriptFunction@2@@Z|  ; call InterpreterStackFrame::EnsureDynamicInterpreterThunk
-
-#if defined(_CONTROL_FLOW_GUARD)
-    mov     r4, r0                ; save entryPoint in r4
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r4                ; restore entryPoint in r0
-#endif
 
     mov  r12, r0                  ; back up entryPoint in R12
 

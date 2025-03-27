@@ -10,9 +10,6 @@
 _Must_inspect_result_
 _Ret_maybenull_ _Post_writable_byte_size_(size)
 void * __RPC_USER midl_user_allocate(
-#if defined(_WIN32_WINNT_WIN10)
-    _In_ // starting win10, _In_ is in the signature
-#endif
     size_t size)
 {
     return (HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, size));
@@ -336,9 +333,6 @@ JITManager::ConnectProcess(RPC_BINDING_HANDLE rpcBindingHandle)
     }
     else
     {
-#if (WINVER >= _WIN32_WINNT_WINBLUE)
-        AssertOrFailFast(UNREACHED);
-#else
         RpcTryExcept
         {
             hr = ClientConnectProcess(
@@ -351,7 +345,6 @@ JITManager::ConnectProcess(RPC_BINDING_HANDLE rpcBindingHandle)
             hr = HRESULT_FROM_WIN32(RpcExceptionCode());
         }
         RpcEndExcept;
-#endif
     }
 
     return hr;

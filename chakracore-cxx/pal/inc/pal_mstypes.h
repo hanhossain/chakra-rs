@@ -35,8 +35,6 @@ extern "C" {
 #define EXTERN_C
 #endif // __cplusplus
 
-#ifndef _MSC_VER
-
 // Note:  Win32-hosted GCC predefines __stdcall and __cdecl, but Unix-
 // hosted GCC does not.
 
@@ -82,8 +80,6 @@ extern "C" {
 #if defined(_VAC_) && defined(__cplusplus)
 #define __inline        inline
 #endif
-
-#endif // !_MSC_VER
 
 #define PALIMPORT
 #define PAL_NORETURN    __attribute__((noreturn))
@@ -136,8 +132,6 @@ extern "C" {
 // Misc. types
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _MSC_VER
-
 // A bunch of source files (e.g. most of the ndp tree) include pal.h
 // but are written to be LLP64, not LP64.  (LP64 => long = 64 bits
 // LLP64 => longs = 32 bits, long long = 64 bits)
@@ -171,7 +165,6 @@ extern "C" {
 #define __int16     short int
 #define __int8      char        // assumes char is signed
 
-#endif // _MSC_VER
 
 #ifndef PAL_STDCPP_COMPAT
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
@@ -190,13 +183,10 @@ typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 #endif // PAL_IMPLEMENTATION
 
-#ifndef _MSC_VER
-
 #if _WIN64
 typedef long double LONG_DOUBLE;
 #endif
 
-#endif // _MSC_VER
 #endif // !PAL_STDCPP_COMPAT
 
 typedef void VOID;
@@ -273,11 +263,7 @@ typedef signed __int32 LONG32, *PLONG32;
 typedef unsigned __int64 ULONG64;
 typedef signed __int64 LONG64;
 
-#if defined(_X86_) && _MSC_VER >= 1300
-#define _W64 __w64
-#else
 #define _W64
-#endif
 
 #ifdef BIT64
 #define _atoi64 (__int64)atoll

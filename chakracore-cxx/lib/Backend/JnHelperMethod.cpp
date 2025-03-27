@@ -33,38 +33,6 @@ intptr_t const *GetHelperMethods()
     return JnHelperMethodAddresses;
 }
 
-#if ENABLE_DEBUG_CONFIG_OPTIONS && defined(_CONTROL_FLOW_GUARD)
-class HelperTableCheck
-{
-public:
-    HelperTableCheck() {
-        CheckJnHelperTable(JnHelperMethodAddresses);
-    }
-};
-
-// Dummy global to trigger CheckJnHelperTable call at load time.
-static HelperTableCheck LoadTimeHelperTableCheck;
-
-void CheckJnHelperTable(intptr_t const* table)
-{
-    MEMORY_BASIC_INFORMATION memBuffer;
-
-    // Make sure the helper table is in read-only memory for security reasons.
-    SIZE_T byteCount;
-    byteCount = VirtualQuery(table, &memBuffer, sizeof(memBuffer));
-
-    Assert(byteCount);
-
-    // Note: .rdata is merged with .text on x86.
-    if (memBuffer.Protect != PAGE_READONLY && memBuffer.Protect != PAGE_EXECUTE_READ)
-    {
-        AssertMsg(false, "JnHelperMethodAddress table needs to be read-only for security reasons");
-
-        Fatal();
-    }
-}
-#endif
-
 #ifdef ENABLE_SCRIPT_DEBUGGING
 static intptr_t const helperMethodWrappers[] = {
     reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper0),
@@ -126,20 +94,11 @@ GetMethodAddress(ThreadContextInfo * context, IR::HelperCallOpnd* opnd)
     return GetMethodOriginalAddress(context, opnd->m_fnHelper);
 }
 
-// TODO:  Remove this define once makes it into WINNT.h
-#ifndef DECLSPEC_GUARDIGNORE
-#if (_MSC_FULL_VER >= 170065501) && !defined(__clang__)
-#define DECLSPEC_GUARDIGNORE  __declspec(guard(ignore))
-#else
-#define DECLSPEC_GUARDIGNORE
-#endif
-#endif
-
 // We need the helper table to be in read-only memory for obvious security reasons.
 // Import function ptr require dynamic initialization, and cause the table to be in read-write memory.
 // Additionally, all function ptrs are automatically marked as safe CFG addresses by the compiler.
 // __declspec(guard(ignore)) can be used on methods to have the compiler not mark these as valid CFG targets.
-DECLSPEC_GUARDIGNORE  _NOINLINE intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod helperMethod)
+_NOINLINE intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelperMethod helperMethod)
 {
     switch (helperMethod)
     {
@@ -241,11 +200,6 @@ DECLSPEC_GUARDIGNORE  _NOINLINE intptr_t GetNonTableMethodAddress(ThreadContextI
         //
         // Methods that we don't want to get marked as CFG targets as they make unprotected calls
         //
-
-#ifdef _CONTROL_FLOW_GUARD
-    case HelperGuardCheckCall:
-        return  (intptr_t)__guard_check_icall_fptr; // OOP JIT: ntdll load at same address across all process
-#endif
 
     case HelperOp_TryCatch:
         return ShiftStdcallAddr(context, Js::JavascriptExceptionOperators::OP_TryCatch);
