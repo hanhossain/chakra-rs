@@ -5,12 +5,6 @@
 #include "RuntimeLanguagePch.h"
 #include "Language/InterpreterStackFrame.h"
 
-#ifdef _M_IX86
-#ifdef _CONTROL_FLOW_GUARD
-extern "C" PVOID __guard_check_icall_fptr;
-#endif
-#endif
-
 namespace Js
 {
     void JavascriptExceptionOperators::AutoCatchHandlerExists::FetchNonUserCodeStatus(ScriptContext * scriptContext)
@@ -550,13 +544,6 @@ namespace Js
                     // Set up the call target, save the current frame ptr, and adjust the frame to access
                     // locals in native code.
                     mov eax, tryAddr
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-                    // verify that the call target is valid
-                    mov  ebx, eax; save call target
-                    mov  ecx, eax
-                    call[__guard_check_icall_fptr]
-                    mov  eax, ebx; restore call target
-#endif
                     push ebp
                     mov ebp, framePtr
                     call eax
@@ -633,13 +620,6 @@ namespace Js
                 // Set up the call target
                 mov ecx, handlerAddr
 
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-                // verify that the call target is valid
-                mov  ebx, ecx     ; save call target
-                call [__guard_check_icall_fptr]
-                mov  ecx, ebx     ; restore call target
-#endif
-
                 // Set up catch object, save the current frame ptr, and adjust the frame to access
                 // locals in native code.
                 mov eax, catchObject
@@ -710,14 +690,6 @@ namespace Js
                 // Set up the call target, save the current frame ptr, and adjust the frame to access
                 // locals in native code.
                 mov eax, tryAddr
-
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-                // verify that the call target is valid
-                mov  ebx, eax     ; save call target
-                mov  ecx, eax
-                call [__guard_check_icall_fptr]
-                mov  eax, ebx     ; restore call target
-#endif
 
                 push ebp
                 mov ebp, framePtr
@@ -795,14 +767,6 @@ namespace Js
                     // Set up the call target
                     mov eax, handlerAddr
 
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-                    // verify that the call target is valid
-                    mov  ebx, eax; save call target
-                    mov  ecx, eax
-                    call[__guard_check_icall_fptr]
-                    mov  eax, ebx; restore call target
-#endif
-
                     // save the current frame ptr, and adjust the frame to access
                     // locals in native code.
                     push ebp
@@ -875,14 +839,6 @@ namespace Js
                     // locals in native code.
                     mov eax, tryAddr
 
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-                    // verify that the call target is valid
-                    mov  ebx, eax; save call target
-                    mov  ecx, eax
-                    call[__guard_check_icall_fptr]
-                    mov  eax, ebx; restore call target
-#endif
-
                     push ebp
                     mov ebp, framePtr
                     call eax
@@ -943,13 +899,6 @@ namespace Js
 
             // Set up the call target
             mov eax, handlerAddr
-
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-            // verify that the call target is valid
-            mov  ecx, eax
-            call[__guard_check_icall_fptr]
-            mov  eax, ecx; restore call target
-#endif
 
             // save the current frame ptr, and adjust the frame to access
             // locals in native code.

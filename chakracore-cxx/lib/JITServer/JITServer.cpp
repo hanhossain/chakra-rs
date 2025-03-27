@@ -242,17 +242,6 @@ ServerInitializeThreadContext(
 
         *threadContextInfoAddress = (PTHREADCONTEXT_HANDLE)EncodePointer(contextInfo);
 
-#if defined(_CONTROL_FLOW_GUARD)
-        if (!PHASE_OFF1(Js::PreReservedHeapAllocPhase))
-        {
-            *prereservedRegionAddr = (intptr_t)contextInfo->GetPreReservedSectionAllocator()->EnsurePreReservedRegion();
-            contextInfo->SetCanCreatePreReservedSegment(*prereservedRegionAddr != 0);
-        }
-#if !defined(_M_ARM)
-        *jitThunkAddr = (intptr_t)contextInfo->GetJITThunkEmitter()->EnsureInitialized();
-#endif
-#endif
-
         return hr;
     });
 }

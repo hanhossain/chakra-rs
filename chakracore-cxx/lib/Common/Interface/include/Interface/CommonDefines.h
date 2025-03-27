@@ -79,11 +79,7 @@
 #endif
 
 // Memory Protections
-#ifdef _CONTROL_FLOW_GUARD
-#define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ | PAGE_TARGETS_INVALID)
-#else
 #define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ)
-#endif
 
 //----------------------------------------------------------------------------------------------------
 // Enabled features
@@ -321,11 +317,6 @@
 // VTUNE profiling requires ETW trace
 #if defined(_M_IX86) || defined(_M_X64)
 #define VTUNE_PROFILING
-#endif
-
-
-#ifdef _CONTROL_FLOW_GUARD
-#define CONTROL_FLOW_GUARD_LOGGER
 #endif
 
 #ifndef ENABLE_TEST_HOOKS
@@ -649,9 +640,6 @@
 // (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
 #if ENABLE_DEBUG_CONFIG_OPTIONS && defined(STACK_BACK_TRACE)
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
-#endif
-
-#if defined(STACK_BACK_TRACE) || defined(CONTROL_FLOW_GUARD_LOGGER)
 #endif
 
 #if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)

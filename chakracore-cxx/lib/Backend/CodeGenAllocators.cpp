@@ -9,9 +9,6 @@ CodeGenAllocators<TAlloc, TPreReservedAlloc>::CodeGenAllocators(AllocationPolicy
 : pageAllocator(policyManager, Js::Configuration::Global.flags, PageAllocatorType_BGJIT, 0)
 , allocator(_u("NativeCode"), &pageAllocator, Js::Throw::OutOfMemory)
 , emitBufferManager(&allocator, codePageAllocators, scriptContext, threadContext, _u("JIT code buffer"), processHandle)
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-, canCreatePreReservedSegment(false)
-#endif
 {
 }
 

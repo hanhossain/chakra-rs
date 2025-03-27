@@ -6,10 +6,6 @@ include ksamd64.inc
 
         _TEXT SEGMENT
 
-ifdef _CONTROL_FLOW_GUARD
-    extrn __guard_check_icall_fptr:QWORD
-endif
-
 ;;============================================================================================================
 ;; NativeCodeGenerator::CheckCodeGenThunk
 ;;============================================================================================================
@@ -29,19 +25,9 @@ align 16
         .setframe rbp, 0
         .endprolog
 
-
-ifdef _CONTROL_FLOW_GUARD
-        sub rsp, 20h                            ; allocate stack space for the callee params(min 4 slots is mandate)
-        call ?CheckCodeGen@NativeCodeGenerator@@SAP6APEAXPEAVRecyclableObject@Js@@UCallInfo@3@ZZPEAVScriptFunction@3@@Z
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        add rsp, 20h                            ;de-allocate stack space for the callee params(min 4 slots is mandate + 1 for alignment )
-        mov rax, rcx
-else
         sub rsp, 20h                            ;allocate stack space for the callee params(min 4 slots is mandate)
         call ?CheckCodeGen@NativeCodeGenerator@@SAP6APEAXPEAVRecyclableObject@Js@@UCallInfo@3@ZZPEAVScriptFunction@3@@Z
         add rsp, 20h                            ;de-allocate stack space for the callee params(min 4 slots is mandate)
-endif
 
         ;EPILOGUE starts here
 
@@ -84,11 +70,6 @@ align 16
         movups xmmword ptr [rsp + 50h], xmm3
 
         call ?CheckAsmJsCodeGen@NativeCodeGenerator@@SAP6APEAXPEAVRecyclableObject@Js@@UCallInfo@3@ZZPEAVScriptFunction@3@@Z
-ifdef _CONTROL_FLOW_GUARD
-        mov rcx, rax                            ; __guard_check_icall_fptr requires the call target in rcx.
-        call [__guard_check_icall_fptr]         ; verify that the call target is valid
-        mov rax, rcx ; CFG is guaranteed not to mess up rcx
-endif
 
         ;EPILOGUE starts here
         movups xmm1, xmmword ptr [rsp + 30h]

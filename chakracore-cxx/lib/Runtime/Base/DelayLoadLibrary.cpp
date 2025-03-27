@@ -4,22 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
 
-#ifdef _CONTROL_FLOW_GUARD
-#if !defined(DELAYLOAD_SET_CFG_TARGET)
-extern "C"
-WINBASEAPI
-BOOL
-WINAPI
-SetProcessValidCallTargets(
-    _In_ HANDLE hProcess,
-    _In_ PVOID VirtualAddress,
-    _In_ SIZE_T RegionSize,
-    _In_ ULONG NumberOfOffsets,
-    _In_reads_(NumberOfOffsets) PCFG_CALL_TARGET_INFO OffsetInformation
-    );
-#endif
-#endif
-
 namespace Js
 {
     HRESULT DelayLoadWinRtString::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)

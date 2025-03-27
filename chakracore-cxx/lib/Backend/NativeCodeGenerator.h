@@ -143,12 +143,6 @@ private:
         {
             this->foregroundAllocators = CreateAllocators(pageAllocator);
 
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-            if (this->scriptContext->webWorkerId != Js::Constants::NonWebWorkerContextId)
-            {
-                this->foregroundAllocators->canCreatePreReservedSegment = true;
-            }
-#endif
         }
 
         return this->foregroundAllocators;
@@ -169,9 +163,6 @@ private:
         if (!this->backgroundAllocators)
         {
             this->backgroundAllocators = CreateAllocators(pageAllocator);
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-            this->backgroundAllocators->canCreatePreReservedSegment = true;
-#endif
         }
 
         AllocateBackgroundCodeGenProfiler(pageAllocator);

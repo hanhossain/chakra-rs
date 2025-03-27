@@ -42,8 +42,6 @@ Preprocessor directives to remove:
   - `__MINGW32__`
   - `WINVER`
   - `_WIN32_WINNT`
-  - `_CONTROL_FLOW_GUARD`
-  - `SUPPORT_WIN32_SLIST`
 - ios
   - `__IOS__`
 - android
@@ -60,3 +58,4 @@ Files to remove:
 - chakracore-cxx/lib/Common/Memory/DelayDeletingFunctionTable.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.h
+- any files with // TODO (hanhossain): remove file

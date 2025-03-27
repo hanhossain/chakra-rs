@@ -54,9 +54,6 @@
     PROLOG_PUSH {r4-r7}   // r6 is saved for stack alignment, this does: add r11,sp,#10 as well
     PROLOG_PUSH {r11}
     PROLOG_PUSH {lr}
-#if defined(_CONTROL_FLOW_GUARD)
-    PROLOG_PUSH {r8-r9}          // extra register to save info across icall check, and one register to maintain alignment
-#endif
     PROLOG_STACK_SAVE r7       // mov r7,sp -- save stack frame for restoring at the epilog.
 
 
@@ -91,20 +88,6 @@ LOCAL_LABEL(argN):
 
 LOCAL_LABEL(arg2):
     // Verify that the call target is valid, and process last two arguments
-#if defined(_CONTROL_FLOW_GUARD)
-    mov     r5, r0    // save argument registers
-    mov     r6, r1
-    mov     r8, r2
-
-    mov     r0, r4    // the target address to check
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r5    // restore argument registers
-    mov     r1, r6
-    mov     r2, r8
-#endif
 
     // Push values[1] into r3
     ldr     r3,[r2,#-4]                         // r3 = *(r2-4) = values[1]
@@ -115,9 +98,6 @@ LOCAL_LABEL(arg2):
     blx     r4                                  // call r4 (== entry point)
 
     EPILOG_STACK_RESTORE r7
-#if defined(_CONTROL_FLOW_GUARD)
-    EPILOG_POP {r8-r9}
-#endif
     EPILOG_POP {pc}
     EPILOG_POP {r11}
     EPILOG_POP {r4-r7}
@@ -153,20 +133,6 @@ LOCAL_LABEL(arg2):
     cmp r3,4096
     bge LOCAL_LABEL(chkstk_call)
     sub sp,r3
-
-    // Verify that the call target is valid
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-    // we have used the r1-r3 info to set up the fake frame
-    // they aren't needed by the jitted code that we're going to thunk to
-    // so we don't preserve them across the __guard_check_icall_fptr call
-    mov     r5, r0
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r5
-#endif
 
     // Thunk to the jitted code (and don't return)
     bx  r0
@@ -216,20 +182,6 @@ LOCAL_LABEL(chkstk_call):
     cmp r3,4096
     bge LOCAL_LABEL(chkstk_call_catch)
     sub sp,r3
-
-    // Verify that the call target is valid
-#if 0 && defined(_CONTROL_FLOW_GUARD)
-    // we have used the r1-r3 info to set up the fake frame
-    // they aren't needed by the jitted code that we're going to thunk to
-    // so we don't preserve them across the __guard_check_icall_fptr call
-    mov     r5, r0
-
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r5
-#endif
 
     // Thunk to the jitted code (and don't return)
     bx  r0

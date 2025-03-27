@@ -6,9 +6,6 @@ include ksamd64.inc
 
         _TEXT SEGMENT
 
-ifdef _CONTROL_FLOW_GUARD
-    extrn __guard_check_icall_fptr:QWORD
-endif
 extrn __chkstk: PROC
 
         ;; [rsp + 8h] = arg0.

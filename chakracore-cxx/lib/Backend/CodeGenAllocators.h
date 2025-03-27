@@ -13,9 +13,6 @@ private:
     NoRecoverMemoryArenaAllocator  allocator;
 public:
     EmitBufferManager<TAlloc, TPreReservedAlloc, CriticalSection> emitBufferManager;
-#if !TARGET_64 && _CONTROL_FLOW_GUARD
-    bool canCreatePreReservedSegment;
-#endif
 
     CodeGenAllocators(AllocationPolicyManager * policyManager, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, HANDLE processHandle);
     ~CodeGenAllocators();

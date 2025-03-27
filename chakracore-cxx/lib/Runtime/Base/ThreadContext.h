@@ -694,9 +694,6 @@ private:
     CustomHeap::InProcCodePageAllocators thunkPageAllocators;
 #endif
     CustomHeap::InProcCodePageAllocators codePageAllocators;
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    InProcJITThunkEmitter jitThunkEmitter;
-#endif
 #endif
 
     RecyclerRootPtr<RecyclableData> recyclableData;
@@ -862,9 +859,6 @@ public:
 #endif
     CustomHeap::InProcCodePageAllocators * GetCodePageAllocators() { return &codePageAllocators; }
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    InProcJITThunkEmitter * GetJITThunkEmitter() { return &jitThunkEmitter; }
-#endif
 #endif // ENABLE_NATIVE_CODEGEN
 
     CriticalSection* GetFunctionBodyLock() { return &csFunctionBody; }

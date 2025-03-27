@@ -3557,18 +3557,7 @@ namespace Js
     {
 #if ENABLE_NATIVE_CODEGEN
         JavascriptMethod originalEntryPoint = this->GetOriginalEntryPoint_Unchecked();
-        return
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-            (
-#if ENABLE_OOP_NATIVE_CODEGEN
-            JITManager::GetJITManager()->IsOOPJITEnabled()
-                ? JITThunkEmitter<SectionAllocWrapper>::IsInThunk(this->GetScriptContext()->GetThreadContext()->GetJITThunkStartAddr(), (uintptr_t)originalEntryPoint)
-                :
-#endif
-                this->GetScriptContext()->GetThreadContext()->GetJITThunkEmitter()->IsInThunk((uintptr_t)originalEntryPoint)
-            ) ||
-#endif
-            this->GetScriptContext()->IsNativeAddress((void*)originalEntryPoint);
+        return this->GetScriptContext()->IsNativeAddress((void*)originalEntryPoint);
 #else
         return false;
 #endif

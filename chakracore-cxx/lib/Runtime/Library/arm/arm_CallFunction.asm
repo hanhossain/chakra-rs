@@ -29,9 +29,6 @@
 
 #include "ksarm.h"
 
-#if defined(_CONTROL_FLOW_GUARD)
-        IMPORT __guard_check_icall_fptr
-#endif
 
     OPT 1   ; re-enable listing
 
@@ -46,9 +43,6 @@
 
     ; IMPORTANT: the number of pushed registers (even vs odd) must be consistent with 8-bytes align check below.
     PROLOG_PUSH r4-r7,r11,lr   ; r6 is saved for stack alignment, this does: add r11,sp,#10 as well
-#if defined(_CONTROL_FLOW_GUARD)
-    PROLOG_PUSH r8-r9          ; extra register to save info across icall check, and one register to maintain alignment
-#endif
     PROLOG_STACK_SAVE r7       ; mov r7,sp -- save stack frame for restoring at the epilog.
 
 
@@ -68,11 +62,7 @@
     ;  - output: r4 = total number of BYTES probed/allocated.
     blx     __chkstk            ;now r4 = the space to allocate, r5 = actual space needed for values on stack, r4 >= r5.
 
-#if defined(_CONTROL_FLOW_GUARD)
-    ldr     r6,[sp, #32]        ; r6 = entryPoint
-#else
     ldr     r6,[sp, #24]
-#endif
     ;offset stack by the amount of space we'll need.
     sub     sp,sp,r4
 
@@ -91,20 +81,6 @@
 
 |arg2|
     ; Verify that the call target is valid, and process last two arguments
-#if defined(_CONTROL_FLOW_GUARD)
-    mov     r4, r0    ; save argument registers
-    mov     r5, r1
-    mov     r8, r3
-
-    mov     r0, r6    ; the target address to check
-    mov32   r12, __guard_check_icall_fptr
-    ldr     r12, [r12]
-    blx     r12
-
-    mov     r0, r4    ; restore argument registers
-    mov     r1, r5
-    mov     r3, r8
-#endif
 
     ;Push values[0] into r2
     ldr     r2,[r3,#-8]                         ;r2 = *(r2-8) = values[0]
@@ -115,9 +91,6 @@
     blx     r6                                  ;call r4 (== entry point)
 
     EPILOG_STACK_RESTORE r7
-#if defined(_CONTROL_FLOW_GUARD)
-    EPILOG_POP r8-r9
-#endif
     EPILOG_POP r4-r7,r11,pc
 
     NESTED_END

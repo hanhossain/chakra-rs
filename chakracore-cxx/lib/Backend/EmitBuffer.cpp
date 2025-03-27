@@ -252,20 +252,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* a
                 this->scriptContext->GetThreadContext()->SubCodeSize(allocation->bytesCommitted);
             }
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-            if (allocation->allocation->thunkAddress)
-            {
-                if (JITManager::GetJITManager()->IsJITServer())
-                {
-                    ((ServerThreadContext*)this->threadContext)->GetJITThunkEmitter()->FreeThunk(allocation->allocation->thunkAddress);
-                }
-                else
-                {
-                    ((ThreadContext*)this->threadContext)->GetJITThunkEmitter()->FreeThunk(allocation->allocation->thunkAddress);
-                }
-            }
-            else
-#endif
             {
                 SetValidCallTarget(allocation, address, false);
             }

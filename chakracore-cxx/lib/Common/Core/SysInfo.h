@@ -19,9 +19,6 @@ public:
     bool DisableDebugScopeCapture() const { return this->disableDebugScopeCapture; }
     bool IsWin8OrLater();
     bool IsWin8Point1OrLater();
-#if defined(_CONTROL_FLOW_GUARD)
-    bool IsWinThresholdOrLater();
-#endif
 #if defined(_M_IX86) || defined(_M_X64)
     bool VirtualSseAvailable(const int sseLevel) const;
 #endif

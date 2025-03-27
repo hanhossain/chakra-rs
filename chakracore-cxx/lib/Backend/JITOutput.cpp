@@ -264,12 +264,6 @@ JITOutput::FinalizeNativeCode()
     {
         m_func->GetOOPCodeGenAllocators()->emitBufferManager.CompletePreviousAllocation(m_oopAlloc);
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-        if (!m_func->IsLoopBody() && CONFIG_FLAG(UseJITTrampoline))
-        {
-            allocation->thunkAddress = m_func->GetOOPThreadContext()->GetJITThunkEmitter()->CreateThunk(m_outputData->codeAddress);
-        }
-#endif
     }
     else
 #endif
@@ -282,12 +276,6 @@ JITOutput::FinalizeNativeCode()
         m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->SetNumberChunks(numberChunks);
 #endif
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-        if (!m_func->IsLoopBody() && CONFIG_FLAG(UseJITTrampoline))
-        {
-            allocation->thunkAddress = m_func->GetInProcThreadContext()->GetJITThunkEmitter()->CreateThunk(m_outputData->codeAddress);
-        }
-#endif
     }
     m_outputData->thunkAddress = allocation->thunkAddress;
     if (!allocation->thunkAddress && CONFIG_FLAG(OOPCFGRegistration))

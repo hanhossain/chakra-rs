@@ -13,9 +13,6 @@
 #endif
 
 #ifdef _M_IX86
-#ifdef _CONTROL_FLOW_GUARD
-extern "C" PVOID __guard_check_icall_fptr;
-#endif
 extern "C" void __cdecl _alloca_probe_16();
 #endif
 
@@ -1220,10 +1217,6 @@ using namespace Js;
             rep movs byte ptr[edi], byte ptr[esi];
 
             mov  ecx, entryPoint
-#ifdef _CONTROL_FLOW_GUARD
-            // verify that the call target is valid
-            call[__guard_check_icall_fptr]
-#endif
             push function;
             call ecx;
             mov retVals.low, eax;
@@ -1312,10 +1305,6 @@ dbl_align:
         __asm
         {
             mov  ecx, entryPoint
-#ifdef _CONTROL_FLOW_GUARD
-            // verify that the call target is valid
-            call [__guard_check_icall_fptr]
-#endif
 
             push callInfo
             push function
@@ -1725,12 +1714,6 @@ LABEL1:
             lea eax, [esp+8]                // load the address of the function os that if we need to box, we can patch it up
             push eax
             call JavascriptFunction::DeferredParse
-#ifdef _CONTROL_FLOW_GUARD
-            // verify that the call target is valid
-            mov  ecx, eax
-            call[__guard_check_icall_fptr]
-            mov eax, ecx
-#endif
             pop ebp
             jmp eax
         }
@@ -1777,12 +1760,6 @@ LABEL1:
             mov ebp, esp
             push [esp+8]
             call JavascriptFunction::DeferredDeserialize
-#ifdef _CONTROL_FLOW_GUARD
-            // verify that the call target is valid
-            mov  ecx, eax
-            call[__guard_check_icall_fptr]
-            mov eax, ecx
-#endif
             pop ebp
             jmp eax
         }

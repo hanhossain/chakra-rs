@@ -120,11 +120,6 @@ public:
 
     bool IsClosed();
 
-#if defined(ENABLE_GLOBALIZATION) && defined(_CONTROL_FLOW_GUARD)
-    Js::DelayLoadWinCoreProcessThreads * GetWinCoreProcessThreads();
-    Js::DelayLoadWinCoreProcessThreads m_delayLoadWinCoreProcessThreads;
-#endif
-
     private:
         template<bool useFileAPI>
         void SetValidCallTargetInternal(

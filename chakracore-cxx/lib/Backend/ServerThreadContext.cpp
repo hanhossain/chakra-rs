@@ -16,9 +16,6 @@ ServerThreadContext::ServerThreadContext(ThreadContextDataIDL* data, ProcessCont
     m_sectionAllocator(processContext->processHandle),
     m_codePageAllocators(nullptr, ALLOC_XDATA, &m_sectionAllocator, &m_preReservedSectionAllocator, processContext->processHandle),
     m_thunkPageAllocators(nullptr, /* allocXData */ false, &m_sectionAllocator, nullptr, processContext->processHandle),
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-    m_jitThunkEmitter(this, &m_sectionAllocator, processContext->processHandle),
-#endif
     m_pageAlloc(nullptr, Js::Configuration::Global.flags, PageAllocatorType_BGJIT,
         AutoSystemInfo::Data.IsLowMemoryProcess() ?
         PageAllocator::DefaultLowMaxFreePageCount :
@@ -130,13 +127,6 @@ ServerThreadContext::GetCodePageAllocators()
     return &m_codePageAllocators;
 }
 
-#if defined(_CONTROL_FLOW_GUARD) && !defined(_M_ARM)
-OOPJITThunkEmitter *
-ServerThreadContext::GetJITThunkEmitter()
-{
-    return &m_jitThunkEmitter;
-}
-#endif
 
 intptr_t
 ServerThreadContext::GetRuntimeChakraBaseAddress() const

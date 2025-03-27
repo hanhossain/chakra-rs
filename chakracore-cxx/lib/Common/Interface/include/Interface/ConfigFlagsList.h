@@ -1645,12 +1645,6 @@ FLAGNR(Boolean, IRViewer, "Enable IRViewer functionality (improved UI for variou
 
 FLAGNR(Number,  GCMemoryThreshold, "Threshold for allocation-based GC initiation (in MB)", 0)
 
-#ifdef _CONTROL_FLOW_GUARD
-FLAGNR(Boolean, PreReservedHeapAlloc, "Enable Pre-reserved Heap Page Allocator", true)
-FLAGNR(Boolean, CFGInJit, "Enable CFG check in JIT", true)
-FLAGNR(Boolean, CFG, "Force enable CFG on jshost. version in the jshost's manifest file disables CFG", true)
-#endif
-
 #if DBG
     FLAGNR(Number, SimulatePolyCacheWithOneTypeForInlineCacheIndex, "Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec", -1)
 #endif
