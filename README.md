@@ -44,7 +44,6 @@ Preprocessor directives to remove:
   - `_WIN32_WINNT`
   - `_CONTROL_FLOW_GUARD`
   - `SUPPORT_WIN32_SLIST`
-  - `HAVE_WIN32_VT100`
 - ios
   - `__IOS__`
 - android
