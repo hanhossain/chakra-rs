@@ -36,9 +36,6 @@ open graph.svg
 ## TODO
 
 Preprocessor directives to remove:
-- windows
-  - `WIN32`
-  - `__WIN32__`
 - ios
   - `__IOS__`
 - android
