@@ -47,8 +47,6 @@
 
 #if HAVE_ALLOCA_H
 #include <alloca.h>
-#elif defined(__MINGW32__)
-#include <malloc.h>
 #else
 #include <stdlib.h>
 #endif
@@ -61,16 +59,8 @@
 #define WABT_UNLIKELY(x) __builtin_expect(!!(x), 0)
 #define WABT_LIKELY(x) __builtin_expect(!!(x), 1)
 
-#if __MINGW32__
-// mingw defaults to printf format specifier being ms_printf (which doesn't
-// understand 'llu', etc.) We always want gnu_printf, and force mingw to always
-// use mingw_printf, mingw_vprintf, etc.
-#define WABT_PRINTF_FORMAT(format_arg, first_arg) \
-  __attribute__((format(gnu_printf, (format_arg), (first_arg))))
-#else
 #define WABT_PRINTF_FORMAT(format_arg, first_arg) \
   __attribute__((format(printf, (format_arg), (first_arg))))
-#endif
 
 #ifdef __cplusplus
 #if __cplusplus >= 201103L

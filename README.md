@@ -39,7 +39,6 @@ Preprocessor directives to remove:
 - windows
   - `WIN32`
   - `__WIN32__`
-  - `__MINGW32__`
 - ios
   - `__IOS__`
 - android
