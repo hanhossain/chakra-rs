@@ -155,11 +155,7 @@
 
 
 // templatized code
-#if defined(_MSC_VER) && !defined(__clang__)
-#define USE_STATIC_VPM 1 // Disable to force generation at runtime
-#else
 #define USE_STATIC_VPM 0
-#endif
 
 
 #if ENABLE_CONCURRENT_GC

@@ -40,11 +40,7 @@
 
 #ifndef THREAD_LOCAL
 #ifndef __APPLE__
-#if defined(_MSC_VER) && _MSC_VER <= 1800 // VS2013?
-#define THREAD_LOCAL __declspec(thread)
-#else // VS2015+, linux Clang etc.
 #define THREAD_LOCAL thread_local
-#endif // VS2013?
 #else // __APPLE__
 #ifndef __IOS__
 #define THREAD_LOCAL _Thread_local
@@ -54,16 +50,7 @@
 #endif // __APPLE__
 #endif // THREAD_LOCAL
 
-// VS2015 RTM has bugs with constexpr, so require min of VS2015 Update 3 (known good version)
-#if !defined(_MSC_VER) || _MSC_FULL_VER >= 190024210
-#define HAS_CONSTEXPR 1
-#endif
-
-#ifdef HAS_CONSTEXPR
 #define OPT_CONSTEXPR constexpr
-#else
-#define OPT_CONSTEXPR
-#endif
 
 #ifdef __clang__
 #define CLANG_WNO_BEGIN_(x) \
@@ -476,18 +463,9 @@ DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
 #include <stdint.h>
 
 // `typename QualifiedName` declarations outside of template code not supported before MSVC 2015 update 1
-#if defined(_MSC_VER) && _MSC_VER < 1910 && !defined(__clang__)
-#define _TYPENAME
-#else
 #define _TYPENAME typename
-#endif
 
-#if (defined(_MSC_VER) && _MSC_VER < 1900) || defined(NTBUILD)
-// "noexcept" not supported before VS 2015
-#define _NOEXCEPT_ throw()
-#else
 #define _NOEXCEPT_ noexcept
-#endif
 
 #if defined(__GNUC__) || defined(__clang__)
 #define _ReturnAddress() __builtin_return_address(0)

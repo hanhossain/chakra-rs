@@ -164,11 +164,7 @@ LeakReport::LogUrl(char16 const * url, void * globalObject)
     urlCopy[length - 1] = _u('\0');
 
     record->url = urlCopy;
-#if _MSC_VER
-    record->time = _time64(NULL);
-#else
     record->time = time(NULL);
-#endif
     record->tid = ::GetCurrentThreadId();
     record->next = nullptr;
     record->scriptEngine = nullptr;
@@ -209,11 +205,6 @@ LeakReport::DumpUrl(DWORD tid)
             char16 timeStr[26] = _u("00:00");
 
             // xplat-todo: Need to implement _wasctime_s in the PAL
-#if _MSC_VER
-            struct tm local_time;
-            _localtime64_s(&local_time, &curr->time);
-            _wasctime_s(timeStr, &local_time);
-#endif
             timeStr[wcslen(timeStr) - 1] = 0;
             Print(_u("%s - (%p, %p) %s\n"), timeStr, curr->scriptEngine, curr->globalObject, curr->url);
             *pprev = curr->next;

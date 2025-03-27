@@ -150,10 +150,6 @@ inline bool DoubleFitsInIntType(double val)
 
 #define ovadd3_gt(a, b, c, rhs) (((a) + (b) + (c) > (rhs)) || ((a) + (b) < (a)) || ((a) + (b) + (c) < (c)))
 
-#if defined(_TARGET_X86_) && defined( _MSC_VER )
-#define S_SIZE_T_WP64BUG(v)  S_SIZE_T( static_cast<uint32_t>( v ) )
-#else
 #define S_SIZE_T_WP64BUG(v)  S_SIZE_T( v )
-#endif
 
  #endif // SAFEMATH_H_

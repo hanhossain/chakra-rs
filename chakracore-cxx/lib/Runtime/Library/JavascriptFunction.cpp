@@ -21,12 +21,7 @@ extern "C" void __cdecl _alloca_probe_16();
 
 using namespace Js;
 
-    // The VS2013 linker treats this as a redefinition of an already
-    // defined constant and complains. So skip the declaration if we're compiling
-    // with VS2013 or below.
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
     const charcount_t JavascriptFunction::DIAG_MAX_FUNCTION_STRING;
-#endif
 
     DEFINE_RECYCLER_TRACKER_PERF_COUNTER(JavascriptFunction);
     JavascriptFunction::JavascriptFunction(DynamicType * type)
@@ -1792,11 +1787,6 @@ LABEL1:
             jmp eax
         }
     }
-#elif (defined(_M_X64) || defined(_M_ARM32_OR_ARM64)) && defined(_MSC_VER)
-    //Do nothing: the implementation of JavascriptFunction::DeferredParsingThunk is declared (appropriately decorated) in
-    // Library\amd64\javascriptfunctiona.asm
-    // Library\arm\arm_DeferredParsingThunk.asm
-    // Library\arm64\arm64_DeferredParsingThunk.asm
 #else
     // xplat implement in
     // Library/amd64/JavascriptFunctionA.S

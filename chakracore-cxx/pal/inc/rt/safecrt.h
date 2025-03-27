@@ -99,11 +99,7 @@
 
 /* _W64 */
 #if !defined(_W64)
-#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
-#define _W64 __w64
-#else
 #define _W64
-#endif
 #endif
 
 /* uintptr_t */
@@ -116,7 +112,7 @@ typedef _W64 unsigned int   uintptr_t;
 #define _UINTPTR_T_DEFINED
 #endif
 
-#if defined(_MSC_VER) || (defined(__GNUC__) && (__GNUC__ >= 3))
+#if (defined(__GNUC__) && (__GNUC__ >= 3))
 #define SAFECRT_DEPRECATED __declspec(deprecated)
 #else
 #define SAFECRT_DEPRECATED

@@ -12,10 +12,6 @@
 #ifndef _INTSAFE_H_INCLUDED_
 #define _INTSAFE_H_INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "specstrings.h"    // for IN, etc.
 
 

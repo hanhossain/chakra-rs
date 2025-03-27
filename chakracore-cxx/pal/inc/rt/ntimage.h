@@ -26,10 +26,6 @@
 #ifndef _NTIMAGE_
 #define _NTIMAGE_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 //
 // Define the linker version number.
 

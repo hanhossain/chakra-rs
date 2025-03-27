@@ -1556,11 +1556,7 @@ ThreadContext::IsOnStack(void const *ptr)
         return true;
     }
 
-#if defined(_M_IX86) && defined(_MSC_VER)
-    return ptr < (void*)__readfsdword(0x4) && ptr >= (void*)__readfsdword(0xE0C);
-#elif defined(_M_AMD64) && defined(_MSC_VER)
-    return ptr < (void*)__readgsqword(0x8) && ptr >= (void*)__readgsqword(0x1478);
-#elif defined(_M_ARM)
+#if defined(_M_ARM)
     ULONG lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
@@ -1570,12 +1566,8 @@ ThreadContext::IsOnStack(void const *ptr)
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
-#elif !defined(_MSC_VER)
-    return ::IsAddressOnStack((ULONG_PTR) ptr);
 #else
-    AssertMsg(FALSE, "IsOnStack -- not implemented yet case");
-    Js::Throw::NotImplemented();
-    return false;
+    return ::IsAddressOnStack((ULONG_PTR) ptr);
 #endif
 }
 

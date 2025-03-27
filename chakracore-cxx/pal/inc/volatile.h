@@ -69,7 +69,7 @@
 // support new compilers and/or CPUs.  Here we enforce that we can only compile using
 // VC++, or GCC on x86 or AMD64.
 // 
-#if !defined(_MSC_VER) && !defined(__GNUC__)
+#if !defined(__GNUC__)
 #error The Volatile type is currently only defined for Visual C++ and GNU C++
 #endif
 
@@ -452,10 +452,6 @@ public:
 #define RAW_KEYWORD(x) x
 
 // Disable use of Volatile<T> for GC/HandleTable code except on platforms where it's absolutely necessary.
-#if defined(_MSC_VER) && !defined(_ARM_)
-#define VOLATILE(T) T RAW_KEYWORD(volatile)
-#else
 #define VOLATILE(T) Volatile<T>
-#endif
 
 #endif //_VOLATILE_H_

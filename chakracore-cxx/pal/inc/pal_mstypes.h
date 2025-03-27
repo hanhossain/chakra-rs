@@ -263,11 +263,7 @@ typedef signed __int32 LONG32, *PLONG32;
 typedef unsigned __int64 ULONG64;
 typedef signed __int64 LONG64;
 
-#if defined(_X86_) && _MSC_VER >= 1300
-#define _W64 __w64
-#else
 #define _W64
-#endif
 
 #ifdef BIT64
 #define _atoi64 (__int64)atoll
