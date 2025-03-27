@@ -37,8 +37,6 @@ open graph.svg
 
 Preprocessor directives to remove:
 - windows
-  - `_MSC_VER`
-  - `__MSC_FULL_VER`
   - `WIN32`
   - `__WIN32__`
   - `__MINGW32__`

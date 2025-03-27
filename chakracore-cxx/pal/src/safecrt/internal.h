@@ -516,11 +516,7 @@ extern Volatile<unsigned int> __native_vcclrit_reason;
 
 #pragma warning(push)
 #pragma warning(disable: 4483)
-#if _MSC_FULL_VER >= 140050415
-#define _NATIVE_STARTUP_NAMESPACE  __identifier("<CrtImplementationDetails>")
-#else  /* _MSC_FULL_VER >= 140050415 */
 #define _NATIVE_STARTUP_NAMESPACE __CrtImplementationDetails
-#endif  /* _MSC_FULL_VER >= 140050415 */
 
 namespace _NATIVE_STARTUP_NAMESPACE
 {

@@ -1347,15 +1347,6 @@ CommonNumber:
         //
 
         uint32 result = JavascriptConversion::ToUInt32(T1);
-#if defined(_M_IX86) && _MSC_FULL_VER < 160030329
-        // Well VC doesn't actually do the right thing...  It takes (uint16)(uint32)double and removes the
-        // middle uint32 cast to (uint16)double, which isn't the same thing.  Somehow, it only seems to be a
-        // problem for x86. Forcing a store to uint32 prevents the incorrect optimization.
-        //
-        // A bug has been filled in the Dev11 database: TF bug id #901495
-        // Fixed in compiler 16.00.30329.00
-        volatile uint32 volResult = result;
-#endif
         return (uint16) result;
     }
 
