@@ -67,12 +67,8 @@ namespace Js
 
         inline BOOL IsExternal() const
         {
-#ifdef NTBUILD
-            return (this->flags & TypeFlagMask_EngineExternal) != 0;
-#else
             AssertMsg((this->flags & TypeFlagMask_EngineExternal) == 0, "Not expected.");
             return false;
-#endif
         }
         inline BOOL IsJsrtExternal() const { return (this->flags & TypeFlagMask_JsrtExternal) != 0; }
         inline BOOL SkipsPrototype() const { return (this->flags & TypeFlagMask_SkipsPrototype) != 0 ; }

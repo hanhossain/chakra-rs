@@ -9,12 +9,8 @@
 
 #include <windows.h>
 #include "Runtime.h"
-#ifdef NTBUILD
-#include "Windows.Globalization.h"
-#else
 #include "Windows.Data.Text.h"
 using namespace ABI;
-#endif
 
 namespace PlatformAgnostic
 {

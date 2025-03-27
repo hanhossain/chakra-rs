@@ -359,9 +359,6 @@ namespace Js
         Utf8SourceInfo* GetCallerUtf8SourceInfo() const;
 
         BoundedPropertyRecordHashSet * GetBoundedPropertyRecordHashSet() { return &this->boundedPropertyRecordHashSet; }
-#ifdef NTBUILD
-        bool GetDebugDocumentName(BSTR * sourceName);
-#endif
     private:
 
         Field(charcount_t) m_cchLength;               // The number of characters encoded in m_utf8Source.
@@ -411,9 +408,7 @@ namespace Js
             DWORD_PTR secondaryHostSourceContext, ScriptContext* scriptContext,
             bool isLibraryCode, Js::Var scriptSource = nullptr);
 
-#ifndef NTBUILD
         Field(Js::Var) sourceRef; // keep source string reference to prevent GC
-#endif
     };
 }
 

@@ -17,7 +17,7 @@
 #ifndef _CHAKRACORE_H_
 #define _CHAKRACORE_H_
 
-#if !defined(NTBUILD) && !defined(_CHAKRACOREBUILD)
+#if !defined(_CHAKRACOREBUILD)
 #define _CHAKRACOREBUILD
 #endif
 

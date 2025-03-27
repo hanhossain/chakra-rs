@@ -480,7 +480,7 @@ namespace Js {
     template <typename T, typename U> bool VarIs(U* obj)
     {
         // ChakraFull can't include type_traits, but ChakraCore does include it for debug builds
-#if DBG && !defined(NTBUILD)
+#if DBG
         static_assert(!std::is_same<T, U>::value, "Check should be unnecessary - did you prematurely cast?");
         static_assert(std::is_base_of<U, T>::value, "VarIs/VarTo should only downcast!");
 #endif

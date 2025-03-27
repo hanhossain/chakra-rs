@@ -1966,7 +1966,6 @@ namespace Js
         else
         {
             // We do not own the memory passed into DefaultLoadScriptUtf8. We need to save it so we copy the memory.
-#ifndef NTBUILD
             if (loadScriptFlag & LoadScriptFlag_ExternalArrayBuffer)
             {
                 *ppSourceInfo = Utf8SourceInfo::NewWithNoCopy(this,
@@ -1974,7 +1973,6 @@ namespace Js
                     scriptSource);
             }
             else
-#endif
             {
                 // The 'length' here is not correct (we will get the length from the parser) however parser isn't done yet.
                 // Once the parser is done we will update the utf8sourceinfo's length correctly

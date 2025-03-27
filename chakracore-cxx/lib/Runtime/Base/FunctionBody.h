@@ -1693,9 +1693,6 @@ namespace Js
         void SetReparsed(bool set) { m_reparsed = set; }
         bool IsMethod() const { return m_isMethod; }
         void SetIsMethod(bool set) { m_isMethod = set; }
-#ifdef NTBUILD
-        bool GetExternalDisplaySourceName(BSTR* sourceName);
-#endif
 
         void CleanupToReparse();
         void CleanupToReparseHelper();

@@ -411,19 +411,6 @@ Js::CharClassifier::CharClassifier(void)
     bool isES6UnicodeModeEnabled = CONFIG_FLAG(ES6Unicode);
     bool isFullUnicodeSupportAvailable = PlatformAgnostic::UnicodeText::IsExternalUnicodeLibraryAvailable();
 
-// The following assertions are intentionally excluded from ChakraCore by guarding on NTBUILD.
-// This is to work around limitations of the i18n library downlevel (Win7, Win 8.0)
-// where CharClassifier functionality is not available.
-// TODO: Ideally, we would use the following guard instead to assert when an i18n library is available:
-// #if INTL_ICU || INTL_WINGLOB
-#ifdef NTBUILD
-    AssertMsg(isFullUnicodeSupportAvailable, "Windows.Globalization needs to present with IUnicodeCharacterStatics support for Chakra.dll to work");
-    if (!isFullUnicodeSupportAvailable)
-    {
-        Js::Throw::FatalInternalGlobalizationError();
-    }
-#endif
-
     // If we're in ES6 mode, and we have full support for Unicode character classification
     // from an external library, then use the ES6/Surrogate pair supported versions of the functions
     // Otherwise, fallback to the ES5 versions which don't need an external library

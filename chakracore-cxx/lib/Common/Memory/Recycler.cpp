@@ -226,9 +226,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef HEAP_ENUMERATION_VALIDATION
     ,pfPostHeapEnumScanCallback(nullptr)
 #endif
-#ifdef NTBUILD
-    , telemetryBlock(&localTelemetryBlock)
-#endif
 #ifdef ENABLE_BASIC_TELEMETRY
     , telemetryStats(this, hostInterface)
 #endif
@@ -323,10 +320,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #if defined(RECYCLER_DUMP_OBJECT_GRAPH) ||  defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
     this->inDllCanUnloadNow = false;
     this->inDetachProcess = false;
-#endif
-
-#ifdef NTBUILD
-    memset(&localTelemetryBlock, 0, sizeof(localTelemetryBlock));
 #endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
@@ -3802,11 +3795,6 @@ Recycler::Collect()
 
     {
         RECORD_TIMESTAMP(initialCollectionStartTime);
-#ifdef NTBUILD
-        this->telemetryBlock->initialCollectionStartProcessUsedBytes = PageAllocator::GetProcessUsedBytes();
-        this->telemetryBlock->exhaustiveRepeatedCount = 0;
-#endif
-
         return DoCollectWrapped(finalFlags);
     }
 }
@@ -3932,9 +3920,6 @@ Recycler::DoCollect(CollectionFlags flags)
     {
         INC_TIMESTAMP_FIELD(exhaustiveRepeatedCount);
         RECORD_TIMESTAMP(currentCollectionStartTime);
-#ifdef NTBUILD
-        this->telemetryBlock->currentCollectionStartProcessUsedBytes = PageAllocator::GetProcessUsedBytes();
-#endif
 
 #if ENABLE_CONCURRENT_GC
         // DisposeObject may call script again and start another GC, so we may still be in concurrent GC state
@@ -4323,14 +4308,6 @@ Recycler::IsReentrantState() const
     return !this->CollectionInProgress();
 #endif
 }
-#endif
-
-#if defined(ENABLE_JS_ETW) && defined(NTBUILD)
-template <Js::Phase phase> static ETWEventGCActivationKind GetETWEventGCActivationKind();
-template <> ETWEventGCActivationKind GetETWEventGCActivationKind<Js::GarbageCollectPhase>() { return ETWEvent_GarbageCollect; }
-template <> ETWEventGCActivationKind GetETWEventGCActivationKind<Js::ThreadCollectPhase>() { return ETWEvent_ThreadCollect; }
-template <> ETWEventGCActivationKind GetETWEventGCActivationKind<Js::ConcurrentCollectPhase>() { return ETWEvent_ConcurrentCollect; }
-template <> ETWEventGCActivationKind GetETWEventGCActivationKind<Js::PartialCollectPhase>() { return ETWEvent_PartialCollect; }
 #endif
 
 template <Js::Phase phase>
@@ -6130,15 +6107,6 @@ Recycler::StaticBackgroundWorkCallback(void * callbackData)
     Recycler * recycler = (Recycler *) callbackData;
     recycler->DoBackgroundWork(true);
 }
-
-#if defined(ENABLE_JS_ETW) && defined(NTBUILD)
-static ETWEventGCActivationKind
-BackgroundMarkETWEventGCActivationKind(CollectionState collectionState)
-{
-    return collectionState == CollectionStateConcurrentFinishMark?
-        ETWEvent_ConcurrentFinishMark : ETWEvent_ConcurrentMark;
-}
-#endif
 
 void
 Recycler::DoBackgroundWork(bool forceForeground)

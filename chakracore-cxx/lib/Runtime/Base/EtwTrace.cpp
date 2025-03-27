@@ -207,12 +207,6 @@ void EtwTrace::PerformRundown(bool start)
 
             scriptContext = scriptContext->next;
         }
-#ifdef NTBUILD
-        if (EventEnabledJSCRIPT_HOSTING_CEO_START())
-        {
-            threadContext->EtwLogPropertyIdList();
-        }
-#endif
 
         threadContext = threadContext->Next();
     }

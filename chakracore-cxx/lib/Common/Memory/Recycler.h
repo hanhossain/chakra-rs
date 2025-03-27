@@ -1136,10 +1136,6 @@ private:
 #if DBG || defined(RECYCLER_STATS)
     bool isForceSweeping;
 #endif
-#ifdef NTBUILD
-    RecyclerWatsonTelemetryBlock localTelemetryBlock;
-    RecyclerWatsonTelemetryBlock * telemetryBlock;
-#endif
 
 #ifdef ENABLE_BASIC_TELEMETRY
 private:
@@ -1202,9 +1198,6 @@ public:
     size_t GetUsedBytes();
     void LogMemProtectHeapSize(bool fromGC);
     char* Realloc(void* buffer, DECLSPEC_GUARD_OVERFLOW size_t existingBytes, DECLSPEC_GUARD_OVERFLOW size_t requestedBytes, bool truncate = true);
-#ifdef NTBUILD
-    void SetTelemetryBlock(RecyclerWatsonTelemetryBlock * telemetryBlock) { this->telemetryBlock = telemetryBlock; }
-#endif
     
     uint GetPinnedObjectCount() const { return this->pinnedObjectMap.Count(); }
 

@@ -42,7 +42,6 @@ Preprocessor directives to remove:
   - `__MINGW32__`
   - `WINVER`
   - `_WIN32_WINNT`
-  - `NTBUILD`
   - `_CONTROL_FLOW_GUARD`
   - `SUPPORT_WIN32_SLIST`
   - `HAVE_WIN32_VT100`

@@ -7,33 +7,6 @@
 #ifdef ENABLE_JS_ETW
 #define PAIR(a,b) a ## b
 
-#ifdef NTBUILD
-#define GCETW(e, args)                          \
-    if (IsMemProtectMode())                     \
-    {                                           \
-        PAIR(EventWriteMEMPROTECT_ ## e, args); \
-    }                                           \
-    else                                        \
-    {                                           \
-        PAIR(EventWriteJSCRIPT_ ## e, args);    \
-    }
-
-#define GCETW_INTERNAL(e, args)                 \
-    if (IsMemProtectMode())                     \
-    {                                           \
-        PAIR(EventWriteMEMPROTECT_ ## e, args); \
-    }                                           \
-    else                                        \
-    {                                           \
-        PAIR(EventWriteJSCRIPT_ ## e, args);    \
-    }
-
-#define IS_GCETW_Enabled(e) \
-    (IsMemProtectMode() ? EventEnabledMEMPROTECT_##e() : EventEnabledJSCRIPT_##e())
-
-#define JS_ETW_INTERNAL(s) s
-#define EDGE_ETW_INTERNAL(s) s
-#else  // !NTBUILD
 #define GCETW(e, args)                          \
     PAIR(EventWriteJSCRIPT_ ## e, args);
 
@@ -42,7 +15,6 @@
 #define GCETW_INTERNAL(e, args)
 #define JS_ETW_INTERNAL(s)
 #define EDGE_ETW_INTERNAL(s)
-#endif  // !NTBUILD
 
 #define JS_ETW(s) s
 #define IS_JS_ETW(s) s
@@ -75,10 +47,6 @@ CompileAssert(false)
 #pragma prefast(disable:__WARNING_USING_UNINIT_VAR, "The ETW data generated from the manifest includes a default null function which uses unintialized memory.")
 
 #include <Microsoft-Scripting-Chakra-InstrumentationEvents.h>
-#ifdef NTBUILD
-#include <ieresp_mshtml.h>
-#include <microsoft-scripting-jscript9.internalevents.h>
-#endif
 
 #pragma prefast(pop)
 

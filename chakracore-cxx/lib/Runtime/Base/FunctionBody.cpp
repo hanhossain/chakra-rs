@@ -2712,21 +2712,6 @@ namespace Js
         return GetIsGlobalFunc() && !(flags & fscrGlobalCode);
     }
 
-#ifdef NTBUILD
-    bool ParseableFunctionInfo::GetExternalDisplaySourceName(BSTR* sourceName)
-    {
-        Assert(sourceName);
-
-        if (IsDynamicScript() && GetUtf8SourceInfo()->GetDebugDocumentName(sourceName))
-        {
-            return true;
-        }
-
-        *sourceName = ::SysAllocString(GetSourceName());
-        return *sourceName != nullptr;
-    }
-#endif
-
     const char16* FunctionProxy::WrapWithBrackets(const char16* name, charcount_t sz, ScriptContext* scriptContext)
     {
         char16 * wrappedName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, sz + 3); //[]\0

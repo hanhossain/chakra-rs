@@ -35,12 +35,7 @@
 #define EXDEF4_WMS(process, op, func, y, t)
 #endif
 
-#ifdef NTBUILD
-// NT header is missing __cdecl on these API
-#define _CRT_HAS_CDECL false
-#else
 #define _CRT_HAS_CDECL true
-#endif
 
   DEF3    ( CUSTOM     , Nop               , OP_Empty                , Empty         )
 EXDEF3    ( CUSTOM     , InvalidOpCode     , OP_Empty                , Empty         )

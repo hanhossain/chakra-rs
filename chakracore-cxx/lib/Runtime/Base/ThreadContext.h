@@ -191,14 +191,6 @@ enum RecyclerCollectCallBackFlags
 };
 typedef void (__cdecl *RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
 
-#ifdef NTBUILD
-struct ThreadContextWatsonTelemetryBlock
-{
-    FILETIME lastScriptStartTime;
-    FILETIME lastScriptEndTime;
-};
-#endif
-
 class NativeLibraryEntryRecord
 {
 public:
@@ -821,11 +813,6 @@ private:
     typedef JsUtil::BaseDictionary<Js::DynamicType const *, void *, HeapAllocator, PowerOf2SizePolicy> DynamicObjectEnumeratorCacheMap;
     DynamicObjectEnumeratorCacheMap dynamicObjectEnumeratorCacheMap;
 
-#ifdef NTBUILD
-    ThreadContextWatsonTelemetryBlock localTelemetryBlock;
-    ThreadContextWatsonTelemetryBlock * telemetryBlock;
-#endif
-
     NativeLibraryEntryRecord nativeLibraryEntry;
 
     UCrtC99MathApis ucrtC99MathApis;
@@ -1104,10 +1091,6 @@ public:
     ThreadConfiguration const * GetConfig() const { return &configuration; }
 
 public:
-#ifdef NTBUILD
-    void SetTelemetryBlock(ThreadContextWatsonTelemetryBlock * telemetryBlock) { this->telemetryBlock = telemetryBlock; }
-#endif
-
     static ThreadContext* GetContextForCurrentThread();
 
     Recycler* GetRecycler() { return recycler; }

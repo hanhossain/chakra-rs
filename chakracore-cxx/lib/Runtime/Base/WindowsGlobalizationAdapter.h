@@ -8,13 +8,11 @@
 
 #ifdef INTL_WINGLOB
 #include "Windows.Globalization.h"
-#ifndef NTBUILD
 #include "windows.globalization.numberformatting.h"
 #include "windows.globalization.datetimeformatting.h"
 #include "Windows.Data.Text.h"
 #include "activation.h"
 using namespace ABI;
-#endif // NTBUILD
 #endif // INTL_WINGLOB
 
 class ThreadContext;

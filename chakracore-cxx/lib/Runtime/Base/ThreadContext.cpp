@@ -180,9 +180,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #endif
     dynamicObjectEnumeratorCacheMap(&HeapAllocator::Instance, 16),
     //threadContextFlags(ThreadContextFlagNoFlag),
-#ifdef NTBUILD
-    telemetryBlock(&localTelemetryBlock),
-#endif
     configuration(enableExperimentalFeatures),
     jsrtRuntime(nullptr),
     propertyMap(nullptr),
@@ -249,10 +246,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     this->threadId = ::GetCurrentThreadId();
 #endif
 
-#ifdef NTBUILD
-    memset(&localTelemetryBlock, 0, sizeof(localTelemetryBlock));
-#endif
-
     AutoCriticalSection autocs(ThreadContext::GetCriticalSection());
     ThreadContext::LinkToBeginning(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
 #if DBG
@@ -280,18 +273,6 @@ void ThreadContext::InitAvailableCommit()
     if (!success)
     {
         commit = (ULONG64)-1;
-#ifdef NTBUILD
-        APP_MEMORY_INFORMATION AppMemInfo;
-        success = GetWinCoreProcessThreads()->GetProcessInformation(
-            GetCurrentProcess(),
-            ProcessAppMemoryInfo,
-            &AppMemInfo,
-            sizeof(AppMemInfo));
-        if (success)
-        {
-            commit = AppMemInfo.AvailableCommit;
-        }
-#endif
         AutoSystemInfo::Data.SetAvailableCommit(commit);
     }
 }
@@ -652,47 +633,27 @@ public:
 
 LPFILETIME ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetLastScriptExecutionEndTime() const
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return &(tc->telemetryBlock->lastScriptEndTime);
-#else
     return nullptr;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerTelemetryStats(rti);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerHeapUsage(totalHeapBytes, usedHeapBytes, heapUsedRatio);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsTelemetryProviderEnabled() const
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::IsTelemetryProviderEnabled();
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg)
 {
-#if defined(ENABLE_BASIC_TELEMETRY) && defined(NTBUILD)
-    return Js::TransmitRecyclerTelemetryError(rti, msg);
-#else
     return false;
-#endif
 }
 
 bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const
@@ -1675,7 +1636,7 @@ ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext
         Js::Throw::StackOverflow(scriptContext, returnAddress);
     }
 
-#if defined(NTBUILD) || defined(__IOS__) || defined(__ANDROID__)
+#if defined(__IOS__) || defined(__ANDROID__)
     // Use every Nth stack probe as a QC trigger.
     if (AutoSystemInfo::ShouldQCMoreFrequently() && this->HasInterruptPoller() && this->IsScriptActive())
     {
@@ -4399,15 +4360,6 @@ uint ThreadContext::GetRandomNumber()
     return randomNumber;
 #endif
 }
-
-#if defined(ENABLE_JS_ETW) && defined(NTBUILD)
-void ThreadContext::EtwLogPropertyIdList()
-{
-    propertyMap->Map([&](const Js::PropertyRecord* propertyRecord){
-        EventWriteJSCRIPT_HOSTING_PROPERTYID_LIST(propertyRecord, propertyRecord->GetBuffer());
-    });
-}
-#endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 Js::Var ThreadContext::GetMemoryStat(Js::ScriptContext* scriptContext)

@@ -28,13 +28,8 @@ extern int IsInAssert;
 #define LOG_ASSERT()
 #endif
 
-#ifdef NTBUILD
-#include <ntassert.h>
-#define RAISE_ASSERTION(comment) NT_ASSERTMSG(comment, FALSE)
-#else
 #include <assert.h>
 #define RAISE_ASSERTION(comment) DbgRaiseAssertionFailure()
-#endif
 
 #define AssertMsg(f, comment) \
     do { \
@@ -60,12 +55,7 @@ extern int IsInAssert;
 
 #define AssertMsg(f, comment) ((void) 0)
 #define Assert(exp)           ((void) 0)
-#ifdef NTBUILD
-#include <ntassert.h>
-#define AssertVerify(exp)     NT_VERIFY(exp) // Execute the expression but don't do anything with the result in non-debug builds
-#else
 #define AssertVerify(exp)     (exp)
-#endif
 #define Assume(x)             __assume(x)
 #define DebugOnly(x)
 #endif // DBG
