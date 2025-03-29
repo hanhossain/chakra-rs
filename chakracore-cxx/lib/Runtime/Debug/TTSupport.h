@@ -283,10 +283,10 @@ namespace TTD
     //Function pointer definitions and a struct for writing data out of memory (presumably to stable storage)
     typedef void* JsTTDStreamHandle;
 
-    typedef JsTTDStreamHandle(*TTDOpenResourceStreamCallback)(size_t uriLength, const char* uri, size_t filenameLength, const char* filename, bool read, bool write);
-    typedef bool(*TTDReadBytesFromStreamCallback)(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount);
-    typedef bool(*TTDWriteBytesToStreamCallback)(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount);
-    typedef void(*TTDFlushAndCloseStreamCallback)(JsTTDStreamHandle handle, bool read, bool write);
+    typedef JsTTDStreamHandle(CALLBACK *TTDOpenResourceStreamCallback)(size_t uriLength, const char* uri, size_t filenameLength, const char* filename, bool read, bool write);
+    typedef bool(CALLBACK *TTDReadBytesFromStreamCallback)(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount);
+    typedef bool(CALLBACK *TTDWriteBytesToStreamCallback)(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount);
+    typedef void(CALLBACK *TTDFlushAndCloseStreamCallback)(JsTTDStreamHandle handle, bool read, bool write);
 
     struct TTDataIOInfo
     {
@@ -302,11 +302,11 @@ namespace TTD
     };
 
     //Function pointer definitions for creating/interacting with external objects
-    typedef void(*TTDCreateExternalObjectCallback)(Js::ScriptContext* ctx, Js::Var prototype, Js::Var* object);
+    typedef void(CALLBACK *TTDCreateExternalObjectCallback)(Js::ScriptContext* ctx, Js::Var prototype, Js::Var* object);
 
-    typedef void(*TTDCreateJsRTContextCallback)(void* runtimeHandle, Js::ScriptContext** ctx); //Create and pin the context so it does not get GC'd
-    typedef void(*TTDReleaseJsRTContextCallback)(FinalizableObject* jsrtCtx); //Release an un-needed context during replay
-    typedef void(*TTDSetActiveJsRTContext)(void* runtimeHandle, Js::ScriptContext* ctx); //Set active jsrtcontext
+    typedef void(CALLBACK *TTDCreateJsRTContextCallback)(void* runtimeHandle, Js::ScriptContext** ctx); //Create and pin the context so it does not get GC'd
+    typedef void(CALLBACK *TTDReleaseJsRTContextCallback)(FinalizableObject* jsrtCtx); //Release an un-needed context during replay
+    typedef void(CALLBACK *TTDSetActiveJsRTContext)(void* runtimeHandle, Js::ScriptContext* ctx); //Set active jsrtcontext
 
     struct ExternalObjectFunctions
     {

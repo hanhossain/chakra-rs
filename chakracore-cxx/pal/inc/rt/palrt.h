@@ -152,6 +152,7 @@ typedef enum tagEFaultRepRetVal
 
 #define NTAPI
 #define WINAPI
+#define CALLBACK
 #define NTSYSAPI
 
 #define _WINNT_

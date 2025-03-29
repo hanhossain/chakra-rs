@@ -325,7 +325,7 @@ namespace Js
         Field(JavascriptSymbol*) symbolUnscopables;
 
     public:
-        typedef void (*HostPromiseRejectionTrackerCallback)(Var promise, Var reason, bool handled, void *callbackState);
+        typedef void (CALLBACK *HostPromiseRejectionTrackerCallback)(Var promise, Var reason, bool handled, void *callbackState);
 
         void SetNativeHostPromiseRejectionTrackerCallback(HostPromiseRejectionTrackerCallback function, void *state)
         {

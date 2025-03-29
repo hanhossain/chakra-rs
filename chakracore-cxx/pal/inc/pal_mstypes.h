@@ -35,6 +35,8 @@ extern "C" {
 #define EXTERN_C
 #endif // __cplusplus
 
+#define CALLBACK
+
 #if !defined(_declspec)
 #define _declspec(e)  __declspec(e)
 #endif

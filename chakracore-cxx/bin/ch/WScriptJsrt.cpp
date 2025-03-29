@@ -1290,7 +1290,7 @@ bool WScriptJsrt::Uninitialize()
 }
 
 #if ENABLE_TTD
-void WScriptJsrt::JsContextBeforeCollectCallback(JsRef contextRef, void *data)
+void CALLBACK WScriptJsrt::JsContextBeforeCollectCallback(JsRef contextRef, void *data)
 {
     ChakraRTInterface::JsTTDNotifyContextDestroy(contextRef);
 }

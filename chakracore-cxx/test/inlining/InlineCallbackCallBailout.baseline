@@ -1,12 +1,12 @@
 INLINING : Found callback def instr for call/apply target callback at	CallSite: 0	Caller: DispatchCallWithThis ( (#1.2), #3)
-INLINING : Inlining callback for call/apply target : 	BailOut ( (#1.1), #2)
+INLINING CALLBACK : Inlining callback for call/apply target : 	BailOut ( (#1.1), #2)
 BailOut: function BailOut, Opcode: BoundCheck Kind: BailOutOnNotNativeArray
 BailOut: function DispatchCallWithThis, Opcode: InlineeEnd Kind: BailOutOnNotNativeArray
 BailOut: function DispatchBailout, Opcode: InlineeEnd Kind: BailOutOnNotNativeArray
 foo
 foo
 INLINING : Found callback def instr for call/apply target callback at	CallSite: 0	Caller: Dispatch ( (#1.5), #6)
-INLINING : Inlining callback for call/apply target : 	foo ( (#1.4), #5)
+INLINING CALLBACK : Inlining callback for call/apply target : 	foo ( (#1.4), #5)
 foo
 BailOut: function Dispatch, Opcode: BailTarget Kind: BailOutOnInlineFunction
 bar

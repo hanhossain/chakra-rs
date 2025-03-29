@@ -211,10 +211,10 @@ public:
 };
 
 #if ENABLE_TTD
-typedef void (*JsTTDOnScriptLoadCallback)(FinalizableObject* hostContext, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-typedef uint32 (*JsTTDOnBPRegisterCallback)(void* hostRuntime, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP);
-typedef void (*JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32 bpID);
-typedef void (*JsTTDOnBPClearDocumentCallback)(void* hostRuntime);
+typedef void (CALLBACK *JsTTDOnScriptLoadCallback)(FinalizableObject* hostContext, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
+typedef uint32 (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP);
+typedef void (CALLBACK *JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32 bpID);
+typedef void (CALLBACK *JsTTDOnBPClearDocumentCallback)(void* hostRuntime);
 
 //A class that we use to pass in a functor from the host when we need to inform it about something we are doing
 class HostScriptContextCallbackFunctor

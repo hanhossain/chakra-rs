@@ -128,7 +128,7 @@ void PageAllocatorPool::IdleCleanup()
     }
 }
 
-void PageAllocatorPool::IdleCleanupRoutine(
+void CALLBACK PageAllocatorPool::IdleCleanupRoutine(
     _Inout_     PTP_CALLBACK_INSTANCE,
     _Inout_opt_ PVOID,
     _Inout_     PTP_TIMER)
