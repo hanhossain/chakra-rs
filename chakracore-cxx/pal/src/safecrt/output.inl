@@ -172,8 +172,6 @@ int __cdecl _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, v
 #endif  /* _MBCS */
 //#include <tchar.h>
 
-/* this macro defines a function which is private and as fast as possible: */
-/* for example, in C 6.0, it might be static _fastcall <type> near. */
 #define LOCAL(x) static x __cdecl
 
 /* int/long/short/pointer sizes */

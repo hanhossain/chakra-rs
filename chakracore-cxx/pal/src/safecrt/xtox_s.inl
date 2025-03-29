@@ -287,7 +287,7 @@ TCHAR * __cdecl _ultox (
 *******************************************************************************/
 
 #ifdef _SECURE_ITOA
-errno_t __fastcall x64tox_s
+errno_t x64tox_s
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
         unsigned __int64 val,
         TCHAR *buf,
@@ -296,7 +296,7 @@ errno_t __fastcall x64tox_s
         int is_neg
         )
 #else  /* _SECURE_ITOA */
-void __fastcall x64tox
+void x64tox
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
         unsigned __int64 val,
         TCHAR *buf,

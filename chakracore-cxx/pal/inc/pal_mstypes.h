@@ -44,26 +44,11 @@ extern "C" {
 #define _cdecl
 #define CDECL
 
-#ifndef PAL_STDCPP_COMPAT
-#undef __fastcall
-#define __fastcall
-#undef _fastcall
-#define _fastcall       __fastcall
-#endif // PAL_STDCPP_COMPAT
-
 #else   // !defined(__i386__)
 
 #define __cdecl
 #define _cdecl
 #define CDECL
-
-// On ARM __fastcall is ignored and causes a compile error
-#if !defined(PAL_STDCPP_COMPAT) || defined(__arm__)
-#  undef __fastcall
-#  undef _fastcall
-#  define __fastcall
-#  define _fastcall
-#endif // !defined(PAL_STDCPP_COMPAT) || defined(__arm__)
 
 #endif  // !defined(__i386__)
 
