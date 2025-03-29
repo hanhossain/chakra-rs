@@ -837,29 +837,29 @@ namespace CorUnix
         virtual PAL_ERROR AllocateObjectSynchData(
             CObjectType *potObjectType,
             ObjectDomain odObjectDomain,
-            VOID **ppvSynchData);
+            void **ppvSynchData);
 
         virtual void FreeObjectSynchData(
             CObjectType *potObjectType,
             ObjectDomain odObjectDomain,
-            VOID *pvSynchData);
+            void *pvSynchData);
 
         virtual PAL_ERROR PromoteObjectSynchData(
             CPalThread *pthrCurrent,
-            VOID *pvLocalSynchData,
-            VOID **ppvSharedSynchData);
+            void *pvLocalSynchData,
+            void **ppvSharedSynchData);
 
         virtual PAL_ERROR CreateSynchStateController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain odObjectDomain,
             ISynchStateController **ppStateController);
 
         virtual PAL_ERROR CreateSynchWaitController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain odObjectDomain,
             ISynchWaitController **ppWaitController);
 

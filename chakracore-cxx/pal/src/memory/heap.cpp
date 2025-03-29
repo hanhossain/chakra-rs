@@ -63,11 +63,11 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 RtlMoveMemory(
           IN PVOID Destination,
-          IN CONST VOID *Source,
+          IN CONST void *Source,
           IN SIZE_T Length)
 {
     PERF_ENTRY(RtlMoveMemory);
@@ -86,7 +86,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 RtlZeroMemory(
     PVOID Destination,
@@ -166,7 +166,7 @@ See MSDN doc.
 HANDLE
 PALAPI
 GetProcessHeap(
-	       VOID)
+	       void)
 {
     HANDLE ret;
 #ifdef DEBUG

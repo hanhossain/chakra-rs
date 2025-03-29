@@ -94,7 +94,7 @@ Function:
   MiscCleanup
 
 --*/
-VOID MiscCleanup();
+void MiscCleanup();
 
 /*++
 Function:

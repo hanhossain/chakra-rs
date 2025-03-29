@@ -157,7 +157,7 @@ Abstract:
 
   NOTE: This function must not modify LastError.
 --*/
-VOID
+void
 PALAPI
 PAL_Reenter(PAL_Boundary boundary)
 {
@@ -226,7 +226,7 @@ Abstract:
 
   NOTE: This function must not modify LastError.
 --*/
-VOID
+void
 PALAPI
 PAL_Leave(PAL_Boundary boundary)
 {
@@ -241,7 +241,7 @@ PAL_Leave(PAL_Boundary boundary)
 }
 
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_LeaveBottom()
 {
@@ -249,7 +249,7 @@ PAL_LeaveBottom()
 }
 
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_LeaveTop()
 {

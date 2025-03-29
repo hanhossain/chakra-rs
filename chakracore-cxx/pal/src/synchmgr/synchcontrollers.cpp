@@ -1314,7 +1314,7 @@ namespace CorUnix
                     pwtlnItem->ptrOwnerObjSynchData.shrid);
 
                 TRACE("Delegating object signaling for SynchData shrid=%p\n",
-                      (VOID *)pwtlnItem->ptrOwnerObjSynchData.shrid);
+                      (void *)pwtlnItem->ptrOwnerObjSynchData.shrid);
                 
                 if (NO_ERROR == palErr)
                 {

@@ -116,7 +116,7 @@ Function:
 
 CObjectType *
 CPalObjectBase::GetObjectType(
-    VOID
+    void
     )
 {
     ENTRY("CPalObjectBase::GetObjectType(this = %p)\n", this);
@@ -134,7 +134,7 @@ Function:
 
 CObjectAttributes *
 CPalObjectBase::GetObjectAttributes(
-    VOID
+    void
     )
 {
     ENTRY("CPalObjectBase::GetObjectAttributes(this = %p)\n", this);

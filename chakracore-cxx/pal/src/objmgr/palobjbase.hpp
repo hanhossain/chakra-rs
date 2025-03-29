@@ -93,8 +93,8 @@ namespace CorUnix
 
         LONG m_lRefCount;
 
-        VOID *m_pvImmutableData;
-        VOID *m_pvLocalData;
+        void *m_pvImmutableData;
+        void *m_pvLocalData;
 
         CObjectType *m_pot;
         CObjectAttributes m_oa;
@@ -150,13 +150,13 @@ namespace CorUnix
         virtual
         CObjectType *
         GetObjectType(
-            VOID
+            void
             );
 
         virtual
         CObjectAttributes *
         GetObjectAttributes(
-            VOID
+            void
             );
 
         virtual

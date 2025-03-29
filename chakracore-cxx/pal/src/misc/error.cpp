@@ -92,7 +92,7 @@ conditions under which the function sets the last-error code.
 DWORD
 PALAPI
 GetLastError(
-         VOID)
+         void)
 {
     return CPalThread::GetLastError();
 }
@@ -117,7 +117,7 @@ Return Values
 This function does not return a value.
 
 --*/
-VOID
+void
 PALAPI
 SetLastError(
          IN DWORD dwErrCode)

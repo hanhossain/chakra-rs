@@ -166,7 +166,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 OutputDebugStringA(
         IN LPCSTR lpOutputString)
@@ -194,7 +194,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 OutputDebugStringW(
         IN LPCWSTR lpOutputString)
@@ -394,10 +394,10 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 DebugBreak(
-       VOID)
+       void)
 {
     PERF_ENTRY(DebugBreak);
     ENTRY("DebugBreak()\n");

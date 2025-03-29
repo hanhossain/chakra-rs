@@ -85,7 +85,7 @@ namespace CorUnix
         IPalObject **ppobjThread
         );
 
-    VOID
+    void
     InternalEndCurrentThread(
         CPalThread *pThread
         );
@@ -772,7 +772,7 @@ TLSInitialize(
     void
     );
 
-VOID
+void
 WaitForEndingThreads(
     void
     );

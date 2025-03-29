@@ -465,7 +465,7 @@ approach is the safest and avoids nasty race conditions.
 If USE_GLOBAL_LOCK_FOR_SUSPENSION is defined, the calling thread
 will acquire the global lock when possible.
 --*/
-VOID
+void
 CThreadSuspensionInfo::AcquireSuspensionLocks(
     CPalThread *pthrSuspender,
     CPalThread *pthrTarget
@@ -526,7 +526,7 @@ This prevents a suspending or resuming thread from being suspended
 while holding the target's lock.
 If USE_GLOBAL_LOCK_FOR_SUSPENSION is defined, it simply releases the global lock.
 --*/
-VOID
+void
 CThreadSuspensionInfo::ReleaseSuspensionLocks(
     CPalThread *pthrSuspender,
     CPalThread *pthrTarget
@@ -771,7 +771,7 @@ InitializeSuspensionLock initializes a thread's suspension spinlock
 or suspension mutex. It is called from the CThreadSuspensionInfo
 constructor.
 --*/
-VOID
+void
 CThreadSuspensionInfo::InitializeSuspensionLock()
 {
 #if !DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX

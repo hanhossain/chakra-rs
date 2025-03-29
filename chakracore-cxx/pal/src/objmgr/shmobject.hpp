@@ -107,7 +107,7 @@ namespace CorUnix
         // SharedObject, and m_sdlSharedData when it is ProcessLocalObject.
         //
 
-        VOID *m_pvSharedData;
+        void *m_pvSharedData;
         
         CSimpleSharedMemoryLock m_ssmlSharedData;
         CSimpleDataLock m_sdlSharedData;
@@ -303,7 +303,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData
+            void **ppvSynchData
             );
 
     };
@@ -314,7 +314,7 @@ namespace CorUnix
         
     protected:
 
-        VOID *m_pvSynchData;
+        void *m_pvSynchData;
 
         virtual ~CSharedMemoryWaitableObject();
         
@@ -382,7 +382,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData
+            void **ppvSynchData
             );
     };
 

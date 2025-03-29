@@ -11,7 +11,7 @@ public:
 
     void Generate(PULONG prologStart, PULONG prologEnd, PULONG epilogStart, PULONG epilogEnd, PULONG functionEnd, ULONG exceptionHandlerRva = 0, ULONG exceptionData = 0);
 
-    const VOID *GetXdata() const { return &this->m_xdata[0]; }
+    const void *GetXdata() const { return &this->m_xdata[0]; }
     ULONG GetXdataBytes() const { return this->m_xdataBytes; }
 
     // xdata opcodes map 1:1 with instructions; compute an estimated maximum 

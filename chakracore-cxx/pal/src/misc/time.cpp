@@ -86,7 +86,7 @@ Return Values
 This function does not return a value.
 
 --*/
-VOID
+void
 PALAPI
 GetSystemTime(
           OUT LPSYSTEMTIME lpSystemTime)
@@ -181,7 +181,7 @@ the start of the epoch.
 DWORD
 PALAPI
 GetTickCount(
-         VOID)
+         void)
 {
     DWORD retval = 0;
     PERF_ENTRY(GetTickCount);

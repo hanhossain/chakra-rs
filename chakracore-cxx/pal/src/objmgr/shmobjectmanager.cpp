@@ -396,7 +396,7 @@ CSharedMemoryObjectManager::RegisterObject(
 
     if (fShared && 0 != potObj->GetImmutableDataSize())
     {
-        VOID *pvImmutableData;
+        void *pvImmutableData;
         SHMObjData *psmod;
 
         palError = pobjToRegister->GetImmutableData(&pvImmutableData);
@@ -409,8 +409,8 @@ CSharedMemoryObjectManager::RegisterObject(
         psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
         if (NULL != psmod)
         {
-            VOID *pvSharedImmutableData =
-                SHMPTR_TO_TYPED_PTR(VOID, psmod->shmObjImmutableData);
+            void *pvSharedImmutableData =
+                SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
             
             if (NULL != pvSharedImmutableData)
             {

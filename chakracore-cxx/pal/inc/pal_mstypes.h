@@ -185,8 +185,6 @@ typedef long double LONG_DOUBLE;
 
 #endif // !PAL_STDCPP_COMPAT
 
-typedef void VOID;
-
 #ifndef PLATFORM_UNIX
 typedef long LONG;
 typedef unsigned long ULONG;
@@ -445,12 +443,12 @@ UShortToPtr(
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
 #define PtrToUshort( p ) ((unsigned short)(ULONG_PTR)(p) )
 #define PtrToShort( p )  ((short)(LONG_PTR)(p) )
-#define IntToPtr( i )    ((VOID *)(INT_PTR)((int)(i)))
-#define UIntToPtr( ui )  ((VOID *)(UINT_PTR)((unsigned int)(ui)))
-#define LongToPtr( l )   ((VOID *)(LONG_PTR)((long)(l)))
-#define ULongToPtr( ul ) ((VOID *)(ULONG_PTR)((unsigned long)(ul)))
-#define ShortToPtr( s )  ((VOID *)(INT_PTR)((short)(s)))
-#define UShortToPtr( us )  ((VOID *)(UINT_PTR)((unsigned short)(s)))
+#define IntToPtr( i )    ((void *)(INT_PTR)((int)(i)))
+#define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)(ui)))
+#define LongToPtr( l )   ((void *)(LONG_PTR)((long)(l)))
+#define ULongToPtr( ul ) ((void *)(ULONG_PTR)((unsigned long)(ul)))
+#define ShortToPtr( s )  ((void *)(INT_PTR)((short)(s)))
+#define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)(s)))
 #endif // !defined(BIT64)
 
 #else
@@ -481,12 +479,12 @@ typedef _W64 unsigned __int32 DWORD_PTR, *PDWORD_PTR;
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
 #define PtrToUshort( p ) ((unsigned short)(ULONG_PTR)(p) )
 #define PtrToShort( p )  ((short)(LONG_PTR)(p) )
-#define IntToPtr( i )    ((VOID *)(INT_PTR)((int)i))
-#define UIntToPtr( ui )  ((VOID *)(UINT_PTR)((unsigned int)ui))
-#define LongToPtr( l )   ((VOID *)(LONG_PTR)((long)l))
-#define ULongToPtr( ul ) ((VOID *)(ULONG_PTR)((unsigned long)ul))
-#define ShortToPtr( s )  ((VOID *)(INT_PTR)((short)s))
-#define UShortToPtr( us )  ((VOID *)(UINT_PTR)((unsigned short)s))
+#define IntToPtr( i )    ((void *)(INT_PTR)((int)i))
+#define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)ui))
+#define LongToPtr( l )   ((void *)(LONG_PTR)((long)l))
+#define ULongToPtr( ul ) ((void *)(ULONG_PTR)((unsigned long)ul))
+#define ShortToPtr( s )  ((void *)(INT_PTR)((short)s))
+#define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)s))
 
 #endif
 
@@ -614,12 +612,12 @@ typedef CONST TCHAR *LPCTSTR;
 #define LOBYTE(w)           ((BYTE)((DWORD_PTR)(w) & 0xff))
 #define HIBYTE(w)           ((BYTE)((DWORD_PTR)(w) >> 8))
 
-typedef VOID *HANDLE;
+typedef void *HANDLE;
 typedef HANDLE HWND;
 typedef struct __PAL_RemoteHandle__ { HANDLE h; } *RHANDLE;
 typedef HANDLE *PHANDLE;
 typedef HANDLE *LPHANDLE;
-#define INVALID_HANDLE_VALUE ((VOID *)(-1))
+#define INVALID_HANDLE_VALUE ((void *)(-1))
 #define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF)
 #define INVALID_FILE_ATTRIBUTES ((DWORD) -1)
 typedef HANDLE HMODULE;

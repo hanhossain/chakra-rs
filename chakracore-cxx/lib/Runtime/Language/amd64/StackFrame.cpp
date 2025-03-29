@@ -94,9 +94,9 @@ bool Js::Amd64StackFrame::Next()
     return false;
 }
 
-VOID *Js::Amd64StackFrame::GetInstructionPointer()
+void *Js::Amd64StackFrame::GetInstructionPointer()
 {
-    return (VOID *)currentContext->Rip;
+    return (void *)currentContext->Rip;
 }
 
 void *Js::Amd64StackFrame::GetFrame() const
@@ -104,21 +104,21 @@ void *Js::Amd64StackFrame::GetFrame() const
     return (void *)currentContext->Rbp;
 }
 
-VOID **Js::Amd64StackFrame::GetArgv(bool isCurrentContextNative, bool shouldCheckForNativeAddr)
+void **Js::Amd64StackFrame::GetArgv(bool isCurrentContextNative, bool shouldCheckForNativeAddr)
 {
     if (EnsureCallerContext(isCurrentContextNative || (shouldCheckForNativeAddr && JavascriptFunction::IsNativeAddress(this->scriptContext, (void*)this->currentContext->Rip))))
     {
-        return (VOID **)callerContext->Rsp;
+        return (void **)callerContext->Rsp;
     }
 
     return nullptr;
 }
 
-VOID *Js::Amd64StackFrame::GetReturnAddress(bool isCurrentContextNative, bool shouldCheckForNativeAddr)
+void *Js::Amd64StackFrame::GetReturnAddress(bool isCurrentContextNative, bool shouldCheckForNativeAddr)
 {
     if (EnsureCallerContext(isCurrentContextNative || (shouldCheckForNativeAddr && JavascriptFunction::IsNativeAddress(this->scriptContext, (void*)this->currentContext->Rip))))
     {
-        return (VOID *)callerContext->Rip;
+        return (void *)callerContext->Rip;
     }
 
     return nullptr;
@@ -128,7 +128,7 @@ void *Js::Amd64StackFrame::GetAddressOfReturnAddress(bool isCurrentContextNative
 {
     if (EnsureCallerContext(isCurrentContextNative || (shouldCheckForNativeAddr && JavascriptFunction::IsNativeAddress(this->scriptContext, (void*)this->currentContext->Rip))))
     {
-        return (void*)((VOID **)callerContext->Rsp - 1);
+        return (void*)((void **)callerContext->Rsp - 1);
     }
 
     return nullptr;
@@ -138,7 +138,7 @@ bool Js::Amd64StackFrame::Next(CONTEXT *context, ULONG64 imageBase, RUNTIME_FUNC
 {
     Assert(context);
 
-    VOID *handlerData = nullptr;
+    void *handlerData = nullptr;
     ULONG64 establisherFrame = 0;
 
     if (!context->Rip)

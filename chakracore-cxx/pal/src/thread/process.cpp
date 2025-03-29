@@ -283,7 +283,7 @@ See MSDN doc.
 DWORD
 PALAPI
 GetCurrentProcessId(
-            VOID)
+            void)
 {
     PERF_ENTRY(GetCurrentProcessId);
     ENTRY("GetCurrentProcessId()\n" );
@@ -303,7 +303,7 @@ See MSDN doc.
 DWORD
 PALAPI
 GetCurrentSessionId(
-            VOID)
+            void)
 {
     PERF_ENTRY(GetCurrentSessionId);
     ENTRY("GetCurrentSessionId()\n" );
@@ -323,7 +323,7 @@ See MSDN doc.
 HANDLE
 PALAPI
 GetCurrentProcess(
-          VOID)
+          void)
 {
     PERF_ENTRY(GetCurrentProcess);
     ENTRY("GetCurrentProcess()\n" );
@@ -1123,7 +1123,7 @@ Function:
 See MSDN doc.
 --*/
 PAL_NORETURN
-VOID
+void
 PALAPI
 ExitProcess(
     IN UINT uExitCode)
@@ -1425,7 +1425,7 @@ See MSDN doc.
 LPWSTR
 PALAPI
 GetCommandLineW(
-    VOID)
+    void)
 {
     PERF_ENTRY(GetCommandLineW);
     ENTRY("GetCommandLineW()\n");
@@ -1842,14 +1842,14 @@ Abstract
   Cleanup all the structures for the initial process.
 
 Parameter
-  VOID
+  void
 
 Return
-  VOID
+  void
 
 --*/
-VOID
-PROCCleanupInitialProcess(VOID)
+void
+PROCCleanupInitialProcess(void)
 {
     CPalThread *pThread = InternalGetCurrentThread();
 
@@ -1881,7 +1881,7 @@ Parameter
   pThread:   Thread object
 
 --*/
-VOID
+void
 CorUnix::PROCAddThread(
     CPalThread *pCurrentThread,
     CPalThread *pTargetThread
@@ -1914,7 +1914,7 @@ Parameter
 
 (no return value)
 --*/
-VOID
+void
 CorUnix::PROCRemoveThread(
     CPalThread *pCurrentThread,
     CPalThread *pTargetThread
@@ -1984,7 +1984,7 @@ Return
 --*/
 INT
 CorUnix::PROCGetNumberOfThreads(
-    VOID)
+    void)
 {
     return g_dwThreadCount;
 }
@@ -2003,9 +2003,9 @@ Parameter
 Return
   void
 --*/
-VOID
+void
 PROCProcessLock(
-    VOID)
+    void)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
@@ -2027,9 +2027,9 @@ Parameter
 Return
   void
 --*/
-VOID
+void
 PROCProcessUnlock(
-    VOID)
+    void)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
@@ -2047,7 +2047,7 @@ Abstract
 
 (no parameters, no return value)
 --*/
-VOID
+void
 PROCCleanupThreadSemIds(void)
 {
     //
@@ -2087,7 +2087,7 @@ Note:
   This function is used in ExitThread and TerminateProcess
 
 --*/
-VOID
+void
 CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
 {
     BOOL locked;

@@ -362,7 +362,7 @@ FreeEnvironmentStrings.
 LPWSTR
 PALAPI
 GetEnvironmentStringsW(
-               VOID)
+               void)
 {
     WCHAR *wenviron = NULL, *tempEnviron;
     int i, len, envNum;
@@ -420,7 +420,7 @@ See GetEnvironmentStringsW.
 LPSTR
 PALAPI
 GetEnvironmentStringsA(
-               VOID)
+               void)
 {
     char *environ = NULL, *tempEnviron;
     int i, len, envNum;

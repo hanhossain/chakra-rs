@@ -319,7 +319,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
+void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
     PERF_ENTRY(LeaveCriticalSection);
     ENTRY("LeaveCriticalSection(lpCriticalSection=%p)\n", lpCriticalSection);
@@ -339,7 +339,7 @@ Function:
 Initializes a critical section. It assumes the CS is an internal one,
 i.e. thread entering it will be marked unsafe for suspension
 --*/
-VOID InternalInitializeCriticalSection(CRITICAL_SECTION *pcs)
+void InternalInitializeCriticalSection(CRITICAL_SECTION *pcs)
 {
     InternalInitializeCriticalSectionAndSpinCount(pcs, 0, true);
 }
@@ -350,7 +350,7 @@ Function:
 
 Deletes a critical section
 --*/
-VOID InternalDeleteCriticalSection(
+void InternalDeleteCriticalSection(
     PCRITICAL_SECTION pCriticalSection)
 {
     PAL_CRITICAL_SECTION * pPalCriticalSection =
@@ -498,7 +498,7 @@ Function:
 Provides CorUnix's InternalEnterCriticalSection functionality to legacy C code,
 which has no knowledge of CPalThread, classes and namespaces.
 --*/
-VOID PALCEnterCriticalSection(CRITICAL_SECTION * pcs)
+void PALCEnterCriticalSection(CRITICAL_SECTION * pcs)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? GetCurrentPalThread() : NULL);
@@ -512,7 +512,7 @@ Function:
 Provides CorUnix's InternalLeaveCriticalSection functionality to legacy C code,
 which has no knowledge of CPalThread, classes and namespaces.
 --*/
-VOID PALCLeaveCriticalSection(CRITICAL_SECTION * pcs)
+void PALCLeaveCriticalSection(CRITICAL_SECTION * pcs)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? GetCurrentPalThread() : NULL);

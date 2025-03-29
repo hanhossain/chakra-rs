@@ -130,7 +130,7 @@ DbgHelpSymbolManager::Initialize()
 
             // load line information
             typedef DWORD(*PfnSymGetOptions)();
-            typedef VOID(*PfnSymSetOptions)(DWORD);
+            typedef void(*PfnSymSetOptions)(DWORD);
             PfnSymGetOptions pfnSymGetOptions = (PfnSymGetOptions)GetProcAddress(hDbgHelpModule, "SymGetOptions");
             PfnSymSetOptions pfnSymSetOptions = (PfnSymSetOptions)GetProcAddress(hDbgHelpModule, "SymSetOptions");
 

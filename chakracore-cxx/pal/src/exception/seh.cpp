@@ -6,7 +6,7 @@
 #include "pal/thread.hpp"
 #include "pal/handleapi.hpp"
 
-VOID
+void
 PALAPI
 RaiseException(IN DWORD dwExceptionCode,
                IN DWORD dwExceptionFlags,

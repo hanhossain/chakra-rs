@@ -38,7 +38,7 @@ on a single processor, such as Intel's Hyper-Threading technology.
 void
 PALAPI
 YieldProcessor(
-    VOID)
+    void)
 {
 	// Pretty sure ARM has no useful function here?
     return;

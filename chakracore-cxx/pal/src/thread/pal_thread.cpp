@@ -368,7 +368,7 @@ See MSDN doc.
 DWORD
 PALAPI
 GetCurrentThreadId(
-            VOID)
+            void)
 {
     DWORD dwThreadId;
 
@@ -392,7 +392,7 @@ See MSDN doc.
 HANDLE
 PALAPI
 PAL_GetCurrentThread(
-          VOID)
+          void)
 {
     PERF_ENTRY(GetCurrentThread);
     ENTRY("GetCurrentThread()\n");
@@ -413,7 +413,7 @@ See MSDN doc.
 BOOL
 PALAPI
 SwitchToThread(
-    VOID)
+    void)
 {
     BOOL ret;
 
@@ -773,7 +773,7 @@ Function:
 See MSDN doc.
 --*/
 PAL_NORETURN
-VOID
+void
 PALAPI
 ExitThread(
        IN DWORD dwExitCode)
@@ -809,7 +809,7 @@ Does any necessary memory clean up, signals waiting threads, and then forces
 the current thread to exit.
 --*/
 
-VOID
+void
 CorUnix::InternalEndCurrentThread(
     CPalThread *pThread
     )
@@ -2381,7 +2381,7 @@ Return value:
     None
 --*/
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_SetActivationFunction(
     IN PAL_ActivationFunction pActivationFunction,

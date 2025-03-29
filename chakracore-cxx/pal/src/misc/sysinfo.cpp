@@ -133,7 +133,7 @@ Others are set to zero.
 
 int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
 
-VOID
+void
 PALAPI
 GetSystemInfo(
           OUT LPSYSTEM_INFO lpSystemInfo)

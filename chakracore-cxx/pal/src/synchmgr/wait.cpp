@@ -170,7 +170,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 Sleep(IN DWORD dwMilliseconds)
 {
@@ -331,7 +331,7 @@ DWORD CorUnix::InternalWaitForMultipleObjectsEx(
     }
 
     palErr = g_pObjectManager->ReferenceMultipleObjectsByHandleArray(pThread,
-                                                                     (VOID **)lpHandles,
+                                                                     (void **)lpHandles,
                                                                      nCount,
                                                                      &sg_aotWaitObject,
                                                                      SYNCHRONIZE,

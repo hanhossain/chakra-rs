@@ -306,7 +306,7 @@ of OEM code pages.
 BOOL
 PALAPI
 AreFileApisANSI(
-    VOID)
+    void)
 {
     PERF_ENTRY(AreFileApisANSI);
     ENTRY("AreFileApisANSI ()\n");
@@ -326,7 +326,7 @@ See MSDN doc.
 UINT
 PALAPI
 GetConsoleCP(
-     VOID)
+     void)
 {
     UINT nRet = 0;
     PERF_ENTRY(GetConsoleCP);
@@ -348,7 +348,7 @@ See MSDN doc.
 UINT
 PALAPI
 GetConsoleOutputCP(
-       VOID)
+       void)
 {
     UINT nRet = 0;
     PERF_ENTRY(GetConsoleOutputCP);
@@ -581,7 +581,7 @@ See MSDN doc.
 --*/
 UINT
 PALAPI
-GetACP(VOID)
+GetACP(void)
 {
     PERF_ENTRY(GetACP);
     ENTRY("GetACP(VOID)\n");

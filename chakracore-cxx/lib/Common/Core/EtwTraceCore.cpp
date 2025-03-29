@@ -8,7 +8,7 @@
 #ifdef ENABLE_JS_ETW
 extern "C" {
     ETW_INLINE
-        VOID EtwCallback(
+        void EtwCallback(
         ULONG controlCode,
         PVOID callbackContext)
     {

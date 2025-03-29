@@ -96,7 +96,7 @@ CSharedMemoryObject::Initialize(
                 goto InitializeExit;
             } 
 
-            m_pvSharedData = SHMPTR_TO_TYPED_PTR(VOID, psmod->shmObjSharedData);
+            m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
             if (NULL == m_pvSharedData)
             {
                 ASSERT("Unable to map shared data area\n");
@@ -239,7 +239,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 
     if (SHMNULL != psmod->shmObjImmutableData)
     {
-        VOID *pv = SHMPTR_TO_TYPED_PTR(VOID, psmod->shmObjImmutableData);
+        void *pv = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
         if (NULL != pv)
         {
             memcpy(m_pvImmutableData, pv, m_pot->GetImmutableDataSize());
@@ -254,7 +254,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 
     if (SHMNULL != psmod->shmObjSharedData)
     {
-        m_pvSharedData = SHMPTR_TO_TYPED_PTR(VOID, psmod->shmObjSharedData);
+        m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
         if (NULL == m_pvSharedData)
         {
             ASSERT("Unable to map object shared data\n");
@@ -1101,7 +1101,7 @@ Parameters:
 
 PAL_ERROR
 CSharedMemoryObject::GetObjectSynchData(
-    VOID **ppvSynchData             // OUT
+    void **ppvSynchData             // OUT
     )
 {
     _ASSERTE(NULL != ppvSynchData);
@@ -1198,7 +1198,7 @@ CSharedMemoryWaitableObject::EnsureObjectIsShared(
     IDataLock *pDataLock = NULL;
     SHMPTR shmObjData = SHMNULL;
     SHMObjData *psmod;
-    VOID *pvSharedSynchData;
+    void *pvSharedSynchData;
 
     _ASSERTE(NULL != pthr);
 
@@ -1450,7 +1450,7 @@ Parameters:
 
 PAL_ERROR
 CSharedMemoryWaitableObject::GetObjectSynchData(
-    VOID **ppvSynchData             // OUT
+    void **ppvSynchData             // OUT
     )
 {
     _ASSERTE(NULL != ppvSynchData);

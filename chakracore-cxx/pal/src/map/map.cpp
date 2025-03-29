@@ -1975,7 +1975,7 @@ BOOL MAPGetRegionInfo(LPVOID lpAddress,
         pLink = pLink->Flink)
     {
         UINT MappedSize;
-        VOID * real_map_addr;
+        void * real_map_addr;
         SIZE_T real_map_sz;
         PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
 
@@ -1989,7 +1989,7 @@ BOOL MAPGetRegionInfo(LPVOID lpAddress,
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
-             (VOID *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
+             (void *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
         {
             if (lpBuffer)
             {
@@ -2079,7 +2079,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
                 {
                     memcpy(pNewView, pView, sizeof(*pNewView));
                     NativeMapHolderAddRef(pNewView->pNMHolder);
-                    pNewView->lpAddress = (VOID*)((CHAR*)pNewView->pNMHolder->address + 
+                    pNewView->lpAddress = (void*)((CHAR*)pNewView->pNMHolder->address +
                         offset - pNewView->pNMHolder->offset);
                     pNewView->NumberOfBytesToMap = size; 
                 }

@@ -144,14 +144,14 @@ namespace CorUnix
             thread and therefore does not require synchronization. */
 
 #ifdef _DEBUG
-            VOID
+            void
             IncrNumThreadsSuspendedByThisThread(
                 )
             {
                 InterlockedIncrement(&m_lNumThreadsSuspendedByThisThread);
             };
 
-            VOID
+            void
             DecrNumThreadsSuspendedByThisThread(
                 )
             {
@@ -159,13 +159,13 @@ namespace CorUnix
             };
 #endif
 
-            VOID
+            void
             AcquireSuspensionLocks(
                 CPalThread *pthrSuspender,
                 CPalThread *pthrTarget
             );
 
-            VOID
+            void
             ReleaseSuspensionLocks(
                 CPalThread *pthrSuspender,
                 CPalThread *pthrTarget
@@ -357,7 +357,7 @@ namespace CorUnix
                 DWORD *pdwSuspendCount
             );
 
-            VOID InitializeSuspensionLock();
+            void InitializeSuspensionLock();
 
             void SetBlockingPipe(
                 int nBlockingPipe

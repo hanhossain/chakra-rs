@@ -1183,21 +1183,21 @@ typedef DWORD OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
 
-typedef VOID (NTAPI * WAITORTIMERCALLBACKFUNC) (PVOID, BOOLEAN );
+typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (PVOID, BOOLEAN );
 
 typedef HANDLE HWND;
 
 #define IS_TEXT_UNICODE_SIGNATURE             0x0008
 #define IS_TEXT_UNICODE_UNICODE_MASK          0x000F
 
-BOOL IsTextUnicode(CONST VOID* lpv, int iSize, LPINT lpiResult);
+BOOL IsTextUnicode(CONST void* lpv, int iSize, LPINT lpiResult);
 
 typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Flink;
    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
-typedef VOID (*WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
+typedef void (*WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 // PORTABILITY_ASSERT and PORTABILITY_WARNING macros are meant to be used to
 // mark places in the code that needs attention for portability. The usual
@@ -1355,7 +1355,7 @@ interface ITypeInfo;
 interface ITypeLib;
 interface IMoniker;
 
-typedef VOID (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
+typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
     DWORD dwErrorCode,
     DWORD dwNumberOfBytesTransfered,
     LPVOID lpOverlapped);

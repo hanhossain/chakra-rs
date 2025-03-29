@@ -17,7 +17,7 @@
 extern "C" LPVOID arm64_GET_CURRENT_FRAME(void);
 #endif
 
-extern "C" VOID arm64_SAVE_REGISTERS(void*);
+extern "C" void arm64_SAVE_REGISTERS(void*);
 
 /*
  * The relevant part of the frame looks like this (high addresses at the top, low ones at the bottom):

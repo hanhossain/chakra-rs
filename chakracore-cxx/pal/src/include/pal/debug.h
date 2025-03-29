@@ -35,7 +35,7 @@ Function :
 
 (no parameters, no return value)
 --*/
-extern "C" VOID
+extern "C" void
 DBG_DebugBreak();
 
 /*++

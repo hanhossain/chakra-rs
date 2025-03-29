@@ -412,7 +412,7 @@ See MSDN doc.
 
 --*/
 PALIMPORT
-VOID
+void
 PALAPI
 FreeLibraryAndExitThread(
     IN HMODULE hLibModule,
@@ -694,7 +694,7 @@ Function:
 
   Used to cleanup the module HINSTANCE from PAL_RegisterModule.
 --*/
-VOID
+void
 PALAPI
 PAL_UnregisterModule(
     IN HINSTANCE hInstance)

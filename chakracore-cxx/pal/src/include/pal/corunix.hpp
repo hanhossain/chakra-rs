@@ -783,13 +783,13 @@ namespace CorUnix
         virtual
         CObjectType *
         GetObjectType(
-            VOID
+            void
             ) = 0;
 
         virtual
         CObjectAttributes *
         GetObjectAttributes(
-            VOID
+            void
             ) = 0;
 
         virtual
@@ -893,7 +893,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData             // OUT
+            void **ppvSynchData             // OUT
             ) = 0;
 
     };
@@ -1162,7 +1162,7 @@ namespace CorUnix
         AllocateObjectSynchData(
             CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
-            VOID **ppvSynchData                 // OUT
+            void **ppvSynchData                 // OUT
             ) = 0;
 
         virtual
@@ -1170,15 +1170,15 @@ namespace CorUnix
         FreeObjectSynchData(
             CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
-            VOID *pvSynchData
+            void *pvSynchData
             ) = 0;
 
         virtual
         PAL_ERROR
         PromoteObjectSynchData(
             CPalThread *pThread,
-            VOID *pvLocalSynchData,
-            VOID **ppvSharedSynchData           // OUT
+            void *pvLocalSynchData,
+            void **ppvSharedSynchData           // OUT
             ) = 0;
 
         //
@@ -1208,7 +1208,7 @@ namespace CorUnix
         CreateSynchStateController(
             CPalThread *pThread,                // IN, OPTIONAL
             CObjectType *pObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain eObjectDomain,
             ISynchStateController **ppStateController       // OUT
             ) = 0;
@@ -1218,7 +1218,7 @@ namespace CorUnix
         CreateSynchWaitController(
             CPalThread *pThread,                // IN, OPTIONAL
             CObjectType *pObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain eObjectDomain,
             ISynchWaitController **ppWaitController       // OUT
             ) = 0;

@@ -500,7 +500,7 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
+void
 PALAPI
 GetSystemTimeAsFileTime(
             OUT LPFILETIME lpSystemTimeAsFileTime)

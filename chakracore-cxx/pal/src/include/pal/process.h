@@ -82,25 +82,25 @@ Abstract
   Cleanup all the structures for the initial process.
 
 Parameter
-  VOID
+  void
 
 Return
-  VOID
+  void
 
 --*/
-VOID PROCCleanupInitialProcess(VOID);
+void PROCCleanupInitialProcess(void);
 
 #if USE_SYSV_SEMAPHORES
 /*++
 Function:
-  PROCCleanupThreadSemIds(VOID);
+  PROCCleanupThreadSemIds(void);
 
 Abstract
   Cleanup SysV semaphore ids for all threads.
 
 (no parameters, no return value)
 --*/
-VOID PROCCleanupThreadSemIds(VOID);
+void PROCCleanupThreadSemIds(void);
 #endif
 
 /*++
@@ -110,7 +110,7 @@ Function:
 Abstract
   Enter the critical section associated to the current process
 --*/
-VOID PROCProcessLock(VOID);
+void PROCProcessLock(void);
 
 
 /*++
@@ -120,7 +120,7 @@ Function:
 Abstract
   Leave the critical section associated to the current process
 --*/
-VOID PROCProcessUnlock(VOID);
+void PROCProcessUnlock(void);
 
 /*++
 Function:

@@ -183,7 +183,7 @@ namespace CorUnix
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Got NULL pdwWaitState from m_shridWaitAwakened=%p\n",
-                    (VOID *)pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
+                    (void *)pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
 
         if (fIsSleep)
         {
@@ -1024,7 +1024,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::AllocateObjectSynchData(
         CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
-        VOID **ppvSynchData)
+        void **ppvSynchData)
     {
         PAL_ERROR palErr = NO_ERROR;
         CSynchData * psdSynchData = NULL;
@@ -1095,7 +1095,7 @@ namespace CorUnix
     void CPalSynchronizationManager::FreeObjectSynchData(
         CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
-        VOID *pvSynchData)
+        void *pvSynchData)
     {
         CSynchData * psdSynchData;
         CPalThread * pthrCurrent = InternalGetCurrentThread();
@@ -1130,7 +1130,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::CreateSynchStateController(
         CPalThread *pthrCurrent,
         CObjectType *potObjectType,
-        VOID *pvSynchData,
+        void *pvSynchData,
         ObjectDomain odObjectDomain,
         ISynchStateController **ppStateController)
     {
@@ -1179,7 +1179,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::CreateSynchWaitController(
         CPalThread *pthrCurrent,
         CObjectType *potObjectType,
-        VOID *pvSynchData,
+        void *pvSynchData,
         ObjectDomain odObjectDomain,
         ISynchWaitController **ppWaitController)
     {
@@ -1820,7 +1820,7 @@ namespace CorUnix
                 goto RCFPP_exit;
             }
 
-            TRACE("Received marshaled shrid=%p\n", (VOID *)shridMarshaledId);
+            TRACE("Received marshaled shrid=%p\n", (void *)shridMarshaledId);
 
             *pshridMarshaledData = shridMarshaledId;
         }
@@ -2382,7 +2382,7 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridWLNode, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != pWLNode,
                     "Bad shared wait list node identifier (%p)\n",
-                    (VOID*)shridWLNode);
+                    (void*)shridWLNode);
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
                     MsgSize, (int)PIPE_BUF);
@@ -2390,7 +2390,7 @@ namespace CorUnix
         TRACE("Waking up remote thread {pid=%x, tid=%x} by sending "
               "cmd=%u and shridWLNode=%p over process pipe\n",
               pWLNode->dwProcessId, pWLNode->dwThreadId,
-              SynchWorkerCmdRemoteSignal, (VOID *)shridWLNode);
+              SynchWorkerCmdRemoteSignal, (void *)shridWLNode);
 
         // Prepare the message
         // Cmd
@@ -2448,7 +2448,7 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridSynchData, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != psdSynchData,
                     "Bad shared SynchData identifier (%p)\n",
-                    (VOID*)shridSynchData);
+                    (void*)shridSynchData);
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
                     MsgSize, (int)PIPE_BUF);
@@ -2456,7 +2456,7 @@ namespace CorUnix
         TRACE("Transfering wait all signaling to remote process pid=%x "
               "by sending cmd=%u and shridSynchData=%p over process pipe\n",
               dwTargetProcessId, SynchWorkerCmdDelegatedObjectSignaling,
-              (VOID *)shridSynchData);
+              (void *)shridSynchData);
 
         dwSigCount = psdSynchData->GetSignalCount();
 
@@ -3438,8 +3438,8 @@ namespace CorUnix
     --*/
     PAL_ERROR CPalSynchronizationManager::PromoteObjectSynchData(
         CPalThread *pthrCurrent,
-        VOID *pvLocalSynchData,
-        VOID **ppvSharedSynchData)
+        void *pvLocalSynchData,
+        void **ppvSharedSynchData)
     {
         PAL_ERROR palError = NO_ERROR;
         CSynchData *psdLocal = reinterpret_cast<CSynchData *>(pvLocalSynchData);
@@ -3668,7 +3668,7 @@ namespace CorUnix
             InternalLeaveCriticalSection(pthrCurrent, &s_csMonitoredProcessesLock);
         }
 
-        *ppvSharedSynchData = reinterpret_cast<VOID*>(shridSynchData);
+        *ppvSharedSynchData = reinterpret_cast<void*>(shridSynchData);
 
         //
         // Free the local memory items to caches
@@ -3819,7 +3819,7 @@ namespace CorUnix
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Unable to map shared wait state: bad shrared id"
-                    "[shrid=%p]\n", (VOID*)m_shridWaitAwakened);
+                    "[shrid=%p]\n", (void*)m_shridWaitAwakened);
 
         VolatileStore<DWORD>(pdwWaitState, TWS_ACTIVE);
         m_tsThreadState = TS_STARTING;

@@ -421,7 +421,7 @@ PAL_TerminateEx(
     int exitCode);
 
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_UnregisterModule(
     IN HINSTANCE hInstance);
@@ -538,7 +538,7 @@ PALIMPORT
 BOOL
 PALAPI
 AreFileApisANSI(
-        VOID);
+        void);
 
 typedef struct _SECURITY_ATTRIBUTES {
             DWORD nLength;
@@ -1052,7 +1052,7 @@ GetFileTime(
         OUT LPFILETIME lpLastWriteTime);
 
 PALIMPORT
-VOID
+void
 PALAPI
 GetSystemTimeAsFileTime(
             OUT LPFILETIME lpSystemTimeAsFileTime);
@@ -1108,13 +1108,13 @@ PALIMPORT
 UINT
 PALAPI
 GetConsoleCP(
-         VOID);
+         void);
 
 PALIMPORT
 UINT
 PALAPI
 GetConsoleOutputCP(
-           VOID);
+           void);
 
 PALIMPORT
 DWORD
@@ -1433,19 +1433,19 @@ PALIMPORT
 DWORD
 PALAPI
 GetCurrentProcessId(
-            VOID);
+            void);
 
 PALIMPORT
 HANDLE
 PALAPI
 GetCurrentProcess(
-          VOID);
+          void);
 
 PALIMPORT
 DWORD
 PALAPI
 GetCurrentThreadId(
-           VOID);
+           void);
 
 PALIMPORT
 DWORD
@@ -1459,7 +1459,7 @@ PALIMPORT
 HANDLE
 PALAPI
 GetCurrentThread(
-         VOID);
+         void);
 
 
 #define STARTF_USESTDHANDLES       0x00000100
@@ -1563,7 +1563,7 @@ CreateProcessW(
 
 PALIMPORT
 PAL_NORETURN
-VOID
+void
 PALAPI
 ExitProcess(
         IN UINT uExitCode);
@@ -1664,7 +1664,7 @@ DuplicateHandle(
         IN DWORD dwOptions);
 
 PALIMPORT
-VOID
+void
 PALAPI
 Sleep(
       IN DWORD dwMilliseconds);
@@ -1680,7 +1680,7 @@ PALIMPORT
 BOOL
 PALAPI
 SwitchToThread(
-    VOID);
+    void);
 
 #define DEBUG_PROCESS                     0x00000001
 #define DEBUG_ONLY_THIS_PROCESS           0x00000002
@@ -1700,7 +1700,7 @@ CreateThread(
 
 PALIMPORT
 PAL_NORETURN
-VOID
+void
 PALAPI
 ExitThread(
        IN DWORD dwExitCode);
@@ -1718,7 +1718,7 @@ PALAPI
 ResumeThread(
          IN HANDLE hThread);
 
-typedef VOID (PALAPI *PAPCFUNC)(ULONG_PTR dwParam);
+typedef void (PALAPI *PAPCFUNC)(ULONG_PTR dwParam);
 
 PALIMPORT
 DWORD
@@ -3215,17 +3215,17 @@ typedef struct _CRITICAL_SECTION {
     union CSNativeDataStorage
     {
         BYTE rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
-        VOID * pvAlign; // make sure the storage is machine-pointer-size aligned
+        void * pvAlign; // make sure the storage is machine-pointer-size aligned
     } csnds;
 #endif // PLATFORM_UNIX
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
-PALIMPORT VOID PALAPI EnterCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
-PALIMPORT VOID PALAPI LeaveCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
-PALIMPORT VOID PALAPI InitializeCriticalSection(OUT LPCRITICAL_SECTION lpCriticalSection);
+PALIMPORT void PALAPI EnterCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
+PALIMPORT void PALAPI LeaveCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
+PALIMPORT void PALAPI InitializeCriticalSection(OUT LPCRITICAL_SECTION lpCriticalSection);
 PALIMPORT BOOL PALAPI InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
 PALIMPORT BOOL PALAPI InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount);
-PALIMPORT VOID PALAPI DeleteCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
+PALIMPORT void PALAPI DeleteCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 PALIMPORT BOOL PALAPI TryEnterCriticalSection(IN OUT LPCRITICAL_SECTION lpCriticalSection);
 
 #define SEM_FAILCRITICALERRORS          0x0001
@@ -3452,7 +3452,7 @@ FreeLibrary(
 
 PALIMPORT
 PAL_NORETURN
-VOID
+void
 PALAPI
 FreeLibraryAndExitThread(
     IN HMODULE hLibModule,
@@ -3640,15 +3640,15 @@ ReadProcessMemory(
           OUT SIZE_T * lpNumberOfBytesRead);
 
 PALIMPORT
-VOID
+void
 PALAPI
 RtlMoveMemory(
           IN PVOID Destination,
-          IN CONST VOID *Source,
+          IN CONST void *Source,
           IN SIZE_T Length);
 
 PALIMPORT
-VOID
+void
 PALAPI
 RtlZeroMemory(
     IN PVOID Destination,
@@ -3664,7 +3664,7 @@ PALIMPORT
 HANDLE
 PALAPI
 GetProcessHeap(
-           VOID);
+           void);
 
 #define HEAP_ZERO_MEMORY 0x00000008
 
@@ -4791,13 +4791,13 @@ EnumProcessModules(
     );
 
 PALIMPORT
-VOID
+void
 PALAPI
 OutputDebugStringA(
     IN LPCSTR lpOutputString);
 
 PALIMPORT
-VOID
+void
 PALAPI
 OutputDebugStringW(
     IN LPCWSTR lpOutputStrig);
@@ -4809,10 +4809,10 @@ OutputDebugStringW(
 #endif
 
 PALIMPORT
-VOID
+void
 PALAPI
 DebugBreak(
-       VOID);
+       void);
 
 PALIMPORT
 LPWSTR
@@ -4913,13 +4913,13 @@ PALIMPORT
 LPSTR
 PALAPI
 GetEnvironmentStringsA(
-               VOID);
+               void);
 
 PALIMPORT
 LPWSTR
 PALAPI
 GetEnvironmentStringsW(
-               VOID);
+               void);
 
 #ifdef UNICODE
 #define GetEnvironmentStrings GetEnvironmentStringsW
@@ -4952,7 +4952,7 @@ CloseHandle(
         IN OUT HANDLE hObject);
 
 PALIMPORT
-VOID
+void
 PALAPI
 RaiseException(
            IN DWORD dwExceptionCode,
@@ -4963,7 +4963,7 @@ RaiseException(
 #ifdef FEATURE_PAL_SXS
 PALIMPORT
 PAL_NORETURN
-VOID
+void
 PALAPI
 PAL_RaiseException(
            IN PEXCEPTION_POINTERS ExceptionPointers);
@@ -4973,7 +4973,7 @@ PALIMPORT
 DWORD
 PALAPI
 GetTickCount(
-         VOID);
+         void);
 
 PALIMPORT
 ULONGLONG
@@ -5729,19 +5729,19 @@ The MemoryBarrier function creates a full memory barrier.
 EXTERN_C
 PALIMPORT
 inline
-VOID
+void
 PALAPI
 MemoryBarrier(
-    VOID)
+    void)
 {
     __sync_synchronize();
 }
 
 PALIMPORT
-VOID
+void
 PALAPI
 YieldProcessor(
-    VOID);
+    void);
 
 PALIMPORT
 DWORD
@@ -5788,10 +5788,10 @@ PALIMPORT
 DWORD
 PALAPI
 GetLastError(
-         VOID);
+         void);
 
 PALIMPORT
-VOID
+void
 PALAPI
 SetLastError(
          IN DWORD dwErrCode);
@@ -5800,14 +5800,14 @@ PALIMPORT
 LPWSTR
 PALAPI
 GetCommandLineW(
-        VOID);
+        void);
 
 #ifdef UNICODE
 #define GetCommandLine GetCommandLineW
 #endif
 
 PALIMPORT
-VOID
+void
 PALAPI
 RtlRestoreContext(
   IN PCONTEXT ContextRecord,
@@ -5815,7 +5815,7 @@ RtlRestoreContext(
 );
 
 PALIMPORT
-VOID
+void
 PALAPI
 RtlCaptureContext(
   OUT PCONTEXT ContextRecord
@@ -5825,7 +5825,7 @@ typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(SIZE_T ip, BOOL checkingCurrentThread);
 
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_SetActivationFunction(
     IN PAL_ActivationFunction pActivationFunction,
@@ -5938,7 +5938,7 @@ typedef struct _SYSTEM_INFO {
 } SYSTEM_INFO, *LPSYSTEM_INFO;
 
 PALIMPORT
-VOID
+void
 PALAPI
 GetSystemInfo(
           OUT LPSYSTEM_INFO lpSystemInfo);
@@ -6555,24 +6555,24 @@ PAL_GetCPUBusyTime(
 /****************PAL Perf functions for PInvoke*********************/
 #if PAL_PERF
 PALIMPORT
-VOID
+void
 PALAPI
-PAL_EnableProcessProfile(VOID);
+PAL_EnableProcessProfile(void);
 
 PALIMPORT
-VOID
+void
 PALAPI
-PAL_DisableProcessProfile(VOID);
+PAL_DisableProcessProfile(void);
 
 PALIMPORT
 BOOL
 PALAPI
-PAL_IsProcessProfileEnabled(VOID);
+PAL_IsProcessProfileEnabled(void);
 
 PALIMPORT
 int64_t
 PALAPI
-PAL_GetCpuTickCount(VOID);
+PAL_GetCpuTickCount(void);
 #endif // PAL_PERF
 
 /******************* PAL side-by-side support  ************************/
@@ -6630,7 +6630,7 @@ PAL_EnterTop();
 // in the process, and the current thread is already known to
 // the PAL.  Does not modify LastError.
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_Reenter(PAL_Boundary boundary);
 
@@ -6638,21 +6638,21 @@ PAL_Reenter(PAL_Boundary boundary);
 // a region of code that depends on this instance of the PAL
 // in the process.  Does not modify LastError.
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_Leave(PAL_Boundary boundary);
 
 // This function is equivalent to PAL_Leave(PAL_BoundaryBottom)
 // and is available to limit the creation of stub code.
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_LeaveBottom();
 
 // This function is equivalent to PAL_Leave(PAL_BoundaryTop)
 // and is available to limit the creation of stub code.
 PALIMPORT
-VOID
+void
 PALAPI
 PAL_LeaveTop();
 
