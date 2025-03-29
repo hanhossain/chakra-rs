@@ -3201,7 +3201,7 @@ GetModuleFileNameExW(
 
 HMODULE
 GetModuleHandleW(
-     OPTIONAL LPCWSTR lpModuleName
+      LPCWSTR lpModuleName
 );
 
 #ifdef UNICODE
@@ -3211,7 +3211,7 @@ GetModuleHandleW(
 BOOL
 GetModuleHandleExW(
      DWORD dwFlags,
-     OPTIONAL LPCWSTR lpModuleName,
+      LPCWSTR lpModuleName,
      HMODULE *phModule);
 
 #ifdef UNICODE
@@ -3369,7 +3369,7 @@ typedef enum _HEAP_INFORMATION_CLASS {
 
 BOOL
 HeapSetInformation(
-         OPTIONAL HANDLE HeapHandle,
+          HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
          PVOID HeapInformation,
          SIZE_T HeapInformationLength);
@@ -5362,12 +5362,12 @@ DeregisterEventSource (
 
 HANDLE
 RegisterEventSourceA (
-     OPTIONAL LPCSTR lpUNCServerName,
+      LPCSTR lpUNCServerName,
          LPCSTR lpSourceName
     );
 HANDLE
 RegisterEventSourceW (
-     OPTIONAL LPCWSTR lpUNCServerName,
+      LPCWSTR lpUNCServerName,
          LPCWSTR lpSourceName
     );
 #ifdef UNICODE
@@ -5392,11 +5392,11 @@ ReportEventA (
          WORD       wType,
          WORD       wCategory,
          DWORD      dwEventID,
-     OPTIONAL PSID       lpUserSid,
+      PSID       lpUserSid,
          WORD       wNumStrings,
          DWORD      dwDataSize,
-     OPTIONAL LPCSTR *lpStrings,
-     OPTIONAL LPVOID lpRawData
+      LPCSTR *lpStrings,
+      LPVOID lpRawData
     );
 BOOL
 ReportEventW (
@@ -5404,11 +5404,11 @@ ReportEventW (
          WORD       wType,
          WORD       wCategory,
          DWORD      dwEventID,
-     OPTIONAL PSID       lpUserSid,
+      PSID       lpUserSid,
          WORD       wNumStrings,
          DWORD      dwDataSize,
-     OPTIONAL LPCWSTR *lpStrings,
-     OPTIONAL LPVOID lpRawData
+      LPCWSTR *lpStrings,
+      LPVOID lpRawData
     );
 #ifdef UNICODE
 #define ReportEvent  ReportEventW

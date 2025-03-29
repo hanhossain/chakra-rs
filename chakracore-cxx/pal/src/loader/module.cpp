@@ -550,7 +550,7 @@ done:
 
 HMODULE
 GetModuleHandleW(
-     OPTIONAL LPCWSTR lpModuleName)
+      LPCWSTR lpModuleName)
 {
     if (lpModuleName)
     {
@@ -565,7 +565,7 @@ GetModuleHandleW(
 BOOL
 GetModuleHandleExW(
      DWORD dwFlags,
-     OPTIONAL LPCWSTR lpModuleName,
+      LPCWSTR lpModuleName,
      HMODULE *phModule)
 {
     *phModule = NULL;

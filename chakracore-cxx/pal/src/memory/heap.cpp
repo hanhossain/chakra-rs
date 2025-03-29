@@ -410,7 +410,7 @@ done:
 
 BOOL
 HeapSetInformation(
-         OPTIONAL HANDLE HeapHandle,
+          HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
          PVOID HeapInformation,
          SIZE_T HeapInformationLength)
