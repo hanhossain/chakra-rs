@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "Memory/SectionAllocWrapper.h"
-
 #if ENABLE_OOP_NATIVE_CODEGEN
 class ProcessContext
 {

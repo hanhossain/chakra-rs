@@ -47,6 +47,4 @@ Preprocessor directives to remove:
   - `TARGET_32`
 
 Files to remove:
-- chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.cpp
-- chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.h
 - any files with // TODO (hanhossain): remove file
