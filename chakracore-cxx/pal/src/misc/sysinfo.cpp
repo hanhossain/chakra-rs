@@ -330,7 +330,6 @@ GlobalMemoryStatusEx(
     return fRetVal;
 }
 
-PALIMPORT
 DWORD
 PALAPI
 GetCurrentProcessorNumber()

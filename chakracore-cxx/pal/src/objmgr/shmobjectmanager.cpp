@@ -1183,7 +1183,6 @@ Parameters:
   hLocal -- the handle to generate a "remote handle" for
 --*/
 
-PALIMPORT
 RHANDLE
 PALAPI
 PAL_LocalHandleToRemote(IN HANDLE hLocal)
@@ -1472,7 +1471,6 @@ Parameters:
   rhRemote -- the "remote handle" to convert to a local handle
 --*/
 
-PALIMPORT
 HANDLE
 PALAPI
 PAL_RemoteHandleToLocal(IN RHANDLE rhRemote)

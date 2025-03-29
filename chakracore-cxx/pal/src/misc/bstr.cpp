@@ -31,7 +31,7 @@ Abstract:
 
 #define WIN32_ALLOC_ALIGN (16 - 1)
 
-PALIMPORT size_t PAL_wcslen(const WCHAR *);
+size_t PAL_wcslen(const WCHAR *);
 
 typedef WCHAR OLECHAR;
 typedef WCHAR *BSTR;

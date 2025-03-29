@@ -4413,7 +4413,6 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
 PALAPI
 CreatePipe(
@@ -4540,7 +4539,6 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
 PALAPI
 LockFile(HANDLE hFile,
@@ -4666,7 +4664,6 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
 PALAPI
 UnlockFile(HANDLE hFile,

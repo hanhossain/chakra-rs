@@ -136,7 +136,6 @@ exit:
     return palError;
 }
 
-PALIMPORT
 DWORD
 PALAPI
 PAL_EnterTop()
@@ -240,7 +239,6 @@ PAL_Leave(PAL_Boundary boundary)
     LOGEXIT("PAL_Leave returns\n");
 }
 
-PALIMPORT
 void
 PALAPI
 PAL_LeaveBottom()
@@ -248,7 +246,6 @@ PAL_LeaveBottom()
     PAL_Leave(PAL_BoundaryBottom);
 }
 
-PALIMPORT
 void
 PALAPI
 PAL_LeaveTop()

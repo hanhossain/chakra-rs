@@ -2380,7 +2380,6 @@ Parameters:
 Return value:
     None
 --*/
-PALIMPORT
 void
 PALAPI
 PAL_SetActivationFunction(

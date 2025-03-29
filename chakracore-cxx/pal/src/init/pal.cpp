@@ -492,7 +492,6 @@ PAL_IsDebuggerPresent
 Abstract:
 This function should be used to determine if a debugger is attached to the process.
 --*/
-PALIMPORT
 BOOL
 PALAPI
 PAL_IsDebuggerPresent()

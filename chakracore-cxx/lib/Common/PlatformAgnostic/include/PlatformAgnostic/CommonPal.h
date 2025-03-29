@@ -366,9 +366,9 @@ typedef union _SLIST_HEADER {
 
 #endif
 
-PALIMPORT void PALAPI InitializeSListHead(IN OUT PSLIST_HEADER ListHead);
-PALIMPORT PSLIST_ENTRY PALAPI InterlockedPushEntrySList(IN OUT PSLIST_HEADER ListHead, IN OUT PSLIST_ENTRY  ListEntry);
-PALIMPORT PSLIST_ENTRY PALAPI InterlockedPopEntrySList(IN OUT PSLIST_HEADER ListHead);
+void PALAPI InitializeSListHead(IN OUT PSLIST_HEADER ListHead);
+PSLIST_ENTRY PALAPI InterlockedPushEntrySList(IN OUT PSLIST_HEADER ListHead, IN OUT PSLIST_ENTRY  ListEntry);
+PSLIST_ENTRY PALAPI InterlockedPopEntrySList(IN OUT PSLIST_HEADER ListHead);
 
 
 template <class T>

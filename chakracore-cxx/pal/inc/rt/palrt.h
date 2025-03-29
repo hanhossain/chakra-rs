@@ -1094,7 +1094,7 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 
 STDAPI_(BOOL) PathAppendW(LPWSTR pszPath, LPCWSTR pszMore);
 STDAPI_(int) PathCommonPrefixW(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR  pszPath);
-PALIMPORT LPWSTR PALAPI PathFindFileNameW(LPCWSTR pPath);
+LPWSTR PALAPI PathFindFileNameW(LPCWSTR pPath);
 STDAPI_(int) PathGetDriveNumberW(LPCWSTR lpsz);
 STDAPI_(BOOL) PathIsRelativeW(LPCWSTR lpszPath);
 STDAPI_(BOOL) PathIsUNCW(LPCWSTR pszPath);

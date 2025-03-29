@@ -411,7 +411,6 @@ Function:
 See MSDN doc.
 
 --*/
-PALIMPORT
 void
 PALAPI
 FreeLibraryAndExitThread(
