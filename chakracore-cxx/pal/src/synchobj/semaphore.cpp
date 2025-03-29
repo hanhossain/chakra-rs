@@ -397,7 +397,7 @@ BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
           LONG lReleaseCount,
-         OUT LPLONG lpPreviousCount)
+          LPLONG lpPreviousCount)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;

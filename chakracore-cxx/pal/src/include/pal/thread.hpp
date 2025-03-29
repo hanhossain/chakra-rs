@@ -113,8 +113,8 @@ namespace CorUnix
     BOOL
     GetThreadTimesInternal(
          HANDLE hThread,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime);
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime);
 
 #ifdef FEATURE_PAL_SXS
 #if HAVE_MACH_EXCEPTIONS

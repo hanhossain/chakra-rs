@@ -65,7 +65,7 @@ and its terminating null character.
 DWORD
 GetEnvironmentVariableA(
              LPCSTR lpName,
-            OUT LPSTR lpBuffer,
+             LPSTR lpBuffer,
              DWORD nSize)
 {
     char  *value;
@@ -134,7 +134,7 @@ See MSDN doc.
 DWORD
 GetEnvironmentVariableW(
              LPCWSTR lpName,
-            OUT LPWSTR lpBuffer,
+             LPWSTR lpBuffer,
              DWORD nSize)
 {
     CHAR *inBuff = NULL;

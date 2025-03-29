@@ -353,9 +353,9 @@ atime for LastAccessTime.
 BOOL
 GetFileTime(
          HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime)
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -389,9 +389,9 @@ PAL_ERROR
 CorUnix::InternalGetFileTime(
         CPalThread *pThread,
          HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime)
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pFileObject = NULL;
@@ -499,7 +499,7 @@ See MSDN doc.
 --*/
 void
 GetSystemTimeAsFileTime(
-            OUT LPFILETIME lpSystemTimeAsFileTime)
+             LPFILETIME lpSystemTimeAsFileTime)
 {
     struct timeval Time;
 
@@ -716,8 +716,8 @@ See msdn for more details.
 BOOL
 FileTimeToDosDateTime(
              const FILETIME *lpFileTime,
-            OUT LPWORD lpFatDate,
-            OUT LPWORD lpFatTime )
+             LPWORD lpFatDate,
+             LPWORD lpFatTime )
 {
     BOOL bRetVal = FALSE;
 

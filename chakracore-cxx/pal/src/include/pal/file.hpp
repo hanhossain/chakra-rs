@@ -161,9 +161,9 @@ namespace CorUnix
     InternalGetFileTime(
         CPalThread *pThread,
          HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime
         );
 
     /*++

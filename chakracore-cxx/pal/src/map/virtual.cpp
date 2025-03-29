@@ -2214,7 +2214,7 @@ VirtualProtectEx(
             LPVOID lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect)
+            PDWORD lpflOldProtect)
 {
     return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
 }
@@ -2230,7 +2230,7 @@ VirtualProtect(
             LPVOID lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect)
+            PDWORD lpflOldProtect)
 {
     BOOL     bRetVal = FALSE;
     PCMI     pEntry = NULL;
@@ -2485,7 +2485,7 @@ SIZE_T
 VirtualQueryEx(
      HANDLE hProcess,
      LPCVOID lpAddress,
-    OUT PMEMORY_BASIC_INFORMATION lpBuffer,
+     PMEMORY_BASIC_INFORMATION lpBuffer,
      SIZE_T dwLength)
 {
     return VirtualQuery(lpAddress, lpBuffer, dwLength);
@@ -2500,7 +2500,7 @@ See MSDN doc.
 SIZE_T
 VirtualQuery(
           LPCVOID lpAddress,
-         OUT PMEMORY_BASIC_INFORMATION lpBuffer,
+          PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength)
 {
     PCMI     pEntry = NULL;

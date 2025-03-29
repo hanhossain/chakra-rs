@@ -416,7 +416,7 @@ GetStringTypeExW(
       DWORD dwInfoType,
       LPCWSTR lpSrcStr,
       int cchSrc,
-     OUT LPWORD lpCharType)
+      LPWORD lpCharType)
 {
 
 
@@ -521,7 +521,7 @@ See MSDN doc.
 BOOL
 GetCPInfo(
    UINT CodePage,
-  OUT LPCPINFO lpCPInfo)
+   LPCPINFO lpCPInfo)
 {
     const CP_MAPPING * lpStruct = NULL;
     BOOL bRet = FALSE;
@@ -658,7 +658,7 @@ MultiByteToWideChar(
          DWORD dwFlags,
          LPCSTR lpMultiByteStr,
          int cbMultiByte,
-        OUT LPWSTR lpWideCharStr,
+         LPWSTR lpWideCharStr,
          int cchWideChar)
 {
     INT retval =0;
@@ -784,10 +784,10 @@ WideCharToMultiByte(
          DWORD dwFlags,
          LPCWSTR lpWideCharStr,
          int cchWideChar,
-        OUT LPSTR lpMultiByteStr,
+         LPSTR lpMultiByteStr,
          int cbMultiByte,
          LPCSTR lpDefaultChar,
-        OUT LPBOOL lpUsedDefaultChar)
+         LPBOOL lpUsedDefaultChar)
 {
     INT retval =0;
     char defaultChar = '?';
@@ -954,7 +954,7 @@ int
 PAL_GetResourceString(
          LPCSTR lpDomain,
          LPCSTR lpResourceStr,
-        OUT LPWSTR lpWideCharStr,
+         LPWSTR lpWideCharStr,
          int cchWideChar
       )
 {

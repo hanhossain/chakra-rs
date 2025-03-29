@@ -54,8 +54,8 @@ DWORD
 GetFullPathNameA(
       LPCSTR lpFileName,
       DWORD nBufferLength,
-     OUT LPSTR lpBuffer,
-     OUT LPSTR *lpFilePart)
+      LPSTR lpBuffer,
+      LPSTR *lpFilePart)
 {
     DWORD  nReqPathLen, nRet = 0;
     LPSTR lpUnixPath = NULL;
@@ -188,8 +188,8 @@ DWORD
 GetFullPathNameW(
       LPCWSTR lpFileName,
       DWORD nBufferLength,
-     OUT LPWSTR lpBuffer,
-     OUT LPWSTR *lpFilePart)
+      LPWSTR lpBuffer,
+      LPWSTR *lpFilePart)
 {
     LPSTR fileNameA;
     /* bufferA needs to be able to hold a path that's potentially as
@@ -314,7 +314,7 @@ Note:
 DWORD
 GetLongPathNameW(
 		  LPCWSTR lpszShortPath,
-         OUT LPWSTR lpszLongPath,
+          LPWSTR lpszLongPath,
   		  DWORD cchBuffer)
 {
     DWORD dwPathLen = 0;
@@ -385,7 +385,7 @@ Note:
 DWORD
 GetShortPathNameW(
 		  LPCWSTR lpszLongPath,
-         OUT LPWSTR lpszShortPath,
+          LPWSTR lpszShortPath,
   		  DWORD cchBuffer)
 {
     DWORD dwPathLen = 0;
@@ -463,7 +463,7 @@ Notes:
 DWORD
 GetTempPathA(
 	      DWORD nBufferLength,
-	     OUT LPSTR lpBuffer)
+	      LPSTR lpBuffer)
 {
     DWORD dwPathLen = 0;
 
@@ -557,7 +557,7 @@ See also the comment for GetTempPathA.
 DWORD
 GetTempPathW(
 	      DWORD nBufferLength,
-	     OUT LPWSTR lpBuffer)
+	      LPWSTR lpBuffer)
 {
     PERF_ENTRY(GetTempPathW);
     ENTRY("GetTempPathW(nBufferLength=%u, lpBuffer=%p)\n",
@@ -1088,8 +1088,8 @@ SearchPathA(
      LPCSTR lpFileName,
      LPCSTR lpExtension,
      DWORD nBufferLength,
-    OUT LPSTR lpBuffer,
-    OUT LPSTR *lpFilePart
+     LPSTR lpBuffer,
+     LPSTR *lpFilePart
     )
 {
     DWORD nRet = 0;
@@ -1356,8 +1356,8 @@ SearchPathW(
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
      DWORD nBufferLength,
-    OUT LPWSTR lpBuffer,
-    OUT LPWSTR *lpFilePart
+     LPWSTR lpBuffer,
+     LPWSTR *lpFilePart
     )
 {
     DWORD nRet = 0;

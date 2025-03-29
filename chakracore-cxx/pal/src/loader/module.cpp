@@ -385,7 +385,7 @@ See MSDN doc.
 --*/
 BOOL
 FreeLibrary(
-     OUT HMODULE hLibModule)
+      HMODULE hLibModule)
 {
     BOOL retval = FALSE;
 
@@ -434,7 +434,7 @@ Notes :
 DWORD
 GetModuleFileNameA(
      HMODULE hModule,
-    OUT LPSTR lpFileName,
+     LPSTR lpFileName,
      DWORD nSize)
 {
     INT name_length;
@@ -497,7 +497,7 @@ Notes :
 DWORD
 GetModuleFileNameW(
      HMODULE hModule,
-    OUT LPWSTR lpFileName,
+     LPWSTR lpFileName,
      DWORD nSize)
 {
     INT name_length;
@@ -566,7 +566,7 @@ BOOL
 GetModuleHandleExW(
      DWORD dwFlags,
      OPTIONAL LPCWSTR lpModuleName,
-    OUT HMODULE *phModule)
+     HMODULE *phModule)
 {
     *phModule = NULL;
     return FALSE;

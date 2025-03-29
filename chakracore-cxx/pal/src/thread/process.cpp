@@ -353,7 +353,7 @@ CreateProcessW(
             LPVOID lpEnvironment,
             LPCWSTR lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
-           OUT LPPROCESS_INFORMATION lpProcessInformation)
+            LPPROCESS_INFORMATION lpProcessInformation)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -1335,10 +1335,10 @@ See MSDN doc.
 BOOL
 GetProcessTimes(
          HANDLE hProcess,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpExitTime,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime)
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpExitTime,
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime)
 {
     BOOL retval = FALSE;
     struct rusage resUsage;

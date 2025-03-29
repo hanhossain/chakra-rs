@@ -30,7 +30,7 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 static
 int
 AllocFlagsToHeapAllocFlags (  UINT  AllocFlags,
-                       OUT PUINT pHeapallocFlags)
+                        PUINT pHeapallocFlags)
 {
     int success = 1;
     UINT newFlags = 0, flags = AllocFlags;

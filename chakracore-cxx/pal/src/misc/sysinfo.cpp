@@ -135,7 +135,7 @@ int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
 
 void
 GetSystemInfo(
-          OUT LPSYSTEM_INFO lpSystemInfo)
+           LPSYSTEM_INFO lpSystemInfo)
 {
     int nrcpus = 0;
     long pagesize;
@@ -231,7 +231,7 @@ This function returns a BOOL to indicate its success status.
 --*/
 BOOL
 GlobalMemoryStatusEx(
-             OUT LPMEMORYSTATUSEX lpBuffer)
+              LPMEMORYSTATUSEX lpBuffer)
 {
 
     PERF_ENTRY(GlobalMemoryStatusEx);

@@ -57,7 +57,7 @@ DuplicateHandle(
          HANDLE hSourceProcessHandle,
          HANDLE hSourceHandle,
          HANDLE hTargetProcessHandle,
-        OUT LPHANDLE lpTargetHandle,
+         LPHANDLE lpTargetHandle,
          DWORD dwDesiredAccess,
          BOOL bInheritHandle,
          DWORD dwOptions)
@@ -273,7 +273,7 @@ not required in the PAL, so we'll always return FALSE.
 --*/
 BOOL
 CloseHandle(
-         OUT HANDLE hObject)
+          HANDLE hObject)
 {
     CPalThread *pThread;
     PAL_ERROR palError;

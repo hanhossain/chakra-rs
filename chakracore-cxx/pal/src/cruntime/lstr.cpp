@@ -47,7 +47,7 @@ If the function fails, the return value is NULL.
 --*/
 LPWSTR
 lstrcatW(
-	  OUT LPWSTR lpString1,
+	   LPWSTR lpString1,
 	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
@@ -118,7 +118,7 @@ If the function fails, the return value is NULL.
 --*/
 LPWSTR
 lstrcpyW(
-	 OUT LPWSTR lpString1,
+	  LPWSTR lpString1,
 	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
@@ -264,7 +264,7 @@ If the function fails, the return value is NULL.
 --*/
 LPWSTR
 lstrcpynW(
-	  OUT LPWSTR lpString1,
+	   LPWSTR lpString1,
 	   LPCWSTR lpString2,
 	   int iMaxLength)
 {

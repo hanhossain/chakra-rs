@@ -287,7 +287,7 @@ See MSDN doc.
 __attribute__((no_instrument_function))
 int
 wsprintfA(
-      OUT LPSTR buffer,
+       LPSTR buffer,
        LPCSTR format,
       ...)
 {
@@ -315,7 +315,7 @@ See MSDN doc.
 __attribute__((no_instrument_function))
 int
 wsprintfW(
-      OUT LPWSTR buffer,
+       LPWSTR buffer,
        LPCWSTR format,
       ...)
 {

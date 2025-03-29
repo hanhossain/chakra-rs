@@ -436,7 +436,7 @@ See MSDN doc.
 BOOL
 GetThreadContext(
             HANDLE hThread,
-            OUT LPCONTEXT lpContext)
+             LPCONTEXT lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -559,7 +559,7 @@ ReadProcessMemory(
             LPCVOID lpBaseAddress,
             LPVOID lpBuffer,
             SIZE_T nSize,
-           OUT SIZE_T * lpNumberOfBytesRead
+            SIZE_T * lpNumberOfBytesRead
            )
 {
     CPalThread *pThread;
@@ -848,7 +848,7 @@ WriteProcessMemory(
             LPVOID lpBaseAddress,
             LPCVOID lpBuffer,
             SIZE_T nSize,
-           OUT SIZE_T * lpNumberOfBytesWritten
+            SIZE_T * lpNumberOfBytesWritten
            )
 
 {

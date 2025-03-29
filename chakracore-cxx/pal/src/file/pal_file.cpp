@@ -1822,7 +1822,7 @@ BOOL
 GetFileAttributesExW(
               LPCWSTR lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
-             OUT LPVOID lpFileInformation)
+              LPVOID lpFileInformation)
 {
     CPalThread *pThread;
     BOOL bRet = FALSE;
@@ -2195,7 +2195,7 @@ WriteFile(
        HANDLE hFile,
        LPCVOID lpBuffer,
        DWORD nNumberOfBytesToWrite,
-      OUT LPDWORD lpNumberOfBytesWritten,
+       LPDWORD lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
@@ -2416,9 +2416,9 @@ See MSDN doc.
 BOOL
 ReadFile(
       HANDLE hFile,
-     OUT LPVOID lpBuffer,
+      LPVOID lpBuffer,
       DWORD nNumberOfBytesToRead,
-     OUT LPDWORD lpNumberOfBytesRead,
+      LPDWORD lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
@@ -2937,7 +2937,7 @@ BOOL
 SetFilePointerEx(
             HANDLE hFile,
             LARGE_INTEGER liDistanceToMove,
-           OUT PLARGE_INTEGER lpNewFilePointer,
+            PLARGE_INTEGER lpNewFilePointer,
             DWORD dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -3076,7 +3076,7 @@ See MSDN doc.
 DWORD
 GetFileSize(
          HANDLE hFile,
-        OUT LPDWORD lpFileSizeHigh)
+         LPDWORD lpFileSizeHigh)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3114,7 +3114,7 @@ See MSDN doc.
 BOOL
 GetFileSizeEx(
    HANDLE hFile,
-OUT  PLARGE_INTEGER lpFileSize)
+  PLARGE_INTEGER lpFileSize)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3445,7 +3445,7 @@ GetTempFileNameA(
                   LPCSTR lpPathName,
                   LPCSTR lpPrefixString,
                   UINT   uUnique,
-                 OUT LPSTR lpTempFileName)
+                  LPSTR lpTempFileName)
 {
     CPalThread *pThread;
     CHAR * full_name;
@@ -3637,7 +3637,7 @@ GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
           UINT uUnique,
-         OUT LPWSTR lpTempFileName)
+          LPWSTR lpTempFileName)
 {
     CPalThread *pThread;
     INT path_size = 0;
@@ -4389,8 +4389,8 @@ See MSDN doc.
 --*/
 BOOL
 CreatePipe(
-        OUT PHANDLE hReadPipe,
-        OUT PHANDLE hWritePipe,
+         PHANDLE hReadPipe,
+         PHANDLE hWritePipe,
          LPSECURITY_ATTRIBUTES lpPipeAttributes,
          DWORD nSize)
 {
@@ -4892,7 +4892,7 @@ See MSDN doc.
 BOOL
 GetFileInformationByHandle(
               HANDLE hFile,
-             OUT LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
+              LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
 {
     CPalThread *pThread;
     BOOL bRet = FALSE;

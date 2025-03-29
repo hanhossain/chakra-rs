@@ -443,7 +443,7 @@ CreateThread(
      LPTHREAD_START_ROUTINE lpStartAddress,
      LPVOID lpParameter,
      DWORD dwCreationFlags,
-    OUT LPDWORD lpThreadId)
+     LPDWORD lpThreadId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1191,8 +1191,8 @@ InternalSetThreadPriorityExit:
 BOOL
 CorUnix::GetThreadTimesInternal(
      HANDLE hThread,
-    OUT LPFILETIME lpKernelTime,
-    OUT LPFILETIME lpUserTime)
+     LPFILETIME lpKernelTime,
+     LPFILETIME lpUserTime)
 {
     __int64 calcTime;
     BOOL retval = FALSE;

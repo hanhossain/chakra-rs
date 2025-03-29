@@ -88,7 +88,7 @@ This function does not return a value.
 --*/
 void
 GetSystemTime(
-          OUT LPSYSTEMTIME lpSystemTime)
+           LPSYSTEMTIME lpSystemTime)
 {
     time_t tt;
 #if HAVE_GMTIME_R
@@ -195,7 +195,7 @@ GetTickCount(
 
 BOOL
 QueryPerformanceCounter(
-    OUT LARGE_INTEGER *lpPerformanceCount
+     LARGE_INTEGER *lpPerformanceCount
     )
 {
     BOOL retval = TRUE;
@@ -258,7 +258,7 @@ QueryPerformanceCounter(
 
 BOOL
 QueryPerformanceFrequency(
-    OUT LARGE_INTEGER *lpFrequency
+     LARGE_INTEGER *lpFrequency
     )
 {
     BOOL retval = TRUE;
@@ -284,7 +284,7 @@ failure.
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
-    OUT PULONG64 CycleTime
+     PULONG64 CycleTime
     )
 {
 

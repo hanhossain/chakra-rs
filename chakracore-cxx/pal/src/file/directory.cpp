@@ -315,7 +315,7 @@ See MSDN doc.
 DWORD
 GetCurrentDirectoryA(
               DWORD nBufferLength,
-             OUT LPSTR lpBuffer)
+              LPSTR lpBuffer)
 {
     DWORD dwDirLen = 0;
     DWORD dwLastError = 0;
@@ -372,7 +372,7 @@ See MSDN doc.
 DWORD
 GetCurrentDirectoryW(
               DWORD nBufferLength,
-             OUT LPWSTR lpBuffer)
+              LPWSTR lpBuffer)
 {
     DWORD dwWideLen = 0;
     DWORD dwLastError = 0;

@@ -416,12 +416,12 @@ PAL_UnregisterModule(
 
 BOOL
 PAL_GetPALDirectoryW(
-    OUT LPWSTR lpDirectoryName,
+     LPWSTR lpDirectoryName,
      UINT cchDirectoryName);
 
 BOOL
 PAL_GetPALDirectoryA(
-    OUT LPSTR lpDirectoryName,
+     LPSTR lpDirectoryName,
      UINT cchDirectoryName);
 
 #ifdef UNICODE
@@ -433,7 +433,7 @@ PAL_GetPALDirectoryA(
 BOOL
 PAL_Random(
      BOOL bStrong,
-     OUT LPVOID lpBuffer,
+      LPVOID lpBuffer,
      DWORD dwLength);
 
 #ifdef PLATFORM_UNIX
@@ -478,13 +478,13 @@ extern errno_t _ui64tow_s(unsigned long long inValue, WCHAR* outBuffer, size_t i
 
 int
 wsprintfA(
-      OUT LPSTR,
+       LPSTR,
        LPCSTR,
       ...);
 
 int
 wsprintfW(
-      OUT LPWSTR,
+       LPWSTR,
        LPCWSTR,
       ...);
 
@@ -604,8 +604,8 @@ SearchPathA(
      LPCSTR lpFileName,
      LPCSTR lpExtension,
      DWORD nBufferLength,
-    OUT LPSTR lpBuffer,
-    OUT LPSTR *lpFilePart
+     LPSTR lpBuffer,
+     LPSTR *lpFilePart
     );
 
 DWORD
@@ -614,8 +614,8 @@ SearchPathW(
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
      DWORD nBufferLength,
-    OUT LPWSTR lpBuffer,
-    OUT LPWSTR *lpFilePart
+     LPWSTR lpBuffer,
+     LPWSTR *lpFilePart
     );
 #ifdef UNICODE
 #define SearchPath  SearchPathW
@@ -776,12 +776,12 @@ typedef LPWIN32_FIND_DATAA LPWIN32_FIND_DATA;
 HANDLE
 FindFirstFileA(
             LPCSTR lpFileName,
-           OUT LPWIN32_FIND_DATAA lpFindFileData);
+            LPWIN32_FIND_DATAA lpFindFileData);
 
 HANDLE
 FindFirstFileW(
             LPCWSTR lpFileName,
-           OUT LPWIN32_FIND_DATAW lpFindFileData);
+            LPWIN32_FIND_DATAW lpFindFileData);
 
 #ifdef UNICODE
 #define FindFirstFile FindFirstFileW
@@ -792,12 +792,12 @@ FindFirstFileW(
 BOOL
 FindNextFileA(
            HANDLE hFindFile,
-          OUT LPWIN32_FIND_DATAA lpFindFileData);
+           LPWIN32_FIND_DATAA lpFindFileData);
 
 BOOL
 FindNextFileW(
            HANDLE hFindFile,
-          OUT LPWIN32_FIND_DATAW lpFindFileData);
+           LPWIN32_FIND_DATAW lpFindFileData);
 
 #ifdef UNICODE
 #define FindNextFile FindNextFileW
@@ -807,7 +807,7 @@ FindNextFileW(
 
 BOOL
 FindClose(
-       OUT HANDLE hFindFile);
+        HANDLE hFindFile);
 
 DWORD
 GetFileAttributesA(
@@ -840,7 +840,7 @@ BOOL
 GetFileAttributesExW(
               LPCWSTR lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
-             OUT LPVOID lpFileInformation);
+              LPVOID lpFileInformation);
 
 #ifdef UNICODE
 #define GetFileAttributesEx GetFileAttributesExW
@@ -869,15 +869,15 @@ WriteFile(
        HANDLE hFile,
        LPCVOID lpBuffer,
        DWORD nNumberOfBytesToWrite,
-      OUT LPDWORD lpNumberOfBytesWritten,
+       LPDWORD lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
 BOOL
 ReadFile(
       HANDLE hFile,
-     OUT LPVOID lpBuffer,
+      LPVOID lpBuffer,
       DWORD nNumberOfBytesToRead,
-     OUT LPDWORD lpNumberOfBytesRead,
+      LPDWORD lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped);
 
 #define STD_INPUT_HANDLE         ((DWORD)-10)
@@ -903,23 +903,23 @@ BOOL
 SetFilePointerEx(
             HANDLE hFile,
             LARGE_INTEGER liDistanceToMove,
-           OUT PLARGE_INTEGER lpNewFilePointer,
+            PLARGE_INTEGER lpNewFilePointer,
             DWORD dwMoveMethod);
 
 DWORD
 GetFileSize(
          HANDLE hFile,
-        OUT LPDWORD lpFileSizeHigh);
+         LPDWORD lpFileSizeHigh);
 
 BOOL
 GetFileSizeEx(
            HANDLE hFile,
-        OUT  PLARGE_INTEGER lpFileSize);
+          PLARGE_INTEGER lpFileSize);
 
 BOOL
 GetFileInformationByHandle(
          HANDLE hFile,
-        OUT BY_HANDLE_FILE_INFORMATION* lpFileInformation);
+         BY_HANDLE_FILE_INFORMATION* lpFileInformation);
 
 LONG
 CompareFileTime(
@@ -936,13 +936,13 @@ SetFileTime(
 BOOL
 GetFileTime(
          HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime);
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime);
 
 void
 GetSystemTimeAsFileTime(
-            OUT LPFILETIME lpSystemTimeAsFileTime);
+             LPFILETIME lpSystemTimeAsFileTime);
 
 typedef struct _SYSTEMTIME {
     WORD wYear;
@@ -958,13 +958,13 @@ typedef struct _SYSTEMTIME {
 BOOL
 FileTimeToSystemTime(
              const FILETIME *lpFileTime,
-            OUT LPSYSTEMTIME lpSystemTime);
+             LPSYSTEMTIME lpSystemTime);
 
 BOOL
 FileTimeToDosDateTime(
      const FILETIME *lpFileTime,
-    OUT LPWORD lpFatDate,
-    OUT LPWORD lpFatTime
+     LPWORD lpFatDate,
+     LPWORD lpFatTime
     );
 
 
@@ -995,15 +995,15 @@ DWORD
 GetFullPathNameA(
           LPCSTR lpFileName,
           DWORD nBufferLength,
-         OUT LPSTR lpBuffer,
-         OUT LPSTR *lpFilePart);
+          LPSTR lpBuffer,
+          LPSTR *lpFilePart);
 
 DWORD
 GetFullPathNameW(
           LPCWSTR lpFileName,
           DWORD nBufferLength,
-         OUT LPWSTR lpBuffer,
-         OUT LPWSTR *lpFilePart);
+          LPWSTR lpBuffer,
+          LPWSTR *lpFilePart);
 
 #ifdef UNICODE
 #define GetFullPathName GetFullPathNameW
@@ -1014,7 +1014,7 @@ GetFullPathNameW(
 DWORD
 GetLongPathNameW(
           LPCWSTR lpszShortPath,
-                 OUT LPWSTR lpszLongPath,
+                  LPWSTR lpszLongPath,
           DWORD cchBuffer);
 
 #ifdef UNICODE
@@ -1024,7 +1024,7 @@ GetLongPathNameW(
 DWORD
 GetShortPathNameW(
           LPCWSTR lpszLongPath,
-                 OUT LPWSTR lpszShortPath,
+                  LPWSTR lpszShortPath,
           DWORD cchBuffer);
 
 #ifdef UNICODE
@@ -1037,14 +1037,14 @@ GetTempFileNameA(
           LPCSTR lpPathName,
           LPCSTR lpPrefixString,
           UINT uUnique,
-         OUT LPSTR lpTempFileName);
+          LPSTR lpTempFileName);
 
 UINT
 GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
           UINT uUnique,
-         OUT LPWSTR lpTempFileName);
+          LPWSTR lpTempFileName);
 
 #ifdef UNICODE
 #define GetTempFileName GetTempFileNameW
@@ -1055,12 +1055,12 @@ GetTempFileNameW(
 DWORD
 GetTempPathA(
           DWORD nBufferLength,
-         OUT LPSTR lpBuffer);
+          LPSTR lpBuffer);
 
 DWORD
 GetTempPathW(
           DWORD nBufferLength,
-         OUT LPWSTR lpBuffer);
+          LPWSTR lpBuffer);
 
 #ifdef UNICODE
 #define GetTempPath GetTempPathW
@@ -1071,12 +1071,12 @@ GetTempPathW(
 DWORD
 GetCurrentDirectoryA(
               DWORD nBufferLength,
-             OUT LPSTR lpBuffer);
+              LPSTR lpBuffer);
 
 DWORD
 GetCurrentDirectoryW(
               DWORD nBufferLength,
-             OUT LPWSTR lpBuffer);
+              LPWSTR lpBuffer);
 
 #ifdef UNICODE
 #define GetCurrentDirectory GetCurrentDirectoryW
@@ -1101,13 +1101,13 @@ SetCurrentDirectoryW(
 
 BOOL
 GetUserNameW(
-    OUT LPWSTR lpBuffer,      // address of name buffer
-     OUT LPDWORD nSize );   // address of size of name buffer
+     LPWSTR lpBuffer,      // address of name buffer
+      LPDWORD nSize );   // address of size of name buffer
 
 BOOL
 GetComputerNameW(
-    OUT LPWSTR lpBuffer,     // address of name buffer
-     OUT LPDWORD nSize);   // address of size of name buffer
+     LPWSTR lpBuffer,     // address of name buffer
+      LPDWORD nSize);   // address of size of name buffer
 
 #ifdef UNICODE
 #define GetUserName GetUserNameW
@@ -1164,7 +1164,7 @@ BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
           LONG lReleaseCount,
-         OUT LPLONG lpPreviousCount);
+          LPLONG lpPreviousCount);
 
 HANDLE
 CreateEventA(
@@ -1341,7 +1341,7 @@ CreateProcessA(
             LPVOID lpEnvironment,
             LPCSTR lpCurrentDirectory,
             LPSTARTUPINFOA lpStartupInfo,
-           OUT LPPROCESS_INFORMATION lpProcessInformation);
+            LPPROCESS_INFORMATION lpProcessInformation);
 
 BOOL
 CreateProcessW(
@@ -1354,7 +1354,7 @@ CreateProcessW(
             LPVOID lpEnvironment,
             LPCWSTR lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
-           OUT LPPROCESS_INFORMATION lpProcessInformation);
+            LPPROCESS_INFORMATION lpProcessInformation);
 
 #ifdef UNICODE
 #define CreateProcess CreateProcessW
@@ -1380,10 +1380,10 @@ GetExitCodeProcess(
 BOOL
 GetProcessTimes(
          HANDLE hProcess,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpExitTime,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime);
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpExitTime,
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime);
 
 #define MAXIMUM_WAIT_OBJECTS  64
 #define WAIT_OBJECT_0 0
@@ -1437,7 +1437,7 @@ DuplicateHandle(
          HANDLE hSourceProcessHandle,
          HANDLE hSourceHandle,
          HANDLE hTargetProcessHandle,
-        OUT LPHANDLE lpTargetHandle,
+         LPHANDLE lpTargetHandle,
          DWORD dwDesiredAccess,
          BOOL bInheritHandle,
          DWORD dwOptions);
@@ -1467,7 +1467,7 @@ CreateThread(
           LPTHREAD_START_ROUTINE lpStartAddress,
           LPVOID lpParameter,
           DWORD dwCreationFlags,
-         OUT LPDWORD lpThreadId);
+          LPDWORD lpThreadId);
 
 __attribute__((noreturn))
 void
@@ -2846,7 +2846,7 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 BOOL
 GetThreadContext(
           HANDLE hThread,
-          OUT LPCONTEXT lpContext);
+           LPCONTEXT lpContext);
 
 BOOL
 SetThreadContext(
@@ -2880,10 +2880,10 @@ SetThreadPriority(
 BOOL
 GetThreadTimes(
          HANDLE hThread,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpExitTime,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime);
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpExitTime,
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime);
 
 void *
 PAL_GetStackBase();
@@ -2965,13 +2965,13 @@ typedef struct _CRITICAL_SECTION {
 #endif // PLATFORM_UNIX
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
-void EnterCriticalSection( OUT LPCRITICAL_SECTION lpCriticalSection);
-void LeaveCriticalSection( OUT LPCRITICAL_SECTION lpCriticalSection);
-void InitializeCriticalSection(OUT LPCRITICAL_SECTION lpCriticalSection);
+void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
 BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount);
-void DeleteCriticalSection( OUT LPCRITICAL_SECTION lpCriticalSection);
-BOOL TryEnterCriticalSection( OUT LPCRITICAL_SECTION lpCriticalSection);
+void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+BOOL TryEnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
 #define SEM_FAILCRITICALERRORS          0x0001
 #define SEM_NOOPENFILEERRORBOX          0x8000
@@ -3157,7 +3157,7 @@ GetProcAddress(
 
 BOOL
 FreeLibrary(
-     OUT HMODULE hLibModule);
+      HMODULE hLibModule);
 
 __attribute__((noreturn))
 void
@@ -3172,13 +3172,13 @@ DisableThreadLibraryCalls(
 DWORD
 GetModuleFileNameA(
      HMODULE hModule,
-    OUT LPSTR lpFileName,
+     LPSTR lpFileName,
      DWORD nSize);
 
 DWORD
 GetModuleFileNameW(
      HMODULE hModule,
-    OUT LPWSTR lpFileName,
+     LPWSTR lpFileName,
      DWORD nSize);
 
 #ifdef UNICODE
@@ -3191,7 +3191,7 @@ DWORD
 GetModuleFileNameExW(
      HANDLE hProcess,
      HMODULE hModule,
-    OUT LPWSTR lpFilename,
+     LPWSTR lpFilename,
      DWORD nSize
     );
 
@@ -3212,7 +3212,7 @@ BOOL
 GetModuleHandleExW(
      DWORD dwFlags,
      OPTIONAL LPCWSTR lpModuleName,
-    OUT HMODULE *phModule);
+     HMODULE *phModule);
 
 #ifdef UNICODE
 #define GetModuleHandleEx GetModuleHandleExW
@@ -3256,7 +3256,7 @@ VirtualProtect(
             LPVOID lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect);
+            PDWORD lpflOldProtect);
 
 BOOL
 VirtualProtectEx(
@@ -3264,7 +3264,7 @@ VirtualProtectEx(
             LPVOID lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect);
+            PDWORD lpflOldProtect);
 
 typedef struct _MEMORYSTATUSEX {
   DWORD     dwLength;
@@ -3280,7 +3280,7 @@ typedef struct _MEMORYSTATUSEX {
 
 BOOL
 GlobalMemoryStatusEx(
-             OUT LPMEMORYSTATUSEX lpBuffer);
+              LPMEMORYSTATUSEX lpBuffer);
 
 typedef struct _MEMORY_BASIC_INFORMATION {
     PVOID BaseAddress;
@@ -3295,23 +3295,23 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 SIZE_T
 VirtualQuery(
           LPCVOID lpAddress,
-         OUT PMEMORY_BASIC_INFORMATION lpBuffer,
+          PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength);
 
 SIZE_T
 VirtualQueryEx(
           HANDLE hProcess,
           LPCVOID lpAddress,
-         OUT PMEMORY_BASIC_INFORMATION lpBuffer,
+          PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength);
 
 BOOL
 ReadProcessMemory(
            HANDLE hProcess,
            LPCVOID lpBaseAddress,
-          OUT LPVOID lpBuffer,
+           LPVOID lpBuffer,
            SIZE_T nSize,
-          OUT SIZE_T * lpNumberOfBytesRead);
+           SIZE_T * lpNumberOfBytesRead);
 
 void
 RtlMoveMemory(
@@ -3408,7 +3408,7 @@ GetStringTypeExW(
           DWORD dwInfoType,
           LPCWSTR lpSrcStr,
           int cchSrc,
-         OUT LPWORD lpCharType);
+          LPWORD lpCharType);
 
 #ifdef UNICODE
 #define GetStringTypeEx GetStringTypeExW
@@ -3507,7 +3507,7 @@ typedef struct _cpinfo {
 BOOL
 GetCPInfo(
        UINT CodePage,
-      OUT LPCPINFO lpCPInfo);
+       LPCPINFO lpCPInfo);
 
 BOOL
 IsDBCSLeadByteEx(
@@ -3532,7 +3532,7 @@ MultiByteToWideChar(
              DWORD dwFlags,
              LPCSTR lpMultiByteStr,
              int cbMultiByte,
-            OUT LPWSTR lpWideCharStr,
+             LPWSTR lpWideCharStr,
              int cchWideChar);
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
@@ -3543,10 +3543,10 @@ WideCharToMultiByte(
              DWORD dwFlags,
              LPCWSTR lpWideCharStr,
              int cchWideChar,
-            OUT LPSTR lpMultiByteStr,
+             LPSTR lpMultiByteStr,
              int cbMultyByte,
              LPCSTR lpDefaultChar,
-            OUT LPBOOL lpUsedDefaultChar);
+             LPBOOL lpUsedDefaultChar);
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3815,7 +3815,7 @@ int
 GetLocaleInfoW(
      LCID     Locale,
      LCTYPE   LCType,
-    OUT LPWSTR  lpLCData,
+     LPWSTR  lpLCData,
      int      cchData);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
@@ -3824,7 +3824,7 @@ int
 GetLocaleInfoEx(
      LPCWSTR  lpLocaleName,
      LCTYPE   LCType,
-    OUT LPWSTR  lpLCData,
+     LPWSTR  lpLCData,
      int      cchData);
 
 
@@ -3852,7 +3852,7 @@ FindNLSStringEx(
 	 int cchSource,
      LPCWSTR lpStringValue,
 	 int cchValue,
-	OUT LPINT pcchFound,
+	 LPINT pcchFound,
 	 LPNLSVERSIONINFOEX lpVersionInformation,
 	 LPVOID lpReserved,
 	 LPARAM lParam );
@@ -3873,20 +3873,20 @@ IsNLSDefinedString(
 int
 ResolveLocaleName(
      LPCWSTR lpNameToResolve,
-        OUT LPWSTR lpLocaleName,
+         LPWSTR lpLocaleName,
          int cchLocaleName );
 
 BOOL
 GetThreadPreferredUILanguages(
      DWORD  dwFlags,
-    OUT PULONG  pulNumLanguages,
-    OUT PWSTR  pwszLanguagesBuffer,
-     OUT PULONG  pcchLanguagesBuffer);
+     PULONG  pulNumLanguages,
+     PWSTR  pwszLanguagesBuffer,
+      PULONG  pcchLanguagesBuffer);
 
 
 int
 GetSystemDefaultLocaleName(
-    OUT LPWSTR lpLocaleName,
+     LPWSTR lpLocaleName,
 	 int cchLocaleName);
 
 #ifdef UNICODE
@@ -3902,7 +3902,7 @@ GetUserDefaultLCID(
 
 int
 GetUserDefaultLocaleName(
-           OUT LPWSTR lpLocaleName,
+            LPWSTR lpLocaleName,
             int cchLocaleName);
 
 
@@ -3946,9 +3946,9 @@ GetCalendarInfoW(
           LCID Locale,
           CALID Calendar,
           CALTYPE CalType,
-         OUT LPWSTR lpCalData,
+          LPWSTR lpCalData,
           int cchData,
-         OUT LPDWORD lpValue);
+          LPDWORD lpValue);
 
 #ifdef UNICODE
 #define GetCalendarInfo GetCalendarInfoW
@@ -3963,9 +3963,9 @@ GetCalendarInfoEx(
           CALID Calendar,
           LPCWSTR lpReserved,
           CALTYPE CalType,
-         OUT LPWSTR lpCalData,
+          LPWSTR lpCalData,
           int cchData,
-         OUT LPDWORD lpValue);
+          LPDWORD lpValue);
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 typedef BOOL (CALLBACK* LOCALE_ENUMPROCW)(LPWSTR);
@@ -4068,7 +4068,7 @@ LCMapStringW(
      DWORD   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
-    OUT LPWSTR lpDestStr,
+     LPWSTR lpDestStr,
      int     cchDest);
 
 #ifdef UNICODE
@@ -4085,7 +4085,7 @@ LCMapStringEx(
      DWORD   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
-    OUT LPWSTR lpDestStr,
+     LPWSTR lpDestStr,
      int     cchDest,
      LPNLSVERSIONINFO lpVersionInformation,
      LPVOID lpReserved,
@@ -4096,7 +4096,7 @@ PAL_LCMapCharW(
      LPCWSTR    lpLocaleName,
      DWORD   dwMapFlags,
      WCHAR   srcChar,
-    OUT WCHAR  *destChar,
+     WCHAR  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
     LPVOID lpReserved,
     LPARAM lParam );
@@ -4107,7 +4107,7 @@ PAL_NormalizeStringExW(
      DWORD   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
-    OUT LPWSTR lpDestStr,
+     LPWSTR lpDestStr,
      int     cchDest);
 
 int
@@ -4115,12 +4115,12 @@ PAL_ParseDateW(
      LPCWSTR   lpLocaleName,
      LPCWSTR   lpFormat,
      LPCWSTR   lpString,
-    OUT LPSYSTEMTIME lpTime);
+     LPSYSTEMTIME lpTime);
 
 int
 PAL_GetCalendar(
      LPCWSTR   lpLocaleName,
-    OUT CALID*   pCalendar);
+     CALID*   pCalendar);
 
 #define GEOID_NOT_AVAILABLE -1
 
@@ -4161,7 +4161,7 @@ GetDateFormatW(
             DWORD dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
-           OUT LPWSTR lpDateStr,
+            LPWSTR lpDateStr,
             int cchDate);
 
 #else
@@ -4172,7 +4172,7 @@ GetDateFormatEx(
             DWORD dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
-           OUT LPWSTR lpDateStr,
+            LPWSTR lpDateStr,
             int cchDate,
             LPCWSTR lpCalendar);
 
@@ -4185,7 +4185,7 @@ GetDateFormatEx(
             DWORD dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
-           OUT LPWSTR lpDateStr,
+            LPWSTR lpDateStr,
             int cchDate,
            LPCWSTR lpCalendar);
 
@@ -4199,7 +4199,7 @@ int
 PAL_GetResourceString(
          LPCSTR lpDomain,
          LPCSTR lpResourceStr,
-        OUT LPWSTR lpWideCharStr,
+         LPWSTR lpWideCharStr,
          int cchWideChar);
 
 BOOL
@@ -4293,7 +4293,7 @@ WriteProcessMemory( HANDLE hProcess,
                     LPVOID lpBaseAddress,
                     LPCVOID lpBuffer,
                     SIZE_T nSize,
-                   OUT SIZE_T * lpNumberOfBytesWritten);
+                    SIZE_T * lpNumberOfBytesWritten);
 
 #define STANDARD_RIGHTS_REQUIRED  (0x000F0000L)
 #define SYNCHRONIZE               (0x00100000L)
@@ -4337,9 +4337,9 @@ OpenProcess(
 BOOL
 EnumProcessModules(
      HANDLE hProcess,
-    OUT HMODULE *lphModule,
+     HMODULE *lphModule,
      DWORD cb,
-    OUT LPDWORD lpcbNeeded
+     LPDWORD lpcbNeeded
     );
 
 void
@@ -4362,7 +4362,7 @@ DebugBreak(
 
 LPWSTR
 lstrcatW(
-      OUT LPWSTR lpString1,
+       LPWSTR lpString1,
       LPCWSTR lpString2);
 
 #ifdef UNICODE
@@ -4371,7 +4371,7 @@ lstrcatW(
 
 LPWSTR
 lstrcpyW(
-     OUT LPWSTR lpString1,
+      LPWSTR lpString1,
       LPCWSTR lpString2);
 
 #ifdef UNICODE
@@ -4394,7 +4394,7 @@ lstrlenW(
 
 LPWSTR
 lstrcpynW(
-      OUT LPWSTR lpString1,
+       LPWSTR lpString1,
        LPCWSTR lpString2,
        int iMaxLength);
 
@@ -4406,13 +4406,13 @@ lstrcpynW(
 DWORD
 GetEnvironmentVariableA(
              LPCSTR lpName,
-            OUT LPSTR lpBuffer,
+             LPSTR lpBuffer,
              DWORD nSize);
 
 DWORD
 GetEnvironmentVariableW(
              LPCWSTR lpName,
-            OUT LPWSTR lpBuffer,
+             LPWSTR lpBuffer,
              DWORD nSize);
 
 #ifdef UNICODE
@@ -4467,7 +4467,7 @@ FreeEnvironmentStringsW(
 
 BOOL
 CloseHandle(
-         OUT HANDLE hObject);
+          HANDLE hObject);
 
 void
 RaiseException(
@@ -4492,18 +4492,18 @@ GetTickCount64();
 
 BOOL
 QueryPerformanceCounter(
-    OUT LARGE_INTEGER *lpPerformanceCount
+     LARGE_INTEGER *lpPerformanceCount
     );
 
 BOOL
 QueryPerformanceFrequency(
-    OUT LARGE_INTEGER *lpFrequency
+     LARGE_INTEGER *lpFrequency
     );
 
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
-    OUT PULONG64 CycleTime);
+     PULONG64 CycleTime);
 
 #ifndef FEATURE_PAL_SXS
 
@@ -4542,7 +4542,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanForward(
-     OUT PDWORD Index,
+      PDWORD Index,
      UINT qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4563,7 +4563,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanForward64(
-     OUT PDWORD Index,
+      PDWORD Index,
      UINT64 qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4585,7 +4585,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanReverse(
-     OUT PDWORD Index,
+      PDWORD Index,
      UINT qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4606,7 +4606,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanReverse64(
-     OUT PDWORD Index,
+      PDWORD Index,
      UINT64 qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4645,7 +4645,7 @@ EXTERN_C
 inline
 LONG
 InterlockedIncrement(
-     OUT LONG volatile *lpAddend)
+      LONG volatile *lpAddend)
 {
     return __sync_add_and_fetch(lpAddend, (LONG)1);
 }
@@ -4654,7 +4654,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedIncrement16(
-     OUT SHORT volatile *lpAddend)
+      SHORT volatile *lpAddend)
 {
     return __sync_add_and_fetch(lpAddend, (SHORT)1);
 }
@@ -4663,7 +4663,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedIncrement64(
-     OUT LONGLONG volatile *lpAddend)
+      LONGLONG volatile *lpAddend)
 {
     return __sync_add_and_fetch(lpAddend, (LONGLONG)1);
 }
@@ -4691,7 +4691,7 @@ EXTERN_C
 inline
 LONG
 InterlockedDecrement(
-     OUT LONG volatile *lpAddend)
+      LONG volatile *lpAddend)
 {
     return __sync_sub_and_fetch(lpAddend, (LONG)1);
 }
@@ -4700,7 +4700,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedDecrement64(
-     OUT LONGLONG volatile *lpAddend)
+      LONGLONG volatile *lpAddend)
 {
     return __sync_sub_and_fetch(lpAddend, (LONGLONG)1);
 }
@@ -4730,7 +4730,7 @@ EXTERN_C
 inline
 char
 InterlockedExchange8(
-     OUT char volatile *Target,
+      char volatile *Target,
      char Value)
 {
     return __sync_swap(Target, Value);
@@ -4740,7 +4740,7 @@ EXTERN_C
 inline
 short
 InterlockedExchange16(
-     OUT short volatile *Target,
+      short volatile *Target,
      short Value)
 {
     return __sync_swap(Target, Value);
@@ -4750,7 +4750,7 @@ EXTERN_C
 inline
 LONG
 InterlockedExchange(
-     OUT LONG volatile *Target,
+      LONG volatile *Target,
      LONG Value)
 {
     return __sync_swap(Target, Value);
@@ -4760,7 +4760,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedExchange64(
-     OUT LONGLONG volatile *Target,
+      LONGLONG volatile *Target,
      LONGLONG Value)
 {
     return __sync_swap(Target, Value);
@@ -4793,7 +4793,7 @@ EXTERN_C
 inline
 char
 InterlockedCompareExchange8(
-     OUT char volatile *Destination,
+      char volatile *Destination,
      char Exchange,
      char Comperand)
 {
@@ -4807,7 +4807,7 @@ EXTERN_C
 inline
 short
 InterlockedCompareExchange16(
-     OUT short volatile *Destination,
+      short volatile *Destination,
      short Exchange,
      short Comperand)
 {
@@ -4821,7 +4821,7 @@ EXTERN_C
 inline
 LONG
 InterlockedCompareExchange(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Exchange,
      LONG Comperand)
 {
@@ -4835,7 +4835,7 @@ EXTERN_C
 inline
 LONG
 InterlockedCompareExchangeAcquire(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Exchange,
      LONG Comperand)
 {
@@ -4850,7 +4850,7 @@ EXTERN_C
 inline
 LONG
 InterlockedCompareExchangeRelease(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Exchange,
      LONG Comperand)
 {
@@ -4866,7 +4866,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedCompareExchange64(
-     OUT LONGLONG volatile *Destination,
+      LONGLONG volatile *Destination,
      LONGLONG Exchange,
      LONGLONG Comperand)
 {
@@ -4897,7 +4897,7 @@ EXTERN_C
 inline
 char
 InterlockedExchangeAdd8(
-     OUT char volatile *Addend,
+      char volatile *Addend,
      char Value)
 {
     return __sync_fetch_and_add(Addend, Value);
@@ -4907,7 +4907,7 @@ EXTERN_C
 inline
 short
 InterlockedExchangeAdd16(
-     OUT short volatile *Addend,
+      short volatile *Addend,
      short Value)
 {
     return __sync_fetch_and_add(Addend, Value);
@@ -4917,7 +4917,7 @@ EXTERN_C
 inline
 LONG
 InterlockedExchangeAdd(
-     OUT LONG volatile *Addend,
+      LONG volatile *Addend,
      LONG Value)
 {
     return __sync_fetch_and_add(Addend, Value);
@@ -4927,7 +4927,7 @@ EXTERN_C
 inline
 LONG
 InterlockedAdd(
-     OUT LONG volatile *Addend,
+      LONG volatile *Addend,
      LONG Value)
 {
     return InterlockedExchangeAdd(Addend, Value) + Value;
@@ -4937,7 +4937,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedExchangeAdd64(
-     OUT LONGLONG volatile *Addend,
+      LONGLONG volatile *Addend,
      LONGLONG Value)
 {
     return __sync_fetch_and_add(Addend, Value);
@@ -4947,7 +4947,7 @@ EXTERN_C
 inline
 char
 InterlockedAnd8(
-     OUT char volatile *Destination,
+      char volatile *Destination,
      char Value)
 {
     return __sync_fetch_and_and(Destination, Value);
@@ -4957,7 +4957,7 @@ EXTERN_C
 inline
 short
 InterlockedAnd16(
-     OUT short volatile *Destination,
+      short volatile *Destination,
      short Value)
 {
     return __sync_fetch_and_and(Destination, Value);
@@ -4967,7 +4967,7 @@ EXTERN_C
 inline
 LONG
 InterlockedAnd(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Value)
 {
     return __sync_fetch_and_and(Destination, Value);
@@ -4977,7 +4977,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedAnd64(
-     OUT LONGLONG volatile *Destination,
+      LONGLONG volatile *Destination,
      LONGLONG Value)
 {
     return __sync_fetch_and_and(Destination, Value);
@@ -4987,7 +4987,7 @@ EXTERN_C
 inline
 char
 InterlockedOr8(
-     OUT char volatile *Destination,
+      char volatile *Destination,
      char Value)
 {
     return __sync_fetch_and_or(Destination, Value);
@@ -4997,7 +4997,7 @@ EXTERN_C
 inline
 short
 InterlockedOr16(
-     OUT short volatile *Destination,
+      short volatile *Destination,
      short Value)
 {
     return __sync_fetch_and_or(Destination, Value);
@@ -5007,7 +5007,7 @@ EXTERN_C
 inline
 LONG
 InterlockedOr(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Value)
 {
     return __sync_fetch_and_or(Destination, Value);
@@ -5017,7 +5017,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedOr64(
-     OUT LONGLONG volatile *Destination,
+      LONGLONG volatile *Destination,
      LONGLONG Value)
 {
     return __sync_fetch_and_or(Destination, Value);
@@ -5027,7 +5027,7 @@ EXTERN_C
 inline
 char
 InterlockedXor8(
-     OUT char volatile *Destination,
+      char volatile *Destination,
      char Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
@@ -5037,7 +5037,7 @@ EXTERN_C
 inline
 short
 InterlockedXor16(
-     OUT short volatile *Destination,
+      short volatile *Destination,
      short Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
@@ -5047,7 +5047,7 @@ EXTERN_C
 inline
 LONG
 InterlockedXor(
-     OUT LONG volatile *Destination,
+      LONG volatile *Destination,
      LONG Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
@@ -5057,7 +5057,7 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedXor64(
-     OUT LONGLONG volatile *Destination,
+      LONGLONG volatile *Destination,
      LONGLONG Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
@@ -5070,7 +5070,7 @@ EXTERN_C
 inline
 UCHAR
 InterlockedBitTestAndReset(
-     OUT LONG volatile *Base,
+      LONG volatile *Base,
      LONG Bit)
 {
     // The BitTestAndReset family of functions allow for arbitrary bit
@@ -5086,7 +5086,7 @@ EXTERN_C
 inline
 UCHAR
 InterlockedBitTestAndSet(
-     OUT LONG volatile *Base,
+      LONG volatile *Base,
      LONG Bit)
 {
     volatile LONG* longToTest = Base + (Bit / BITS_IN_LONG);
@@ -5110,7 +5110,7 @@ EXTERN_C
 inline
 UCHAR
 BitTestAndSet(
-     OUT LONG *Base,
+      LONG *Base,
      LONG Bit)
 {
     // xplat-todo: Benchmark whether this is better than
@@ -5185,7 +5185,7 @@ FormatMessageW(
             LPCVOID lpSource,
             DWORD dwMessageId,
             DWORD dwLanguageId,
-           OUT LPWSTR lpBffer,
+            LPWSTR lpBffer,
             DWORD nSize,
             va_list *Arguments);
 
@@ -5218,7 +5218,7 @@ RtlRestoreContext(
 
 void
 RtlCaptureContext(
-  OUT PCONTEXT ContextRecord
+   PCONTEXT ContextRecord
 );
 
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
@@ -5302,11 +5302,11 @@ typedef LPOSVERSIONINFOEXA LPOSVERSIONINFOEX;
 
 BOOL
 GetVersionExA(
-           OUT LPOSVERSIONINFOA lpVersionInformation);
+            LPOSVERSIONINFOA lpVersionInformation);
 
 BOOL
 GetVersionExW(
-           OUT LPOSVERSIONINFOW lpVersionInformation);
+            LPOSVERSIONINFOW lpVersionInformation);
 
 #ifdef UNICODE
 #define GetVersionEx GetVersionExW
@@ -5333,7 +5333,7 @@ typedef struct _SYSTEM_INFO {
 
 void
 GetSystemInfo(
-          OUT LPSYSTEM_INFO lpSystemInfo);
+           LPSYSTEM_INFO lpSystemInfo);
 
 BOOL
 GetDiskFreeSpaceW(
@@ -5349,8 +5349,8 @@ GetDiskFreeSpaceW(
 
 BOOL
 CreatePipe(
-    OUT PHANDLE hReadPipe,
-    OUT PHANDLE hWritePipe,
+     PHANDLE hReadPipe,
+     PHANDLE hWritePipe,
      LPSECURITY_ATTRIBUTES lpPipeAttributes,
      DWORD nSize
     );
@@ -5417,7 +5417,7 @@ ReportEventW (
 #endif // !UNICODE
 
 HRESULT
-CoCreateGuid(OUT GUID * pguid);
+CoCreateGuid( GUID * pguid);
 
 /******************* C Runtime Entrypoints *******************************/
 
@@ -5920,7 +5920,7 @@ typedef struct _PAL_IOCP_CPU_INFORMATION {
 
 INT
 PAL_GetCPUBusyTime(
-     OUT PAL_IOCP_CPU_INFORMATION *lpPrevCPUInfo);
+      PAL_IOCP_CPU_INFORMATION *lpPrevCPUInfo);
 
 /****************PAL Perf functions for PInvoke*********************/
 #if PAL_PERF
