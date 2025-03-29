@@ -9,7 +9,6 @@
  * This file contains defines that switch feature on or off, or configuration a feature at build time
  *****************************************************************************************************/
 
-#include "Interface/TargetVer.h"
 #include "Interface/Warnings.h"
 #include "Interface/ChakraCoreVersion.h"
 

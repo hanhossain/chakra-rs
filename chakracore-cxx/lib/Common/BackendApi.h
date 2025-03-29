@@ -37,7 +37,6 @@ typedef double  FloatConstType;
 
 #include "EmitBuffer.h"
 #include "InterpreterThunkEmitter.h"
-#include "JITThunkEmitter.h"
 #include "BackendOpCodeAttr.h"
 #include "BackendOpCodeAttrAsmJs.h"
 #include "CodeGenNumberAllocator.h"
