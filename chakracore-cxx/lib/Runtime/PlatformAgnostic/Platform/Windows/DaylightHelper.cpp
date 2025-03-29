@@ -20,8 +20,8 @@ namespace DateTime
     static const double criticalMax = Js::DateUtilities::TvFromDate(USHRT_MAX-1, 0, 0, 0);
 
     typedef BOOL(*DateConversionFunction)(
-        _In_opt_ CONST PVOID lpTimeZoneInformation,
-        _In_ CONST SYSTEMTIME * lpLocalTime,
+        _In_opt_ const PVOID lpTimeZoneInformation,
+        _In_ const SYSTEMTIME * lpLocalTime,
         _Out_ LPSYSTEMTIME lpUniversalTime
         );
 

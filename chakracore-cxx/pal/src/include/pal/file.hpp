@@ -152,9 +152,9 @@ namespace CorUnix
     InternalSetFileTime(
         CPalThread *pThread,
         IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime
+        IN const FILETIME *lpCreationTime,
+        IN const FILETIME *lpLastAccessTime,
+        IN const FILETIME *lpLastWriteTime
         );
 
     PAL_ERROR

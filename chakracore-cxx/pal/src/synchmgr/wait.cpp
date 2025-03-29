@@ -109,7 +109,7 @@ See MSDN doc.
 --*/
 DWORD
 WaitForMultipleObjects(IN DWORD nCount,
-                       IN CONST HANDLE *lpHandles,
+                       IN const HANDLE *lpHandles,
                        IN BOOL bWaitAll,
                        IN DWORD dwMilliseconds)
 {
@@ -138,7 +138,7 @@ See MSDN doc for info about this function.
 --*/
 DWORD
 WaitForMultipleObjectsEx(IN DWORD nCount,
-                         IN CONST HANDLE *lpHandles,
+                         IN const HANDLE *lpHandles,
                          IN BOOL bWaitAll,
                          IN DWORD dwMilliseconds,
                          IN BOOL bAlertable)
@@ -276,7 +276,7 @@ QueueUserAPC_exit:
 DWORD CorUnix::InternalWaitForMultipleObjectsEx(
     CPalThread * pThread,
     DWORD nCount,
-    CONST HANDLE *lpHandles,
+    const HANDLE *lpHandles,
     BOOL bWaitAll,
     DWORD dwMilliseconds,
     BOOL bAlertable)

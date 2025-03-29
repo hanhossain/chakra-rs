@@ -53,7 +53,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 
 /* This code is written to the blocking pipe of a thread that was created
    in suspended state in order to resume it. */
-CONST BYTE WAKEUPCODE=0x2A;
+const BYTE WAKEUPCODE=0x2A;
 
 // #define USE_GLOBAL_LOCK_FOR_SUSPENSION // Uncomment this define to use the global suspension lock.
 /* The global suspension lock can be used in place of each thread having its own

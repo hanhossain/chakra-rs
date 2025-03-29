@@ -47,7 +47,6 @@ extern "C" {
 // Type attribute stuff
 ////////////////////////////////////////////////////////////////////////
 
-#define CONST const
 #define IN
 #define OUT
 #define OPTIONAL
@@ -199,7 +198,7 @@ typedef DWORD *PDWORD;
 typedef DWORD *LPDWORD;
 typedef void *PVOID;
 typedef void *LPVOID;
-typedef CONST void *LPCVOID;
+typedef const void *LPCVOID;
 typedef int INT;
 typedef unsigned int UINT;
 typedef unsigned int *PUINT;
@@ -541,19 +540,19 @@ typedef DWORD LCTYPE;
 
 typedef WCHAR *PWCHAR;
 typedef WCHAR *LPWCH, *PWCH;
-typedef CONST WCHAR *LPCWCH, *PCWCH;
+typedef const WCHAR *LPCWCH, *PCWCH;
 typedef WCHAR *NWPSTR;
 typedef WCHAR *LPWSTR, *PWSTR;
 
-typedef CONST WCHAR *LPCWSTR, *PCWSTR;
+typedef const WCHAR *LPCWSTR, *PCWSTR;
 
 typedef char CHAR;
 typedef CHAR *PCHAR;
 typedef CHAR *LPCH, *PCH;
-typedef CONST CHAR *LPCCH, *PCCH;
+typedef const CHAR *LPCCH, *PCCH;
 typedef CHAR *NPSTR;
 typedef CHAR *LPSTR, *PSTR;
-typedef CONST CHAR *LPCSTR, *PCSTR;
+typedef const CHAR *LPCSTR, *PCSTR;
 
 #ifdef UNICODE
 typedef WCHAR TCHAR;
@@ -564,7 +563,7 @@ typedef CHAR _TCHAR;
 #endif
 typedef TCHAR *PTCHAR;
 typedef TCHAR *LPTSTR, *PTSTR;
-typedef CONST TCHAR *LPCTSTR;
+typedef const TCHAR *LPCTSTR;
 
 #define MAKEWORD(a, b)      ((WORD)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((WORD)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
 #define MAKELONG(a, b)      ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16))

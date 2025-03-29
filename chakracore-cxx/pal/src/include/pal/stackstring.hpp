@@ -123,7 +123,7 @@ public:
         return m_size * sizeof(T);
     }
 
-    CONST T * GetString() const
+    const T * GetString() const
     {
         return (const T *)m_buffer;
     }

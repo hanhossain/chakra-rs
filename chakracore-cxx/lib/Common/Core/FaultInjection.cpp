@@ -191,7 +191,7 @@ namespace Js
         _In_ DWORD FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
         _Inout_opt_ PDWORD BackTraceHash,
-        __in_opt CONST PCONTEXT InitialContext = NULL
+        __in_opt const PCONTEXT InitialContext = NULL
         )
     {
         _Analysis_assume_(FramesToSkip >= 0);

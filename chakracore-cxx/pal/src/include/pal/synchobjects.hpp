@@ -42,7 +42,7 @@ namespace CorUnix
     DWORD InternalWaitForMultipleObjectsEx(
         CPalThread * pthrCurrent,
         DWORD nCount,
-        CONST HANDLE *lpHandles,
+        const HANDLE *lpHandles,
         BOOL bWaitAll,
         DWORD dwMilliseconds,
         BOOL bAlertable);

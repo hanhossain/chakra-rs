@@ -1797,7 +1797,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
     if ( TruncateRetVal != 0 || FileInfo.st_size != (int) NewSize )
     {
         INT OrigSize;
-        CONST UINT  BUFFER_SIZE = 128;
+        const UINT  BUFFER_SIZE = 128;
         BYTE buf[BUFFER_SIZE];
         UINT x = 0;
         UINT CurrentPosition = 0;

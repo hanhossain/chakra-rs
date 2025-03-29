@@ -460,7 +460,7 @@ BOOL
 CONTEXT_SetThreadContext(
            DWORD dwProcessId,
            pthread_t self,
-           CONST CONTEXT *lpContext)
+           const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
@@ -552,14 +552,14 @@ Function :
     Converts a CONTEXT record to a native context.
 
 Parameters :
-    CONST CONTEXT *lpContext : CONTEXT to convert
+    const CONTEXT *lpContext : CONTEXT to convert
     native_context_t *native : native context to fill in
 
 Return value :
     None
 
 --*/
-void CONTEXTToNativeContext(CONST CONTEXT *lpContext, native_context_t *native)
+void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native)
 {
 #define ASSIGN_REG(reg) MCREG_##reg(native->uc_mcontext) = lpContext->reg;
     if ((lpContext->ContextFlags & CONTEXT_CONTROL) == CONTEXT_CONTROL)
@@ -1405,7 +1405,7 @@ Function:
 kern_return_t
 CONTEXT_SetThreadContextOnPort(
            mach_port_t Port,
-           IN CONST CONTEXT *lpContext)
+           IN const CONTEXT *lpContext)
 {
     kern_return_t MachRet = KERN_SUCCESS;
     mach_msg_type_number_t StateCount;
@@ -1573,7 +1573,7 @@ BOOL
 CONTEXT_SetThreadContext(
            DWORD dwProcessId,
            pthread_t self,
-           CONST CONTEXT *lpContext)
+           const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 

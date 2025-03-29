@@ -66,7 +66,7 @@ See MSDN doc.
 void
 RtlMoveMemory(
           IN PVOID Destination,
-          IN CONST void *Source,
+          IN const void *Source,
           IN SIZE_T Length)
 {
     PERF_ENTRY(RtlMoveMemory);

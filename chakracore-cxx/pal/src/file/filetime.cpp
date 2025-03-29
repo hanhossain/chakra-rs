@@ -112,8 +112,8 @@ See MSDN doc.
 --*/
 LONG
 CompareFileTime(
-        IN CONST FILETIME *lpFileTime1,
-        IN CONST FILETIME *lpFileTime2)
+        IN const FILETIME *lpFileTime1,
+        IN const FILETIME *lpFileTime2)
 {
     __int64 First;
     __int64 Second;
@@ -164,9 +164,9 @@ ignored, and the inode change time will be set to the current time.
 BOOL
 SetFileTime(
         IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime)
+        IN const FILETIME *lpCreationTime,
+        IN const FILETIME *lpLastAccessTime,
+        IN const FILETIME *lpLastWriteTime)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -213,9 +213,9 @@ PAL_ERROR
 CorUnix::InternalSetFileTime(
         CPalThread *pThread,
         IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime)
+        IN const FILETIME *lpCreationTime,
+        IN const FILETIME *lpLastAccessTime,
+        IN const FILETIME *lpLastWriteTime)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pFileObject = NULL;
@@ -643,7 +643,7 @@ Function
     easier manipulation in FileTimeToDosTime.
         
 --*/
-BOOL FileTimeToSystemTime( CONST FILETIME * lpFileTime,
+BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
                                   LPSYSTEMTIME lpSystemTime )
 {
     UINT64 FileTime = 0;
@@ -715,7 +715,7 @@ See msdn for more details.
 --*/
 BOOL
 FileTimeToDosDateTime(
-            IN CONST FILETIME *lpFileTime,
+            IN const FILETIME *lpFileTime,
             OUT LPWORD lpFatDate,
             OUT LPWORD lpFatTime )
 {

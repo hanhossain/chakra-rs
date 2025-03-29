@@ -923,15 +923,15 @@ GetFileInformationByHandle(
 
 LONG
 CompareFileTime(
-        IN CONST FILETIME *lpFileTime1,
-        IN CONST FILETIME *lpFileTime2);
+        IN const FILETIME *lpFileTime1,
+        IN const FILETIME *lpFileTime2);
 
 BOOL
 SetFileTime(
         IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime);
+        IN const FILETIME *lpCreationTime,
+        IN const FILETIME *lpLastAccessTime,
+        IN const FILETIME *lpLastWriteTime);
 
 BOOL
 GetFileTime(
@@ -957,12 +957,12 @@ typedef struct _SYSTEMTIME {
 
 BOOL
 FileTimeToSystemTime(
-            IN CONST FILETIME *lpFileTime,
+            IN const FILETIME *lpFileTime,
             OUT LPSYSTEMTIME lpSystemTime);
 
 BOOL
 FileTimeToDosDateTime(
-    IN CONST FILETIME *lpFileTime,
+    IN const FILETIME *lpFileTime,
     OUT LPWORD lpFatDate,
     OUT LPWORD lpFatTime
     );
@@ -1408,14 +1408,14 @@ WaitForSingleObjectEx(
 DWORD
 WaitForMultipleObjects(
                IN DWORD nCount,
-               IN CONST HANDLE *lpHandles,
+               IN const HANDLE *lpHandles,
                IN BOOL bWaitAll,
                IN DWORD dwMilliseconds);
 
 DWORD
 WaitForMultipleObjectsEx(
              IN DWORD nCount,
-             IN CONST HANDLE *lpHandles,
+             IN const HANDLE *lpHandles,
              IN BOOL bWaitAll,
              IN DWORD dwMilliseconds,
              IN BOOL bAlertable);
@@ -2851,7 +2851,7 @@ GetThreadContext(
 BOOL
 SetThreadContext(
          IN HANDLE hThread,
-         IN CONST CONTEXT *lpContext);
+         IN const CONTEXT *lpContext);
 
 #define THREAD_BASE_PRIORITY_LOWRT    15
 #define THREAD_BASE_PRIORITY_MAX      2
@@ -3316,7 +3316,7 @@ ReadProcessMemory(
 void
 RtlMoveMemory(
           IN PVOID Destination,
-          IN CONST void *Source,
+          IN const void *Source,
           IN SIZE_T Length);
 
 void
@@ -4159,7 +4159,7 @@ int
 GetDateFormatW(
            IN LCID Locale,
            IN DWORD dwFlags,
-           IN CONST SYSTEMTIME *lpDate,
+           IN const SYSTEMTIME *lpDate,
            IN LPCWSTR lpFormat,
            OUT LPWSTR lpDateStr,
            IN int cchDate);
@@ -4170,7 +4170,7 @@ int
 GetDateFormatEx(
            IN LPCWSTR Locale,
            IN DWORD dwFlags,
-           IN CONST SYSTEMTIME *lpDate,
+           IN const SYSTEMTIME *lpDate,
            IN LPCWSTR lpFormat,
            OUT LPWSTR lpDateStr,
            IN int cchDate,
@@ -4183,7 +4183,7 @@ int
 GetDateFormatEx(
            IN LPCWSTR lpLocaleName,
            IN DWORD dwFlags,
-           IN CONST SYSTEMTIME *lpDate,
+           IN const SYSTEMTIME *lpDate,
            IN LPCWSTR lpFormat,
            OUT LPWSTR lpDateStr,
            IN int cchDate,
@@ -4474,7 +4474,7 @@ RaiseException(
            IN DWORD dwExceptionCode,
            IN DWORD dwExceptionFlags,
            IN DWORD nNumberOfArguments,
-           IN CONST ULONG_PTR *lpArguments);
+           IN const ULONG_PTR *lpArguments);
 
 #ifdef FEATURE_PAL_SXS
 __attribute__((noreturn))

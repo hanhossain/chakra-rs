@@ -148,7 +148,7 @@ NOTES:
 --*/
 char * _ecvt( double value, int count, int * dec, int * sign )
 {
-    CONST CHAR * FORMAT_STRING = "%.348e";
+    const CHAR * FORMAT_STRING = "%.348e";
     CHAR TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
     CPalThread *pThread = NULL;
     LPSTR lpReturnBuffer = NULL;

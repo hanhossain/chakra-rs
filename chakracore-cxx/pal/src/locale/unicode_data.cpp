@@ -23,7 +23,7 @@ Abstract:
 
 #if !HAVE_COREFOUNDATION
 
-CONST UnicodeDataRec UnicodeData[] = {
+const UnicodeDataRec UnicodeData[] = {
 
 
 { 0x0000,	0x0020,	0x0000,	0 },
@@ -1847,7 +1847,7 @@ CONST UnicodeDataRec UnicodeData[] = {
 { 0xffe0,	0x0010,	0x0000,	13 },
 };
 
-CONST UINT UNICODE_DATA_SIZE = sizeof(UnicodeData)/sizeof(UnicodeDataRec);
-CONST UINT UNICODE_DATA_DIRECT_ACCESS = 256;
+const UINT UNICODE_DATA_SIZE = sizeof(UnicodeData)/sizeof(UnicodeDataRec);
+const UINT UNICODE_DATA_DIRECT_ACCESS = 256;
 
 #endif // !HAVE_COREFOUNDATION

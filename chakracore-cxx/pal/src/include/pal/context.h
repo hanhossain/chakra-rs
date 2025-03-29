@@ -438,7 +438,7 @@ BOOL
 CONTEXT_SetThreadContext(
     DWORD dwProcessId,
     pthread_t self,
-    CONST CONTEXT *lpContext
+    const CONTEXT *lpContext
     );
 
 /*++
@@ -476,7 +476,7 @@ Function:
 kern_return_t
 CONTEXT_SetThreadContextOnPort(
    mach_port_t Port,
-   IN CONST CONTEXT *lpContext);
+   IN const CONTEXT *lpContext);
 
 /*++
 Function:
@@ -496,14 +496,14 @@ Function :
 
     Converts a CONTEXT record to a native context.
 Parameters :
-    CONST CONTEXT *lpContext : CONTEXT to convert, including
+    const CONTEXT *lpContext : CONTEXT to convert, including
                                flags that determine which registers are valid in
                                lpContext and which ones to set in native
     native_context_t *native : native context to fill in
 Return value :
     None
 --*/
-void CONTEXTToNativeContext(CONST CONTEXT *lpContext, native_context_t *native);
+void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native);
 
 /*++
 Function :

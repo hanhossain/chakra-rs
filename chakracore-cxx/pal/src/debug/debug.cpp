@@ -497,7 +497,7 @@ See MSDN doc.
 BOOL
 SetThreadContext(
            IN HANDLE hThread,
-           IN CONST CONTEXT *lpContext)
+           IN const CONTEXT *lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;

@@ -231,7 +231,7 @@ static BOOL VIRTUALContainsInvalidProtectionFlags( IN DWORD flProtect )
  *  Returns TRUE if committed, FALSE otherwise.
  *
  */
-static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
+static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
     UINT nBitOffset = 0;
@@ -269,7 +269,7 @@ static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, CONST PCMI pInformati
  *  FALSE otherwise.
  *
  */
-static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
+static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
     UINT nBitOffset = 0;
@@ -307,7 +307,7 @@ static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
  *      IN pInformation - The virtual memory object.
  *
  */
-static INT VIRTUALGetAllocationType( SIZE_T Index, CONST PCMI pInformation )
+static INT VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
 {
     if ( VIRTUALIsPageCommitted( Index, pInformation ) )
     {
@@ -474,7 +474,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
  *
  */
 static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
-                           SIZE_T nNumberOfBits, CONST PCMI pInformation )
+                           SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetAllocState( nAction = %d, nStartingBit = %d, "
            "nNumberOfBits = %d, pStateArray = 0x%p )\n",
@@ -506,7 +506,7 @@ static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
  *
  */
 static BOOL VIRTUALSetDirtyPages( UINT nStatus, SIZE_T nStartingBit,
-                           SIZE_T nNumberOfBits, CONST PCMI pInformation )
+                           SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetDirtyPages( nStatus = %d, nStartingBit = %d, "
            "nNumberOfBits = %d, pStateArray = 0x%p )\n",
