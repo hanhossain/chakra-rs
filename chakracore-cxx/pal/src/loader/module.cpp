@@ -123,7 +123,6 @@ Function:
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryA(
     IN LPCSTR lpLibFileName)
 {
@@ -137,7 +136,6 @@ Function:
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryW(
     IN LPCWSTR lpLibFileName)
 {
@@ -151,7 +149,6 @@ LoadLibraryExA
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryExA(
     IN LPCSTR lpLibFileName,
     IN /*Reserved*/ HANDLE hFile,
@@ -209,7 +206,6 @@ LoadLibraryExW
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryExW(
     IN LPCWSTR lpLibFileName,
     IN /*Reserved*/ HANDLE hFile,
@@ -267,7 +263,6 @@ Function:
 See MSDN doc.
 --*/
 FARPROC
-PALAPI
 GetProcAddress(
     IN HMODULE hModule,
     IN LPCSTR lpProcName)
@@ -389,7 +384,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FreeLibrary(
     IN OUT HMODULE hLibModule)
 {
@@ -412,7 +406,6 @@ See MSDN doc.
 
 --*/
 void
-PALAPI
 FreeLibraryAndExitThread(
     IN HMODULE hLibModule,
     IN DWORD dwExitCode)
@@ -439,7 +432,6 @@ Notes :
     NULL : in this case, the full path of the executable is always returned.
 --*/
 DWORD
-PALAPI
 GetModuleFileNameA(
     IN HMODULE hModule,
     OUT LPSTR lpFileName,
@@ -503,7 +495,6 @@ Notes :
     NULL : in this case, the full path of the executable is always returned.
 --*/
 DWORD
-PALAPI
 GetModuleFileNameW(
     IN HMODULE hModule,
     OUT LPWSTR lpFileName,
@@ -558,7 +549,6 @@ done:
 }
 
 HMODULE
-PALAPI
 GetModuleHandleW(
     IN OPTIONAL LPCWSTR lpModuleName)
 {
@@ -573,7 +563,6 @@ GetModuleHandleW(
 }
 
 BOOL
-PALAPI
 GetModuleHandleExW(
     IN DWORD dwFlags,
     IN OPTIONAL LPCWSTR lpModuleName,
@@ -592,7 +581,6 @@ Function:
   Returns the system handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
 void *
-PALAPI
 PAL_LoadLibraryDirect(
     IN LPCWSTR lpLibFileName)
 {
@@ -642,7 +630,6 @@ Function:
   Returns a PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
 HMODULE
-PALAPI
 PAL_RegisterLibraryDirect(
     IN void *dl_handle,
     IN LPCWSTR lpLibFileName)
@@ -694,7 +681,6 @@ Function:
   Used to cleanup the module HINSTANCE from PAL_RegisterModule.
 --*/
 void
-PALAPI
 PAL_UnregisterModule(
     IN HINSTANCE hInstance)
 {
@@ -721,7 +707,6 @@ Return value:
     NULL - error, with last error set.
 --*/
 void *
-PALAPI
 PAL_LOADLoadPEFile(HANDLE hFile)
 {
     ENTRY("PAL_LOADLoadPEFile (hFile=%p)\n", hFile);
@@ -758,7 +743,6 @@ Return value:
     FALSE - failure (incorrect ptr, etc.)
 --*/
 BOOL
-PALAPI
 PAL_LOADUnloadPEFile(void * ptr)
 {
     BOOL retval = FALSE;
@@ -790,7 +774,6 @@ Return value:
     module base address
 --*/
 LPCVOID
-PALAPI
 PAL_GetSymbolModuleBase(void *symbol)
 {
     LPCVOID retval = nullptr;
@@ -1170,7 +1153,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DisableThreadLibraryCalls(
     IN HMODULE hLibModule)
 {

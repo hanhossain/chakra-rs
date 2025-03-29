@@ -111,7 +111,6 @@ Function:
 See MSDN doc.
 --*/
 LONG
-PALAPI
 CompareFileTime(
         IN CONST FILETIME *lpFileTime1,
         IN CONST FILETIME *lpFileTime2)
@@ -163,7 +162,6 @@ systems, so the lpCreationTime argument to this function will always be
 ignored, and the inode change time will be set to the current time.
 --*/
 BOOL
-PALAPI
 SetFileTime(
         IN HANDLE hFile,
         IN CONST FILETIME *lpCreationTime,
@@ -353,7 +351,6 @@ To be consistent with Win32, this function returns the greater of mtime and
 atime for LastAccessTime.
 --*/
 BOOL
-PALAPI
 GetFileTime(
         IN HANDLE hFile,
         OUT LPFILETIME lpCreationTime,
@@ -501,7 +498,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 GetSystemTimeAsFileTime(
             OUT LPFILETIME lpSystemTimeAsFileTime)
 {
@@ -647,7 +643,7 @@ Function
     easier manipulation in FileTimeToDosTime.
         
 --*/
-BOOL PALAPI FileTimeToSystemTime( CONST FILETIME * lpFileTime, 
+BOOL FileTimeToSystemTime( CONST FILETIME * lpFileTime,
                                   LPSYSTEMTIME lpSystemTime )
 {
     UINT64 FileTime = 0;
@@ -718,7 +714,6 @@ Function:
 See msdn for more details.
 --*/
 BOOL
-PALAPI
 FileTimeToDosDateTime(
             IN CONST FILETIME *lpFileTime,
             OUT LPWORD lpFatDate,

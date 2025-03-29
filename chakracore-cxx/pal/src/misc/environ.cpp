@@ -63,7 +63,6 @@ and its terminating null character.
 
 --*/
 DWORD
-PALAPI
 GetEnvironmentVariableA(
             IN LPCSTR lpName,
             OUT LPSTR lpBuffer,
@@ -133,7 +132,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetEnvironmentVariableW(
             IN LPCWSTR lpName,
             OUT LPWSTR lpBuffer,
@@ -253,7 +251,6 @@ environment variables of other processes.
 
 --*/
 BOOL
-PALAPI
 SetEnvironmentVariableW(
             IN LPCWSTR lpName,
             IN LPCWSTR lpValue)
@@ -360,7 +357,6 @@ FreeEnvironmentStrings.
 
 --*/
 LPWSTR
-PALAPI
 GetEnvironmentStringsW(
                void)
 {
@@ -418,7 +414,6 @@ See GetEnvironmentStringsW.
 
 --*/
 LPSTR
-PALAPI
 GetEnvironmentStringsA(
                void)
 {
@@ -495,7 +490,6 @@ be freed by calling FreeEnvironmentStrings.
 
 --*/
 BOOL
-PALAPI
 FreeEnvironmentStringsW(
             IN LPWSTR lpValue)
 {
@@ -521,7 +515,6 @@ See FreeEnvironmentStringsW.
 
 --*/
 BOOL
-PALAPI
 FreeEnvironmentStringsA(
             IN LPSTR lpValue)
 {
@@ -573,7 +566,6 @@ environment variables of other processes.
 
 --*/
 BOOL
-PALAPI
 SetEnvironmentVariableA(
 			IN LPCSTR lpName,
 			IN LPCSTR lpValue)

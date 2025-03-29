@@ -274,7 +274,6 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileMappingA(
                    IN HANDLE hFile,
                    IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
@@ -341,7 +340,6 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileMappingW(
                IN HANDLE hFile,
                IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
@@ -771,7 +769,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 OpenFileMappingA(
          IN DWORD dwDesiredAccess,
          IN BOOL bInheritHandle,
@@ -815,7 +812,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 OpenFileMappingW(
          IN DWORD dwDesiredAccess,
          IN BOOL bInheritHandle,
@@ -939,7 +935,6 @@ Function:
 See MSDN doc.
 --*/
 LPVOID
-PALAPI
 MapViewOfFile(
           IN HANDLE hFileMappingObject,
           IN DWORD dwDesiredAccess,
@@ -980,7 +975,6 @@ MapViewOfFile(
 }
 
 LPVOID
-PALAPI
 MapViewOfFileEx(
           IN HANDLE hFileMappingObject,
           IN DWORD dwDesiredAccess,
@@ -1036,7 +1030,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FlushViewOfFile(
     IN LPVOID lpBaseAddress,
     IN SIZE_T dwNumberOfBytesToFlush)
@@ -1110,7 +1103,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 UnmapViewOfFile(
         IN LPCVOID lpBaseAddress)
 {

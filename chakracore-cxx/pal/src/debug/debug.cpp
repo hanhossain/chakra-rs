@@ -133,7 +133,6 @@ usually maps to a kernel API to flush the D-caches on all processors.
 
 --*/
 BOOL
-PALAPI
 FlushInstructionCache(
         IN HANDLE hProcess,
         IN LPCVOID lpBaseAddress,
@@ -167,7 +166,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 OutputDebugStringA(
         IN LPCSTR lpOutputString)
 {
@@ -195,7 +193,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 OutputDebugStringW(
         IN LPCWSTR lpOutputString)
 {
@@ -395,7 +392,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 DebugBreak(
        void)
 {
@@ -438,7 +434,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetThreadContext(
            IN HANDLE hThread,
            IN OUT LPCONTEXT lpContext)
@@ -500,7 +495,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetThreadContext(
            IN HANDLE hThread,
            IN CONST CONTEXT *lpContext)
@@ -560,7 +554,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 ReadProcessMemory(
            IN HANDLE hProcess,
            IN LPCVOID lpBaseAddress,
@@ -850,7 +843,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 WriteProcessMemory(
            IN HANDLE hProcess,
            IN LPVOID lpBaseAddress,

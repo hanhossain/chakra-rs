@@ -281,7 +281,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetCurrentProcessId(
             void)
 {
@@ -301,7 +300,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetCurrentSessionId(
             void)
 {
@@ -321,7 +319,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetCurrentProcess(
           void)
 {
@@ -346,7 +343,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateProcessW(
            IN LPCWSTR lpApplicationName,
            IN LPWSTR lpCommandLine,
@@ -1058,7 +1054,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetExitCodeProcess(
     IN HANDLE hProcess,
     IN LPDWORD lpExitCode)
@@ -1124,7 +1119,6 @@ See MSDN doc.
 --*/
 __attribute__((noreturn))
 void
-PALAPI
 ExitProcess(
     IN UINT uExitCode)
 {
@@ -1200,7 +1194,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 TerminateProcess(
     IN HANDLE hProcess,
     IN UINT uExitCode)
@@ -1340,7 +1333,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetProcessTimes(
         IN HANDLE hProcess,
         OUT LPFILETIME lpCreationTime,
@@ -1423,7 +1415,6 @@ Function:
 See MSDN doc.
 --*/
 LPWSTR
-PALAPI
 GetCommandLineW(
     void)
 {
@@ -1451,7 +1442,6 @@ dwDesiredAccess is ignored (all supported operations will be allowed)
 bInheritHandle is ignored (no inheritance)
 --*/
 HANDLE
-PALAPI
 OpenProcess(
         DWORD dwDesiredAccess,
         BOOL bInheritHandle,

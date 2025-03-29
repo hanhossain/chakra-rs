@@ -58,7 +58,6 @@ Function:
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalAlloc(
 	   IN UINT uFlags,
 	   IN SIZE_T uBytes)
@@ -86,7 +85,6 @@ LocalReAlloc
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalReAlloc(
        IN HLOCAL hMem,
        IN SIZE_T uBytes,
@@ -119,7 +117,6 @@ Function:
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalFree(
 	  IN HLOCAL hMem)
 {

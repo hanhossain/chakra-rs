@@ -46,7 +46,6 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcatW(
 	 IN OUT LPWSTR lpString1,
 	 IN LPCWSTR lpString2)
@@ -118,7 +117,6 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcpyW(
 	 OUT LPWSTR lpString1,
 	 IN LPCWSTR lpString2)
@@ -181,7 +179,6 @@ Unicode versions.
 
 --*/
 int
-PALAPI
 lstrlenA( IN LPCSTR lpString)
 {
     int nChar = 0;
@@ -221,7 +218,6 @@ Unicode versions.
 
 --*/
 int
-PALAPI
 lstrlenW(
 	 IN LPCWSTR lpString)
 {
@@ -267,7 +263,6 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcpynW(
 	  OUT LPWSTR lpString1,
 	  IN LPCWSTR lpString2,

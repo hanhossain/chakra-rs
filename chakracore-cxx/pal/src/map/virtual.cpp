@@ -1674,7 +1674,6 @@ done:
 #endif // RESERVE_FROM_BACKING_FILE
 
 LPVOID
-PALAPI
 VirtualAllocEx(
          IN HANDLE hProcess,
          IN LPVOID lpAddress,       /* Region to reserve or commit */
@@ -1919,7 +1918,6 @@ VirtualFreeEnclosingExit:
 #define MB64 (KB64 * 1024)
 
 LPVOID
-PALAPI
 VirtualAlloc(
          IN LPVOID lpAddress,       /* Region to reserve or commit */
          IN SIZE_T dwSize,          /* Size of Region */
@@ -1998,7 +1996,6 @@ VirtualAlloc(
 #undef MB64
 
 BOOL
-PALAPI
 VirtualFreeEx(
         IN HANDLE hProcess,
         IN LPVOID lpAddress,    /* Address of region. */
@@ -2015,7 +2012,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 VirtualFree(
         IN LPVOID lpAddress,    /* Address of region. */
         IN SIZE_T dwSize,       /* Size of region. */
@@ -2213,7 +2209,6 @@ VirtualFreeExit:
 }
 
 BOOL
-PALAPI
 VirtualProtectEx(
            IN HANDLE hProcess,
            IN LPVOID lpAddress,
@@ -2231,7 +2226,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 VirtualProtect(
            IN LPVOID lpAddress,
            IN SIZE_T dwSize,
@@ -2488,7 +2482,6 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
 #endif // HAVE_VM_ALLOCATE
 
 SIZE_T
-PALAPI
 VirtualQueryEx(
     IN HANDLE hProcess,
     IN LPCVOID lpAddress,
@@ -2505,7 +2498,6 @@ Function:
 See MSDN doc.
 --*/
 SIZE_T
-PALAPI
 VirtualQuery(
          IN LPCVOID lpAddress,
          OUT PMEMORY_BASIC_INFORMATION lpBuffer,

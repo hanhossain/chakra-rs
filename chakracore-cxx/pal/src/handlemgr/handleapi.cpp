@@ -53,7 +53,6 @@ PAL-specific behavior :
 
 --*/
 BOOL
-PALAPI
 DuplicateHandle(
         IN HANDLE hSourceProcessHandle,
         IN HANDLE hSourceHandle,
@@ -273,7 +272,6 @@ debugger [or, alternately, if a special registry key is set]. This behavior is
 not required in the PAL, so we'll always return FALSE.
 --*/
 BOOL
-PALAPI
 CloseHandle(
         IN OUT HANDLE hObject)
 {

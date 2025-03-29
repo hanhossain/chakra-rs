@@ -237,7 +237,6 @@ If lpsz points to the terminating null character, the return value is equal to l
 See MSDN doc.
 --*/
 LPSTR
-PALAPI
 CharNextA(
   IN LPCSTR lpsz)
 {
@@ -260,7 +259,6 @@ CharNextExA
 See MSDN doc.
 --*/
 LPSTR
-PALAPI
 CharNextExA(
     IN WORD CodePage,
     IN LPCSTR lpCurrentChar,
@@ -304,7 +302,6 @@ of OEM code pages.
 
 --*/
 BOOL
-PALAPI
 AreFileApisANSI(
     void)
 {
@@ -324,7 +321,6 @@ GetConsoleCP
 See MSDN doc.
 --*/
 UINT
-PALAPI
 GetConsoleCP(
      void)
 {
@@ -346,7 +342,6 @@ GetConsoleOutputCP
 See MSDN doc.
 --*/
 UINT
-PALAPI
 GetConsoleOutputCP(
        void)
 {
@@ -373,7 +368,6 @@ MSDN fails to mention them in the IsValidCodePage entry.
 Note : CP_UTF7 support isn't required for Rotor
 --*/
 BOOL
-PALAPI
 IsValidCodePage(
     IN UINT CodePage)
 {
@@ -417,7 +411,6 @@ GetStringTypeEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetStringTypeExW(
      IN LCID Locale,
      IN DWORD dwInfoType,
@@ -526,7 +519,6 @@ GetCPInfo
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetCPInfo(
   IN UINT CodePage,
   OUT LPCPINFO lpCPInfo)
@@ -580,7 +572,6 @@ GetACP
 See MSDN doc.
 --*/
 UINT
-PALAPI
 GetACP(void)
 {
     PERF_ENTRY(GetACP);
@@ -600,7 +591,6 @@ IsDBCSLeadByteEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 IsDBCSLeadByteEx(
      IN UINT CodePage,
      IN BYTE TestChar)
@@ -647,7 +637,6 @@ IsDBCSLeadByte
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 IsDBCSLeadByte(
         IN BYTE TestChar)
 {
@@ -664,7 +653,6 @@ See MSDN doc.
 
 --*/
 int
-PALAPI
 MultiByteToWideChar(
         IN UINT CodePage,
         IN DWORD dwFlags,
@@ -791,7 +779,6 @@ See MSDN doc.
 
 --*/
 int
-PALAPI
 WideCharToMultiByte(
         IN UINT CodePage,
         IN DWORD dwFlags,
@@ -964,7 +951,6 @@ will be returned if an appropriately localized version is not found.
 Returns number of characters retrieved, 0 if it failed.
 --*/
 int
-PALAPI
 PAL_GetResourceString(
         IN LPCSTR lpDomain,
         IN LPCSTR lpResourceStr,

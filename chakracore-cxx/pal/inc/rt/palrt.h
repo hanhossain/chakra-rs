@@ -1094,7 +1094,7 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 
 STDAPI_(BOOL) PathAppendW(LPWSTR pszPath, LPCWSTR pszMore);
 STDAPI_(int) PathCommonPrefixW(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR  pszPath);
-LPWSTR PALAPI PathFindFileNameW(LPCWSTR pPath);
+LPWSTR PathFindFileNameW(LPCWSTR pPath);
 STDAPI_(int) PathGetDriveNumberW(LPCWSTR lpsz);
 STDAPI_(BOOL) PathIsRelativeW(LPCWSTR lpszPath);
 STDAPI_(BOOL) PathIsUNCW(LPCWSTR pszPath);
@@ -1609,19 +1609,19 @@ typedef LIST_ENTRY64 *PLIST_ENTRY64;
 
 typedef struct _HSATELLITE *HSATELLITE;
 
-EXTERN_C HSATELLITE PALAPI PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
-EXTERN_C HSATELLITE PALAPI PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
-EXTERN_C BOOL PALAPI PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
-EXTERN_C UINT PALAPI PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
+EXTERN_C BOOL PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
+EXTERN_C UINT PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
              UINT uID,
              LPWSTR lpBuffer,
              UINT nBufferMax);
-EXTERN_C UINT PALAPI PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
+EXTERN_C UINT PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
              UINT uID,
              LPSTR lpBuffer,
              UINT nBufferMax);
 
-EXTERN_C HRESULT PALAPI PAL_CoCreateInstance(REFCLSID   rclsid,
+EXTERN_C HRESULT PAL_CoCreateInstance(REFCLSID   rclsid,
                              REFIID     riid,
                              void     **ppv);
 

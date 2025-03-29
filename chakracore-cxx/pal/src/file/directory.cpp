@@ -48,7 +48,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateDirectoryW(
          IN LPCWSTR lpPathName,
          IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
@@ -184,7 +183,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 RemoveDirectoryA(
          IN LPCSTR lpPathName)
 {
@@ -242,7 +240,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 RemoveDirectoryW(
          IN LPCWSTR lpPathName)
 {
@@ -316,7 +313,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetCurrentDirectoryA(
              IN DWORD nBufferLength,
              OUT LPSTR lpBuffer)
@@ -374,7 +370,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetCurrentDirectoryW(
              IN DWORD nBufferLength,
              OUT LPWSTR lpBuffer)
@@ -441,7 +436,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetCurrentDirectoryW(
             IN LPCWSTR lpPathName)
 {
@@ -519,7 +513,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateDirectoryA(
          IN LPCSTR lpPathName,
          IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
@@ -656,7 +649,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetCurrentDirectoryA(
             IN LPCSTR lpPathName)
 {

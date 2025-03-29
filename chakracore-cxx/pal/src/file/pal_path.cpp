@@ -51,7 +51,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetFullPathNameA(
      IN LPCSTR lpFileName,
      IN DWORD nBufferLength,
@@ -186,7 +185,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetFullPathNameW(
      IN LPCWSTR lpFileName,
      IN DWORD nBufferLength,
@@ -314,7 +312,6 @@ Note:
 
 --*/
 DWORD
-PALAPI
 GetLongPathNameW(
 		 IN LPCWSTR lpszShortPath,
          OUT LPWSTR lpszLongPath,
@@ -386,7 +383,6 @@ Note:
 
 --*/
 DWORD
-PALAPI
 GetShortPathNameW(
 		 IN LPCWSTR lpszLongPath,
          OUT LPWSTR lpszShortPath,
@@ -465,7 +461,6 @@ Notes:
 
 --*/
 DWORD
-PALAPI
 GetTempPathA(
 	     IN DWORD nBufferLength,
 	     OUT LPSTR lpBuffer)
@@ -560,7 +555,6 @@ See MSDN.
 See also the comment for GetTempPathA.
 --*/
 DWORD
-PALAPI
 GetTempPathW(
 	     IN DWORD nBufferLength,
 	     OUT LPWSTR lpBuffer)
@@ -1089,7 +1083,6 @@ PAL-specific notes :
 -lpFilePart (if non-NULL) doesn't need to be used (but we do)
 --*/
 DWORD
-PALAPI
 SearchPathA(
     IN LPCSTR lpPath,
     IN LPCSTR lpFileName,
@@ -1358,7 +1351,6 @@ PAL-specific notes :
 -lpFilePart (if non-NULL) doesn't need to be used (but we do)
 --*/
 DWORD
-PALAPI
 SearchPathW(
     IN LPCWSTR lpPath,
     IN LPCWSTR lpFileName,
@@ -1631,7 +1623,6 @@ Function:
 See MSDN doc.
 --*/
 LPWSTR
-PALAPI
 PathFindFileNameW(
     IN LPCWSTR pPath
     )

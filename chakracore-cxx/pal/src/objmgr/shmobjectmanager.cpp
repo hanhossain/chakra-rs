@@ -1184,7 +1184,6 @@ Parameters:
 --*/
 
 RHANDLE
-PALAPI
 PAL_LocalHandleToRemote(IN HANDLE hLocal)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1472,7 +1471,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 PAL_RemoteHandleToLocal(IN RHANDLE rhRemote)
 {
     PAL_ERROR palError = NO_ERROR;

@@ -70,7 +70,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateMutexA(
     IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
     IN BOOL bInitialOwner,
@@ -131,7 +130,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateMutexW(
     IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
     IN BOOL bInitialOwner,
@@ -302,7 +300,6 @@ Parameters:
 --*/
 
 BOOL
-PALAPI
 ReleaseMutex( IN HANDLE hMutex )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -414,7 +411,6 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 OpenMutexA (
        IN DWORD dwDesiredAccess,
        IN BOOL bInheritHandle,
@@ -464,7 +460,6 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 OpenMutexW(
        IN DWORD dwDesiredAccess,
        IN BOOL bInheritHandle,

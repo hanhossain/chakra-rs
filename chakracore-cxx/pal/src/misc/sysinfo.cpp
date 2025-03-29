@@ -134,7 +134,6 @@ Others are set to zero.
 int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
 
 void
-PALAPI
 GetSystemInfo(
           OUT LPSYSTEM_INFO lpSystemInfo)
 {
@@ -231,7 +230,6 @@ This function returns a BOOL to indicate its success status.
 
 --*/
 BOOL
-PALAPI
 GlobalMemoryStatusEx(
             IN OUT LPMEMORYSTATUSEX lpBuffer)
 {
@@ -331,7 +329,6 @@ GlobalMemoryStatusEx(
 }
 
 DWORD
-PALAPI
 GetCurrentProcessorNumber()
 {
 #if HAVE_SCHED_GETCPU
@@ -342,14 +339,12 @@ GetCurrentProcessorNumber()
 }
 
 BOOL
-PALAPI
 PAL_HasGetCurrentProcessorNumber()
 {
     return HAVE_SCHED_GETCPU;
 }
 
 DWORD
-PALAPI
 PAL_GetLogicalCpuCountFromOS()
 {
     DWORD numLogicalCores = 0;
@@ -362,7 +357,6 @@ PAL_GetLogicalCpuCountFromOS()
 }
 
 size_t
-PALAPI
 PAL_GetLogicalProcessorCacheSizeFromOS()
 {
     size_t cacheSize = 0;

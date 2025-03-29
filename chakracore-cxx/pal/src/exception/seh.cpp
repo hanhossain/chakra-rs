@@ -7,7 +7,6 @@
 #include "pal/handleapi.hpp"
 
 void
-PALAPI
 RaiseException(IN DWORD dwExceptionCode,
                IN DWORD dwExceptionFlags,
                IN DWORD nNumberOfArguments,

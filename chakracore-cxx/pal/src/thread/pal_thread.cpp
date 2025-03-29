@@ -318,7 +318,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetThreadId(
     HANDLE hThread
     // UNIXTODO Should take pThread parameter here (modify callers)
@@ -366,7 +365,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetCurrentThreadId(
             void)
 {
@@ -390,7 +388,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 PAL_GetCurrentThread(
           void)
 {
@@ -411,7 +408,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SwitchToThread(
     void)
 {
@@ -441,7 +437,6 @@ See MSDN doc.
 
 --*/
 HANDLE
-PALAPI
 CreateThread(
     IN LPSECURITY_ATTRIBUTES lpThreadAttributes,
     IN DWORD dwStackSize,
@@ -774,7 +769,6 @@ See MSDN doc.
 --*/
 __attribute__((noreturn))
 void
-PALAPI
 ExitThread(
        IN DWORD dwExitCode)
 {
@@ -903,7 +897,6 @@ Function:
 See MSDN doc.
 --*/
 int
-PALAPI
 GetThreadPriority(
           IN HANDLE hThread)
 {
@@ -981,7 +974,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetThreadPriority(
           IN HANDLE hThread,
           IN int nPriority)
@@ -2351,7 +2343,6 @@ CPalThread::GetStackLimit()
 }
 
 PVOID
-PALAPI
 PAL_GetStackBase()
 {
     CPalThread* thread = InternalGetCurrentThread();
@@ -2359,7 +2350,6 @@ PAL_GetStackBase()
 }
 
 PVOID
-PALAPI
 PAL_GetStackLimit()
 {
     CPalThread* thread = InternalGetCurrentThread();
@@ -2381,7 +2371,6 @@ Return value:
     None
 --*/
 void
-PALAPI
 PAL_SetActivationFunction(
     IN PAL_ActivationFunction pActivationFunction,
     IN PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)

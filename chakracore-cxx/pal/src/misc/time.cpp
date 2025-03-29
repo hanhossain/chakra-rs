@@ -87,7 +87,6 @@ This function does not return a value.
 
 --*/
 void
-PALAPI
 GetSystemTime(
           OUT LPSYSTEMTIME lpSystemTime)
 {
@@ -179,7 +178,6 @@ the start of the epoch.
 
 --*/
 DWORD
-PALAPI
 GetTickCount(
          void)
 {
@@ -196,7 +194,6 @@ GetTickCount(
 }
 
 BOOL
-PALAPI
 QueryPerformanceCounter(
     OUT LARGE_INTEGER *lpPerformanceCount
     )
@@ -260,7 +257,6 @@ QueryPerformanceCounter(
 }
 
 BOOL
-PALAPI
 QueryPerformanceFrequency(
     OUT LARGE_INTEGER *lpFrequency
     )
@@ -286,7 +282,6 @@ failure.
 --*/
 
 BOOL
-PALAPI
 QueryThreadCycleTime(
     IN HANDLE ThreadHandle,
     OUT PULONG64 CycleTime
@@ -431,7 +426,6 @@ to return monotonically increasing counts and avoid being affected by changes
 to the system clock (either due to drift or due to explicit changes to system
 time).
 --*/
-PALAPI
 ULONGLONG
 GetTickCount64()
 {

@@ -54,7 +54,6 @@ The return value is the previous state of the error-mode bit flags.
 
 --*/
 UINT
-PALAPI
 SetErrorMode(
          IN UINT uMode)
 {
@@ -90,7 +89,6 @@ conditions under which the function sets the last-error code.
 
 --*/
 DWORD
-PALAPI
 GetLastError(
          void)
 {
@@ -118,7 +116,6 @@ This function does not return a value.
 
 --*/
 void
-PALAPI
 SetLastError(
          IN DWORD dwErrCode)
 {

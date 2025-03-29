@@ -52,7 +52,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 WaitForSingleObject(IN HANDLE hHandle,
                     IN DWORD dwMilliseconds)
 {
@@ -80,7 +79,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 WaitForSingleObjectEx(IN HANDLE hHandle,
                       IN DWORD dwMilliseconds,
                       IN BOOL bAlertable)
@@ -110,7 +108,6 @@ See MSDN doc.
 
 --*/
 DWORD
-PALAPI
 WaitForMultipleObjects(IN DWORD nCount,
                        IN CONST HANDLE *lpHandles,
                        IN BOOL bWaitAll,
@@ -140,7 +137,6 @@ Function:
 See MSDN doc for info about this function.
 --*/
 DWORD
-PALAPI
 WaitForMultipleObjectsEx(IN DWORD nCount,
                          IN CONST HANDLE *lpHandles,
                          IN BOOL bWaitAll,
@@ -171,7 +167,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 Sleep(IN DWORD dwMilliseconds)
 {
     PERF_ENTRY(Sleep);
@@ -200,7 +195,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 SleepEx(IN DWORD dwMilliseconds,
         IN BOOL bAlertable)
 {
@@ -226,7 +220,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 QueueUserAPC(
     PAPCFUNC pfnAPC,
     HANDLE hThread,

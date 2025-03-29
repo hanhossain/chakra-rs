@@ -900,7 +900,6 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileA(
         IN LPCSTR lpFileName,
         IN DWORD dwDesiredAccess,
@@ -963,7 +962,6 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileW(
         IN LPCWSTR lpFileName,
         IN DWORD dwDesiredAccess,
@@ -1062,7 +1060,6 @@ This is because we know that CreateFile, ReadFile, and WriteFile will do so,
 and will have a much better idea of the specific error.
 --*/
 BOOL
-PALAPI
 CopyFileW(
       IN LPCWSTR lpExistingFileName,
       IN LPCWSTR lpNewFileName,
@@ -1164,7 +1161,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DeleteFileA(
         IN LPCSTR lpFileName)
 {
@@ -1255,7 +1251,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DeleteFileW(
         IN LPCWSTR lpFileName)
 {
@@ -1322,7 +1317,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileA(
      IN LPCSTR lpExistingFileName,
      IN LPCSTR lpNewFileName)
@@ -1353,7 +1347,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileW(
      IN LPCWSTR lpExistingFileName,
      IN LPCWSTR lpNewFileName)
@@ -1383,7 +1376,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileExA(
         IN LPCSTR lpExistingFileName,
         IN LPCSTR lpNewFileName,
@@ -1557,7 +1549,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileExW(
         IN LPCWSTR lpExistingFileName,
         IN LPCWSTR lpNewFileName,
@@ -1677,7 +1668,6 @@ FILE_ATTRIBUTE_HIDDEN
 
 --*/
 DWORD
-PALAPI
 GetFileAttributesA(
            IN LPCSTR lpFileName)
 {
@@ -1766,7 +1756,6 @@ Note:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetFileAttributesW(
            IN LPCWSTR lpFileName)
 {
@@ -1830,7 +1819,6 @@ Function:
 See MSDN doc, and notes for GetFileAttributesW.
 --*/
 BOOL
-PALAPI
 GetFileAttributesExW(
              IN LPCWSTR lpFileName,
              IN GET_FILEEX_INFO_LEVELS fInfoLevelId,
@@ -1958,7 +1946,6 @@ Notes:
 
 --*/
 BOOL
-PALAPI
 SetFileAttributesW(
            IN LPCWSTR lpFileName,
            IN DWORD dwFileAttributes)
@@ -2204,7 +2191,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 WriteFile(
       IN HANDLE hFile,
       IN LPCVOID lpBuffer,
@@ -2428,7 +2414,6 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 ReadFile(
      IN HANDLE hFile,
      OUT LPVOID lpBuffer,
@@ -2474,7 +2459,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetStdHandle(
          IN DWORD nStdHandle)
 {
@@ -2654,7 +2638,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetEndOfFile(
          IN HANDLE hFile)
 {
@@ -2894,7 +2877,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 SetFilePointer(
            IN HANDLE hFile,
            IN LONG lDistanceToMove,
@@ -2952,7 +2934,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetFilePointerEx(
            IN HANDLE hFile,
            IN LARGE_INTEGER liDistanceToMove,
@@ -3093,7 +3074,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 GetFileSize(
         IN HANDLE hFile,
         OUT LPDWORD lpFileSizeHigh)
@@ -3132,7 +3112,7 @@ GetFileSizeEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI GetFileSizeEx(
+GetFileSizeEx(
 IN   HANDLE hFile,
 OUT  PLARGE_INTEGER lpFileSize)
 {
@@ -3278,7 +3258,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FlushFileBuffers(
          IN HANDLE hFile)
 {
@@ -3409,7 +3388,6 @@ See MSDN doc.
 
 --*/
 DWORD
-PALAPI
 GetFileType(
         IN HANDLE hFile)
 {
@@ -3463,7 +3441,6 @@ static USHORT uUniqueSeed   = 0;
 static BOOL IsInitialized   = FALSE;
 
 UINT
-PALAPI
 GetTempFileNameA(
                  IN LPCSTR lpPathName,
                  IN LPCSTR lpPrefixString,
@@ -3656,7 +3633,6 @@ Function:
 uUnique is always 0.
 --*/
 UINT
-PALAPI
 GetTempFileNameW(
          IN LPCWSTR lpPathName,
          IN LPCWSTR lpPrefixString,
@@ -3892,7 +3868,6 @@ This is because we know that CreateFile, ReadFile, and WriteFile will do so,
 and will have a much better idea of the specific error.
 --*/
 BOOL
-PALAPI
 CopyFileA(
       IN LPCSTR lpExistingFileName,
       IN LPCSTR lpNewFileName,
@@ -4064,7 +4039,6 @@ Notes:
 
 --*/
 BOOL
-PALAPI
 SetFileAttributesA(
            IN LPCSTR lpFileName,
            IN DWORD dwFileAttributes)
@@ -4414,7 +4388,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreatePipe(
         OUT PHANDLE hReadPipe,
         OUT PHANDLE hWritePipe,
@@ -4540,7 +4513,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 LockFile(HANDLE hFile,
          DWORD dwFileOffsetLow,
          DWORD dwFileOffsetHigh,
@@ -4665,7 +4637,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 UnlockFile(HANDLE hFile,
            DWORD dwFileOffsetLow,
            DWORD dwFileOffsetHigh,
@@ -4919,7 +4890,6 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetFileInformationByHandle(
              IN HANDLE hFile,
              OUT LPBY_HANDLE_FILE_INFORMATION lpFileInformation)

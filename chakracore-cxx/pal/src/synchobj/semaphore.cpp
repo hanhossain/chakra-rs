@@ -72,7 +72,6 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreExA(
         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
         IN LONG lInitialCount,
@@ -107,7 +106,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreA(
          IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
          IN LONG lInitialCount,
@@ -170,7 +168,6 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreExW(
         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
         IN LONG lInitialCount,
@@ -202,7 +199,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreW(
          IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
          IN LONG lInitialCount,
@@ -398,7 +394,6 @@ Parameters:
 --*/
 
 BOOL
-PALAPI
 ReleaseSemaphore(
          IN HANDLE hSemaphore,
          IN LONG lReleaseCount,
@@ -564,7 +559,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 OpenSemaphoreW(
        IN DWORD dwDesiredAccess,
        IN BOOL bInheritHandle,

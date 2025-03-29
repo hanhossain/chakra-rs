@@ -64,7 +64,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 RtlMoveMemory(
           IN PVOID Destination,
           IN CONST void *Source,
@@ -87,7 +86,6 @@ Function:
 See MSDN doc.
 --*/
 void
-PALAPI
 RtlZeroMemory(
     PVOID Destination,
     SIZE_T Length
@@ -109,7 +107,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 HeapCreate(
 	       IN DWORD flOptions,
 	       IN SIZE_T dwInitialSize,
@@ -164,7 +161,6 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetProcessHeap(
 	       void)
 {
@@ -210,7 +206,6 @@ Abstract
 See MSDN doc.
 --*/
 LPVOID
-PALAPI
 HeapAlloc(
     IN HANDLE hHeap,
     IN DWORD dwFlags,
@@ -284,7 +279,6 @@ Abstract
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 HeapFree(
     IN HANDLE hHeap,
     IN DWORD dwFlags,
@@ -347,7 +341,6 @@ Abstract
 See MSDN doc.
 --*/
 LPVOID
-PALAPI
 HeapReAlloc(
     IN HANDLE hHeap,
     IN DWORD dwFlags,
@@ -416,7 +409,6 @@ done:
 }
 
 BOOL
-PALAPI
 HeapSetInformation(
         IN OPTIONAL HANDLE HeapHandle,
         IN HEAP_INFORMATION_CLASS HeapInformationClass,

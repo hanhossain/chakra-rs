@@ -454,7 +454,6 @@ bool PAL_InitializeChakraCoreCalled = false;
 #endif
 
 int
-PALAPI
 PAL_InitializeChakraCore()
 {
     // this is not thread safe but PAL_InitializeChakraCore is per process
@@ -493,7 +492,6 @@ Abstract:
 This function should be used to determine if a debugger is attached to the process.
 --*/
 BOOL
-PALAPI
 PAL_IsDebuggerPresent()
 {
 #if defined(__LINUX__)
@@ -546,7 +544,6 @@ Abstract:
   This function shuts down the PAL WITHOUT exiting the current process.
 --*/
 void
-PALAPI
 PAL_Shutdown(
     void)
 {
@@ -562,7 +559,6 @@ Abstract:
   library. It shuts down PAL and exits the current process.
 --*/
 void
-PALAPI
 PAL_Terminate(
     void)
 {
@@ -579,7 +575,6 @@ library. It shuts down PAL and exits the current process with
 the specified exit code.
 --*/
 void
-PALAPI
 PAL_TerminateEx(
     int exitCode)
 {

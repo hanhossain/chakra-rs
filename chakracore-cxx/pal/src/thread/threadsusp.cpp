@@ -136,7 +136,6 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-PALAPI
 ResumeThread(
          IN HANDLE hThread
          )

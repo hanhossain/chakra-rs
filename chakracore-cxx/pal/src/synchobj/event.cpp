@@ -83,7 +83,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateEventA(
          IN LPSECURITY_ATTRIBUTES lpEventAttributes,
          IN BOOL bManualReset,
@@ -146,7 +145,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateEventW(
          IN LPSECURITY_ATTRIBUTES lpEventAttributes,
          IN BOOL bManualReset,
@@ -315,7 +313,6 @@ See MSDN doc.
 --*/
 
 BOOL
-PALAPI
 SetEvent(
      IN HANDLE hEvent)
 {
@@ -348,7 +345,6 @@ See MSDN doc.
 --*/
 
 BOOL
-PALAPI
 ResetEvent(
        IN HANDLE hEvent)
 {
@@ -466,7 +462,6 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 OpenEventW(
        IN DWORD dwDesiredAccess,
        IN BOOL bInheritHandle,
