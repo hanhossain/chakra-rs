@@ -1067,7 +1067,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int __cdecl PAL__vsnprintf(LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap)
+int PAL__vsnprintf(LPSTR Buffer, size_t Count, LPCSTR Format, va_list ap)
 {
     return CoreVsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
 }
@@ -1079,7 +1079,7 @@ Function:
   -- see PAL_vsnprintf above
 *******************************************************************************/
 
-int __cdecl PAL__wvsnprintf(LPWSTR Buffer, size_t Count, LPCWSTR Format, va_list ap)
+int PAL__wvsnprintf(LPWSTR Buffer, size_t Count, LPCWSTR Format, va_list ap)
 {
     return CoreWvsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
 }
@@ -1097,7 +1097,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int __cdecl PAL_vfprintf(PAL_FILE *stream, const char *format, va_list ap)
+int PAL_vfprintf(PAL_FILE *stream, const char *format, va_list ap)
 {
     return CoreVfprintf(InternalGetCurrentThread(), stream, format, ap);
 }
@@ -1115,7 +1115,7 @@ Parameters:
     - stdarg parameter list
 *******************************************************************************/
 
-int __cdecl PAL_vfwprintf(PAL_FILE *stream, const char16_t *format, va_list ap)
+int PAL_vfwprintf(PAL_FILE *stream, const char16_t *format, va_list ap)
 {
     return CoreVfwprintf(InternalGetCurrentThread(), stream, format, ap);
 }

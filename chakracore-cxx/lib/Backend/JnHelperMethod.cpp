@@ -79,7 +79,7 @@ GetMethodAddress(ThreadContextInfo * context, IR::HelperCallOpnd* opnd)
     if (opnd->IsDiagHelperCallOpnd())
     {
         // Note: all arguments are already loaded for the original helper. Here we just return the address.
-        IR::DiagHelperCallOpnd* diagOpnd = (IR::DiagHelperCallOpnd*)opnd;
+        IR::DiagHelperCallOpnd* diagOpnd = static_cast<IR::DiagHelperCallOpnd*>(opnd);
 
         if (0 <= diagOpnd->m_argCount && diagOpnd->m_argCount <= LowererMDFinal::MaxArgumentsToHelper)
         {
@@ -166,35 +166,35 @@ _NOINLINE intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelpe
         return ShiftCdeclAddr(context, wmemcmp);
 
     case HelperMemCpy:
-        return ShiftCdeclAddr(context, (void *(__cdecl *)(void *, void const*, size_t))memcpy);
+        return ShiftCdeclAddr(context, static_cast<void *(*)(void*, void const*, size_t)>(memcpy));
 
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     case HelperDirectMath_Acos:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))acos);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(acos));
 
     case HelperDirectMath_Asin:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))asin);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(asin));
 
     case HelperDirectMath_Atan:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))atan);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(atan));
 
     case HelperDirectMath_Atan2:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double, double))atan2);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double, double)>(atan2));
 
     case HelperDirectMath_Cos:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))cos);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(cos));
 
     case HelperDirectMath_Exp:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))exp);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(exp));
 
     case HelperDirectMath_Log:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))log);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(log));
 
     case HelperDirectMath_Sin:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))sin);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(sin));
 
     case HelperDirectMath_Tan:
-        return ShiftCdeclAddr(context, (double(__cdecl *)(double))tan);
+        return ShiftCdeclAddr(context, static_cast<double(*)(double)>(tan));
 #endif
 
         //

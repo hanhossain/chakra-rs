@@ -498,7 +498,7 @@ namespace JsUtil
             }, nullptr);
         }
 
-        void Sort(int(__cdecl * _PtFuncCompare)(void *, const void *, const void *), void *_Context)
+        void Sort(int(* _PtFuncCompare)(void *, const void *, const void *), void *_Context)
         {
             // We can call QSort only if the remove policy for this list is CopyRemovePolicy
             CompileAssert((IsSame<TRemovePolicyType, Js::CopyRemovePolicy<TListType, false> >::IsTrue) ||

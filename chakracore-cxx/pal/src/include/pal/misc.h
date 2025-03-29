@@ -46,7 +46,7 @@ Function :
     Calls rand and mitigates the difference between RAND_MAX 
     on Windows and FreeBSD.
 --*/
-int __cdecl PAL_rand(void);
+int PAL_rand(void);
 
 /*++
 Function:

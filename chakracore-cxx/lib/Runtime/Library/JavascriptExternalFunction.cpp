@@ -56,7 +56,7 @@ namespace Js
         DebugOnly(VerifyEntryPoint());
     }
 
-    bool __cdecl JavascriptExternalFunction::DeferredLengthInitializer(DynamicObject * instance, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
+    bool JavascriptExternalFunction::DeferredLengthInitializer(DynamicObject * instance, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
     {
         Js::JavascriptLibrary::InitializeFunction<true, true, true, true>(instance, typeHandler, mode);
 
@@ -68,7 +68,7 @@ namespace Js
     }
 
     // Note: non-constructors will probably use JavascriptFunction::InitiailizeFunction for undeferral.
-    bool __cdecl JavascriptExternalFunction::DeferredConstructorInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode)
+    bool JavascriptExternalFunction::DeferredConstructorInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode)
     {
         JavascriptExternalFunction* object = static_cast<JavascriptExternalFunction*>(instance);
         HRESULT hr = E_FAIL;

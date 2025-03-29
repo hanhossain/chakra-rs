@@ -97,16 +97,16 @@
 
 #define LEFT_BRACKET    ('[' | ('a' - 'A')) /* 'lowercase' version */
 
-static int __cdecl _hextodec(_TCHAR);
+static int _hextodec(_TCHAR);
 #ifdef CPRFLAG
 
 #define INC()           (++charcount, _inc())
 #define UN_INC(chr)     (--charcount, _un_inc(chr))
 #define EAT_WHITE()     _whiteout(&charcount)
 
-static int __cdecl _inc(void);
-static void __cdecl _un_inc(int);
-static int __cdecl _whiteout(int *);
+static int _inc(void);
+static void _un_inc(int);
+static int _whiteout(int *);
 
 #else  /* CPRFLAG */
 
@@ -114,9 +114,9 @@ static int __cdecl _whiteout(int *);
 #define UN_INC(chr)     (--charcount, _un_inc(chr, stream))
 #define EAT_WHITE()     _whiteout(&charcount, stream)
 
-static int __cdecl _inc(miniFILE *);
-static void __cdecl _un_inc(int, miniFILE *);
-static int __cdecl _whiteout(int *, miniFILE *);
+static int _inc(miniFILE *);
+static void _un_inc(int, miniFILE *);
+static int _whiteout(int *, miniFILE *);
 
 #endif  /* CPRFLAG */
 
@@ -242,9 +242,9 @@ static int __check_float_string(size_t nFloatStrUsed,
     #define _INTRN_LOCALE_CONV( x ) localeconv()
 
 #ifndef _UNICODE
-        int __cdecl __tinput_s (miniFILE* stream, const _TUCHAR* format, va_list arglist)
+        int __tinput_s (miniFILE* stream, const _TUCHAR* format, va_list arglist)
 #else
-        int __cdecl __twinput_s (miniFILE* stream, const _TUCHAR* format, va_list arglist)
+        int __twinput_s (miniFILE* stream, const _TUCHAR* format, va_list arglist)
 #endif  /* _UNICODE */
 {
     _TCHAR floatstring[_CVTBUFSIZE + 1];
@@ -1247,26 +1247,26 @@ error_return:
 /* _inc() is the one place where we put the actual getc code. */
 /* _whiteout() returns the first non-blank character, as defined by isspace() */
 
-static int __cdecl _hextodec ( _TCHAR chr)
+static int _hextodec ( _TCHAR chr)
 {
     return _ISDIGIT(chr) ? chr : (chr & ~(_T('a') - _T('A'))) - _T('A') + 10 + _T('0');
 }
 
 #ifdef CPRFLAG
 
-static int __cdecl _inc(void)
+static int _inc(void)
 {
     return (_gettche_nolock());
 }
 
-static void __cdecl _un_inc(int chr)
+static void _un_inc(int chr)
 {
     if (_TEOF != chr) {
         _ungettch_nolock(chr);
     }
 }
 
-static int __cdecl _whiteout(REG1 int* counter)
+static int _whiteout(REG1 int* counter)
 {
     REG2 int ch;
 
@@ -1286,19 +1286,19 @@ static int __cdecl _whiteout(REG1 int* counter)
 
 #else  /* CPRFLAG */
 
-static int __cdecl _inc(miniFILE* fileptr)
+static int _inc(miniFILE* fileptr)
 {
     return (_gettc_nolock(fileptr));
 }
 
-static void __cdecl _un_inc(int chr, miniFILE* fileptr)
+static void _un_inc(int chr, miniFILE* fileptr)
 {
     if (_TEOF != chr) {
         _ungettc_nolock(chr,fileptr);
     }
 }
 
-static int __cdecl _whiteout(int* counter, miniFILE* fileptr)
+static int _whiteout(int* counter, miniFILE* fileptr)
 {
     int ch;
 

@@ -25,13 +25,13 @@ namespace Js
 #else
 #define AsmJsVirtualAllocator Js::ArrayBuffer::BadAllocCall
 #define WasmVirtualAllocator Js::ArrayBuffer::BadAllocCall
-        static void* __cdecl BadAllocCall(DECLSPEC_GUARD_OVERFLOW size_t length)
+        static void* BadAllocCall(DECLSPEC_GUARD_OVERFLOW size_t length)
         {
             // This allocator should never be used
             Js::Throw::FatalInternalError();
         }
 #endif
-        static void __cdecl FreeMemAlloc(Var ptr)
+        static void FreeMemAlloc(Var ptr)
         {
             // This free function should never be used
             Js::Throw::FatalInternalError();
@@ -177,7 +177,7 @@ namespace Js
         RefCountedBuffer *GetBufferContent() { return bufferContent;  }
         static int GetBufferContentsOffset() { return offsetof(ArrayBuffer, bufferContent); }
 
-        typedef void(__cdecl *FreeFn)(void*);
+        typedef void(*FreeFn)(void*);
         virtual FreeFn GetArrayBufferFreeFn() { return nullptr; }
         static int GetByteLengthOffset() { return offsetof(ArrayBuffer, bufferLength); }
         virtual void AddParent(ArrayBufferParent* parent) override;

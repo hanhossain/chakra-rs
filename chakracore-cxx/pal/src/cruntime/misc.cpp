@@ -54,7 +54,6 @@ Function:
 See MSDN doc.
 --*/
 char *
-__cdecl
 _gcvt_s( char * buffer, int iSize, double value, int digits )
 {
     PERF_ENTRY(_gcvt);
@@ -97,7 +96,6 @@ Function :
 See MSDN for more details.
 --*/
 int
-__cdecl
 __iscsym( int c )
 {
     PERF_ENTRY(__iscsym);
@@ -125,7 +123,7 @@ Function :
     Returns the address of the errno.
 
 --*/
-int * __cdecl PAL_errno( int caller )
+int * PAL_errno( int caller )
 {
     int *retval;
     PERF_ENTRY(errno);
@@ -146,7 +144,6 @@ Note:   The BSD implementation can cause
         memory leaks. See man pages for more details.
 --*/
 int
-__cdecl
 _putenv( const char * envstring )
 {
     int ret = -1;
@@ -174,7 +171,7 @@ Function : PAL_getenv
 
 See MSDN for more details.
 --*/
-char * __cdecl PAL_getenv(const char *varname)
+char * PAL_getenv(const char *varname)
 {
     char *retval;
 
@@ -207,7 +204,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-__cdecl
 PAL_rand(void)
 {
     int ret;
@@ -222,9 +218,8 @@ PAL_rand(void)
 }
 
 PALIMPORT
-void * __cdecl
-PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
-            int (__cdecl *compar)(const void *, const void *))
+void * PAL_bsearch(const void *key, const void *base, size_t nmemb, size_t size,
+            int (*compar)(const void *, const void *))
 {
     void *retval;
 

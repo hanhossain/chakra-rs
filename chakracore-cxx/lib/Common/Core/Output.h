@@ -69,16 +69,16 @@ namespace Js
 class Output
 {
 public:
-    static size_t __cdecl VerboseNote(const char16 * format, ...);
+    static size_t VerboseNote(const char16 * format, ...);
 #ifdef ENABLE_TRACE
-    static size_t __cdecl Trace(Js::Phase phase, const char16 *form, ...);
-    static size_t __cdecl Trace2(Js::Phase phase, const char16 *form, ...);
-    static size_t __cdecl TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...);
-    static size_t __cdecl TraceWithFlush(Js::Phase phase, const char16 *form, ...);
-    static size_t __cdecl TraceWithFlush(Js::Flag flag, const char16 *form, ...);
-    static size_t __cdecl TraceStats(Js::Phase phase, const char16 *form, ...);
+    static size_t Trace(Js::Phase phase, const char16 *form, ...);
+    static size_t Trace2(Js::Phase phase, const char16 *form, ...);
+    static size_t TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...);
+    static size_t TraceWithFlush(Js::Phase phase, const char16 *form, ...);
+    static size_t TraceWithFlush(Js::Flag flag, const char16 *form, ...);
+    static size_t TraceStats(Js::Phase phase, const char16 *form, ...);
     template<class Fn>
-    static size_t __cdecl
+    static size_t
     TraceWithCallback(Js::Phase phase, Fn callback, const char16 *form, ...)
     {
         size_t retValue = 0;
@@ -101,10 +101,10 @@ public:
 #endif
     
 #endif // ENABLE_TRACE
-    static size_t __cdecl Print(const char16 *form, ...);
-    static size_t __cdecl Print(int column, const char16 *form, ...);
-    static size_t __cdecl PrintBuffer(const char16 * buffer, size_t size);
-    static size_t __cdecl VPrint(const char16 *form, va_list argptr);
+    static size_t Print(const char16 *form, ...);
+    static size_t Print(int column, const char16 *form, ...);
+    static size_t PrintBuffer(const char16 * buffer, size_t size);
+    static size_t VPrint(const char16 *form, va_list argptr);
     static void     SkipToColumn(size_t column);
     static FILE*    SetFile(FILE *);
     static FILE*    GetFile();

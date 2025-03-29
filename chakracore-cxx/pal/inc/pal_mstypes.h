@@ -35,18 +35,13 @@ extern "C" {
 #define EXTERN_C
 #endif // __cplusplus
 
-// Note:  Win32-hosted GCC predefines __stdcall and __cdecl, but Unix-
-// hosted GCC does not.
-
 #ifdef __i386__
 
-#define __cdecl
 #define _cdecl
 #define CDECL
 
 #else   // !defined(__i386__)
 
-#define __cdecl
 #define _cdecl
 #define CDECL
 
@@ -65,7 +60,6 @@ extern "C" {
 #define PALIMPORT
 #define PAL_NORETURN    __attribute__((noreturn))
 #define PALAPI
-#define PALAPIV     __cdecl
 
 ////////////////////////////////////////////////////////////////////////
 // Type attribute stuff

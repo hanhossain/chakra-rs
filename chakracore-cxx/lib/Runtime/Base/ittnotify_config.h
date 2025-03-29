@@ -76,25 +76,6 @@
 #endif /* UNICODE || _UNICODE */
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
-#ifndef ITTAPI_CDECL
-#  if ITT_PLATFORM==ITT_PLATFORM_WIN
-#    define ITTAPI_CDECL __cdecl
-#  else /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#    if defined _M_IX86 || defined __i386__
-#      define ITTAPI_CDECL __attribute__ ((cdecl))
-#    else  /* _M_IX86 || __i386__ */
-#      define ITTAPI_CDECL /* actual only on x86 platform */
-#    endif /* _M_IX86 || __i386__ */
-#  endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#endif /* ITTAPI_CDECL */
-
-#define ITTAPI    ITTAPI_CDECL
-#define LIBITTAPI ITTAPI_CDECL
-
-/* TODO: Temporary for compatibility! */
-#define ITTAPI_CALL    ITTAPI_CDECL
-#define LIBITTAPI_CALL ITTAPI_CDECL
-
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
 /* use __forceinline (VC++ specific) */
 #define ITT_INLINE           __forceinline

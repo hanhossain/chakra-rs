@@ -28,12 +28,12 @@ namespace UnifiedRegex
     }                                                               \
     va_end(argptr)
 
-    void __cdecl DebugWriter::Print(const Char *form, ...)
+    void DebugWriter::Print(const Char *form, ...)
     {
         PRINT_DEBUG_WRITER();
     }
 
-    void __cdecl DebugWriter::PrintEOL(const Char *form, ...)
+    void DebugWriter::PrintEOL(const Char *form, ...)
     {
         PRINT_DEBUG_WRITER();
         EOL();

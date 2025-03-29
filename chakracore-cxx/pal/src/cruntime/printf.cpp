@@ -180,7 +180,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_printf(
       const char *format,
       ...)
@@ -208,7 +207,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_fprintf(PAL_FILE *stream,const char *format,...)
 {
     LONG Length = 0;
@@ -234,7 +232,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_wprintf(
       const char16_t *format,
       ...)
@@ -264,7 +261,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vprintf(
       const char *format,
       va_list ap)
@@ -290,7 +286,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-PALAPIV
 wsprintfA(
       OUT LPSTR buffer,
       IN LPCSTR format,
@@ -319,7 +314,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-PALAPIV
 wsprintfW(
       OUT LPWSTR buffer,
       IN LPCWSTR format,
@@ -349,7 +343,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _snprintf(
      char *buffer,
      size_t count,
@@ -381,7 +374,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _snwprintf(
      char16_t *buffer,
      size_t count,
@@ -412,7 +404,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_fwprintf(
      PAL_FILE *stream,
      const char16_t *format,
@@ -1505,7 +1496,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_sscanf(
            const char *buffer,
            const char *format,
@@ -1534,7 +1524,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_sprintf(
           char *buffer,
           const char *format,
@@ -1564,7 +1553,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_swprintf(
           char16_t *buffer,
           const char16_t *format,
@@ -1593,7 +1581,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_swscanf(
           const char16_t *buffer,
           const char16_t *format,
@@ -1623,7 +1610,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vsprintf(char *buffer,
          const char *format,
          va_list argptr)
@@ -1651,7 +1637,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _vsnprintf(char *buffer,
            size_t count,
            const char *format,
@@ -1681,7 +1666,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vswprintf(char16_t *buffer,
               const char16_t *format,
               va_list argptr)
@@ -1709,7 +1693,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _vsnwprintf(char16_t *buffer,
             size_t count,
             const char16_t *format,

@@ -72,7 +72,6 @@ x  Double-precision floating-point value
 
 --*/
 int
-__cdecl
 _finite(
         double x)
 {
@@ -97,7 +96,6 @@ Function:
 See MSDN doc
 --*/
 int
-__cdecl
 _isnan(
        double x)
 {
@@ -118,7 +116,6 @@ Function:
 See MSDN doc
 --*/
 double 
-__cdecl 
 _copysign(
           double x,
           double y)
@@ -140,7 +137,6 @@ _copysignf
 See MSDN doc
 --*/
 float
-__cdecl
 _copysignf(
     float x,
     float y)

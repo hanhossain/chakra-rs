@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 // Forward declaration to avoid including scriptdirect.h
-typedef HRESULT(__cdecl *InitializeMethod)(Js::Var instance);
+typedef HRESULT(*InitializeMethod)(Js::Var instance);
 
 namespace Js
 {
@@ -90,8 +90,8 @@ namespace Js
         static Var WrappedFunctionThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static Var StdCallExternalFunctionThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static Var DefaultExternalFunctionThunk(RecyclableObject* function, CallInfo callInfo, ...);
-        static bool __cdecl DeferredLengthInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode);
-        static bool __cdecl DeferredConstructorInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode);
+        static bool DeferredLengthInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode);
+        static bool DeferredConstructorInitializer(DynamicObject* instance, DeferredTypeHandlerBase* typeHandler, DeferredInitializeMode mode);
 
         void PrepareExternalCall(Arguments * args);
 

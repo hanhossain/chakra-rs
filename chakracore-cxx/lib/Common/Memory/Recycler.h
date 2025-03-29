@@ -308,7 +308,7 @@ private:
 #define RecyclerHeapNew(recycler,heapInfo,T,...) new (recycler, heapInfo) T(__VA_ARGS__)
 #define RecyclerHeapDelete(recycler,heapInfo,addr) (static_cast<Recycler *>(recycler)->HeapFree(heapInfo,addr))
 
-typedef void (__cdecl* ExternalRootMarker)(void *);
+typedef void (* ExternalRootMarker)(void *);
 
 typedef void (*DOMWrapperTracingCallback)(_In_opt_ void *data);
 typedef bool (*DOMWrapperTracingDoneCallback)(_In_opt_ void *data);
@@ -2638,20 +2638,20 @@ struct ForceLeafAllocator<RecyclerNonLeafAllocator>
 #endif
 }
 
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, Recycler * alloc, HeapInfo * heapInfo)
 {
     return alloc->HeapAllocR(heapInfo, byteSize);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, Recycler * alloc, HeapInfo * heapInfo)
 {
     alloc->HeapFree(heapInfo, obj);
 }
 
 template<ObjectInfoBits infoBits>
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, Recycler * recycler, const InfoBitsWrapper<infoBits>&)
 {
     AssertCanHandleOutOfMemory();

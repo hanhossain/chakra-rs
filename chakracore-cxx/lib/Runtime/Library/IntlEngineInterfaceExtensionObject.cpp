@@ -289,7 +289,7 @@ namespace Js
 
 #elif defined(INTL_ICU)
 
-    template<typename TResource, void(__cdecl * CloseFunction)(TResource)>
+    template<typename TResource, void(* CloseFunction)(TResource)>
     class FinalizableICUObject : public FinalizableObject
     {
     private:
@@ -960,7 +960,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
     }
 
 #ifdef INTL_ICU
-    template <const char *(__cdecl *GetAvailableLocalesFunc)(int), int(__cdecl *CountAvailableLocalesFunc)(void)>
+    template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
     static bool BinarySearchForLocale(const char *localeID)
     {
         const int count = CountAvailableLocalesFunc();
@@ -1002,7 +1002,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         }
     }
 
-    template <const char *(__cdecl *GetAvailableLocalesFunc)(int), int(__cdecl *CountAvailableLocalesFunc)(void)>
+    template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
     static bool IsLocaleAvailable(JavascriptString *langtag)
     {
         char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };

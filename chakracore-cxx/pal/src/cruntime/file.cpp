@@ -201,7 +201,6 @@ see MSDN
 
 --*/
 PAL_FILE *
-__cdecl
 _fdopen(
     int handle,
     const char *mode)
@@ -259,7 +258,6 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 PAL_fopen(const char * fileName, const char * mode)
 {
     PAL_FILE *f = NULL;
@@ -349,7 +347,6 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 _wfopen(
     const char16_t *fileName,
     const char16_t *mode)
@@ -396,7 +393,6 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 _wfsopen(
     const char16_t *fileName,
     const char16_t *mode,
@@ -413,7 +409,7 @@ Function
 
     Returns the stdout stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stdout(int caller)
+PAL_FILE * PAL_get_stdout(int caller)
 {
     PERF_ENTRY(get_stdout);
     ENTRY("PAL_get_stdout\n");
@@ -428,7 +424,7 @@ Function
 
     Returns the stdin stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stdin(int caller)
+PAL_FILE * PAL_get_stdin(int caller)
 {
     PERF_ENTRY(get_stdin);
     ENTRY("PAL_get_stdin\n");
@@ -443,7 +439,7 @@ Function
 
     Returns the stderr stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stderr(int caller)
+PAL_FILE * PAL_get_stderr(int caller)
 {
     PERF_ENTRY(get_stderr);
     ENTRY("PAL_get_stderr\n");
@@ -461,7 +457,7 @@ Function:
 
 See msdn for more details.
 --*/
-int __cdecl PAL__close(int handle)
+int PAL__close(int handle)
 {
     INT nRetVal = 0;
 
@@ -475,13 +471,12 @@ int __cdecl PAL__close(int handle)
     return nRetVal;
 }
 
- int __cdecl PAL__flushall()
+ int PAL__flushall()
  {
     return fflush(NULL);
  }
 
 char16_t *
-__cdecl
 PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
 {
     ASSERT (0);
@@ -498,7 +493,6 @@ Function :
 --*/
 
 size_t
-__cdecl
 PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
 {
     size_t nReadBytes = 0;
@@ -755,7 +749,6 @@ See msdn for more details.
 --*/
 
 int
-__cdecl
 PAL_fgetpos (
     PAL_FILE   *f,
     PAL_fpos_t *pos
@@ -801,7 +794,6 @@ See msdn for more details.
 --*/
 
 int
-__cdecl
 PAL_fsetpos (
     PAL_FILE         *f,
     const PAL_fpos_t *pos

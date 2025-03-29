@@ -371,33 +371,33 @@ private:
 // NoThrowNoMemProtectHeapAllocator overrides
 //----------------------------------------
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new(byteSize, alloc, true, AllocFunc);
 }
 
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new[](DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new[](byteSize, alloc, true, AllocFunc);
 }
 
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t), DECLSPEC_GUARD_OVERFLOW size_t plusSize)
 {
     return ::operator new(byteSize, alloc, true, AllocFunc, plusSize);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
 {
     alloc->Free(obj, (size_t)-1);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     alloc->Free(obj, (size_t)-1);
@@ -409,13 +409,13 @@ typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
 //----------------------------------------
 // HeapAllocator overrides
 //----------------------------------------
-inline void __cdecl
+inline void
 operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t))
 {
     alloc->Free(obj, (size_t)-1);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     alloc->Free(obj, (size_t)-1);
@@ -425,33 +425,33 @@ operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*Alloc
 // NoThrowHeapAllocator overrides
 //----------------------------------------
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new(byteSize, alloc, true, AllocFunc);
 }
 
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new[](DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
     return ::operator new[](byteSize, alloc, true, AllocFunc);
 }
 
 template <>
-_Ret_maybenull_ inline void * __cdecl
+_Ret_maybenull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     return ::operator new(byteSize, alloc, true, AllocFunc, plusSize);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
     alloc->Free(obj, (size_t)-1);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     alloc->Free(obj, (size_t)-1);
@@ -459,7 +459,7 @@ operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAll
 
 
 template <>
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
     Assert(byteSize != 0);
@@ -469,7 +469,7 @@ operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoCheckHeapAllocator * all
 
 
 template <>
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t), DECLSPEC_GUARD_OVERFLOW size_t plusSize)
 {
     Assert(byteSize != 0);
@@ -479,20 +479,20 @@ operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoCheckHeapAllocator * all
 }
 
 
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new[](DECLSPEC_GUARD_OVERFLOW size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
     void * buffer = (alloc->*AllocFunc)(byteSize);
     return buffer;
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
     alloc->Free(obj, (size_t)-1);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     alloc->Free(obj, (size_t)-1);

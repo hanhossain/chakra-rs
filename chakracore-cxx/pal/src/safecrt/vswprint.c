@@ -86,7 +86,7 @@ static int _vscwprintf_helper (WOUTPUTFN outfn, const char16_t *format, va_list 
 *
 *******************************************************************************/
 
-int __cdecl _vswprintf_helper (
+int _vswprintf_helper (
         WOUTPUTFN woutfn,
         char16_t *string,
         size_t count,
@@ -134,7 +134,7 @@ int __cdecl _vswprintf_helper (
         return -1;
 }
 
-int __cdecl _vswprintf_s (
+int _vswprintf_s (
         char16_t *string,
         size_t sizeInWords,
         const char16_t *format,
@@ -165,7 +165,7 @@ int __cdecl _vswprintf_s (
     return retvalue;
 }
 
-int __cdecl vswprintf_s (
+int vswprintf_s (
         char16_t *string,
         size_t sizeInWords,
         const char16_t *format,
@@ -175,7 +175,7 @@ int __cdecl vswprintf_s (
     return _vswprintf_s(string, sizeInWords, format, ap);
 }
 
-int __cdecl _vsnwprintf_s (
+int _vsnwprintf_s (
         char16_t *string,
         size_t sizeInWords,
         size_t count,
@@ -262,7 +262,7 @@ int __cdecl _vsnwprintf_s (
 
 #ifndef _COUNT_
 
-int __cdecl _vscwprintf_helper (
+int _vscwprintf_helper (
         WOUTPUTFN woutfn,
         const char16_t *format,
         va_list ap
@@ -282,7 +282,7 @@ int __cdecl _vscwprintf_helper (
         return(retval);
 }
 
-int __cdecl _vscwprintf (
+int _vscwprintf (
         const char16_t *format,
         va_list ap
         )

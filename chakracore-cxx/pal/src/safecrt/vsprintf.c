@@ -72,7 +72,7 @@ static int _vsnprintf_helper( OUTPUTFN outfn, char *string, size_t count, const 
 *
 *******************************************************************************/
 
-int __cdecl _vsnprintf_helper (
+int _vsnprintf_helper (
         OUTPUTFN outfn,
         char *string,
         size_t count,
@@ -119,7 +119,7 @@ int __cdecl _vsnprintf_helper (
         return -1;
 }
 
-int __cdecl _vsprintf_s (
+int _vsprintf_s (
         char *string,
         size_t sizeInBytes,
         const char *format,
@@ -150,12 +150,12 @@ int __cdecl _vsprintf_s (
     return retvalue;
 }
 
-int __cdecl vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList)
+int vsprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, va_list _ArgList)
 {
     return _vsprintf_s(_Dst, _SizeInBytes, _Format, _ArgList);
 }
 
-int __cdecl _vsnprintf_s (
+int _vsnprintf_s (
         char *string,
         size_t sizeInBytes,
         size_t count,

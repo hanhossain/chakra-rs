@@ -10,7 +10,7 @@
 
 class BailOutRecord;
 
-extern "C" void __cdecl _alloca_probe_16();
+extern "C" void _alloca_probe_16();
 namespace Js
 {
     class EHBailoutData;
@@ -393,8 +393,8 @@ namespace Js
         OpCodeType ReadOp_WPreviousStmtTracking(const byte *& ip);
 #endif
 
-        void* __cdecl operator new(size_t byteSize, void* previousAllocation) throw();
-        void __cdecl operator delete(void* allocationToFree, void* previousAllocation) throw();
+        void* operator new(size_t byteSize, void* previousAllocation) throw();
+        void operator delete(void* allocationToFree, void* previousAllocation) throw();
 
 
         _NOINLINE Var ProcessThunk(void* returnAddress, void* addressOfReturnAddress);

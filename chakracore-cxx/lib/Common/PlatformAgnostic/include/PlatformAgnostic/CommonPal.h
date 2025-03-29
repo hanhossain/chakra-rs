@@ -444,8 +444,8 @@ inline errno_t _wcserror_s(char16 (&buffer)[size], int errnum)
 #define midl_user_free(ptr) \
     if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
 
-DWORD __cdecl CharLowerBuffW(const char16* lpsz, DWORD  cchLength);
-DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
+DWORD CharLowerBuffW(const char16* lpsz, DWORD  cchLength);
+DWORD CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
 
 // TODO (hanhossain): replace with std::numeric_limits<uint32_t>::max()
 #define MAXUINT32   ((uint32_t)~((uint32_t)0))

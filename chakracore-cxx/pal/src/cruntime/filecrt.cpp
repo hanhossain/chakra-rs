@@ -48,7 +48,6 @@ Function:
 See MSDN doc.
 --*/
 int
-__cdecl
 _open_osfhandle( INT_PTR osfhandle, int flags )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -177,7 +176,6 @@ Return value:
     A pointer to the pathname if successful, otherwise NULL is returned
 --*/
 char *
-__cdecl
 PAL__getcwd(
     char *szBuf,
     size_t nSize
@@ -200,7 +198,6 @@ Return value:
     Open file descriptor on success, -1 if file could not be created
 --*/
 int
-__cdecl
 PAL_mkstemp(char *szNameTemplate)
 {
     return InternalMkstemp(szNameTemplate);
@@ -248,7 +245,6 @@ Return value:
     File descriptor on success, -1 on failure
 --*/
 int
-__cdecl
 PAL__open(
     const char *szPath,
     int nFlags,
@@ -326,7 +322,6 @@ Return value:
     Returns 0 on success and -1 on failure
 --*/
 int
-__cdecl
 PAL_unlink(const char *szPath)
 {
     return unlink(szPath);
@@ -347,7 +342,6 @@ Return value:
     Returns 0 on success and -1 on failure
 --*/
 int
-__cdecl
 PAL_rename(
     const char *szOldName,
     const char *szNewName
@@ -373,7 +367,6 @@ Return value:
     and NULL on failure.
 --*/
 char *
-__cdecl
 PAL_fgets(
     char *sz,
     int nSize,
@@ -491,7 +484,6 @@ Return value:
     Returns the number of objects written.
 --*/
 size_t
-__cdecl
 PAL_fwrite(
     const void *pvBuffer,
     size_t nSize,

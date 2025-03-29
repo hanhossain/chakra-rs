@@ -159,7 +159,6 @@ Function:
 
   --*/
 char16_t *
-__cdecl
 _itow(
     int value,
     char16_t *string,
@@ -187,7 +186,6 @@ Function:
 
   --*/
 char16_t *
-__cdecl
 _ltow(
     long value,
     char16_t *string,
@@ -214,8 +212,7 @@ Function:
 See MSDN doc
 --*/
 char16_t *
- __cdecl
-_i64tow(
+ _i64tow(
     __int64 value,
     char16_t *string,
     int radix)
@@ -242,7 +239,6 @@ Function:
 See MSDN doc
 --*/
 int
-__cdecl
 _wtoi(
     const char16_t *string)
 {
@@ -291,7 +287,6 @@ Function:
 See MSDN doc
 --*/
 int
-__cdecl
 PAL_iswspace(char16_t c)
 {
     int ret;
@@ -342,7 +337,6 @@ is lesser.
 
 --*/
 int
-__cdecl
 _wcsnicmp(
           const char16_t *string1,
           const char16_t *string2,
@@ -394,7 +388,6 @@ string1, string2        Null-terminated strings to compare
 
 --*/
 int
-__cdecl
 _wcsicmp(
           const char16_t *string1,
           const char16_t *string2)
@@ -435,7 +428,6 @@ Remarks
 
 --*/
 char16_t *
-__cdecl
 _wcslwr(
         char16_t *string)
 {
@@ -500,7 +492,6 @@ returned from this function. If "long" is used instead of LONG, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
 LONG
-__cdecl
 PAL_wcstol(
         const char16_t *nptr,
         char16_t **endptr,
@@ -609,7 +600,6 @@ Notes :
 --*/
 
 LONGLONG
-__cdecl
 PAL_wcstoll(
         const char16_t *nptr,
         char16_t **endptr,
@@ -722,7 +712,6 @@ returned from this function. If "unsigned long" is used instead of ULONG,
 then a 64 bit value could be returned on 64 bit platforms like HP-UX, thus
 breaking Windows behavior .*/
 ULONG
-__cdecl
 PAL_wcstoul(
         const char16_t *nptr,
         char16_t **endptr,
@@ -812,7 +801,6 @@ PAL_wcstoulExit:
 }
 
 ULONGLONG
-__cdecl
 PAL__wcstoui64(
         const char16_t *nptr,
         char16_t **endptr,
@@ -882,7 +870,6 @@ See MSDN
 
 --*/
 char16_t
-__cdecl
 PAL_towlower( char16_t c )
 {
     PERF_ENTRY(towlower);
@@ -957,7 +944,6 @@ See MSDN
 
 --*/
 char16_t
-__cdecl
 PAL_towupper( char16_t c )
 {
 #if HAVE_COREFOUNDATION
@@ -1015,7 +1001,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswupper( char16_t c )
 {
     BOOL bRetVal = FALSE;
@@ -1061,7 +1046,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswlower( char16_t c )
 {
     BOOL bRetVal = FALSE;
@@ -1107,7 +1091,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswalpha( char16_t c )
 {
     PERF_ENTRY(iswalpha);
@@ -1134,7 +1117,6 @@ See MSDN or the man page for mcscat.
 
 --*/
 char16_t *
-__cdecl
 PAL_wcscat(
         char16_t *strDestination,
         const char16_t *strSource)
@@ -1161,7 +1143,6 @@ See MSDN or the man page for mcscpy.
 
 --*/
 char16_t *
-__cdecl
 PAL_wcscpy(
         char16_t *strDestination,
         const char16_t *strSource)
@@ -1212,7 +1193,6 @@ See MSDN or the man page for wcslen.
 --*/
 __attribute__((no_instrument_function))
 size_t
-__cdecl
 PAL_wcslen(
         const char16_t *string)
 {
@@ -1240,7 +1220,6 @@ Function:
 See MSDN or the man page for wmemcmp.
 --*/
 int
-__cdecl
 PAL_wmemcmp(
         const char16_t *string1,
         const char16_t *string2,
@@ -1284,7 +1263,6 @@ Function:
 See MSDN or the man page for wcsncmp.
 --*/
 int
-__cdecl
 PAL_wcsncmp(
         const char16_t *string1,
         const char16_t *string2,
@@ -1327,7 +1305,6 @@ Function:
 See MSDN or the man page for wcscmp.
 --*/
 int
-__cdecl
 PAL_wcscmp(
         const char16_t *string1,
         const char16_t *string2)
@@ -1354,7 +1331,6 @@ See MSDN or man page for wcschr.
 
 --*/
 char16_t _WConst_return *
-__cdecl
 PAL_wcschr(
         const char16_t * string,
         char16_t c)
@@ -1391,7 +1367,6 @@ See MSDN or man page for wcsrchr.
 
 --*/
 char16_t _WConst_return *
-__cdecl
 PAL_wcsrchr(
         const char16_t * string,
         char16_t c)
@@ -1423,7 +1398,6 @@ Function:
 See MSDN or man page for wcspbrk.
 --*/
 size_t
-__cdecl
 PAL_wcsspn (const char16_t *string, const char16_t *stringCharSet)
 {
     ASSERT(0);
@@ -1438,7 +1412,6 @@ Function:
 See MSDN or man page for wcspbrk.
 --*/
 const char16_t *
-__cdecl
 PAL_wcspbrk(
         const char16_t *string,
         const char16_t *strCharSet)
@@ -1473,7 +1446,6 @@ Function:
 See MSDN or man page for wcsstr.
 --*/
 const char16_t *
-__cdecl
 PAL_wcsstr(
         const char16_t *string,
         const char16_t *strCharSet)
@@ -1543,7 +1515,6 @@ Function :
 see msdn doc.
 --*/
 char16_t *
-__cdecl
 PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
 {
     UINT length = sizeof( char16_t ) * count;
@@ -1568,7 +1539,6 @@ Function :
 see msdn doc.
 --*/
 char16_t *
-__cdecl
 PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
 {
     char16_t *start = strDest;
@@ -1649,7 +1619,6 @@ Function :
 see msdn doc.
 --*/
 double
-__cdecl
 PAL_wcstod( const char16_t * nptr, char16_t **endptr )
 {
     double RetVal = 0.0;
@@ -1746,7 +1715,6 @@ Function :
 See MSDN for more details.
 --*/
 char16_t *
-__cdecl
 _ui64tow( unsigned __int64 value , char16_t * string , int radix )
 {
     UINT ReversedIndex = 0;
@@ -1817,7 +1785,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-__cdecl
 PAL_iswdigit( char16_t c )
 {
     UINT nRetVal = 0;
@@ -1873,7 +1840,6 @@ numbers and letters are considered as "hex"; other "numbers"
 (nGeneralCategory==8) aren't.
 --*/
 int
-__cdecl
 PAL_iswxdigit( char16_t c )
 {
     UINT nRetVal = 0;
@@ -1914,7 +1880,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-__cdecl
 PAL_iswprint( char16_t c )
 {
     int ret;
@@ -1949,7 +1914,6 @@ strCharSet      Set of delimiter characters
 
 --*/
 size_t
-__cdecl
 PAL_wcscspn(const char16_t *string, const char16_t *strCharSet)
 {
     const char16_t *temp;
@@ -1982,7 +1946,6 @@ Function:
 Returns TRUE if c is a Win32 "blank" character.
 --*/
 int
-__cdecl
 PAL_iswblank(char16_t c)
 {
     int ret;
@@ -2023,7 +1986,6 @@ Function:
 Returns TRUE if c is a control character.
 --*/
 int
-__cdecl
 PAL_iswcntrl(char16_t c)
 {
     int ret;
@@ -2044,7 +2006,6 @@ Function:
 Returns TRUE if c is a punctuation character.
 --*/
 int
-__cdecl
 PAL_iswpunct(char16_t c)
 {
     int ret;

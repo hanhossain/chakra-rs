@@ -1962,7 +1962,7 @@ CHAKRA_API
 JsDetachArrayBuffer(
     _In_ JsValueRef arrayBuffer);
 
-typedef void(__cdecl *ArrayBufferFreeFn)(void*);
+typedef void(*ArrayBufferFreeFn)(void*);
 
 /// <summary>
 ///     Returns the function which free the underlying buffer of ArrayBuffer

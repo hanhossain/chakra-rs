@@ -580,19 +580,19 @@ void qsort_s(WriteBarrierPtr<T>* _Base, size_t _NumOfElements, size_t _SizeOfEle
 
 // Disallow memcpy, memmove of WriteBarrierPtr
 template <typename T>
-void *  __cdecl memmove(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
+void *  memmove(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
 {
     CompileAssert(false);
 }
 
 template <typename T>
-void* __cdecl memcpy(WriteBarrierPtr<T> *dst, const void *src, size_t count)
+void* memcpy(WriteBarrierPtr<T> *dst, const void *src, size_t count)
 {
     CompileAssert(false);
 }
 
 template <typename T>
-errno_t __cdecl memcpy_s(WriteBarrierPtr<T> *dst, size_t dstSize, const void *src, size_t srcSize)
+errno_t memcpy_s(WriteBarrierPtr<T> *dst, size_t dstSize, const void *src, size_t srcSize)
 {
     static_assert(false, "Use CopyArray instead");
 }
@@ -604,7 +604,7 @@ void js_memcpy_s(__bcount(sizeInBytes) WriteBarrierPtr<T> *dst, size_t sizeInByt
 }
 
 template <typename T>
-void *  __cdecl memset(_Out_writes_bytes_all_(_Size) WriteBarrierPtr<T> * _Dst, _In_ int _Val, _In_ size_t _Size)
+void *  memset(_Out_writes_bytes_all_(_Size) WriteBarrierPtr<T> * _Dst, _In_ int _Val, _In_ size_t _Size)
 {
     CompileAssert(false);
 }

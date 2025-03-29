@@ -1027,13 +1027,13 @@ public:
 
 //we don't need these for the ArenaAllocator
 #if 0
-inline void __cdecl
+inline void
 operator delete(void * obj, ArenaAllocator * alloc, char * (ArenaAllocator::*AllocFunc)(size_t))
 {
     alloc->Free(obj, (size_t)-1);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, ArenaAllocator * alloc, char * (ArenaAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
     alloc->Free(obj, (size_t)-1);

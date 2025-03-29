@@ -155,7 +155,7 @@ namespace Js
     typedef void * Var;
     typedef WriteBarrierPtr<void> WriteBarrierVar;
 
-    typedef Var(__cdecl *JavascriptMethod)(RecyclableObject*, CallInfo, ...);
+    typedef Var(*JavascriptMethod)(RecyclableObject*, CallInfo, ...);
     typedef Var(*ExternalMethod)(RecyclableObject*, CallInfo, Var*);
 
 

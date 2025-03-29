@@ -13,7 +13,7 @@
 #endif
 
 #ifdef _M_IX86
-extern "C" void __cdecl _alloca_probe_16();
+extern "C" void _alloca_probe_16();
 #endif
 
 using namespace Js;
@@ -1230,7 +1230,7 @@ using namespace Js;
 #endif
 
 #ifdef __clang__
-void __cdecl _alloca_probe_16()
+void _alloca_probe_16()
 {
     // todo: fix this!!!
     abort();

@@ -189,7 +189,7 @@ enum RecyclerCollectCallBackFlags
     Collect_Wait                     = 0x04,     // callback can be from another thread
     Collect_Begin_Sweep              = 0x08
 };
-typedef void (__cdecl *RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
+typedef void (*RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
 
 class NativeLibraryEntryRecord
 {

@@ -49,7 +49,7 @@ THREAD_ST const char16* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
 
-size_t __cdecl
+size_t
 Output::VerboseNote(const char16 * format, ...)
 {
 #ifdef ENABLE_TRACE
@@ -68,7 +68,7 @@ Output::VerboseNote(const char16 * format, ...)
 }
 
 #ifdef ENABLE_TRACE
-size_t __cdecl
+size_t
 Output::Trace(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -84,7 +84,7 @@ Output::Trace(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::Trace2(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -100,7 +100,7 @@ Output::Trace2(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -118,7 +118,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *fo
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -135,7 +135,7 @@ Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithFlush(Js::Flag flag, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -206,7 +206,7 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
 }
 
 #ifdef BGJIT_STATS
-size_t __cdecl
+size_t
 Output::TraceStats(Js::Phase phase, const char16 *form, ...)
 {
     if(PHASE_STATS1(phase))
@@ -231,7 +231,7 @@ Output::TraceStats(Js::Phase phase, const char16 *form, ...)
 ///
 ///----------------------------------------------------------------------------
 
-size_t __cdecl
+size_t
 Output::Print(const char16 *form, ...)
 {
     va_list argptr;
@@ -241,7 +241,7 @@ Output::Print(const char16 *form, ...)
     return ret_val;
 }
 
-size_t __cdecl
+size_t
 Output::Print(int column, const char16 *form, ...)
 {
     Output::SkipToColumn(column);
@@ -252,7 +252,7 @@ Output::Print(int column, const char16 *form, ...)
     return ret_val;
 }
 
-size_t __cdecl
+size_t
 Output::VPrint(const char16 *form, va_list argptr)
 {
     char16 buf[2048];
@@ -270,7 +270,7 @@ Output::VPrint(const char16 *form, va_list argptr)
 // buf: a null terminated string
 // size: characters in buf, excluding the terminating null ==> wcslen(buf)
 //
-size_t __cdecl
+size_t
 Output::PrintBuffer(const char16 * buf, size_t size)
 {
     // Handle custom line prefixing

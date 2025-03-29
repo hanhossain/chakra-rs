@@ -43,7 +43,7 @@
 *
 *******************************************************************************/
 
-size_t __cdecl strnlen(const char *str, size_t maxsize)
+size_t strnlen(const char *str, size_t maxsize)
 {
     size_t n;
 

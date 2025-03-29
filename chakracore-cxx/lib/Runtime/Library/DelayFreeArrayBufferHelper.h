@@ -45,7 +45,7 @@ namespace Js
         void CheckAndMarkObject(void * candidate);
     };
 
-    typedef void __cdecl FreeFunction(void* ptr);
+    typedef void FreeFunction(void* ptr);
 
     class ArrayBufferContentForDelayedFreeBase
     {

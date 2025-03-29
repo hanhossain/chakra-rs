@@ -33,26 +33,22 @@ Abstract:
 extern "C"
 {
     void *
-    __cdecl
     PAL_realloc(
         void* pvMemblock,
         size_t szSize
         );
 
     void *
-    __cdecl
     PAL_malloc(
         size_t szSize
         );
 
     void
-    __cdecl
     PAL_free(
         void *pvMem
         );
 
     char *
-    __cdecl
     PAL__strdup(
         const char *c_szStr
         );

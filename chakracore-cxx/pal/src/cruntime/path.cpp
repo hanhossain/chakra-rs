@@ -70,7 +70,6 @@ Notes :
 
 --*/
 void
-__cdecl
 _wsplitpath(
             const char16_t *dospath,
             char16_t *drive,
@@ -218,7 +217,6 @@ See description above for _wsplitpath.
 
 --*/
 void
-__cdecl
 _splitpath(
            const char *path,
            char *drive,
@@ -318,7 +316,6 @@ See MSDN doc.
 
 --*/
 void
-__cdecl
 _makepath(
           char *path,
           const char *drive,
@@ -443,7 +440,6 @@ See MSDN doc.
 
 --*/
 void
-__cdecl
 _wmakepath(
           char16_t *path,
           const char16_t *drive,
@@ -524,7 +520,6 @@ See MSDN doc.
 
 --*/
 char *
-__cdecl
 _fullpath(
           char *absPath,
           const char *relPath,

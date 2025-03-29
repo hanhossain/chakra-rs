@@ -230,7 +230,7 @@ namespace Js
 
 #if _M_IX86
 
-    extern "C" double __cdecl __libm_sse2_pow(double, double);
+    extern "C" double __libm_sse2_pow(double, double);
 
     static const double d1_0 = 1.0;
 

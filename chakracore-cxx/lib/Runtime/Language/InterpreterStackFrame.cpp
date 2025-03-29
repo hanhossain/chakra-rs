@@ -9433,7 +9433,7 @@ skipThunk:
         return previousAllocation;
     }
 
-    void __cdecl InterpreterStackFrame::operator delete(void * allocationToFree, void * previousAllocation) throw()
+    void InterpreterStackFrame::operator delete(void * allocationToFree, void * previousAllocation) throw()
     {
         AssertMsg(allocationToFree == previousAllocation, "Memory locations should match");
         AssertMsg(false, "This function should never actually be called");

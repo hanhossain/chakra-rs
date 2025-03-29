@@ -157,7 +157,7 @@ Function:
 See MSDN
 
 --*/
-int __cdecl PAL_iswlower( char16_t c );
+int PAL_iswlower( char16_t c );
 
 
 /*++
@@ -167,7 +167,7 @@ Function:
 See MSDN
 
 --*/
-int __cdecl PAL_iswalpha( char16_t c );
+int PAL_iswalpha( char16_t c );
 
 #if HAVE_COREFOUNDATION
 /*--
@@ -176,7 +176,7 @@ Function:
 
 Returns TRUE if c is a Win32 "blank" character.
 --*/
-int __cdecl PAL_iswblank(char16_t c);
+int PAL_iswblank(char16_t c);
 
 /*--
 Function:
@@ -184,7 +184,7 @@ Function:
 
 Returns TRUE if c is a control character.
 --*/
-int __cdecl PAL_iswcntrl(char16_t c);
+int PAL_iswcntrl(char16_t c);
 
 /*--
 Function:
@@ -192,7 +192,7 @@ Function:
 
 Returns TRUE if c is a control character.
 --*/
-int __cdecl PAL_iswpunct(char16_t c);
+int PAL_iswpunct(char16_t c);
 #endif  // HAVE_COREFOUNDATION
 
 /*++

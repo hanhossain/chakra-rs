@@ -51,7 +51,6 @@ See MSDN for more details.
 --*/
 
 struct PAL_tm *
-__cdecl
 PAL_localtime(const PAL_time_t *clock)
 {
     CPalThread *pThread = NULL;
@@ -97,7 +96,6 @@ Function:
 See MSDN for more details.
 --*/
 char *
-__cdecl
 PAL_ctime( const PAL_time_t *clock )
 {
     CPalThread *pThread = NULL;
@@ -148,8 +146,7 @@ NOTES:
     The difference is due to the difference between BSD and Win32 sprintf.
 
 --*/
-char * __cdecl
-_ecvt( double value, int count, int * dec, int * sign )
+char * _ecvt( double value, int count, int * dec, int * sign )
 {
     CONST CHAR * FORMAT_STRING = "%.348e";
     CHAR TempBuffer[ ECVT_MAX_BUFFER_SIZE ];

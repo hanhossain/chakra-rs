@@ -203,27 +203,24 @@ typedef enum tagEFaultRepRetVal
 #define interface struct
 
 #define STDMETHODCALLTYPE
-#define STDMETHODVCALLTYPE   __cdecl
-
-#define STDAPIVCALLTYPE      __cdecl
 
 #define STDMETHODIMP         HRESULT STDMETHODCALLTYPE
 #define STDMETHODIMP_(type)  type STDMETHODCALLTYPE
 
-#define STDMETHODIMPV        HRESULT STDMETHODVCALLTYPE
-#define STDMETHODIMPV_(type) type STDMETHODVCALLTYPE
+#define STDMETHODIMPV        HRESULT
+#define STDMETHODIMPV_(type) type
 
 #define STDMETHOD(method)       virtual HRESULT STDMETHODCALLTYPE method
 #define STDMETHOD_(type,method) virtual type STDMETHODCALLTYPE method
 
-#define STDMETHODV(method)       virtual HRESULT STDMETHODVCALLTYPE method
-#define STDMETHODV_(type,method) virtual type STDMETHODVCALLTYPE method
+#define STDMETHODV(method)       virtual HRESULT method
+#define STDMETHODV_(type,method) virtual type method
 
 #define STDAPI               EXTERN_C HRESULT
 #define STDAPI_(type)        EXTERN_C type
 
-#define STDAPIV              EXTERN_C HRESULT STDAPIVCALLTYPE
-#define STDAPIV_(type)       EXTERN_C type STDAPIVCALLTYPE
+#define STDAPIV              EXTERN_C HRESULT
+#define STDAPIV_(type)       EXTERN_C type
 
 #define PURE                    = 0
 #define THIS_
@@ -811,7 +808,7 @@ extern "C++" {
 
 #include <safemath.h>
 
-inline errno_t __cdecl _wcslwr_unsafe(WCHAR *str, size_t sz)
+inline errno_t _wcslwr_unsafe(WCHAR *str, size_t sz)
 {
     if (sz >= INT_MAX / sizeof(WCHAR))
         return 1;
@@ -833,7 +830,7 @@ inline errno_t __cdecl _wcslwr_unsafe(WCHAR *str, size_t sz)
 
     return 0;
 }
-inline errno_t __cdecl _strlwr_unsafe(char *str, size_t sz)
+inline errno_t _strlwr_unsafe(char *str, size_t sz)
 {
     char *copy = (char *)malloc(sz);
     if(copy == nullptr)
@@ -852,7 +849,7 @@ inline errno_t __cdecl _strlwr_unsafe(char *str, size_t sz)
     return 0;
 }
 
-inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
+inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 {
     int guess = 10;
 
@@ -872,7 +869,7 @@ inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
     }
 }
 
-inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
+inline int _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
 {
     int guess = 256;
 
@@ -895,7 +892,7 @@ inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
     }
 }
 
-inline int __cdecl _scwprintf_unsafe(const WCHAR *_Format, ...)
+inline int _scwprintf_unsafe(const WCHAR *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -905,7 +902,7 @@ inline int __cdecl _scwprintf_unsafe(const WCHAR *_Format, ...)
     return ret;
 }
 
-inline int __cdecl _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
+inline int _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
     int ret = _vsnwprintf(_Dst, _Count, _Format, _ArgList);
@@ -917,7 +914,7 @@ inline int __cdecl _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _
     return ret;
 }
 
-inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, ...)
+inline int _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -927,7 +924,7 @@ inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _C
     return ret;
 }
 
-inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
+inline int _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
     int ret = _vsnprintf(_Dst, _Count, _Format, _ArgList);
@@ -939,7 +936,7 @@ inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Co
     return ret;
 }
 
-inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, ...)
+inline int _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -949,7 +946,7 @@ inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Cou
     return ret;
 }
 
-inline errno_t __cdecl _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
+inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
 {
     PAL_FILE *result = _wfopen(fileName, mode);
     if(result == 0) {
@@ -960,7 +957,7 @@ inline errno_t __cdecl _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, con
     }
 }
 
-inline errno_t __cdecl _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *mode)
+inline errno_t _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *mode)
 {
   PAL_FILE *result = PAL_fopen(fileName, mode);
   if(result == 0) {
@@ -973,12 +970,12 @@ inline errno_t __cdecl _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const
 
 /* _itow_s */
 _SAFECRT__EXTERN_C
-errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _itow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -987,7 +984,7 @@ errno_t __cdecl _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1000,12 +997,12 @@ errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix
 #endif
 
 _SAFECRT__EXTERN_C
-errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _ltow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1014,7 +1011,7 @@ errno_t __cdecl _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1028,12 +1025,12 @@ errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radi
 
 /* _i64tow_s */
 _SAFECRT__EXTERN_C
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _i64tow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1042,7 +1039,7 @@ errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radi
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1059,12 +1056,12 @@ errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int 
  * _ReturnValue indicates if the variable has been found and size needed
  */
 _SAFECRT__EXTERN_C
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name);
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SzInWords>
 inline
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     return getenv_s(_ReturnValue, _Dst, _SizeInWords, _Name);
 }
@@ -1073,7 +1070,7 @@ errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, 
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     char *szFound;
 
@@ -1348,7 +1345,7 @@ STDAPI SafeArrayPutElement(SAFEARRAY * psa, LONG * rgIndices, void * pv);
 STDAPI SafeArrayDestroy(SAFEARRAY * psa);
 
 EXTERN_C void * _stdcall _lfind(const void *, const void *, unsigned int *, unsigned int,
-        int (__cdecl *)(const void *, const void *));
+        int (*)(const void *, const void *));
 
 interface IDispatch;
 interface ITypeInfo;

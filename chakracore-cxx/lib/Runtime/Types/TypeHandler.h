@@ -23,7 +23,7 @@ namespace Js
     };
 #endif
 
-    typedef bool (__cdecl *DeferredTypeInitializer)(DynamicObject* instance, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
+    typedef bool (*DeferredTypeInitializer)(DynamicObject* instance, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
 
     class DynamicTypeHandler
     {

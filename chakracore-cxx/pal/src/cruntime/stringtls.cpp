@@ -57,7 +57,6 @@ simultaneously from multiple threads does not have undesirable effects", so
 we need to use strtok_r.
 --*/
 char *
-__cdecl
 PAL_strtok(char *strToken, const char *strDelimit)
 {
     CPalThread *pThread = NULL;

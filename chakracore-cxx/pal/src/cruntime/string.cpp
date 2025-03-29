@@ -53,7 +53,6 @@ Value Meaning
 
 --*/
 int
-__cdecl
 _strnicmp( const char *s1, const char *s2, size_t count )
 {
     int ret;
@@ -89,7 +88,6 @@ Value Meaning
 
 --*/
 int
-__cdecl
 _stricmp(
          const char *s1,
          const char *s2)
@@ -132,7 +130,6 @@ information on LC_CTYPE, see setlocale.
 
 --*/
 char *
-__cdecl
 _strlwr(
         char *str)
 {
@@ -203,7 +200,6 @@ returned from this function. If "unsigned long" is used instead of ULONG,
 then a 64 bit value could be returned on 64 bit platforms like HP-UX, thus
 breaking Windows behavior. */
 ULONG
-__cdecl
 PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
 {
     unsigned long ulResult;
@@ -273,7 +269,6 @@ returned from this function. If "long" is used instead of LONG, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
 LONG
-__cdecl
 PAL_atol(const char *szNumber)
 {
     long lResult;
