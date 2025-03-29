@@ -54,7 +54,7 @@
 #define CALLBACK0(member) \
   ERROR_UNLESS(Succeeded(delegate_->member()), #member " callback failed")
 
-#define CALLBACK(member, ...)                             \
+#define (member, ...)                             \
   ERROR_UNLESS(Succeeded(delegate_->member(__VA_ARGS__)), \
                #member " callback failed")
 
