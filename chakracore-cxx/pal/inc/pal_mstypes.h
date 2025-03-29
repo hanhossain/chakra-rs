@@ -43,7 +43,6 @@ extern "C" {
 #define __inline        inline
 #endif
 
-#define PAL_NORETURN    __attribute__((noreturn))
 #define PALAPI
 
 ////////////////////////////////////////////////////////////////////////

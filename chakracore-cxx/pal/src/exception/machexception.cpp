@@ -1268,7 +1268,7 @@ Parameters:
 Return value :
     Doesn't return
 --*/
-PAL_NORETURN
+__attribute__((noreturn))
 void
 MachSetThreadContext(CONTEXT *lpContext)
 {

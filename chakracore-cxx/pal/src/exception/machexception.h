@@ -39,7 +39,7 @@ extern "C"
 // Process and thread initialization/cleanup/context routines
 BOOL SEHInitializeMachExceptions();
 void MachExceptionInitializeDebug(void);
-PAL_NORETURN void MachSetThreadContext(CONTEXT *lpContext);
+__attribute__((noreturn)) void MachSetThreadContext(CONTEXT *lpContext);
 
 #ifdef __cplusplus
 }

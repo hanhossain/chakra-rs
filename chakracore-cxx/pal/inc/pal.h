@@ -213,7 +213,6 @@ extern "C" {
 
 #define FEATURE_PAL_SXS 1
 #define DECLSPEC_ALIGN(x)   __declspec(align(x))
-#define DECLSPEC_NORETURN   PAL_NORETURN
 #define __assume(x) (void)0
 #define __annotation(x)
 #define UNALIGNED
@@ -1460,7 +1459,7 @@ CreateProcessW(
 #define CreateProcess CreateProcessA
 #endif
 
-PAL_NORETURN
+__attribute__((noreturn))
 void
 PALAPI
 ExitProcess(
@@ -1582,7 +1581,7 @@ CreateThread(
          IN DWORD dwCreationFlags,
          OUT LPDWORD lpThreadId);
 
-PAL_NORETURN
+__attribute__((noreturn))
 void
 PALAPI
 ExitThread(
@@ -3304,7 +3303,7 @@ PALAPI
 FreeLibrary(
     IN OUT HMODULE hLibModule);
 
-PAL_NORETURN
+__attribute__((noreturn))
 void
 PALAPI
 FreeLibraryAndExitThread(
@@ -4719,7 +4718,7 @@ RaiseException(
            IN CONST ULONG_PTR *lpArguments);
 
 #ifdef FEATURE_PAL_SXS
-PAL_NORETURN
+__attribute__((noreturn))
 void
 PALAPI
 PAL_RaiseException(
@@ -6085,7 +6084,7 @@ char * _strdup(const char *);
 
 #endif // !PAL_STDCPP_COMPAT
 
-PAL_NORETURN void exit(int);
+__attribute__((noreturn)) void exit(int);
 int atexit(void (*function)(void));
 
 void * bsearch(const void *, const void *, size_t, size_t,

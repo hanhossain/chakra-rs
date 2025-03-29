@@ -772,7 +772,7 @@ Function:
 
 See MSDN doc.
 --*/
-PAL_NORETURN
+__attribute__((noreturn))
 void
 PALAPI
 ExitThread(
