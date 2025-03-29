@@ -35,16 +35,6 @@ extern "C" {
 #define EXTERN_C
 #endif // __cplusplus
 
-#ifdef __i386__
-
-#define CDECL
-
-#else   // !defined(__i386__)
-
-#define CDECL
-
-#endif  // !defined(__i386__)
-
 #define CALLBACK
 
 #if !defined(_declspec)
