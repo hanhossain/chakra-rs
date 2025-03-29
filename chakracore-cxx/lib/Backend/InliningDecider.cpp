@@ -950,7 +950,7 @@ void InliningDecider::TraceInlining(Js::FunctionBody *const inliner, const char1
         inlineeName = debugStringBuffer3;
     }
     INLINE_TRACE_AND_TESTTRACE(_u("INLINING%s %s: Inlinee: %s (%s)\tSize: %d\tCaller: %s (%s)\tSize: %d\tInlineCount: %d\tRoot: %s (%s)\tSize: %d\tCallSiteId: %d\n"),
-        isCallback ? _u(" CALLBACK") : _u(""),
+        isCallback ? _u(" ") : _u(""),
         inLoopBody ? _u(" IN LOOP BODY") : _u(""),
         inlineeName, inlineeFunctionIdandNumberString, inlineeByteCodeCount,
         inliner->GetDisplayName(), inliner->GetDebugNumberSet(debugStringBuffer), inliner->GetByteCodeCount(),

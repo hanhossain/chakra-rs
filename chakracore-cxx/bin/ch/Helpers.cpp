@@ -507,7 +507,7 @@ void Helpers::GetTTDDirectory(const wchar* curi, size_t* uriLength, char* uri, s
     Helpers::CreateTTDDirectoryAsNeeded(uriLength, uri, "_ttdlog", curi);
 }
 
-JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
+JsTTDStreamHandle Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
 {
     AssertMsg((read | write) & (!read | !write), "Read/Write streams not supported yet -- defaulting to read only");
 
@@ -533,7 +533,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     return res;
 }
 
-bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount)
+bool Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount)
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
@@ -552,7 +552,7 @@ bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, b
     return ok ? true : false;
 }
 
-bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount)
+bool Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount)
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
@@ -571,7 +571,7 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
     return ok ? true : false;
 }
 
-void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
+void Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
     fflush((FILE*)handle);
     fclose((FILE*)handle);

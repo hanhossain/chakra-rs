@@ -617,10 +617,10 @@ public:
 
 private:
     // Static entry point for thread creation
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int StaticThreadProc(LPVOID lpParameter);
 
     // Static entry point for thread service usage
-    static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
+    static void StaticBackgroundWorkCallback(void * callbackData);
 
 private:
     WorkFunc workFunc;
@@ -1784,12 +1784,12 @@ private:
     bool AbortConcurrent(bool restoreState);
     void FinalizeConcurrent(bool restoreState);
 
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int StaticThreadProc(LPVOID lpParameter);
     static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
     DWORD ThreadProc();
 
     void DoBackgroundWork(bool forceForeground = false);
-    static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
+    static void StaticBackgroundWorkCallback(void * callbackData);
 
     BOOL CollectOnConcurrentThread();
     bool StartConcurrent(CollectionState const state);
@@ -2068,9 +2068,9 @@ private:
 #endif
 
 public:
-    typedef void (CALLBACK *ObjectBeforeCollectCallback)(void* object, void* callbackState); // same as jsrt JsObjectBeforeCollectCallback
+    typedef void (*ObjectBeforeCollectCallback)(void* object, void* callbackState); // same as jsrt JsObjectBeforeCollectCallback
     // same as jsrt JsObjectBeforeCollectCallbackWrapper
-    typedef void (CALLBACK *ObjectBeforeCollectCallbackWrapper)(ObjectBeforeCollectCallback callback, void* object, void* callbackState, void* threadContext);
+    typedef void (*ObjectBeforeCollectCallbackWrapper)(ObjectBeforeCollectCallback callback, void* object, void* callbackState, void* threadContext);
     void SetObjectBeforeCollectCallback(void* object,
         ObjectBeforeCollectCallback callback,
         void* callbackState,

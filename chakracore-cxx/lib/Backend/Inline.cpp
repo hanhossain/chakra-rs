@@ -3131,7 +3131,7 @@ Inline::InlineCallApplyTarget_Shared(
     if (isCallback)
     {
         char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        INLINE_CALLBACKS_TRACE(_u("INLINING CALLBACK : Inlining callback for call/apply target : \t%s (%s)\n"), inlineeData->GetBody()->GetDisplayName(),
+        INLINE_CALLBACKS_TRACE(_u("INLINING : Inlining callback for call/apply target : \t%s (%s)\n"), inlineeData->GetBody()->GetDisplayName(),
             inlineeData->GetDebugNumberSet(debugStringBuffer));
     }
 #endif

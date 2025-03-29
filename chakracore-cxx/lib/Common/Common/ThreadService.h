@@ -12,11 +12,11 @@ namespace JsUtil
     class ThreadService
     {
     public:
-        typedef void (CALLBACK *BackgroundWorkItemCallback)(void * callbackData);
+        typedef void (*BackgroundWorkItemCallback)(void * callbackData);
 
         // Callback for the thread service itself, to which we can submit background work items.
 
-        typedef bool (CALLBACK *ThreadServiceCallback)(BackgroundWorkItemCallback callback, void * callbackData);
+        typedef bool (*ThreadServiceCallback)(BackgroundWorkItemCallback callback, void * callbackData);
 
     private:
         ThreadServiceCallback threadService;

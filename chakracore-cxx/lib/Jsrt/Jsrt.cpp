@@ -99,22 +99,22 @@ JsErrorCode CheckContext(JsrtContext *currentContext, bool verifyRuntimeState,
 /////////////////////
 
 #if ENABLE_TTD
-void CALLBACK OnScriptLoad_TTDCallback(FinalizableObject* jsrtCtx, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify)
+void OnScriptLoad_TTDCallback(FinalizableObject* jsrtCtx, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify)
 {
     ((JsrtContext*)jsrtCtx)->OnScriptLoad_TTDCallback(body, utf8SourceInfo, compileException, notify);
 }
 
-uint32 CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
+uint32 OnBPRegister_TTDCallback(void* runtimeRcvr, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
 {
     return ((JsrtRuntime*)runtimeRcvr)->BPRegister_TTD(bpID, scriptContext, utf8SourceInfo, line, column, isNewBP);
 }
 
-void CALLBACK OnBPDelete_TTDCallback(void* runtimeRcvr, uint32 bpID)
+void OnBPDelete_TTDCallback(void* runtimeRcvr, uint32 bpID)
 {
     ((JsrtRuntime*)runtimeRcvr)->BPDelete_TTD(bpID);
 }
 
-void CALLBACK OnBPClearDocument_TTDCallback(void* runtimeRcvr)
+void OnBPClearDocument_TTDCallback(void* runtimeRcvr)
 {
     ((JsrtRuntime*)runtimeRcvr)->BPClearDocument_TTD();
 }
@@ -222,7 +222,7 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ TTDRecord
 }
 
 #if ENABLE_TTD
-void CALLBACK CreateExternalObject_TTDCallback(Js::ScriptContext* ctx, Js::Var prototype, Js::Var* object)
+void CreateExternalObject_TTDCallback(Js::ScriptContext* ctx, Js::Var prototype, Js::Var* object)
 {
     TTDAssert(object != nullptr, "This should always be a valid location");
 
@@ -235,12 +235,12 @@ void CALLBACK CreateExternalObject_TTDCallback(Js::ScriptContext* ctx, Js::Var p
     *object = JsrtExternalObject::Create(nullptr, 0, nullptr, prototypeObject, ctx, nullptr);
 }
 
-void CALLBACK TTDDummyPromiseContinuationCallback(JsValueRef task, void *callbackState)
+void TTDDummyPromiseContinuationCallback(JsValueRef task, void *callbackState)
 {
     TTDAssert(false, "This should never actually be invoked!!!");
 }
 
-void CALLBACK CreateJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext** result)
+void CreateJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext** result)
 {
     JsContextRef newContext = nullptr;
     *result = nullptr;
@@ -256,13 +256,13 @@ void CALLBACK CreateJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptConte
     JsrtContext::TrySetCurrent(static_cast<JsrtContext*>(newContext));
 }
 
-void CALLBACK ReleaseJsRTContext_TTDCallback(FinalizableObject* jsrtCtx)
+void ReleaseJsRTContext_TTDCallback(FinalizableObject* jsrtCtx)
 {
     static_cast<JsrtContext*>(jsrtCtx)->GetScriptContext()->GetThreadContext()->GetRecycler()->RootRelease(jsrtCtx);
     JsrtContext::OnReplayDisposeContext_TTDCallback(jsrtCtx);
 }
 
-void CALLBACK SetActiveJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext* ctx)
+void SetActiveJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext* ctx)
 {
     JsrtRuntime * runtime = JsrtRuntime::FromHandle(static_cast<JsRuntimeHandle>(runtimeHandle));
     ThreadContext * threadContext = runtime->GetThreadContext();
@@ -2915,7 +2915,7 @@ typedef struct JsNativeFunctionWrapperHolder
     FieldNoBarrier(JsNativeFunction) nativeFunction;
 }JsNativeFunctionWrapperHolder;
 
-JsValueRef CALLBACK JsNativeFunctionWrapper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, JsNativeFunctionInfo *info, void *wrapperData)
+JsValueRef JsNativeFunctionWrapper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, JsNativeFunctionInfo *info, void *wrapperData)
 {
     JsNativeFunctionWrapperHolder *wrapperHolder = static_cast<JsNativeFunctionWrapperHolder*>(wrapperData);
     JsValueRef result = wrapperHolder->nativeFunction(callee, info->isConstructCall, arguments, argumentCount, wrapperHolder->callbackState);

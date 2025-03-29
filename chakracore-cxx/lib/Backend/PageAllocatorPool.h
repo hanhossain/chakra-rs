@@ -18,7 +18,7 @@ public:
     static void IdleCleanup();
 private:
 
-    static void CALLBACK IdleCleanupRoutine(
+    static void IdleCleanupRoutine(
         _Inout_     PTP_CALLBACK_INSTANCE Instance,
         _Inout_opt_ PVOID Context,
         _Inout_     PTP_TIMER Timer);

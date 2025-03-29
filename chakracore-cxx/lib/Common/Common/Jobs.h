@@ -542,7 +542,7 @@ namespace JsUtil
         static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
 #endif
 
-        static void CALLBACK ThreadServiceCallback(void * callbackData);
+        static void ThreadServiceCallback(void * callbackData);
     };
 #endif
 
