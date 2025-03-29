@@ -476,7 +476,7 @@ Function:
 kern_return_t
 CONTEXT_SetThreadContextOnPort(
    mach_port_t Port,
-   IN const CONTEXT *lpContext);
+    const CONTEXT *lpContext);
 
 /*++
 Function:

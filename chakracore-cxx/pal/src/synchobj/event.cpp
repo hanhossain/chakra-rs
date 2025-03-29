@@ -84,10 +84,10 @@ Parameters:
 
 HANDLE
 CreateEventA(
-         IN LPSECURITY_ATTRIBUTES lpEventAttributes,
-         IN BOOL bManualReset,
-         IN BOOL bInitialState,
-         IN LPCSTR lpName)
+          LPSECURITY_ATTRIBUTES lpEventAttributes,
+          BOOL bManualReset,
+          BOOL bInitialState,
+          LPCSTR lpName)
 {
     HANDLE hEvent = NULL;
     CPalThread *pthr = NULL;
@@ -146,10 +146,10 @@ Parameters:
 
 HANDLE
 CreateEventW(
-         IN LPSECURITY_ATTRIBUTES lpEventAttributes,
-         IN BOOL bManualReset,
-         IN BOOL bInitialState,
-         IN LPCWSTR lpName)
+          LPSECURITY_ATTRIBUTES lpEventAttributes,
+          BOOL bManualReset,
+          BOOL bInitialState,
+          LPCWSTR lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError;
@@ -314,7 +314,7 @@ See MSDN doc.
 
 BOOL
 SetEvent(
-     IN HANDLE hEvent)
+      HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -346,7 +346,7 @@ See MSDN doc.
 
 BOOL
 ResetEvent(
-       IN HANDLE hEvent)
+        HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -463,9 +463,9 @@ Parameters:
 
 HANDLE
 OpenEventW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        DWORD dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError = NO_ERROR;

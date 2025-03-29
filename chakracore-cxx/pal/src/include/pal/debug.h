@@ -64,8 +64,8 @@ Return value :
 --*/
 BOOL
 DBG_FlushInstructionCache(
-                      IN LPCVOID lpBaseAddress,
-                      IN SIZE_T dwSize);
+                       LPCVOID lpBaseAddress,
+                       SIZE_T dwSize);
 
 #ifdef __cplusplus
 }

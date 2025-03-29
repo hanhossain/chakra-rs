@@ -112,8 +112,8 @@ See MSDN doc.
 --*/
 LONG
 CompareFileTime(
-        IN const FILETIME *lpFileTime1,
-        IN const FILETIME *lpFileTime2)
+         const FILETIME *lpFileTime1,
+         const FILETIME *lpFileTime2)
 {
     __int64 First;
     __int64 Second;
@@ -163,10 +163,10 @@ ignored, and the inode change time will be set to the current time.
 --*/
 BOOL
 SetFileTime(
-        IN HANDLE hFile,
-        IN const FILETIME *lpCreationTime,
-        IN const FILETIME *lpLastAccessTime,
-        IN const FILETIME *lpLastWriteTime)
+         HANDLE hFile,
+         const FILETIME *lpCreationTime,
+         const FILETIME *lpLastAccessTime,
+         const FILETIME *lpLastWriteTime)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -212,10 +212,10 @@ SetFileTime(
 PAL_ERROR
 CorUnix::InternalSetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
-        IN const FILETIME *lpCreationTime,
-        IN const FILETIME *lpLastAccessTime,
-        IN const FILETIME *lpLastWriteTime)
+         HANDLE hFile,
+         const FILETIME *lpCreationTime,
+         const FILETIME *lpLastAccessTime,
+         const FILETIME *lpLastWriteTime)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pFileObject = NULL;
@@ -352,7 +352,7 @@ atime for LastAccessTime.
 --*/
 BOOL
 GetFileTime(
-        IN HANDLE hFile,
+         HANDLE hFile,
         OUT LPFILETIME lpCreationTime,
         OUT LPFILETIME lpLastAccessTime,
         OUT LPFILETIME lpLastWriteTime)
@@ -388,7 +388,7 @@ GetFileTime(
 PAL_ERROR
 CorUnix::InternalGetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
+         HANDLE hFile,
         OUT LPFILETIME lpCreationTime,
         OUT LPFILETIME lpLastAccessTime,
         OUT LPFILETIME lpLastWriteTime)
@@ -715,7 +715,7 @@ See msdn for more details.
 --*/
 BOOL
 FileTimeToDosDateTime(
-            IN const FILETIME *lpFileTime,
+             const FILETIME *lpFileTime,
             OUT LPWORD lpFatDate,
             OUT LPWORD lpFatTime )
 {

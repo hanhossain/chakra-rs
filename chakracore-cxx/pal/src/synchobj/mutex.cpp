@@ -71,9 +71,9 @@ Parameters:
 
 HANDLE
 CreateMutexA(
-    IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
-    IN BOOL bInitialOwner,
-    IN LPCSTR lpName)
+     LPSECURITY_ATTRIBUTES lpMutexAttributes,
+     BOOL bInitialOwner,
+     LPCSTR lpName)
 {
     HANDLE hMutex = NULL;
     CPalThread *pthr = NULL;
@@ -131,9 +131,9 @@ Parameters:
 
 HANDLE
 CreateMutexW(
-    IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
-    IN BOOL bInitialOwner,
-    IN LPCWSTR lpName)
+     LPSECURITY_ATTRIBUTES lpMutexAttributes,
+     BOOL bInitialOwner,
+     LPCWSTR lpName)
 {
     HANDLE hMutex = NULL;
     PAL_ERROR palError;
@@ -300,7 +300,7 @@ Parameters:
 --*/
 
 BOOL
-ReleaseMutex( IN HANDLE hMutex )
+ReleaseMutex(  HANDLE hMutex )
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -412,9 +412,9 @@ See MSDN doc.
 
 HANDLE
 OpenMutexA (
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCSTR lpName)
+        DWORD dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCSTR lpName)
 {
     HANDLE hMutex = NULL;
     CPalThread *pthr = NULL;
@@ -461,9 +461,9 @@ See MSDN doc.
 
 HANDLE
 OpenMutexW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        DWORD dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hMutex = NULL;
     PAL_ERROR palError = NO_ERROR;

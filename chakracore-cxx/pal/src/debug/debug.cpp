@@ -134,9 +134,9 @@ usually maps to a kernel API to flush the D-caches on all processors.
 --*/
 BOOL
 FlushInstructionCache(
-        IN HANDLE hProcess,
-        IN LPCVOID lpBaseAddress,
-        IN SIZE_T dwSize)
+         HANDLE hProcess,
+         LPCVOID lpBaseAddress,
+         SIZE_T dwSize)
 {
     BOOL Ret;
 
@@ -167,7 +167,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringA(
-        IN LPCSTR lpOutputString)
+         LPCSTR lpOutputString)
 {
     PERF_ENTRY(OutputDebugStringA);
     ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
@@ -194,7 +194,7 @@ See MSDN doc.
 --*/
 void
 OutputDebugStringW(
-        IN LPCWSTR lpOutputString)
+         LPCWSTR lpOutputString)
 {
     CHAR *lpOutputStringA;
     int strLen;
@@ -435,8 +435,8 @@ See MSDN doc.
 --*/
 BOOL
 GetThreadContext(
-           IN HANDLE hThread,
-           IN OUT LPCONTEXT lpContext)
+            HANDLE hThread,
+            OUT LPCONTEXT lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -496,8 +496,8 @@ See MSDN doc.
 --*/
 BOOL
 SetThreadContext(
-           IN HANDLE hThread,
-           IN const CONTEXT *lpContext)
+            HANDLE hThread,
+            const CONTEXT *lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -555,10 +555,10 @@ See MSDN doc.
 --*/
 BOOL
 ReadProcessMemory(
-           IN HANDLE hProcess,
-           IN LPCVOID lpBaseAddress,
-           IN LPVOID lpBuffer,
-           IN SIZE_T nSize,
+            HANDLE hProcess,
+            LPCVOID lpBaseAddress,
+            LPVOID lpBuffer,
+            SIZE_T nSize,
            OUT SIZE_T * lpNumberOfBytesRead
            )
 {
@@ -844,10 +844,10 @@ See MSDN doc.
 --*/
 BOOL
 WriteProcessMemory(
-           IN HANDLE hProcess,
-           IN LPVOID lpBaseAddress,
-           IN LPCVOID lpBuffer,
-           IN SIZE_T nSize,
+            HANDLE hProcess,
+            LPVOID lpBaseAddress,
+            LPCVOID lpBuffer,
+            SIZE_T nSize,
            OUT SIZE_T * lpNumberOfBytesWritten
            )
 
@@ -1145,9 +1145,9 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_Int(IN DWORD processId,
-                    IN int *addr,
-                    IN int data)
+DBGWriteProcMem_Int( DWORD processId,
+                     int *addr,
+                     int data)
 {
     if (PAL_PTRACE( PAL_PT_WRITE_D, processId, addr, data ) == -1)
     {
@@ -1187,10 +1187,10 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_IntWithMask(IN DWORD processId,
-                            IN int *addr,
-                            IN int data,
-                            IN unsigned int mask )
+DBGWriteProcMem_IntWithMask( DWORD processId,
+                             int *addr,
+                             int data,
+                             unsigned int mask )
 {
     int readInt;
 

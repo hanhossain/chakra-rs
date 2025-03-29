@@ -65,9 +65,9 @@ See MSDN doc.
 --*/
 void
 RtlMoveMemory(
-          IN PVOID Destination,
-          IN const void *Source,
-          IN SIZE_T Length)
+           PVOID Destination,
+           const void *Source,
+           SIZE_T Length)
 {
     PERF_ENTRY(RtlMoveMemory);
     ENTRY("RtlMoveMemory(Destination:%p, Source:%p, Length:%d)\n",
@@ -108,9 +108,9 @@ See MSDN doc.
 --*/
 HANDLE
 HeapCreate(
-	       IN DWORD flOptions,
-	       IN SIZE_T dwInitialSize,
-	       IN SIZE_T dwMaximumSize)
+	        DWORD flOptions,
+	        SIZE_T dwInitialSize,
+	        SIZE_T dwMaximumSize)
 {
     HANDLE ret = INVALID_HANDLE_VALUE;
     PERF_ENTRY(HeapCreate);
@@ -207,9 +207,9 @@ See MSDN doc.
 --*/
 LPVOID
 HeapAlloc(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN SIZE_T numberOfBytes)
+     HANDLE hHeap,
+     DWORD dwFlags,
+     SIZE_T numberOfBytes)
 {
     BYTE *pMem;
 
@@ -280,9 +280,9 @@ See MSDN doc.
 --*/
 BOOL
 HeapFree(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN LPVOID lpMem)
+     HANDLE hHeap,
+     DWORD dwFlags,
+     LPVOID lpMem)
 {
     BOOL bRetVal = FALSE;
 
@@ -342,10 +342,10 @@ See MSDN doc.
 --*/
 LPVOID
 HeapReAlloc(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN LPVOID lpmem,
-    IN SIZE_T numberOfBytes)
+     HANDLE hHeap,
+     DWORD dwFlags,
+     LPVOID lpmem,
+     SIZE_T numberOfBytes)
 {
     BYTE *pMem = NULL;
 
@@ -410,10 +410,10 @@ done:
 
 BOOL
 HeapSetInformation(
-        IN OPTIONAL HANDLE HeapHandle,
-        IN HEAP_INFORMATION_CLASS HeapInformationClass,
-        IN PVOID HeapInformation,
-        IN SIZE_T HeapInformationLength)
+         OPTIONAL HANDLE HeapHandle,
+         HEAP_INFORMATION_CLASS HeapInformationClass,
+         PVOID HeapInformation,
+         SIZE_T HeapInformationLength)
 {
     return TRUE;
 }

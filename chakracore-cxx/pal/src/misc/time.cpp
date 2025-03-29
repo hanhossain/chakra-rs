@@ -283,7 +283,7 @@ failure.
 
 BOOL
 QueryThreadCycleTime(
-    IN HANDLE ThreadHandle,
+     HANDLE ThreadHandle,
     OUT PULONG64 CycleTime
     )
 {

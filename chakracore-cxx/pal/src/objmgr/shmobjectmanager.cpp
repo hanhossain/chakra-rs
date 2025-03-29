@@ -1184,7 +1184,7 @@ Parameters:
 --*/
 
 RHANDLE
-PAL_LocalHandleToRemote(IN HANDLE hLocal)
+PAL_LocalHandleToRemote( HANDLE hLocal)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr;
@@ -1471,7 +1471,7 @@ Parameters:
 --*/
 
 HANDLE
-PAL_RemoteHandleToLocal(IN RHANDLE rhRemote)
+PAL_RemoteHandleToLocal( RHANDLE rhRemote)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr;

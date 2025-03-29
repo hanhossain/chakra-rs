@@ -49,8 +49,8 @@ See MSDN doc.
 --*/
 BOOL
 CreateDirectoryW(
-         IN LPCWSTR lpPathName,
-         IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+          LPCWSTR lpPathName,
+          LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
     DWORD dwLastError = 0;
@@ -184,7 +184,7 @@ See MSDN doc.
 --*/
 BOOL
 RemoveDirectoryA(
-         IN LPCSTR lpPathName)
+          LPCSTR lpPathName)
 {
     DWORD dwLastError = 0;
     BOOL  bRet = FALSE;
@@ -241,7 +241,7 @@ See MSDN doc.
 --*/
 BOOL
 RemoveDirectoryW(
-         IN LPCWSTR lpPathName)
+          LPCWSTR lpPathName)
 {
     PathCharString mb_dirPathString;
     int   mb_size;
@@ -314,7 +314,7 @@ See MSDN doc.
 --*/
 DWORD
 GetCurrentDirectoryA(
-             IN DWORD nBufferLength,
+              DWORD nBufferLength,
              OUT LPSTR lpBuffer)
 {
     DWORD dwDirLen = 0;
@@ -371,7 +371,7 @@ See MSDN doc.
 --*/
 DWORD
 GetCurrentDirectoryW(
-             IN DWORD nBufferLength,
+              DWORD nBufferLength,
              OUT LPWSTR lpBuffer)
 {
     DWORD dwWideLen = 0;
@@ -437,7 +437,7 @@ See MSDN doc.
 --*/
 BOOL
 SetCurrentDirectoryW(
-            IN LPCWSTR lpPathName)
+             LPCWSTR lpPathName)
 {
     BOOL bRet;
     DWORD dwLastError = 0;
@@ -514,8 +514,8 @@ See MSDN doc.
 --*/
 BOOL
 CreateDirectoryA(
-         IN LPCSTR lpPathName,
-         IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+          LPCSTR lpPathName,
+          LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
     DWORD dwLastError = 0;
@@ -650,7 +650,7 @@ See MSDN doc.
 --*/
 BOOL
 SetCurrentDirectoryA(
-            IN LPCSTR lpPathName)
+             LPCSTR lpPathName)
 {
     BOOL bRet = FALSE;
     DWORD dwLastError = 0;

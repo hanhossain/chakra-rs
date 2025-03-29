@@ -52,8 +52,8 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-WaitForSingleObject(IN HANDLE hHandle,
-                    IN DWORD dwMilliseconds)
+WaitForSingleObject( HANDLE hHandle,
+                     DWORD dwMilliseconds)
 {
     DWORD dwRet;
 
@@ -79,9 +79,9 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-WaitForSingleObjectEx(IN HANDLE hHandle,
-                      IN DWORD dwMilliseconds,
-                      IN BOOL bAlertable)
+WaitForSingleObjectEx( HANDLE hHandle,
+                       DWORD dwMilliseconds,
+                       BOOL bAlertable)
 {
     DWORD dwRet;
 
@@ -108,10 +108,10 @@ See MSDN doc.
 
 --*/
 DWORD
-WaitForMultipleObjects(IN DWORD nCount,
-                       IN const HANDLE *lpHandles,
-                       IN BOOL bWaitAll,
-                       IN DWORD dwMilliseconds)
+WaitForMultipleObjects( DWORD nCount,
+                        const HANDLE *lpHandles,
+                        BOOL bWaitAll,
+                        DWORD dwMilliseconds)
 {
     DWORD dwRet;
 
@@ -137,11 +137,11 @@ Function:
 See MSDN doc for info about this function.
 --*/
 DWORD
-WaitForMultipleObjectsEx(IN DWORD nCount,
-                         IN const HANDLE *lpHandles,
-                         IN BOOL bWaitAll,
-                         IN DWORD dwMilliseconds,
-                         IN BOOL bAlertable)
+WaitForMultipleObjectsEx( DWORD nCount,
+                          const HANDLE *lpHandles,
+                          BOOL bWaitAll,
+                          DWORD dwMilliseconds,
+                          BOOL bAlertable)
 {
     DWORD dwRet;
 
@@ -167,7 +167,7 @@ Function:
 See MSDN doc.
 --*/
 void
-Sleep(IN DWORD dwMilliseconds)
+Sleep( DWORD dwMilliseconds)
 {
     PERF_ENTRY(Sleep);
     ENTRY("Sleep(dwMilliseconds=%u)\n", dwMilliseconds);
@@ -195,8 +195,8 @@ Function:
 See MSDN doc.
 --*/
 DWORD
-SleepEx(IN DWORD dwMilliseconds,
-        IN BOOL bAlertable)
+SleepEx( DWORD dwMilliseconds,
+         BOOL bAlertable)
 {
     DWORD dwRet;
 

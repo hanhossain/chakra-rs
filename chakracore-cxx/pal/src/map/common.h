@@ -31,7 +31,7 @@ extern "C"
  * W32toUnixAccessControl( DWORD ) - Maps Win32 to Unix memory access controls .
  *
  */
-INT W32toUnixAccessControl( IN DWORD flProtect );
+INT W32toUnixAccessControl(  DWORD flProtect );
 
 #ifdef __cplusplus
 }

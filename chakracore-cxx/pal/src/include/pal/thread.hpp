@@ -112,7 +112,7 @@ namespace CorUnix
 
     BOOL
     GetThreadTimesInternal(
-        IN HANDLE hThread,
+         HANDLE hThread,
         OUT LPFILETIME lpKernelTime,
         OUT LPFILETIME lpUserTime);
 

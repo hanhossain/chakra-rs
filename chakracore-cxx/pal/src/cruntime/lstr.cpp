@@ -47,8 +47,8 @@ If the function fails, the return value is NULL.
 --*/
 LPWSTR
 lstrcatW(
-	 IN OUT LPWSTR lpString1,
-	 IN LPCWSTR lpString2)
+	  OUT LPWSTR lpString1,
+	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
 
@@ -119,7 +119,7 @@ If the function fails, the return value is NULL.
 LPWSTR
 lstrcpyW(
 	 OUT LPWSTR lpString1,
-	 IN LPCWSTR lpString2)
+	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
 
@@ -179,7 +179,7 @@ Unicode versions.
 
 --*/
 int
-lstrlenA( IN LPCSTR lpString)
+lstrlenA(  LPCSTR lpString)
 {
     int nChar = 0;
 
@@ -219,7 +219,7 @@ Unicode versions.
 --*/
 int
 lstrlenW(
-	 IN LPCWSTR lpString)
+	  LPCWSTR lpString)
 {
     int nChar = 0;
 
@@ -265,8 +265,8 @@ If the function fails, the return value is NULL.
 LPWSTR
 lstrcpynW(
 	  OUT LPWSTR lpString1,
-	  IN LPCWSTR lpString2,
-	  IN int iMaxLength)
+	   LPCWSTR lpString2,
+	   int iMaxLength)
 {
     LPWSTR lpStart = lpString1;
 

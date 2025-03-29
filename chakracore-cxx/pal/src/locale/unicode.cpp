@@ -174,7 +174,7 @@ CODEPAGEGetData
     Returns a pointer to structure, NULL otherwise.
 --*/
 const CP_MAPPING *
-CODEPAGEGetData( IN UINT CodePage )
+CODEPAGEGetData(  UINT CodePage )
 {
     UINT nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
     UINT nIndex = 0;
@@ -238,7 +238,7 @@ See MSDN doc.
 --*/
 LPSTR
 CharNextA(
-  IN LPCSTR lpsz)
+   LPCSTR lpsz)
 {
     LPSTR pRet;
     PERF_ENTRY(CharNextA);
@@ -260,9 +260,9 @@ See MSDN doc.
 --*/
 LPSTR
 CharNextExA(
-    IN WORD CodePage,
-    IN LPCSTR lpCurrentChar,
-    IN DWORD dwFlags)
+     WORD CodePage,
+     LPCSTR lpCurrentChar,
+     DWORD dwFlags)
 {
     LPSTR pRet = (LPSTR) lpCurrentChar;
 
@@ -369,7 +369,7 @@ Note : CP_UTF7 support isn't required for Rotor
 --*/
 BOOL
 IsValidCodePage(
-    IN UINT CodePage)
+     UINT CodePage)
 {
     BOOL retval = FALSE;
 
@@ -412,10 +412,10 @@ See MSDN doc.
 --*/
 BOOL
 GetStringTypeExW(
-     IN LCID Locale,
-     IN DWORD dwInfoType,
-     IN LPCWSTR lpSrcStr,
-     IN int cchSrc,
+      LCID Locale,
+      DWORD dwInfoType,
+      LPCWSTR lpSrcStr,
+      int cchSrc,
      OUT LPWORD lpCharType)
 {
 
@@ -520,7 +520,7 @@ See MSDN doc.
 --*/
 BOOL
 GetCPInfo(
-  IN UINT CodePage,
+   UINT CodePage,
   OUT LPCPINFO lpCPInfo)
 {
     const CP_MAPPING * lpStruct = NULL;
@@ -592,8 +592,8 @@ See MSDN doc.
 --*/
 BOOL
 IsDBCSLeadByteEx(
-     IN UINT CodePage,
-     IN BYTE TestChar)
+      UINT CodePage,
+      BYTE TestChar)
 {
     CPINFO cpinfo;
     SIZE_T i;
@@ -638,7 +638,7 @@ See MSDN doc.
 --*/
 BOOL
 IsDBCSLeadByte(
-        IN BYTE TestChar)
+         BYTE TestChar)
 {
     // UNIXTODO: Implement this!
     ERROR("Needs Implementation!!!");
@@ -654,12 +654,12 @@ See MSDN doc.
 --*/
 int
 MultiByteToWideChar(
-        IN UINT CodePage,
-        IN DWORD dwFlags,
-        IN LPCSTR lpMultiByteStr,
-        IN int cbMultiByte,
+         UINT CodePage,
+         DWORD dwFlags,
+         LPCSTR lpMultiByteStr,
+         int cbMultiByte,
         OUT LPWSTR lpWideCharStr,
-        IN int cchWideChar)
+         int cchWideChar)
 {
     INT retval =0;
 #if HAVE_COREFOUNDATION
@@ -780,13 +780,13 @@ See MSDN doc.
 --*/
 int
 WideCharToMultiByte(
-        IN UINT CodePage,
-        IN DWORD dwFlags,
-        IN LPCWSTR lpWideCharStr,
-        IN int cchWideChar,
+         UINT CodePage,
+         DWORD dwFlags,
+         LPCWSTR lpWideCharStr,
+         int cchWideChar,
         OUT LPSTR lpMultiByteStr,
-        IN int cbMultiByte,
-        IN LPCSTR lpDefaultChar,
+         int cbMultiByte,
+         LPCSTR lpDefaultChar,
         OUT LPBOOL lpUsedDefaultChar)
 {
     INT retval =0;
@@ -952,10 +952,10 @@ Returns number of characters retrieved, 0 if it failed.
 --*/
 int
 PAL_GetResourceString(
-        IN LPCSTR lpDomain,
-        IN LPCSTR lpResourceStr,
+         LPCSTR lpDomain,
+         LPCSTR lpResourceStr,
         OUT LPWSTR lpWideCharStr,
-        IN int cchWideChar
+         int cchWideChar
       )
 {
 #if !defined(__APPLE__) && !defined(__ANDROID__)

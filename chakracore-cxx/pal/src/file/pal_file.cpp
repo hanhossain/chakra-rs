@@ -901,13 +901,13 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileA(
-        IN LPCSTR lpFileName,
-        IN DWORD dwDesiredAccess,
-        IN DWORD dwShareMode,
-        IN LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        IN DWORD dwCreationDisposition,
-        IN DWORD dwFlagsAndAttributes,
-        IN HANDLE hTemplateFile
+         LPCSTR lpFileName,
+         DWORD dwDesiredAccess,
+         DWORD dwShareMode,
+         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+         DWORD dwCreationDisposition,
+         DWORD dwFlagsAndAttributes,
+         HANDLE hTemplateFile
         )
 {
     CPalThread *pThread;
@@ -963,13 +963,13 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileW(
-        IN LPCWSTR lpFileName,
-        IN DWORD dwDesiredAccess,
-        IN DWORD dwShareMode,
-        IN LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        IN DWORD dwCreationDisposition,
-        IN DWORD dwFlagsAndAttributes,
-        IN HANDLE hTemplateFile)
+         LPCWSTR lpFileName,
+         DWORD dwDesiredAccess,
+         DWORD dwShareMode,
+         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+         DWORD dwCreationDisposition,
+         DWORD dwFlagsAndAttributes,
+         HANDLE hTemplateFile)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -1061,9 +1061,9 @@ and will have a much better idea of the specific error.
 --*/
 BOOL
 CopyFileW(
-      IN LPCWSTR lpExistingFileName,
-      IN LPCWSTR lpNewFileName,
-      IN BOOL bFailIfExists)
+       LPCWSTR lpExistingFileName,
+       LPCWSTR lpNewFileName,
+       BOOL bFailIfExists)
 {
     CPalThread *pThread;
     PathCharString sourcePathString;
@@ -1162,7 +1162,7 @@ See MSDN doc.
 --*/
 BOOL
 DeleteFileA(
-        IN LPCSTR lpFileName)
+         LPCSTR lpFileName)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -1252,7 +1252,7 @@ See MSDN doc.
 --*/
 BOOL
 DeleteFileW(
-        IN LPCWSTR lpFileName)
+         LPCWSTR lpFileName)
 {
     CPalThread *pThread;
     int  size;
@@ -1318,8 +1318,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileA(
-     IN LPCSTR lpExistingFileName,
-     IN LPCSTR lpNewFileName)
+      LPCSTR lpExistingFileName,
+      LPCSTR lpNewFileName)
 {
     BOOL bRet;
 
@@ -1348,8 +1348,8 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileW(
-     IN LPCWSTR lpExistingFileName,
-     IN LPCWSTR lpNewFileName)
+      LPCWSTR lpExistingFileName,
+      LPCWSTR lpNewFileName)
 {
     BOOL bRet;
 
@@ -1377,9 +1377,9 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileExA(
-        IN LPCSTR lpExistingFileName,
-        IN LPCSTR lpNewFileName,
-        IN DWORD dwFlags)
+         LPCSTR lpExistingFileName,
+         LPCSTR lpNewFileName,
+         DWORD dwFlags)
 {
     CPalThread *pThread;
     int   result;
@@ -1550,9 +1550,9 @@ See MSDN doc.
 --*/
 BOOL
 MoveFileExW(
-        IN LPCWSTR lpExistingFileName,
-        IN LPCWSTR lpNewFileName,
-        IN DWORD dwFlags)
+         LPCWSTR lpExistingFileName,
+         LPCWSTR lpNewFileName,
+         DWORD dwFlags)
 {
     CPalThread *pThread;
     PathCharString sourcePS;
@@ -1669,7 +1669,7 @@ FILE_ATTRIBUTE_HIDDEN
 --*/
 DWORD
 GetFileAttributesA(
-           IN LPCSTR lpFileName)
+            LPCSTR lpFileName)
 {
     CPalThread *pThread;
     struct stat stat_data;
@@ -1757,7 +1757,7 @@ See MSDN doc.
 --*/
 DWORD
 GetFileAttributesW(
-           IN LPCWSTR lpFileName)
+            LPCWSTR lpFileName)
 {
     CPalThread *pThread;
     int   size;
@@ -1820,8 +1820,8 @@ See MSDN doc, and notes for GetFileAttributesW.
 --*/
 BOOL
 GetFileAttributesExW(
-             IN LPCWSTR lpFileName,
-             IN GET_FILEEX_INFO_LEVELS fInfoLevelId,
+              LPCWSTR lpFileName,
+              GET_FILEEX_INFO_LEVELS fInfoLevelId,
              OUT LPVOID lpFileInformation)
 {
     CPalThread *pThread;
@@ -1947,8 +1947,8 @@ Notes:
 --*/
 BOOL
 SetFileAttributesW(
-           IN LPCWSTR lpFileName,
-           IN DWORD dwFileAttributes)
+            LPCWSTR lpFileName,
+            DWORD dwFileAttributes)
 {
     CPalThread *pThread;
     char * name;
@@ -2192,11 +2192,11 @@ See MSDN doc.
 --*/
 BOOL
 WriteFile(
-      IN HANDLE hFile,
-      IN LPCVOID lpBuffer,
-      IN DWORD nNumberOfBytesToWrite,
+       HANDLE hFile,
+       LPCVOID lpBuffer,
+       DWORD nNumberOfBytesToWrite,
       OUT LPDWORD lpNumberOfBytesWritten,
-      IN LPOVERLAPPED lpOverlapped)
+       LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -2415,11 +2415,11 @@ See MSDN doc.
 --*/
 BOOL
 ReadFile(
-     IN HANDLE hFile,
+      HANDLE hFile,
      OUT LPVOID lpBuffer,
-     IN DWORD nNumberOfBytesToRead,
+      DWORD nNumberOfBytesToRead,
      OUT LPDWORD lpNumberOfBytesRead,
-     IN LPOVERLAPPED lpOverlapped)
+      LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -2460,7 +2460,7 @@ See MSDN doc.
 --*/
 HANDLE
 GetStdHandle(
-         IN DWORD nStdHandle)
+          DWORD nStdHandle)
 {
     CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
@@ -2639,7 +2639,7 @@ See MSDN doc.
 --*/
 BOOL
 SetEndOfFile(
-         IN HANDLE hFile)
+          HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;;
@@ -2878,10 +2878,10 @@ See MSDN doc.
 --*/
 DWORD
 SetFilePointer(
-           IN HANDLE hFile,
-           IN LONG lDistanceToMove,
-           IN PLONG lpDistanceToMoveHigh,
-           IN DWORD dwMoveMethod)
+            HANDLE hFile,
+            LONG lDistanceToMove,
+            PLONG lpDistanceToMoveHigh,
+            DWORD dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -2935,10 +2935,10 @@ See MSDN doc.
 --*/
 BOOL
 SetFilePointerEx(
-           IN HANDLE hFile,
-           IN LARGE_INTEGER liDistanceToMove,
+            HANDLE hFile,
+            LARGE_INTEGER liDistanceToMove,
            OUT PLARGE_INTEGER lpNewFilePointer,
-           IN DWORD dwMoveMethod)
+            DWORD dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3075,7 +3075,7 @@ See MSDN doc.
 --*/
 DWORD
 GetFileSize(
-        IN HANDLE hFile,
+         HANDLE hFile,
         OUT LPDWORD lpFileSizeHigh)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -3113,7 +3113,7 @@ See MSDN doc.
 --*/
 BOOL
 GetFileSizeEx(
-IN   HANDLE hFile,
+   HANDLE hFile,
 OUT  PLARGE_INTEGER lpFileSize)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -3259,7 +3259,7 @@ See MSDN doc.
 --*/
 BOOL
 FlushFileBuffers(
-         IN HANDLE hFile)
+          HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3389,7 +3389,7 @@ See MSDN doc.
 --*/
 DWORD
 GetFileType(
-        IN HANDLE hFile)
+         HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3442,9 +3442,9 @@ static BOOL IsInitialized   = FALSE;
 
 UINT
 GetTempFileNameA(
-                 IN LPCSTR lpPathName,
-                 IN LPCSTR lpPrefixString,
-                 IN UINT   uUnique,
+                  LPCSTR lpPathName,
+                  LPCSTR lpPrefixString,
+                  UINT   uUnique,
                  OUT LPSTR lpTempFileName)
 {
     CPalThread *pThread;
@@ -3634,9 +3634,9 @@ uUnique is always 0.
 --*/
 UINT
 GetTempFileNameW(
-         IN LPCWSTR lpPathName,
-         IN LPCWSTR lpPrefixString,
-         IN UINT uUnique,
+          LPCWSTR lpPathName,
+          LPCWSTR lpPrefixString,
+          UINT uUnique,
          OUT LPWSTR lpTempFileName)
 {
     CPalThread *pThread;
@@ -3869,9 +3869,9 @@ and will have a much better idea of the specific error.
 --*/
 BOOL
 CopyFileA(
-      IN LPCSTR lpExistingFileName,
-      IN LPCSTR lpNewFileName,
-      IN BOOL bFailIfExists)
+       LPCSTR lpExistingFileName,
+       LPCSTR lpNewFileName,
+       BOOL bFailIfExists)
 {
     CPalThread *pThread;
     HANDLE       hSource = INVALID_HANDLE_VALUE;
@@ -4040,8 +4040,8 @@ Notes:
 --*/
 BOOL
 SetFileAttributesA(
-           IN LPCSTR lpFileName,
-           IN DWORD dwFileAttributes)
+            LPCSTR lpFileName,
+            DWORD dwFileAttributes)
 {
     CPalThread *pThread;
     struct stat stat_data;
@@ -4391,8 +4391,8 @@ BOOL
 CreatePipe(
         OUT PHANDLE hReadPipe,
         OUT PHANDLE hWritePipe,
-        IN LPSECURITY_ATTRIBUTES lpPipeAttributes,
-        IN DWORD nSize)
+         LPSECURITY_ATTRIBUTES lpPipeAttributes,
+         DWORD nSize)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -4891,7 +4891,7 @@ See MSDN doc.
 --*/
 BOOL
 GetFileInformationByHandle(
-             IN HANDLE hFile,
+              HANDLE hFile,
              OUT LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
 {
     CPalThread *pThread;

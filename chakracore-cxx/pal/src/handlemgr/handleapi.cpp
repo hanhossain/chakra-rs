@@ -54,13 +54,13 @@ PAL-specific behavior :
 --*/
 BOOL
 DuplicateHandle(
-        IN HANDLE hSourceProcessHandle,
-        IN HANDLE hSourceHandle,
-        IN HANDLE hTargetProcessHandle,
+         HANDLE hSourceProcessHandle,
+         HANDLE hSourceHandle,
+         HANDLE hTargetProcessHandle,
         OUT LPHANDLE lpTargetHandle,
-        IN DWORD dwDesiredAccess,
-        IN BOOL bInheritHandle,
-        IN DWORD dwOptions)
+         DWORD dwDesiredAccess,
+         BOOL bInheritHandle,
+         DWORD dwOptions)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -273,7 +273,7 @@ not required in the PAL, so we'll always return FALSE.
 --*/
 BOOL
 CloseHandle(
-        IN OUT HANDLE hObject)
+         OUT HANDLE hObject)
 {
     CPalThread *pThread;
     PAL_ERROR palError;

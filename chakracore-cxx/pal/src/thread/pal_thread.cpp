@@ -438,11 +438,11 @@ See MSDN doc.
 --*/
 HANDLE
 CreateThread(
-    IN LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    IN DWORD dwStackSize,
-    IN LPTHREAD_START_ROUTINE lpStartAddress,
-    IN LPVOID lpParameter,
-    IN DWORD dwCreationFlags,
+     LPSECURITY_ATTRIBUTES lpThreadAttributes,
+     DWORD dwStackSize,
+     LPTHREAD_START_ROUTINE lpStartAddress,
+     LPVOID lpParameter,
+     DWORD dwCreationFlags,
     OUT LPDWORD lpThreadId)
 {
     PAL_ERROR palError;
@@ -770,7 +770,7 @@ See MSDN doc.
 __attribute__((noreturn))
 void
 ExitThread(
-       IN DWORD dwExitCode)
+        DWORD dwExitCode)
 {
     CPalThread *pThread;
 
@@ -898,7 +898,7 @@ See MSDN doc.
 --*/
 int
 GetThreadPriority(
-          IN HANDLE hThread)
+           HANDLE hThread)
 {
     CPalThread *pThread;
     PAL_ERROR palError;
@@ -975,8 +975,8 @@ See MSDN doc.
 --*/
 BOOL
 SetThreadPriority(
-          IN HANDLE hThread,
-          IN int nPriority)
+           HANDLE hThread,
+           int nPriority)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -1190,7 +1190,7 @@ InternalSetThreadPriorityExit:
 
 BOOL
 CorUnix::GetThreadTimesInternal(
-    IN HANDLE hThread,
+     HANDLE hThread,
     OUT LPFILETIME lpKernelTime,
     OUT LPFILETIME lpUserTime)
 {
@@ -2372,8 +2372,8 @@ Return value:
 --*/
 void
 PAL_SetActivationFunction(
-    IN PAL_ActivationFunction pActivationFunction,
-    IN PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)
+     PAL_ActivationFunction pActivationFunction,
+     PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)
 {
     g_activationFunction = pActivationFunction;
     g_safeActivationCheckFunction = pSafeActivationCheckFunction;

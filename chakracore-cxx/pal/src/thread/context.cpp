@@ -1405,7 +1405,7 @@ Function:
 kern_return_t
 CONTEXT_SetThreadContextOnPort(
            mach_port_t Port,
-           IN const CONTEXT *lpContext)
+            const CONTEXT *lpContext)
 {
     kern_return_t MachRet = KERN_SUCCESS;
     mach_msg_type_number_t StateCount;
@@ -1624,8 +1624,8 @@ See MSDN doc.
 --*/
 BOOL
 DBG_FlushInstructionCache(
-                          IN LPCVOID lpBaseAddress,
-                          IN SIZE_T dwSize)
+                           LPCVOID lpBaseAddress,
+                           SIZE_T dwSize)
 {
 #if defined(__linux__) && defined(_ARM_)
     // On Linux/arm (at least on 3.10) we found that there is a problem with __do_cache_op (arch/arm/kernel/traps.c)

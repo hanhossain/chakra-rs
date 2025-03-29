@@ -275,12 +275,12 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileMappingA(
-                   IN HANDLE hFile,
-                   IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                   IN DWORD flProtect,
-                   IN DWORD dwMaximumSizeHigh,
-                   IN DWORD dwMaximumSizeLow,
-                   IN LPCSTR lpName)
+                    HANDLE hFile,
+                    LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+                    DWORD flProtect,
+                    DWORD dwMaximumSizeHigh,
+                    DWORD dwMaximumSizeLow,
+                    LPCSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -341,12 +341,12 @@ See MSDN doc.
 --*/
 HANDLE
 CreateFileMappingW(
-               IN HANDLE hFile,
-               IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-               IN DWORD flProtect,
-               IN DWORD dwMaximumSizeHigh,
-               IN DWORD dwMaximumSizeLow,
-               IN LPCWSTR lpName)
+                HANDLE hFile,
+                LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+                DWORD flProtect,
+                DWORD dwMaximumSizeHigh,
+                DWORD dwMaximumSizeLow,
+                LPCWSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -770,9 +770,9 @@ See MSDN doc.
 --*/
 HANDLE
 OpenFileMappingA(
-         IN DWORD dwDesiredAccess,
-         IN BOOL bInheritHandle,
-         IN LPCSTR lpName)
+          DWORD dwDesiredAccess,
+          BOOL bInheritHandle,
+          LPCSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -813,9 +813,9 @@ See MSDN doc.
 --*/
 HANDLE
 OpenFileMappingW(
-         IN DWORD dwDesiredAccess,
-         IN BOOL bInheritHandle,
-         IN LPCWSTR lpName)
+          DWORD dwDesiredAccess,
+          BOOL bInheritHandle,
+          LPCWSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -936,11 +936,11 @@ See MSDN doc.
 --*/
 LPVOID
 MapViewOfFile(
-          IN HANDLE hFileMappingObject,
-          IN DWORD dwDesiredAccess,
-          IN DWORD dwFileOffsetHigh,
-          IN DWORD dwFileOffsetLow,
-          IN SIZE_T dwNumberOfBytesToMap)
+           HANDLE hFileMappingObject,
+           DWORD dwDesiredAccess,
+           DWORD dwFileOffsetHigh,
+           DWORD dwFileOffsetLow,
+           SIZE_T dwNumberOfBytesToMap)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -976,12 +976,12 @@ MapViewOfFile(
 
 LPVOID
 MapViewOfFileEx(
-          IN HANDLE hFileMappingObject,
-          IN DWORD dwDesiredAccess,
-          IN DWORD dwFileOffsetHigh,
-          IN DWORD dwFileOffsetLow,
-          IN SIZE_T dwNumberOfBytesToMap,
-          IN LPVOID lpBaseAddress)
+           HANDLE hFileMappingObject,
+           DWORD dwDesiredAccess,
+           DWORD dwFileOffsetHigh,
+           DWORD dwFileOffsetLow,
+           SIZE_T dwNumberOfBytesToMap,
+           LPVOID lpBaseAddress)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -1031,8 +1031,8 @@ See MSDN doc.
 --*/
 BOOL
 FlushViewOfFile(
-    IN LPVOID lpBaseAddress,
-    IN SIZE_T dwNumberOfBytesToFlush)
+     LPVOID lpBaseAddress,
+     SIZE_T dwNumberOfBytesToFlush)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -1104,7 +1104,7 @@ See MSDN doc.
 --*/
 BOOL
 UnmapViewOfFile(
-        IN LPCVOID lpBaseAddress)
+         LPCVOID lpBaseAddress)
 {
     PAL_ERROR palError;
     CPalThread *pThread;

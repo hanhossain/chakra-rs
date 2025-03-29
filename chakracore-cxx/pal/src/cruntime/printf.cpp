@@ -288,7 +288,7 @@ __attribute__((no_instrument_function))
 int
 wsprintfA(
       OUT LPSTR buffer,
-      IN LPCSTR format,
+       LPCSTR format,
       ...)
 {
     LONG Length;
@@ -316,7 +316,7 @@ __attribute__((no_instrument_function))
 int
 wsprintfW(
       OUT LPWSTR buffer,
-      IN LPCWSTR format,
+       LPCWSTR format,
       ...)
 {
     LONG Length;

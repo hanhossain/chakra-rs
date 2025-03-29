@@ -55,7 +55,7 @@ The return value is the previous state of the error-mode bit flags.
 --*/
 UINT
 SetErrorMode(
-         IN UINT uMode)
+          UINT uMode)
 {
   PERF_ENTRY(SetErrorMode);
   ENTRY("SetErrorMode (uMode=%#x)\n", uMode);
@@ -117,7 +117,7 @@ This function does not return a value.
 --*/
 void
 SetLastError(
-         IN DWORD dwErrCode)
+          DWORD dwErrCode)
 {
     CPalThread::SetLastError(dwErrCode);
 }

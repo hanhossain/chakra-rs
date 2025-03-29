@@ -1278,7 +1278,7 @@ CommonNumber:
     // ToUInt16() converts the given Var to a UInt16 value, as described in
     // (ES3.0: S9.6).
     //----------------------------------------------------------------------------
-    uint16 JavascriptConversion::ToUInt16_Full(IN  Var aValue, ScriptContext* scriptContext)
+    uint16 JavascriptConversion::ToUInt16_Full(  Var aValue, ScriptContext* scriptContext)
     {
         AssertMsg(!TaggedInt::Is(aValue), "Should be detected");
         ScriptContext * objectScriptContext = VarIs<RecyclableObject>(aValue) ? UnsafeVarTo<RecyclableObject>(aValue)->GetScriptContext() : nullptr;

@@ -52,8 +52,8 @@ See MSDN doc.
 --*/
 DWORD
 GetFullPathNameA(
-     IN LPCSTR lpFileName,
-     IN DWORD nBufferLength,
+      LPCSTR lpFileName,
+      DWORD nBufferLength,
      OUT LPSTR lpBuffer,
      OUT LPSTR *lpFilePart)
 {
@@ -186,8 +186,8 @@ See MSDN doc.
 --*/
 DWORD
 GetFullPathNameW(
-     IN LPCWSTR lpFileName,
-     IN DWORD nBufferLength,
+      LPCWSTR lpFileName,
+      DWORD nBufferLength,
      OUT LPWSTR lpBuffer,
      OUT LPWSTR *lpFilePart)
 {
@@ -313,9 +313,9 @@ Note:
 --*/
 DWORD
 GetLongPathNameW(
-		 IN LPCWSTR lpszShortPath,
+		  LPCWSTR lpszShortPath,
          OUT LPWSTR lpszLongPath,
-  		 IN DWORD cchBuffer)
+  		  DWORD cchBuffer)
 {
     DWORD dwPathLen = 0;
 
@@ -384,9 +384,9 @@ Note:
 --*/
 DWORD
 GetShortPathNameW(
-		 IN LPCWSTR lpszLongPath,
+		  LPCWSTR lpszLongPath,
          OUT LPWSTR lpszShortPath,
-  		 IN DWORD cchBuffer)
+  		  DWORD cchBuffer)
 {
     DWORD dwPathLen = 0;
 
@@ -462,7 +462,7 @@ Notes:
 --*/
 DWORD
 GetTempPathA(
-	     IN DWORD nBufferLength,
+	      DWORD nBufferLength,
 	     OUT LPSTR lpBuffer)
 {
     DWORD dwPathLen = 0;
@@ -556,7 +556,7 @@ See also the comment for GetTempPathA.
 --*/
 DWORD
 GetTempPathW(
-	     IN DWORD nBufferLength,
+	      DWORD nBufferLength,
 	     OUT LPWSTR lpBuffer)
 {
     PERF_ENTRY(GetTempPathW);
@@ -1084,10 +1084,10 @@ PAL-specific notes :
 --*/
 DWORD
 SearchPathA(
-    IN LPCSTR lpPath,
-    IN LPCSTR lpFileName,
-    IN LPCSTR lpExtension,
-    IN DWORD nBufferLength,
+     LPCSTR lpPath,
+     LPCSTR lpFileName,
+     LPCSTR lpExtension,
+     DWORD nBufferLength,
     OUT LPSTR lpBuffer,
     OUT LPSTR *lpFilePart
     )
@@ -1352,10 +1352,10 @@ PAL-specific notes :
 --*/
 DWORD
 SearchPathW(
-    IN LPCWSTR lpPath,
-    IN LPCWSTR lpFileName,
-    IN LPCWSTR lpExtension,
-    IN DWORD nBufferLength,
+     LPCWSTR lpPath,
+     LPCWSTR lpFileName,
+     LPCWSTR lpExtension,
+     DWORD nBufferLength,
     OUT LPWSTR lpBuffer,
     OUT LPWSTR *lpFilePart
     )
@@ -1624,7 +1624,7 @@ See MSDN doc.
 --*/
 LPWSTR
 PathFindFileNameW(
-    IN LPCWSTR pPath
+     LPCWSTR pPath
     )
 {
     PERF_ENTRY(PathFindFileNameW);

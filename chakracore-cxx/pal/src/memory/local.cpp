@@ -29,7 +29,7 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
 static
 int
-AllocFlagsToHeapAllocFlags (IN  UINT  AllocFlags,
+AllocFlagsToHeapAllocFlags (  UINT  AllocFlags,
                        OUT PUINT pHeapallocFlags)
 {
     int success = 1;
@@ -59,8 +59,8 @@ See MSDN doc.
 --*/
 HLOCAL
 LocalAlloc(
-	   IN UINT uFlags,
-	   IN SIZE_T uBytes)
+	    UINT uFlags,
+	    SIZE_T uBytes)
 {
     LPVOID lpRetVal = NULL;
     PERF_ENTRY(LocalAlloc);
@@ -86,9 +86,9 @@ See MSDN doc.
 --*/
 HLOCAL
 LocalReAlloc(
-       IN HLOCAL hMem,
-       IN SIZE_T uBytes,
-       IN UINT   uFlags)
+        HLOCAL hMem,
+        SIZE_T uBytes,
+        UINT   uFlags)
 {
     LPVOID lpRetVal = NULL;
     PERF_ENTRY(LocalReAlloc);
@@ -118,7 +118,7 @@ See MSDN doc.
 --*/
 HLOCAL
 LocalFree(
-	  IN HLOCAL hMem)
+	   HLOCAL hMem)
 {
     BOOL bRetVal = FALSE;
     PERF_ENTRY(LocalFree);
@@ -138,17 +138,17 @@ LocalFree(
     return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
 }
 
-extern "C" LPVOID CoTaskMemAlloc(IN SIZE_T cb)
+extern "C" LPVOID CoTaskMemAlloc( SIZE_T cb)
 {
     return HeapAlloc(GetProcessHeap(), 0, cb);
 }
 
-extern "C" LPVOID CoTaskMemRealloc(IN LPVOID pv, IN SIZE_T cb)
+extern "C" LPVOID CoTaskMemRealloc( LPVOID pv,  SIZE_T cb)
 {
     return HeapReAlloc(GetProcessHeap(), 0, pv, cb);
 }
 
-extern "C" void CoTaskMemFree(IN LPVOID pv)
+extern "C" void CoTaskMemFree( LPVOID pv)
 {
     HeapFree(GetProcessHeap(), 0, pv);
 }

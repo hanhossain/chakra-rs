@@ -344,15 +344,15 @@ See MSDN doc.
 --*/
 BOOL
 CreateProcessW(
-           IN LPCWSTR lpApplicationName,
-           IN LPWSTR lpCommandLine,
-           IN LPSECURITY_ATTRIBUTES lpProcessAttributes,
-           IN LPSECURITY_ATTRIBUTES lpThreadAttributes,
-           IN BOOL bInheritHandles,
-           IN DWORD dwCreationFlags,
-           IN LPVOID lpEnvironment,
-           IN LPCWSTR lpCurrentDirectory,
-           IN LPSTARTUPINFOW lpStartupInfo,
+            LPCWSTR lpApplicationName,
+            LPWSTR lpCommandLine,
+            LPSECURITY_ATTRIBUTES lpProcessAttributes,
+            LPSECURITY_ATTRIBUTES lpThreadAttributes,
+            BOOL bInheritHandles,
+            DWORD dwCreationFlags,
+            LPVOID lpEnvironment,
+            LPCWSTR lpCurrentDirectory,
+            LPSTARTUPINFOW lpStartupInfo,
            OUT LPPROCESS_INFORMATION lpProcessInformation)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1055,8 +1055,8 @@ See MSDN doc.
 --*/
 BOOL
 GetExitCodeProcess(
-    IN HANDLE hProcess,
-    IN LPDWORD lpExitCode)
+     HANDLE hProcess,
+     LPDWORD lpExitCode)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -1120,7 +1120,7 @@ See MSDN doc.
 __attribute__((noreturn))
 void
 ExitProcess(
-    IN UINT uExitCode)
+     UINT uExitCode)
 {
     DWORD old_terminator;
 
@@ -1195,8 +1195,8 @@ See MSDN doc.
 --*/
 BOOL
 TerminateProcess(
-    IN HANDLE hProcess,
-    IN UINT uExitCode)
+     HANDLE hProcess,
+     UINT uExitCode)
 {
     BOOL ret;
 
@@ -1334,7 +1334,7 @@ See MSDN doc.
 --*/
 BOOL
 GetProcessTimes(
-        IN HANDLE hProcess,
+         HANDLE hProcess,
         OUT LPFILETIME lpCreationTime,
         OUT LPFILETIME lpExitTime,
         OUT LPFILETIME lpKernelTime,

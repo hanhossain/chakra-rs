@@ -64,9 +64,9 @@ and its terminating null character.
 --*/
 DWORD
 GetEnvironmentVariableA(
-            IN LPCSTR lpName,
+             LPCSTR lpName,
             OUT LPSTR lpBuffer,
-            IN DWORD nSize)
+             DWORD nSize)
 {
     char  *value;
     DWORD dwRet = 0;
@@ -133,9 +133,9 @@ See MSDN doc.
 --*/
 DWORD
 GetEnvironmentVariableW(
-            IN LPCWSTR lpName,
+             LPCWSTR lpName,
             OUT LPWSTR lpBuffer,
-            IN DWORD nSize)
+             DWORD nSize)
 {
     CHAR *inBuff = NULL;
     CHAR *outBuff = NULL;
@@ -252,8 +252,8 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableW(
-            IN LPCWSTR lpName,
-            IN LPCWSTR lpValue)
+             LPCWSTR lpName,
+             LPCWSTR lpValue)
 {
     PCHAR name = NULL;
     PCHAR value = NULL;
@@ -491,7 +491,7 @@ be freed by calling FreeEnvironmentStrings.
 --*/
 BOOL
 FreeEnvironmentStringsW(
-            IN LPWSTR lpValue)
+             LPWSTR lpValue)
 {
     PERF_ENTRY(FreeEnvironmentStringsW);
     ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
@@ -516,7 +516,7 @@ See FreeEnvironmentStringsW.
 --*/
 BOOL
 FreeEnvironmentStringsA(
-            IN LPSTR lpValue)
+             LPSTR lpValue)
 {
     PERF_ENTRY(FreeEnvironmentStringsA);
     ENTRY("FreeEnvironmentStringsA(lpValue=%p (%s))\n", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
@@ -567,8 +567,8 @@ environment variables of other processes.
 --*/
 BOOL
 SetEnvironmentVariableA(
-			IN LPCSTR lpName,
-			IN LPCSTR lpValue)
+			 LPCSTR lpName,
+			 LPCSTR lpValue)
 {
 
     BOOL bRet = FALSE;

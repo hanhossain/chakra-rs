@@ -135,7 +135,7 @@ C_ASSERT(sizeof(ULONG) == 4);
 __inline
 HRESULT
 IntToSignedChar(
-    IN INT iOperand,
+     INT iOperand,
     OUT signed char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -156,7 +156,7 @@ IntToSignedChar(
 __inline
 HRESULT
 IntToUChar(
-    IN INT iOperand,
+     INT iOperand,
     OUT UCHAR* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -177,7 +177,7 @@ IntToUChar(
 __inline
 HRESULT
 LongToUChar(
-    IN LONG lOperand,
+     LONG lOperand,
     OUT UCHAR* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -202,7 +202,7 @@ LongToUChar(
 __forceinline
 HRESULT
 IntToChar(
-    IN INT iOperand,
+     INT iOperand,
     OUT CHAR* pch)
 {
 #ifdef _CHAR_UNSIGNED
@@ -218,7 +218,7 @@ IntToChar(
 __inline
 HRESULT
 IntToUShort(
-    IN INT iOperand,
+     INT iOperand,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -239,7 +239,7 @@ IntToUShort(
 __inline
 HRESULT
 IntToUInt(
-    IN INT iOperand,
+     INT iOperand,
     OUT UINT* puResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -260,7 +260,7 @@ IntToUInt(
 __inline
 HRESULT
 IntToULong(
-    IN INT iOperand,
+     INT iOperand,
     OUT ULONG* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -281,7 +281,7 @@ IntToULong(
 __inline
 HRESULT
 IntToULongLong(
-    IN INT iOperand,
+     INT iOperand,
     OUT ULONGLONG* pullResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -302,7 +302,7 @@ IntToULongLong(
 __inline
 HRESULT
 UIntToSignedChar(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT signed char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -323,7 +323,7 @@ UIntToSignedChar(
 __inline
 HRESULT
 UIntToUChar(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT UCHAR* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -353,7 +353,7 @@ UIntToUChar(
 __forceinline
 HRESULT
 UIntToChar(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT CHAR* pch)
 {
 #ifdef _CHAR_UNSIGNED
@@ -369,7 +369,7 @@ UIntToChar(
 __inline
 HRESULT
 UIntToInt(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT INT* piResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -390,7 +390,7 @@ UIntToInt(
 __inline
 HRESULT
 UIntToLong(
-    IN UINT Operand,
+     UINT Operand,
     OUT LONG* Result)
 {
     if (Operand <= LONG_MAX)
@@ -411,7 +411,7 @@ UIntToLong(
 __inline
 HRESULT
 UIntToULong(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT ULONG* pulResult)
 {
     *pulResult = (ULONG)uOperand;
@@ -425,7 +425,7 @@ UIntToULong(
 __inline
 HRESULT
 ULongToSignedChar(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT signed char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -446,7 +446,7 @@ ULongToSignedChar(
 __inline
 HRESULT
 ULongToUChar(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -471,7 +471,7 @@ ULongToUChar(
 __forceinline
 HRESULT
 ULongToChar(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT CHAR* pch)
 {
 #ifdef _CHAR_UNSIGNED
@@ -487,7 +487,7 @@ ULongToChar(
 __inline
 HRESULT
 ULongToUShort(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -508,7 +508,7 @@ ULongToUShort(
 __inline
 HRESULT
 ULongToInt(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT INT* piResult)
 {
     if (ulOperand <= INT_MAX)
@@ -529,7 +529,7 @@ ULongToInt(
 __inline
 HRESULT
 ULongToUInt(
-    IN ULONG ulOperand,
+     ULONG ulOperand,
     OUT UINT* puResult)
 {
     *puResult = (UINT)ulOperand;
@@ -543,7 +543,7 @@ ULongToUInt(
 __inline
 HRESULT
 ULongToLong(
-    IN ULONG Operand,
+     ULONG Operand,
     OUT LONG* Result)
 {
     if (Operand <= LONG_MAX)
@@ -564,7 +564,7 @@ ULongToLong(
 __inline
 HRESULT
 ULongLongToInt(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT INT* piResult)
 {
     if (ullOperand <= INT_MAX)
@@ -585,7 +585,7 @@ ULongLongToInt(
 __inline
 HRESULT
 ULongLongToLong(
-    IN ULONGLONG Operand,
+     ULONGLONG Operand,
     OUT LONG* Result)
 {
     if (Operand <= LONG_MAX)
@@ -606,7 +606,7 @@ ULongLongToLong(
 __inline
 HRESULT
 UIntToUShort(
-    IN UINT uOperand,
+     UINT uOperand,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -627,7 +627,7 @@ UIntToUShort(
 __inline
 HRESULT
 ULongLongToUShort(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -649,7 +649,7 @@ ULongLongToUShort(
 __inline
 HRESULT
 ULongLongToULong(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT ULONG* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -678,7 +678,7 @@ ULongLongToULong(
 __inline
 HRESULT
 UIntPtrToULong(
-    IN UINT_PTR Operand,
+     UINT_PTR Operand,
     OUT ULONG* pResult)
 {
     *pResult = (ULONG)Operand;
@@ -688,7 +688,7 @@ UIntPtrToULong(
 __inline
 HRESULT
 ULongPtrToULong(
-    IN ULONG_PTR Operand,
+     ULONG_PTR Operand,
     OUT ULONG* pResult)
 {
     *pResult = (ULONG)Operand;
@@ -703,7 +703,7 @@ ULongPtrToULong(
 __inline
 HRESULT
 ULongLongToUInt(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT UINT* puResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -732,7 +732,7 @@ ULongLongToUInt(
 __inline
 HRESULT
 UIntPtrToUInt(
-    IN UINT_PTR Operand,
+     UINT_PTR Operand,
     OUT UINT* pResult)
 {
     *pResult = (UINT)Operand;
@@ -742,7 +742,7 @@ UIntPtrToUInt(
 __inline
 HRESULT
 ULongPtrToUInt(
-    IN ULONG_PTR Operand,
+     ULONG_PTR Operand,
     OUT UINT* pResult)
 {
     *pResult = (UINT)Operand;
@@ -840,7 +840,7 @@ ULongPtrToUInt(
 __inline
 HRESULT
 IntToUIntPtr(
-    IN INT iOperand,
+     INT iOperand,
     OUT UINT_PTR* puResult)
 {
 	return IntToUInt(iOperand, (UINT*)puResult);
@@ -856,7 +856,7 @@ IntToUIntPtr(
 __inline
 HRESULT
 ULongLongToUIntPtr(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT UINT_PTR* puResult)
 {
 #ifdef _WIN64
@@ -883,7 +883,7 @@ ULongLongToUIntPtr(
 __inline
 HRESULT
 UIntPtrToUShort(
-    IN UINT_PTR uOperand,
+     UINT_PTR uOperand,
     OUT USHORT* pusResult)
 {
 	return UIntToUShort((UINT)uOperand, pusResult);
@@ -892,7 +892,7 @@ UIntPtrToUShort(
 __inline
 HRESULT
 UIntPtrToInt(
-    IN UINT_PTR uOperand,
+     UINT_PTR uOperand,
     OUT INT* piResult)
 {
 	return UIntToInt((UINT)uOperand, piResult);
@@ -901,7 +901,7 @@ UIntPtrToInt(
 __inline
 HRESULT
 UIntPtrToLong(
-    IN UINT_PTR Operand,
+     UINT_PTR Operand,
     OUT LONG* Result)
 {
 	return UIntToLong((UINT)Operand, Result);
@@ -933,7 +933,7 @@ UIntPtrToLong(
 __inline
 HRESULT
 IntToULongPtr(
-    IN INT iOperand,
+     INT iOperand,
     OUT ULONG_PTR* pulResult)
 {
 	return IntToULong(iOperand, (ULONG*)pulResult);
@@ -949,7 +949,7 @@ IntToULongPtr(
 __inline
 HRESULT
 ULongLongToULongPtr(
-    IN ULONGLONG ullOperand,
+     ULONGLONG ullOperand,
     OUT ULONG_PTR* pulResult)
 {
 #ifdef _WIN64
@@ -976,7 +976,7 @@ ULongLongToULongPtr(
 __inline
 HRESULT
 ULongPtrToUShort(
-    IN ULONG_PTR ulOperand,
+     ULONG_PTR ulOperand,
     OUT USHORT* pusResult)
 {
 	return ULongToUShort((ULONG)ulOperand, pusResult);
@@ -985,7 +985,7 @@ ULongPtrToUShort(
 __inline
 HRESULT
 ULongPtrToInt(
-    IN ULONG_PTR ulOperand,
+     ULONG_PTR ulOperand,
     OUT INT* piResult)
 {
 	return ULongToInt((ULONG)ulOperand, piResult);
@@ -994,7 +994,7 @@ ULongPtrToInt(
 __inline
 HRESULT
 ULongPtrToLong(
-    IN ULONG_PTR Operand,
+     ULONG_PTR Operand,
     OUT LONG* Result)
 {
 	return ULongToLong((ULONG)Operand, Result);
@@ -1089,8 +1089,8 @@ ULongPtrToLong(
 __inline
 HRESULT
 UShortAdd(
-    IN USHORT usAugend,
-    IN USHORT usAddend,
+     USHORT usAugend,
+     USHORT usAddend,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1116,8 +1116,8 @@ UShortAdd(
 __inline
 HRESULT
 UIntAdd(
-    IN UINT uAugend,
-    IN UINT uAddend,
+     UINT uAugend,
+     UINT uAddend,
     OUT UINT* puResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1143,8 +1143,8 @@ UIntAdd(
 __inline
 HRESULT
 ULongAdd(
-    IN ULONG ulAugend,
-    IN ULONG ulAddend,
+     ULONG ulAugend,
+     ULONG ulAddend,
     OUT ULONG* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1168,8 +1168,8 @@ ULongAdd(
 __inline
 HRESULT
 ULongPtrAdd(
-    IN ULONG_PTR ulAugend,
-    IN ULONG_PTR ulAddend,
+     ULONG_PTR ulAugend,
+     ULONG_PTR ulAddend,
     OUT ULONG_PTR* pulResult)
 {
 	return ULongAdd((ULONG)ulAugend, (ULONG)ulAddend, (ULONG*)pulResult);
@@ -1192,8 +1192,8 @@ ULongPtrAdd(
 __inline
 HRESULT
 SizeTAdd(
-    IN size_t Augend,
-    IN size_t Addend,
+     size_t Augend,
+     size_t Addend,
     OUT size_t* pResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1219,8 +1219,8 @@ SizeTAdd(
 __inline
 HRESULT
 ULongLongAdd(
-    IN ULONGLONG ullAugend,
-    IN ULONGLONG ullAddend,
+     ULONGLONG ullAugend,
+     ULONGLONG ullAddend,
     OUT ULONGLONG* pullResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1241,8 +1241,8 @@ ULongLongAdd(
 __inline
 HRESULT
 UShortSub(
-    IN USHORT usMinuend,
-    IN USHORT usSubtrahend,
+     USHORT usMinuend,
+     USHORT usSubtrahend,
     OUT USHORT* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1269,8 +1269,8 @@ UShortSub(
 __inline
 HRESULT
 UIntSub(
-    IN UINT uMinuend,
-    IN UINT uSubtrahend,
+     UINT uMinuend,
+     UINT uSubtrahend,
     OUT UINT* puResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1296,8 +1296,8 @@ UIntSub(
 __inline
 HRESULT
 ULongSub(
-    IN ULONG ulMinuend,
-    IN ULONG ulSubtrahend,
+     ULONG ulMinuend,
+     ULONG ulSubtrahend,
     OUT ULONG* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1321,8 +1321,8 @@ ULongSub(
 __inline
 HRESULT
 ULongPtrSub(
-    IN ULONG_PTR ulMinuend,
-    IN ULONG_PTR ulSubtrahend,
+     ULONG_PTR ulMinuend,
+     ULONG_PTR ulSubtrahend,
     OUT ULONG_PTR* pulResult)
 {
 	return ULongSub((ULONG)ulMinuend, (ULONG)ulSubtrahend, (ULONG*)pulResult);
@@ -1346,8 +1346,8 @@ ULongPtrSub(
 __inline
 HRESULT
 SizeTSub(
-    IN size_t Minuend,
-    IN size_t Subtrahend,
+     size_t Minuend,
+     size_t Subtrahend,
     OUT size_t* pResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1373,8 +1373,8 @@ SizeTSub(
 __inline
 HRESULT
 ULongLongSub(
-    IN ULONGLONG ullMinuend,
-    IN ULONGLONG ullSubtrahend,
+     ULONGLONG ullMinuend,
+     ULONGLONG ullSubtrahend,
     OUT ULONGLONG* pullResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -1395,8 +1395,8 @@ ULongLongSub(
 __inline
 HRESULT
 UShortMult(
-    IN USHORT usMultiplicand,
-    IN USHORT usMultiplier,
+     USHORT usMultiplicand,
+     USHORT usMultiplier,
     OUT USHORT* pusResult)
 {
     ULONG ulResult = ((ULONG)usMultiplicand) * (ULONG)usMultiplier;
@@ -1415,8 +1415,8 @@ UShortMult(
 __inline
 HRESULT
 UIntMult(
-    IN UINT uMultiplicand,
-    IN UINT uMultiplier,
+     UINT uMultiplicand,
+     UINT uMultiplier,
     OUT UINT* puResult)
 {
     ULONGLONG ull64Result = UInt32x32To64(uMultiplicand, uMultiplier);
@@ -1431,8 +1431,8 @@ UIntMult(
 __inline
 HRESULT
 UIntPtrMult(
-    IN UINT_PTR ulMultiplicand,
-    IN UINT_PTR ulMultiplier,
+     UINT_PTR ulMultiplicand,
+     UINT_PTR ulMultiplier,
     OUT UINT_PTR* pulResult)
 {
 	return UIntMult((UINT)ulMultiplicand, (UINT)ulMultiplier, (UINT*)pulResult);
@@ -1445,8 +1445,8 @@ UIntPtrMult(
 __inline
 HRESULT
 ULongMult(
-    IN ULONG ulMultiplicand,
-    IN ULONG ulMultiplier,
+     ULONG ulMultiplicand,
+     ULONG ulMultiplier,
     OUT ULONG* pulResult)
 {
     ULONGLONG ull64Result = UInt32x32To64(ulMultiplicand, ulMultiplier);
@@ -1461,8 +1461,8 @@ ULongMult(
 __inline
 HRESULT
 ULongPtrMult(
-    IN ULONG_PTR ulMultiplicand,
-    IN ULONG_PTR ulMultiplier,
+     ULONG_PTR ulMultiplicand,
+     ULONG_PTR ulMultiplier,
     OUT ULONG_PTR* pulResult)
 {
 	return ULongMult((ULONG)ulMultiplicand, (ULONG)ulMultiplier, (ULONG*)pulResult);

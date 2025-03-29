@@ -106,9 +106,9 @@ Function:
 
 --*/
 static LPVOID ReserveVirtualMemory(
-               IN CPalThread *pthrCurrent, /* Currently executing thread */
-               IN LPVOID lpAddress,        /* Region to reserve or commit */
-               IN SIZE_T dwSize);          /* Size of Region */
+                CPalThread *pthrCurrent, /* Currently executing thread */
+                LPVOID lpAddress,        /* Region to reserve or commit */
+                SIZE_T dwSize);          /* Size of Region */
 
 /*++
 Function:
@@ -207,7 +207,7 @@ void VIRTUALCleanup()
  *  VIRTUALContainsInvalidProtectionFlags()
  *          Returns TRUE if an invalid flag is specified. FALSE otherwise.
  */
-static BOOL VIRTUALContainsInvalidProtectionFlags( IN DWORD flProtect )
+static BOOL VIRTUALContainsInvalidProtectionFlags(  DWORD flProtect )
 {
     if ( ( flProtect & ~( PAGE_NOACCESS | PAGE_READONLY |
                           PAGE_READWRITE | PAGE_EXECUTE | PAGE_EXECUTE_READ |
@@ -532,7 +532,7 @@ static BOOL VIRTUALSetDirtyPages( UINT nStatus, SIZE_T nStartingBit,
  *
  *          Returns the PCMI if found, NULL otherwise.
  */
-static PCMI VIRTUALFindRegionInformation( IN UINT_PTR address )
+static PCMI VIRTUALFindRegionInformation(  UINT_PTR address )
 {
     PCMI pEntry = NULL;
 
@@ -580,7 +580,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion( IN UINT_PTR address )
+BOOL VIRTUALOwnedRegion(  UINT_PTR address )
 {
     PCMI pEntry = NULL;
     CPalThread * pthrCurrent = InternalGetCurrentThread();
@@ -668,7 +668,7 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
  *          internal VIRTUAL flags.
  *
  */
-static BYTE VIRTUALConvertWinFlags( IN DWORD flProtect )
+static BYTE VIRTUALConvertWinFlags(  DWORD flProtect )
 {
     BYTE MemAccessControl = 0;
 
@@ -705,7 +705,7 @@ static BYTE VIRTUALConvertWinFlags( IN DWORD flProtect )
  *              Converts internal virtual protection
  *              flags to their win32 counterparts.
  */
-static DWORD VIRTUALConvertVirtualFlags( IN BYTE VirtualProtect )
+static DWORD VIRTUALConvertVirtualFlags(  BYTE VirtualProtect )
 {
     DWORD MemAccessControl = 0;
 
@@ -749,10 +749,10 @@ static DWORD VIRTUALConvertVirtualFlags( IN BYTE VirtualProtect )
  *      NOTE: The caller must own the critical section.
  */
 static BOOL VIRTUALStoreAllocationInfo(
-            IN UINT_PTR startBoundary,      /* Start of the region. */
-            IN SIZE_T memSize,            /* Size of the region. */
-            IN DWORD flAllocationType,  /* Allocation Types. */
-            IN DWORD flProtection )     /* Protections flags on the memory. */
+             UINT_PTR startBoundary,      /* Start of the region. */
+             SIZE_T memSize,            /* Size of the region. */
+             DWORD flAllocationType,  /* Allocation Types. */
+             DWORD flProtection )     /* Protections flags on the memory. */
 {
     PCMI pNewEntry       = NULL;
     PCMI pMemInfo        = NULL;
@@ -874,9 +874,9 @@ done:
  *      NOTE: The caller must own the critical section virtual_critsec.
  */
 static BOOL VIRTUALUpdateAllocationInfo(
-    IN PCMI pExistingEntry,         /* Existing entry in the virtual memory regions list that we are currently managing. */
-    IN UINT_PTR startBoundary,      /* The new starting address of the region. */
-    IN SIZE_T memSize)              /* The new size of the region. */
+     PCMI pExistingEntry,         /* Existing entry in the virtual memory regions list that we are currently managing. */
+     UINT_PTR startBoundary,      /* The new starting address of the region. */
+     SIZE_T memSize)              /* The new size of the region. */
 {
     BOOL bRetVal = TRUE;
     SIZE_T nBufferSize = 0;
@@ -971,11 +971,11 @@ done:
  *
  */
 static LPVOID VIRTUALReserveMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize,           /* Size of Region */
-                IN DWORD flAllocationType,  /* Type of allocation */
-                IN DWORD flProtect)         /* Type of access protection */
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize,           /* Size of Region */
+                 DWORD flAllocationType,  /* Type of allocation */
+                 DWORD flProtect)         /* Type of access protection */
 {
     LPVOID pRetVal      = NULL;
     UINT_PTR StartBoundary;
@@ -1040,9 +1040,9 @@ static LPVOID VIRTUALReserveMemory(
  *
  */
 static LPVOID ReserveVirtualMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize)           /* Size of Region */
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize)           /* Size of Region */
 {
     LPVOID pRetVal = NULL;
 #if !defined(__APPLE__) && !defined(vm_address_t)
@@ -1138,11 +1138,11 @@ done:
  *
  */
 static LPVOID VIRTUALCommitMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize,           /* Size of Region */
-                IN DWORD flAllocationType,  /* Type of allocation */
-                IN DWORD flProtect)         /* Type of access protection */
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize,           /* Size of Region */
+                 DWORD flAllocationType,  /* Type of allocation */
+                 DWORD flProtect)         /* Type of access protection */
 {
     UINT_PTR StartBoundary      = 0;
     SIZE_T MemSize              = 0;
@@ -1675,11 +1675,11 @@ done:
 
 LPVOID
 VirtualAllocEx(
-         IN HANDLE hProcess,
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          HANDLE hProcess,
+          LPVOID lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          DWORD flAllocationType, /* Type of allocation */
+          DWORD flProtect)        /* Type of access protection */
 {
     return VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
 }
@@ -1704,10 +1704,10 @@ See MSDN doc.
 --*/
 LPVOID
 VirtualAlloc_(
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          LPVOID lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          DWORD flAllocationType, /* Type of allocation */
+          DWORD flProtect)        /* Type of access protection */
 {
 #ifdef DEBUG
     static bool was_pal_initialized = PAL_Initialize_Check_Once();
@@ -1800,10 +1800,10 @@ Function:
 --*/
 BOOL
 VirtualFreeEnclosing_(
-    IN LPVOID lpRegionStartAddress,         /* Starting address of the original region. */
-    IN SIZE_T dwSize,                       /* Size of the requested region i.e. the intended size of the VirtualAlloc call.*/
-    IN SIZE_T dwAlignmentSize,              /* The intended alignment of the returned address. This is also the size of the extra memory reserved i.e. 64KB in our case whenw e try a 64K alignment. */
-    IN LPVOID lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
+     LPVOID lpRegionStartAddress,         /* Starting address of the original region. */
+     SIZE_T dwSize,                       /* Size of the requested region i.e. the intended size of the VirtualAlloc call.*/
+     SIZE_T dwAlignmentSize,              /* The intended alignment of the returned address. This is also the size of the extra memory reserved i.e. 64KB in our case whenw e try a 64K alignment. */
+     LPVOID lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
 {
     BOOL bRetVal = TRUE;
 
@@ -1919,10 +1919,10 @@ VirtualFreeEnclosingExit:
 
 LPVOID
 VirtualAlloc(
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          LPVOID lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          DWORD flAllocationType, /* Type of allocation */
+          DWORD flProtect)        /* Type of access protection */
 {
     if (lpAddress)
     {
@@ -1997,10 +1997,10 @@ VirtualAlloc(
 
 BOOL
 VirtualFreeEx(
-        IN HANDLE hProcess,
-        IN LPVOID lpAddress,    /* Address of region. */
-        IN SIZE_T dwSize,       /* Size of region. */
-        IN DWORD dwFreeType )   /* Operation type. */
+         HANDLE hProcess,
+         LPVOID lpAddress,    /* Address of region. */
+         SIZE_T dwSize,       /* Size of region. */
+         DWORD dwFreeType )   /* Operation type. */
 {
     return VirtualFree(lpAddress, dwSize, dwFreeType);
 }
@@ -2013,9 +2013,9 @@ See MSDN doc.
 --*/
 BOOL
 VirtualFree(
-        IN LPVOID lpAddress,    /* Address of region. */
-        IN SIZE_T dwSize,       /* Size of region. */
-        IN DWORD dwFreeType )   /* Operation type. */
+         LPVOID lpAddress,    /* Address of region. */
+         SIZE_T dwSize,       /* Size of region. */
+         DWORD dwFreeType )   /* Operation type. */
 {
     BOOL bRetVal = TRUE;
     CPalThread *pthrCurrent;
@@ -2210,10 +2210,10 @@ VirtualFreeExit:
 
 BOOL
 VirtualProtectEx(
-           IN HANDLE hProcess,
-           IN LPVOID lpAddress,
-           IN SIZE_T dwSize,
-           IN DWORD flNewProtect,
+            HANDLE hProcess,
+            LPVOID lpAddress,
+            SIZE_T dwSize,
+            DWORD flNewProtect,
            OUT PDWORD lpflOldProtect)
 {
     return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
@@ -2227,9 +2227,9 @@ See MSDN doc.
 --*/
 BOOL
 VirtualProtect(
-           IN LPVOID lpAddress,
-           IN SIZE_T dwSize,
-           IN DWORD flNewProtect,
+            LPVOID lpAddress,
+            SIZE_T dwSize,
+            DWORD flNewProtect,
            OUT PDWORD lpflOldProtect)
 {
     BOOL     bRetVal = FALSE;
@@ -2483,10 +2483,10 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
 
 SIZE_T
 VirtualQueryEx(
-    IN HANDLE hProcess,
-    IN LPCVOID lpAddress,
+     HANDLE hProcess,
+     LPCVOID lpAddress,
     OUT PMEMORY_BASIC_INFORMATION lpBuffer,
-    IN SIZE_T dwLength)
+     SIZE_T dwLength)
 {
     return VirtualQuery(lpAddress, lpBuffer, dwLength);
 }
@@ -2499,9 +2499,9 @@ See MSDN doc.
 --*/
 SIZE_T
 VirtualQuery(
-         IN LPCVOID lpAddress,
+          LPCVOID lpAddress,
          OUT PMEMORY_BASIC_INFORMATION lpBuffer,
-         IN SIZE_T dwLength)
+          SIZE_T dwLength)
 {
     PCMI     pEntry = NULL;
     UINT_PTR StartBoundary = 0;

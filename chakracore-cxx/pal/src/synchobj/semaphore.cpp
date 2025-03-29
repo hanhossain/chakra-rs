@@ -73,12 +73,12 @@ See MSDN doc.
 
 HANDLE
 CreateSemaphoreExA(
-        IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-        IN LONG lInitialCount,
-        IN LONG lMaximumCount,
-        IN LPCSTR lpName,
-        IN /*_Reserved_*/  DWORD dwFlags,
-        IN DWORD dwDesiredAccess)
+         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+         LONG lInitialCount,
+         LONG lMaximumCount,
+         LPCSTR lpName,
+         /*_Reserved_*/  DWORD dwFlags,
+         DWORD dwDesiredAccess)
 {
     // dwFlags is reserved and unused, and dwDesiredAccess is currently
     // only ever used as SEMAPHORE_ALL_ACCESS.  The other parameters
@@ -107,10 +107,10 @@ Parameters:
 
 HANDLE
 CreateSemaphoreA(
-         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         IN LONG lInitialCount,
-         IN LONG lMaximumCount,
-         IN LPCSTR lpName)
+          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+          LONG lInitialCount,
+          LONG lMaximumCount,
+          LPCSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     CPalThread *pthr = NULL;
@@ -169,12 +169,12 @@ See MSDN doc.
 
 HANDLE
 CreateSemaphoreExW(
-        IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-        IN LONG lInitialCount,
-        IN LONG lMaximumCount,
-        IN LPCWSTR lpName,
-        IN /*_Reserved_*/  DWORD dwFlags,
-        IN DWORD dwDesiredAccess)
+         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+         LONG lInitialCount,
+         LONG lMaximumCount,
+         LPCWSTR lpName,
+         /*_Reserved_*/  DWORD dwFlags,
+         DWORD dwDesiredAccess)
 {
     // dwFlags is reserved and unused
 
@@ -200,10 +200,10 @@ Parameters:
 
 HANDLE
 CreateSemaphoreW(
-         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         IN LONG lInitialCount,
-         IN LONG lMaximumCount,
-         IN LPCWSTR lpName)
+          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+          LONG lInitialCount,
+          LONG lMaximumCount,
+          LPCWSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError;
@@ -395,8 +395,8 @@ Parameters:
 
 BOOL
 ReleaseSemaphore(
-         IN HANDLE hSemaphore,
-         IN LONG lReleaseCount,
+          HANDLE hSemaphore,
+          LONG lReleaseCount,
          OUT LPLONG lpPreviousCount)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -560,9 +560,9 @@ Parameters:
 
 HANDLE
 OpenSemaphoreW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        DWORD dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError = NO_ERROR;

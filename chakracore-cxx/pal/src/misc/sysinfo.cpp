@@ -231,7 +231,7 @@ This function returns a BOOL to indicate its success status.
 --*/
 BOOL
 GlobalMemoryStatusEx(
-            IN OUT LPMEMORYSTATUSEX lpBuffer)
+             OUT LPMEMORYSTATUSEX lpBuffer)
 {
 
     PERF_ENTRY(GlobalMemoryStatusEx);

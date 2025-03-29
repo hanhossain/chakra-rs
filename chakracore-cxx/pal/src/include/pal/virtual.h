@@ -105,7 +105,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion( IN UINT_PTR address );
+BOOL VIRTUALOwnedRegion(  UINT_PTR address );
 
 
 #ifdef __cplusplus

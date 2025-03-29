@@ -124,7 +124,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryA(
-    IN LPCSTR lpLibFileName)
+     LPCSTR lpLibFileName)
 {
     return LoadLibraryExA(lpLibFileName, nullptr, 0);
 }
@@ -137,7 +137,7 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryW(
-    IN LPCWSTR lpLibFileName)
+     LPCWSTR lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
 }
@@ -150,9 +150,9 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExA(
-    IN LPCSTR lpLibFileName,
-    IN /*Reserved*/ HANDLE hFile,
-    IN DWORD dwFlags)
+     LPCSTR lpLibFileName,
+     /*Reserved*/ HANDLE hFile,
+     DWORD dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -207,9 +207,9 @@ See MSDN doc.
 --*/
 HMODULE
 LoadLibraryExW(
-    IN LPCWSTR lpLibFileName,
-    IN /*Reserved*/ HANDLE hFile,
-    IN DWORD dwFlags)
+     LPCWSTR lpLibFileName,
+     /*Reserved*/ HANDLE hFile,
+     DWORD dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -264,8 +264,8 @@ See MSDN doc.
 --*/
 FARPROC
 GetProcAddress(
-    IN HMODULE hModule,
-    IN LPCSTR lpProcName)
+     HMODULE hModule,
+     LPCSTR lpProcName)
 {
     MODSTRUCT *module;
     FARPROC ProcAddress = nullptr;
@@ -385,7 +385,7 @@ See MSDN doc.
 --*/
 BOOL
 FreeLibrary(
-    IN OUT HMODULE hLibModule)
+     OUT HMODULE hLibModule)
 {
     BOOL retval = FALSE;
 
@@ -407,8 +407,8 @@ See MSDN doc.
 --*/
 void
 FreeLibraryAndExitThread(
-    IN HMODULE hLibModule,
-    IN DWORD dwExitCode)
+     HMODULE hLibModule,
+     DWORD dwExitCode)
 {
     PERF_ENTRY(FreeLibraryAndExitThread);
     ENTRY("FreeLibraryAndExitThread()\n");
@@ -433,9 +433,9 @@ Notes :
 --*/
 DWORD
 GetModuleFileNameA(
-    IN HMODULE hModule,
+     HMODULE hModule,
     OUT LPSTR lpFileName,
-    IN DWORD nSize)
+     DWORD nSize)
 {
     INT name_length;
     DWORD retval = 0;
@@ -496,9 +496,9 @@ Notes :
 --*/
 DWORD
 GetModuleFileNameW(
-    IN HMODULE hModule,
+     HMODULE hModule,
     OUT LPWSTR lpFileName,
-    IN DWORD nSize)
+     DWORD nSize)
 {
     INT name_length;
     DWORD retval = 0;
@@ -550,7 +550,7 @@ done:
 
 HMODULE
 GetModuleHandleW(
-    IN OPTIONAL LPCWSTR lpModuleName)
+     OPTIONAL LPCWSTR lpModuleName)
 {
     if (lpModuleName)
     {
@@ -564,8 +564,8 @@ GetModuleHandleW(
 
 BOOL
 GetModuleHandleExW(
-    IN DWORD dwFlags,
-    IN OPTIONAL LPCWSTR lpModuleName,
+     DWORD dwFlags,
+     OPTIONAL LPCWSTR lpModuleName,
     OUT HMODULE *phModule)
 {
     *phModule = NULL;
@@ -582,7 +582,7 @@ Function:
 */
 void *
 PAL_LoadLibraryDirect(
-    IN LPCWSTR lpLibFileName)
+     LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
     CHAR * lpstr = nullptr;
@@ -631,8 +631,8 @@ Function:
 */
 HMODULE
 PAL_RegisterLibraryDirect(
-    IN void *dl_handle,
-    IN LPCWSTR lpLibFileName)
+     void *dl_handle,
+     LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
     CHAR * lpstr = nullptr;
@@ -682,7 +682,7 @@ Function:
 --*/
 void
 PAL_UnregisterModule(
-    IN HINSTANCE hInstance)
+     HINSTANCE hInstance)
 {
     PERF_ENTRY(PAL_UnregisterModule);
     ENTRY("PAL_UnregisterModule(hInstance=%p)\n", hInstance);
@@ -1154,7 +1154,7 @@ See MSDN doc.
 --*/
 BOOL
 DisableThreadLibraryCalls(
-    IN HMODULE hLibModule)
+     HMODULE hLibModule)
 {
     BOOL ret = FALSE;
     MODSTRUCT *module;

@@ -366,37 +366,37 @@ typedef union _SLIST_HEADER {
 
 #endif
 
-void InitializeSListHead(IN OUT PSLIST_HEADER ListHead);
-PSLIST_ENTRY InterlockedPushEntrySList(IN OUT PSLIST_HEADER ListHead, IN OUT PSLIST_ENTRY  ListEntry);
-PSLIST_ENTRY InterlockedPopEntrySList(IN OUT PSLIST_HEADER ListHead);
+void InitializeSListHead( OUT PSLIST_HEADER ListHead);
+PSLIST_ENTRY InterlockedPushEntrySList( OUT PSLIST_HEADER ListHead,  OUT PSLIST_ENTRY  ListEntry);
+PSLIST_ENTRY InterlockedPopEntrySList( OUT PSLIST_HEADER ListHead);
 
 
 template <class T>
 inline T InterlockedExchangeAdd(
-    IN OUT T volatile *Addend,
-    IN T Value)
+     OUT T volatile *Addend,
+     T Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
 
 template <class T>
 inline T InterlockedExchangeSubtract(
-    IN OUT T volatile *Addend,
-    IN T Value)
+     OUT T volatile *Addend,
+     T Value)
 {
     return __sync_fetch_and_sub(Addend, Value);
 }
 
 template <class T>
 inline T InterlockedIncrement(
-    IN OUT T volatile *Addend)
+     OUT T volatile *Addend)
 {
     return __sync_add_and_fetch(Addend, T(1));
 }
 
 template <class T>
 inline T InterlockedDecrement(
-    IN OUT T volatile *Addend)
+     OUT T volatile *Addend)
 {
     return __sync_sub_and_fetch(Addend, T(1));
 }

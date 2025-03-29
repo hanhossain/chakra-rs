@@ -137,7 +137,7 @@ See MSDN doc.
 --*/
 DWORD
 ResumeThread(
-         IN HANDLE hThread
+          HANDLE hThread
          )
 {
     PAL_ERROR palError;
