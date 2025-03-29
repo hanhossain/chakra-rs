@@ -6,7 +6,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     EtwMemoryTracking.cpp
     ForcedMemoryConstraints.cpp
     HeapAllocator.cpp
-    HeapAllocatorOperators.cpp
     HeapBlock.cpp
     HeapBlockMap.cpp
     HeapBucket.cpp
