@@ -83,13 +83,13 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
     };
     
 STDAPI
-SetErrorInfo(ULONG dwReserved, IErrorInfo FAR* perrinfo);
+SetErrorInfo(ULONG dwReserved, IErrorInfo * perrinfo);
 
 STDAPI
-GetErrorInfo(ULONG dwReserved, IErrorInfo FAR* FAR* pperrinfo);
+GetErrorInfo(ULONG dwReserved, IErrorInfo * * pperrinfo);
 
 STDAPI
-CreateErrorInfo(ICreateErrorInfo FAR* FAR* pperrinfo);
+CreateErrorInfo(ICreateErrorInfo * * pperrinfo);
 
 
 typedef interface ISupportErrorInfo ISupportErrorInfo;

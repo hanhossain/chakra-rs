@@ -102,7 +102,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, UINT len)
         *(DWORD_PTR *)bstr = (DWORD_PTR) 0;
         bstr = (BSTR) ((char *) bstr + sizeof (DWORD));
 #endif
-        *(DWORD FAR*)bstr = (DWORD)len * sizeof(OLECHAR);
+        *(DWORD *)bstr = (DWORD)len * sizeof(OLECHAR);
 
         bstr = (BSTR) ((char*) bstr + sizeof(DWORD));
 
@@ -159,7 +159,7 @@ extern "C" UINT SysStringLen(BSTR bstr)
         return 0;
     }
 
-    return (UINT)((((DWORD FAR*)bstr)[-1]) / sizeof(OLECHAR));
+    return (UINT)((((DWORD *)bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***

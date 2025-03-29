@@ -49,8 +49,6 @@ extern "C" {
 // Type attribute stuff
 ////////////////////////////////////////////////////////////////////////
 
-#define FAR
-
 #ifdef UNICODE
 #define __TEXT(x) L##x
 #else
