@@ -40,7 +40,6 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
-#include "Common/CompressionUtilities.h"
 
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 

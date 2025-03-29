@@ -47,8 +47,6 @@ Preprocessor directives to remove:
   - `TARGET_32`
 
 Files to remove:
-- chakracore-cxx/lib/Common/Common/CompressionUtilities.cpp
-- chakracore-cxx/lib/Common/Common/CompressionUtilities.h
 - chakracore-cxx/lib/Common/Memory/DelayDeletingFunctionTable.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.cpp
 - chakracore-cxx/lib/Common/Memory/SectionAllocWrapper.h
