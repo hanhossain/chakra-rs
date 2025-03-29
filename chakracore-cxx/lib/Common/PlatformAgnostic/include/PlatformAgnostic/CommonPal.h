@@ -493,12 +493,12 @@ extern "C" void * _AddressOfReturnAddress(void);
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.
 #if defined(STRSAFE_LIB)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #pragma comment(lib, "strsafe.lib")
 #elif defined(STRSAFE_LIB_IMPL)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
-#define STRSAFEAPI  inline HRESULT __stdcall
+#define STRSAFEAPI  inline HRESULT
 #define STRSAFE_INLINE
 #endif
 

@@ -276,7 +276,7 @@ struct JsAPIHooks
 class ChakraRTInterface
 {
 public:
-    typedef void(__stdcall * HostPrintUsageFuncPtr)();
+    typedef void(* HostPrintUsageFuncPtr)();
 
     struct ArgInfo
     {

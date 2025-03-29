@@ -40,23 +40,19 @@ extern "C" {
 
 #ifdef __i386__
 
-#define __stdcall
-#define _stdcall
 #define __cdecl
 #define _cdecl
 #define CDECL
 
 #ifndef PAL_STDCPP_COMPAT
 #undef __fastcall
-#define __fastcall      __stdcall
+#define __fastcall
 #undef _fastcall
 #define _fastcall       __fastcall
 #endif // PAL_STDCPP_COMPAT
 
 #else   // !defined(__i386__)
 
-#define __stdcall
-#define _stdcall
 #define __cdecl
 #define _cdecl
 #define CDECL
@@ -71,7 +67,7 @@ extern "C" {
 
 #endif  // !defined(__i386__)
 
-#define CALLBACK __stdcall
+#define CALLBACK
 
 #if !defined(_declspec)
 #define _declspec(e)  __declspec(e)
@@ -83,7 +79,7 @@ extern "C" {
 
 #define PALIMPORT
 #define PAL_NORETURN    __attribute__((noreturn))
-#define PALAPI      __stdcall
+#define PALAPI
 #define PALAPIV     __cdecl
 
 ////////////////////////////////////////////////////////////////////////

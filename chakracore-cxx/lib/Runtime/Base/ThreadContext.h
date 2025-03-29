@@ -1438,9 +1438,9 @@ public:
     void ProbeStack(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress = nullptr);
     void ProbeStack(size_t size, Js::RecyclableObject * obj, Js::ScriptContext *scriptContext);
     void ProbeStack(size_t size);
-    static void __stdcall ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
-    static void __stdcall ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
-    static void __stdcall ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32 u1, uint32 u2)
+    static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
+    static void ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
+    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32 u1, uint32 u2)
     {
         ProbeCurrentStack(size, scriptContext);
     }

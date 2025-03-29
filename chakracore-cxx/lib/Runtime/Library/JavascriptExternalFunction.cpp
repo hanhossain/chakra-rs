@@ -449,7 +449,7 @@ namespace Js
         return result;
     }
 
-    Var __stdcall JavascriptExternalFunction::TTDReplayDummyExternalMethod(Var callee, Var *args, USHORT cargs, StdCallJavascriptMethodInfo *info, void *callbackState)
+    Var JavascriptExternalFunction::TTDReplayDummyExternalMethod(Var callee, Var *args, USHORT cargs, StdCallJavascriptMethodInfo *info, void *callbackState)
     {
         JavascriptExternalFunction* externalFunction = static_cast<JavascriptExternalFunction*>(callee);
 

@@ -120,7 +120,7 @@ DbgHelpSymbolManager::Initialize()
     }
 
     {
-        typedef BOOL(__stdcall *PfnSymInitialize)(HANDLE, PCWSTR, BOOL);
+        typedef BOOL(*PfnSymInitialize)(HANDLE, PCWSTR, BOOL);
         PfnSymInitialize pfnSymInitialize = (PfnSymInitialize)GetProcAddress(hDbgHelpModule, "SymInitializeW");
         if (pfnSymInitialize)
         {
@@ -129,8 +129,8 @@ DbgHelpSymbolManager::Initialize()
             pfnSymGetLineFromAddr64W = (PfnSymGetLineFromAddr64W)GetProcAddress(hDbgHelpModule, "SymGetLineFromAddrW64");
 
             // load line information
-            typedef DWORD(__stdcall *PfnSymGetOptions)();
-            typedef VOID(__stdcall *PfnSymSetOptions)(DWORD);
+            typedef DWORD(*PfnSymGetOptions)();
+            typedef VOID(*PfnSymSetOptions)(DWORD);
             PfnSymGetOptions pfnSymGetOptions = (PfnSymGetOptions)GetProcAddress(hDbgHelpModule, "SymGetOptions");
             PfnSymSetOptions pfnSymSetOptions = (PfnSymSetOptions)GetProcAddress(hDbgHelpModule, "SymSetOptions");
 
@@ -176,7 +176,7 @@ DbgHelpSymbolManager::~DbgHelpSymbolManager()
 {
     if (hDbgHelpModule)
     {
-        typedef BOOL(__stdcall *PfnSymCleanup)(HANDLE);
+        typedef BOOL(*PfnSymCleanup)(HANDLE);
         PfnSymCleanup pfnSymCleanup = (PfnSymCleanup)GetProcAddress(hDbgHelpModule, "SymCleanup");
         if (pfnSymCleanup)
         {

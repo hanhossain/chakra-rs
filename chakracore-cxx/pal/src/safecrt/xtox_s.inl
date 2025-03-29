@@ -71,7 +71,7 @@
 
 /* helper routine that does the main job. */
 #ifdef _SECURE_ITOA
-errno_t __stdcall xtox_s
+errno_t xtox_s
         (
         unsigned long val,
         TCHAR *buf,
@@ -80,7 +80,7 @@ errno_t __stdcall xtox_s
         int is_neg
         )
 #else  /* _SECURE_ITOA */
-void __stdcall xtox
+void xtox
         (
         unsigned long val,
         TCHAR *buf,

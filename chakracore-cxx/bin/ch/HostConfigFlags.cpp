@@ -7,7 +7,7 @@
 HostConfigFlags HostConfigFlags::flags;
 LPWSTR* HostConfigFlags::argsVal;
 int HostConfigFlags::argsCount;
-void(__stdcall *HostConfigFlags::pfnPrintUsage)();
+void(*HostConfigFlags::pfnPrintUsage)();
 
 template <>
 void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)

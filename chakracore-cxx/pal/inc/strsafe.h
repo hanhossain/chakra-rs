@@ -77,18 +77,18 @@ typedef LONG HRESULT;
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.
 #if defined(STRSAFE_LIB)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #pragma comment(lib, "strsafe.lib")
 #elif defined(STRSAFE_LIB_IMPL)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
-#define STRSAFEAPI  __inline HRESULT __stdcall
+#define STRSAFEAPI  __inline HRESULT
 #define STRSAFE_INLINE
 #endif
 
 // Some functions always run inline because they use stdin and we want to avoid building multiple
 // versions of strsafe lib depending on if you use msvcrt, libcmt, etc.
-#define STRSAFE_INLINE_API  __inline HRESULT __stdcall
+#define STRSAFE_INLINE_API  __inline HRESULT
 
 // The user can request no "Cb" or no "Cch" fuctions, but not both!
 #if defined(STRSAFE_NO_CB_FUNCTIONS) && defined(STRSAFE_NO_CCH_FUNCTIONS)

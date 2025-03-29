@@ -25,7 +25,7 @@ typedef struct tagEXCEPINFO {
     BSTR bstrHelpFile;
     DWORD dwHelpContext;
     PVOID pvReserved;
-    HRESULT (__stdcall *pfnDeferredFillIn)(struct tagEXCEPINFO *);
+    HRESULT (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
 } EXCEPINFO, * LPEXCEPINFO;
 

@@ -22,7 +22,7 @@ public:
         MemoryFailure = 2,
         MemoryMax = 2,
     };
-    typedef bool (__stdcall * PageAllocatorMemoryAllocationCallback)(__in LPVOID context,
+    typedef bool (* PageAllocatorMemoryAllocationCallback)(__in LPVOID context,
         __in AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
         __in size_t allocationSize);
 

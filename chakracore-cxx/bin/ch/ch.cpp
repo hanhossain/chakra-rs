@@ -33,7 +33,7 @@ uint32_t startEventCount = 1;
 HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName);
 
 extern "C"
-HRESULT __stdcall OnChakraCoreLoadedEntry(TestHooks& testHooks)
+HRESULT OnChakraCoreLoadedEntry(TestHooks& testHooks)
 {
     return ChakraRTInterface::OnChakraCoreLoaded(testHooks);
 }
@@ -63,7 +63,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void __stdcall PrintUsageFormat()
+void PrintUsageFormat()
 {
     wprintf(_u("\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n"), hostName);
     wprintf(_u("\t-v|-version\t\tDisplays version info\n"));
@@ -72,7 +72,7 @@ void __stdcall PrintUsageFormat()
 }
 
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-void __stdcall PrintReleaseUsage()
+void PrintReleaseUsage()
 {
     wprintf(_u("\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s"), hostName,
         _u("\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n"));
@@ -81,7 +81,7 @@ void __stdcall PrintReleaseUsage()
 }
 #endif
 
-void __stdcall PrintUsage()
+void PrintUsage()
 {
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     PrintReleaseUsage();
@@ -90,7 +90,7 @@ void __stdcall PrintUsage()
 #endif
 }
 
-void __stdcall PrintChVersion()
+void PrintChVersion()
 {
 #if CHAKRA_CORE_VERSION_RELEASE
     wprintf(_u("%s version %d.%d.%d.0\n"),
@@ -100,7 +100,7 @@ void __stdcall PrintChVersion()
         hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
 }
 
-void __stdcall PrintVersion()
+void PrintVersion()
 {
     PrintChVersion();
 }

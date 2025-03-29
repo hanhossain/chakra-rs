@@ -24,9 +24,7 @@ Abstract:
 #define E_INVALIDARG ((HRESULT) 0x80070057L)
 #define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
 #define FAILED(Status) ((HRESULT)(Status)<0)
-#define STDAPICALLTYPE       __stdcall
 #define NULL    0
-#define STDAPI_(type)        EXTERN_C type STDAPICALLTYPE
 
 #include "pal_assert.h"
 #include "rt/intsafe.h"
@@ -83,7 +81,7 @@ inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
  *  return value = BSTR, NULL if the allocation failed.
  *
  ***********************************************************************/
-STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *psz, UINT len)
+extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, UINT len)
 {
 
     BSTR bstr;
@@ -130,7 +128,7 @@ STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *psz, UINT len)
  *  return value = void
  *
  ***********************************************************************/
-STDAPI_(void) SysFreeString(BSTR bstr)
+extern "C" void SysFreeString(BSTR bstr)
 {
     if (bstr != NULL)
     {
@@ -154,7 +152,7 @@ STDAPI_(void) SysFreeString(BSTR bstr)
  *  return value = length of the string
  *
  ***********************************************************************/
-STDAPI_(UINT) SysStringLen(BSTR bstr)
+extern "C" UINT SysStringLen(BSTR bstr)
 {
     if (bstr == NULL)
     {
@@ -176,7 +174,7 @@ STDAPI_(UINT) SysStringLen(BSTR bstr)
  *  return value = BSTR, NULL if allocation failed
  *
  ***********************************************************************/
-STDAPI_(BSTR) SysAllocString(const OLECHAR* psz)
+extern "C" BSTR SysAllocString(const OLECHAR* psz)
 {
     if(psz == NULL)
     {

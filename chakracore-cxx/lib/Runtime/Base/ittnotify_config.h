@@ -88,18 +88,6 @@
 #  endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 #endif /* ITTAPI_CDECL */
 
-#ifndef STDCALL
-#  if ITT_PLATFORM==ITT_PLATFORM_WIN
-#    define STDCALL __stdcall
-#  else /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#    if defined _M_IX86 || defined __i386__
-#      define STDCALL __attribute__ ((stdcall))
-#    else  /* _M_IX86 || __i386__ */
-#      define STDCALL /* supported only on x86 platform */
-#    endif /* _M_IX86 || __i386__ */
-#  endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#endif /* STDCALL */
-
 #define ITTAPI    ITTAPI_CDECL
 #define LIBITTAPI ITTAPI_CDECL
 

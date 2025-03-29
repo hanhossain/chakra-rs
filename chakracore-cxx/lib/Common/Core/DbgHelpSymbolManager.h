@@ -31,10 +31,10 @@ private:
     HANDLE hProcess;
     HMODULE hDbgHelpModule;
 
-    typedef BOOL(__stdcall *PfnSymFromAddrW)(HANDLE, DWORD64, PDWORD64, PSYMBOL_INFOW);
+    typedef BOOL(*PfnSymFromAddrW)(HANDLE, DWORD64, PDWORD64, PSYMBOL_INFOW);
     PfnSymFromAddrW pfnSymFromAddrW;
 
-    typedef BOOL(__stdcall *PfnSymGetLineFromAddr64W)(HANDLE, DWORD64, PDWORD, PIMAGEHLP_LINEW64);
+    typedef BOOL(*PfnSymGetLineFromAddr64W)(HANDLE, DWORD64, PDWORD, PIMAGEHLP_LINEW64);
     PfnSymGetLineFromAddr64W pfnSymGetLineFromAddr64W;
 };
 #endif

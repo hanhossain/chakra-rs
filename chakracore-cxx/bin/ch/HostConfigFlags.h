@@ -17,7 +17,7 @@ public:
     static HostConfigFlags flags;
     static LPWSTR* argsVal;
     static int argsCount;
-    static void(__stdcall *pfnPrintUsage)();
+    static void(*pfnPrintUsage)();
 
     static void HandleArgsFlag(int& argc, _Inout_updates_to_(argc, argc) LPWSTR argv[]);
     static void RemoveArg(int& argc, _Inout_updates_to_(argc, argc) PWSTR argv[], int index);

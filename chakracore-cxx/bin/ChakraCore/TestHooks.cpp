@@ -28,7 +28,7 @@ namespace Js
 
 #ifdef ENABLE_TEST_HOOKS
 
-HRESULT __stdcall SetConfigFlags(__in int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags)
+HRESULT SetConfigFlags(__in int argc, __in_ecount(argc) LPWSTR argv[], ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
     if (parser.Parse(argc, argv) != 0)
@@ -39,20 +39,20 @@ HRESULT __stdcall SetConfigFlags(__in int argc, __in_ecount(argc) LPWSTR argv[],
     return S_OK;
 }
 
-HRESULT __stdcall SetConfigFile(__in LPWSTR strConfigFile)
+HRESULT SetConfigFile(__in LPWSTR strConfigFile)
 {
     CmdLineArgsParser parser;
     ConfigParser::ParseCustomConfigFile(parser, strConfigFile);
     return S_OK;
 }
 
-HRESULT __stdcall PrintConfigFlagsUsageString()
+HRESULT PrintConfigFlagsUsageString()
 {
     Js::ConfigFlagsTable::PrintUsageString();
     return S_OK;
 }
 
-HRESULT __stdcall SetAssertToConsoleFlag(bool flag)
+HRESULT SetAssertToConsoleFlag(bool flag)
 {
 #ifdef DBG
     AssertsToConsole = flag;
@@ -60,7 +60,7 @@ HRESULT __stdcall SetAssertToConsoleFlag(bool flag)
     return S_OK;
 }
 
-HRESULT __stdcall SetEnableCheckMemoryLeakOutput(bool flag)
+HRESULT SetEnableCheckMemoryLeakOutput(bool flag)
 {
 #if defined(CHECK_MEMORY_LEAK)
     MemoryLeakCheck::SetEnableOutput(flag);
@@ -68,7 +68,7 @@ HRESULT __stdcall SetEnableCheckMemoryLeakOutput(bool flag)
     return S_OK;
 }
 
-void __stdcall NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
+void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
 {
 #ifdef GENERATE_DUMP
     // We already reported assert at the assert point, don't do it here again
@@ -88,12 +88,12 @@ void __stdcall NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT __stdcall Get##name##Flag(BSTR *flag) \
+    HRESULT Get##name##Flag(BSTR *flag) \
     { \
         *flag = SysAllocString(Js::Configuration::Global.flags.##name##); \
         return (*flag == NULL ? E_OUTOFMEMORY : S_OK); \
     } \
-    HRESULT __stdcall Set##name##Flag(BSTR flag) \
+    HRESULT Set##name##Flag(BSTR flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \
@@ -103,12 +103,12 @@ void __stdcall NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT __stdcall Get##name##Flag(bool *flag) \
+    HRESULT Get##name##Flag(bool *flag) \
     { \
         *flag = Js::Configuration::Global.flags.##name##; \
         return S_OK; \
     } \
-    HRESULT __stdcall Set##name##Flag(bool flag) \
+    HRESULT Set##name##Flag(bool flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \
@@ -118,12 +118,12 @@ void __stdcall NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
     { \
         return Js::Configuration::Global.flags.IsEnabled(Js::##name##Flag); \
     } \
-    HRESULT __stdcall Get##name##Flag(int *flag) \
+    HRESULT Get##name##Flag(int *flag) \
     { \
         *flag = Js::Configuration::Global.flags.##name##; \
         return S_OK; \
     } \
-    HRESULT __stdcall Set##name##Flag(int flag) \
+    HRESULT Set##name##Flag(int flag) \
     { \
         Js::Configuration::Global.flags.##name = flag; \
         return S_OK; \

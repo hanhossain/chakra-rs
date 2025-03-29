@@ -150,9 +150,9 @@ typedef enum tagEFaultRepRetVal
 
 #endif // DEBUG
 
-#define NTAPI       __stdcall
-#define WINAPI      __stdcall
-#define CALLBACK    __stdcall
+#define NTAPI
+#define WINAPI
+#define CALLBACK
 #define NTSYSAPI
 
 #define _WINNT_
@@ -202,10 +202,9 @@ typedef enum tagEFaultRepRetVal
 
 #define interface struct
 
-#define STDMETHODCALLTYPE    __stdcall
+#define STDMETHODCALLTYPE
 #define STDMETHODVCALLTYPE   __cdecl
 
-#define STDAPICALLTYPE       __stdcall
 #define STDAPIVCALLTYPE      __cdecl
 
 #define STDMETHODIMP         HRESULT STDMETHODCALLTYPE
@@ -220,8 +219,8 @@ typedef enum tagEFaultRepRetVal
 #define STDMETHODV(method)       virtual HRESULT STDMETHODVCALLTYPE method
 #define STDMETHODV_(type,method) virtual type STDMETHODVCALLTYPE method
 
-#define STDAPI               EXTERN_C HRESULT STDAPICALLTYPE
-#define STDAPI_(type)        EXTERN_C type STDAPICALLTYPE
+#define STDAPI               EXTERN_C HRESULT
+#define STDAPI_(type)        EXTERN_C type
 
 #define STDAPIV              EXTERN_C HRESULT STDAPIVCALLTYPE
 #define STDAPIV_(type)       EXTERN_C type STDAPIVCALLTYPE
@@ -1198,7 +1197,7 @@ typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
-typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
+typedef VOID (*WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 // PORTABILITY_ASSERT and PORTABILITY_WARNING macros are meant to be used to
 // mark places in the code that needs attention for portability. The usual

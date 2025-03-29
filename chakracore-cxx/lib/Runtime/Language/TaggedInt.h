@@ -67,9 +67,9 @@ namespace Js {
 
     private:
         static Var DivideByZero(int nLeft, ScriptContext* scriptContext);
-        static Var __stdcall OverflowHelper(int overflowValue, ScriptContext* scriptContext);
-        static Var __stdcall IncrementOverflowHelper(ScriptContext* scriptContext);
-        static Var __stdcall DecrementUnderflowHelper(ScriptContext* scriptContext);
+        static Var OverflowHelper(int overflowValue, ScriptContext* scriptContext);
+        static Var IncrementOverflowHelper(ScriptContext* scriptContext);
+        static Var DecrementUnderflowHelper(ScriptContext* scriptContext);
 
 #ifdef DBG
         static Var DbgAdd(Var aLeft, Var aRight,ScriptContext* scriptContext);

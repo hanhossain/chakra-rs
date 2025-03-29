@@ -6854,7 +6854,7 @@ public:
 #define _O_TEXT     0x4000
 #define _O_BINARY   0x8000
 
-ULONG_PTR __stdcall GetCurrentSP();
+ULONG_PTR GetCurrentSP();
 
 // xplat-todo: implement me
 #define IsProcessorFeaturePresent(x) false
