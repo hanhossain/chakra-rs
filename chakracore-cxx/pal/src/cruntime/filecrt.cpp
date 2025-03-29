@@ -145,7 +145,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fflush( PAL_FILE *stream )
 {
     int nRetVal = 0;
@@ -565,7 +564,6 @@ Return value:
     0 on success, -1 on failure.
 --*/
 int
-_cdecl
 PAL_fseek(
     PAL_FILE * pf,
     LONG lOffset,

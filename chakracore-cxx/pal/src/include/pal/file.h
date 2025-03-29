@@ -198,7 +198,7 @@ PAL_FILE *stream = stream to be flushed.
 Return value:
     0 is returned on success, otherwise EOF is returned.
 --*/
-int _cdecl PAL_fflush( PAL_FILE *stream );
+int PAL_fflush( PAL_FILE *stream );
 
 /*++
 PAL_mkstemp
@@ -307,7 +307,7 @@ nWhence = method used to determine the file_position indicator location relative
 Return value:
     0 on success, -1 on failure.
 --*/
-int _cdecl PAL_fseek(PAL_FILE *pf, LONG lOffset, int nWhence);
+int PAL_fseek(PAL_FILE *pf, LONG lOffset, int nWhence);
 
 #ifdef __cplusplus
 }

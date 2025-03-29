@@ -553,7 +553,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_ferror(PAL_FILE * f)
 {
     INT nErrorCode = PAL_FILE_NOERROR;
@@ -584,7 +583,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fclose(PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -612,7 +610,6 @@ Function :
     See MSDN for more details.
 --*/
 void
-_cdecl
 PAL_setbuf(PAL_FILE * f, char * buffer)
 {
     PERF_ENTRY(setbuf);
@@ -634,7 +631,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fputs(const char * str,  PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -662,7 +658,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fputc(int c,  PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -689,7 +684,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_putchar( int c )
 {
     INT nRetVal = 0;
@@ -712,7 +706,6 @@ Function :
     See MSDN for more details.
 --*/
 LONG
-_cdecl
 PAL_ftell(PAL_FILE * f)
 {
     long lRetVal = 0;
@@ -837,7 +830,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_feof(PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -861,7 +853,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_getc(PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -901,7 +892,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_ungetc(int c, PAL_FILE * f)
 {
     INT nRetVal = 0;
@@ -941,7 +931,6 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
 {
     INT nRetVal = 0;

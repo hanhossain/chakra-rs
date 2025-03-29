@@ -215,7 +215,6 @@ JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstru
     return LoadScriptFileHelper(callee, arguments, argumentCount, false);
 }
 
-// needed because of calling convention differences between _stdcall and _cdecl
 void WScriptJsrt::FinalizeFree(void* addr)
 {
     free(addr);

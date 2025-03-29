@@ -37,12 +37,10 @@ extern "C" {
 
 #ifdef __i386__
 
-#define _cdecl
 #define CDECL
 
 #else   // !defined(__i386__)
 
-#define _cdecl
 #define CDECL
 
 #endif  // !defined(__i386__)
