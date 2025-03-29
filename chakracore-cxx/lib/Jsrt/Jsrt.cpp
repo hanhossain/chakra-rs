@@ -2906,7 +2906,7 @@ typedef struct JsNativeFunctionInfo
     bool isConstructCall;
 }JsNativeFunctionInfo;
 
-typedef _Ret_maybenull_ JsValueRef(CHAKRA_CALLBACK * JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
+typedef _Ret_maybenull_ JsValueRef(* JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
 #endif
 
 typedef struct JsNativeFunctionWrapperHolder
@@ -4057,7 +4057,7 @@ JsErrorCode RunSerializedScriptCore(
     });
 }
 
-static void CHAKRA_CALLBACK DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
+static void DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
 {
     // Do nothing
 }
@@ -5283,7 +5283,7 @@ CHAKRA_API JsSerializeParserState(
     return errorCode;
 }
 
-static bool CHAKRA_CALLBACK DummyScriptLoadSourceCallbackForRunScriptWithParserState(
+static bool DummyScriptLoadSourceCallbackForRunScriptWithParserState(
     JsSourceContext sourceContext,
     _Out_ JsValueRef *value,
     _Out_ JsParseScriptAttributes *parseAttributes)

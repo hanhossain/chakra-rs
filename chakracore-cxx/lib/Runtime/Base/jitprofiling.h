@@ -580,16 +580,6 @@ typedef struct _iJIT_Method_Update
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
-#ifndef JITAPI_CDECL
-#  if defined _M_IX86 || defined __i386__
-#    define JITAPI_CDECL __attribute__ ((cdecl))
-#  else  /* _M_IX86 || __i386__ */
-#    define JITAPI_CDECL /* actual only on x86_64 platform */
-#  endif /* _M_IX86 || __i386__ */
-#endif /* JITAPI_CDECL */
-
-#define JITAPI JITAPI_CDECL
 /** @endcond */
 
 /**
@@ -602,7 +592,7 @@ extern "C" {
  * @return a new unique method ID. When out of unique method IDs, this API
  * returns 0, which is not an accepted value.
  */
-unsigned int JITAPI iJIT_GetNewMethodID(void);
+unsigned int iJIT_GetNewMethodID(void);
 
 /**
  * @brief Returns the current mode of the agent.
@@ -610,7 +600,7 @@ unsigned int JITAPI iJIT_GetNewMethodID(void);
  * @return iJIT_SAMPLING_ON, indicating that agent is running, or
  * iJIT_NOTHING_RUNNING if no agent is running.
  */
-iJIT_IsProfilingActiveFlags JITAPI iJIT_IsProfilingActive(void);
+iJIT_IsProfilingActiveFlags iJIT_IsProfilingActive(void);
 
 /**
  * @brief Reports information about JIT-compiled code to the agent.
@@ -625,7 +615,7 @@ iJIT_IsProfilingActiveFlags JITAPI iJIT_IsProfilingActive(void);
  * 
  * @returns 1 on success, otherwise 0.
  */
-int JITAPI iJIT_NotifyEvent(iJIT_JVM_EVENT event_type, void *EventSpecificData);
+int iJIT_NotifyEvent(iJIT_JVM_EVENT event_type, void *EventSpecificData);
 
 #ifdef __cplusplus
 }

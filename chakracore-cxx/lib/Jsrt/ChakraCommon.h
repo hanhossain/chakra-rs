@@ -39,13 +39,6 @@
 #define _Out_writes_(size)
 #define _Out_writes_to_opt_(byteLength, byteLength2)
 
-// Header macros
-#ifdef __i386___
-#define CHAKRA_CALLBACK __attribute__((cdecl))
-#else // non-32 bit x86 doesn't have cdecl support
-#define CHAKRA_CALLBACK
-#endif // __i386__
-
 #define SET_API_VISIBILITY __attribute__((visibility("default")))
 
 #ifdef __cplusplus
@@ -652,7 +645,7 @@ typedef unsigned short WCHAR;
     ///     with the allocation. Returning false indicates the allocation request is rejected. The
     ///     return value is ignored for other allocation events.
     /// </returns>
-    typedef bool (CHAKRA_CALLBACK * JsMemoryAllocationCallback)(_In_opt_ void *callbackState, _In_ JsMemoryEventType allocationEvent, _In_ size_t allocationSize);
+    typedef bool (* JsMemoryAllocationCallback)(_In_opt_ void *callbackState, _In_ JsMemoryEventType allocationEvent, _In_ size_t allocationSize);
 
     /// <summary>
     ///     A callback called before collection.
@@ -661,7 +654,7 @@ typedef unsigned short WCHAR;
     ///     Use <c>JsSetBeforeCollectCallback</c> to register this callback.
     /// </remarks>
     /// <param name="callbackState">The state passed to <c>JsSetBeforeCollectCallback</c>.</param>
-    typedef void (CHAKRA_CALLBACK *JsBeforeCollectCallback)(_In_opt_ void *callbackState);
+    typedef void (*JsBeforeCollectCallback)(_In_opt_ void *callbackState);
 
     /// <summary>
     ///     A callback called before collecting an object.
@@ -671,7 +664,7 @@ typedef unsigned short WCHAR;
     /// </remarks>
     /// <param name="ref">The object to be collected.</param>
     /// <param name="callbackState">The state passed to <c>JsSetObjectBeforeCollectCallback</c>.</param>
-    typedef void (CHAKRA_CALLBACK *JsObjectBeforeCollectCallback)(_In_ JsRef ref, _In_opt_ void *callbackState);
+    typedef void (*JsObjectBeforeCollectCallback)(_In_ JsRef ref, _In_opt_ void *callbackState);
 
     /// <summary>
     ///     A background work item callback.
@@ -681,7 +674,7 @@ typedef unsigned short WCHAR;
     ///     invoke the work item callback on the background thread of its choice.
     /// </remarks>
     /// <param name="callbackState">Data argument passed to the thread service.</param>
-    typedef void (CHAKRA_CALLBACK *JsBackgroundWorkItemCallback)(_In_opt_ void *callbackState);
+    typedef void (*JsBackgroundWorkItemCallback)(_In_opt_ void *callbackState);
 
     /// <summary>
     ///     A thread service callback.
@@ -694,14 +687,14 @@ typedef unsigned short WCHAR;
     /// </remarks>
     /// <param name="callback">The callback for the background work item.</param>
     /// <param name="callbackState">The data argument to be passed to the callback.</param>
-    typedef bool (CHAKRA_CALLBACK *JsThreadServiceCallback)(_In_ JsBackgroundWorkItemCallback callback, _In_opt_ void *callbackState);
+    typedef bool (*JsThreadServiceCallback)(_In_ JsBackgroundWorkItemCallback callback, _In_opt_ void *callbackState);
 
     /// <summary>
     ///     Called by the runtime when it is finished with all resources related to the script execution.
     ///     The caller should free the source if loaded, the byte code, and the context at this time.
     /// </summary>
     /// <param name="sourceContext">The context passed to Js[Parse|Run]SerializedScriptWithCallback</param>
-    typedef void (CHAKRA_CALLBACK * JsSerializedScriptUnloadCallback)(_In_ JsSourceContext sourceContext);
+    typedef void (* JsSerializedScriptUnloadCallback)(_In_ JsSourceContext sourceContext);
 
     /// <summary>
     ///     A finalizer callback.
@@ -709,7 +702,7 @@ typedef unsigned short WCHAR;
     /// <param name="data">
     ///     The external data that was passed in when creating the object being finalized.
     /// </param>
-    typedef void (CHAKRA_CALLBACK *JsFinalizeCallback)(_In_opt_ void *data);
+    typedef void (*JsFinalizeCallback)(_In_opt_ void *data);
 
     /// <summary>
     ///     A function callback.
@@ -724,7 +717,7 @@ typedef unsigned short WCHAR;
     ///     The state passed to <c>JsCreateFunction</c>.
     /// </param>
     /// <returns>The result of the call, if any.</returns>
-    typedef _Ret_maybenull_ JsValueRef(CHAKRA_CALLBACK * JsNativeFunction)(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState);
+    typedef _Ret_maybenull_ JsValueRef(* JsNativeFunction)(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState);
 
     /// <summary>
     ///     A promise continuation callback.
@@ -737,7 +730,7 @@ typedef unsigned short WCHAR;
     /// </remarks>
     /// <param name="task">The task, represented as a JavaScript function.</param>
     /// <param name="callbackState">The data argument to be passed to the callback.</param>
-    typedef void (CHAKRA_CALLBACK *JsPromiseContinuationCallback)(_In_ JsValueRef task, _In_opt_ void *callbackState);
+    typedef void (*JsPromiseContinuationCallback)(_In_ JsValueRef task, _In_opt_ void *callbackState);
 
     /// <summary>
     ///     Creates a new runtime.

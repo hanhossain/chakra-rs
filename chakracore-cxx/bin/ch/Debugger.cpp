@@ -9,7 +9,7 @@
 
 #define MAX_BASELINE_SIZE       (1024*1024*200)
 
-void CHAKRA_CALLBACK Debugger::DebugEventHandler(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState)
+void Debugger::DebugEventHandler(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState)
 {
     Debugger* debugger = (Debugger*)callbackState;
     debugger->HandleDebugEvent(debugEvent, eventData);

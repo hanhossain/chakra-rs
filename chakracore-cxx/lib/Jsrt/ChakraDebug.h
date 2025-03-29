@@ -110,7 +110,7 @@
     /// <param name="debugEvent">The type of JsDiagDebugEvent event.</param>
     /// <param name="eventData">Additional data related to the debug event.</param>
     /// <param name="callbackState">The state passed to <c>JsDiagStartDebugging</c>.</param>
-    typedef void (CHAKRA_CALLBACK * JsDiagDebugEventCallback)(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState);
+    typedef void (* JsDiagDebugEventCallback)(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState);
 
     /// <summary>
     ///     Starts debugging in the given runtime.
@@ -659,7 +659,7 @@
     /// <param name="read">If the handle should be opened for reading.</param>
     /// <param name="write">If the handle should be opened for writing.</param>
     /// <returns>A JsTTDStreamHandle opened in read/write mode as specified.</returns>
-    typedef JsTTDStreamHandle (CHAKRA_CALLBACK *TTDOpenResourceStreamCallback)(_In_ size_t uriLength, _In_reads_(uriLength) const char* uri, _In_ size_t asciiNameLength, _In_reads_(asciiNameLength) const char* asciiResourceName, _In_ bool read, _In_ bool write);
+    typedef JsTTDStreamHandle (*TTDOpenResourceStreamCallback)(_In_ size_t uriLength, _In_reads_(uriLength) const char* uri, _In_ size_t asciiNameLength, _In_reads_(asciiNameLength) const char* asciiResourceName, _In_ bool read, _In_ bool write);
 
     /// <summary>
     ///     TTD API -- may change in future versions:
@@ -670,7 +670,7 @@
     /// <param name="size">The max number of bytes that should be read.</param>
     /// <param name="readCount">The actual number of bytes read and placed in the buffer.</param>
     /// <returns>true if the read was successful false otherwise.</returns>
-    typedef bool (CHAKRA_CALLBACK *JsTTDReadBytesFromStreamCallback)(_In_ JsTTDStreamHandle handle, _Out_writes_(size) byte* buff, _In_ size_t size, _Out_ size_t* readCount);
+    typedef bool (*JsTTDReadBytesFromStreamCallback)(_In_ JsTTDStreamHandle handle, _Out_writes_(size) byte* buff, _In_ size_t size, _Out_ size_t* readCount);
 
     /// <summary>
     ///     TTD API -- may change in future versions:
@@ -681,7 +681,7 @@
     /// <param name="size">The max number of bytes that should be written.</param>
     /// <param name="readCount">The actual number of bytes written to the HANDLE.</param>
     /// <returns>true if the write was successful false otherwise.</returns>
-    typedef bool (CHAKRA_CALLBACK *JsTTDWriteBytesToStreamCallback)(_In_ JsTTDStreamHandle handle, _In_reads_(size) const byte* buff, _In_ size_t size, _Out_ size_t* writtenCount);
+    typedef bool (*JsTTDWriteBytesToStreamCallback)(_In_ JsTTDStreamHandle handle, _In_reads_(size) const byte* buff, _In_ size_t size, _Out_ size_t* writtenCount);
 
     /// <summary>
     ///     TTD API -- may change in future versions:
@@ -693,7 +693,7 @@
     /// <param name="handle">The JsTTDStreamHandle to close.</param>
     /// <param name="read">If the handle was opened for reading.</param>
     /// <param name="write">If the handle was opened for writing.</param>
-    typedef void (CHAKRA_CALLBACK *JsTTDFlushAndCloseStreamCallback)(_In_ JsTTDStreamHandle handle, _In_ bool read, _In_ bool write);
+    typedef void (*JsTTDFlushAndCloseStreamCallback)(_In_ JsTTDStreamHandle handle, _In_ bool read, _In_ bool write);
 
     /// <summary>
     ///     TTD API -- may change in future versions:

@@ -175,7 +175,7 @@ typedef struct {
     bool freeingHandled;
 } SerializedCallbackInfo;
 
-static bool CHAKRA_CALLBACK DummyJsSerializedScriptLoadUtf8Source(
+static bool DummyJsSerializedScriptLoadUtf8Source(
     JsSourceContext sourceContext,
     JsValueRef* scriptBuffer,
     JsParseScriptAttributes *parseAttributes)

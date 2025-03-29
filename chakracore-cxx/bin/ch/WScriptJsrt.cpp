@@ -216,7 +216,7 @@ JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstru
 }
 
 // needed because of calling convention differences between _stdcall and _cdecl
-void CHAKRA_CALLBACK WScriptJsrt::FinalizeFree(void* addr)
+void WScriptJsrt::FinalizeFree(void* addr)
 {
     free(addr);
 }
@@ -289,7 +289,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage)
     }
 }
 
-byte * CHAKRA_CALLBACK ReallocateBufferMemory(void * state, byte *oldBuffer, size_t newSize, size_t *allocatedSize)
+byte * ReallocateBufferMemory(void * state, byte *oldBuffer, size_t newSize, size_t *allocatedSize)
 {
     void* data = realloc((void*)oldBuffer, newSize);
     if (allocatedSize)
@@ -299,7 +299,7 @@ byte * CHAKRA_CALLBACK ReallocateBufferMemory(void * state, byte *oldBuffer, siz
     return (byte*)data;
 }
 
-bool CHAKRA_CALLBACK WriteHostObject(void * state, JsValueRef data)
+bool WriteHostObject(void * state, JsValueRef data)
 {
     // Not implemented
     return true;
@@ -404,18 +404,18 @@ Error:
     return returnValue;
 }
 
-JsValueRef CHAKRA_CALLBACK ReadHostObject(void * state)
+JsValueRef ReadHostObject(void * state)
 {
     Assert(false); // TBD
     return nullptr;
 }
 
-JsValueRef CHAKRA_CALLBACK GetSharedArrayBufferFromId(void * state, uint32_t id)
+JsValueRef GetSharedArrayBufferFromId(void * state, uint32_t id)
 {
     Assert(false); // TBD
     return nullptr;
 }
-JsValueRef CHAKRA_CALLBACK GetWasmModuleFromId(void * state, uint32_t transfer_id)
+JsValueRef GetWasmModuleFromId(void * state, uint32_t transfer_id)
 {
     Assert(false); // TBD
     return nullptr;
@@ -426,7 +426,7 @@ struct BufferFreeFunctionState {
     void* buffer;
 };
 
-void CHAKRA_CALLBACK BufferFreeFunction(void * state)
+void BufferFreeFunction(void * state)
 {
     BufferFreeFunctionState* bufferState = (BufferFreeFunctionState*)state;
     if (!bufferState)
