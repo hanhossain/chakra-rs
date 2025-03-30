@@ -133,7 +133,7 @@ static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
         *bTextMode = FALSE;
     }
 
-    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( CHAR ) );
+    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -351,8 +351,8 @@ _wfopen(
     const char16_t *fileName,
     const char16_t *mode)
 {
-    CHAR mbFileName[ _MAX_PATH ];
-    CHAR mbMode[ 10 ];
+    char mbFileName[ _MAX_PATH ];
+    char mbMode[ 10 ];
     PAL_FILE * filePtr = NULL;
 
     PERF_ENTRY(_wfopen);

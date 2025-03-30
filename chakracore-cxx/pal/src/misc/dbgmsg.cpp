@@ -155,7 +155,7 @@ BOOL DBG_init_channels(void)
     LPSTR env_pcache;
     LPSTR entry_ptr;
     LPSTR level_ptr;
-    CHAR plus_or_minus;
+    char plus_or_minus;
     DWORD flag_mask = 0;
     int ret;
 
@@ -475,8 +475,8 @@ Notes :
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
                    LPCSTR function, LPCSTR file, INT line, LPCSTR format, ...)
 {
-    CHAR *buffer = (CHAR*)alloca(DBG_BUFFER_SIZE);
-    CHAR indent[MAX_NESTING+1];
+    char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
+    char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
     INT output_size;
     va_list args;
@@ -589,8 +589,8 @@ Notes :
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
                    LPSTR file, INT line, LPSTR format, ...)
 {
-    CHAR *buffer = (CHAR*)alloca(DBG_BUFFER_SIZE);
-    CHAR indent[MAX_NESTING+1];
+    char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
+    char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
     INT output_size;
     va_list args;

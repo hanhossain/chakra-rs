@@ -39,7 +39,6 @@ typedef __w64 unsigned long ULONG_PTR;
 typedef __w64 unsigned long DWORD_PTR;
 typedef __w64 unsigned long SIZE_T;
 #endif
-typedef          char       CHAR;
 typedef          int        INT;
 typedef          long       LONG;
 typedef unsigned char       UCHAR;
@@ -197,13 +196,13 @@ LongToUChar(
 // If the function is not inlined and you link .objs compiled with different compiler switches,
 // you get one or the other function arbitrarily chosen.
 //
-// INT -> CHAR conversion
+// INT -> char conversion
 //
 __forceinline
 HRESULT
 IntToChar(
      INT iOperand,
-     CHAR* pch)
+     char* pch)
 {
 #ifdef _CHAR_UNSIGNED
     return IntToUChar(iOperand, (UCHAR*)pch);
@@ -348,13 +347,13 @@ UIntToUChar(
 // If the function is not inlined and you link .objs compiled with different compiler switches,
 // you get one or the other function arbitrarily chosen.
 //
-// UINT -> CHAR conversion
+// UINT -> char conversion
 //
 __forceinline
 HRESULT
 UIntToChar(
      UINT uOperand,
-     CHAR* pch)
+     char* pch)
 {
 #ifdef _CHAR_UNSIGNED
     return UIntToUChar(uOperand, (UCHAR*)pch);
@@ -466,13 +465,13 @@ ULongToUChar(
 // If the function is not inlined and you link .objs compiled with different compiler switches,
 // you get one or the other function arbitrarily chosen.
 //
-// ULONG -> CHAR conversion
+// ULONG -> char conversion
 //
 __forceinline
 HRESULT
 ULongToChar(
      ULONG ulOperand,
-     CHAR* pch)
+     char* pch)
 {
 #ifdef _CHAR_UNSIGNED
     return ULongToUChar(ulOperand, (unsigned char*)pch);

@@ -307,20 +307,19 @@ typedef WCHAR *LPWSTR, *PWSTR;
 
 typedef const WCHAR *LPCWSTR, *PCWSTR;
 
-typedef char CHAR;
-typedef CHAR *PCHAR;
-typedef CHAR *LPCH, *PCH;
-typedef const CHAR *LPCCH, *PCCH;
-typedef CHAR *NPSTR;
-typedef CHAR *LPSTR, *PSTR;
-typedef const CHAR *LPCSTR, *PCSTR;
+typedef char *PCHAR;
+typedef char *LPCH, *PCH;
+typedef const char *LPCCH, *PCCH;
+typedef char *NPSTR;
+typedef char *LPSTR, *PSTR;
+typedef const char *LPCSTR, *PCSTR;
 
 #ifdef UNICODE
 typedef WCHAR TCHAR;
 typedef WCHAR _TCHAR;
 #else
-typedef CHAR TCHAR;
-typedef CHAR _TCHAR;
+typedef char TCHAR;
+typedef char _TCHAR;
 #endif
 typedef TCHAR *PTCHAR;
 typedef TCHAR *LPTSTR, *PTSTR;

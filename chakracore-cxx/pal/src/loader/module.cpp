@@ -218,7 +218,7 @@ LoadLibraryExW(
         return nullptr;
     }
 
-    CHAR * lpstr;
+    char * lpstr;
     INT name_length;
     PathCharString pathstr;
     HMODULE hModule = nullptr;
@@ -585,7 +585,7 @@ PAL_LoadLibraryDirect(
      LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
-    CHAR * lpstr = nullptr;
+    char * lpstr = nullptr;
     INT name_length;
     void *dl_handle = nullptr;
 
@@ -635,7 +635,7 @@ PAL_RegisterLibraryDirect(
      LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
-    CHAR * lpstr = nullptr;
+    char * lpstr = nullptr;
     INT name_length;
     HMODULE hModule = nullptr;
 

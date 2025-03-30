@@ -447,10 +447,10 @@ _wmakepath(
           const char16_t *fname,
           const char16_t *ext)
 {
-    CHAR Dir[ _MAX_DIR ]={0};
-    CHAR FileName[ _MAX_FNAME ]={0};
-    CHAR Ext[ _MAX_EXT ]={0};
-    CHAR Path[ _MAX_PATH ]={0};
+    char Dir[ _MAX_DIR ]={0};
+    char FileName[ _MAX_FNAME ]={0};
+    char Ext[ _MAX_EXT ]={0};
+    char Path[ _MAX_PATH ]={0};
 
     PERF_ENTRY(_wmakepath);
     ENTRY("_wmakepath (path=%p, drive=%p (%S), dir=%p (%S), fname=%p (%S), ext=%p (%S))\n",

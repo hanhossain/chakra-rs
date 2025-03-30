@@ -46,7 +46,7 @@ SET_DEFAULT_DEBUG_CHANNEL(LOADER);
     Retrieve the full path of the librotor_pal.so using loadquery()
 
 Parameters:
-    pszBuf - CHAR array of MAX_PATH_FNAME length
+    pszBuf - char array of MAX_PATH_FNAME length
 
 Return value:
     0 on success
@@ -54,7 +54,7 @@ Return value:
 --*/
 int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
 {
-    CHAR*               pLoadQueryBuf = NULL;
+    char*               pLoadQueryBuf = NULL;
     UINT                cbBuf = 1024;
     struct ld_info *    pInfo = NULL;
     INT                 iLQRetVal = -1;
@@ -74,7 +74,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     // an error other than ENOMEM
     while (iLQRetVal != 0)
     {
-        pLoadQueryBuf = (CHAR*) InternalMalloc (pThread, cbBuf * sizeof(char));
+        pLoadQueryBuf = (char*) InternalMalloc (pThread, cbBuf * sizeof(char));
         if (!pLoadQueryBuf)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);

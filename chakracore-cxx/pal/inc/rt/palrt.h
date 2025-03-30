@@ -186,7 +186,7 @@ typedef enum tagEFaultRepRetVal
     ((type *)((LONG_PTR)(address) - FIELD_OFFSET(type, field)))
 
 #define ARGUMENT_PRESENT(ArgumentPointer)    (\
-    (CHAR *)(ArgumentPointer) != (CHAR *)(NULL) )
+    (char *)(ArgumentPointer) != (char *)(NULL) )
 
 #if defined(_WIN64) || defined(_M_ALPHA)
 #define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
@@ -540,14 +540,14 @@ struct tagVARIANT
                 interface IUnknown **ppunkVal;
                 VARIANT *pvarVal;
                 PVOID byref;
-                CHAR cVal;
+                char cVal;
                 USHORT uiVal;
                 ULONG ulVal;
                 ULONGLONG ullVal;
                 INT intVal;
                 UINT uintVal;
                 DECIMAL *pdecVal;
-                CHAR *pcVal;
+                char *pcVal;
                 USHORT *puiVal;
                 ULONG *pulVal;
                 ULONGLONG *pullVal;

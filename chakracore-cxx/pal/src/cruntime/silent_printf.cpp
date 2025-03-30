@@ -48,11 +48,11 @@ Function:
 INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPSTR BufferPtr = Buffer;
     LPCSTR Fmt = Format;
     LPWSTR TempWStr;
-    CHAR TempStr[MAX_STR_LEN+1];
+    char TempStr[MAX_STR_LEN+1];
     WCHAR TempWChar;
     INT Flags;
     INT Width;
@@ -155,7 +155,7 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[4];
+                char TempBuffer[4];
 
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
@@ -328,7 +328,7 @@ Function:
 --*/
 int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
 {
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
     LPWSTR TempWStr;
     LPSTR TempStr;
@@ -436,7 +436,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[4];
+                char TempBuffer[4];
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
                 {

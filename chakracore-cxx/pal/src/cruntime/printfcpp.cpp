@@ -461,7 +461,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
 
     if (*Fmt && **Fmt == '%')
     {
-        *Out++ = (CHAR) *(*Fmt)++;
+        *Out++ = (char) *(*Fmt)++;
     }
     else
     {
@@ -494,7 +494,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
             case '#':
                 *Flags |= PFF_POUND; break;
         }
-            *Out++ = (CHAR) *(*Fmt)++;
+            *Out++ = (char) *(*Fmt)++;
     }
     /* '-' flag negates '0' flag */
     if ((*Flags & PFF_MINUS) && (*Flags & PFF_ZERO))
@@ -508,8 +508,8 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
         TempStrPtr = TempStr;
         while (isdigit(**Fmt))
         {
-            *TempStrPtr++ = (CHAR) **Fmt;
-            *Out++ = (CHAR) *(*Fmt)++;
+            *TempStrPtr++ = (char) **Fmt;
+            *Out++ = (char) *(*Fmt)++;
         }
         *TempStrPtr = 0; /* end string */
         *Width = atoi(TempStr);
@@ -523,7 +523,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
     else if (**Fmt == '*')
     {
         *Width = WIDTH_STAR;
-        *Out++ = (CHAR) *(*Fmt)++;
+        *Out++ = (char) *(*Fmt)++;
         if (isdigit(**Fmt))
         {
             /* this is an invalid width because we have a * then a number */
@@ -531,7 +531,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
             *Width = WIDTH_INVALID;
             while (isdigit(**Fmt))
             {
-                *Out++ = (CHAR) *(*Fmt)++;
+                *Out++ = (char) *(*Fmt)++;
             }
         }
     }
@@ -539,14 +539,14 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
     /* grab precision specifier */
     if (**Fmt == '.')
     {
-        *Out++ = (CHAR) *(*Fmt)++;
+        *Out++ = (char) *(*Fmt)++;
         if (isdigit(**Fmt))
         {
             TempStrPtr = TempStr;
             while (isdigit(**Fmt))
             {
-                *TempStrPtr++ = (CHAR) **Fmt;
-                *Out++ = (CHAR) *(*Fmt)++;
+                *TempStrPtr++ = (char) **Fmt;
+                *Out++ = (char) *(*Fmt)++;
             }
             *TempStrPtr = 0; /* end string */
             *Precision = atoi(TempStr);
@@ -560,7 +560,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
         else if (**Fmt == '*')
         {
             *Precision = PRECISION_STAR;
-            *Out++ = (CHAR) *(*Fmt)++;
+            *Out++ = (char) *(*Fmt)++;
             if (isdigit(**Fmt))
             {
                 /* this is an invalid precision because we have a .* then a number */
@@ -568,7 +568,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
                 *Precision = PRECISION_INVALID;
                 while (isdigit(**Fmt))
                 {
-                    *Out++ = (CHAR) *(*Fmt)++;
+                    *Out++ = (char) *(*Fmt)++;
                 }
             }
         }
@@ -1132,7 +1132,7 @@ int CorUnix::InternalVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const 
 
 int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *format, va_list aparg)
 {
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCWSTR Fmt = format;
     LPWSTR TempWStr = NULL;
     LPWSTR WorkingWStr = NULL;
@@ -1562,7 +1562,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
 int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPSTR BufferPtr = Buffer;
     LPCSTR Fmt = Format;
     LPWSTR TempWStr;
@@ -1681,7 +1681,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[5];
+                char TempBuffer[5];
 
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
@@ -1857,7 +1857,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
 int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPWSTR BufferPtr = Buffer;
     LPCWSTR Fmt = Format;
     LPWSTR TempWStr = NULL;
@@ -2228,7 +2228,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
 
 int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, va_list aparg)
 {
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
     LPWSTR TempWStr;
     LPSTR TempStr;
@@ -2356,7 +2356,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[5];
+                char TempBuffer[5];
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
                 {

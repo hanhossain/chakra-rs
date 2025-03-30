@@ -191,7 +191,7 @@ void
 OutputDebugStringW(
          LPCWSTR lpOutputString)
 {
-    CHAR *lpOutputStringA;
+    char *lpOutputStringA;
     int strLen;
 
     PERF_ENTRY(OutputDebugStringW);
@@ -215,7 +215,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(CHAR)))) == NULL)
+    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -344,7 +344,7 @@ DebugBreakCommand()
         }
 
         SIZE_T dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
-        CHAR * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
+        char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
 
         if (NULL == exe_buf)
         {
@@ -354,7 +354,7 @@ DebugBreakCommand()
         if (snprintf (pid_buf, sizeof (pid_buf), PID_TEXT "%d", getpid()) <= 0) {
             goto FAILED;
         }
-        if (snprintf (exe_buf, sizeof (CHAR) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
+        if (snprintf (exe_buf, sizeof (char) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
             goto FAILED;
         }
 

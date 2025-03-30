@@ -868,7 +868,7 @@ Notes 2:
 static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
 {
 #ifndef __APPLE__
-    CHAR real_path[PATH_MAX+1];
+    char real_path[PATH_MAX+1];
     LPSTR env_path;
     LPSTR path_ptr;
     LPSTR cur_dir;
@@ -1130,7 +1130,7 @@ last_resort:
 #else // !__APPLE__
     // On the Mac we can just directly ask the OS for the executable path.
 
-    CHAR exec_path[PATH_MAX+1];
+    char exec_path[PATH_MAX+1];
     LPWSTR return_value;
     INT return_size;
 

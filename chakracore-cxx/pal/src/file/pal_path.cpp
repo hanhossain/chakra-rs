@@ -194,7 +194,7 @@ GetFullPathNameW(
     LPSTR fileNameA;
     /* bufferA needs to be able to hold a path that's potentially as
        large as MAX_LONGPATH WCHARs. */
-    CHAR * bufferA;
+    char * bufferA;
     size_t bufferASize = 0;
     PathCharString bufferAPS;
     LPSTR lpFilePartA;
@@ -1093,11 +1093,11 @@ SearchPathA(
     )
 {
     DWORD nRet = 0;
-    CHAR * FullPath;
+    char * FullPath;
     size_t FullPathLength = 0;
     PathCharString FullPathPS;
     PathCharString CanonicalFullPathPS;
-    CHAR * CanonicalFullPath;
+    char * CanonicalFullPath;
     LPCSTR pPathStart;
     LPCSTR pPathEnd;
     size_t PathLength;

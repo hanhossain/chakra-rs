@@ -85,8 +85,8 @@ typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
 
 typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
     USHORT ne_magic;                    // Magic number
-    CHAR   ne_ver;                      // Version number
-    CHAR   ne_rev;                      // Revision number
+    char   ne_ver;                      // Version number
+    char   ne_rev;                      // Revision number
     USHORT ne_enttab;                   // Offset of Entry Table
     USHORT ne_cbenttab;                 // Number of bytes in Entry Table
     LONG   ne_crc;                      // Checksum of whole file
@@ -1385,7 +1385,7 @@ typedef struct _IMAGE_RESOURCE_DIRECTORY_ENTRY {
 
 typedef struct _IMAGE_RESOURCE_DIRECTORY_STRING {
     USHORT  Length;
-    CHAR    NameString[ 1 ];
+    char    NameString[ 1 ];
 } IMAGE_RESOURCE_DIRECTORY_STRING, *PIMAGE_RESOURCE_DIRECTORY_STRING;
 
 

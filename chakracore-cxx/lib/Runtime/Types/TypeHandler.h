@@ -15,7 +15,7 @@ namespace Js
     };
 
 #if ENABLE_FIXED_FIELDS
-    enum FixedPropertyKind : CHAR
+    enum FixedPropertyKind : char
     {
         FixedDataProperty = 1 << 0,
         FixedMethodProperty = 1 << 1,

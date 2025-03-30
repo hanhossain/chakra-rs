@@ -137,8 +137,8 @@ GetEnvironmentVariableW(
              LPWSTR lpBuffer,
              DWORD nSize)
 {
-    CHAR *inBuff = NULL;
-    CHAR *outBuff = NULL;
+    char *inBuff = NULL;
+    char *outBuff = NULL;
     INT inBuffSize;
     DWORD size = 0;
 
@@ -156,7 +156,7 @@ GetEnvironmentVariableW(
         goto done;
     }
 
-    inBuff = (CHAR *)PAL_malloc(inBuffSize);
+    inBuff = (char *)PAL_malloc(inBuffSize);
     if (inBuff == NULL)
     {
         ERROR("malloc failed\n");
@@ -165,7 +165,7 @@ GetEnvironmentVariableW(
     }
     
     if (nSize) {
-        outBuff = (CHAR *)PAL_malloc(nSize*2);
+        outBuff = (char *)PAL_malloc(nSize*2);
         if (outBuff == NULL)
         {
             ERROR("malloc failed\n");
@@ -274,7 +274,7 @@ SetEnvironmentVariableW(
         goto done;
     }
 
-    name = (PCHAR)PAL_malloc(sizeof(CHAR)* nameSize);
+    name = (PCHAR)PAL_malloc(sizeof(char)* nameSize);
     if (name == NULL)
     {
         ERROR("malloc failed\n");
@@ -300,7 +300,7 @@ SetEnvironmentVariableW(
             goto done;
         }
 
-        value = (PCHAR)PAL_malloc(sizeof(CHAR)*valueSize);
+        value = (PCHAR)PAL_malloc(sizeof(char)*valueSize);
         
         if ( NULL == value )
         {

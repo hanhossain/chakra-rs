@@ -2071,7 +2071,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
                 {
                     memcpy(pNewView, pView, sizeof(*pNewView));
                     NativeMapHolderAddRef(pNewView->pNMHolder);
-                    pNewView->lpAddress = (void*)((CHAR*)pNewView->pNMHolder->address +
+                    pNewView->lpAddress = (void*)((char*)pNewView->pNMHolder->address +
                         offset - pNewView->pNMHolder->offset);
                     pNewView->NumberOfBytesToMap = size; 
                 }

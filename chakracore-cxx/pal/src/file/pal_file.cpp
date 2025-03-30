@@ -1675,7 +1675,7 @@ GetFileAttributesA(
     struct stat stat_data;
     DWORD dwAttr = 0;
     DWORD dwLastError = 0;
-    CHAR * UnixFileName;
+    char * UnixFileName;
     int length = 0;
     PathCharString UnixFileNamePS;
 
@@ -3448,12 +3448,12 @@ GetTempFileNameA(
                   LPSTR lpTempFileName)
 {
     CPalThread *pThread;
-    CHAR * full_name;
+    char * full_name;
     PathCharString full_namePS;
     int length;
-    CHAR * file_template;
+    char * file_template;
     PathCharString file_templatePS;
-    CHAR    chLastPathNameChar;
+    char    chLastPathNameChar;
  
     HANDLE  hTempFile;
     UINT    uRet = 0;
@@ -3642,9 +3642,9 @@ GetTempFileNameW(
     CPalThread *pThread;
     INT path_size = 0;
     INT prefix_size = 0;
-    CHAR * full_name;
-    CHAR * prefix_string;
-    CHAR * tempfile_name;
+    char * full_name;
+    char * prefix_string;
+    char * tempfile_name;
     PathCharString full_namePS, prefix_stringPS;
     INT length = 0;
     UINT   uRet;

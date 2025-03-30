@@ -738,8 +738,8 @@ typedef struct _WIN32_FIND_DATAA {
     DWORD nFileSizeLow;
     DWORD dwReserved0;
     DWORD dwReserved1;
-    CHAR cFileName[ MAX_PATH_FNAME ];
-    CHAR cAlternateFileName[ 14 ];
+    char cFileName[ MAX_PATH_FNAME ];
+    char cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAA, *PWIN32_FIND_DATAA, *LPWIN32_FIND_DATAA;
 
 typedef struct _WIN32_FIND_DATAW {
@@ -5218,7 +5218,7 @@ typedef struct _OSVERSIONINFOA {
     DWORD dwMinorVersion;
     DWORD dwBuildNumber;
     DWORD dwPlatformId;
-    CHAR szCSDVersion[ 128 ];
+    char szCSDVersion[ 128 ];
 } OSVERSIONINFOA, *POSVERSIONINFOA, *LPOSVERSIONINFOA;
 
 typedef struct _OSVERSIONINFOW {
@@ -5246,7 +5246,7 @@ typedef struct _OSVERSIONINFOEXA {
     DWORD dwMinorVersion;
     DWORD dwBuildNumber;
     DWORD dwPlatformId;
-    CHAR szCSDVersion[ 128 ];
+    char szCSDVersion[ 128 ];
     WORD  wServicePackMajor;
     WORD  wServicePackMinor;
     WORD  wSuiteMask;

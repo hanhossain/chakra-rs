@@ -1836,8 +1836,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
 
                 if (jsErrorCode != JsErrorCode::JsErrorScriptCompile)
                 {
-                    CHAR shortFileName[_MAX_PATH];
-                    CHAR ext[_MAX_EXT];
+                    char shortFileName[_MAX_PATH];
+                    char ext[_MAX_EXT];
                     _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     if (metaData != JS_INVALID_REFERENCE)
@@ -1888,8 +1888,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
-                CHAR shortFileName[_MAX_PATH];
-                CHAR ext[_MAX_EXT];
+                char shortFileName[_MAX_PATH];
+                char ext[_MAX_EXT];
                 _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
                 fwprintf(stderr, _u("%ls\n\tat code (%S%S:%d:%d)\n"),
                     errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
@@ -1917,8 +1917,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                 {
                     const char *fName = fileName != nullptr ? fileName : "(unknown)";
 
-                    CHAR shortFileName[_MAX_PATH];
-                    CHAR ext[_MAX_EXT];
+                    char shortFileName[_MAX_PATH];
+                    char ext[_MAX_EXT];
                     _splitpath_s(fName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     // do not mix char/wchar. print them separately

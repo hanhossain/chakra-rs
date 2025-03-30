@@ -1078,7 +1078,7 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
     INT Length = 0;
     LPCSTR Buff = Buffer;
     LPCSTR Fmt = Format;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
     INT Width;
     INT Prefix;
@@ -1253,7 +1253,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
     INT Length = 0;
     LPCWSTR Buff = Buffer;
     LPCWSTR Fmt = Format;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
     INT Width;
     INT Prefix;
@@ -1770,10 +1770,10 @@ static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
              )
         )
     {
-        CHAR * pLocBuf = (CHAR *)PAL_malloc((pos-buff+1)*sizeof(CHAR));
+        char * pLocBuf = (char *)PAL_malloc((pos-buff+1)*sizeof(char));
         if (pLocBuf)
         {
-            memcpy(pLocBuf, buff, (pos-buff)*sizeof(CHAR));
+            memcpy(pLocBuf, buff, (pos-buff)*sizeof(char));
             pLocBuf[pos-buff] = 0;
             if (voidPtr)
                 ret = sscanf_s(pLocBuf, floatFmt, voidPtr, pn);

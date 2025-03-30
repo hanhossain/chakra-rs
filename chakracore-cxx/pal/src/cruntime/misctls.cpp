@@ -148,15 +148,15 @@ NOTES:
 --*/
 char * _ecvt( double value, int count, int * dec, int * sign )
 {
-    const CHAR * FORMAT_STRING = "%.348e";
-    CHAR TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
+    const char * FORMAT_STRING = "%.348e";
+    char TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
     CPalThread *pThread = NULL;
     LPSTR lpReturnBuffer = NULL;
     LPSTR lpStartOfReturnBuffer = NULL;
     LPSTR lpTempBuffer = NULL;
     LPSTR lpEndOfTempBuffer = NULL;
     INT nTempBufferLength = 0;
-    CHAR ExponentBuffer[ 6 ];
+    char ExponentBuffer[ 6 ];
     INT nExponentValue = 0;
     INT LoopIndex = 0;
 
@@ -302,7 +302,7 @@ char * _ecvt( double value, int count, int * dec, int * sign )
         /* Determine whether I need to round up. */
         if ( *(lpReturnBuffer + count) >= '5' )
         {
-            CHAR cNumberToBeRounded;
+            char cNumberToBeRounded;
             if ( count != 0 )
             {
                 cNumberToBeRounded = *(lpReturnBuffer + count - 1);
