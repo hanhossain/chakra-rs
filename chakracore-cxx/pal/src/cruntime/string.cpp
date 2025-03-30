@@ -213,7 +213,6 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
 
     ulResult = strtoul(szNumber, pszEnd, nBase);
 
-#ifdef BIT64
     if (ulResult > _UI32_MAX)
     {
         char ch = *szNumber;
@@ -230,7 +229,6 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
             errno = ERANGE;
         }
     }
-#endif
 
     LOGEXIT("strtoul returning unsigned long %lu\n", ulResult);
     PERF_EXIT(wcstoul);

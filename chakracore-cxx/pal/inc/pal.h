@@ -5111,19 +5111,11 @@ BitTestAndSet(
     return wasBitSet;
 }
 
-#if defined(BIT64)
 #define InterlockedExchangePointer(Target, Value) \
     ((PVOID)InterlockedExchange64((PLONG64)(Target), (LONGLONG)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
     ((PVOID)InterlockedCompareExchange64((PLONG64)(Destination), (LONGLONG)(ExChange), (LONGLONG)(Comperand)))
-#else
-#define InterlockedExchangePointer(Target, Value) \
-    ((PVOID)(UINT_PTR)InterlockedExchange((PLONG)(UINT_PTR)(Target), (LONG)(UINT_PTR)(Value)))
-
-#define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((PVOID)(UINT_PTR)InterlockedCompareExchange((PLONG)(UINT_PTR)(Destination), (LONG)(UINT_PTR)(ExChange), (LONG)(UINT_PTR)(Comperand)))
-#endif
 
 /*++
 Function:
@@ -5656,9 +5648,7 @@ unsigned int _rotl(unsigned int value, int shift)
 #endif
 
 // On 64 bit unix, make the long an int.
-#ifdef BIT64
 #define _lrotl _rotl
-#endif // BIT64
 
 #if !__has_builtin(_rotl64)
 /*++

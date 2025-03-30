@@ -280,12 +280,10 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, LP
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = PFF_PREFIX_LONGLONG;
     }
-#endif
     if ((*Fmt)[0] == 'I')
     {
         /* grab prefix of 'I64' for __int64 */
@@ -303,10 +301,8 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, LP
         else
         {
             ++(*Fmt);
-    #ifdef BIT64
             /* convert to 'll' so that Unix snprintf can handle it */
             *Prefix = PFF_PREFIX_LONGLONG;
-    #endif
         }
     }
     /* grab a prefix of 'h' */
@@ -319,10 +315,8 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, LP
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
-#ifdef BIT64
         // Only want to change the prefix on 64 bit when printing characters.
         if (**Fmt == 'c' || **Fmt == 's')
-#endif
         {
             *Prefix = PFF_PREFIX_LONG;
         }
@@ -584,12 +578,10 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = PFF_PREFIX_LONGLONG;
     }
-#endif
     if ((*Fmt)[0] == 'I')
     {
         /* grab prefix of 'I64' for __int64 */
@@ -607,10 +599,8 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
         else
         {
             ++(*Fmt);
-    #ifdef BIT64
             /* convert to 'll' so that Unix snprintf can handle it */
             *Prefix = PFF_PREFIX_LONGLONG;
-    #endif
         }
     }
     /* grab a prefix of 'h' */
@@ -622,10 +612,8 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, L
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
- #ifdef BIT64
         // Only want to change the prefix on 64 bit when printing characters.
         if (**Fmt == 'C' || **Fmt == 'S')
-#endif
         {
             *Prefix = PFF_PREFIX_LONG_W;
         }

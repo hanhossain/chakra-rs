@@ -2414,22 +2414,12 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
     vm_region_flavor_t vm_flavor;
     mach_msg_type_number_t infoCnt;
     mach_port_t object_name;
-#ifdef BIT64
     vm_region_basic_info_data_64_t info;
     infoCnt = VM_REGION_BASIC_INFO_COUNT_64;
     vm_flavor = VM_REGION_BASIC_INFO_64;
-#else
-    vm_region_basic_info_data_t info;
-    infoCnt = VM_REGION_BASIC_INFO_COUNT;
-    vm_flavor = VM_REGION_BASIC_INFO;
-#endif
 
     vm_address = (vm_address_t)lpAddress;
-#ifdef BIT64
     MachRet = vm_region_64(
-#else
-    MachRet = vm_region(
-#endif
                         mach_task_self(),
                         &vm_address,
                         &vm_size,

@@ -109,11 +109,7 @@ extern "C" {
 // they must be either signed or unsigned) and we want to be able to use
 // __int64 as though it were intrinsic
 
-#ifdef BIT64
 #define __int64     long
-#else // BIT64
-#define __int64     long long
-#endif // BIT64
 
 // TODO (hanhossain): remove for int32_t
 #define __int32     int
@@ -195,7 +191,6 @@ typedef signed __int64 LONG64;
 
 #define _W64
 
-#ifdef BIT64
 #define _atoi64 (__int64)atoll
 
 typedef __int64 INT_PTR, *PINT_PTR;
@@ -215,160 +210,6 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 
 #define __int3264   __int64
 
-#if !defined(BIT64)
-__inline
-unsigned long
-HandleToULong(
-    const void *h
-    )
-{
-    return((unsigned long) (ULONG_PTR) h );
-}
-
-__inline
-long
-HandleToLong(
-    const void *h
-    )
-{
-    return((long) (LONG_PTR) h );
-}
-
-__inline
-void *
-ULongToHandle(
-    const unsigned long h
-    )
-{
-    return((void *) (UINT_PTR) h );
-}
-
-
-__inline
-void *
-LongToHandle(
-    const long h
-    )
-{
-    return((void *) (INT_PTR) h );
-}
-
-
-__inline
-unsigned long
-PtrToUlong(
-    const void  *p
-    )
-{
-    return((unsigned long) (ULONG_PTR) p );
-}
-
-__inline
-unsigned int
-PtrToUint(
-    const void  *p
-    )
-{
-    return((unsigned int) (UINT_PTR) p );
-}
-
-__inline
-unsigned short
-PtrToUshort(
-    const void  *p
-    )
-{
-    return((unsigned short) (unsigned long) (ULONG_PTR) p );
-}
-
-__inline
-long
-PtrToLong(
-    const void  *p
-    )
-{
-    return((long) (LONG_PTR) p );
-}
-
-__inline
-int
-PtrToInt(
-    const void  *p
-    )
-{
-    return((int) (INT_PTR) p );
-}
-
-__inline
-short
-PtrToShort(
-    const void  *p
-    )
-{
-    return((short) (long) (LONG_PTR) p );
-}
-
-__inline
-void *
-IntToPtr(
-    const int i
-    )
-// Caution: IntToPtr() sign-extends the int value.
-{
-    return( (void *)(INT_PTR)i );
-}
-
-__inline
-void *
-UIntToPtr(
-    const unsigned int ui
-    )
-// Caution: UIntToPtr() zero-extends the unsigned int value.
-{
-    return( (void *)(UINT_PTR)ui );
-}
-
-__inline
-void *
-LongToPtr(
-    const long l
-    )
-// Caution: LongToPtr() sign-extends the long value.
-{
-    return( (void *)(LONG_PTR)l );
-}
-
-__inline
-void *
-ULongToPtr(
-    const unsigned long ul
-    )
-// Caution: ULongToPtr() zero-extends the unsigned long value.
-{
-    return( (void *)(ULONG_PTR)ul );
-}
-
-__inline
-void *
-ShortToPtr(
-    const short s
-    )
-// Caution: ShortToPtr() sign-extends the short value.
-{
-    return( (void *)(INT_PTR)s );
-}
-
-__inline
-void *
-UShortToPtr(
-    const unsigned short us
-    )
-// Caution: UShortToPtr() zero-extends the unsigned short value.
-{
-    return( (void *)(UINT_PTR)us );
-}
-
-#else // !defined(BIT64)
 #define HandleToULong( h ) ((ULONG)(ULONG_PTR)(h) )
 #define HandleToLong( h )  ((LONG)(LONG_PTR) (h) )
 #define ULongToHandle( ul ) ((HANDLE)(ULONG_PTR) (ul) )
@@ -385,44 +226,6 @@ UShortToPtr(
 #define ULongToPtr( ul ) ((void *)(ULONG_PTR)((unsigned long)(ul)))
 #define ShortToPtr( s )  ((void *)(INT_PTR)((short)(s)))
 #define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)(s)))
-#endif // !defined(BIT64)
-
-#else
-
-typedef _W64 __int32 INT_PTR;
-typedef _W64 unsigned __int32 UINT_PTR;
-
-typedef _W64 __int32 LONG_PTR;
-typedef _W64 unsigned __int32 ULONG_PTR, *PULONG_PTR;
-typedef _W64 unsigned __int32 DWORD_PTR, *PDWORD_PTR;
-
-/* maximum signed 32 bit value */
-#define LONG_PTR_MAX      2147483647L
-/* maximum unsigned 32 bit value */
-#define ULONG_PTR_MAX     0xffffffffUL
-
-#define SIZE_MAX UINT_MAX
-
-#define __int3264   __int32
-
-#define HandleToULong( h ) ((ULONG)(ULONG_PTR)(h) )
-#define HandleToLong( h )  ((LONG)(LONG_PTR) (h) )
-#define ULongToHandle( ul ) ((HANDLE)(ULONG_PTR) (ul) )
-#define LongToHandle( h )   ((HANDLE)(LONG_PTR) (h) )
-#define PtrToUlong( p ) ((ULONG)(ULONG_PTR) (p) )
-#define PtrToLong( p )  ((LONG)(LONG_PTR) (p) )
-#define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
-#define PtrToInt( p )  ((INT)(INT_PTR) (p) )
-#define PtrToUshort( p ) ((unsigned short)(ULONG_PTR)(p) )
-#define PtrToShort( p )  ((short)(LONG_PTR)(p) )
-#define IntToPtr( i )    ((void *)(INT_PTR)((int)i))
-#define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)ui))
-#define LongToPtr( l )   ((void *)(LONG_PTR)((long)l))
-#define ULongToPtr( ul ) ((void *)(ULONG_PTR)((unsigned long)ul))
-#define ShortToPtr( s )  ((void *)(INT_PTR)((short)s))
-#define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)s))
-
-#endif
 
 #define HandleToUlong(h)  HandleToULong(h)
 #define UlongToHandle(ul) ULongToHandle(ul)
@@ -446,13 +249,8 @@ typedef LONG_PTR SSIZE_T, *PSSIZE_T;
 
 #ifndef PAL_STDCPP_COMPAT
 #if defined(__APPLE__) || defined(__LINUX__)
-#ifdef BIT64
 typedef unsigned long size_t;
 typedef long ptrdiff_t;
-#else // !BIT64
-typedef unsigned int size_t;
-typedef int ptrdiff_t;
-#endif // !BIT64
 #else
 typedef ULONG_PTR size_t;
 typedef LONG_PTR ptrdiff_t;
@@ -481,23 +279,14 @@ typedef char16_t WCHAR;
 #ifdef __APPLE__
 static_assert(sizeof(unsigned long) == sizeof(void*), "This platform is not supported");
 #else
-#ifdef BIT64
 typedef unsigned long int uintptr_t;
-#else // !BIT64
-typedef unsigned int uintptr_t;
-#endif // !BIT64
 #endif
 
 #else // !PAL_STDCPP_COMPAT
 
 #if defined(__LINUX__)
-#ifdef BIT64
 typedef long int intptr_t;
 typedef unsigned long int uintptr_t;
-#else // !BIT64
-typedef int intptr_t;
-typedef unsigned int uintptr_t;
-#endif // !BIT64
 #else
 typedef INT_PTR intptr_t;
 typedef UINT_PTR uintptr_t;

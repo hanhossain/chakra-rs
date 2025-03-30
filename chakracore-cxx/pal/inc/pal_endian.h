@@ -95,11 +95,7 @@ inline void SwapGuid(GUID *pGuid)
 
 #endif  // !BIGENDIAN
 
-#ifdef BIT64
 #define VALPTR(x) VAL64(x)
-#else
-#define VALPTR(x) VAL32(x)
-#endif
 
 #if defined(ALIGN_ACCESS)
 

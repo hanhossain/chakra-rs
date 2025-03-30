@@ -746,12 +746,10 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPI
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = PFF_PREFIX_LONGLONG;
     }
-#endif
     /* grab prefix of 'I64' for __int64 */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
@@ -769,10 +767,8 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPI
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
-#ifdef BIT64
         // Only want to change the prefix on 64 bit when printing characters.
         if (**Fmt == 'c' || **Fmt == 's')
-#endif       
         {
             *Prefix = PFF_PREFIX_LONG;
         }

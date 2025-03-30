@@ -21,11 +21,6 @@ Revision History:
 
 --*/
 
-#ifndef BIT64
-#undef _LARGEFILE64_SOURCE
-#undef _FILE_OFFSET_BITS
-#endif
-
 #include "pal/thread.hpp"
 #include "pal/procobj.hpp"
 #include "pal/file.hpp"

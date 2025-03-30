@@ -536,7 +536,6 @@ PAL_wcstol(
 
     res = strtol(s_nptr, &s_endptr, base);
 
-#ifdef BIT64
     if (res > _I32_MAX)
     {
         res = _I32_MAX;
@@ -547,7 +546,6 @@ PAL_wcstol(
         res = _I32_MIN;
         errno = ERANGE;
     }
-#endif
 
     /* only ASCII characters will be accepted by strtol, and those always get
        mapped to single-byte characters, so the first rejected character will
@@ -756,7 +754,6 @@ PAL_wcstoul(
 
     res = strtoul(s_nptr, &s_endptr, base);
 
-#ifdef BIT64
     if (res > _UI32_MAX)
     {
         char16_t wc = *nptr;
@@ -773,7 +770,6 @@ PAL_wcstoul(
             errno = ERANGE;
         }
     }
-#endif
 
     /* only ASCII characters will be accepted by strtol, and those always get
        mapped to single-byte characters, so the first rejected character will
