@@ -1276,7 +1276,7 @@ typedef struct _STARTUPINFOW {
     DWORD dwFlags;
     uint16_t wShowWindow_PAL_Undefined;
     uint16_t cbReserved2_PAL_Undefined;
-    LPBYTE lpReserved2_PAL_Undefined;
+    uint8_t * lpReserved2_PAL_Undefined;
     HANDLE hStdInput;
     HANDLE hStdOutput;
     HANDLE hStdError;
@@ -1297,7 +1297,7 @@ typedef struct _STARTUPINFOA {
     DWORD dwFlags;
     uint16_t wShowWindow_PAL_Undefined;
     uint16_t cbReserved2_PAL_Undefined;
-    LPBYTE lpReserved2_PAL_Undefined;
+    uint8_t * lpReserved2_PAL_Undefined;
     HANDLE hStdInput;
     HANDLE hStdOutput;
     HANDLE hStdError;
@@ -1518,7 +1518,7 @@ typedef struct _FLOATING_SAVE_AREA {
     DWORD   ErrorSelector;
     DWORD   DataOffset;
     DWORD   DataSelector;
-    BYTE    RegisterArea[SIZE_OF_80387_REGISTERS];
+    uint8_t    RegisterArea[SIZE_OF_80387_REGISTERS];
     DWORD   Cr0NpxState;
 } FLOATING_SAVE_AREA;
 
@@ -2246,8 +2246,8 @@ typedef M128A *PM128A;
 typedef struct _XMM_SAVE_AREA32 {
     uint16_t   ControlWord;
     uint16_t   StatusWord;
-    BYTE  TagWord;
-    BYTE  Reserved1;
+    uint8_t  TagWord;
+    uint8_t  Reserved1;
     uint16_t   ErrorOpcode;
     DWORD ErrorOffset;
     uint16_t   ErrorSelector;
@@ -2259,7 +2259,7 @@ typedef struct _XMM_SAVE_AREA32 {
     DWORD MxCsr_Mask;
     M128A FloatRegisters[8];
     M128A XmmRegisters[16];
-    BYTE  Reserved4[96];
+    uint8_t  Reserved4[96];
 } XMM_SAVE_AREA32, *PXMM_SAVE_AREA32;
 
 #define LEGACY_SAVE_AREA_LENGTH sizeof(XMM_SAVE_AREA32)
@@ -2946,7 +2946,7 @@ typedef struct _CRITICAL_SECTION {
     volatile DWORD dwInitState;
     union CSNativeDataStorage
     {
-        BYTE rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
+        uint8_t rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
         void * pvAlign; // make sure the storage is machine-pointer-size aligned
     } csnds;
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
@@ -3486,8 +3486,8 @@ GetACP(void);
 
 typedef struct _cpinfo {
     UINT MaxCharSize;
-    BYTE DefaultChar[MAX_DEFAULTCHAR];
-    BYTE LeadByte[MAX_LEADBYTES];
+    uint8_t DefaultChar[MAX_DEFAULTCHAR];
+    uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
 BOOL
@@ -3498,11 +3498,11 @@ GetCPInfo(
 BOOL
 IsDBCSLeadByteEx(
           UINT CodePage,
-          BYTE TestChar);
+          uint8_t TestChar);
 
 BOOL
 IsDBCSLeadByte(
-         BYTE TestChar);
+         uint8_t TestChar);
 
 BOOL
 IsValidCodePage(
@@ -5250,8 +5250,8 @@ typedef struct _OSVERSIONINFOEXA {
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
     uint16_t  wSuiteMask;
-    BYTE  wProductType;
-    BYTE  wReserved;
+    uint8_t  wProductType;
+    uint8_t  wReserved;
 } OSVERSIONINFOEXA, *POSVERSIONINFOEXA, *LPOSVERSIONINFOEXA;
 
 typedef struct _OSVERSIONINFOEXW {
@@ -5264,8 +5264,8 @@ typedef struct _OSVERSIONINFOEXW {
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
     uint16_t  wSuiteMask;
-    BYTE  wProductType;
-    BYTE  wReserved;
+    uint8_t  wProductType;
+    uint8_t  wReserved;
 } OSVERSIONINFOEXW, *POSVERSIONINFOEXW, *LPOSVERSIONINFOEXW;
 
 #ifdef UNICODE

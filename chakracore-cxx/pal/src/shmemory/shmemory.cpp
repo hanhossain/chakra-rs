@@ -873,7 +873,7 @@ LPVOID SHMPtrToPtr(SHMPTR shmptr)
     }
 
     retval = shm_segment_bases[segment];
-    retval = static_cast<BYTE*>(retval) + offset;
+    retval = static_cast<uint8_t*>(retval) + offset;
 
     TRACE("SHMPTR %#x is at offset %d in segment %d; maps to address %p\n",
           shmptr, offset, segment, retval);
@@ -1038,7 +1038,7 @@ in the memory location corresponding to the previous SHMPTR :
 --*/
 static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
 {
-    LPBYTE item_ptr;
+    uint8_t * item_ptr;
     SHMPTR *shmptr_ptr;
     SHMPTR next_shmptr;
     int i;
@@ -1046,8 +1046,8 @@ static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
     TRACE("Linking %d blocks of %d bytes, starting at 0x%08x\n",
           num_blocks, block_size, first);
 
-    item_ptr = static_cast<LPBYTE>(
-        static_cast<LPBYTE>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
+    item_ptr = static_cast<uint8_t *>(
+        static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
             (SHMPTR_OFFSET(first)));
     next_shmptr = first/*+block_size*/;
 
@@ -1234,7 +1234,7 @@ static BOOL SHMAddSegment(void)
            old global linked list. We don't use SHMPTR_TO_PTR because the pool
            data isn't updated yet */
         shmptr_ptr = reinterpret_cast<SHMPTR*>(
-            static_cast<LPBYTE>(shm_segment_bases[SHMPTR_SEGMENT(header->last_pool_blocks[sps])].Load()) +
+            static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(header->last_pool_blocks[sps])].Load()) +
                      SHMPTR_OFFSET(header->last_pool_blocks[sps]));
 
         *shmptr_ptr = first_header->pools[sps].first_free;

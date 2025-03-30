@@ -24,8 +24,8 @@ public:
     void Init(Func * func);
     DWORD GetPDataCount(DWORD length);
     DWORD SizeOfUnwindInfo() const { return m_xdata.GetXdataBytes(); }
-    BYTE *GetUnwindInfo() { return reinterpret_cast<BYTE *>(const_cast<void *>(m_xdata.GetXdata())); }
-    void FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize);
+    uint8_t *GetUnwindInfo() { return reinterpret_cast<uint8_t *>(const_cast<void *>(m_xdata.GetXdata())); }
+    void FinalizeUnwindInfo(uint8_t *functionStart, DWORD codeSize);
 
     // label management
     void SetFunctionOffsetLabel(UnwindFunctionOffsets which, IR::LabelInstr *label);

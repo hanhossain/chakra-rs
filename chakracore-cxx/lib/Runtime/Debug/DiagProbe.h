@@ -79,7 +79,7 @@ namespace Js
         virtual bool Uninstall(Js::ScriptContext* pScriptContext) = 0;
     };
 
-    enum StepType : BYTE
+    enum StepType : uint8_t
     {
         STEP_NONE,
         STEP_IN         = 0x01,

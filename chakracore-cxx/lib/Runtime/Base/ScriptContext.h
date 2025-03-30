@@ -1673,8 +1673,8 @@ private:
 #if DBG
         BOOL IsDynamicInterpreterThunk(JavascriptMethod address);
 #endif
-        void ReleaseDynamicInterpreterThunk(BYTE* address, bool addtoFreeList);
-        void ReleaseDynamicAsmJsInterpreterThunk(BYTE* address, bool addtoFreeList);
+        void ReleaseDynamicInterpreterThunk(uint8_t* address, bool addtoFreeList);
+        void ReleaseDynamicAsmJsInterpreterThunk(uint8_t* address, bool addtoFreeList);
 #endif
 
         static Var DebugProfileProbeThunk(RecyclableObject* function, CallInfo callInfo, ...);

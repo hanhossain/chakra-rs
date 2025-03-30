@@ -207,7 +207,7 @@ namespace Js
         virtual Var Subarray(uint32 begin, uint32 end) = 0;
         Field(int32) BYTES_PER_ELEMENT;
         Field(uint32) byteOffset;
-        FieldNoBarrier(BYTE*) buffer;   // beginning of mapped array.
+        FieldNoBarrier(uint8_t*) buffer;   // beginning of mapped array.
 
     public:
         static uint32 GetOffsetOfBuffer()  { return offsetof(TypedArrayBase, buffer); }

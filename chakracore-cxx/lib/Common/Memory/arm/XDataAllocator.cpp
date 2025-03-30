@@ -13,7 +13,7 @@ CompileAssert(false)
 
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
 
-XDataAllocator::XDataAllocator(BYTE* address, uint size)
+XDataAllocator::XDataAllocator(uint8_t* address, uint size)
 {
     Assert(size == 0);
 }
@@ -37,7 +37,7 @@ bool XDataAllocator::Alloc(size_t functionStart, DWORD functionSize, ushort pdat
     Assert(xdata);
 
     DWORD size = GetAllocSize(pdataCount, xdataSize);
-    BYTE* alloc = HeapNewNoThrowArray(BYTE, size);
+    uint8_t* alloc = HeapNewNoThrowArray(uint8_t, size);
     if (alloc != nullptr)
     {
         xdata->address = alloc;

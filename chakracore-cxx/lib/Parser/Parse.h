@@ -1171,7 +1171,7 @@ private:
     private:
         Scanner_t* m_scanner;
         bool m_forcePid;
-        BYTE m_oldScannerDeferredParseFlags;
+        uint8_t m_oldScannerDeferredParseFlags;
 
     public:
         AutoTempForcePid(Scanner_t* scanner, bool forcePid)

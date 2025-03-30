@@ -32,7 +32,7 @@ namespace CorUnix
         typedef union _USynchCacheStackNode
         {
             union _USynchCacheStackNode * next;
-            BYTE objraw[sizeof(T)];
+            uint8_t objraw[sizeof(T)];
         } USynchCacheStackNode;    
 
         static const int MaxDepth = 256;
@@ -202,7 +202,7 @@ namespace CorUnix
         typedef union _USHRSynchCacheStackNode
         {
             SHRCachePTRs  pointers;
-            BYTE objraw[sizeof(T)];
+            uint8_t objraw[sizeof(T)];
         } USHRSynchCacheStackNode;    
 
         static const int MaxDepth       = 256;

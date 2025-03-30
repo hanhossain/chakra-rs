@@ -402,8 +402,8 @@ typedef struct tagDEC {
 #if BIGENDIAN
     union {
         struct {
-            BYTE sign;
-            BYTE scale;
+            uint8_t sign;
+            uint8_t scale;
         };
         unsigned short signscale;
     };
@@ -412,8 +412,8 @@ typedef struct tagDEC {
     unsigned short wReserved;
     union {
         struct {
-            BYTE scale;
-            BYTE sign;
+            uint8_t scale;
+            uint8_t sign;
         };
         unsigned short signscale;
     };
@@ -430,7 +430,7 @@ typedef struct tagDEC {
 
 typedef struct tagBLOB {
     uint32_t cbSize;
-    BYTE *pBlobData;
+    uint8_t *pBlobData;
 } BLOB, *LPBLOB;
 
 interface IStream;
@@ -514,7 +514,7 @@ struct tagVARIANT
                 {
                 LONGLONG llVal;
                 int32_t lVal;
-                BYTE bVal;
+                uint8_t bVal;
                 short iVal;
                 float fltVal;
                 double dblVal;
@@ -526,7 +526,7 @@ struct tagVARIANT
                 interface IUnknown *punkVal;
                 interface IDispatch *pdispVal;
                 SAFEARRAY *parray;
-                BYTE *pbVal;
+                uint8_t *pbVal;
                 short *piVal;
                 int32_t *plVal;
                 LONGLONG *pllVal;
@@ -1466,10 +1466,10 @@ typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
 
 typedef struct _UNWIND_HISTORY_TABLE {
     DWORD Count;
-    BYTE  LocalHint;
-    BYTE  GlobalHint;
-    BYTE  Search;
-    BYTE  Once;
+    uint8_t  LocalHint;
+    uint8_t  GlobalHint;
+    uint8_t  Search;
+    uint8_t  Once;
     DWORD64 LowAddress;
     DWORD64 HighAddress;
     UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
@@ -1498,7 +1498,7 @@ typedef struct _DISPATCHER_CONTEXT {
     PUNWIND_HISTORY_TABLE HistoryTable;
     DWORD ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
-    PBYTE  NonVolatileRegisters;
+    uint8_t *  NonVolatileRegisters;
     DWORD Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
@@ -1516,7 +1516,7 @@ typedef struct _DISPATCHER_CONTEXT {
     PUNWIND_HISTORY_TABLE HistoryTable;
     ULONG64 ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
-    PBYTE  NonVolatileRegisters;
+    uint8_t *  NonVolatileRegisters;
     ULONG64 Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 

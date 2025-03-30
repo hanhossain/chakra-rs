@@ -36,7 +36,7 @@ namespace Js
         }
 
         void Write(const char16* str, charcount_t len) const;
-        void Write(const BYTE* bytes, uint32 len) const;
+        void Write(const uint8_t* bytes, uint32 len) const;
 
         //
         // Write a TypedArray or a DataView layout: [SCATypeId] [ArrayBuffer] [byteOffset] [length]

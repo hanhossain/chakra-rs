@@ -1757,14 +1757,14 @@ namespace CorUnix
     {
         PAL_ERROR palErr = NO_ERROR;
         int iRet;
-        BYTE byVal;
+        uint8_t byVal;
         SynchWorkerCmd swcWorkerCmd = SynchWorkerCmdNop;
 
         _ASSERTE(NULL != pswcWorkerCmd);
         _ASSERTE(NULL != pshridMarshaledData);
         _ASSERTE(NULL != pdwData);
 
-        iRet = ReadBytesFromProcessPipe(iPollTimeout, &byVal, sizeof(BYTE));
+        iRet = ReadBytesFromProcessPipe(iPollTimeout, &byVal, sizeof(uint8_t));
 
         if (0 > iRet)
         {
@@ -1776,9 +1776,9 @@ namespace CorUnix
 
         if (iRet != 0)
         {
-            _ASSERT_MSG(sizeof(BYTE) == iRet,
+            _ASSERT_MSG(sizeof(uint8_t) == iRet,
                         "Got %d bytes from process pipe while expecting for %d\n",
-                        iRet, sizeof(BYTE));
+                        iRet, sizeof(uint8_t));
 
             swcWorkerCmd = (SynchWorkerCmd)byVal;
 
@@ -1809,7 +1809,7 @@ namespace CorUnix
                   "REMOTE SIGNAL" : "DELEGATED OBJECT SIGNALING" );
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (BYTE *)&shridMarshaledId,
+                                            (uint8_t *)&shridMarshaledId,
                                             sizeof(shridMarshaledId));
             if (sizeof(shridMarshaledId) != iRet)
             {
@@ -1830,7 +1830,7 @@ namespace CorUnix
             DWORD dwData;
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (BYTE *)&dwData,
+                                            (uint8_t *)&dwData,
                                             sizeof(dwData));
             if (sizeof(dwData) != iRet)
             {
@@ -1864,7 +1864,7 @@ namespace CorUnix
     --*/
     int CPalSynchronizationManager::ReadBytesFromProcessPipe(
         int iTimeout,
-        BYTE * pRecvBuf,
+        uint8_t * pRecvBuf,
         int32_t iBytes)
     {
 #if !HAVE_KQUEUE
@@ -1873,7 +1873,7 @@ namespace CorUnix
         int iRet = -1;
         int iConsecutiveEintrs = 0;
         int32_t iBytesRead = 0;
-        BYTE * pPos = pRecvBuf;
+        uint8_t * pPos = pRecvBuf;
 #if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
         struct kevent keChanges;
         struct timespec ts, *pts;
@@ -2369,11 +2369,11 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::WakeUpRemoteThread(
         SharedID shridWLNode)
     {
-        const int MsgSize = sizeof(BYTE) + sizeof(SharedID);
+        const int MsgSize = sizeof(uint8_t) + sizeof(SharedID);
         int i;
         PAL_ERROR palErr = NO_ERROR;
-        BYTE rgSendBuf[MsgSize];
-        BYTE * pbySrc, * pbyDst = rgSendBuf;
+        uint8_t rgSendBuf[MsgSize];
+        uint8_t * pbySrc, * pbyDst = rgSendBuf;
         WaitingThreadsListNode * pWLNode =
             SharedIDToTypePointer(WaitingThreadsListNode, shridWLNode);
 
@@ -2394,9 +2394,9 @@ namespace CorUnix
 
         // Prepare the message
         // Cmd
-        *pbyDst++ = (BYTE)(SynchWorkerCmdRemoteSignal & 0xFF);
+        *pbyDst++ = (uint8_t)(SynchWorkerCmdRemoteSignal & 0xFF);
         // WaitingThreadsListNode (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&shridWLNode;
+        pbySrc = (uint8_t *)&shridWLNode;
         for (i=0; i<(int)sizeof(SharedID); i++)
         {
             *pbyDst++ = *pbySrc++;
@@ -2434,11 +2434,11 @@ namespace CorUnix
         DWORD dwTargetProcessId,
         SharedID shridSynchData)
     {
-        const int MsgSize = sizeof(BYTE) + sizeof(SharedID) + sizeof(DWORD);
+        const int MsgSize = sizeof(uint8_t) + sizeof(SharedID) + sizeof(DWORD);
         int i;
         PAL_ERROR palErr = NO_ERROR;
-        BYTE rgSendBuf[MsgSize];
-        BYTE * pbySrc, * pbyDst = rgSendBuf;
+        uint8_t rgSendBuf[MsgSize];
+        uint8_t * pbySrc, * pbyDst = rgSendBuf;
         DWORD dwSigCount;
         CSynchData * psdSynchData =
             SharedIDToTypePointer(CSynchData, shridSynchData);
@@ -2468,17 +2468,17 @@ namespace CorUnix
         //
 
         // Cmd
-        *pbyDst++ = (BYTE)(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
+        *pbyDst++ = (uint8_t)(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
 
         // CSynchData (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&shridSynchData;
+        pbySrc = (uint8_t *)&shridSynchData;
         for (i=0; i<(int)sizeof(SharedID); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
 
         // Signal Count (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&dwSigCount;
+        pbySrc = (uint8_t *)&dwSigCount;
         for (i=0; i<(int)sizeof(DWORD); i++)
         {
             *pbyDst++ = *pbySrc++;
@@ -2510,7 +2510,7 @@ namespace CorUnix
     --*/
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
         DWORD dwProcessId,
-        BYTE * pMsg,
+        uint8_t * pMsg,
         int iMsgSize)
     {
         ASSERT("There should never be a reason to send a message to a remote worker\n");
@@ -2529,7 +2529,7 @@ namespace CorUnix
     {
         PAL_ERROR palErr = NO_ERROR;
         ssize_t sszWritten;
-        BYTE byCmd;
+        uint8_t byCmd;
         int iRetryCount;
 
         _ASSERT_MSG((swcWorkerCmd & 0xFF) == swcWorkerCmd,
@@ -2540,7 +2540,7 @@ namespace CorUnix
                     "SynchWorkerCmdNop and SynchWorkerCmdShutdown  "
                     "[received cmd=%d]\n", swcWorkerCmd);
 
-        byCmd = (BYTE)(swcWorkerCmd & 0xFF);
+        byCmd = (uint8_t)(swcWorkerCmd & 0xFF);
 
         TRACE("Waking up Synch Worker Thread for %u [byCmd=%u]\n",
                     swcWorkerCmd, (unsigned int)byCmd);
@@ -2549,18 +2549,18 @@ namespace CorUnix
         // within PIPE_BUF, there's no need to lock here, since the
         // write is guaranteed not to be interleaved with/into other
         // writes of PIPE_BUF bytes or less.
-        _ASSERT_MSG(sizeof(BYTE) <= PIPE_BUF, "Message too long\n");
+        _ASSERT_MSG(sizeof(uint8_t) <= PIPE_BUF, "Message too long\n");
 
         iRetryCount = 0;
         do
         {
-            sszWritten = write(m_iProcessPipeWrite, &byCmd, sizeof(BYTE));
+            sszWritten = write(m_iProcessPipeWrite, &byCmd, sizeof(uint8_t));
         } while (-1 == sszWritten &&
                  EAGAIN == errno &&
                  ++iRetryCount < MaxConsecutiveEagains &&
                  0 == sched_yield());
 
-        if (sszWritten != sizeof(BYTE))
+        if (sszWritten != sizeof(uint8_t))
         {
             ERROR("Unable to write the the process pipe to wakeup the "
                    "worker thread [errno=%d (%s)]\n", errno, strerror(errno));

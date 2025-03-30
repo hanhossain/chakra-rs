@@ -302,7 +302,7 @@ namespace Js
     extern const FrameDisplay NullFrameDisplay;
     extern const FrameDisplay StrictNullFrameDisplay;
 
-    enum ImplicitCallFlags : BYTE
+    enum ImplicitCallFlags : uint8_t
     {
         ImplicitCall_HasNoInfo = 0x00,
         ImplicitCall_None = 0x01,

@@ -102,7 +102,7 @@ namespace Js
     class HeapSourceHolder : public SimpleSourceHolder
     {
     public:
-        HeapSourceHolder(LPCUTF8 source, size_t byteLength, BYTE* originalSourceBuffer):
+        HeapSourceHolder(LPCUTF8 source, size_t byteLength, uint8_t* originalSourceBuffer):
             SimpleSourceHolder(source, byteLength),
             shouldFreeSource(true),
             originalSourceBuffer(originalSourceBuffer)
@@ -113,6 +113,6 @@ namespace Js
 
     private:
         bool shouldFreeSource;
-        BYTE* originalSourceBuffer;
+        uint8_t* originalSourceBuffer;
     };
 }

@@ -34,7 +34,7 @@ DWORD UnwindInfoManager::GetFunctionOffset(UnwindFunctionOffsets which)
     return result;
 }
 
-void UnwindInfoManager::FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize)
+void UnwindInfoManager::FinalizeUnwindInfo(uint8_t *functionStart, DWORD codeSize)
 {
     // fetch the appropriate offsets and hand off to the generic code
     m_xdata.Generate((uint32_t *)(functionStart + this->GetFunctionOffset(UnwindPrologStart)),

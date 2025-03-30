@@ -43,7 +43,7 @@ namespace Js
         // PropertyTypesReserved (0x1) is always on so that the DWORD formed with the following boolean doesn't look like
         // a pointer.
         Field(PropertyTypes) propertyTypes;
-        Field(BYTE) flags;
+        Field(uint8_t) flags;
         Field(uint16) offsetOfInlineSlots;
         Field(int) slotCapacity;
         Field(uint16) unusedBytes;             // This always has it's lowest bit set to avoid false references
@@ -66,7 +66,7 @@ namespace Js
     public:
         DEFINE_VTABLE_CTOR_NOBASE_ABSTRACT(DynamicTypeHandler);
 
-        DynamicTypeHandler(int slotCapacity, uint16 inlineSlotCapacity = 0, uint16 offsetOfInlineSlots = 0, BYTE flags = DefaultFlags);
+        DynamicTypeHandler(int slotCapacity, uint16 inlineSlotCapacity = 0, uint16 offsetOfInlineSlots = 0, uint8_t flags = DefaultFlags);
 
         void SetInstanceTypeHandler(DynamicObject * instance, bool hasChanged = true);
 
@@ -99,15 +99,15 @@ namespace Js
         }
 
     public:
-        static const BYTE IsExtensibleFlag = 0x01;
-        static const BYTE HasKnownSlot0Flag = 0x02;
-        static const BYTE IsLockedFlag = 0x04;
-        static const BYTE MayBecomeSharedFlag = 0x08;
-        static const BYTE IsSharedFlag = 0x10;
-        static const BYTE IsPrototypeFlag = 0x20;
-        static const BYTE IsSealedOnceFlag = 0x40;  // Set state means the object is sealed, clear state means nothing (can be sealed, or not).
-        static const BYTE IsFrozenOnceFlag = 0x80;  // Set state means the object is frozen, clear state means nothing (can be frozen, or not).
-        static const BYTE DefaultFlags = IsExtensibleFlag;
+        static const uint8_t IsExtensibleFlag = 0x01;
+        static const uint8_t HasKnownSlot0Flag = 0x02;
+        static const uint8_t IsLockedFlag = 0x04;
+        static const uint8_t MayBecomeSharedFlag = 0x08;
+        static const uint8_t IsSharedFlag = 0x10;
+        static const uint8_t IsPrototypeFlag = 0x20;
+        static const uint8_t IsSealedOnceFlag = 0x40;  // Set state means the object is sealed, clear state means nothing (can be sealed, or not).
+        static const uint8_t IsFrozenOnceFlag = 0x80;  // Set state means the object is frozen, clear state means nothing (can be frozen, or not).
+        static const uint8_t DefaultFlags = IsExtensibleFlag;
 
     public:
         static PropertyIndex RoundUpObjectHeaderInlinedInlineSlotCapacity(const PropertyIndex slotCapacity);
@@ -204,7 +204,7 @@ namespace Js
         }
 
     protected:
-        void SetFlags(BYTE values)
+        void SetFlags(uint8_t values)
         {
             // Don't set a shared flag if the type handler isn't locked.
             Assert((this->flags & IsLockedFlag) != 0 || (values & IsLockedFlag) != 0 || (values & IsSharedFlag) == 0);
@@ -228,7 +228,7 @@ namespace Js
             this->flags |= values;
         }
 
-        void ClearFlags(BYTE values)
+        void ClearFlags(uint8_t values)
         {
             // Don't clear the locked, shared or prototype flags.
             Assert((values & IsLockedFlag) == 0 && (values & IsSharedFlag) == 0 && (values & IsPrototypeFlag) == 0);
@@ -236,12 +236,12 @@ namespace Js
             this->flags &= ~values;
         }
 
-        void SetFlags(BYTE selector, BYTE values)
+        void SetFlags(uint8_t selector, uint8_t values)
         {
             SetFlags(selector & values);
         }
 
-        void ChangeFlags(BYTE selector, BYTE values)
+        void ChangeFlags(uint8_t selector, uint8_t values)
         {
             // Don't clear the locked, shared or prototype flags.
             Assert((this->flags & IsLockedFlag) == 0 || (selector & IsLockedFlag) == 0 || (values & IsLockedFlag) != 0);
@@ -305,7 +305,7 @@ namespace Js
         static bool CanBeSingletonInstance(DynamicObject * instance);
         static Var CanonicalizeAccessor(Var accessor, /*const*/ JavascriptLibrary* library);
     public:
-        BYTE GetFlags() const { return this->flags; }
+        uint8_t GetFlags() const { return this->flags; }
         static int GetOffsetOfFlags() { return offsetof(DynamicTypeHandler, flags); }
         static int GetOffsetOfOffsetOfInlineSlots() { return offsetof(DynamicTypeHandler, offsetOfInlineSlots); }
 

@@ -15,10 +15,10 @@ namespace Js
 #define Is128BitsOper() (sizeof(OperationSize) == 16)
 #define Is128BitsReg(reg) Is64BitsReg(reg)
 
-        const BYTE MOD0 = 0x0;
-        const BYTE MOD1 = 0x40;
-        const BYTE MOD2 = 0x80;
-        const BYTE MOD3 = 0xC0;
+        const uint8_t MOD0 = 0x0;
+        const uint8_t MOD1 = 0x40;
+        const uint8_t MOD2 = 0x80;
+        const uint8_t MOD3 = 0xC0;
 
         enum InstructionFlags
         {
@@ -347,20 +347,20 @@ namespace Js
         }
 
         template <typename FormatType>
-        int EncodeModRM_2Reg(BYTE*& buffer, const FormatType& params)
+        int EncodeModRM_2Reg(uint8_t*& buffer, const FormatType& params)
         {
             *buffer++ = MOD3 | ( RegEncode[params.reg] << 3 ) | RegEncode[params.reg2];
             return 1;
         }
 
-        template<BYTE b, typename FormatType>
-        int EncodeModRM_ByteReg( BYTE*& buffer, const FormatType& params )
+        template<uint8_t b, typename FormatType>
+        int EncodeModRM_ByteReg( uint8_t*& buffer, const FormatType& params )
         {
             *buffer++ = MOD3 | ( b << 3 ) | RegEncode[params.reg];
             return 1;
         }
 
-        int EncodeModRM_Min( BYTE*& buffer, BYTE regByte, RegNum regEffAddr, int offset )
+        int EncodeModRM_Min( uint8_t*& buffer, uint8_t regByte, RegNum regEffAddr, int offset )
         {
             // [offset]
             if( regEffAddr == RegNOREG )
@@ -368,7 +368,7 @@ namespace Js
                 *buffer++ = MOD0 | ( regByte << 3 ) | 0x05;
                 for( int i = 0; i < 4; i++ )
                 {
-                    *buffer++ = (BYTE)offset & 0xFF;
+                    *buffer++ = (uint8_t)offset & 0xFF;
                     offset >>= 8;
                 }
                 return 5;
@@ -386,7 +386,7 @@ namespace Js
                     {
                         *buffer++ = 0x24; // SIB byte to esp scaled index none
                     }
-                    *buffer++ = (BYTE)offset;
+                    *buffer++ = (uint8_t)offset;
                     return 2;
                 }
 
@@ -399,7 +399,7 @@ namespace Js
                 }
                 for( int i = 0; i < 4; i++ )
                 {
-                    *buffer++ = (BYTE)offset & 0xFF;
+                    *buffer++ = (uint8_t)offset & 0xFF;
                     offset >>= 8;
                 }
                 return 5;
@@ -419,7 +419,7 @@ namespace Js
             return 1;
         }
 
-        int EncodeModRM( BYTE*& buffer, BYTE regByte, RegNum regEffAddr, RegNum regEffAddr2, int multiplier, int offset )
+        int EncodeModRM( uint8_t*& buffer, uint8_t regByte, RegNum regEffAddr, RegNum regEffAddr2, int multiplier, int offset )
         {
             Assert( !Is64BitsReg( regEffAddr ) );
             Assert( !Is64BitsReg( regEffAddr2 ) );
@@ -432,7 +432,7 @@ namespace Js
             }
             // encode modr/m byte
             const bool offsetFitsInByte = FitsInByte( offset );
-            BYTE mod = 0;
+            uint8_t mod = 0;
             // 0 = noEncoding, 1 = encode 1 byte, 2 = encode 4 bytes
             int offsetEncoding = 0;
             if( offset == 0 || regEffAddr == RegNOREG )
@@ -457,7 +457,7 @@ namespace Js
             *buffer++ = mod | ( regByte << 3 ) | 0x04;
 
 
-            BYTE ss = 0;
+            uint8_t ss = 0;
             // encode SIB byte
             switch( multiplier )
             {
@@ -476,7 +476,7 @@ namespace Js
             default:
                 Assume( false );
             }
-            BYTE sibReg = RegEncode[regEffAddr];
+            uint8_t sibReg = RegEncode[regEffAddr];
             if( regEffAddr == RegNOREG )
             {
                 sibReg = 0x05;
@@ -486,14 +486,14 @@ namespace Js
             // encode offset
             if( offsetEncoding & 1 )
             {
-                *buffer++ = (BYTE)offset & 0xFF;
+                *buffer++ = (uint8_t)offset & 0xFF;
                 return 3;
             }
             else if( offsetEncoding & 2 )
             {
                 for( int i = 0; i < 4; i++ )
                 {
-                    *buffer++ = (BYTE)offset & 0xFF;
+                    *buffer++ = (uint8_t)offset & 0xFF;
                     offset >>= 8;
                 }
                 return 6;
@@ -502,40 +502,40 @@ namespace Js
         }
 
         template <typename FormatType>
-        int EncodeModRM_RegRM(BYTE*& buffer, const FormatType& params)
+        int EncodeModRM_RegRM(uint8_t*& buffer, const FormatType& params)
         {
             Assert( params.reg != RegNOREG );
             return EncodeModRM( buffer, RegEncode[params.reg], params.addr.regEffAddr, params.addr.regEffAddr2, params.addr.multiplier, params.addr.offset );
         }
 
-        int EncodeModRM_RegPtr( BYTE*& buffer, const InstrParamsRegPtr& params )
+        int EncodeModRM_RegPtr( uint8_t*& buffer, const InstrParamsRegPtr& params )
         {
             *buffer++ = MOD0 | RegEncode[params.reg] << 3 | 0x05;
             int addr = (int)params.addr;
             for( int i = 0; i < 4; i++ )
             {
-                *buffer++ = (BYTE)addr & 0xFF;
+                *buffer++ = (uint8_t)addr & 0xFF;
                 addr >>= 8;
             }
             return 5;
         }
 
-        template<BYTE b, typename FormatType>
-        int EncodeModRM_ByteRM( BYTE*& buffer, const FormatType& params )
+        template<uint8_t b, typename FormatType>
+        int EncodeModRM_ByteRM( uint8_t*& buffer, const FormatType& params )
         {
             return EncodeModRM( buffer, b, params.addr.regEffAddr, params.addr.regEffAddr2, params.addr.multiplier, params.addr.offset );
         }
 
         // encodes the opcode + register
-        template<BYTE op, typename FormatType>
-        int EncodeOpReg( BYTE*& buffer, const FormatType& params )
+        template<uint8_t op, typename FormatType>
+        int EncodeOpReg( uint8_t*& buffer, const FormatType& params )
         {
             *buffer++ = op | RegEncode[params.reg];
             return 1;
         }
 
         template<typename ImmType>
-        int Encode_Immutable( BYTE*& buffer, ImmType imm )
+        int Encode_Immutable( uint8_t*& buffer, ImmType imm )
         {
             for( int i = 0; i < sizeof(ImmType); i++ )
             {
@@ -545,7 +545,7 @@ namespace Js
             return sizeof(ImmType);
         }
 
-        int EncodeFarAddress( BYTE*& buffer, const InstrParamsPtr& params )
+        int EncodeFarAddress( uint8_t*& buffer, const InstrParamsPtr& params )
         {
             AssertMsg( false, "Todo:: need more work for encoding far addresses" );
 
@@ -562,7 +562,7 @@ namespace Js
         }
 
         template<typename T>
-        int Encode_Empty( BYTE*& buffer, const T& params )
+        int Encode_Empty( uint8_t*& buffer, const T& params )
         {
             return 0;
         }
@@ -571,10 +571,10 @@ namespace Js
         /// OpCode encoding functions
 
 #define OpFuncSignature(name) template<int instrSize, typename ImmType> \
-        int name##_OpFunc( BYTE*& buffer, FormatType formatType, void* params )
+        int name##_OpFunc( uint8_t*& buffer, FormatType formatType, void* params )
 
         template<int instrSize, typename ImmType, int opReg, int opAddr, int opImm>
-        int GenericBinary_OpFunc( BYTE*& buffer, FormatType formatType )
+        int GenericBinary_OpFunc( uint8_t*& buffer, FormatType formatType )
         {
             switch( formatType )
             {
@@ -1037,20 +1037,20 @@ namespace Js
             {\
             case Js::AsmJsJitTemplate::REG:\
             case Js::AsmJsJitTemplate::ADDR:\
-                *buffer++ = 0xD0 | (BYTE)(instrSize!= 1);\
+                *buffer++ = 0xD0 | (uint8_t)(instrSize!= 1);\
                 break;\
             case Js::AsmJsJitTemplate::REG_REG:\
                 Assert( ((InstrParams2Reg*)params)->reg2 == RegECX );\
-                *buffer++ = 0xD2 | (BYTE)(instrSize!= 1);\
+                *buffer++ = 0xD2 | (uint8_t)(instrSize!= 1);\
                 break;\
             case Js::AsmJsJitTemplate::ADDR_REG:\
                 Assert( ((InstrParamsAddrReg*)params)->reg == RegECX );\
-                *buffer++ = 0xD2 | (BYTE)(instrSize!= 1);\
+                *buffer++ = 0xD2 | (uint8_t)(instrSize!= 1);\
                 break;\
             case Js::AsmJsJitTemplate::REG_IMM:\
             case Js::AsmJsJitTemplate::ADDR_IMM:\
                 Assert( sizeof( ImmType ) == 1 );\
-                *buffer++ = 0xC0 | (BYTE)(instrSize!= 1);\
+                *buffer++ = 0xC0 | (uint8_t)(instrSize!= 1);\
                 break;\
             default:\
                 Assume( false );\
@@ -1147,7 +1147,7 @@ namespace Js
         }
 
         template<typename ImmType, int op>
-        int JmpGeneric_OpFunc( BYTE*& buffer, FormatType formatType )
+        int JmpGeneric_OpFunc( uint8_t*& buffer, FormatType formatType )
         {
             if( sizeof(ImmType) != 1 )
             {
@@ -1194,7 +1194,7 @@ namespace Js
 #undef Jcc
 
         template<int op>
-        int SetFlagGeneric_OpFunc( BYTE*& buffer, FormatType formatType )
+        int SetFlagGeneric_OpFunc( uint8_t*& buffer, FormatType formatType )
         {
             *buffer++ = op;
             return 1;
@@ -1673,7 +1673,7 @@ namespace Js
 #define DUMP_ASM_CODE_PADDING(size) ((DUMP_ASM_CODE_NB_BYTES-size%DUMP_ASM_CODE_NB_BYTES)%DUMP_ASM_CODE_NB_BYTES)*5+1
 
     template<typename T>
-    void DumpAsmCode( const BYTE* buffer, const int size, const char16* instructionName, T* params )
+    void DumpAsmCode( const uint8_t* buffer, const int size, const char16* instructionName, T* params )
     {
 #if DBG_DUMP
         if( PHASE_TRACE( AsmjsEncoderPhase, AsmJsJitTemplate::Globals::CurrentEncodingFunction ) )
@@ -1720,7 +1720,7 @@ namespace Js
         InstructionMembers(name, supInstrSize, flags)\
     private:\
         template<int instrSize, typename ImmType> \
-        static int EncodeOpFunc( BYTE*& buffer, FormatType formatType, void* params )\
+        static int EncodeOpFunc( uint8_t*& buffer, FormatType formatType, void* params )\
         {\
             return name##_OpFunc<instrSize,ImmType>(buffer,formatType,params);\
         }\
@@ -1732,7 +1732,7 @@ namespace Js
 
 // Structure for instructions
 #define InstructionEmpty() \
-    template<typename OperationSize> static int EncodeInstruction( BYTE*& buffer, EncodingInfo* info = nullptr )\
+    template<typename OperationSize> static int EncodeInstruction( uint8_t*& buffer, EncodingInfo* info = nullptr )\
     {\
         CompileAssert((sizeof(OperationSize)&(SupportedInstrSize)));\
         CompileAssert(IsPowerOfTwo(sizeof(OperationSize)));\
@@ -1743,7 +1743,7 @@ namespace Js
     }
 
 #define InstructionFormat(check,Format,encodingfunc) \
-    template<typename OperationSize> static int EncodeInstruction( BYTE*& buffer, const Format& params, EncodingInfo* info = nullptr )\
+    template<typename OperationSize> static int EncodeInstruction( uint8_t*& buffer, const Format& params, EncodingInfo* info = nullptr )\
     {\
         CompileAssert((sizeof(OperationSize)&(SupportedInstrSize))); \
         CompileAssert(IsPowerOfTwo(sizeof(OperationSize))); \
@@ -1758,7 +1758,7 @@ namespace Js
 
         // Structure for instructions with a constant value
 #define InstructionFormat_Imm(check,Format,encodingfunc) \
-    template<typename OperationSize, typename ImmType> static int EncodeInstruction( BYTE*& buffer, const Format<ImmType>& params, EncodingInfo* info = nullptr )\
+    template<typename OperationSize, typename ImmType> static int EncodeInstruction( uint8_t*& buffer, const Format<ImmType>& params, EncodingInfo* info = nullptr )\
     {\
         CompileAssert((sizeof(OperationSize)&(SupportedInstrSize)));\
         CompileAssert(IsPowerOfTwo(sizeof(OperationSize)));\
@@ -1933,10 +1933,10 @@ namespace Js
 #undef InstructionFormat_Imm
 #undef InstructionFormat
 
-        int MovHigh8Bits( BYTE*& buffer, RegNum reg, int8 imm )
+        int MovHigh8Bits( uint8_t*& buffer, RegNum reg, int8 imm )
         {
             Assert( reg <= RegEBX );
-            BYTE* opDst = buffer;
+            uint8_t* opDst = buffer;
             int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsRegImm<int8>(reg, imm) );
             *opDst |= 4;
             return size;
@@ -1947,33 +1947,33 @@ namespace Js
             HIGH_LOW = 0x20,
             HIGH_HIGH = 0x24,
         };
-        int MovHigh8Bits( BYTE*& buffer, RegNum reg, RegNum reg2, High8BitsRegType high8BitsRegType )
+        int MovHigh8Bits( uint8_t*& buffer, RegNum reg, RegNum reg2, High8BitsRegType high8BitsRegType )
         {
             Assert( reg <= RegEBX );
             Assert( reg2 <= RegEBX );
-            BYTE* opDst = buffer;
+            uint8_t* opDst = buffer;
             int size = MOV::EncodeInstruction<int8>( buffer, InstrParams2Reg(reg, reg2) );
             opDst[1] |= high8BitsRegType;
             return size;
         }
-        int MovHigh8Bits( BYTE*& buffer, RegNum reg, RegNum regEffAddr, int offset )
+        int MovHigh8Bits( uint8_t*& buffer, RegNum reg, RegNum regEffAddr, int offset )
         {
             Assert( reg <= RegEBX );
-            BYTE* opDst = buffer;
+            uint8_t* opDst = buffer;
             int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsRegAddr(reg, regEffAddr, offset) );
             opDst[1] |= 0x20;
             return size;
         }
-        int MovHigh8Bits( BYTE*& buffer, RegNum regEffAddr, int offset, RegNum reg )
+        int MovHigh8Bits( uint8_t*& buffer, RegNum regEffAddr, int offset, RegNum reg )
         {
             Assert( reg <= RegEBX );
-            BYTE* opDst = buffer;
+            uint8_t* opDst = buffer;
             int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsAddrReg(regEffAddr, offset, reg) );
             opDst[1] |= 0x20;
             return size;
         }
 
-        int ApplyCustomTemplate( BYTE*& buffer, const BYTE* src, const int size )
+        int ApplyCustomTemplate( uint8_t*& buffer, const uint8_t* src, const int size )
         {
             memcpy_s( buffer, size, src, size );
             buffer += size;

@@ -291,10 +291,10 @@ void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediat
 }
 #endif
 
-void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionSize, BYTE *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
+void DoFunctionRelocations(uint8_t *function, DWORD functionOffset, DWORD functionSize, uint8_t *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
 {
     PIMAGE_BASE_RELOCATION relocationBlock = (PIMAGE_BASE_RELOCATION)(module + relocHeader->PointerToRawData);
-    for (; relocationBlock->VirtualAddress > 0 && ((BYTE *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
+    for (; relocationBlock->VirtualAddress > 0 && ((uint8_t *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
     {
         DWORD blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
 
@@ -361,7 +361,7 @@ void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionS
             }
         }
 
-        relocationBlock = (PIMAGE_BASE_RELOCATION) (((BYTE *) relocationBlock) + relocationBlock->SizeOfBlock);
+        relocationBlock = (PIMAGE_BASE_RELOCATION) (((uint8_t *) relocationBlock) + relocationBlock->SizeOfBlock);
     }
 }
 

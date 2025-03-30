@@ -16,18 +16,18 @@ namespace {
 // public.  The latter option seems the less objectionable, so that's what I've done here.
 
 #ifdef _M_X64
-constexpr BYTE FunctionInfoOffset = 7;
-constexpr BYTE FunctionProxyOffset = 11;
-constexpr BYTE DynamicThunkAddressOffset = 15;
-constexpr BYTE CallBlockStartAddrOffset = 25;
-constexpr BYTE ThunkSizeOffset = 39;
-constexpr BYTE ErrorOffset = 48;
-constexpr BYTE ThunkAddressOffset = 61;
+constexpr uint8_t FunctionInfoOffset = 7;
+constexpr uint8_t FunctionProxyOffset = 11;
+constexpr uint8_t DynamicThunkAddressOffset = 15;
+constexpr uint8_t CallBlockStartAddrOffset = 25;
+constexpr uint8_t ThunkSizeOffset = 39;
+constexpr uint8_t ErrorOffset = 48;
+constexpr uint8_t ThunkAddressOffset = 61;
 
-constexpr BYTE PrologSize = 60;
-constexpr BYTE StackAllocSize = 0x0;
+constexpr uint8_t PrologSize = 60;
+constexpr uint8_t StackAllocSize = 0x0;
 
-constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
+constexpr uint8_t InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
     0x55,                                                       // push   rbp                   // Prolog - setup the stack frame
     0x48, 0x89, 0xe5,                                           // mov    rbp, rsp
     0x48, 0x8b, 0x47, 0x00,                                     // mov    rax, qword ptr [rdi + FunctionInfoOffset]
@@ -50,21 +50,21 @@ constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] =
     0xcc                                                        // int    3                     // for alignment to size of 8
 };
 
-constexpr BYTE Epilog[] = {
+constexpr uint8_t Epilog[] = {
     0x5d,                                                       // pop    rbp
     0xc3                                                        // ret
 };
 #elif defined(_M_ARM)
 
-constexpr BYTE ThunkAddressOffset = 8;
-constexpr BYTE FunctionInfoOffset = 18;
-constexpr BYTE FunctionProxyOffset = 22;
-constexpr BYTE DynamicThunkAddressOffset = 26;
-constexpr BYTE CallBlockStartAddressInstrOffset = 42;
-constexpr BYTE CallThunkSizeInstrOffset = 54;
-constexpr BYTE ErrorOffset = 64;
+constexpr uint8_t ThunkAddressOffset = 8;
+constexpr uint8_t FunctionInfoOffset = 18;
+constexpr uint8_t FunctionProxyOffset = 22;
+constexpr uint8_t DynamicThunkAddressOffset = 26;
+constexpr uint8_t CallBlockStartAddressInstrOffset = 42;
+constexpr uint8_t CallThunkSizeInstrOffset = 54;
+constexpr uint8_t ErrorOffset = 64;
 
-constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
+constexpr uint8_t InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
     0x0F, 0xB4,                                                      // push        {r0-r3}
     0x2D, 0xE9, 0x00, 0x48,                                          // push        {r11,lr}
     0xEB, 0x46,                                                      // mov         r11,sp
@@ -91,27 +91,27 @@ constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] =
     0x18, 0x47                                                       // bx          r3
 };
 
-constexpr BYTE JmpOffset = 2;
+constexpr uint8_t JmpOffset = 2;
 
-constexpr BYTE Call[] = {
+constexpr uint8_t Call[] = {
     0x88, 0x47,                                                      // blx         r1
     0x00, 0x00, 0x00, 0x00,                                          // b.w         epilog
     0xFE, 0xDE,                                                      // int         3       ;Required for alignment
 };
 
-constexpr BYTE Epilog[] = {
+constexpr uint8_t Epilog[] = {
     0x5D, 0xF8, 0x04, 0xBB,                                         // pop         {r11}
     0x5D, 0xF8, 0x14, 0xFB                                          // ldr         pc,[sp],#0x14
 };
 #elif defined(_M_ARM64)
 
-constexpr BYTE FunctionInfoOffset = 8;
-constexpr BYTE FunctionProxyOffset = 12;
-constexpr BYTE DynamicThunkAddressOffset = 16;
-constexpr BYTE ThunkAddressOffset = 20;
+constexpr uint8_t FunctionInfoOffset = 8;
+constexpr uint8_t FunctionProxyOffset = 12;
+constexpr uint8_t DynamicThunkAddressOffset = 16;
+constexpr uint8_t ThunkAddressOffset = 20;
 
 //TODO: saravind :Implement Range Check for ARM64
-constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
+constexpr uint8_t InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
     0xFD, 0x7B, 0xBF, 0xA9,                                         //stp         fp, lr, [sp, #-16]!   ;Prologue
     0xFD, 0x03, 0x00, 0x91,                                         //mov         fp, sp                ;update frame pointer to the stack pointer
     0x02, 0x00, 0x40, 0xF9,                                         //ldr         x2, [x0, #0x00]       ;offset will be replaced with Offset of FunctionInfo
@@ -127,28 +127,28 @@ constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] =
     0xCC, 0xCC, 0xCC, 0xCC                                          //int 3 for 8byte alignment
 };
 
-constexpr BYTE JmpOffset = 4;
+constexpr uint8_t JmpOffset = 4;
 
-constexpr BYTE Call[] = {
+constexpr uint8_t Call[] = {
     0x20, 0x00, 0x3f, 0xd6,                                         // blr         x1
     0x00, 0x00, 0x00, 0x00                                          // b           epilog
 };
 
-constexpr BYTE Epilog[] = {
+constexpr uint8_t Epilog[] = {
     0xfd, 0x7b, 0xc1, 0xa8,                                         // ldp         fp, lr, [sp], #16
     0xc0, 0x03, 0x5f, 0xd6                                          // ret
 };
 #else // x86
 
-constexpr BYTE FunctionInfoOffset = 8;
-constexpr BYTE FunctionProxyOffset = 11;
-constexpr BYTE DynamicThunkAddressOffset = 14;
-constexpr BYTE CallBlockStartAddrOffset = 21;
-constexpr BYTE ThunkSizeOffset = 26;
-constexpr BYTE ErrorOffset = 33;
-constexpr BYTE ThunkAddressOffset = 44;
+constexpr uint8_t FunctionInfoOffset = 8;
+constexpr uint8_t FunctionProxyOffset = 11;
+constexpr uint8_t DynamicThunkAddressOffset = 14;
+constexpr uint8_t CallBlockStartAddrOffset = 21;
+constexpr uint8_t ThunkSizeOffset = 26;
+constexpr uint8_t ErrorOffset = 33;
+constexpr uint8_t ThunkAddressOffset = 44;
 
-constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
+constexpr uint8_t InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] = {
     0x55,                                                           //   push        ebp                ;Prolog - setup the stack frame
     0x8B, 0xEC,                                                     //   mov         ebp,esp
     0x8B, 0x45, 0x08,                                               //   mov         eax, dword ptr [ebp+8]
@@ -172,16 +172,16 @@ constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] =
     0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC                              //   int 3 for 8byte alignment
 };
 
-constexpr BYTE Epilog[] = {
+constexpr uint8_t Epilog[] = {
     0x5D,                                                         // pop ebp
     0xC3                                                          // ret
 };
 #endif
 
 #if defined(_M_X64) || defined(_M_IX86)
-constexpr BYTE JmpOffset = 3;
+constexpr uint8_t JmpOffset = 3;
 
-constexpr BYTE Call[] = {
+constexpr uint8_t Call[] = {
     0xFF, 0xD0,                                                // call       rax
     0xE9, 0x00, 0x00, 0x00, 0x00,                              // jmp        [offset]
     0xCC,                                                      // int 3      ;for alignment to size of 8 we are adding this
@@ -189,11 +189,11 @@ constexpr BYTE Call[] = {
 
 #endif
 
-constexpr BYTE HeaderSize = sizeof(InterpreterThunk);
+constexpr uint8_t HeaderSize = sizeof(InterpreterThunk);
 
 } // anonymous namespace
 
-const BYTE InterpreterThunkEmitter::ThunkSize = sizeof(Call);
+const uint8_t InterpreterThunkEmitter::ThunkSize = sizeof(Call);
 
 InterpreterThunkEmitter::InterpreterThunkEmitter(Js::ScriptContext* context, ArenaAllocator* allocator, CustomHeap::InProcCodePageAllocators * codePageAllocators, bool isAsmInterpreterThunk) :
     emitBufferManager(allocator, codePageAllocators, /*scriptContext*/ nullptr, nullptr, _u("Interpreter thunk buffer"), GetCurrentProcess()),
@@ -214,7 +214,7 @@ InterpreterThunkEmitter::GetThunkBlocksList()
 //
 // Returns the next thunk. Batch allocated PageCount pages of thunks and issue them one at a time
 //
-BYTE* InterpreterThunkEmitter::GetNextThunk(PVOID* ppDynamicInterpreterThunk)
+uint8_t* InterpreterThunkEmitter::GetNextThunk(PVOID* ppDynamicInterpreterThunk)
 {
     Assert(ppDynamicInterpreterThunk);
     Assert(*ppDynamicInterpreterThunk == nullptr);
@@ -228,18 +228,18 @@ BYTE* InterpreterThunkEmitter::GetNextThunk(PVOID* ppDynamicInterpreterThunk)
         if (!NewThunkBlock())
         {
 #ifdef ASMJS_PLAT
-            return this->isAsmInterpreterThunk ? (BYTE*)&Js::InterpreterStackFrame::StaticInterpreterAsmThunk : (BYTE*)&Js::InterpreterStackFrame::StaticInterpreterThunk;
+            return this->isAsmInterpreterThunk ? (uint8_t*)&Js::InterpreterStackFrame::StaticInterpreterAsmThunk : (uint8_t*)&Js::InterpreterStackFrame::StaticInterpreterThunk;
 #else
             Assert(!this->isAsmInterpreterThunk);
-            return (BYTE*)&Js::InterpreterStackFrame::StaticInterpreterThunk;
+            return (uint8_t*)&Js::InterpreterStackFrame::StaticInterpreterThunk;
 #endif
         }
     }
 
     Assert(this->thunkBuffer != nullptr);
-    BYTE* thunk = this->thunkBuffer;
+    uint8_t* thunk = this->thunkBuffer;
 #if _M_ARM
-    thunk = (BYTE*)((DWORD)thunk | 0x01);
+    thunk = (uint8_t*)((DWORD)thunk | 0x01);
 #endif
     *ppDynamicInterpreterThunk = thunk + HeaderSize + ((--thunkCount) * ThunkSize);
 #if _M_ARM
@@ -260,7 +260,7 @@ void* InterpreterThunkEmitter::ConvertToEntryPoint(PVOID dynamicInterpreterThunk
     void* entryPoint = (void*)((size_t)dynamicInterpreterThunk & (~((size_t)(BlockSize) - 1)));
 
 #if _M_ARM
-    entryPoint = (BYTE*)((DWORD)entryPoint | 0x01);
+    entryPoint = (uint8_t*)((DWORD)entryPoint | 0x01);
 #endif
     return entryPoint;
 }
@@ -285,7 +285,7 @@ bool InterpreterThunkEmitter::NewThunkBlock()
 #endif
 
     Assert(this->thunkCount == 0);
-    BYTE* buffer;
+    uint8_t* buffer;
 
     EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * allocation = emitBufferManager.AllocateBuffer(BlockSize, &buffer);
     if (allocation == nullptr)
@@ -322,10 +322,10 @@ bool InterpreterThunkEmitter::NewThunkBlock()
     }
 
     // Call to set VALID flag for CFG check
-    BYTE* callTarget = buffer;
+    uint8_t* callTarget = buffer;
 #ifdef _M_ARM
     // We want to allow the actual callable value, so thumb-tag the address
-    callTarget = (BYTE*)((uintptr_t)buffer | 0x1);
+    callTarget = (uint8_t*)((uintptr_t)buffer | 0x1);
 #endif
     ThreadContext::GetContextForCurrentThread()->SetValidCallTargetForCFG(callTarget);
 
@@ -361,14 +361,14 @@ bool InterpreterThunkEmitter::NewOOPJITThunkBlock()
         return false;
     }
 
-    BYTE* buffer = (BYTE*)thunkOutput.mappedBaseAddr;
+    uint8_t* buffer = (uint8_t*)thunkOutput.mappedBaseAddr;
 
     if (!CONFIG_FLAG(OOPCFGRegistration))
     {
-        BYTE* callTarget = buffer;
+        uint8_t* callTarget = buffer;
 #ifdef _M_ARM
         // Need to register the thumb-tagged call target for CFG
-        callTarget = (BYTE*)((uintptr_t)callTarget | 0x1);
+        callTarget = (uint8_t*)((uintptr_t)callTarget | 0x1);
 #endif
         this->scriptContext->GetThreadContext()->SetValidCallTargetForCFG(callTarget);
     }
@@ -383,7 +383,7 @@ bool InterpreterThunkEmitter::NewOOPJITThunkBlock()
     Unused(block);
 #endif
 
-    this->thunkBuffer = (BYTE*)thunkOutput.mappedBaseAddr;
+    this->thunkBuffer = (uint8_t*)thunkOutput.mappedBaseAddr;
     this->thunkCount = thunkOutput.thunkCount;
     return true;
 }
@@ -395,7 +395,7 @@ void InterpreterThunkEmitter::FillBuffer(
     _In_ bool asmJsThunk,
     _In_ intptr_t finalAddr,
     _In_ size_t bufferSize,
-    _Out_writes_bytes_all_(BlockSize) BYTE* buffer,
+    _Out_writes_bytes_all_(BlockSize) uint8_t* buffer,
 #if PDATA_ENABLED
     _Out_ PRUNTIME_FUNCTION * pdataTableStart,
     _Out_ intptr_t * epilogEndAddr,
@@ -416,8 +416,8 @@ void InterpreterThunkEmitter::FillBuffer(
     DWORD bytesWritten = 0;
     DWORD thunks = 0;
     DWORD epilogSize = sizeof(Epilog);
-    const BYTE *epilog = Epilog;
-    const BYTE *header = InterpreterThunk;
+    const uint8_t *epilog = Epilog;
+    const uint8_t *header = InterpreterThunk;
 
     intptr_t interpreterThunk;
 
@@ -434,10 +434,10 @@ void InterpreterThunkEmitter::FillBuffer(
     }
 
 
-    BYTE * currentBuffer = buffer;
+    uint8_t * currentBuffer = buffer;
     // Ensure there is space for PDATA at the end
-    BYTE* pdataStart = currentBuffer + (BlockSize - Math::Align(pdataSize, EMIT_BUFFER_ALIGNMENT));
-    BYTE* epilogStart = pdataStart - Math::Align(epilogSize, EMIT_BUFFER_ALIGNMENT);
+    uint8_t* pdataStart = currentBuffer + (BlockSize - Math::Align(pdataSize, EMIT_BUFFER_ALIGNMENT));
+    uint8_t* epilogStart = pdataStart - Math::Align(epilogSize, EMIT_BUFFER_ALIGNMENT);
 
     // Ensure there is space for PDATA at the end
     intptr_t finalPdataStart = finalAddr + (BlockSize - Math::Align(pdataSize, EMIT_BUFFER_ALIGNMENT));
@@ -489,17 +489,17 @@ void InterpreterThunkEmitter::FillBuffer(
 
     // Generate and register PDATA
 #if PDATA_ENABLED
-    BYTE* epilogEnd = epilogStart + epilogSize;
+    uint8_t* epilogEnd = epilogStart + epilogSize;
     DWORD functionSize = (DWORD)(epilogEnd - buffer);
     Assert(pdataStart == currentBuffer);
 #ifdef _M_X64
     Assert(bytesRemaining >= pdataSize);
-    BYTE* pdata = prologEncoder.Finalize(buffer, functionSize, pdataStart);
+    uint8_t* pdata = prologEncoder.Finalize(buffer, functionSize, pdataStart);
     bytesWritten = CopyWithAlignment(pdataStart, bytesRemaining, pdata, pdataSize, EMIT_BUFFER_ALIGNMENT);
 #elif defined(_M_ARM32_OR_ARM64)
     RUNTIME_FUNCTION pdata;
     GeneratePdata(buffer, functionSize, &pdata);
-    bytesWritten = CopyWithAlignment(pdataStart, bytesRemaining, (const BYTE*)&pdata, pdataSize, EMIT_BUFFER_ALIGNMENT);
+    bytesWritten = CopyWithAlignment(pdataStart, bytesRemaining, (const uint8_t*)&pdata, pdataSize, EMIT_BUFFER_ALIGNMENT);
 #endif
     *pdataTableStart = (PRUNTIME_FUNCTION)finalPdataStart;
     *epilogEndAddr = finalEpilogStart;
@@ -509,7 +509,7 @@ void InterpreterThunkEmitter::FillBuffer(
 
 #if _M_ARM
 void InterpreterThunkEmitter::EncodeInterpreterThunk(
-    __in_bcount(InterpreterThunkSize) BYTE* thunkBuffer,
+    __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
     __in const intptr_t thunkBufferStartAddress,
     __in const intptr_t epilogStart,
     __in const DWORD epilogSize,
@@ -549,7 +549,7 @@ void InterpreterThunkEmitter::EncodeInterpreterThunk(
     DWORD movBlockSize = EncodeMove(/*Opcode*/ 0x0000F240, /*register*/12, (DWORD)totalThunkSize);
     Emit(thunkBuffer, CallThunkSizeInstrOffset, movBlockSize);
 
-    Emit(thunkBuffer, ErrorOffset, (BYTE) FAST_FAIL_INVALID_ARG);
+    Emit(thunkBuffer, ErrorOffset, (uint8_t) FAST_FAIL_INVALID_ARG);
 }
 
 DWORD InterpreterThunkEmitter::EncodeMove(DWORD opCode, int reg, DWORD imm16)
@@ -568,7 +568,7 @@ DWORD InterpreterThunkEmitter::EncodeMove(DWORD opCode, int reg, DWORD imm16)
     return encodedMove;
 }
 
-void InterpreterThunkEmitter::GeneratePdata(_In_ const BYTE* entryPoint, _In_ const DWORD functionSize, _Out_ RUNTIME_FUNCTION* function)
+void InterpreterThunkEmitter::GeneratePdata(_In_ const uint8_t* entryPoint, _In_ const DWORD functionSize, _Out_ RUNTIME_FUNCTION* function)
 {
     function->BeginAddress   = 0x1;                        // Since our base address is the start of the function - this is offset from the base address
     function->Flag           = 1;                          // Packed unwind data is used
@@ -584,7 +584,7 @@ void InterpreterThunkEmitter::GeneratePdata(_In_ const BYTE* entryPoint, _In_ co
 
 #elif _M_ARM64
 void InterpreterThunkEmitter::EncodeInterpreterThunk(
-    __in_bcount(InterpreterThunkSize) BYTE* thunkBuffer,
+    __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
     __in const intptr_t thunkBufferStartAddress,
     __in const intptr_t epilogStart,
     __in const DWORD epilogSize,
@@ -653,7 +653,7 @@ DWORD InterpreterThunkEmitter::EncodeMove(DWORD opCode, int reg, DWORD imm16)
     return encodedMove;
 }
 
-void InterpreterThunkEmitter::GeneratePdata(_In_ const BYTE* entryPoint, _In_ const DWORD functionSize, _Out_ RUNTIME_FUNCTION* function)
+void InterpreterThunkEmitter::GeneratePdata(_In_ const uint8_t* entryPoint, _In_ const DWORD functionSize, _Out_ RUNTIME_FUNCTION* function)
 {
     function->BeginAddress = 0x0;               // Since our base address is the start of the function - this is offset from the base address
     function->Flag = 1;                         // Packed unwind data is used
@@ -668,7 +668,7 @@ void InterpreterThunkEmitter::GeneratePdata(_In_ const BYTE* entryPoint, _In_ co
 }
 #else
 void InterpreterThunkEmitter::EncodeInterpreterThunk(
-    __in_bcount(InterpreterThunkSize) BYTE* thunkBuffer,
+    __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
     __in const intptr_t thunkBufferStartAddress,
     __in const intptr_t epilogStart,
     __in const DWORD epilogSize,
@@ -681,12 +681,12 @@ void InterpreterThunkEmitter::EncodeInterpreterThunk(
     Emit(thunkBuffer, CallBlockStartAddrOffset, (uintptr_t) thunkBufferStartAddress + HeaderSize);
     uint totalThunkSize = (uint)(epilogStart - (thunkBufferStartAddress + HeaderSize));
     Emit(thunkBuffer, ThunkSizeOffset, totalThunkSize);
-    Emit(thunkBuffer, ErrorOffset, (BYTE) FAST_FAIL_INVALID_ARG);
+    Emit(thunkBuffer, ErrorOffset, (uint8_t) FAST_FAIL_INVALID_ARG);
 }
 #endif
 
 /*static*/
-DWORD InterpreterThunkEmitter::FillDebugBreak(_Out_writes_bytes_all_(count) BYTE* dest, _In_ DWORD count)
+DWORD InterpreterThunkEmitter::FillDebugBreak(_Out_writes_bytes_all_(count) uint8_t* dest, _In_ DWORD count)
 {
 #if defined(_M_ARM)
     Assert(count % 2 == 0);
@@ -699,9 +699,9 @@ DWORD InterpreterThunkEmitter::FillDebugBreak(_Out_writes_bytes_all_(count) BYTE
 
 /*static*/
 DWORD InterpreterThunkEmitter::CopyWithAlignment(
-    _Out_writes_bytes_all_(sizeInBytes) BYTE* dest,
+    _Out_writes_bytes_all_(sizeInBytes) uint8_t* dest,
     _In_ const DWORD sizeInBytes,
-    _In_reads_bytes_(srcSize) const BYTE* src,
+    _In_reads_bytes_(srcSize) const uint8_t* src,
     _In_ const DWORD srcSize,
     _In_ const DWORD alignment)
 {
@@ -785,7 +785,7 @@ void InterpreterThunkEmitter::Close()
     this->thunkCount = 0;
 }
 
-void InterpreterThunkEmitter::Release(BYTE* thunkAddress, bool addtoFreeList)
+void InterpreterThunkEmitter::Release(uint8_t* thunkAddress, bool addtoFreeList)
 {
     if(!addtoFreeList)
     {
@@ -810,33 +810,33 @@ void InterpreterThunkEmitter::Release(BYTE* thunkAddress, bool addtoFreeList)
     }
 }
 
-BYTE* InterpreterThunkEmitter::AllocateFromFreeList(PVOID* ppDynamicInterpreterThunk )
+uint8_t* InterpreterThunkEmitter::AllocateFromFreeList(PVOID* ppDynamicInterpreterThunk )
 {
     ThunkBlock& block = this->freeListedThunkBlocks.Head();
-    BYTE* thunk = block.AllocateFromFreeList();
+    uint8_t* thunk = block.AllocateFromFreeList();
 #if _M_ARM
-    thunk = (BYTE*)((DWORD)thunk | 0x01);
+    thunk = (uint8_t*)((DWORD)thunk | 0x01);
 #endif
     if(block.IsFreeListEmpty())
     {
         this->freeListedThunkBlocks.MoveHeadTo(&this->thunkBlocks);
     }
     *ppDynamicInterpreterThunk = thunk;
-    BYTE* entryPoint = block.GetStart();
+    uint8_t* entryPoint = block.GetStart();
 #if _M_ARM
-    entryPoint = (BYTE*)((DWORD)entryPoint | 0x01);
+    entryPoint = (uint8_t*)((DWORD)entryPoint | 0x01);
 #endif
     return entryPoint;
 }
 
 
-bool ThunkBlock::Contains(BYTE* address) const
+bool ThunkBlock::Contains(uint8_t* address) const
 {
     bool contains = address >= start && address < (start + InterpreterThunkEmitter::BlockSize);
     return contains;
 }
 
-void ThunkBlock::Release(BYTE* address)
+void ThunkBlock::Release(uint8_t* address)
 {
     Assert(Contains(address));
     Assert(this->freeList);
@@ -845,26 +845,26 @@ void ThunkBlock::Release(BYTE* address)
     this->freeList->Set(index);
 }
 
-BYTE* ThunkBlock::AllocateFromFreeList()
+uint8_t* ThunkBlock::AllocateFromFreeList()
 {
     Assert(this->freeList);
     BVIndex index = this->freeList->GetNextBit(0);
-    BYTE* address = ToThunkAddress(index);
+    uint8_t* address = ToThunkAddress(index);
     this->freeList->Clear(index);
     return address;
 }
 
-BVIndex ThunkBlock::FromThunkAddress(BYTE* address)
+BVIndex ThunkBlock::FromThunkAddress(uint8_t* address)
 {
     uint index = ((uint)(address - start) - HeaderSize) / InterpreterThunkEmitter::ThunkSize;
     Assert(index < this->thunkCount);
     return index;
 }
 
-BYTE* ThunkBlock::ToThunkAddress(BVIndex index)
+uint8_t* ThunkBlock::ToThunkAddress(BVIndex index)
 {
     Assert(index < this->thunkCount);
-    BYTE* address = start + HeaderSize + InterpreterThunkEmitter::ThunkSize * index;
+    uint8_t* address = start + HeaderSize + InterpreterThunkEmitter::ThunkSize * index;
     return address;
 }
 

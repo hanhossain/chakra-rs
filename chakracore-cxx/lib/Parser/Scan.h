@@ -155,7 +155,7 @@ public:
     tokens SetRegex(UnifiedRegex::RegexPattern *const pattern, Parser *const parser);
 };
 
-typedef BYTE UTF8Char;
+typedef uint8_t UTF8Char;
 typedef UTF8Char* UTF8CharPtr;
 
 class NullTerminatedUnicodeEncodingPolicy
@@ -459,9 +459,9 @@ public:
 
     IdentPtr GetSecondaryBufferAsPid();
 
-    BYTE SetDeferredParse(BOOL defer)
+    uint8_t SetDeferredParse(BOOL defer)
     {
-        BYTE fOld = m_DeferredParseFlags;
+        uint8_t fOld = m_DeferredParseFlags;
         if (defer)
         {
             m_DeferredParseFlags |= ScanFlagSuppressStrPid;
@@ -473,7 +473,7 @@ public:
         return fOld;
     }
 
-    void SetDeferredParseFlags(BYTE flags)
+    void SetDeferredParseFlags(uint8_t flags)
     {
         m_DeferredParseFlags = flags;
     }
@@ -738,7 +738,7 @@ private:
     bool m_EscapeOnLastTkStrCon:1;
     bool m_lastIdentifierHasEscape:1;
     BOOL m_fNextStringTemplateIsTagged:1;   // the next string template scanned has a tag (must create raw strings)
-    BYTE m_DeferredParseFlags:2;            // suppressStrPid and suppressIdPid    
+    uint8_t m_DeferredParseFlags:2;            // suppressStrPid and suppressIdPid
     bool es6UnicodeMode;                // True if ES6Unicode Extensions are enabled.
     bool m_fYieldIsKeywordRegion;       // Whether to treat 'yield' as an identifier or keyword
     bool m_fAwaitIsKeywordRegion;       // Whether to treat 'await' as an identifier or keyword

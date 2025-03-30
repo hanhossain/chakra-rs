@@ -377,7 +377,7 @@ namespace Js
     // Write layout: [byteLen] [byte data] [padding]
     //
     template <class Writer>
-    void SerializationCloner<Writer>::Write(const BYTE* bytes, uint32 len) const
+    void SerializationCloner<Writer>::Write(const uint8_t* bytes, uint32 len) const
     {
         m_writer->Write(len);
         m_writer->Write(bytes, len);

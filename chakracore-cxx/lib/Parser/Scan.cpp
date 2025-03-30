@@ -1544,7 +1544,7 @@ tokens Scanner<EncodingPolicy>::ScanForcingPid()
 {
     if (m_DeferredParseFlags != ScanFlagNone)
     {
-        BYTE deferredParseFlagsSave = m_DeferredParseFlags;
+        uint8_t deferredParseFlagsSave = m_DeferredParseFlags;
         m_DeferredParseFlags = ScanFlagNone;
         tokens result = tkEOF;
         TryFinally(

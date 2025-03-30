@@ -459,7 +459,7 @@ ServerNewInterpreterThunkBlock(
 
         OOPEmitBufferManagerWithLock * emitBufferManager = scriptContext->GetEmitBufferManager(thunkInput->asmJsThunk != FALSE);
 
-        BYTE* runtimeAddress;
+        uint8_t* runtimeAddress;
         EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * alloc = emitBufferManager->AllocateBuffer(InterpreterThunkEmitter::BlockSize, &runtimeAddress);
 
         CompileAssert(InterpreterThunkEmitter::BlockSize <= CustomHeap::Page::MaxAllocationSize);
@@ -482,7 +482,7 @@ ServerNewInterpreterThunkBlock(
             thunkInput->asmJsThunk != FALSE,
             (intptr_t)runtimeAddress,
             InterpreterThunkEmitter::BlockSize,
-            (BYTE*)localAlloc.localAddress,
+            (uint8_t*)localAlloc.localAddress,
 #if PDATA_ENABLED
             &pdataStart,
             &epilogEnd,

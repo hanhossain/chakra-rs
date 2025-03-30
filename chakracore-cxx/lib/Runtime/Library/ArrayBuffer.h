@@ -60,7 +60,7 @@ namespace Js
         virtual SharedArrayBuffer * GetAsSharedArrayBuffer() { return nullptr; }
         virtual void AddParent(ArrayBufferParent* parent) { }
         virtual uint32 GetByteLength() const = 0;
-        virtual BYTE* GetBuffer() const = 0;
+        virtual uint8_t* GetBuffer() const = 0;
         virtual bool IsValidVirtualBufferLength(uint length) const { return false; };
 
         char GetExtraInfoBits() { return infoBits; }
@@ -81,19 +81,19 @@ namespace Js
     class RefCountedBuffer
     {
     private:
-        FieldNoBarrier(BYTE*) buffer; // Points to a heap allocated RGBA buffer, can be null
+        FieldNoBarrier(uint8_t*) buffer; // Points to a heap allocated RGBA buffer, can be null
 
         // Addref/release counter for current buffer, this is needed hold the current buffer alive
         Field(long) refCount;
     public:
         long AddRef();
         long Release();
-        BYTE* GetBuffer() { return buffer; };
+        uint8_t* GetBuffer() { return buffer; };
         long GetRefCount() { return refCount; }
 
         static int GetBufferOffset() { return offsetof(RefCountedBuffer, buffer); }
 
-        RefCountedBuffer(BYTE* b)
+        RefCountedBuffer(uint8_t* b)
             : buffer(b), refCount(1)
         { }
     };
@@ -173,7 +173,7 @@ namespace Js
 
         ArrayBufferDetachedStateBase* DetachAndGetState(bool queueForDelayFree = true);
         virtual uint32 GetByteLength() const override;
-        virtual BYTE* GetBuffer() const override;
+        virtual uint8_t* GetBuffer() const override;
         RefCountedBuffer *GetBufferContent() { return bufferContent;  }
         static int GetBufferContentsOffset() { return offsetof(ArrayBuffer, bufferContent); }
 

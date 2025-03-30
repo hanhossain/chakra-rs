@@ -5677,12 +5677,12 @@ ScriptContext::GetJitFuncRangeCache()
     }
 #endif
 
-    void ScriptContext::ReleaseDynamicInterpreterThunk(BYTE* address, bool addtoFreeList)
+    void ScriptContext::ReleaseDynamicInterpreterThunk(uint8_t* address, bool addtoFreeList)
     {
         this->interpreterThunkEmitter->Release(address, addtoFreeList);
     }
 
-    void ScriptContext::ReleaseDynamicAsmJsInterpreterThunk(BYTE* address, bool addtoFreeList)
+    void ScriptContext::ReleaseDynamicAsmJsInterpreterThunk(uint8_t* address, bool addtoFreeList)
     {
 #ifdef ASMJS_PLAT
         this->asmJsInterpreterThunkEmitter->Release(address, addtoFreeList);

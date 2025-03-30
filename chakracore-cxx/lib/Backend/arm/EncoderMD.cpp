@@ -34,23 +34,23 @@ EncoderMD::Init(Encoder *encoder)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(IR::RegOpnd *regOpnd)
 {
     return GetRegEncode(regOpnd->GetReg());
 }
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(RegNum reg)
 {
     return RegEncode[reg];
 }
 
-BYTE
+uint8_t
 EncoderMD::GetFloatRegEncode(IR::RegOpnd *regOpnd)
 {
     //Each double register holds two single precision registers.
-    BYTE regEncode = GetRegEncode(regOpnd->GetReg()) * 2;
+    uint8_t regEncode = GetRegEncode(regOpnd->GetReg()) * 2;
     AssertMsg(regEncode <= LAST_FLOAT_REG_NUM, "Impossible to allocate higher registers on VFP");
     return regEncode;
 }
@@ -580,7 +580,7 @@ InstructionType EncoderMD::PushPopEncodeType(IR::IndirOpnd *target, IR::RegBVOpn
     // but in practice we never push LR without R11, so it would never help. If that changes, we
     // should make this function smarter.
 
-    BYTE lastRegEncode = (BYTE)opnd->m_value.GetPrevBit();
+    uint8_t lastRegEncode = (uint8_t)opnd->m_value.GetPrevBit();
     Assert(lastRegEncode != BVInvalidIndex);
     return lastRegEncode > RegEncode[RegR7] ? InstructionType::Thumb2 : InstructionType::Thumb;
 }
@@ -968,7 +968,7 @@ EncoderMD::EncodeT2Offset(ENCODE_32 encode, IR::Instr *instr, int offset, int bi
 //
 //---------------------------------------------------------------------------
 ENCODE_32
-EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size, InstructionType instrType)
+EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 size, InstructionType instrType)
 {
     ENCODE_32 encode = 0 ;
     DWORD encoded = 0;
@@ -1808,7 +1808,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size,
 }
 
 #ifdef INSERT_NOPS
-ptrdiff_t insertNops(BYTE *pc, ENCODE_32 outInstr, uint count, uint size)
+ptrdiff_t insertNops(uint8_t *pc, ENCODE_32 outInstr, uint count, uint size)
 {
         //Insert count nops in the beginning
         for(int i = 0; i < count;i++)
@@ -1904,7 +1904,7 @@ EncoderMD::CheckBranchInstrCriteria(IR::Instr* instr)
 ///----------------------------------------------------------------------------
 
 ptrdiff_t
-EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
+EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 {
     m_pc = pc;
 
@@ -2136,7 +2136,7 @@ EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
 ///----------------------------------------------------------------------------
 
 void
-EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, BYTE *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
+EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
 {
     EncodeReloc *newReloc      = AnewStruct(alloc, EncodeReloc);
     newReloc->m_relocType      = relocType;
@@ -2275,7 +2275,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
 {
     for (EncodeReloc *reloc = m_relocList; reloc; reloc = reloc->m_next)
     {
-        BYTE * relocAddress = reloc->m_consumerOffset;
+        uint8_t * relocAddress = reloc->m_consumerOffset;
         int32 pcrel;
         ENCODE_32 encode = *(ENCODE_32*)relocAddress;
         switch (reloc->m_relocType)
@@ -2433,7 +2433,7 @@ bool EncoderMD::TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd)
     }
 }
 
-void EncoderMD::AddLabelReloc(BYTE* relocAddress)
+void EncoderMD::AddLabelReloc(uint8_t* relocAddress)
 {
     Assert(relocAddress != nullptr);
     EncodeReloc::New(&m_relocList, RelocTypeLabel, relocAddress, *(IR::Instr**)relocAddress, m_encoder->m_tempAlloc);

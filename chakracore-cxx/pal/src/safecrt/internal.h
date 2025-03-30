@@ -1057,9 +1057,9 @@ const char16_t * _wgetenv_helper_nolock(const char16_t *);
 const char * _getenv_helper_nolock(const char *);
 
 /* internal helper routines used to query a PE image header. */
-BOOL _ValidateImageBase(PBYTE pImageBase);
-PIMAGE_SECTION_HEADER _FindPESection(PBYTE pImageBase, DWORD_PTR rva);
-BOOL _IsNonwritableInCurrentImage(PBYTE pTarget);
+BOOL _ValidateImageBase(uint8_t * pImageBase);
+PIMAGE_SECTION_HEADER _FindPESection(uint8_t * pImageBase, DWORD_PTR rva);
+BOOL _IsNonwritableInCurrentImage(uint8_t * pTarget);
 
 #ifdef __cplusplus
 }

@@ -287,14 +287,14 @@ namespace Js
         {
             return WalkUntil(USHORT_MAX, walkFrame, onlyOnDebugMode, filterDiagnosticsOM);
         }
-        BYTE** GetCurrentAddresOfReturnAddress() const
+        uint8_t** GetCurrentAddresOfReturnAddress() const
         {
-            return (BYTE**)this->currentFrame.GetAddressOfReturnAddress();
+            return (uint8_t**)this->currentFrame.GetAddressOfReturnAddress();
         }
 
-        BYTE** GetCurrentAddressOfInstructionPointer() const
+        uint8_t** GetCurrentAddressOfInstructionPointer() const
         {
-            return (BYTE**)this->currentFrame.GetAddressOfInstructionPointer();
+            return (uint8_t**)this->currentFrame.GetAddressOfInstructionPointer();
         }
 
         void* GetInstructionPointer() const

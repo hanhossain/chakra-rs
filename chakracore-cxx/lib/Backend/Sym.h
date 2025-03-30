@@ -20,7 +20,7 @@ class PropertySym;
 typedef JsUtil::BaseDictionary<StackSym*, StackSym*, JitArenaAllocator, PrimeSizePolicy> StackSymMap;
 typedef JsUtil::BaseDictionary<StackSym*, IR::Instr*, JitArenaAllocator, PrimeSizePolicy> SymInstrMap;
 
-enum SymKind : BYTE
+enum SymKind : uint8_t
 {
     SymKindInvalid,
     SymKindStack,
@@ -291,7 +291,7 @@ private:
 ///
 ///---------------------------------------------------------------------------
 
-enum PropertyKind : BYTE
+enum PropertyKind : uint8_t
 {
     PropertyKindData,
     PropertyKindSlots,

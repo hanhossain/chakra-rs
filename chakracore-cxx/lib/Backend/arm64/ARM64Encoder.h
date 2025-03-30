@@ -261,7 +261,7 @@ enum INDEX_SCALE
     INDEX_SCALE_8 = 3,
 };
 
-static const BYTE RegEncode[] =
+static const uint8_t RegEncode[] =
 {
 #define REGDAT(Name, Listing, Encoding, ...) Encoding,
 #include "RegList.h"

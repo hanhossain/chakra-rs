@@ -327,14 +327,14 @@ static INT VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
- *  IN BYTE* pBitArray - A pointer the array to be manipulated.
+ *  IN uint8_t* pBitArray - A pointer the array to be manipulated.
  *
  *  Returns TRUE on success, FALSE otherwise.
  *  Turn on/off memory staus bits.
  *
  */
 static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
-                                 SIZE_T nNumberOfBits, BYTE * pBitArray )
+                                 SIZE_T nNumberOfBits, uint8_t * pBitArray )
 {
     /* byte masks for optimized modification of partial bytes (changing less
        than 8 bits in a single byte). note that bits are treated in little
@@ -344,7 +344,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
     /* start masks : for modifying bits >= n while preserving bits < n.
        example : if nStartignBit%8 is 3, then bits 0, 1, 2 remain unchanged
        while bits 3..7 are changed; startmasks[3] can be used for this.  */
-    static const BYTE startmasks[8] = {
+    static const uint8_t startmasks[8] = {
       0xff, /* start at 0 : 1111 1111 */
       0xfe, /* start at 1 : 1111 1110 */
       0xfc, /* start at 2 : 1111 1100 */
@@ -358,7 +358,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
     /* end masks : for modifying bits <= n while preserving bits > n.
        example : if the last bit to change is 5, then bits 6 & 7 stay unchanged
        while bits 1..5 are changed; endmasks[5] can be used for this.  */
-    static const BYTE endmasks[8] = {
+    static const uint8_t endmasks[8] = {
       0x01, /* end at 0 : 0000 0001 */
       0x03, /* end at 1 : 0000 0011 */
       0x07, /* end at 2 : 0000 0111 */
@@ -376,7 +376,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
        bitwise AND :   0x1c   0001 1100  (change 2,3,4)
     */
 
-    BYTE byte_mask;
+    uint8_t byte_mask;
     SIZE_T nLastBit;
     SIZE_T nFirstByte;
     SIZE_T nLastByte;
@@ -668,9 +668,9 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
  *          internal VIRTUAL flags.
  *
  */
-static BYTE VIRTUALConvertWinFlags(  DWORD flProtect )
+static uint8_t VIRTUALConvertWinFlags(  DWORD flProtect )
 {
-    BYTE MemAccessControl = 0;
+    uint8_t MemAccessControl = 0;
 
     switch ( flProtect & 0xff )
     {
@@ -705,7 +705,7 @@ static BYTE VIRTUALConvertWinFlags(  DWORD flProtect )
  *              Converts internal virtual protection
  *              flags to their win32 counterparts.
  */
-static DWORD VIRTUALConvertVirtualFlags(  BYTE VirtualProtect )
+static DWORD VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
 {
     DWORD MemAccessControl = 0;
 
@@ -784,10 +784,10 @@ static BOOL VIRTUALStoreAllocationInfo(
         nBufferSize++;
     }
 
-    pNewEntry->pAllocState      = (BYTE*)InternalMalloc( nBufferSize  );
-    pNewEntry->pProtectionState = (BYTE*)InternalMalloc( (memSize / VIRTUAL_PAGE_SIZE)  );
+    pNewEntry->pAllocState      = (uint8_t*)InternalMalloc( nBufferSize  );
+    pNewEntry->pProtectionState = (uint8_t*)InternalMalloc( (memSize / VIRTUAL_PAGE_SIZE)  );
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pNewEntry->pDirtyPages  = (BYTE*)InternalMalloc( nBufferSize );
+    pNewEntry->pDirtyPages  = (uint8_t*)InternalMalloc( nBufferSize );
 #endif //
 
     if ( pNewEntry->pAllocState && pNewEntry->pProtectionState
@@ -918,10 +918,10 @@ static BOOL VIRTUALUpdateAllocationInfo(
         pExistingEntry->pAllocState = NULL;
     }
 
-    pExistingEntry->pAllocState = (BYTE*)InternalMalloc(nBufferSize);
-    pExistingEntry->pProtectionState = (BYTE*)InternalMalloc((memSize / VIRTUAL_PAGE_SIZE));
+    pExistingEntry->pAllocState = (uint8_t*)InternalMalloc(nBufferSize);
+    pExistingEntry->pProtectionState = (uint8_t*)InternalMalloc((memSize / VIRTUAL_PAGE_SIZE));
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pExistingEntry->pDirtyPages = (BYTE*)InternalMalloc(nBufferSize);
+    pExistingEntry->pDirtyPages = (uint8_t*)InternalMalloc(nBufferSize);
 #endif //  MMAP_DOESNOT_ALLOW_REMAP
 
     if (pExistingEntry->pAllocState && pExistingEntry->pProtectionState
@@ -2573,7 +2573,7 @@ VirtualQuery(
         SIZE_T Index = ( StartBoundary - pEntry->startBoundary ) / VIRTUAL_PAGE_SIZE;
 
         /* Attributes to check for. */
-        BYTE AccessProtection = pEntry->pProtectionState[ Index ];
+        uint8_t AccessProtection = pEntry->pProtectionState[ Index ];
         INT AllocationType = VIRTUALGetAllocationType( Index, pEntry );
         SIZE_T RegionSize = 0;
 

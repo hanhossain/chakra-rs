@@ -2264,7 +2264,7 @@ LargeHeapBlock::Verify(Recycler * recycler)
                 // Verify the free listed object
                 if (current->headerIndex == i)
                 {
-                    BYTE* objectAddress = (BYTE *)current + sizeof(LargeObjectHeader);
+                    uint8_t* objectAddress = (uint8_t *)current + sizeof(LargeObjectHeader);
                     Recycler::VerifyCheck(current->heapBlock == this, _u("Invalid heap block"), this, current->heapBlock);
                     Recycler::VerifyCheck((char *)current >= lastAddress, _u("LargeHeapBlock invalid object header order"), this->address, current);
                     Recycler::VerifyCheckFill(lastAddress, (char *)current - lastAddress);
@@ -2282,7 +2282,7 @@ LargeHeapBlock::Verify(Recycler * recycler)
         Recycler::VerifyCheck((char *)header >= lastAddress, _u("LargeHeapBlock invalid object header order"), this->address, header);
         Recycler::VerifyCheckFill(lastAddress, (char *)header - lastAddress);
         Recycler::VerifyCheck(header->objectIndex == i, _u("LargeHeapBlock object index mismatch"), this->address, &header->objectIndex);
-        recycler->VerifyCheckPad((BYTE *)header->GetAddress(), header->objectSize);
+        recycler->VerifyCheckPad((uint8_t *)header->GetAddress(), header->objectSize);
 
         verifyFinalizeCount += ((header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit) != 0);
         lastAddress = (char *)header->GetAddress() + header->objectSize;

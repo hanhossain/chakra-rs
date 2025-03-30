@@ -416,7 +416,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
         {
             return nullptr;
         }
-        FillDebugBreak((BYTE*)localAddr, pages*AutoSystemInfo::PageSize);
+        FillDebugBreak((uint8_t*)localAddr, pages*AutoSystemInfo::PageSize);
         this->codePageAllocators->FreeLocal(localAddr, segment);
 
         if (this->processHandle == GetCurrentProcess())
@@ -685,7 +685,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     {
         return nullptr;
     }
-    FillDebugBreak((BYTE*)localAddr, AutoSystemInfo::PageSize);
+    FillDebugBreak((uint8_t*)localAddr, AutoSystemInfo::PageSize);
     this->codePageAllocators->FreeLocal(localAddr, pageSegment);
 
     DWORD protectFlags = 0;
@@ -846,7 +846,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
                 MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
                 return false;
             }
-            FillDebugBreak((BYTE*)localAddr, object->size);
+            FillDebugBreak((uint8_t*)localAddr, object->size);
             this->codePageAllocators->FreeLocal(localAddr, page->segment);
 
             void* pageAddress = page->address;
@@ -914,7 +914,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeAllocationHelper(Allocation* object, B
     char* localAddr = this->codePageAllocators->AllocLocal(object->address, object->size, page->segment);
     if (localAddr)
     {
-        FillDebugBreak((BYTE*)localAddr, object->size);
+        FillDebugBreak((uint8_t*)localAddr, object->size);
         this->codePageAllocators->FreeLocal(localAddr, page->segment);
     }
     else
@@ -1117,7 +1117,7 @@ inline BucketId GetBucketForSize(size_t bytes)
 // Fills the specified buffer with "debug break" instruction encoding.
 // If there is any space left after that due to alignment, fill it with 0.
 // static
-void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t byteCount)
+void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount)
 {
 #if defined(_M_ARM)
     // On ARM there is breakpoint instruction (BKPT) which is 0xBEii, where ii (immediate 8) can be any value, 0xBE in particular.
@@ -1127,7 +1127,7 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t 
     CompileAssert(sizeof(char16) == 2);
     char16 pattern = 0xDEFE;
 
-    BYTE * writeBuffer = buffer;
+    uint8_t * writeBuffer = buffer;
     wmemset((char16 *)writeBuffer, pattern, byteCount / 2);
     if (byteCount % 2)
     {

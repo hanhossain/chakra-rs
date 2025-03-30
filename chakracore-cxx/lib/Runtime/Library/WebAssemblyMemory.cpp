@@ -239,7 +239,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     {
         Output::Print(_u("WasmMemoryTrace:: buf[%u]"), index);
     }
-    BYTE* buffer = mem->m_buffer->GetBuffer();
+    uint8_t* buffer = mem->m_buffer->GetBuffer();
     switch (viewType)
     {
     case ArrayBufferView::ViewType::TYPE_INT8_TO_INT64:

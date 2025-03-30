@@ -643,7 +643,7 @@ MultiBranchInstr::ChangeLabelRef(LabelInstr * oldTarget, LabelInstr * newTarget)
 ///----------------------------------------------------------------------------
 
 inline void
-LabelInstr::SetPC(BYTE * pc)
+LabelInstr::SetPC(uint8_t * pc)
 {
     this->m_pc.pc = pc;
 }
@@ -654,7 +654,7 @@ LabelInstr::SetPC(BYTE * pc)
 ///
 ///----------------------------------------------------------------------------
 
-inline BYTE *
+inline uint8_t *
 LabelInstr::GetPC(void) const
 {
     return this->m_pc.pc;

@@ -906,7 +906,7 @@ namespace CorUnix
 
         static PAL_ERROR SendMsgToRemoteWorker(
             DWORD dwProcessId,
-            BYTE * pMsg,
+            uint8_t * pMsg,
             int iMsgSize);
 
         static ThreadWaitInfo * GetThreadWaitInfo(
@@ -967,7 +967,7 @@ namespace CorUnix
 
         int ReadBytesFromProcessPipe(
             int iTimeout,
-            BYTE * pRecvBuf,
+            uint8_t * pRecvBuf,
             int32_t lBytes);
 
         bool CreateProcessPipe();

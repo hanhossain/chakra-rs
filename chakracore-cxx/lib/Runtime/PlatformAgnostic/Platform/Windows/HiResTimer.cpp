@@ -107,7 +107,7 @@ namespace DateTime
             // QPC resolution was less than our selected quantum).
             if (quantizationToSelectedScaleFactor != 1.0 && quantizedQpc != currentQuantizedQpc)
             {
-                BYTE data[1];
+                uint8_t data[1];
                 NTSTATUS status = BCryptGenRandom(nullptr, data, sizeof(data), BCRYPT_USE_SYSTEM_PREFERRED_RNG);
                 AssertOrFailFast(status == 0);
                 //Release_Assert(status == 0); IE does not have Release_Assert, but Chakra does.

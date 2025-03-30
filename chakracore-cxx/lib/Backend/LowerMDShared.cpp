@@ -5574,7 +5574,7 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
             GetLowerer()->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
         }
 #else
-        IR::MemRefOpnd *doubleRef = IR::MemRefOpnd::New((BYTE*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func,
+        IR::MemRefOpnd *doubleRef = IR::MemRefOpnd::New((uint8_t*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func,
             IR::AddrOpndKindDynamicDoubleRef);
 #endif
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
@@ -8648,7 +8648,7 @@ LowererMD::LowerTypeof(IR::Instr * typeOfInstr)
 
     // MOV typeDisplayStringsArray, &javascriptLibrary->typeDisplayStrings
     IR::RegOpnd * typeDisplayStringsArrayOpnd = IR::RegOpnd::New(TyMachPtr, func);
-    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
+    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
 
     GenerateObjectTest(src1, typeOfInstr, taggedIntLabel);
 

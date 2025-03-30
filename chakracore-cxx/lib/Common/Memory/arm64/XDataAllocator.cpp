@@ -16,7 +16,7 @@ CompileAssert(false)
 
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
 
-XDataAllocator::XDataAllocator(BYTE* address, uint size) :
+XDataAllocator::XDataAllocator(uint8_t* address, uint size) :
     freeList(nullptr),
     start(address),
     current(address),

@@ -83,11 +83,11 @@ void Arm64XdataGenerator::Generate(uint32_t * prologStart, uint32_t * prologEnd,
 
     // first generate the codes for prolog
     Arm64UnwindCodeGenerator generator;
-    BYTE unwindCodes[maxOpcodeBytes * 2];
+    uint8_t unwindCodes[maxOpcodeBytes * 2];
     uint32_t prologCodeBytes = generator.GeneratePrologCodes(&unwindCodes[0], sizeof(unwindCodes), prologStart, prologEnd);
 
     // then for the epilog
-    PBYTE epilogCodes = &unwindCodes[prologCodeBytes];
+    uint8_t * epilogCodes = &unwindCodes[prologCodeBytes];
     uint32_t epilogCodeBytes = 0;
     if (epilogStart != NULL)
     {
@@ -513,7 +513,7 @@ void Arm64UnwindCodeGenerator::ReverseCodes(uint32_t * opcodeList, uint32_t numO
     }
 }
 
-uint32_t Arm64UnwindCodeGenerator::EmitFinalCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * opcodes, uint32_t count)
+uint32_t Arm64UnwindCodeGenerator::EmitFinalCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * opcodes, uint32_t count)
 {
     uint32_t outputIndex = 0;
     for (uint32_t opIndex = 0; opIndex < count; opIndex++)
@@ -605,7 +605,7 @@ ULONG64 Arm64UnwindCodeGenerator::FindRegisterImmediate(int regNum, uint32_t * r
     return pendingImmediate;
 }
 
-uint32_t Arm64UnwindCodeGenerator::GeneratePrologCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * &prologStart, uint32_t * &prologEnd)
+uint32_t Arm64UnwindCodeGenerator::GeneratePrologCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &prologStart, uint32_t * &prologEnd)
 {
     Assert(prologStart != NULL);
     Assert(prologEnd != NULL);
@@ -642,7 +642,7 @@ uint32_t Arm64UnwindCodeGenerator::GeneratePrologCodes(PBYTE buffer, uint32_t bu
     return this->EmitFinalCodes(buffer, bufferSize, opcodeList, numOpcodes);
 }
 
-uint32_t Arm64UnwindCodeGenerator::GenerateEpilogCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * &epilogStart, uint32_t * &epilogEnd)
+uint32_t Arm64UnwindCodeGenerator::GenerateEpilogCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &epilogStart, uint32_t * &epilogEnd)
 {
     Assert(epilogStart != NULL);
     Assert(epilogEnd != NULL);

@@ -110,18 +110,18 @@ namespace Js
                 info = RecyclerNewPlusLeafZ(recycler, totalAlloc, DynamicProfileInfo, functionBody);
             }
         }
-        BYTE* current = (BYTE*)info + sizeof(DynamicProfileInfo);
+        uint8_t* current = (uint8_t*)info + sizeof(DynamicProfileInfo);
 
         for (uint i = 0; i < _countof(batch); i++)
         {
             if (batch[i].size > 0)
             {
-                Field(BYTE*)* field = (Field(BYTE*)*)(((BYTE*)info + batch[i].offset));
+                Field(uint8_t*)* field = (Field(uint8_t*)*)(((uint8_t*)info + batch[i].offset));
                 *field = current;
                 current += batch[i].size;
             }
         }
-        Assert(current - reinterpret_cast<BYTE*>(info) - sizeof(DynamicProfileInfo) == totalAlloc);
+        Assert(current - reinterpret_cast<uint8_t*>(info) - sizeof(DynamicProfileInfo) == totalAlloc);
 
         info->Initialize(functionBody);
         return info;

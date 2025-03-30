@@ -82,7 +82,7 @@ public:
         return this->fragmentLength;
     }
 
-    void SetHomedParamCount(BYTE count)
+    void SetHomedParamCount(uint8_t count)
     {
         Assert(this->homedParamCount == 0);
         this->homedParamCount = count;
@@ -133,15 +133,15 @@ public:
 
     bool GetHasChkStk() const;
     DWORD GetPDataCount(DWORD length);
-    void SetSavedReg(BYTE reg);
-    bool TestSavedReg(BYTE reg) const;
-    DWORD ClearSavedReg(DWORD mask, BYTE reg) const;
+    void SetSavedReg(uint8_t reg);
+    bool TestSavedReg(uint8_t reg) const;
+    DWORD ClearSavedReg(DWORD mask, uint8_t reg) const;
 
     void SetDoubleSavedRegList(DWORD doubleRegMask);
     DWORD GetDoubleSavedRegList() const;
 
-    static BYTE GetLastSavedReg(DWORD mask);
-    static BYTE GetFirstSavedReg(DWORD mask);
+    static uint8_t GetLastSavedReg(DWORD mask);
+    static uint8_t GetFirstSavedReg(DWORD mask);
 
     void SetSavedScratchReg(bool value) { savedScratchReg = value; }
     bool GetSavedScratchReg() { return savedScratchReg; }
@@ -163,7 +163,7 @@ private:
     DWORD savedRegMask;
     DWORD savedDoubleRegMask;
     DWORD stackDepth;
-    BYTE homedParamCount;
+    uint8_t homedParamCount;
     bool hasCalls;
     bool fragmentHasProlog;
     bool fragmentHasEpilog;
@@ -173,7 +173,7 @@ private:
     bool CanEmitPackedPdata() const;
     void EncodePackedUnwindData();
     void EncodeExpandedUnwindData();
-    BYTE * GetBaseAddress();
+    uint8_t * GetBaseAddress();
 
     bool IsR4SavedRegRange(bool saveR11) const;
     static bool IsR4SavedRegRange(DWORD saveRegMask);
@@ -181,18 +181,18 @@ private:
     DWORD XdataTemplate(UnwindCode op) const;
     DWORD XdataLength(UnwindCode op) const;
 
-    DWORD EmitXdataStackAlloc(BYTE xData[], DWORD byte, DWORD stack);
-    DWORD EmitXdataHomeParams(BYTE xData[], DWORD byte);
-    DWORD EmitXdataRestoreRegs(BYTE xData[], DWORD byte, DWORD savedRegMask, bool restoreLR);
-    DWORD EmitXdataRestoreDoubleRegs(BYTE xData[], DWORD byte, DWORD savedDoubleRegMask);
-    DWORD EmitXdataIndirReturn(BYTE xData[], DWORD byte);
-    DWORD EmitXdataNop32(BYTE xData[], DWORD byte);
-    DWORD EmitXdataNop16(BYTE xData[], DWORD byte);
-    DWORD EmitXdataEnd(BYTE xData[], DWORD byte);
-    DWORD EmitXdataEndPlus16(BYTE xData[], DWORD byte);
-    DWORD EmitXdataLocalsPointer(BYTE xData[], DWORD byte, BYTE regEncode);
+    DWORD EmitXdataStackAlloc(uint8_t xData[], DWORD byte, DWORD stack);
+    DWORD EmitXdataHomeParams(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataRestoreRegs(uint8_t xData[], DWORD byte, DWORD savedRegMask, bool restoreLR);
+    DWORD EmitXdataRestoreDoubleRegs(uint8_t xData[], DWORD byte, DWORD savedDoubleRegMask);
+    DWORD EmitXdataIndirReturn(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataNop32(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataNop16(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataEnd(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataEndPlus16(uint8_t xData[], DWORD byte);
+    DWORD EmitXdataLocalsPointer(uint8_t xData[], DWORD byte, uint8_t regEncode);
     DWORD RelativeRegEncoding(RegNum reg, RegNum baseReg) const;
-    DWORD WriteXdataBytes(BYTE xdata[], DWORD byte, DWORD encoding, DWORD length);
+    DWORD WriteXdataBytes(uint8_t xdata[], DWORD byte, DWORD encoding, DWORD length);
 
     void RecordPdataEntry(DWORD beginAddress, DWORD unwindData);
     // Constants defined in the ABI.

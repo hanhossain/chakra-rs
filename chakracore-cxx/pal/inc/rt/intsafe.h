@@ -334,7 +334,7 @@ UIntToUChar(
 }
 
 //
-// UINT -> BYTE conversion
+// UINT -> uint8_t conversion
 //
 #define UIntToByte   UIntToUChar
 
@@ -747,7 +747,7 @@ ULongPtrToUInt(
 #endif
 
 //
-// * -> BYTE conversion (BYTE is always unsigned char)
+// * -> uint8_t conversion (uint8_t is always unsigned char)
 //
 #define  IntToByte   IntToUChar
 #define UIntToByte  UIntToUChar

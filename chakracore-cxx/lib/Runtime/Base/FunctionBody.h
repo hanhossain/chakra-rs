@@ -229,7 +229,7 @@ namespace Js
     {
         
     private:
-        enum State : BYTE
+        enum State : uint8_t
         {
             NotScheduled,       // code gen has not been scheduled
             CodeGenPending,     // code gen job has been scheduled
@@ -585,9 +585,9 @@ namespace Js
         bool HasInlinees();
 
 #if DBG
-        void DoLazyBailout(BYTE **addressOfInstructionPointer, BYTE *framePointer, Js::FunctionBody *functionBody, const PropertyRecord *propertyRecord);
+        void DoLazyBailout(uint8_t **addressOfInstructionPointer, uint8_t *framePointer, Js::FunctionBody *functionBody, const PropertyRecord *propertyRecord);
 #else
-        void DoLazyBailout(BYTE **addressOfInstructionPointer, BYTE *framePointer);
+        void DoLazyBailout(uint8_t **addressOfInstructionPointer, uint8_t *framePointer);
 #endif
 
         void CleanupNativeCode(ScriptContext * scriptContext);
@@ -2255,7 +2255,7 @@ namespace Js
 
         // select dynamic profile info saved off when we codegen and later
         // used for rejit decisions (see bailout.cpp)
-        FieldWithBarrier(BYTE) savedInlinerVersion;
+        FieldWithBarrier(uint8_t) savedInlinerVersion;
 #if ENABLE_NATIVE_CODEGEN
         FieldWithBarrier(ImplicitCallFlags) savedImplicitCallsFlags;
 #endif
@@ -2722,7 +2722,7 @@ namespace Js
         bool IsSimpleJitOriginalEntryPoint() const;
 
 #if DYNAMIC_INTERPRETER_THUNK
-        static BYTE GetOffsetOfDynamicInterpreterThunk() { return static_cast<BYTE>(offsetof(FunctionBody, m_dynamicInterpreterThunk)); }
+        static uint8_t GetOffsetOfDynamicInterpreterThunk() { return static_cast<uint8_t>(offsetof(FunctionBody, m_dynamicInterpreterThunk)); }
         void* GetDynamicInterpreterEntryPoint() const
         {
             return m_dynamicInterpreterThunk;
@@ -3222,7 +3222,7 @@ namespace Js
         DynamicProfileInfo * GetAnyDynamicProfileInfo() const { Assert(HasDynamicProfileInfo()); return dynamicProfileInfo; }
         DynamicProfileInfo * EnsureDynamicProfileInfo();
         DynamicProfileInfo * AllocateDynamicProfile();
-        BYTE GetSavedInlinerVersion() const;
+        uint8_t GetSavedInlinerVersion() const;
         uint32 GetSavedPolymorphicCacheState() const;
         void SetSavedPolymorphicCacheState(uint32 state);
         ImplicitCallFlags GetSavedImplicitCallsFlags() const;

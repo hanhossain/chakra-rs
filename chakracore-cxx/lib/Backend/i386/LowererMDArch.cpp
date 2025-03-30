@@ -9,7 +9,7 @@
 
 const Js::OpCode LowererMD::MDExtend32Opcode = Js::OpCode::MOV;
 
-BYTE
+uint8_t
 LowererMDArch::GetDefaultIndirScale()
 {
     return IndirScale4;

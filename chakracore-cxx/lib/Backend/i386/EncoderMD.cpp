@@ -9,13 +9,13 @@
 #include "X86Encode.h"
 
 
-static const BYTE OpcodeByte2[]={
+static const uint8_t OpcodeByte2[]={
 #define MACRO(name, jnLayout, attrib, byte2, ...) byte2,
 #include "MdOpCodes.h"
 #undef MACRO
 };
 
-struct FormTemplate{ BYTE form[6]; };
+struct FormTemplate{ uint8_t form[6]; };
 
 #define f(form) TEMPLATE_FORM_ ## form
 static const struct FormTemplate OpcodeFormTemplate[] =
@@ -42,7 +42,7 @@ static const uint32 Opdope[] =
 #undef MACRO
 };
 
-static const BYTE RegEncode[] =
+static const uint8_t RegEncode[] =
 {
 #define REGDAT(Name, Listing, Encoding, ...) Encoding,
 #include "RegList.h"
@@ -63,11 +63,11 @@ static const uint32 OpcodeLeadIn[] =
 #undef MACRO
 };
 
-static const BYTE  Nop1[] = { 0x90 };                   /* nop                     */
-static const BYTE  Nop2[] = { 0x66, 0x90 };             /* 66 nop                  */
-static const BYTE  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop dword ptr [eax]     */
-static const BYTE  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop dword ptr [eax + 0] */
-static const BYTE *Nop[4] = { Nop1, Nop2, Nop3, Nop4 };
+static const uint8_t  Nop1[] = { 0x90 };                   /* nop                     */
+static const uint8_t  Nop2[] = { 0x66, 0x90 };             /* 66 nop                  */
+static const uint8_t  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop dword ptr [eax]     */
+static const uint8_t  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop dword ptr [eax + 0] */
+static const uint8_t *Nop[4] = { Nop1, Nop2, Nop3, Nop4 };
 
 
 enum CMP_IMM8
@@ -105,7 +105,7 @@ EncoderMD::Init(Encoder *encoder)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetOpcodeByte2(IR::Instr *instr)
 {
     return OpcodeByte2[instr->m_opcode - (Js::OpCode::MDStart+1)];
@@ -126,7 +126,7 @@ EncoderMD::GetInstrForm(IR::Instr *instr)
     return OpcodeForms[instr->m_opcode - (Js::OpCode::MDStart+1)];
 }
 
-const BYTE *
+const uint8_t *
 EncoderMD::GetFormTemplate(IR::Instr *instr)
 {
     return OpcodeFormTemplate[instr->m_opcode - (Js::OpCode::MDStart + 1)].form;
@@ -140,7 +140,7 @@ EncoderMD::GetFormTemplate(IR::Instr *instr)
 ///
 ///----------------------------------------------------------------------------
 
-const BYTE *
+const uint8_t *
 EncoderMD::GetOpbyte(IR::Instr *instr)
 {
     return Opbyte[instr->m_opcode - (Js::OpCode::MDStart+1)].opbyte;
@@ -154,7 +154,7 @@ EncoderMD::GetOpbyte(IR::Instr *instr)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(IR::RegOpnd *regOpnd)
 {
     AssertMsg(regOpnd->GetReg() != RegNOREG, "RegOpnd should have valid reg in encoder");
@@ -212,13 +212,13 @@ EncoderMD::FitsInByte(size_t value)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetMod(IR::IndirOpnd * opr, int* pDispSize)
 {
     return GetMod(opr->AsIndirOpnd()->GetOffset(), (opr->GetBaseOpnd()->GetReg() == RegEBP), pDispSize);
 }
 
-BYTE
+uint8_t
 EncoderMD::GetMod(IR::SymOpnd * symOpnd, int * pDispSize, RegNum& rmReg)
 {
     StackSym * stackSym = symOpnd->m_sym->AsStackSym();
@@ -245,7 +245,7 @@ EncoderMD::GetMod(IR::SymOpnd * symOpnd, int * pDispSize, RegNum& rmReg)
     return GetMod(offset + symOpnd->m_offset, rmReg == RegEBP, pDispSize);
 }
 
-BYTE
+uint8_t
 EncoderMD::GetMod(size_t offset, bool baseRegIsEBP, int * pDispSize)
 {
     if (offset == 0 && !baseRegIsEBP)
@@ -274,7 +274,7 @@ EncoderMD::GetMod(size_t offset, bool baseRegIsEBP, int * pDispSize)
 ///----------------------------------------------------------------------------
 
 void
-EncoderMD::EmitModRM(IR::Instr * instr, IR::Opnd *opnd, BYTE reg1)
+EncoderMD::EmitModRM(IR::Instr * instr, IR::Opnd *opnd, uint8_t reg1)
 {
     RegNum  rmReg;
     int dispSize;
@@ -282,9 +282,9 @@ EncoderMD::EmitModRM(IR::Instr * instr, IR::Opnd *opnd, BYTE reg1)
     IR::RegOpnd *regOpnd;
     IR::RegOpnd *baseOpnd;
     IR::RegOpnd *indexOpnd;
-    BYTE reg;
-    BYTE regBase;
-    BYTE regIndex;
+    uint8_t reg;
+    uint8_t regBase;
+    uint8_t regIndex;
 
 #ifdef DBG
     dispSize = -1;
@@ -315,18 +315,18 @@ EncoderMD::EmitModRM(IR::Instr * instr, IR::Opnd *opnd, BYTE reg1)
     case IR::OpndKindSym:
         AssertMsg(opnd->AsSymOpnd()->m_sym->IsStackSym(), "Should only see stackSym syms in encoder.");
 
-        BYTE mod;
-        BYTE byte;
+        uint8_t mod;
+        uint8_t byte;
         uint32 baseRegEncode;
 
         mod = this->GetMod(opnd->AsSymOpnd(), &dispSize, rmReg);
         AssertMsg(rmReg != RegNOREG, "rmReg should have been set");
         baseRegEncode = rmReg - RegEAX;
-        byte = (BYTE)(mod | reg1 | baseRegEncode);
+        byte = (uint8_t)(mod | reg1 | baseRegEncode);
         *(m_pc++) = byte;
         if (rmReg == RegESP)
         {
-            byte = (BYTE)(((baseRegEncode & 7) << 3) | (baseRegEncode & 7));
+            byte = (uint8_t)(((baseRegEncode & 7) << 3) | (baseRegEncode & 7));
             *(m_pc++) = byte;
         }
         else
@@ -582,10 +582,10 @@ EncoderMD::EmitCondBranch(IR::BranchInstr * branchInstr)
 ///----------------------------------------------------------------------------
 
 ptrdiff_t
-EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
+EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 {
-    BYTE *opcodeByte;
-    BYTE *instrStart, *instrRestart;
+    uint8_t *opcodeByte;
+    uint8_t *instrStart, *instrRestart;
 
     m_pc = pc;
 
@@ -646,8 +646,8 @@ EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
 
     int instrSize = TySize[opr1 != nullptr? opr1->GetType() : 0];
 
-    const BYTE *form = EncoderMD::GetFormTemplate(instr);
-    const BYTE *opcodeTemplate = EncoderMD::GetOpbyte(instr);
+    const uint8_t *form = EncoderMD::GetFormTemplate(instr);
+    const uint8_t *opcodeTemplate = EncoderMD::GetOpbyte(instr);
     const uint32 leadIn = EncoderMD::GetLeadIn(instr);
     instrRestart = instrStart = m_pc;
 
@@ -793,7 +793,7 @@ EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
 
         case NO:
             {
-                BYTE byte2 = this->GetOpcodeByte2(instr);
+                uint8_t byte2 = this->GetOpcodeByte2(instr);
 
                 if (byte2)
                 {
@@ -837,7 +837,7 @@ modrm:
 
             if (opr2 == nullptr)
             {
-                BYTE byte2 = (this->GetOpcodeByte2(instr) >> 3);
+                uint8_t byte2 = (this->GetOpcodeByte2(instr) >> 3);
 
                 this->EmitModRM(instr, opr1, byte2);
                 break;
@@ -942,7 +942,7 @@ modrm:
             {
                 AppendRelocEntry(RelocTypeCallPcrel, (void*)m_pc, nullptr, (void*)opr1->AsIntConstOpnd()->GetValue());
                 this->EmitConst(0, 4);
-                AssertMsg(m_func->IsOOPJIT() || ( ((BYTE*)opr1->AsIntConstOpnd()->GetValue()) < m_encoder->m_encodeBuffer || ((BYTE *)opr1->AsIntConstOpnd()->GetValue()) >= m_encoder->m_encodeBuffer + m_encoder->m_encodeBufferSize), "Call Target within buffer.");
+                AssertMsg(m_func->IsOOPJIT() || ( ((uint8_t*)opr1->AsIntConstOpnd()->GetValue()) < m_encoder->m_encodeBuffer || ((uint8_t *)opr1->AsIntConstOpnd()->GetValue()) >= m_encoder->m_encodeBuffer + m_encoder->m_encodeBufferSize), "Call Target within buffer.");
             }
             else if (opr1->IsHelperCallOpnd())
             {
@@ -950,7 +950,7 @@ modrm:
                 AppendRelocEntry(RelocTypeCallPcrel, (void*)m_pc, nullptr, fnAddress);
                 AssertMsg(sizeof(uint32) == sizeof(void*), "Sizes of void* assumed to be 32-bits");
                 this->EmitConst(0, 4);
-                AssertMsg(m_func->IsOOPJIT() || (((BYTE*)fnAddress) < m_encoder->m_encodeBuffer || ((BYTE *)fnAddress) >= m_encoder->m_encodeBuffer + m_encoder->m_encodeBufferSize), "Call Target within buffer.");
+                AssertMsg(m_func->IsOOPJIT() || (((uint8_t*)fnAddress) < m_encoder->m_encodeBuffer || ((uint8_t *)fnAddress) >= m_encoder->m_encodeBuffer + m_encoder->m_encodeBufferSize), "Call Target within buffer.");
             }
             else
             {
@@ -1109,7 +1109,7 @@ modrm:
                     unsigned nopSize = instr->GetSrc1()->AsIntConstOpnd()->GetValue();
                     Assert(nopSize >= 2 && nopSize <= 4);
                     nopSize = max(2u, min(4u, nopSize)); // satisfy oacr
-                    const BYTE *nopEncoding = Nop[nopSize - 1];
+                    const uint8_t *nopEncoding = Nop[nopSize - 1];
                     *opcodeByte = nopEncoding[0];
                     for (unsigned i = 1; i < nopSize; i++)
                     {
@@ -1118,7 +1118,7 @@ modrm:
                 }
                 else
                 {
-                    BYTE byte2 = this->GetOpcodeByte2(instr);
+                    uint8_t byte2 = this->GetOpcodeByte2(instr);
 
                     if (byte2)
                     {
@@ -1310,16 +1310,16 @@ EncoderMD::AppendRelocEntry(RelocType type, void *ptr, IR::LabelInstr* labelInst
 }
 
 int
-EncoderMD::FixRelocListEntry(uint32 index, int32 totalBytesSaved, BYTE *buffStart, BYTE* buffEnd)
+EncoderMD::FixRelocListEntry(uint32 index, int32 totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd)
 {
-    BYTE* currentPc;
+    uint8_t* currentPc;
     EncodeRelocAndLabels &relocRecord = m_relocList->Item(index);
     int result = totalBytesSaved;
 
     // LabelInstr ?
     if (relocRecord.isLabel())
     {
-        BYTE* newPC;
+        uint8_t* newPC;
         currentPc = relocRecord.getLabelCurrPC();
 
         AssertMsg(currentPc >= buffStart && currentPc < buffEnd, "LabelInstr offset has to be within buffer.");
@@ -1330,7 +1330,7 @@ EncoderMD::FixRelocListEntry(uint32 index, int32 totalBytesSaved, BYTE *buffStar
         {
             uint32 offset = (uint32)newPC - (uint32)buffStart;
             // Since the final code buffer is page aligned, it is enough to align the offset of the label.
-            BYTE nopCount = m_encoder->FindNopCountFor16byteAlignment(offset);
+            uint8_t nopCount = m_encoder->FindNopCountFor16byteAlignment(offset);
             if (nopCount <= Js::Configuration::Global.flags.LoopAlignNopLimit)
             {
                 // new label pc
@@ -1345,7 +1345,7 @@ EncoderMD::FixRelocListEntry(uint32 index, int32 totalBytesSaved, BYTE *buffStar
     }
     else
     {
-        currentPc = (BYTE*) relocRecord.m_origPtr;
+        currentPc = (uint8_t*) relocRecord.m_origPtr;
         // ignore outside buffer offsets (e.g. JumpTable entries)
         if (currentPc >= buffStart && currentPc < buffEnd)
         {
@@ -1361,7 +1361,7 @@ EncoderMD::FixRelocListEntry(uint32 index, int32 totalBytesSaved, BYTE *buffStar
                 relocRecord.SetInlineOffset(((offset - totalBytesSaved) << Js::InlineeCallInfo::inlineeStartOffsetShiftCount) | count);
             }
             // adjust the ptr to the buffer itself
-            relocRecord.m_ptr = (BYTE*) relocRecord.m_ptr - totalBytesSaved;
+            relocRecord.m_ptr = (uint8_t*) relocRecord.m_ptr - totalBytesSaved;
         }
     }
     return result;
@@ -1446,14 +1446,14 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint * bufferC
     for (int32 i = 0; i < m_relocList->Count(); i++)
     {
         EncodeRelocAndLabels *reloc = &m_relocList->Item(i);
-        BYTE * relocAddress = (BYTE*)reloc->m_ptr;
+        uint8_t * relocAddress = (uint8_t*)reloc->m_ptr;
         uint32 pcrel;
 
         switch (reloc->m_type)
         {
         case RelocTypeCallPcrel:
             {
-                pcrel = (uint32)(codeBufferAddress + (BYTE*)reloc->m_ptr - m_encoder->m_encodeBuffer + 4);
+                pcrel = (uint32)(codeBufferAddress + (uint8_t*)reloc->m_ptr - m_encoder->m_encodeBuffer + 4);
                 uint32 offset = (uint32)reloc->GetFnAddress() - pcrel;
                 if (!isFinalBufferValidation)
                 {
@@ -1470,21 +1470,21 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint * bufferC
                 if (reloc->isShortBr())
                 {
                     // short branch
-                    pcrel = (uint32)(labelInstr->GetPC() - ((BYTE*)reloc->m_ptr + 1));
+                    pcrel = (uint32)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 1));
                     AssertMsg((int32)pcrel >= -128 && (int32)pcrel <= 127, "Offset doesn't fit in imm8.");
                     if (!isFinalBufferValidation)
                     {
-                        Assert(*(BYTE*)relocAddress == 0);
-                        *(BYTE*)relocAddress = (BYTE)pcrel;
+                        Assert(*(uint8_t*)relocAddress == 0);
+                        *(uint8_t*)relocAddress = (uint8_t)pcrel;
                     }
                     else
                     {
-                        Encoder::EnsureRelocEntryIntegrity(codeBufferAddress, codeSize, (size_t)m_encoder->m_encodeBuffer, (size_t)relocAddress, sizeof(BYTE), (ptrdiff_t)labelInstr->GetPC() - ((ptrdiff_t)reloc->m_ptr + 1));
+                        Encoder::EnsureRelocEntryIntegrity(codeBufferAddress, codeSize, (size_t)m_encoder->m_encodeBuffer, (size_t)relocAddress, sizeof(uint8_t), (ptrdiff_t)labelInstr->GetPC() - ((ptrdiff_t)reloc->m_ptr + 1));
                     }
                 }
                 else
                 {
-                    pcrel = (uint32)(labelInstr->GetPC() - ((BYTE*)reloc->m_ptr + 4));
+                    pcrel = (uint32)(labelInstr->GetPC() - ((uint8_t*)reloc->m_ptr + 4));
                     if (!isFinalBufferValidation)
                     {
                         Assert(*(uint32 *)relocAddress == 0);
@@ -1540,7 +1540,7 @@ EncoderMD::GetRelocDataSize(EncodeRelocAndLabels *reloc)
         {
             if (reloc->isShortBr())
             {
-                return sizeof(BYTE);
+                return sizeof(uint8_t);
             }
             else
             {
@@ -1554,10 +1554,10 @@ EncoderMD::GetRelocDataSize(EncodeRelocAndLabels *reloc)
     }
 }
 
-BYTE * 
+uint8_t *
 EncoderMD::GetRelocBufferAddress(EncodeRelocAndLabels * reloc)
 {
-    return (BYTE*)reloc->m_ptr;
+    return (uint8_t*)reloc->m_ptr;
 }
 
 ///----------------------------------------------------------------------------
@@ -1569,9 +1569,9 @@ EncoderMD::GetRelocBufferAddress(EncodeRelocAndLabels * reloc)
 
 #ifdef DBG
 void
-EncoderMD::VerifyRelocList(BYTE *buffStart, BYTE *buffEnd)
+EncoderMD::VerifyRelocList(uint8_t *buffStart, uint8_t *buffEnd)
 {
-    BYTE *last_pc = 0, *pc;
+    uint8_t *last_pc = 0, *pc;
 
     for (int32 i = 0; i < m_relocList->Count(); i ++)
     {
@@ -1584,7 +1584,7 @@ EncoderMD::VerifyRelocList(BYTE *buffStart, BYTE *buffEnd)
             AssertMsg(pc >= buffStart && pc < buffEnd, "LabelInstr offset has to be within buffer.");
         }
         else
-            pc = (BYTE*)p.m_ptr;
+            pc = (uint8_t*)p.m_ptr;
 
         // The list is partially sorted, out of bound ptrs (JumpTable entries) don't follow.
         if (pc >= buffStart && pc < buffEnd)
@@ -1825,7 +1825,7 @@ bool EncoderMD::UsesConditionCode(IR::Instr *instr)
     return instr->IsLowered() && (EncoderMD::GetOpdope(instr) & DUSECC);
 }
 
-void EncoderMD::UpdateRelocListWithNewBuffer(RelocList * relocList, BYTE * newBuffer, BYTE * oldBufferStart, BYTE * oldBufferEnd)
+void EncoderMD::UpdateRelocListWithNewBuffer(RelocList * relocList, uint8_t * newBuffer, uint8_t * oldBufferStart, uint8_t * oldBufferEnd)
 {
     for (int32 i = 0; i < relocList->Count(); i++)
     {
@@ -1833,20 +1833,20 @@ void EncoderMD::UpdateRelocListWithNewBuffer(RelocList * relocList, BYTE * newBu
         if (reloc.isLabel())
         {
             IR::LabelInstr* label = reloc.getLabel();
-            AssertMsg((BYTE*)label < oldBufferStart || (BYTE*)label >= oldBufferEnd, "Invalid label pointer.");
+            AssertMsg((uint8_t*)label < oldBufferStart || (uint8_t*)label >= oldBufferEnd, "Invalid label pointer.");
 
-            BYTE* labelPC = label->GetPC();
-            Assert((BYTE*) reloc.m_origPtr >= oldBufferStart && (BYTE*) reloc.m_origPtr < oldBufferEnd);
+            uint8_t* labelPC = label->GetPC();
+            Assert((uint8_t*) reloc.m_origPtr >= oldBufferStart && (uint8_t*) reloc.m_origPtr < oldBufferEnd);
 
             label->SetPC(labelPC - oldBufferStart + newBuffer);
             // nothing more to be done for a label
             continue;
         }
         else if (reloc.m_type >= RelocTypeBranch && reloc.m_type <= RelocTypeLabelUse &&
-            (BYTE*) reloc.m_origPtr >= oldBufferStart && (BYTE*) reloc.m_origPtr < oldBufferEnd)
+            (uint8_t*) reloc.m_origPtr >= oldBufferStart && (uint8_t*) reloc.m_origPtr < oldBufferEnd)
         {
             // we need to relocate all new offset that were originally within buffer
-            reloc.m_ptr = (BYTE*) reloc.m_ptr - oldBufferStart + newBuffer;
+            reloc.m_ptr = (uint8_t*) reloc.m_ptr - oldBufferStart + newBuffer;
         }
     }
 }
@@ -1864,7 +1864,7 @@ bool EncoderMD::IsSHIFT(IR::Instr *instr)
         instr->m_opcode == Js::OpCode::PSLLD;
 }
 
-void EncoderMD::AddLabelReloc(BYTE* relocAddress)
+void EncoderMD::AddLabelReloc(uint8_t* relocAddress)
 {
     AppendRelocEntry(RelocTypeLabel, relocAddress);
 }

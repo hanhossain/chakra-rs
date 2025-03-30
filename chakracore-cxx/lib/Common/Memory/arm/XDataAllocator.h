@@ -47,7 +47,7 @@ class XDataAllocator sealed : public SecondaryAllocator
 {
 // --------- Public functions ---------/
 public:
-    XDataAllocator(BYTE* address, uint size);
+    XDataAllocator(uint8_t* address, uint size);
 
     bool Initialize(void* segmentStart, void* segmentEnd);
     void Delete();

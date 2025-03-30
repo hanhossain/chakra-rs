@@ -73,10 +73,10 @@ namespace Js
         static const double     DOUBLE_INT_MIN;
         static const double     DOUBLE_TWO_TO_31;
 
-        static const BYTE AbsDoubleCst[];
-        static const BYTE AbsFloatCst[];
-        static const BYTE SgnFloatBitCst[];
-        static const BYTE SgnDoubleBitCst[];
+        static const uint8_t AbsDoubleCst[];
+        static const uint8_t AbsFloatCst[];
+        static const uint8_t SgnFloatBitCst[];
+        static const uint8_t SgnDoubleBitCst[];
         static double const UIntConvertConst[];
 
         static double const MaskNegDouble[];

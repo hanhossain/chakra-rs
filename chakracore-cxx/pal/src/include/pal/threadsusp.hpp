@@ -368,7 +368,7 @@ namespace CorUnix
     };
 } //end CorUnix
 
-extern const BYTE WAKEUPCODE; // use for pipe reads during self suspend.
+extern const uint8_t WAKEUPCODE; // use for pipe reads during self suspend.
 #endif // __cplusplus
 
 #endif // _PAL_THREADSUSP_HPP

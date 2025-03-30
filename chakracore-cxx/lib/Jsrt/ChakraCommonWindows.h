@@ -133,7 +133,7 @@
     CHAKRA_API
         JsSerializeScript(
             _In_z_ const wchar_t *script,
-            _Out_writes_to_opt_(*bufferSize, *bufferSize) BYTE *buffer,
+            _Out_writes_to_opt_(*bufferSize, *bufferSize) uint8_t *buffer,
             _Inout_ unsigned int *bufferSize);
 
     /// <summary>
@@ -166,7 +166,7 @@
         JsParseSerializedScriptWithCallback(
             _In_ JsSerializedScriptLoadSourceCallback scriptLoadCallback,
             _In_ JsSerializedScriptUnloadCallback scriptUnloadCallback,
-            _In_ BYTE *buffer,
+            _In_ uint8_t *buffer,
             _In_ JsSourceContext sourceContext,
             _In_z_ const wchar_t *sourceUrl,
             _Out_ JsValueRef * result);
@@ -203,7 +203,7 @@
         JsRunSerializedScriptWithCallback(
             _In_ JsSerializedScriptLoadSourceCallback scriptLoadCallback,
             _In_ JsSerializedScriptUnloadCallback scriptUnloadCallback,
-            _In_ BYTE *buffer,
+            _In_ uint8_t *buffer,
             _In_ JsSourceContext sourceContext,
             _In_z_ const wchar_t *sourceUrl,
             _Out_opt_ JsValueRef * result);
@@ -233,7 +233,7 @@
     CHAKRA_API
         JsParseSerializedScript(
             _In_z_ const wchar_t *script,
-            _In_ BYTE *buffer,
+            _In_ uint8_t *buffer,
             _In_ JsSourceContext sourceContext,
             _In_z_ const wchar_t *sourceUrl,
             _Out_ JsValueRef *result);
@@ -265,7 +265,7 @@
     CHAKRA_API
         JsRunSerializedScript(
             _In_z_ const wchar_t *script,
-            _In_ BYTE *buffer,
+            _In_ uint8_t *buffer,
             _In_ JsSourceContext sourceContext,
             _In_z_ const wchar_t *sourceUrl,
             _Out_ JsValueRef *result);

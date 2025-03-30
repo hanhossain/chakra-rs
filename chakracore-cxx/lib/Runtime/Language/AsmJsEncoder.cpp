@@ -185,7 +185,7 @@ namespace Js
         mRelocLabelMap = Anew( mLocalAlloc, RelocLabelMap, mLocalAlloc );
         mTemplateData = AsmJsJitTemplate::InitTemplateData();
         mEncodeBufferSize = GetEncodeBufferSize(functionBody);
-        mEncodeBuffer = AnewArray((&localAlloc), BYTE, mEncodeBufferSize);
+        mEncodeBuffer = AnewArray((&localAlloc), uint8_t, mEncodeBufferSize);
         mPc = mEncodeBuffer;
         mReader.Create( functionBody );
         ip = mReader.GetIP();
@@ -214,7 +214,7 @@ namespace Js
         {
             Assert( ::Math::FitsInDWord( codeSize ) );
 
-            BYTE *buffer;
+            uint8_t *buffer;
             EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> *allocation = GetCodeGenAllocator()->emitBufferManager.AllocateBuffer( codeSize, &buffer, 0, 0 );
             functionBody->GetAsmJsFunctionInfo()->mTJBeginAddress = buffer;
 
@@ -228,9 +228,9 @@ namespace Js
                 Js::Throw::OutOfMemory();
             }
 
-            BYTE* callTarget = buffer;
+            uint8_t* callTarget = buffer;
 #ifdef _M_ARM
-            callTarget = (BYTE*)((uintptr_t)buffer | 0x1); // We have to add the thumb bit on arm
+            callTarget = (uint8_t*)((uintptr_t)buffer | 0x1); // We have to add the thumb bit on arm
 #endif
             functionBody->GetScriptContext()->GetThreadContext()->SetValidCallTargetForCFG(callTarget);
 
@@ -262,7 +262,7 @@ namespace Js
 
 
 
-    void Js::AsmJsEncoder::AddReloc( const int labelOffset, BYTE* patchAddr )
+    void Js::AsmJsEncoder::AddReloc( const int labelOffset, uint8_t* patchAddr )
     {
         EncoderRelocLabel* label = nullptr;
         if( mRelocLabelMap->TryGetReference( labelOffset, &label ) )
@@ -304,7 +304,7 @@ namespace Js
         }
     }
 
-    void AsmJsEncoder::EncoderReloc::New( EncoderRelocLabel* label, BYTE* _patchAddr, BYTE* _pc, ArenaAllocator* allocator )
+    void AsmJsEncoder::EncoderReloc::New( EncoderRelocLabel* label, uint8_t* _patchAddr, uint8_t* _pc, ArenaAllocator* allocator )
     {
         AsmJsEncoder::EncoderReloc* reloc = AnewStruct( allocator, AsmJsEncoder::EncoderReloc );
         reloc->next = label->relocList;

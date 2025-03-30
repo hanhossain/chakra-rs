@@ -73,7 +73,7 @@ namespace Js
         return this->bufferLength;
     }
 
-    BYTE* ArrayBuffer::GetBuffer() const
+    uint8_t* ArrayBuffer::GetBuffer() const
     {
         return this->bufferContent != nullptr ? this->bufferContent->GetBuffer() : nullptr;
     }
@@ -656,11 +656,11 @@ namespace Js
         }
         else if (length > 0)
         {
-            BYTE * buffer = nullptr;
+            uint8_t * buffer = nullptr;
             Recycler* recycler = GetType()->GetLibrary()->GetRecycler();
             if (recycler->RequestExternalMemoryAllocation(length))
             {
-                buffer = (BYTE*)allocator(length);
+                buffer = (uint8_t*)allocator(length);
                 if (buffer == nullptr)
                 {
                     recycler->ReportExternalMemoryFree(length);
@@ -673,7 +673,7 @@ namespace Js
 
                 if (recycler->RequestExternalMemoryAllocation(length))
                 {
-                    buffer = (BYTE*)allocator(length);
+                    buffer = (uint8_t*)allocator(length);
                     if (buffer == nullptr)
                     {
                         recycler->ReportExternalMemoryFailure(length);
@@ -906,7 +906,7 @@ namespace Js
         long refCount = content->Release();
         if (refCount == 0)
         {
-            BYTE * buffer = content->GetBuffer();
+            uint8_t * buffer = content->GetBuffer();
             if (buffer && !this->externalized)
             {
                 // Recycler may not be available at Dispose. We need to
@@ -966,9 +966,9 @@ namespace Js
 
 #ifdef ENABLE_WASM
     // Same as realloc but zero newly allocated portion if newSize > oldSize
-    static BYTE* ReallocZero(BYTE* ptr, size_t oldSize, size_t newSize)
+    static uint8_t* ReallocZero(uint8_t* ptr, size_t oldSize, size_t newSize)
     {
-        BYTE* ptrNew = (BYTE*)realloc(ptr, newSize);
+        uint8_t* ptrNew = (uint8_t*)realloc(ptr, newSize);
         if (ptrNew && newSize > oldSize)
         {
             ZeroMemory(ptrNew + oldSize, newSize - oldSize);
@@ -988,7 +988,7 @@ namespace Js
         if (bufferContent == nullptr && length == 0)
         {
             // We want to allocate an empty buffer using virtual memory
-            BYTE *buffer = (BYTE*)allocator(0);
+            uint8_t *buffer = (uint8_t*)allocator(0);
             if (buffer == nullptr)
             {
                 JavascriptError::ThrowOutOfMemoryError(GetScriptContext());

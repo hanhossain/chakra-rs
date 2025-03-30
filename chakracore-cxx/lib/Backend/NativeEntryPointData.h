@@ -61,8 +61,8 @@ public:
     void SetFrameHeight(uint frameHeight) { this->frameHeight = frameHeight; }
     uint32 GetPendingPolymorphicCacheState() const { return this->pendingPolymorphicCacheState; }
     void SetPendingPolymorphicCacheState(uint32 state) { this->pendingPolymorphicCacheState = state; }
-    BYTE GetPendingInlinerVersion() const { return this->pendingInlinerVersion; }
-    void SetPendingInlinerVersion(BYTE version) { this->pendingInlinerVersion = version; }
+    uint8_t GetPendingInlinerVersion() const { return this->pendingInlinerVersion; }
+    void SetPendingInlinerVersion(uint8_t version) { this->pendingInlinerVersion = version; }
     Js::ImplicitCallFlags GetPendingImplicitCallFlags() const { return this->pendingImplicitCallFlags; }
     void SetPendingImplicitCallFlags(Js::ImplicitCallFlags flags) { this->pendingImplicitCallFlags = flags; }
    
@@ -127,7 +127,7 @@ private:
     Field(uint) frameHeight;
 
     // TODO: these only applies to FunctionEntryPointInfo
-    Field(BYTE)                pendingInlinerVersion;
+    Field(uint8_t)                pendingInlinerVersion;
     Field(Js::ImplicitCallFlags) pendingImplicitCallFlags;
     Field(uint32)              pendingPolymorphicCacheState;
 

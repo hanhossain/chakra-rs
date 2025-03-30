@@ -418,7 +418,7 @@ namespace HelperMethodAttributes
 
 // Position: same as in JnHelperMethod enum.
 // Value: one or more of OR'ed HelperMethodAttribute values.
-static const BYTE JnHelperMethodAttributes[] =
+static const uint8_t JnHelperMethodAttributes[] =
 {
 #define HELPERCALL(Name, Address, Attributes) Attributes,
 #include "JnHelperMethodList.h"

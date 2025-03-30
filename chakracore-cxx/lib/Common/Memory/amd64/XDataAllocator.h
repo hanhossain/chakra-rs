@@ -48,15 +48,15 @@ private:
     {
         XDataAllocationEntry* next;
     };
-    BYTE* start;
-    BYTE* current;
+    uint8_t* start;
+    uint8_t* current;
     uint  size;
 
     XDataAllocationEntry* freeList;
 
 // --------- Public functions ---------/
 public:
-    XDataAllocator(BYTE* address, uint size);
+    XDataAllocator(uint8_t* address, uint size);
     virtual ~XDataAllocator();
 
     bool Initialize(void* segmentStart, void* segmentEnd);
@@ -70,7 +70,7 @@ public:
 
 // -------- Private helpers ---------/
 private:
-    BYTE* End() { return start + size; }
+    uint8_t* End() { return start + size; }
 
     // Read .eh_frame data head (length record). 0 means empty.
     static uint32 ReadHead(const void* p)

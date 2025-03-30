@@ -199,7 +199,7 @@ namespace Js
 #endif
 
         Field(uint32) byteOffset;
-        Field(BYTE*) buffer;   // beginning of buffer
+        Field(uint8_t*) buffer;   // beginning of buffer
 
     };
 

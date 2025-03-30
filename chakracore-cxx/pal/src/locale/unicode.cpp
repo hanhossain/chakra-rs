@@ -593,7 +593,7 @@ See MSDN doc.
 BOOL
 IsDBCSLeadByteEx(
       UINT CodePage,
-      BYTE TestChar)
+      uint8_t TestChar)
 {
     CPINFO cpinfo;
     SIZE_T i;
@@ -638,7 +638,7 @@ See MSDN doc.
 --*/
 BOOL
 IsDBCSLeadByte(
-         BYTE TestChar)
+         uint8_t TestChar)
 {
     // UNIXTODO: Implement this!
     ERROR("Needs Implementation!!!");

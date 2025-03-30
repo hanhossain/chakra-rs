@@ -502,7 +502,7 @@ namespace Js
     // Read bytes data: [bytes] [padding]
     //
     template <class Reader>
-    void DeserializationCloner<Reader>::Read(BYTE* buf, uint32 len) const
+    void DeserializationCloner<Reader>::Read(uint8_t* buf, uint32 len) const
     {
         m_reader->Read(buf, len);
 

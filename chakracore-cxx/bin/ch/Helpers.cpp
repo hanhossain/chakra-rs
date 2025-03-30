@@ -114,8 +114,8 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
     char combinedPathBuffer[MAX_URI_LENGTH];
 
     HRESULT hr = S_OK;
-    BYTE * pRawBytes = nullptr;
-    BYTE * pRawBytesFromMap = nullptr;
+    uint8_t * pRawBytes = nullptr;
+    uint8_t * pRawBytesFromMap = nullptr;
     UINT lengthBytes = 0;
     contents = nullptr;
     FILE * file = NULL;
@@ -159,7 +159,7 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
     if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
         SourceMap::Find(filename, strlen(filename), &data))
     {
-        pRawBytesFromMap = (BYTE*) data->GetString();
+        pRawBytesFromMap = (uint8_t*) data->GetString();
         lengthBytes = (UINT) data->GetLength();
     }
     else
@@ -191,13 +191,13 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
 
     if (lengthBytes != 0)
     {
-        bufferLength = lengthBytes + sizeof(BYTE);
-        pRawBytes = (LPBYTE)malloc(bufferLength);
+        bufferLength = lengthBytes + sizeof(uint8_t);
+        pRawBytes = (uint8_t *)malloc(bufferLength);
     }
     else
     {
         bufferLength = 1;
-        pRawBytes = (LPBYTE)malloc(bufferLength);
+        pRawBytes = (uint8_t *)malloc(bufferLength);
     }
 
     if (nullptr == pRawBytes)
@@ -213,8 +213,8 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
             //
             // Read the entire content as a binary block.
             //
-            size_t readBytes = fread(pRawBytes, sizeof(BYTE), lengthBytes, file);
-            if (readBytes < lengthBytes * sizeof(BYTE))
+            size_t readBytes = fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            if (readBytes < lengthBytes * sizeof(uint8_t))
             {
                 IfFailGo(E_FAIL);
             }

@@ -843,7 +843,7 @@ CorUnix::InternalCreateProcess(
 
         if (dwCreationFlags & CREATE_SUSPENDED)
         {
-            BYTE resume_code = 0;
+            uint8_t resume_code = 0;
             ssize_t read_ret;
 
             /* close the write end of the pipe, the child doesn't need it */

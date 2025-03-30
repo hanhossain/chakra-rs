@@ -133,7 +133,7 @@ HANDLE GetFileHandle(LPCWSTR filename)
 HRESULT CreateLibraryByteCode(const char* contentsRaw)
 {
     JsValueRef bufferVal;
-    BYTE *bcBuffer = nullptr;
+    uint8_t *bcBuffer = nullptr;
     unsigned int bcBufferSize = 0;
     HRESULT hr = E_FAIL;
     
@@ -505,7 +505,7 @@ HRESULT CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCall
     HRESULT hr = S_OK;
     HANDLE fileHandle = nullptr;
     JsValueRef parserStateBuffer = nullptr;
-    BYTE *buffer = nullptr;
+    uint8_t *buffer = nullptr;
     unsigned int bufferSize = 0;
 
     IfFailedGoLabel(GetParserStateBuffer(fileContents, fileContentsFinalizeCallback, &parserStateBuffer), Error);

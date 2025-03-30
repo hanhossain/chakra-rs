@@ -80,8 +80,8 @@ namespace Js
         }
 
         static const uint32 MaxUTF8Len = 4;
-        static uint32 ToUTF8( uint32 uVal, BYTE bUTF8[MaxUTF8Len]);
-        static uint32 FromUTF8( BYTE bUTF8[MaxUTF8Len], uint32 uLen );
+        static uint32 ToUTF8( uint32 uVal, uint8_t bUTF8[MaxUTF8Len]);
+        static uint32 FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32 uLen );
         static Var Encode(JavascriptString* strURI, unsigned char unescapedFlags, ScriptContext* scriptContext );
 
     private:

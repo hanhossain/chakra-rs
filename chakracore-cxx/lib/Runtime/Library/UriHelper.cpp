@@ -56,20 +56,20 @@ namespace Js
     // the number of characters in the output array.
     // This routine assumes that it's input 'uVal' is a valid Unicode code-point value
     // and does no error checking.
-    uint32 UriHelper::ToUTF8( uint32 uVal, BYTE bUTF8[MaxUTF8Len])
+    uint32 UriHelper::ToUTF8( uint32 uVal, uint8_t bUTF8[MaxUTF8Len])
     {
         uint32 uRet;
         if( uVal <= 0x007F )
         {
-            bUTF8[0] = (BYTE)uVal;
+            bUTF8[0] = (uint8_t)uVal;
             uRet = 1;
         }
         else if( uVal <= 0x07FF )
         {
             uint32 z = uVal & 0x3F;
             uint32 y = uVal >> 6;
-            bUTF8[0] = (BYTE) (0xC0 | y);
-            bUTF8[1] = (BYTE) (0x80 | z);
+            bUTF8[0] = (uint8_t) (0xC0 | y);
+            bUTF8[1] = (uint8_t) (0x80 | z);
             uRet = 2;
         }
         else if( uVal <= 0xFFFF )
@@ -78,9 +78,9 @@ namespace Js
             uint32 z = uVal & 0x3F;
             uint32 y = (uVal >> 6) & 0x3F;
             uint32 x = (uVal >> 12);
-            bUTF8[0] = (BYTE) (0xE0 | x);
-            bUTF8[1] = (BYTE) (0x80 | y);
-            bUTF8[2] = (BYTE) (0x80 | z);
+            bUTF8[0] = (uint8_t) (0xE0 | x);
+            bUTF8[1] = (uint8_t) (0x80 | y);
+            bUTF8[2] = (uint8_t) (0x80 | z);
             uRet = 3;
         }
         else
@@ -89,10 +89,10 @@ namespace Js
             uint32 y = (uVal >> 6) &0x3F;
             uint32 x = (uVal >> 12) &0x3F;
             uint32 w = (uVal >> 18);
-            bUTF8[0] = (BYTE) (0xF0 | w);
-            bUTF8[1] = (BYTE) (0x80 | x);
-            bUTF8[2] = (BYTE) (0x80 | y);
-            bUTF8[3] = (BYTE) (0x80 | z);
+            bUTF8[0] = (uint8_t) (0xF0 | w);
+            bUTF8[1] = (uint8_t) (0x80 | x);
+            bUTF8[2] = (uint8_t) (0x80 | y);
+            bUTF8[3] = (uint8_t) (0x80 | z);
             uRet = 4;
         }
 
@@ -103,7 +103,7 @@ namespace Js
     // array 'bUTF8'. uLen is the number of characters in the UTF-8 encoding.
     // This routine assumes that a valid UTF-8 encoding of a character is passed in
     // and does no error checking.
-    uint32 UriHelper::FromUTF8( BYTE bUTF8[MaxUTF8Len], uint32 uLen )
+    uint32 UriHelper::FromUTF8( uint8_t bUTF8[MaxUTF8Len], uint32 uLen )
     {
         Assert( 1 <= uLen && uLen <= MaxUTF8Len );
         if( uLen == 1 )
@@ -133,7 +133,7 @@ namespace Js
         charcount_t len = strURI->GetLength();
         __in_ecount(len) const char16* input = strURI->GetString();
         bool needsChanges = false;
-        BYTE bUTF8[MaxUTF8Len];
+        uint8_t bUTF8[MaxUTF8Len];
 
         // pass 1 calculate output length and error check
         uint32 outputLen = 0;
@@ -238,7 +238,7 @@ namespace Js
                 for( uint32 j = 0; j < utfLen; j++ )
                 {
 #pragma prefast(disable: 26014, "buffer length was calculated earlier");
-                    BYTE val = bUTF8[j];
+                    uint8_t val = bUTF8[j];
                     *outCurrent++ = _u('%');
                     *outCurrent++ = hexStream[(val >> 4)];
                     *outCurrent++ = hexStream[(val & 0xF)];
@@ -311,7 +311,7 @@ namespace Js
                 // current locale to see if the specified character maps to a hexadecimal digit, which causes it to consider some
                 // characters outside the ASCII character set to be hexadecimal digits, so we can't use that. 'swscanf_s' seems
                 // to be overkill for this, so using a simple function that parses two hex digits and produces their value.
-                BYTE b;
+                uint8_t b;
                 if(!DecodeByteFromHex(input[k + 1], input[k + 2], b))
                 {
                     JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError);
@@ -334,7 +334,7 @@ namespace Js
                         JavascriptError::ThrowURIError(scriptContext, JSERR_URIDecodeError /* TODO-ERROR: _u("NEED MESSAGE") */);
                     }
 
-                    BYTE bOctets[UriHelper::MaxUTF8Len];
+                    uint8_t bOctets[UriHelper::MaxUTF8Len];
                     bOctets[0] = b;
 
                     if( k + 3 * (n-1) >= len )
@@ -431,7 +431,7 @@ namespace Js
                 // checked upon in the first and second pass are the same.
                 __analysis_assume(!(k + 2 >= len));
 
-                BYTE b;
+                uint8_t b;
                 if(!DecodeByteFromHex(input[k + 1], input[k + 2], b))
                 {
 #if DBG
@@ -457,7 +457,7 @@ namespace Js
                         JavascriptError::ThrowURIError(scriptContext, VBSERR_InternalError /* TODO-ERROR: _u("NEED MESSAGE") */);
                     }
 
-                    BYTE bOctets[UriHelper::MaxUTF8Len];
+                    uint8_t bOctets[UriHelper::MaxUTF8Len];
                     bOctets[0] = b;
 
 #if DBG

@@ -756,7 +756,7 @@ namespace Js
 
         this->length = 0;
 #if INT32VAR
-        this->buffer = (BYTE*)TaggedInt::ToVarUnchecked(0);
+        this->buffer = (uint8_t*)TaggedInt::ToVarUnchecked(0);
 #else
         this->buffer = nullptr;
 #endif

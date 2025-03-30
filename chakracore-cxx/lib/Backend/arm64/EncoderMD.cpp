@@ -44,22 +44,22 @@ EncoderMD::Init(Encoder *encoder)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(IR::RegOpnd *regOpnd)
 {
     return GetRegEncode(regOpnd->GetReg());
 }
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(RegNum reg)
 {
     return RegEncode[reg];
 }
 
-BYTE
+uint8_t
 EncoderMD::GetFloatRegEncode(IR::RegOpnd *regOpnd)
 {
-    BYTE regEncode = GetRegEncode(regOpnd->GetReg());
+    uint8_t regEncode = GetRegEncode(regOpnd->GetReg());
     AssertMsg(regEncode <= LAST_FLOAT_REG_ENCODE, "Impossible to allocate higher registers on VFP");
     return regEncode;
 }
@@ -156,7 +156,7 @@ void EncoderMD::CanonicalizeLea(IR::Instr * instr)
 }
 
 bool
-EncoderMD::DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, BYTE &indexScale, int32 &offset)
+EncoderMD::DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32 &offset)
 {
     RegNum baseReg;
 
@@ -370,7 +370,7 @@ int EncoderMD::EmitPrefetch(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::Opn
 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
-    BYTE indexScale;
+    uint8_t indexScale;
     int32 offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
@@ -393,7 +393,7 @@ int EncoderMD::EmitLoadStore(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::Op
 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
-    BYTE indexScale;
+    uint8_t indexScale;
     int32 offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
@@ -445,7 +445,7 @@ int EncoderMD::EmitLoadStorePair(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR
 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
-    BYTE indexScale;
+    uint8_t indexScale;
     int32 offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
@@ -686,7 +686,7 @@ int EncoderMD::EmitLoadStoreFp(Arm64CodeEmitter &Emitter, IR::Instr* instr, IR::
 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
-    BYTE indexScale;
+    uint8_t indexScale;
     int32 offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
@@ -710,7 +710,7 @@ int EncoderMD::EmitLoadStoreFpPair(Arm64CodeEmitter &Emitter, IR::Instr* instr, 
 
     ARM64_REGISTER indexReg;
     ARM64_REGISTER baseReg;
-    BYTE indexScale;
+    uint8_t indexScale;
     int32 offset;
     if (DecodeMemoryOpnd(memOpnd, baseReg, indexReg, indexScale, offset))
     {
@@ -788,7 +788,7 @@ int EncoderMD::EmitConditionalSelectFp(Arm64CodeEmitter &Emitter, IR::Instr *ins
 //
 //---------------------------------------------------------------------------
 uint32_t
-EncoderMD::GenerateEncoding(IR::Instr* instr, BYTE *pc)
+EncoderMD::GenerateEncoding(IR::Instr* instr, uint8_t *pc)
 {
     Arm64LocalCodeEmitter<1> Emitter;
     IR::Opnd* dst = 0;
@@ -1356,7 +1356,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, BYTE *pc)
 }
 
 #ifdef INSERT_NOPS
-ptrdiff_t insertNops(BYTE *pc, DWORD outInstr, uint count, uint size)
+ptrdiff_t insertNops(uint8_t *pc, DWORD outInstr, uint count, uint size)
 {
         //Insert count nops in the beginning
         for(int i = 0; i < count;i++)
@@ -1395,7 +1395,7 @@ ptrdiff_t insertNops(BYTE *pc, DWORD outInstr, uint count, uint size)
 ///----------------------------------------------------------------------------
 
 ptrdiff_t
-EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
+EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 {
     m_pc = pc;
 
@@ -1476,7 +1476,7 @@ EncoderMD::CanEncodeLogicalConst(IntConstType constant, int size)
 ///----------------------------------------------------------------------------
 
 void
-EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, BYTE *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
+EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
 {
     EncodeReloc *newReloc      = AnewStruct(alloc, EncodeReloc);
     newReloc->m_relocType      = relocType;
@@ -1665,7 +1665,7 @@ bool EncoderMD::TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd)
     }
 }
 
-void EncoderMD::AddLabelReloc(BYTE* relocAddress)
+void EncoderMD::AddLabelReloc(uint8_t* relocAddress)
 {
     Assert(relocAddress != nullptr);
     EncodeReloc::New(&m_relocList, RelocTypeLabel, relocAddress, *(IR::Instr**)relocAddress, m_encoder->m_tempAlloc);

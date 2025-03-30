@@ -11,7 +11,7 @@ const Js::OpCode LowererMD::MDExtend32Opcode = Js::OpCode::MOVSXD;
 
 extern const IRType RegTypes[RegNumCount];
 
-BYTE
+uint8_t
 LowererMDArch::GetDefaultIndirScale()
 {
     return IndirScale8;

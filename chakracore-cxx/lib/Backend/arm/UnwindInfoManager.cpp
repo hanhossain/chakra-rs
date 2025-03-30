@@ -279,7 +279,7 @@ void UnwindInfoManager::EncodePackedUnwindData()
     else
     {
         // Encode the reg.
-        BYTE regEncode = this->GetLastSavedReg(savedRegMask);
+        uint8_t regEncode = this->GetLastSavedReg(savedRegMask);
         Assert(regEncode <= RegEncode[RegR11]);
         dwFlags |= ((regEncode - RegEncode[RegR4]) << PackedRegShift);
     }
@@ -295,9 +295,9 @@ void UnwindInfoManager::EncodePackedUnwindData()
 void UnwindInfoManager::EncodeExpandedUnwindData()
 {
     // Temp local storage. This will contain contiguous pdata and xdata.
-    BYTE xData[MaxXdataBytes];
+    uint8_t xData[MaxXdataBytes];
     // Pointer to the current unwind code (i.e., point past the pdata and the first xdata DWORD).
-    BYTE  *xDataBuffer = xData + 4;
+    uint8_t  *xDataBuffer = xData + 4;
 
     DWORD xDataByteCount = 0;
     DWORD xDataHeader;
@@ -500,7 +500,7 @@ void UnwindInfoManager::EncodeExpandedUnwindData()
     RecordPdataEntry((DWORD)(this->GetFragmentStart() + this->GetPrologOffset()) | 1, unwindField);
 }
 
-DWORD UnwindInfoManager::EmitXdataStackAlloc(BYTE xData[], DWORD byte, DWORD stack)
+DWORD UnwindInfoManager::EmitXdataStackAlloc(uint8_t xData[], DWORD byte, DWORD stack)
 {
     DWORD encoding;
     UnwindCode op;
@@ -546,14 +546,14 @@ void UnwindInfoManager::RecordPdataEntry(DWORD beginAddress, DWORD unwindData)
     function->UnwindData = unwindData;
 }
 
-DWORD UnwindInfoManager::EmitXdataHomeParams(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataHomeParams(uint8_t xData[], DWORD byte)
 {
     Assert(this->homedParamCount >= MIN_HOMED_PARAM_REGS &&
            this->homedParamCount <= NUM_INT_ARG_REGS);
     return this->EmitXdataStackAlloc(xData, byte, this->homedParamCount * MachRegInt);
 }
 
-DWORD UnwindInfoManager::EmitXdataRestoreRegs(BYTE xData[], DWORD byte, DWORD savedRegMask, bool restoreLR)
+DWORD UnwindInfoManager::EmitXdataRestoreRegs(uint8_t xData[], DWORD byte, DWORD savedRegMask, bool restoreLR)
 {
     bool hasCalls = this->GetHasCalls();
     UnwindCode op;
@@ -566,7 +566,7 @@ DWORD UnwindInfoManager::EmitXdataRestoreRegs(BYTE xData[], DWORD byte, DWORD sa
         return byte;
     }
 
-    BYTE lastSavedReg = this->GetLastSavedReg(savedRegMask);
+    uint8_t lastSavedReg = this->GetLastSavedReg(savedRegMask);
 
     if (lastSavedReg > RegEncode[RegR11] || !IsR4SavedRegRange(savedRegMask))
     {
@@ -617,7 +617,7 @@ DWORD UnwindInfoManager::EmitXdataRestoreRegs(BYTE xData[], DWORD byte, DWORD sa
     return this->WriteXdataBytes(xData, byte, encoding, this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataRestoreDoubleRegs(BYTE xData[], DWORD byte, DWORD savedDoubleRegMask)
+DWORD UnwindInfoManager::EmitXdataRestoreDoubleRegs(uint8_t xData[], DWORD byte, DWORD savedDoubleRegMask)
 {
     UnwindCode op;
     DWORD encoding = 0;
@@ -628,8 +628,8 @@ DWORD UnwindInfoManager::EmitXdataRestoreDoubleRegs(BYTE xData[], DWORD byte, DW
         return byte;
     }
 
-    BYTE lastSavedReg = this->GetLastSavedReg(savedDoubleRegMask);
-    BYTE firstSavedReg = this->GetFirstSavedReg(savedDoubleRegMask);
+    uint8_t lastSavedReg = this->GetLastSavedReg(savedDoubleRegMask);
+    uint8_t firstSavedReg = this->GetFirstSavedReg(savedDoubleRegMask);
 
     // All the double regs are assumed to be contiguous...
     // This is the 32-bit pop {d8-d15} form, encoding the reg relative to d8.
@@ -654,7 +654,7 @@ DWORD UnwindInfoManager::EmitXdataRestoreDoubleRegs(BYTE xData[], DWORD byte, DW
 }
 
 
-DWORD UnwindInfoManager::EmitXdataIndirReturn(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataIndirReturn(uint8_t xData[], DWORD byte)
 {
     // We're doing ldr pc,[sp],N, where N is the size of the homed params plus LR.
     // In the xdata, we encode N/4, so we can just use the register count here.
@@ -665,7 +665,7 @@ DWORD UnwindInfoManager::EmitXdataIndirReturn(BYTE xData[], DWORD byte)
     return this->WriteXdataBytes(xData, byte, encoding, this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataLocalsPointer(BYTE xData[], DWORD byte, BYTE regEncode)
+DWORD UnwindInfoManager::EmitXdataLocalsPointer(uint8_t xData[], DWORD byte, uint8_t regEncode)
 {
     UnwindCode op = UWOP_MOV_SP_16;
     DWORD encoding = this->XdataTemplate(op);
@@ -673,35 +673,35 @@ DWORD UnwindInfoManager::EmitXdataLocalsPointer(BYTE xData[], DWORD byte, BYTE r
     return this->WriteXdataBytes(xData, byte, encoding, this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataNop32(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataNop32(uint8_t xData[], DWORD byte)
 {
     // A 32-bit NOP (not a real NOP opcode, just some 32-bit instruction that doesn't impact stack unwinding).
     UnwindCode op = UWOP_NOP_32;
     return this->WriteXdataBytes(xData, byte, this->XdataTemplate(op), this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataNop16(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataNop16(uint8_t xData[], DWORD byte)
 {
     // A 16-bit NOP (not a real NOP opcode, just some 16-bit instruction that doesn't impact stack unwinding).
     UnwindCode op = UWOP_NOP_16;
     return this->WriteXdataBytes(xData, byte, this->XdataTemplate(op), this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataEnd(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataEnd(uint8_t xData[], DWORD byte)
 {
     // The end of the prolog/epilog.
     UnwindCode op = UWOP_END_00;
     return this->WriteXdataBytes(xData, byte, this->XdataTemplate(op), this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::EmitXdataEndPlus16(BYTE xData[], DWORD byte)
+DWORD UnwindInfoManager::EmitXdataEndPlus16(uint8_t xData[], DWORD byte)
 {
     // The end of the prolog/epilog plus a 16-bit unwinding NOP (such as "bx lr").
     UnwindCode op = UWOP_END_EX_16;
     return this->WriteXdataBytes(xData, byte, this->XdataTemplate(op), this->XdataLength(op));
 }
 
-DWORD UnwindInfoManager::WriteXdataBytes(BYTE xdata[], DWORD byte, DWORD encoding, DWORD length)
+DWORD UnwindInfoManager::WriteXdataBytes(uint8_t xdata[], DWORD byte, DWORD encoding, DWORD length)
 {
     // We're required to encode the bytes from most- to least-significant. (The op bits are part of
     // the most significant byte.)
@@ -716,19 +716,19 @@ DWORD UnwindInfoManager::WriteXdataBytes(BYTE xdata[], DWORD byte, DWORD encodin
 
     for (uint i = 0; i < length; i++)
     {
-        xdata[byte++] = (BYTE)(encoding >> (24 - (i * 8)));
+        xdata[byte++] = (uint8_t)(encoding >> (24 - (i * 8)));
     }
 
     // Return the new byte offset.
     return byte;
 }
 
-void UnwindInfoManager::SetSavedReg(BYTE reg)
+void UnwindInfoManager::SetSavedReg(uint8_t reg)
 {
     Assert(reg <= RegEncode[RegR12]);
     this->savedRegMask |= 1 << reg;
 }
-bool UnwindInfoManager::TestSavedReg(BYTE reg) const
+bool UnwindInfoManager::TestSavedReg(uint8_t reg) const
 {
     DWORD mask = 1 << reg;
     return (this->savedRegMask & mask) == mask;
@@ -752,26 +752,26 @@ DWORD UnwindInfoManager::GetDoubleSavedRegList() const
     return this->savedDoubleRegMask;
 }
 
-DWORD UnwindInfoManager::ClearSavedReg(DWORD mask, BYTE reg) const
+DWORD UnwindInfoManager::ClearSavedReg(DWORD mask, uint8_t reg) const
 {
     return mask & ~(1 << reg);
 }
 
-BYTE UnwindInfoManager::GetLastSavedReg(DWORD savedRegMask)
+uint8_t UnwindInfoManager::GetLastSavedReg(DWORD savedRegMask)
 {
     BVUnit32 savedRegs(savedRegMask);
     DWORD encode = savedRegs.GetPrevBit();
-    Assert(encode == (BYTE)encode);
-    Assert(Math::Log2(savedRegMask) == (BYTE)encode);
-    return (BYTE)encode;
+    Assert(encode == (uint8_t)encode);
+    Assert(Math::Log2(savedRegMask) == (uint8_t)encode);
+    return (uint8_t)encode;
 }
 
-BYTE UnwindInfoManager::GetFirstSavedReg(DWORD savedRegMask)
+uint8_t UnwindInfoManager::GetFirstSavedReg(DWORD savedRegMask)
 {
     BVUnit32 savedRegs(savedRegMask);
     DWORD encode = savedRegs.GetNextBit();
-    Assert(encode == (BYTE)encode);
-    return (BYTE)encode;
+    Assert(encode == (uint8_t)encode);
+    return (uint8_t)encode;
 }
 
 

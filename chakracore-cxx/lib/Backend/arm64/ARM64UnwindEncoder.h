@@ -101,8 +101,8 @@ public:
     Arm64UnwindCodeGenerator();
 
     // generate the code for a prolog or epilog as appropriate
-    uint32_t GeneratePrologCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * &prologStart, uint32_t * &prologEnd);
-    uint32_t GenerateEpilogCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * &epilogStart, uint32_t * &epilogEnd);
+    uint32_t GeneratePrologCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &prologStart, uint32_t * &prologEnd);
+    uint32_t GenerateEpilogCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &epilogStart, uint32_t * &epilogEnd);
 
 private:
     // internal helpers
@@ -110,7 +110,7 @@ private:
     uint32_t TrimNops(uint32_t * opcodeList, uint32_t numOpcodes);
     void ReverseCodes(uint32_t * opcodeList, uint32_t numOpcodes);
     ULONG64 FindRegisterImmediate(int regNum, uint32_t * registerStart, uint32_t * regionEnd);
-    uint32_t EmitFinalCodes(PBYTE buffer, uint32_t bufferSize, uint32_t * opcodes, uint32_t count);
+    uint32_t EmitFinalCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * opcodes, uint32_t count);
 
     // encode an opcode and parameters, up to 4 bytes depending on the opcode
     uint32_t SafeEncode(uint32_t opcode, uint32_t params);

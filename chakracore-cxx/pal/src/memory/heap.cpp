@@ -211,7 +211,7 @@ HeapAlloc(
      DWORD dwFlags,
      SIZE_T numberOfBytes)
 {
-    BYTE *pMem;
+    uint8_t *pMem;
 
     PERF_ENTRY(HeapAlloc);
     ENTRY("HeapAlloc (hHeap=%p, dwFlags=%#x, numberOfBytes=%u)\n",
@@ -242,10 +242,10 @@ HeapAlloc(
 #ifdef __APPLE__
     // This is patterned off of InternalMalloc in malloc.cpp.
     {
-        pMem = (BYTE *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
+        pMem = (uint8_t *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (BYTE *) PAL_malloc(numberOfBytes);
+    pMem = (uint8_t *) PAL_malloc(numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)
@@ -347,7 +347,7 @@ HeapReAlloc(
      LPVOID lpmem,
      SIZE_T numberOfBytes)
 {
-    BYTE *pMem = NULL;
+    uint8_t *pMem = NULL;
 
     PERF_ENTRY(HeapReAlloc);
     ENTRY("HeapReAlloc (hHeap=%p, dwFlags=%#x, lpmem=%p, numberOfBytes=%u)\n",
@@ -389,10 +389,10 @@ HeapReAlloc(
 #ifdef __APPLE__
     // This is patterned off of InternalRealloc in malloc.cpp.
     {
-        pMem = (BYTE *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
+        pMem = (uint8_t *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (BYTE *) PAL_realloc(lpmem, numberOfBytes);
+    pMem = (uint8_t *) PAL_realloc(lpmem, numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)

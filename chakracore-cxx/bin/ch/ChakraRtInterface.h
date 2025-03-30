@@ -55,7 +55,7 @@ struct JsAPIHooks
     typedef JsErrorCode (WINAPI *JsrtCreateSharedArrayBufferWithSharedContentPtr)(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result);
     typedef JsErrorCode (WINAPI *JsrtGetSharedArrayBufferContentPtr)(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents);
     typedef JsErrorCode (WINAPI *JsrtReleaseSharedArrayBufferContentHandlePtr)(JsSharedArrayBufferContentHandle sharedContent);
-    typedef JsErrorCode (WINAPI *JsrtGetArrayBufferStoragePtr)(JsValueRef instance, BYTE **buffer, unsigned int *bufferLength);
+    typedef JsErrorCode (WINAPI *JsrtGetArrayBufferStoragePtr)(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength);
     typedef JsErrorCode (WINAPI *JsrtCreateErrorPtr)(JsValueRef message, JsValueRef *error);
     typedef JsErrorCode (WINAPI *JsrtHasExceptionPtr)(bool *hasException);
     typedef JsErrorCode (WINAPI *JsrtSetExceptionPtr)(JsValueRef exception);
@@ -415,7 +415,7 @@ public:
     static JsErrorCode WINAPI JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return HOOK_JS_API(CreateSharedArrayBufferWithSharedContent(sharedContent, result)); }
     static JsErrorCode WINAPI JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return HOOK_JS_API(GetSharedArrayBufferContent(sharedArrayBuffer, sharedContents)); }
     static JsErrorCode WINAPI JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return HOOK_JS_API(ReleaseSharedArrayBufferContentHandle(sharedContent)); }
-    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, BYTE **buffer, unsigned int *bufferLength) { return HOOK_JS_API(GetArrayBufferStorage(instance, buffer, bufferLength)); }
+    static JsErrorCode WINAPI JsGetArrayBufferStorage(JsValueRef instance, uint8_t **buffer, unsigned int *bufferLength) { return HOOK_JS_API(GetArrayBufferStorage(instance, buffer, bufferLength)); }
     static JsErrorCode WINAPI JsCreateError(JsValueRef message, JsValueRef *error) { return HOOK_JS_API(CreateError(message, error)); }
     static JsErrorCode WINAPI JsHasException(bool *hasException) { return HOOK_JS_API(HasException(hasException)); }
     static JsErrorCode WINAPI JsSetException(JsValueRef exception) { return HOOK_JS_API(SetException(exception)); }

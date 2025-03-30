@@ -74,7 +74,7 @@ namespace utf8
     inline char16 DecodeTail(char16 c1, LPCUTF8& ptr, LPCUTF8 end, DecodeOptions& options, bool *chunkEndsAtTruncatedSequence)
     {
         char16 ch = 0;
-        BYTE c2, c3, c4;
+        uint8_t c2, c3, c4;
 
         switch (EncodedBytes(c1))
         {

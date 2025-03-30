@@ -2082,7 +2082,7 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
     _In_opt_ JsFinalizeCallback finalizeCallback, _In_opt_ void *callbackState, _Out_ JsValueRef *result)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalArrayBuffer, reinterpret_cast<BYTE*>(data), byteLength);
+        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalArrayBuffer, reinterpret_cast<uint8_t*>(data), byteLength);
 
         PARAM_NOT_NULL(result);
 
@@ -2093,7 +2093,7 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
 
         Js::JavascriptLibrary* library = scriptContext->GetLibrary();
         *result = Js::JsrtExternalArrayBuffer::New(
-            reinterpret_cast<BYTE*>(data),
+            reinterpret_cast<uint8_t*>(data),
             byteLength,
             finalizeCallback,
             callbackState,
@@ -2271,7 +2271,7 @@ CHAKRA_API JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArra
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer,
+CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
@@ -2292,7 +2292,7 @@ CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_byte
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer,
+CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength, _Out_opt_ JsTypedArrayType *typedArrayType, _Out_opt_ int *elementSize)
 {
     VALIDATE_JSREF(instance);
@@ -2357,7 +2357,7 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer, _Out_ unsigned int *bufferLength)
+CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer, _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
     PARAM_NOT_NULL(buffer);
@@ -2488,7 +2488,7 @@ Js::ArrayObject* CreateTypedArray(Js::ScriptContext *scriptContext, void* data, 
     Js::ArrayBufferBase* arrayBuffer = RecyclerNew(
         scriptContext->GetRecycler(),
         Js::ExternalArrayBuffer,
-        reinterpret_cast<BYTE*>(data),
+        reinterpret_cast<uint8_t*>(data),
         length * sizeof(T),
         library->GetArrayBufferType());
 
@@ -3791,7 +3791,7 @@ JsErrorCode GetScriptBufferDetails(
 }
 
 JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
-    LoadScriptFlag loadScriptFlag, BYTE *functionTable, int functionTableSize,
+    LoadScriptFlag loadScriptFlag, uint8_t *functionTable, int functionTableSize,
     unsigned char *buffer, unsigned int *bufferSize, JsValueRef scriptSource)
 {
     Js::JavascriptFunction *function;

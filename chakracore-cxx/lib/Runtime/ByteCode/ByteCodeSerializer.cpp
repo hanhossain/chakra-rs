@@ -683,7 +683,7 @@ public:
                 // First item in the list is the first string.
                 auto stringIndexEntry = Anew(alloc, BufferBuilderRelativeOffset, _u("First String16 Index"), stringEntry);
                 string16IndexTable.list = regex::ImmutableList<Js::BufferBuilder*>::OfSingle(stringIndexEntry, alloc);
-                PrependByte(string16IndexTable, _u("isPropertyRecord"), (BYTE)isPropertyRecord);
+                PrependByte(string16IndexTable, _u("isPropertyRecord"), (uint8_t)isPropertyRecord);
             }
 
             // Get a pointer to the previous entry of isPropertyRecord
@@ -694,7 +694,7 @@ public:
             string16IndexTable.list = string16IndexTable.list->Prepend(stringIndexEntry, alloc);
 
             // By default, mark the next string to be not a property record.
-            PrependByte(string16IndexTable, _u("isPropertyRecord"), (BYTE)false);
+            PrependByte(string16IndexTable, _u("isPropertyRecord"), (uint8_t)false);
 
             indexEntry.id = nextString16Id;
             string16ToId->Add(bb, indexEntry);
@@ -2490,7 +2490,7 @@ public:
                     | (sym->isModuleImport ? syifIsModuleImport : syifNone));
 
             PrependByte(builder, _u("SymbolInfo flags"), symbolInfoFlags);
-            PrependByte(builder, _u("SymbolInfo symbol type"), (BYTE)sym->symbolType);
+            PrependByte(builder, _u("SymbolInfo symbol type"), (uint8_t)sym->symbolType);
 
             PropertyId symPropertyId = sym->propertyId;
             if (scopeInfo->areNamesCached)
@@ -4511,7 +4511,7 @@ public:
             sym->isModuleExportStorage = (symbolInfoFlags & syifIsModuleExportStorage) != 0;
             sym->isModuleImport = (symbolInfoFlags & syifIsModuleImport) != 0;
 
-            current = ReadByte(current, (BYTE*)&sym->symbolType);
+            current = ReadByte(current, (uint8_t*)&sym->symbolType);
 
             PropertyId obscuredPropertyId;
             current = ReadInt32(current, (int*)&obscuredPropertyId);

@@ -32,10 +32,10 @@ namespace Memory
 X64WriteBarrierCardTableManager RecyclerWriteBarrierManager::x64CardTableManager;
 X64WriteBarrierCardTableManager::CommittedSectionBitVector X64WriteBarrierCardTableManager::committedSections(&HeapAllocator::Instance);
 
-BYTE* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x64CardTableManager.Initialize();
+uint8_t* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x64CardTableManager.Initialize();
 #else
 // Each byte in the card table covers 4096 bytes so the range covered by the table is 4GB
-BYTE RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
+uint8_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 bool dummy = RecyclerWriteBarrierManager::Initialize();
 #endif
@@ -136,8 +136,8 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
 
     // Section Start is the card table's starting entry aligned *down* to the page boundary
     // Section End is the card table's ending entry aligned *up* to the page boundary
-    BYTE* sectionStart = (BYTE*) (((uintptr_t) &_cardTable[startIndex]) & ~(pageSize - 1));
-    BYTE* sectionEnd   = (BYTE*) Math::Align<uintptr_t>((uintptr_t)&_cardTable[endIndex], pageSize);
+    uint8_t* sectionStart = (uint8_t*) (((uintptr_t) &_cardTable[startIndex]) & ~(pageSize - 1));
+    uint8_t* sectionEnd   = (uint8_t*) Math::Align<uintptr_t>((uintptr_t)&_cardTable[endIndex], pageSize);
     size_t commitSize  = (sectionEnd - sectionStart);
 
 #ifdef X64_WB_DIAG
@@ -225,7 +225,7 @@ X64WriteBarrierCardTableManager::GetSectionIndex(void* address)
     return sectionIndex;
 }
 
-BYTE *
+uint8_t *
 X64WriteBarrierCardTableManager::Initialize()
 {
     AutoCriticalSection critSec(&_cardTableInitCriticalSection);
@@ -266,7 +266,7 @@ X64WriteBarrierCardTableManager::Initialize()
             abort();
         }
 
-        _cardTable = (BYTE*) cardTableSpace;
+        _cardTable = (uint8_t*) cardTableSpace;
     }
 
     OnThreadInit();
@@ -523,7 +523,7 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 }
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-BYTE
+uint8_t
 #else
 DWORD
 #endif

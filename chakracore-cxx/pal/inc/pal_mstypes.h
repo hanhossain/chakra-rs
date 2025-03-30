@@ -144,12 +144,8 @@ typedef unsigned int DWORD; // NOTE: diff from  windows.h, for LP64 compat
 typedef unsigned int DWORD32, *PDWORD32;
 
 typedef int BOOL;
-typedef unsigned char BYTE;
 typedef BOOL *PBOOL;
 typedef BOOL *LPBOOL;
-typedef BYTE *PBYTE;
-typedef BYTE *LPBYTE;
-typedef const BYTE *LPCBYTE;
 typedef int *PINT;
 typedef int *LPINT;
 typedef DWORD *PDWORD;
@@ -160,7 +156,7 @@ typedef const void *LPCVOID;
 typedef int INT;
 typedef unsigned int UINT;
 typedef unsigned int *PUINT;
-typedef BYTE BOOLEAN;
+typedef uint8_t BOOLEAN;
 typedef BOOLEAN *PBOOLEAN;
 
 typedef signed __int32 INT32, *PINT32;
@@ -298,12 +294,12 @@ typedef TCHAR *PTCHAR;
 typedef TCHAR *LPTSTR, *PTSTR;
 typedef const TCHAR *LPCTSTR;
 
-#define MAKEWORD(a, b)      ((uint16_t)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
+#define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
 #define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
 #define LOWORD(l)           ((uint16_t)((DWORD_PTR)(l) & 0xffff))
 #define HIWORD(l)           ((uint16_t)((DWORD_PTR)(l) >> 16))
-#define LOBYTE(w)           ((BYTE)((DWORD_PTR)(w) & 0xff))
-#define HIBYTE(w)           ((BYTE)((DWORD_PTR)(w) >> 8))
+#define LOBYTE(w)           ((uint8_t)((DWORD_PTR)(w) & 0xff))
+#define HIBYTE(w)           ((uint8_t)((DWORD_PTR)(w) >> 8))
 
 typedef void *HANDLE;
 typedef HANDLE HWND;

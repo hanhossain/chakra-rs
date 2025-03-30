@@ -6208,7 +6208,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
     this->m_deferringAST = TRUE;
 
     // Put the scanner into "no hashing" mode.
-    BYTE deferFlags = this->GetScanner()->SetDeferredParse(TRUE);
+    uint8_t deferFlags = this->GetScanner()->SetDeferredParse(TRUE);
 
     if (!fLambda)
     {
@@ -7316,7 +7316,7 @@ void Parser::ParseExpressionLambdaBody(ParseNodeFnc * pnodeLambda, bool fAllowIn
     // We need to disable deferred parse mode in the scanner because the lambda body doesn't end with a right paren.
     // The scanner needs to create a pid in the case of a string constant token immediately following the lambda body expression.
     // Otherwise, we'll save null for the string constant pid which will AV during ByteCode generation.
-    BYTE fScanDeferredFlagsSave = this->GetScanner()->SetDeferredParse(FALSE);
+    uint8_t fScanDeferredFlagsSave = this->GetScanner()->SetDeferredParse(FALSE);
     ParseNodePtr result = ParseExpr<buildAST>(koplAsg, nullptr, fAllowIn, FALSE, nullptr, nullptr, nullptr, &token, false, nullptr, &lastRParen);
     this->GetScanner()->SetDeferredParseFlags(fScanDeferredFlagsSave);
 
@@ -12454,7 +12454,7 @@ HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext 
         m_ppnodeVar = &pnodeFnc->pnodeVars;
 
         // Put the scanner into "no hashing" mode.
-        BYTE deferFlags = this->GetScanner()->SetDeferredParse(topLevelDeferred);
+        uint8_t deferFlags = this->GetScanner()->SetDeferredParse(topLevelDeferred);
 
         // Process a sequence of statements/declarations
         if (topLevelDeferred)

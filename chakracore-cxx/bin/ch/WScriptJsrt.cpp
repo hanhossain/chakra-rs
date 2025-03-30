@@ -455,7 +455,7 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
     {
         JsValueRef dataObject = arguments[1];
         uint32 dataLength = 0;
-        BYTE *data = nullptr;
+        uint8_t *data = nullptr;
         IfJsrtErrorSetGo(ChakraRTInterface::JsGetArrayBufferStorage(dataObject, &data, &dataLength));
         SerializerBlob *blob = (SerializerBlob*)data;
         JsVarDeserializerHandle deserializerHandle = nullptr;
@@ -676,7 +676,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileConten
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     unsigned int fileContentLength = (fileContent == nullptr) ? 0 : (unsigned int)strlen(fileContent);
  
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (LPBYTE)fileContent,
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)fileContent,
         fileContentLength, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent != nullptr && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
     {
@@ -1516,7 +1516,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             JsValueRef arrayBuffer;
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsCreateArrayBuffer(lengthBytes, &arrayBuffer), ErrorStillFree);
-            BYTE* buffer;
+            uint8_t* buffer;
             unsigned int bufferLength;
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
@@ -1525,7 +1525,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             }
             else
             {
-                if (memcpy_s(buffer, bufferLength, (BYTE*)fileContent, lengthBytes) == 0)
+                if (memcpy_s(buffer, bufferLength, (uint8_t*)fileContent, lengthBytes) == 0)
                 {
                     returnValue = arrayBuffer;
                 }

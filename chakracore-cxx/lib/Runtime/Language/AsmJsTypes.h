@@ -913,7 +913,7 @@ namespace Js
         // the key is the bytecode address
         typedef JsUtil::BaseDictionary<int, ptrdiff_t, Recycler> ByteCodeToTJMap;
         Field(ByteCodeToTJMap*) mbyteCodeTJMap;
-        Field(BYTE*) mTJBeginAddress;
+        Field(uint8_t*) mTJBeginAddress;
         WAsmJs::TypedSlotInfo* GetTypedSlotInfo(WAsmJs::Types type);
 
 #define TYPED_SLOT_INFO_GETTER(name, type) \

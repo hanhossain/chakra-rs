@@ -33,7 +33,7 @@ struct IActiveScriptProfilerHeapEnum;
 class DynamicProfileMutator;
 class StackProber;
 
-enum DisableImplicitFlags : BYTE
+enum DisableImplicitFlags : uint8_t
 {
     DisableImplicitNoFlag               = 0x00,
     DisableImplicitCallFlag             = 0x01,
@@ -441,8 +441,8 @@ private:
     {
     public:
         typedef JsUtil::BaseHashSet<RecyclerWeakReference<Js::PropertyGuard>*, Recycler, PowerOf2SizePolicy> PropertyGuardHashSet;
-        // we do not have WeaklyReferencedKeyHashSet - hence use BYTE as a dummy value.
-        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, BYTE> EntryPointDictionary;
+        // we do not have WeaklyReferencedKeyHashSet - hence use uint8_t as a dummy value.
+        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, uint8_t> EntryPointDictionary;
         // The sharedGuard is strongly referenced and will be kept alive by ThreadContext::propertyGuards until it's invalidated or
         // the property record itself is collected.  If the code using the guard needs access to it after it's been invalidated, it
         // (the code) is responsible for keeping it alive.
@@ -842,7 +842,7 @@ public:
     // high number may indicate that context leaks have occured.
     uint closedScriptContextCount;
 
-    enum VisibilityState : BYTE
+    enum VisibilityState : uint8_t
     {
         Undefined = 0,
         Visible = 1,

@@ -10,15 +10,15 @@ namespace Js
 {
     class WebAssemblySource
     {
-        BYTE* buffer;
+        uint8_t* buffer;
         uint bufferLength;
         Js::Utf8SourceInfo* sourceInfo;
     public:
         WebAssemblySource(Var source, bool createNewContext, ScriptContext* scriptContext);
         // Caller is responsible to make a copy of the buffer source
-        WebAssemblySource(BYTE* source, uint bufferLength, bool createNewContext, ScriptContext* scriptContext);
+        WebAssemblySource(uint8_t* source, uint bufferLength, bool createNewContext, ScriptContext* scriptContext);
 
-        BYTE* GetBuffer() const { return buffer; }
+        uint8_t* GetBuffer() const { return buffer; }
         uint GetBufferLength() const { return bufferLength; }
         Js::Utf8SourceInfo* GetSourceInfo() const { return sourceInfo; }
     private:

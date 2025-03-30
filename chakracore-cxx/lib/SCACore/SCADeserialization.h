@@ -42,7 +42,7 @@ namespace Js
 
         const char16* TryReadString(charcount_t* len, bool reuseBuffer) const;
         const char16* ReadString(charcount_t* len) const;
-        void Read(BYTE* buf, uint32 len) const;
+        void Read(uint8_t* buf, uint32 len) const;
 
         //
         // Read a TypedArray or DataView.

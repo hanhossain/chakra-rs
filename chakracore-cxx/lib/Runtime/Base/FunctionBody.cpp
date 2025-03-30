@@ -5245,7 +5245,7 @@ namespace Js
 #if DYNAMIC_INTERPRETER_THUNK
         if (m_isAsmJsFunction && m_dynamicInterpreterThunk)
         {
-            m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, true);
+            m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, true);
             this->m_dynamicInterpreterThunk = nullptr;
         }
 #endif
@@ -7679,11 +7679,11 @@ namespace Js
             {
                 if (m_isAsmJsFunction)
                 {
-                    m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
+                    m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
                 }
                 else
                 {
-                    m_scriptContext->ReleaseDynamicInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
+                    m_scriptContext->ReleaseDynamicInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
                 }
             }
         }
@@ -7723,7 +7723,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    BYTE FunctionBody::GetSavedInlinerVersion() const
+    uint8_t FunctionBody::GetSavedInlinerVersion() const
     {
         Assert(this->dynamicProfileInfo != nullptr);
         return this->savedInlinerVersion;
@@ -8664,7 +8664,7 @@ namespace Js
             OOPNativeEntryPointData * oopNativeEntryPointData = this->GetOOPNativeEntryPointData();
             char * nativeDataBuffer = oopNativeEntryPointData->GetNativeDataBuffer();
             NativeOffsetInlineeFrameRecordOffset* offsets = (NativeOffsetInlineeFrameRecordOffset*)(nativeDataBuffer + oopNativeEntryPointData->GetInlineeFrameOffsetArrayOffset());
-            size_t offset = (size_t)((BYTE*)returnAddress - (BYTE*)this->GetNativeAddress());
+            size_t offset = (size_t)((uint8_t*)returnAddress - (uint8_t*)this->GetNativeAddress());
 
             uint inlineeFrameOffsetArrayCount = oopNativeEntryPointData->GetInlineeFrameOffsetArrayCount();
             if (inlineeFrameOffsetArrayCount == 0)
@@ -8714,7 +8714,7 @@ namespace Js
                 return nullptr;
             }
 
-            size_t offset = (size_t)((BYTE*)returnAddress - (BYTE*)this->GetNativeAddress());
+            size_t offset = (size_t)((uint8_t*)returnAddress - (uint8_t*)this->GetNativeAddress());
             int index = inlineeFrameMap->BinarySearch([=](const NativeOffsetInlineeFramePair& pair, int index) {
                 if (pair.offset >= offset)
                 {
@@ -8740,20 +8740,20 @@ namespace Js
     }
 
     void EntryPointInfo::DoLazyBailout(
-        BYTE **addressOfInstructionPointer,
-        BYTE *framePointer
+        uint8_t **addressOfInstructionPointer,
+        uint8_t *framePointer
 #if DBG
         , Js::FunctionBody *functionBody
         , const PropertyRecord *propertyRecord
 #endif
     )
     {
-        BYTE* instructionPointer = *addressOfInstructionPointer;
+        uint8_t* instructionPointer = *addressOfInstructionPointer;
         NativeEntryPointData * nativeEntryPointData = this->GetNativeEntryPointData();
         Js::JavascriptMethod nativeAddress = nativeEntryPointData->GetNativeAddress();
         ptrdiff_t codeSize = nativeEntryPointData->GetCodeSize();
-        Assert(instructionPointer > (BYTE*)nativeAddress && instructionPointer < ((BYTE*)nativeAddress + codeSize));
-        size_t offset = instructionPointer - (BYTE*)nativeAddress;
+        Assert(instructionPointer > (uint8_t*)nativeAddress && instructionPointer < ((uint8_t*)nativeAddress + codeSize));
+        size_t offset = instructionPointer - (uint8_t*)nativeAddress;
         NativeLazyBailOutRecordList * bailOutRecordList = this->GetInProcNativeEntryPointData()->GetSortedLazyBailOutRecordList();
 
         AssertMsg(bailOutRecordList != nullptr, "Lazy Bailout: bailOutRecordList is missing");
@@ -8779,14 +8779,14 @@ namespace Js
             auto inProcNativeEntryPointData = this->GetInProcNativeEntryPointData();
             const LazyBailOutRecord& record = bailOutRecordList->Item(found);
             const uint32 lazyBailOutThunkOffset = inProcNativeEntryPointData->GetLazyBailOutThunkOffset();
-            BYTE * const lazyBailOutThunkAddress = (BYTE *) nativeAddress + lazyBailOutThunkOffset;
+            uint8_t * const lazyBailOutThunkAddress = (uint8_t *) nativeAddress + lazyBailOutThunkOffset;
 
             // Change the instruction pointer of the frame to our thunk so that
             // when execution returns back to this frame, we will execute the thunk instead
             *addressOfInstructionPointer = lazyBailOutThunkAddress;
 
             // Put the BailOutRecord corresponding to our LazyBailOut point on the pre-allocated slot on the stack
-            BYTE *addressOfLazyBailOutRecordSlot = framePointer + inProcNativeEntryPointData->GetLazyBailOutRecordSlotOffset();
+            uint8_t *addressOfLazyBailOutRecordSlot = framePointer + inProcNativeEntryPointData->GetLazyBailOutRecordSlotOffset();
             *(reinterpret_cast<intptr_t *>(addressOfLazyBailOutRecordSlot)) = reinterpret_cast<intptr_t>(record.bailOutRecord);
             
             if (PHASE_TRACE1(Js::LazyBailoutPhase))

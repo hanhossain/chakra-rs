@@ -92,7 +92,7 @@ void OutOfMemoryAllocationPolicy_unrecoverable_error_notvisible();
 
 void XDataRegistration_unrecoverable_error(HRESULT hr, size_t scenario);
 
-inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {
@@ -108,7 +108,7 @@ inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(BYTE visibility)
     }
 }
 
-inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {
@@ -124,7 +124,7 @@ inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(BYTE visibility
     }
 }
 
-inline void OutOfMemoryAllocationPolicy_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryAllocationPolicy_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {

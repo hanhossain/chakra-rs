@@ -1353,7 +1353,7 @@ using namespace Js;
 
     // This is a bit field for the hex values: 00-29, 2C, 3A-3F, 5B-5E, 60, 7B-FF
     // These are the values escape encodes using the default mask (or mask >= 4)
-    static const BYTE _grfbitEscape[] =
+    static const uint8_t _grfbitEscape[] =
     {
         0xFF, 0xFF, // 00 - 0F
         0xFF, 0xFF, // 10 - 1F

@@ -1937,7 +1937,7 @@ LABEL1:
 
     // x64 specific exception filters
 #ifdef _M_X64
-    ArrayAccessDecoder::InstructionData ArrayAccessDecoder::CheckValidInstr(BYTE* &pc, PEXCEPTION_POINTERS exceptionInfo) // get the reg operand and isLoad and
+    ArrayAccessDecoder::InstructionData ArrayAccessDecoder::CheckValidInstr(uint8_t* &pc, PEXCEPTION_POINTERS exceptionInfo) // get the reg operand and isLoad and
     {
         InstructionData instrData;
         uint prefixValue = 0;
@@ -1948,7 +1948,7 @@ LABEL1:
         bool isImmediate = false;
         bool isSIB = false;
         // Read first  byte - check for prefix
-        BYTE* beginPc = pc;
+        uint8_t* beginPc = pc;
 
 
         if (((*pc) == 0x0F2) || ((*pc) == 0x0F3))
@@ -2118,14 +2118,14 @@ LABEL1:
         // Get the number of bytes for displacement
 
         //get mod bits
-        BYTE modVal = *pc & 0xC0; // first two bits(7th and 6th bits)
+        uint8_t modVal = *pc & 0xC0; // first two bits(7th and 6th bits)
         modVal >>= 6;
 
         //get the R/M bits
-        BYTE rmVal = (*pc) & 0x07; // last 3 bits ( 0,1 and 2nd bits)
+        uint8_t rmVal = (*pc) & 0x07; // last 3 bits ( 0,1 and 2nd bits)
 
         //get the reg value
-        BYTE dstReg = (*pc) & 0x38; // mask reg bits (3rd 4th and 5th bits)
+        uint8_t dstReg = (*pc) & 0x38; // mask reg bits (3rd 4th and 5th bits)
         dstReg >>= 3;
 
         Assert(dstReg <= 0x07);
@@ -2364,7 +2364,7 @@ LABEL1:
         }
 
         PEXCEPTION_POINTERS exceptionInfo = helper.GetExceptionInfo();
-        BYTE* pc = (BYTE*)exceptionInfo->ExceptionRecord->ExceptionAddress;
+        uint8_t* pc = (uint8_t*)exceptionInfo->ExceptionRecord->ExceptionAddress;
         ArrayAccessDecoder::InstructionData instrData = ArrayAccessDecoder::CheckValidInstr(pc, exceptionInfo);
         // Check If the instruction is valid
         if (instrData.isInvalidInstr)

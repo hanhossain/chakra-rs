@@ -312,7 +312,7 @@ void GlobOpt::ArraySrcOpt::CheckVirtualArrayBounds()
                     IntConstantBounds idxConstantBounds;
                     if (indexValue && indexValue->GetValueInfo()->TryGetIntConstantBounds(&idxConstantBounds))
                     {
-                        BYTE indirScale = Lowerer::GetArrayIndirScale(baseValueType);
+                        uint8_t indirScale = Lowerer::GetArrayIndirScale(baseValueType);
                         int32 upperBound = idxConstantBounds.UpperBound();
                         int32 lowerBound = idxConstantBounds.LowerBound();
                         if (lowerBound >= 0 && ((static_cast<uint64>(upperBound) << indirScale) < MAX_ASMJS_ARRAYBUFFER_LENGTH))

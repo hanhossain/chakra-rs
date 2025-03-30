@@ -560,7 +560,7 @@ typedef Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcHeap;
 // Helpers
 unsigned int log2(size_t number);
 BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
-void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t byteCount);
+void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount);
 } // namespace CustomHeap
 } // namespace Memory
 #endif

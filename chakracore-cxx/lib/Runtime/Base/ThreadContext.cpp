@@ -3616,7 +3616,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
             // If the current frame is already from a bailout - we do not need to do on stack invalidation
             if (caller != nullptr && Js::ScriptFunction::Test(caller) && !stackWalker.GetCurrentFrameFromBailout())
             {
-                BYTE dummy;
+                uint8_t dummy;
                 Js::FunctionEntryPointInfo* functionEntryPoint = caller->GetFunctionBody()->GetDefaultFunctionEntryPointInfo();
                 if (functionEntryPoint->IsInNativeAddressRange((DWORD_PTR)stackWalker.GetInstructionPointer()))
                 {
@@ -3624,7 +3624,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
                     {
                         functionEntryPoint->DoLazyBailout(
                             stackWalker.GetCurrentAddressOfInstructionPointer(),
-                            static_cast<BYTE*>(stackWalker.GetFramePointer())
+                            static_cast<uint8_t*>(stackWalker.GetFramePointer())
 #if DBG
                             , caller->GetFunctionBody()
                             , propertyRecord
@@ -3634,7 +3634,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
                 }
             }
         }
-        entry->entryPoints->Map([=](Js::EntryPointInfo* info, BYTE& dummy, const RecyclerWeakReference<Js::EntryPointInfo>* infoWeakRef)
+        entry->entryPoints->Map([=](Js::EntryPointInfo* info, uint8_t& dummy, const RecyclerWeakReference<Js::EntryPointInfo>* infoWeakRef)
         {
             OUTPUT_TRACE2(Js::LazyBailoutPhase, info->GetFunctionBody(), _u("Lazy bailout - Invalidation due to property: %s \n"), propertyRecord->GetBuffer());
             info->Invalidate(true);

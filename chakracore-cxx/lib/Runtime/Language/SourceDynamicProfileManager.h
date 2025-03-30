@@ -8,7 +8,7 @@ class SourceContextInfo;
 #if ENABLE_PROFILE_INFO
 namespace Js
 {
-    enum ExecutionFlags : BYTE
+    enum ExecutionFlags : uint8_t
     {
         ExecutionFlags_NotExecuted = 0x00,
         ExecutionFlags_Executed = 0x01,

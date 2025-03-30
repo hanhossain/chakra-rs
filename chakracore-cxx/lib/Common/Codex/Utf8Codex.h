@@ -73,7 +73,7 @@ typedef unsigned __int32 uint32;
 // It is unsigned and the maximum value is (INT_MAX-1)
 typedef uint32 charcount_t;
 
-typedef BYTE utf8char_t;
+typedef uint8_t utf8char_t;
 typedef const utf8char_t CUTF8;
 typedef utf8char_t* LPUTF8;
 typedef const utf8char_t *LPCUTF8;

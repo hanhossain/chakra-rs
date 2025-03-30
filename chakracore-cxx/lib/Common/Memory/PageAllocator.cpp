@@ -2876,11 +2876,11 @@ bool HeapPageAllocator<T>::CreateSecondaryAllocator(SegmentBase<T>* segment, boo
         return false;
     }
 
-    XDataAllocator* secondaryAllocator = HeapNewNoThrow(XDataAllocator, (BYTE*)segment->GetSecondaryAllocStartAddress(), segment->GetSecondaryAllocSize());
+    XDataAllocator* secondaryAllocator = HeapNewNoThrow(XDataAllocator, (uint8_t*)segment->GetSecondaryAllocStartAddress(), segment->GetSecondaryAllocSize());
     bool success = false;
     if (secondaryAllocator)
     {
-        if (secondaryAllocator->Initialize((BYTE*)segment->GetAddress(), (BYTE*)segment->GetEndAddress()))
+        if (secondaryAllocator->Initialize((uint8_t*)segment->GetAddress(), (uint8_t*)segment->GetEndAddress()))
         {
             success = true;
         }

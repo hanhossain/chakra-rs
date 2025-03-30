@@ -57,8 +57,8 @@ typedef unsigned char* ChakraBytePtr;
 // xplat-todo: try reduce usage of following types
 #if !defined(__MSTYPES_DEFINED)
 typedef void* HANDLE;
-typedef unsigned char BYTE;
-typedef BYTE byte;
+typedef unsigned char uint8_t;
+typedef uint8_t byte;
 typedef uint32_t DWORD;
 typedef unsigned short WCHAR;
 #endif

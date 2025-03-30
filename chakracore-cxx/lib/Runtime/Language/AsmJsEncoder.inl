@@ -191,7 +191,7 @@ namespace Js
             {
                 isBackEdge = true;
             }
-            BYTE* relocAddr = nullptr;
+            uint8_t* relocAddr = nullptr;
             AsmJsJitTemplate::Br::ApplyTemplate(this, mPc, &relocAddr, isBackEdge);
             Assert( relocAddr );
             AddReloc( labelOffset, relocAddr );
@@ -208,7 +208,7 @@ namespace Js
             bool isBackEdge = false;
             if (playout->RelativeJumpOffset < 0)
                 isBackEdge = true;
-            BYTE* relocAddr = nullptr;
+            uint8_t* relocAddr = nullptr;
             AsmJsJitTemplate::BrTrue::ApplyTemplate( this, mPc, CalculateOffset<int>( playout->I1 ), &relocAddr, isBackEdge );
             Assert( relocAddr );
             AddReloc( labelOffset, relocAddr );
@@ -225,7 +225,7 @@ namespace Js
             bool isBackEdge = false;
             if (playout->RelativeJumpOffset < 0)
                 isBackEdge = true;
-            BYTE* relocAddr = nullptr;
+            uint8_t* relocAddr = nullptr;
             AsmJsJitTemplate::BrEq::ApplyTemplate(this, mPc, CalculateOffset<int>(playout->I1), CalculateOffset<int>(playout->I2), &relocAddr, isBackEdge);
             Assert( relocAddr );
             AddReloc( labelOffset, relocAddr );
@@ -242,7 +242,7 @@ namespace Js
             bool isBackEdge = false;
             if (playout->RelativeJumpOffset < 0)
                 isBackEdge = true;
-            BYTE* relocAddr = nullptr;
+            uint8_t* relocAddr = nullptr;
             AsmJsJitTemplate::BrEq::ApplyTemplate(this, mPc, CalculateOffset<int>(playout->I1), playout->C1, &relocAddr, isBackEdge, true);
             Assert(relocAddr);
             AddReloc(labelOffset, relocAddr);

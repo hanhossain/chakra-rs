@@ -51,7 +51,7 @@ namespace Js
         FunctionInfo(FunctionInfo& that); // Todo: (leish)(swb) find a way to prevent non-static initializer calling this ctor
 
         static DWORD GetFunctionBodyImplOffset() { return offsetof(FunctionInfo, functionBodyImpl); }
-        static BYTE GetOffsetOfFunctionProxy()
+        static uint8_t GetOffsetOfFunctionProxy()
         {
             CompileAssert(offsetof(FunctionInfo, functionBodyImpl) <= UCHAR_MAX);
             return offsetof(FunctionInfo, functionBodyImpl);

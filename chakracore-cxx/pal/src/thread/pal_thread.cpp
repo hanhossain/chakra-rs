@@ -2311,7 +2311,7 @@ CPalThread::GetStackLimit()
     void* stackLimit;
 #ifdef __APPLE__
     // This is a Mac specific method
-    stackLimit = ((BYTE *)pthread_get_stackaddr_np(pthread_self()) -
+    stackLimit = ((uint8_t *)pthread_get_stackaddr_np(pthread_self()) -
                    pthread_get_stacksize_np(pthread_self()));
 #else
     pthread_attr_t attr;

@@ -87,7 +87,7 @@ typedef void* FunctionTableHandle;
 //
 struct SecondaryAllocation
 {
-    BYTE* address;   // address of the allocation by the secondary allocator
+    uint8_t* address;   // address of the allocation by the secondary allocator
 
     SecondaryAllocation() : address(nullptr)
     {

@@ -1798,7 +1798,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
     {
         INT OrigSize;
         const UINT  BUFFER_SIZE = 128;
-        BYTE buf[BUFFER_SIZE];
+        uint8_t buf[BUFFER_SIZE];
         UINT x = 0;
         UINT CurrentPosition = 0;
 

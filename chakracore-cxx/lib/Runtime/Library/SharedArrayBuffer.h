@@ -16,7 +16,7 @@ namespace Js
     class SharedContents
     {
     public:
-        BYTE  *buffer;             // Points to a heap allocated RGBA buffer, can be null
+        uint8_t  *buffer;             // Points to a heap allocated RGBA buffer, can be null
         IndexToWaitersMap *indexToWaiterList;  // Map of agents waiting on a particular index.
         uint32 bufferLength;       // Number of bytes allocated
         uint32 maxBufferLength = 0; // Maximum number of bytes to allocate (only used by WebAssemblySharedArrayBuffer)
@@ -43,7 +43,7 @@ namespace Js
 
         void Cleanup();
 
-        SharedContents(BYTE* b, uint32 l, uint32 m)
+        SharedContents(uint8_t* b, uint32 l, uint32 m)
             : buffer(b), bufferLength(l), maxBufferLength(m), refCount(1), indexToWaiterList(nullptr)
 #if DBG
             , allowedAgents(nullptr)
@@ -77,7 +77,7 @@ namespace Js
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         virtual uint32 GetByteLength() const override;
-        virtual BYTE* GetBuffer() const override;
+        virtual uint8_t* GetBuffer() const override;
 
         static int GetByteLengthOffset() { Assert(false); return 0; }
         static int GetBufferOffset() { Assert(false); return 0; }
@@ -103,8 +103,8 @@ namespace Js
         // maxLength is necessary only for WebAssemblySharedArrayBuffer to know how much it can grow
         // Must call after constructor of child class is completed. Required to be able to make correct virtual calls
         void Init(uint32 length, uint32 maxLength);
-        virtual BYTE* AllocBuffer(uint32 length, uint32 maxLength);
-        virtual void FreeBuffer(BYTE* buffer, uint32 length, uint32 maxLength);
+        virtual uint8_t* AllocBuffer(uint32 length, uint32 maxLength);
+        virtual void FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength);
 
         FieldNoBarrier(SharedContents *) sharedContents;
 
@@ -150,8 +150,8 @@ namespace Js
         _Must_inspect_result_ bool GrowMemory(uint32 newBufferLength);
 
     protected:
-        virtual BYTE* AllocBuffer(uint32 length, uint32 maxLength) override;
-        virtual void FreeBuffer(BYTE* buffer, uint32 length, uint32 maxLength) override;
+        virtual uint8_t* AllocBuffer(uint32 length, uint32 maxLength) override;
+        virtual void FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength) override;
 
     private:
         WebAssemblySharedArrayBuffer(DynamicType * type);

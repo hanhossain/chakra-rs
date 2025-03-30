@@ -4771,7 +4771,7 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
         Assert(regOpnd->m_sym->m_isSingleDef);
 
         Js::Var value = regOpnd->m_sym->GetFloatConstValueAsVar_PostGlobOpt();
-        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((BYTE*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
+        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((uint8_t*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
         instr = IR::Instr::New(Js::OpCode::FLDR, regFloatOpnd, memRef, this->m_func);
         insertInstr->InsertBefore(instr);
@@ -6862,7 +6862,7 @@ LowererMD::FinalLower()
                     }
                     else
                     {
-                        EncodeReloc::New(&pRelocList, RelocTypeBranch19, (BYTE*)instrOffset, branchInstr, &tempAlloc);
+                        EncodeReloc::New(&pRelocList, RelocTypeBranch19, (uint8_t*)instrOffset, branchInstr, &tempAlloc);
                         //Assume this is a backward long branch, we shall fix up after complete pass, be conservative here
                         instrOffset = instrOffset + MachMaxInstrSize;
                     }
@@ -6904,7 +6904,7 @@ LowererMD::FinalLower()
                 }
                 else
                 {
-                    EncodeReloc::New(&pRelocList, RelocTypeLabelAdr, (BYTE*)instrOffset, instr, &tempAlloc);
+                    EncodeReloc::New(&pRelocList, RelocTypeLabelAdr, (uint8_t*)instrOffset, instr, &tempAlloc);
                     //Assume this is a backward long branch, we shall fix up after complete pass, be conservative here
                     instrOffset = instrOffset + MachMaxInstrSize * 2;
                 }
@@ -7114,7 +7114,7 @@ LowererMD::LowerTypeof(IR::Instr* typeOfInstr)
 
     // MOV typeDisplayStringsArray, &javascriptLibrary->typeDisplayStrings
     IR::RegOpnd * typeDisplayStringsArrayOpnd = IR::RegOpnd::New(TyMachPtr, func);
-    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
+    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
 
     GenerateObjectTest(src1, typeOfInstr, taggedIntLabel);
 
