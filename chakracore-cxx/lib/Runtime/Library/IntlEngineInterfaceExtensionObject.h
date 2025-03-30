@@ -6,7 +6,7 @@
 #ifdef ENABLE_INTL_OBJECT
 namespace Js
 {
-    enum IntlInitializationType : USHORT
+    enum IntlInitializationType : unsigned short
     {
         Intl = 0,
         StringPrototype,

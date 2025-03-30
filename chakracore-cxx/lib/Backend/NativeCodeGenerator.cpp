@@ -265,7 +265,7 @@ NativeCodeGenerator::GenerateAllFunctions(Js::FunctionBody * fn)
 #endif
 
 #if _M_ARM
-USHORT ArmExtractThumbImmediate16(PUSHORT address)
+unsigned short ArmExtractThumbImmediate16(unsigned short * address)
 {
     return ((address[0] << 12) & 0xf000) |  // bits[15:12] in OP0[3:0]
            ((address[0] <<  1) & 0x0800) |  // bits[11]    in OP0[10]
@@ -273,10 +273,10 @@ USHORT ArmExtractThumbImmediate16(PUSHORT address)
            ((address[1] >>  0) & 0x00ff);   // bits[7:0]   in OP1[7:0]
 }
 
-void ArmInsertThumbImmediate16(PUSHORT address, USHORT immediate)
+void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediate)
 {
-    USHORT opcode0;
-    USHORT opcode1;
+    unsigned short opcode0;
+    unsigned short opcode1;
 
     opcode0 = address[0];
     opcode1 = address[1];
@@ -345,11 +345,11 @@ void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionS
 #else
                 case IMAGE_REL_BASED_THUMB_MOV32:
                     {
-                        USHORT *patchAddr = (USHORT *) (function + blockOffset + offset - functionOffset);
+                        unsigned short *patchAddr = (unsigned short *) (function + blockOffset + offset - functionOffset);
                         DWORD address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
                         address = address - imageBase - textHeader->VirtualAddress - functionOffset + (DWORD)function;
-                        ArmInsertThumbImmediate16(patchAddr, (USHORT)(address & 0xFFFF));
-                        ArmInsertThumbImmediate16(patchAddr + 2, (USHORT)(address >> 16));
+                        ArmInsertThumbImmediate16(patchAddr, (unsigned short)(address & 0xFFFF));
+                        ArmInsertThumbImmediate16(patchAddr + 2, (unsigned short)(address >> 16));
                     }
                     break;
 #endif

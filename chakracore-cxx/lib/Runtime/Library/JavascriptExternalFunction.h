@@ -15,7 +15,7 @@ namespace Js
         bool isConstructCall;
     };
 
-    typedef Var (*StdCallJavascriptMethod)(Var callee, Var *args, USHORT cargs, StdCallJavascriptMethodInfo *info, void *callbackState);
+    typedef Var (*StdCallJavascriptMethod)(Var callee, Var *args, unsigned short cargs, StdCallJavascriptMethodInfo *info, void *callbackState);
     typedef int JavascriptTypeId;
 
     class JavascriptExternalFunction : public RuntimeFunction
@@ -103,7 +103,7 @@ namespace Js
         static Var HandleRecordReplayExternalFunction_Thunk(Js::JavascriptFunction* function, CallInfo& callInfo, Arguments& args, ScriptContext* scriptContext);
         static Var HandleRecordReplayExternalFunction_StdThunk(Js::RecyclableObject* function, CallInfo& callInfo, Arguments& args, ScriptContext* scriptContext);
 
-        static Var TTDReplayDummyExternalMethod(Var callee, Var *args, USHORT cargs, StdCallJavascriptMethodInfo *info, void *callbackState);
+        static Var TTDReplayDummyExternalMethod(Var callee, Var *args, unsigned short cargs, StdCallJavascriptMethodInfo *info, void *callbackState);
 #endif
 
         friend class JavascriptLibrary;

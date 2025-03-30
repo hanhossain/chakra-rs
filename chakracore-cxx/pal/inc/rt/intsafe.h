@@ -40,7 +40,7 @@ typedef __w64 unsigned long SIZE_T;
 typedef          int        INT;
 typedef          long       LONG;
 typedef unsigned char       UCHAR;
-typedef unsigned short      USHORT;
+typedef unsigned short      unsigned short;
 typedef unsigned short      WORD;
 typedef unsigned int        UINT;
 typedef unsigned long       ULONG;
@@ -210,20 +210,20 @@ IntToChar(
 }
 
 //
-// INT -> USHORT conversion
+// INT -> unsigned short conversion
 //
 __inline
 HRESULT
 IntToUShort(
      INT iOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if ((iOperand >= 0) && (iOperand <= USHRT_MAX))
     {
-        *pusResult = (USHORT)iOperand;
+        *pusResult = (unsigned short)iOperand;
         hr = S_OK;
     }
 
@@ -479,20 +479,20 @@ ULongToChar(
 }
 
 //
-// ULONG -> USHORT conversion
+// ULONG -> unsigned short conversion
 //
 __inline
 HRESULT
 ULongToUShort(
      ULONG ulOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (ulOperand <= USHRT_MAX)
     {
-        *pusResult = (USHORT)ulOperand;
+        *pusResult = (unsigned short)ulOperand;
         hr = S_OK;
     }
 
@@ -598,20 +598,20 @@ ULongLongToLong(
 }
 
 //
-// UINT -> USHORT conversion
+// UINT -> unsigned short conversion
 //
 __inline
 HRESULT
 UIntToUShort(
      UINT uOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
     if (uOperand <= USHRT_MAX)
     {
-        *pusResult = (USHORT)uOperand;
+        *pusResult = (unsigned short)uOperand;
         hr = S_OK;
     }
 
@@ -619,20 +619,20 @@ UIntToUShort(
 }
 
 //
-// ULONGLONG -> USHORT conversion
+// ULONGLONG -> unsigned short conversion
 //
 __inline
 HRESULT
 ULongLongToUShort(
      ULONGLONG ullOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
-    USHORT usResult = USHORT_ERROR;
+    unsigned short usResult = USHORT_ERROR;
 
     if (ullOperand <= USHRT_MAX)
     {
-        usResult = (USHORT)ullOperand;
+        usResult = (unsigned short)ullOperand;
         hr = S_OK;
     }
     *pusResult = usResult;
@@ -881,7 +881,7 @@ __inline
 HRESULT
 UIntPtrToUShort(
      UINT_PTR uOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
 	return UIntToUShort((UINT)uOperand, pusResult);
 }
@@ -974,7 +974,7 @@ __inline
 HRESULT
 ULongPtrToUShort(
      size_t ulOperand,
-     USHORT* pusResult)
+     unsigned short* pusResult)
 {
 	return ULongToUShort((ULONG)ulOperand, pusResult);
 }
@@ -1081,19 +1081,19 @@ ULongPtrToLong(
 #define DWordPtrToLongPtr          ULongPtrToLongPtr
 
 //
-// USHORT addition
+// unsigned short addition
 //
 __inline
 HRESULT
 UShortAdd(
-     USHORT usAugend,
-     USHORT usAddend,
-     USHORT* pusResult)
+     unsigned short usAugend,
+     unsigned short usAddend,
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
 
-    if (((USHORT)(usAugend + usAddend)) >= usAugend)
+    if (((unsigned short)(usAugend + usAddend)) >= usAugend)
     {
         *pusResult = (usAugend + usAddend);
         hr = S_OK;
@@ -1233,14 +1233,14 @@ ULongLongAdd(
 }
 
 //
-// USHORT subtraction
+// unsigned short subtraction
 //
 __inline
 HRESULT
 UShortSub(
-     USHORT usMinuend,
-     USHORT usSubtrahend,
-     USHORT* pusResult)
+     unsigned short usMinuend,
+     unsigned short usSubtrahend,
+     unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pusResult = USHORT_ERROR;
@@ -1387,14 +1387,14 @@ ULongLongSub(
 }
 
 //
-// USHORT multiplication
+// unsigned short multiplication
 //
 __inline
 HRESULT
 UShortMult(
-     USHORT usMultiplicand,
-     USHORT usMultiplier,
-     USHORT* pusResult)
+     unsigned short usMultiplicand,
+     unsigned short usMultiplier,
+     unsigned short* pusResult)
 {
     ULONG ulResult = ((ULONG)usMultiplicand) * (ULONG)usMultiplier;
 

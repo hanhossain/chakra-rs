@@ -302,14 +302,14 @@ namespace Js
         {
             BEGIN_LEAVE_SCRIPT(scriptContext)
             {
-                result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<USHORT>(args.Info.Count), &info, externalFunction->callbackState);
+                result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<unsigned short>(args.Info.Count), &info, externalFunction->callbackState);
             }
             END_LEAVE_SCRIPT(scriptContext);
         }
 #else
         BEGIN_LEAVE_SCRIPT(scriptContext)
         {
-            result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<USHORT>(args.Info.Count), &info, externalFunction->callbackState);
+            result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<unsigned short>(args.Info.Count), &info, externalFunction->callbackState);
         }
         END_LEAVE_SCRIPT(scriptContext);
 #endif
@@ -449,7 +449,7 @@ namespace Js
         return result;
     }
 
-    Var JavascriptExternalFunction::TTDReplayDummyExternalMethod(Var callee, Var *args, USHORT cargs, StdCallJavascriptMethodInfo *info, void *callbackState)
+    Var JavascriptExternalFunction::TTDReplayDummyExternalMethod(Var callee, Var *args, unsigned short cargs, StdCallJavascriptMethodInfo *info, void *callbackState)
     {
         JavascriptExternalFunction* externalFunction = static_cast<JavascriptExternalFunction*>(callee);
 

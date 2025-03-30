@@ -62,67 +62,67 @@
 #endif
 
 typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
-    USHORT e_magic;                     // Magic number
-    USHORT e_cblp;                      // Bytes on last page of file
-    USHORT e_cp;                        // Pages in file
-    USHORT e_crlc;                      // Relocations
-    USHORT e_cparhdr;                   // Size of header in paragraphs
-    USHORT e_minalloc;                  // Minimum extra paragraphs needed
-    USHORT e_maxalloc;                  // Maximum extra paragraphs needed
-    USHORT e_ss;                        // Initial (relative) SS value
-    USHORT e_sp;                        // Initial SP value
-    USHORT e_csum;                      // Checksum
-    USHORT e_ip;                        // Initial IP value
-    USHORT e_cs;                        // Initial (relative) CS value
-    USHORT e_lfarlc;                    // File address of relocation table
-    USHORT e_ovno;                      // Overlay number
-    USHORT e_res[4];                    // Reserved words
-    USHORT e_oemid;                     // OEM identifier (for e_oeminfo)
-    USHORT e_oeminfo;                   // OEM information; e_oemid specific
-    USHORT e_res2[10];                  // Reserved words
+    unsigned short e_magic;                     // Magic number
+    unsigned short e_cblp;                      // Bytes on last page of file
+    unsigned short e_cp;                        // Pages in file
+    unsigned short e_crlc;                      // Relocations
+    unsigned short e_cparhdr;                   // Size of header in paragraphs
+    unsigned short e_minalloc;                  // Minimum extra paragraphs needed
+    unsigned short e_maxalloc;                  // Maximum extra paragraphs needed
+    unsigned short e_ss;                        // Initial (relative) SS value
+    unsigned short e_sp;                        // Initial SP value
+    unsigned short e_csum;                      // Checksum
+    unsigned short e_ip;                        // Initial IP value
+    unsigned short e_cs;                        // Initial (relative) CS value
+    unsigned short e_lfarlc;                    // File address of relocation table
+    unsigned short e_ovno;                      // Overlay number
+    unsigned short e_res[4];                    // Reserved words
+    unsigned short e_oemid;                     // OEM identifier (for e_oeminfo)
+    unsigned short e_oeminfo;                   // OEM information; e_oemid specific
+    unsigned short e_res2[10];                  // Reserved words
     LONG   e_lfanew;                    // File address of new exe header
   } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 
 typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
-    USHORT ne_magic;                    // Magic number
+    unsigned short ne_magic;                    // Magic number
     char   ne_ver;                      // Version number
     char   ne_rev;                      // Revision number
-    USHORT ne_enttab;                   // Offset of Entry Table
-    USHORT ne_cbenttab;                 // Number of bytes in Entry Table
+    unsigned short ne_enttab;                   // Offset of Entry Table
+    unsigned short ne_cbenttab;                 // Number of bytes in Entry Table
     LONG   ne_crc;                      // Checksum of whole file
-    USHORT ne_flags;                    // Flag word
-    USHORT ne_autodata;                 // Automatic data segment number
-    USHORT ne_heap;                     // Initial heap allocation
-    USHORT ne_stack;                    // Initial stack allocation
+    unsigned short ne_flags;                    // Flag word
+    unsigned short ne_autodata;                 // Automatic data segment number
+    unsigned short ne_heap;                     // Initial heap allocation
+    unsigned short ne_stack;                    // Initial stack allocation
     LONG   ne_csip;                     // Initial CS:IP setting
     LONG   ne_sssp;                     // Initial SS:SP setting
-    USHORT ne_cseg;                     // Count of file segments
-    USHORT ne_cmod;                     // Entries in Module Reference Table
-    USHORT ne_cbnrestab;                // Size of non-resident name table
-    USHORT ne_segtab;                   // Offset of Segment Table
-    USHORT ne_rsrctab;                  // Offset of Resource Table
-    USHORT ne_restab;                   // Offset of resident name table
-    USHORT ne_modtab;                   // Offset of Module Reference Table
-    USHORT ne_imptab;                   // Offset of Imported Names Table
+    unsigned short ne_cseg;                     // Count of file segments
+    unsigned short ne_cmod;                     // Entries in Module Reference Table
+    unsigned short ne_cbnrestab;                // Size of non-resident name table
+    unsigned short ne_segtab;                   // Offset of Segment Table
+    unsigned short ne_rsrctab;                  // Offset of Resource Table
+    unsigned short ne_restab;                   // Offset of resident name table
+    unsigned short ne_modtab;                   // Offset of Module Reference Table
+    unsigned short ne_imptab;                   // Offset of Imported Names Table
     LONG   ne_nrestab;                  // Offset of Non-resident Names Table
-    USHORT ne_cmovent;                  // Count of movable entries
-    USHORT ne_align;                    // Segment alignment shift count
-    USHORT ne_cres;                     // Count of resource segments
+    unsigned short ne_cmovent;                  // Count of movable entries
+    unsigned short ne_align;                    // Segment alignment shift count
+    unsigned short ne_cres;                     // Count of resource segments
     UCHAR  ne_exetyp;                   // Target Operating system
     UCHAR  ne_flagsothers;              // Other .EXE flags
-    USHORT ne_pretthunks;               // offset to return thunks
-    USHORT ne_psegrefbytes;             // offset to segment ref. bytes
-    USHORT ne_swaparea;                 // Minimum code swap area size
-    USHORT ne_expver;                   // Expected Windows version number
+    unsigned short ne_pretthunks;               // offset to return thunks
+    unsigned short ne_psegrefbytes;             // offset to segment ref. bytes
+    unsigned short ne_swaparea;                 // Minimum code swap area size
+    unsigned short ne_expver;                   // Expected Windows version number
   } IMAGE_OS2_HEADER, *PIMAGE_OS2_HEADER;
 
 typedef struct _IMAGE_VXD_HEADER {      // Windows VXD header
-    USHORT e32_magic;                   // Magic number
+    unsigned short e32_magic;                   // Magic number
     UCHAR  e32_border;                  // The byte ordering for the VXD
     UCHAR  e32_worder;                  // The word ordering for the VXD
     ULONG  e32_level;                   // The EXE format level for now = 0
-    USHORT e32_cpu;                     // The CPU type
-    USHORT e32_os;                      // The OS type
+    unsigned short e32_cpu;                     // The CPU type
+    unsigned short e32_os;                      // The OS type
     ULONG  e32_ver;                     // Module version
     ULONG  e32_mflags;                  // Module flags
     ULONG  e32_mpages;                  // Module # pages
@@ -166,8 +166,8 @@ typedef struct _IMAGE_VXD_HEADER {      // Windows VXD header
     UCHAR  e32_res3[12];                // Reserved words
     ULONG  e32_winresoff;
     ULONG  e32_winreslen;
-    USHORT e32_devid;                   // Device ID for VxD
-    USHORT e32_ddkver;                  // DDK version for VxD
+    unsigned short e32_devid;                   // Device ID for VxD
+    unsigned short e32_ddkver;                  // DDK version for VxD
   } IMAGE_VXD_HEADER, *PIMAGE_VXD_HEADER;
 
 #ifndef _MAC
@@ -179,13 +179,13 @@ typedef struct _IMAGE_VXD_HEADER {      // Windows VXD header
 //
 
 typedef struct _IMAGE_FILE_HEADER {
-    USHORT  Machine;
-    USHORT  NumberOfSections;
+    unsigned short  Machine;
+    unsigned short  NumberOfSections;
     ULONG   TimeDateStamp;
     ULONG   PointerToSymbolTable;
     ULONG   NumberOfSymbols;
-    USHORT  SizeOfOptionalHeader;
-    USHORT  Characteristics;
+    unsigned short  SizeOfOptionalHeader;
+    unsigned short  Characteristics;
 } IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
 
 #define IMAGE_SIZEOF_FILE_HEADER             20
@@ -258,7 +258,7 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     // Standard fields.
     //
 
-    USHORT  Magic;
+    unsigned short  Magic;
     UCHAR   MajorLinkerVersion;
     UCHAR   MinorLinkerVersion;
     ULONG   SizeOfCode;
@@ -275,18 +275,18 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     ULONG   ImageBase;
     ULONG   SectionAlignment;
     ULONG   FileAlignment;
-    USHORT  MajorOperatingSystemVersion;
-    USHORT  MinorOperatingSystemVersion;
-    USHORT  MajorImageVersion;
-    USHORT  MinorImageVersion;
-    USHORT  MajorSubsystemVersion;
-    USHORT  MinorSubsystemVersion;
+    unsigned short  MajorOperatingSystemVersion;
+    unsigned short  MinorOperatingSystemVersion;
+    unsigned short  MajorImageVersion;
+    unsigned short  MinorImageVersion;
+    unsigned short  MajorSubsystemVersion;
+    unsigned short  MinorSubsystemVersion;
     ULONG   Win32VersionValue;
     ULONG   SizeOfImage;
     ULONG   SizeOfHeaders;
     ULONG   CheckSum;
-    USHORT  Subsystem;
-    USHORT  DllCharacteristics;
+    unsigned short  Subsystem;
+    unsigned short  DllCharacteristics;
     ULONG   SizeOfStackReserve;
     ULONG   SizeOfStackCommit;
     ULONG   SizeOfHeapReserve;
@@ -297,7 +297,7 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
 } IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
 
 typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
-    USHORT Magic;
+    unsigned short Magic;
     UCHAR  MajorLinkerVersion;
     UCHAR  MinorLinkerVersion;
     ULONG  SizeOfCode;
@@ -313,7 +313,7 @@ typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
 } IMAGE_ROM_OPTIONAL_HEADER, *PIMAGE_ROM_OPTIONAL_HEADER;
 
 typedef struct _IMAGE_OPTIONAL_HEADER64 {
-    USHORT      Magic;
+    unsigned short      Magic;
     UCHAR       MajorLinkerVersion;
     UCHAR       MinorLinkerVersion;
     ULONG       SizeOfCode;
@@ -324,18 +324,18 @@ typedef struct _IMAGE_OPTIONAL_HEADER64 {
     ULONGLONG   ImageBase;
     ULONG       SectionAlignment;
     ULONG       FileAlignment;
-    USHORT      MajorOperatingSystemVersion;
-    USHORT      MinorOperatingSystemVersion;
-    USHORT      MajorImageVersion;
-    USHORT      MinorImageVersion;
-    USHORT      MajorSubsystemVersion;
-    USHORT      MinorSubsystemVersion;
+    unsigned short      MajorOperatingSystemVersion;
+    unsigned short      MinorOperatingSystemVersion;
+    unsigned short      MajorImageVersion;
+    unsigned short      MinorImageVersion;
+    unsigned short      MajorSubsystemVersion;
+    unsigned short      MinorSubsystemVersion;
     ULONG       Win32VersionValue;
     ULONG       SizeOfImage;
     ULONG       SizeOfHeaders;
     ULONG       CheckSum;
-    USHORT      Subsystem;
-    USHORT      DllCharacteristics;
+    unsigned short      Subsystem;
+    unsigned short      DllCharacteristics;
     ULONGLONG   SizeOfStackReserve;
     ULONGLONG   SizeOfStackCommit;
     ULONGLONG   SizeOfHeapReserve;
@@ -480,8 +480,8 @@ typedef struct _IMAGE_SECTION_HEADER {
     ULONG   PointerToRawData;
     ULONG   PointerToRelocations;
     ULONG   PointerToLinenumbers;
-    USHORT  NumberOfRelocations;
-    USHORT  NumberOfLinenumbers;
+    unsigned short  NumberOfRelocations;
+    unsigned short  NumberOfLinenumbers;
     ULONG   Characteristics;
 } IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
 
@@ -567,7 +567,7 @@ typedef struct _IMAGE_SYMBOL {
     } N;
     ULONG   Value;
     short   SectionNumber;
-    USHORT  Type;
+    unsigned short  Type;
     UCHAR   StorageClass;
     UCHAR   NumberOfAuxSymbols;
 } IMAGE_SYMBOL;
@@ -704,8 +704,8 @@ typedef union _IMAGE_AUX_SYMBOL {
         ULONG    TagIndex;                      // struct, union, or enum tag index
         union {
             struct {
-                USHORT  Linenumber;             // declaration line number
-                USHORT  Size;                   // size of struct, union, or enum
+                unsigned short  Linenumber;             // declaration line number
+                unsigned short  Size;                   // size of struct, union, or enum
             } LnSz;
            ULONG    TotalSize;
         } Misc;
@@ -715,18 +715,18 @@ typedef union _IMAGE_AUX_SYMBOL {
                 ULONG    PointerToNextFunction;
             } Function;
             struct {                            // if ISARY, up to 4 dimen.
-                USHORT   Dimension[4];
+                unsigned short   Dimension[4];
             } Array;
         } FcnAry;
-        USHORT  TvIndex;                        // tv index
+        unsigned short  TvIndex;                        // tv index
     } Sym;
     struct {
         UCHAR   Name[IMAGE_SIZEOF_SYMBOL];
     } File;
     struct {
         ULONG   Length;                         // section length
-        USHORT  NumberOfRelocations;            // number of relocation entries
-        USHORT  NumberOfLinenumbers;            // number of line numbers
+        unsigned short  NumberOfRelocations;            // number of relocation entries
+        unsigned short  NumberOfLinenumbers;            // number of line numbers
         ULONG   CheckSum;                       // checksum for communal
         short   Number;                         // section number to associate with
         UCHAR   Selection;                      // communal selection type
@@ -779,7 +779,7 @@ typedef struct _IMAGE_RELOCATION {
         ULONG   RelocCount;             // Set to the real count when IMAGE_SCN_LNK_NRELOC_OVFL is set
     };
     ULONG   SymbolTableIndex;
-    USHORT  Type;
+    unsigned short  Type;
 } IMAGE_RELOCATION;
 typedef IMAGE_RELOCATION UNALIGNED *PIMAGE_RELOCATION;
 
@@ -1100,7 +1100,7 @@ typedef struct _IMAGE_LINENUMBER {
         ULONG   SymbolTableIndex;               // Symbol table index of function name if Linenumber is 0.
         ULONG   VirtualAddress;                 // Virtual address of line number.
     } Type;
-    USHORT  Linenumber;                         // Line number.
+    unsigned short  Linenumber;                         // Line number.
 } IMAGE_LINENUMBER;
 typedef IMAGE_LINENUMBER UNALIGNED *PIMAGE_LINENUMBER;
 
@@ -1117,7 +1117,7 @@ typedef IMAGE_LINENUMBER UNALIGNED *PIMAGE_LINENUMBER;
 typedef struct _IMAGE_BASE_RELOCATION {
     ULONG   VirtualAddress;
     ULONG   SizeOfBlock;
-//  USHORT  TypeOffset[1];
+//  unsigned short  TypeOffset[1];
 } IMAGE_BASE_RELOCATION;
 typedef IMAGE_BASE_RELOCATION UNALIGNED * PIMAGE_BASE_RELOCATION;
 
@@ -1185,8 +1185,8 @@ typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER {
 typedef struct _IMAGE_EXPORT_DIRECTORY {
     ULONG   Characteristics;
     ULONG   TimeDateStamp;
-    USHORT  MajorVersion;
-    USHORT  MinorVersion;
+    unsigned short  MajorVersion;
+    unsigned short  MinorVersion;
     ULONG   Name;
     ULONG   Base;
     ULONG   NumberOfFunctions;
@@ -1201,7 +1201,7 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
 //
 
 typedef struct _IMAGE_IMPORT_BY_NAME {
-    USHORT  Hint;
+    unsigned short  Hint;
     UCHAR   Name[1];
 } IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
 
@@ -1300,15 +1300,15 @@ typedef IMAGE_IMPORT_DESCRIPTOR UNALIGNED *PIMAGE_IMPORT_DESCRIPTOR;
 
 typedef struct _IMAGE_BOUND_IMPORT_DESCRIPTOR {
     ULONG   TimeDateStamp;
-    USHORT  OffsetModuleName;
-    USHORT  NumberOfModuleForwarderRefs;
+    unsigned short  OffsetModuleName;
+    unsigned short  NumberOfModuleForwarderRefs;
 // Array of zero or more IMAGE_BOUND_FORWARDER_REF follows
 } IMAGE_BOUND_IMPORT_DESCRIPTOR,  *PIMAGE_BOUND_IMPORT_DESCRIPTOR;
 
 typedef struct _IMAGE_BOUND_FORWARDER_REF {
     ULONG   TimeDateStamp;
-    USHORT  OffsetModuleName;
-    USHORT  Reserved;
+    unsigned short  OffsetModuleName;
+    unsigned short  Reserved;
 } IMAGE_BOUND_FORWARDER_REF, *PIMAGE_BOUND_FORWARDER_REF;
 
 //
@@ -1332,10 +1332,10 @@ typedef struct _IMAGE_BOUND_FORWARDER_REF {
 typedef struct _IMAGE_RESOURCE_DIRECTORY {
     ULONG   Characteristics;
     ULONG   TimeDateStamp;
-    USHORT  MajorVersion;
-    USHORT  MinorVersion;
-    USHORT  NumberOfNamedEntries;
-    USHORT  NumberOfIdEntries;
+    unsigned short  MajorVersion;
+    unsigned short  MinorVersion;
+    unsigned short  NumberOfNamedEntries;
+    unsigned short  NumberOfIdEntries;
 //  IMAGE_RESOURCE_DIRECTORY_ENTRY DirectoryEntries[];
 } IMAGE_RESOURCE_DIRECTORY, *PIMAGE_RESOURCE_DIRECTORY;
 
@@ -1363,7 +1363,7 @@ typedef struct _IMAGE_RESOURCE_DIRECTORY_ENTRY {
             ULONG NameIsString:1;
         };
         ULONG   Name;
-        USHORT  Id;
+        unsigned short  Id;
     };
     union {
         ULONG   OffsetToData;
@@ -1384,13 +1384,13 @@ typedef struct _IMAGE_RESOURCE_DIRECTORY_ENTRY {
 //
 
 typedef struct _IMAGE_RESOURCE_DIRECTORY_STRING {
-    USHORT  Length;
+    unsigned short  Length;
     char    NameString[ 1 ];
 } IMAGE_RESOURCE_DIRECTORY_STRING, *PIMAGE_RESOURCE_DIRECTORY_STRING;
 
 
 typedef struct _IMAGE_RESOURCE_DIR_STRING_U {
-    USHORT  Length;
+    unsigned short  Length;
     WCHAR   NameString[ 1 ];
 } IMAGE_RESOURCE_DIR_STRING_U, *PIMAGE_RESOURCE_DIR_STRING_U;
 
@@ -1418,8 +1418,8 @@ typedef struct _IMAGE_RESOURCE_DATA_ENTRY {
 typedef struct {
     ULONG   Characteristics;
     ULONG   TimeDateStamp;
-    USHORT  MajorVersion;
-    USHORT  MinorVersion;
+    unsigned short  MajorVersion;
+    unsigned short  MinorVersion;
     ULONG   GlobalFlagsClear;
     ULONG   GlobalFlagsSet;
     ULONG   CriticalSectionDefaultTimeout;
@@ -1430,8 +1430,8 @@ typedef struct {
     ULONG   VirtualMemoryThreshold;
     ULONG   ProcessHeapFlags;
     ULONG   ProcessAffinityMask;
-    USHORT  CSDVersion;
-    USHORT  Reserved1;
+    unsigned short  CSDVersion;
+    unsigned short  Reserved1;
     ULONG   EditList;                   // VA
     ULONG   Reserved[ 1 ];
 } IMAGE_LOAD_CONFIG_DIRECTORY32, *PIMAGE_LOAD_CONFIG_DIRECTORY32;
@@ -1439,8 +1439,8 @@ typedef struct {
 typedef struct {
     ULONG   Characteristics;
     ULONG   TimeDateStamp;
-    USHORT  MajorVersion;
-    USHORT  MinorVersion;
+    unsigned short  MajorVersion;
+    unsigned short  MinorVersion;
     ULONG   GlobalFlagsClear;
     ULONG   GlobalFlagsSet;
     ULONG   CriticalSectionDefaultTimeout;
@@ -1451,8 +1451,8 @@ typedef struct {
     ULONGLONG  VirtualMemoryThreshold;
     ULONGLONG  ProcessAffinityMask;
     ULONG   ProcessHeapFlags;
-    USHORT  CSDVersion;
-    USHORT  Reserved1;
+    unsigned short  CSDVersion;
+    unsigned short  Reserved1;
     ULONGLONG  EditList;                // VA
     ULONG   Reserved[ 2 ];
 } IMAGE_LOAD_CONFIG_DIRECTORY64, *PIMAGE_LOAD_CONFIG_DIRECTORY64;
@@ -1533,8 +1533,8 @@ typedef _PIMAGE_RUNTIME_FUNCTION_ENTRY PIMAGE_RUNTIME_FUNCTION_ENTRY;
 typedef struct _IMAGE_DEBUG_DIRECTORY {
     ULONG   Characteristics;
     ULONG   TimeDateStamp;
-    USHORT  MajorVersion;
-    USHORT  MinorVersion;
+    unsigned short  MajorVersion;
+    unsigned short  MinorVersion;
     ULONG   Type;
     ULONG   SizeOfData;
     ULONG   AddressOfRawData;
@@ -1567,13 +1567,13 @@ typedef struct _FPO_DATA {
     ULONG       ulOffStart;             // offset 1st byte of function code
     ULONG       cbProcSize;             // # bytes in function
     ULONG       cdwLocals;              // # bytes in locals/4
-    USHORT      cdwParams;              // # bytes in params/4
-    USHORT      cbProlog : 8;           // # bytes in prolog
-    USHORT      cbRegs   : 3;           // # regs saved
-    USHORT      fHasSEH  : 1;           // TRUE if SEH in func
-    USHORT      fUseBP   : 1;           // TRUE if EBP has been allocated
-    USHORT      reserved : 1;           // reserved for future use
-    USHORT      cbFrame  : 2;           // frame type
+    unsigned short      cdwParams;              // # bytes in params/4
+    unsigned short      cbProlog : 8;           // # bytes in prolog
+    unsigned short      cbRegs   : 3;           // # regs saved
+    unsigned short      fHasSEH  : 1;           // TRUE if SEH in func
+    unsigned short      fUseBP   : 1;           // TRUE if EBP has been allocated
+    unsigned short      reserved : 1;           // reserved for future use
+    unsigned short      cbFrame  : 2;           // frame type
 } FPO_DATA, *PFPO_DATA;
 #define SIZEOF_RFPO_DATA 16
 
@@ -1632,10 +1632,10 @@ typedef struct _IMAGE_FUNCTION_ENTRY64 {
 //
 
 typedef struct _IMAGE_SEPARATE_DEBUG_HEADER {
-    USHORT      Signature;
-    USHORT      Flags;
-    USHORT      Machine;
-    USHORT      Characteristics;
+    unsigned short      Signature;
+    unsigned short      Flags;
+    unsigned short      Machine;
+    unsigned short      Characteristics;
     ULONG       TimeDateStamp;
     ULONG       CheckSum;
     ULONG       ImageBase;
@@ -1648,11 +1648,11 @@ typedef struct _IMAGE_SEPARATE_DEBUG_HEADER {
 } IMAGE_SEPARATE_DEBUG_HEADER, *PIMAGE_SEPARATE_DEBUG_HEADER;
 
 typedef struct _NON_PAGED_DEBUG_INFO {
-    USHORT      Signature;
-    USHORT      Flags;
+    unsigned short      Signature;
+    unsigned short      Flags;
     ULONG       Size;
-    USHORT      Machine;
-    USHORT      Characteristics;
+    unsigned short      Machine;
+    unsigned short      Characteristics;
     ULONG       TimeDateStamp;
     ULONG       CheckSum;
     ULONG       SizeOfImage;
@@ -1705,21 +1705,21 @@ typedef struct _ImageArchitectureEntry {
 #define IMPORT_OBJECT_HDR_SIG2  0xffff
 
 typedef struct IMPORT_OBJECT_HEADER {
-    USHORT  Sig1;                       // Must be IMAGE_FILE_MACHINE_UNKNOWN
-    USHORT  Sig2;                       // Must be IMPORT_OBJECT_HDR_SIG2.
-    USHORT  Version;
-    USHORT  Machine;
+    unsigned short  Sig1;                       // Must be IMAGE_FILE_MACHINE_UNKNOWN
+    unsigned short  Sig2;                       // Must be IMPORT_OBJECT_HDR_SIG2.
+    unsigned short  Version;
+    unsigned short  Machine;
     ULONG   TimeDateStamp;              // Time/date stamp
     ULONG   SizeOfData;                 // particularly useful for incremental links
 
     union {
-        USHORT  Ordinal;                // if grf & IMPORT_OBJECT_ORDINAL
-        USHORT  Hint;
+        unsigned short  Ordinal;                // if grf & IMPORT_OBJECT_ORDINAL
+        unsigned short  Hint;
     } u;
 
-    USHORT  Type : 2;                   // IMPORT_TYPE
-    USHORT  NameType : 3;               // IMPORT_NAME_TYPE
-    USHORT  Reserved : 11;              // Reserved. Must be zero.
+    unsigned short  Type : 2;                   // IMPORT_TYPE
+    unsigned short  NameType : 3;               // IMPORT_NAME_TYPE
+    unsigned short  Reserved : 11;              // Reserved. Must be zero.
 } IMPORT_OBJECT_HEADER;
 
 typedef enum IMPORT_OBJECT_TYPE
@@ -1794,8 +1794,8 @@ typedef struct IMAGE_COR20_HEADER
 {
     // Header versioning
     ULONG                   cb;
-    USHORT                  MajorRuntimeVersion;
-    USHORT                  MinorRuntimeVersion;
+    unsigned short                  MajorRuntimeVersion;
+    unsigned short                  MinorRuntimeVersion;
 
     // Symbol table and startup information
     IMAGE_DATA_DIRECTORY    MetaData;

@@ -782,7 +782,7 @@ inline
 int
 EmitBrk(
     Arm64CodeEmitter &Emitter,
-    USHORT Code
+    unsigned short Code
     )
 {
     return Emitter.EmitFourBytes(BrkOpcode(Code));

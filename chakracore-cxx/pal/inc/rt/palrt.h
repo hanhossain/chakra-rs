@@ -405,17 +405,17 @@ typedef struct tagDEC {
             BYTE sign;
             BYTE scale;
         };
-        USHORT signscale;
+        unsigned short signscale;
     };
-    USHORT wReserved;
+    unsigned short wReserved;
 #else
-    USHORT wReserved;
+    unsigned short wReserved;
     union {
         struct {
             BYTE scale;
             BYTE sign;
         };
-        USHORT signscale;
+        unsigned short signscale;
     };
 #endif
     ULONG Hi32;
@@ -541,14 +541,14 @@ struct tagVARIANT
                 VARIANT *pvarVal;
                 PVOID byref;
                 char cVal;
-                USHORT uiVal;
+                unsigned short uiVal;
                 ULONG ulVal;
                 ULONGLONG ullVal;
                 INT intVal;
                 UINT uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
-                USHORT *puiVal;
+                unsigned short *puiVal;
                 ULONG *pulVal;
                 ULONGLONG *pullVal;
                 INT *pintVal;
@@ -1307,8 +1307,8 @@ typedef struct tagSAFEARRAYBOUND *LPSAFEARRAYBOUND;
 
 typedef struct tagSAFEARRAY
     {
-    USHORT cDims;
-    USHORT fFeatures;
+    unsigned short cDims;
+    unsigned short fFeatures;
     ULONG cbElements;
     ULONG cLocks;
     PVOID pvData;

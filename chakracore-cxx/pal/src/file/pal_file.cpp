@@ -3437,7 +3437,7 @@ uUnique is always 0.
 const int MAX_PREFIX        = 3;
 const int MAX_SEEDSIZE      = 8; /* length of "unique portion of 
                                    the string, plus extension(FFFF.TMP). */
-static USHORT uUniqueSeed   = 0;
+static unsigned short uUniqueSeed   = 0;
 static BOOL IsInitialized   = FALSE;
 
 UINT
@@ -3458,7 +3458,7 @@ GetTempFileNameA(
     HANDLE  hTempFile;
     UINT    uRet = 0;
     DWORD   dwError;
-    USHORT  uLoopCounter = 0;
+    unsigned short  uLoopCounter = 0;
 
     PERF_ENTRY(GetTempFileNameA);
     ENTRY("GetTempFileNameA(lpPathName=%p (%s), lpPrefixString=%p (%s), uUnique=%u, " 
@@ -3470,7 +3470,7 @@ GetTempFileNameA(
     pThread = InternalGetCurrentThread();
     if ( !IsInitialized )
     {
-        uUniqueSeed = (USHORT)( time( NULL ) );
+        uUniqueSeed = (unsigned short)( time( NULL ) );
     
         /* On the off chance 0 is returned.
         0 being the error return code.  */
@@ -3541,7 +3541,7 @@ GetTempFileNameA(
     
     if (uUnique == 0)
     {
-        /* The USHORT will overflow back to 0 if we go past
+        /* The unsigned short will overflow back to 0 if we go past
         65536 files, so break the loop after 65536 iterations.
         If the CreateFile call was not successful within that 
         number of iterations, then there are no temp file names

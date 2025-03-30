@@ -589,7 +589,7 @@ public:
             pendingZeroPageList = entry;
         }
 
-        USHORT QueryDepth()
+        unsigned short QueryDepth()
         {
             AutoCriticalSection autoCS(&this->backgroundPageQueueCriticalSection);
             FreePageEntry* head = pendingZeroPageList;
@@ -600,7 +600,7 @@ public:
                 count++;
             }
             // If the specified singly linked list contains more than 65535 entries, QueryDepthSList returns the number of entries in the list modulo 65535
-            return (USHORT)(count % 65536);
+            return (unsigned short)(count % 65536);
         }
     };
 #endif

@@ -109,7 +109,7 @@ namespace DateTime
             yearForInfo = 2100;
         }
         TIME_ZONE_INFORMATION timeZoneInfo;
-        if (GetTimeZoneInformationForYear((USHORT)yearForInfo, NULL, &timeZoneInfo))
+        if (GetTimeZoneInformationForYear((unsigned short)yearForInfo, NULL, &timeZoneInfo))
         {
             isDaylightTimeApplicable = timeZoneInfo.StandardDate.wMonth != 0 && timeZoneInfo.DaylightDate.wMonth != 0;
 
@@ -125,7 +125,7 @@ namespace DateTime
             time = Js::DateUtilities::DayTimeFromSt(&timeZoneInfo.StandardDate);
             standardDate = Js::DateUtilities::TvFromDate(year, timeZoneInfo.StandardDate.wMonth-1, day-1, time);
 
-            if (GetTimeZoneInformationForYear((USHORT)yearForInfo-1, NULL, &timeZoneInfo))
+            if (GetTimeZoneInformationForYear((unsigned short)yearForInfo-1, NULL, &timeZoneInfo))
             {
                 isJanuary1Critical = timeZoneInfo.Bias + timeZoneInfo.DaylightBias + timeZoneInfo.StandardBias != bias + daylightBias + standardBias;
 
