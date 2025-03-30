@@ -244,7 +244,7 @@ _NOINLINE intptr_t GetNonTableMethodAddress(ThreadContextInfo * context, JnHelpe
 intptr_t GetMethodOriginalAddress(ThreadContextInfo * context, JnHelperMethod helperMethod)
 {
     AssertOrFailFast(helperMethod >= 0 && helperMethod < IR::JnHelperMethodCount);
-    intptr_t address = GetHelperMethods()[static_cast<WORD>(helperMethod)];
+    intptr_t address = GetHelperMethods()[static_cast<uint16_t>(helperMethod)];
     if (address == 0)
     {
         return GetNonTableMethodAddress(context, helperMethod);
@@ -275,7 +275,7 @@ char16 const * const JnHelperMethodNames[] =
 char16 const*
 GetMethodName(JnHelperMethod helperMethod)
 {
-    return JnHelperMethodNames[static_cast<WORD>(helperMethod)];
+    return JnHelperMethodNames[static_cast<uint16_t>(helperMethod)];
 }
 
 #endif  //#if DBG_DUMP

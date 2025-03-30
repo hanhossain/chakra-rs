@@ -562,7 +562,7 @@ public:
     // we keep these here to avoid increase in number of opcodes and to not use ExtendedArgs
     uint8           dataWidth;
 #if DBG
-    WORD            highlight;
+    uint16_t            highlight;
 #endif
 
 

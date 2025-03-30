@@ -4455,7 +4455,7 @@ Instr::Dump(IRDumpFlags flags)
     const auto PrintOpCodeName = [&]() {
         Output::SkipToColumn(23);
 #if DBG
-        WORD oldValue = 0;
+        uint16_t oldValue = 0;
         if (this->highlight != 0)
         {
             oldValue = Output::SetConsoleForeground(this->highlight);

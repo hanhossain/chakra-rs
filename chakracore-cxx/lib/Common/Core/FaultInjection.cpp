@@ -110,7 +110,7 @@ namespace Js
 #if _M_X64
     // for amd64 jit frame, RtlCaptureStackBackTrace stops walking after hitting jit frame on amd64
     _NOINLINE
-        WORD StackTrace64(_In_ DWORD FramesToSkip,
+        uint16_t StackTrace64(_In_ DWORD FramesToSkip,
         _In_ DWORD FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
         _Out_opt_ PDWORD BackTraceHash,
@@ -176,7 +176,7 @@ namespace Js
             Frame++;
         }
 
-        return (WORD)Frame;
+        return (uint16_t)Frame;
     }
 
 #define CaptureStack(FramesToSkip, FramesToCapture, BackTrace, BackTraceHash) \
@@ -186,7 +186,7 @@ namespace Js
 #pragma warning( push )
 #pragma warning( disable : 4748 )
 #pragma warning( disable : 4995 )
-    WORD StackTrace86(
+    uint16_t StackTrace86(
         _In_ DWORD FramesToSkip,
         _In_ DWORD FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
@@ -228,7 +228,7 @@ namespace Js
         StackFrame.AddrStack.Offset = Context.Esp;
         StackFrame.AddrStack.Mode = AddrModeFlat;
 
-        WORD FrameCount = 0;
+        uint16_t FrameCount = 0;
         while (FrameCount < FramesToSkip + FramesToCapture)
         {
             if (!pfnStackWalk64(MachineType, GetCurrentProcess(), GetCurrentThread(), &StackFrame,
@@ -259,7 +259,7 @@ namespace Js
 
         if (FrameCount > FramesToSkip)
         {
-            return (WORD)(FrameCount - FramesToSkip);
+            return (uint16_t)(FrameCount - FramesToSkip);
         }
         else
         {
@@ -929,7 +929,7 @@ namespace Js
     }
 
     // Calculate stack hash by adding the addresses (only jscript9 frames)
-    UINT_PTR FaultInjection::CalculateStackHash(void* frames[], WORD frameCount, WORD framesToSkip)
+    UINT_PTR FaultInjection::CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip)
     {
         UINT_PTR hash = 0;
         for (int i = framesToSkip; i < frameCount; i++)
@@ -1151,11 +1151,11 @@ namespace Js
         LPVOID backTrace[MAX_FRAME_COUNT] = { 0 };
         DWORD64 displacements[MAX_FRAME_COUNT] = { 0 };
 #if _M_IX86
-        WORD nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
+        uint16_t nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
 #elif _M_X64
-        WORD nStackCount = StackTrace64(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
+        uint16_t nStackCount = StackTrace64(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
 #else
-        WORD nStackCount = CaptureStack(0, MAX_FRAME_COUNT, backTrace, 0);
+        uint16_t nStackCount = CaptureStack(0, MAX_FRAME_COUNT, backTrace, 0);
 #endif
 
         // Print current crash stacks

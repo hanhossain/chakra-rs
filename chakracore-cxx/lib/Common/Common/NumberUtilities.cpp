@@ -189,7 +189,7 @@ using namespace Js;
     charcount_t NumberUtilities::UInt16ToString(uint16 integer, __out __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
     {
         // inlined here
-        WORD digit;
+        uint16_t digit;
         charcount_t cchWritten = 0;
 
         Assert(cchWritten < outBufferSize);

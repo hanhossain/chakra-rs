@@ -251,7 +251,7 @@ int UTF8ToUnicode(
                         //
                         if (cchSrc >= 3)
                         {
-                            WORD word = (((WORD)*pUTF8) << 8) | *(pUTF8 + 1);
+                            uint16_t word = (((uint16_t)*pUTF8) << 8) | *(pUTF8 + 1);
                             // Look ahead to check for non-shortest form.
                             // 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx                        
                             // Check if the 5 X bits are all zero.

@@ -18,8 +18,8 @@
 #include "unknwn.h"
 
 typedef struct tagEXCEPINFO {
-    WORD wCode;
-    WORD wReserved;
+    uint16_t wCode;
+    uint16_t wReserved;
     BSTR bstrSource;
     BSTR bstrDescription;
     BSTR bstrHelpFile;

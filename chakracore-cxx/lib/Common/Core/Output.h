@@ -113,7 +113,7 @@ public:
     static void     UseDebuggerWindow() { s_useDebuggerWindow = true; }
     static void     Flush();
 
-    static WORD     SetConsoleForeground(WORD color);
+    static uint16_t     SetConsoleForeground(uint16_t color);
     static void     CaptureStart();
     static char16*  CaptureEnd();
 
@@ -146,6 +146,6 @@ private:
     THREAD_ST static bool s_capture;
     THREAD_ST static FILE * s_file;
     THREAD_ST static size_t s_Column;
-    THREAD_ST static WORD s_color;
+    THREAD_ST static uint16_t s_color;
     THREAD_ST static bool s_hasColor;
 };

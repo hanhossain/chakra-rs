@@ -304,10 +304,10 @@ typedef __int64 time_t;
 #endif // !PAL_STDCPP_COMPAT
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
-#define MAKELCID(lgid, srtid)  ((DWORD)((((DWORD)((WORD  )(srtid))) << 16) |  \
-                                         ((DWORD)((WORD  )(lgid)))))
-#define LANGIDFROMLCID(lcid)   ((WORD)(lcid))
-#define SORTIDFROMLCID(lcid)   ((WORD)((((DWORD)(lcid)) >> 16) & 0xf))
+#define MAKELCID(lgid, srtid)  ((DWORD)((((DWORD)((uint16_t  )(srtid))) << 16) |  \
+                                         ((DWORD)((uint16_t  )(lgid)))))
+#define LANGIDFROMLCID(lcid)   ((uint16_t)(lcid))
+#define SORTIDFROMLCID(lcid)   ((uint16_t)((((DWORD)(lcid)) >> 16) & 0xf))
 
 #define LANG_NEUTRAL                     0x00
 #define LANG_INVARIANT                   0x7f
@@ -316,9 +316,9 @@ typedef __int64 time_t;
 #define SORT_DEFAULT                     0x0     // sorting default
 #define SUBLANG_SYS_DEFAULT              0x02    // system default
 
-#define MAKELANGID(p, s)       ((((WORD  )(s)) << 10) | (WORD  )(p))
-#define PRIMARYLANGID(lgid)    ((WORD  )(lgid) & 0x3ff)
-#define SUBLANGID(lgid)        ((WORD  )(lgid) >> 10)
+#define MAKELANGID(p, s)       ((((uint16_t  )(s)) << 10) | (uint16_t  )(p))
+#define PRIMARYLANGID(lgid)    ((uint16_t  )(lgid) & 0x3ff)
+#define SUBLANGID(lgid)        ((uint16_t  )(lgid) >> 10)
 
 #define LANG_SYSTEM_DEFAULT    (MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT))
 #define LANG_USER_DEFAULT      (MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT))
@@ -453,7 +453,7 @@ CharNextA(
 
 LPSTR
 CharNextExA(
-         WORD CodePage,
+         uint16_t CodePage,
          LPCSTR lpCurrentChar,
          DWORD dwFlags);
 
@@ -937,14 +937,14 @@ GetSystemTimeAsFileTime(
              LPFILETIME lpSystemTimeAsFileTime);
 
 typedef struct _SYSTEMTIME {
-    WORD wYear;
-    WORD wMonth;
-    WORD wDayOfWeek;
-    WORD wDay;
-    WORD wHour;
-    WORD wMinute;
-    WORD wSecond;
-    WORD wMilliseconds;
+    uint16_t wYear;
+    uint16_t wMonth;
+    uint16_t wDayOfWeek;
+    uint16_t wDay;
+    uint16_t wHour;
+    uint16_t wMinute;
+    uint16_t wSecond;
+    uint16_t wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
 BOOL
@@ -955,8 +955,8 @@ FileTimeToSystemTime(
 BOOL
 FileTimeToDosDateTime(
      const FILETIME *lpFileTime,
-     LPWORD lpFatDate,
-     LPWORD lpFatTime
+     uint16_t * lpFatDate,
+     uint16_t * lpFatTime
     );
 
 
@@ -1274,8 +1274,8 @@ typedef struct _STARTUPINFOW {
     DWORD dwYCountChars_PAL_Undefined;
     DWORD dwFillAttribute_PAL_Undefined;
     DWORD dwFlags;
-    WORD wShowWindow_PAL_Undefined;
-    WORD cbReserved2_PAL_Undefined;
+    uint16_t wShowWindow_PAL_Undefined;
+    uint16_t cbReserved2_PAL_Undefined;
     LPBYTE lpReserved2_PAL_Undefined;
     HANDLE hStdInput;
     HANDLE hStdOutput;
@@ -1295,8 +1295,8 @@ typedef struct _STARTUPINFOA {
     DWORD dwYCountChars_PAL_Undefined;
     DWORD dwFillAttribute_PAL_Undefined;
     DWORD dwFlags;
-    WORD wShowWindow_PAL_Undefined;
-    WORD cbReserved2_PAL_Undefined;
+    uint16_t wShowWindow_PAL_Undefined;
+    uint16_t cbReserved2_PAL_Undefined;
     LPBYTE lpReserved2_PAL_Undefined;
     HANDLE hStdInput;
     HANDLE hStdOutput;
@@ -2244,17 +2244,17 @@ typedef DECLSPEC_ALIGN(16) M128U M128A;
 typedef M128A *PM128A;
 
 typedef struct _XMM_SAVE_AREA32 {
-    WORD   ControlWord;
-    WORD   StatusWord;
+    uint16_t   ControlWord;
+    uint16_t   StatusWord;
     BYTE  TagWord;
     BYTE  Reserved1;
-    WORD   ErrorOpcode;
+    uint16_t   ErrorOpcode;
     DWORD ErrorOffset;
-    WORD   ErrorSelector;
-    WORD   Reserved2;
+    uint16_t   ErrorSelector;
+    uint16_t   Reserved2;
     DWORD DataOffset;
-    WORD   DataSelector;
-    WORD   Reserved3;
+    uint16_t   DataSelector;
+    uint16_t   Reserved3;
     DWORD MxCsr;
     DWORD MxCsr_Mask;
     M128A FloatRegisters[8];
@@ -2324,12 +2324,12 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     // Segment Registers and processor flags.
     //
 
-    WORD   SegCs;
-    WORD   SegDs;
-    WORD   SegEs;
-    WORD   SegFs;
-    WORD   SegGs;
-    WORD   SegSs;
+    uint16_t   SegCs;
+    uint16_t   SegDs;
+    uint16_t   SegEs;
+    uint16_t   SegFs;
+    uint16_t   SegGs;
+    uint16_t   SegSs;
     DWORD EFlags;
 
     //
@@ -3394,7 +3394,7 @@ GetStringTypeExW(
           DWORD dwInfoType,
           LPCWSTR lpSrcStr,
           int cchSrc,
-          LPWORD lpCharType);
+          uint16_t * lpCharType);
 
 #ifdef UNICODE
 #define GetStringTypeEx GetStringTypeExW
@@ -5247,9 +5247,9 @@ typedef struct _OSVERSIONINFOEXA {
     DWORD dwBuildNumber;
     DWORD dwPlatformId;
     char szCSDVersion[ 128 ];
-    WORD  wServicePackMajor;
-    WORD  wServicePackMinor;
-    WORD  wSuiteMask;
+    uint16_t  wServicePackMajor;
+    uint16_t  wServicePackMinor;
+    uint16_t  wSuiteMask;
     BYTE  wProductType;
     BYTE  wReserved;
 } OSVERSIONINFOEXA, *POSVERSIONINFOEXA, *LPOSVERSIONINFOEXA;
@@ -5261,9 +5261,9 @@ typedef struct _OSVERSIONINFOEXW {
     DWORD dwBuildNumber;
     DWORD dwPlatformId;
     WCHAR szCSDVersion[ 128 ];
-    WORD  wServicePackMajor;
-    WORD  wServicePackMinor;
-    WORD  wSuiteMask;
+    uint16_t  wServicePackMajor;
+    uint16_t  wServicePackMinor;
+    uint16_t  wSuiteMask;
     BYTE  wProductType;
     BYTE  wReserved;
 } OSVERSIONINFOEXW, *POSVERSIONINFOEXW, *LPOSVERSIONINFOEXW;
@@ -5296,8 +5296,8 @@ GetVersionExW(
 #define IMAGE_FILE_MACHINE_ARM64             0xAA64  // ARM64 Little-Endian
 
 typedef struct _SYSTEM_INFO {
-    WORD wProcessorArchitecture_PAL_Undefined;
-    WORD wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union
+    uint16_t wProcessorArchitecture_PAL_Undefined;
+    uint16_t wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union
     DWORD dwPageSize;
     LPVOID lpMinimumApplicationAddress;
     LPVOID lpMaximumApplicationAddress;
@@ -5305,8 +5305,8 @@ typedef struct _SYSTEM_INFO {
     DWORD dwNumberOfProcessors;
     DWORD dwProcessorType_PAL_Undefined;
     DWORD dwAllocationGranularity;
-    WORD wProcessorLevel_PAL_Undefined;
-    WORD wProcessorRevision_PAL_Undefined;
+    uint16_t wProcessorLevel_PAL_Undefined;
+    uint16_t wProcessorRevision_PAL_Undefined;
 } SYSTEM_INFO, *LPSYSTEM_INFO;
 
 void
@@ -5367,11 +5367,11 @@ RegisterEventSourceW (
 BOOL
 ReportEventA (
          HANDLE     hEventLog,
-         WORD       wType,
-         WORD       wCategory,
+         uint16_t       wType,
+         uint16_t       wCategory,
          DWORD      dwEventID,
       PSID       lpUserSid,
-         WORD       wNumStrings,
+         uint16_t       wNumStrings,
          DWORD      dwDataSize,
       LPCSTR *lpStrings,
       LPVOID lpRawData
@@ -5379,11 +5379,11 @@ ReportEventA (
 BOOL
 ReportEventW (
          HANDLE     hEventLog,
-         WORD       wType,
-         WORD       wCategory,
+         uint16_t       wType,
+         uint16_t       wCategory,
          DWORD      dwEventID,
       PSID       lpUserSid,
-         WORD       wNumStrings,
+         uint16_t       wNumStrings,
          DWORD      dwDataSize,
       LPCWSTR *lpStrings,
       LPVOID lpRawData

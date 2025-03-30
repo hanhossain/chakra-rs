@@ -336,8 +336,8 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   CpuId;
+    uint16_t   Depth;
+    uint16_t   CpuId;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 
@@ -347,8 +347,8 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   Reserved;
+    uint16_t   Depth;
+    uint16_t   Reserved;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 
@@ -358,8 +358,8 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   Reserved;
+    uint16_t   Depth;
+    uint16_t   Reserved;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 

@@ -98,7 +98,7 @@ namespace PlatformAgnostic
             return false;
         }
 
-        static WORD oFindOldCharType(OLECHAR ch)
+        static uint16_t oFindOldCharType(OLECHAR ch)
         {
             if ((OLECHAR)65279 == ch)
             {
@@ -120,7 +120,7 @@ namespace PlatformAgnostic
 
         CharacterClassificationType GetLegacyCharacterClassificationType(char16 ch)
         {
-            WORD charType = 0;
+            uint16_t charType = 0;
             BOOL res = ::GetStringTypeW(CT_CTYPE1, &ch, 1, &charType);
 
             if (res == TRUE)
@@ -134,7 +134,7 @@ namespace PlatformAgnostic
                     // characters, so we return the Win2K (Unicode 2.1) attributes.
                     // We only return the ones we care about - ALPHA for ALPHA, PUNCT
                     // for PUNCT or DIGIT, and SPACE for SPACE or BLANK.
-                    WORD wOldCharType = oFindOldCharType(ch);
+                    uint16_t wOldCharType = oFindOldCharType(ch);
                     if (0 == wOldCharType)
                     {
                         return CharacterClassificationType::Invalid;

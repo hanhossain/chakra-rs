@@ -120,7 +120,7 @@ namespace Js
         struct InjectionRecord{
             void* StackFrames[MAX_FRAME_COUNT];
             UINT_PTR hash;
-            WORD FrameCount;
+            uint16_t FrameCount;
             void* StackData;
             size_t StackDataLength;
             CONTEXT Context;
@@ -142,7 +142,7 @@ namespace Js
         static DWORD exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
-        static UINT_PTR CalculateStackHash(void* frames[], WORD frameCount, WORD framesToSkip);
+        static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
         static LONG WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };

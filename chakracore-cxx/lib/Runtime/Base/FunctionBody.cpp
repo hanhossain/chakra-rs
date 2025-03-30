@@ -4597,7 +4597,7 @@ namespace Js
 
         if (sourceInfo->GetSourceHolder() != ISourceHolder::GetEmptySourceHolder())
         {
-            WORD color = 0;
+            uint16_t color = 0;
             if (Js::Configuration::Global.flags.DumpLineNoInColor)
             {
                 color = Output::SetConsoleForeground(12);

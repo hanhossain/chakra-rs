@@ -378,7 +378,7 @@ namespace Js {
         bs->AppendChars(g_rgpszDay[pymd->wday]);
         bs->AppendChars(_u(", "));
         // sz - as %02d - output is "01" to "31"
-        bs->AppendChars(static_cast<WORD>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
+        bs->AppendChars(static_cast<uint16_t>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
         bs->AppendChars(_u(' '));
         bs->AppendChars(g_rgpszMonth[pymd->mon]);
         bs->AppendChars(_u(' '));
@@ -398,13 +398,13 @@ namespace Js {
         // Add the time.
         bs->AppendChars(_u(' '));
         // sz - as %02d - HOUR
-        bs->AppendChars(static_cast<WORD>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
+        bs->AppendChars(static_cast<uint16_t>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
         bs->AppendChars(_u(':'));
         // sz - as %02d - MINUTE
-        bs->AppendChars(static_cast<WORD>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
+        bs->AppendChars(static_cast<uint16_t>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
         bs->AppendChars(_u(':'));
         // sz - as %02d - SECOND
-        bs->AppendChars(static_cast<WORD>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
+        bs->AppendChars(static_cast<uint16_t>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
         bs->AppendChars(_u(' '));
 
         bs->AppendChars(_u("GMT"));
@@ -425,14 +425,14 @@ namespace Js {
         JavascriptString *bs = nullptr;
 
          // the caller of this function should ensure that the range of pymd->year is such that the following conversion works.
-        st.wYear = (WORD)pymd->year;
-        st.wMonth = (WORD)pymd->mon + 1;
-        st.wDayOfWeek = (WORD)pymd->wday;
-        st.wDay = (WORD)pymd->mday + 1;
-        st.wHour = (WORD)(pymd->time / 3600000);
-        st.wMinute = (WORD)((pymd->time / 60000) % 60);
-        st.wSecond = (WORD)((pymd->time / 1000) % 60);
-        st.wMilliseconds = (WORD)(pymd->time % 60);
+        st.wYear = (uint16_t)pymd->year;
+        st.wMonth = (uint16_t)pymd->mon + 1;
+        st.wDayOfWeek = (uint16_t)pymd->wday;
+        st.wDay = (uint16_t)pymd->mday + 1;
+        st.wHour = (uint16_t)(pymd->time / 3600000);
+        st.wMinute = (uint16_t)((pymd->time / 60000) % 60);
+        st.wSecond = (uint16_t)((pymd->time / 1000) % 60);
+        st.wMilliseconds = (uint16_t)(pymd->time % 60);
 
         cch = 0;
 

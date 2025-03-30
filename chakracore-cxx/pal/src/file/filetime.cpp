@@ -716,8 +716,8 @@ See msdn for more details.
 BOOL
 FileTimeToDosDateTime(
              const FILETIME *lpFileTime,
-             LPWORD lpFatDate,
-             LPWORD lpFatTime )
+             uint16_t * lpFatDate,
+             uint16_t * lpFatTime )
 {
     BOOL bRetVal = FALSE;
 

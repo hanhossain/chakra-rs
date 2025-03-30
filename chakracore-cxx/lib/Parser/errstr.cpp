@@ -25,7 +25,7 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
     int cch;
     int cstring;
     DWORD cbRes;
-    int itable = ((WORD)istring >> 4) + 1;
+    int itable = ((uint16_t)istring >> 4) + 1;
     istring &= 0x0F;
     BOOL fRet = FALSE;
 
@@ -49,16 +49,16 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
 
     cbRes = SizeofResource((HMODULE)hlib, hrsrc);
 
-    if (cbRes < sizeof(WORD))
+    if (cbRes < sizeof(uint16_t))
         goto LError;
 
     pchCur = pchRes;
     for (cstring = istring; cstring-- > 0;)
     {
-        if (cbRes - sizeof(WORD) < sizeof(WCHAR) * (pchCur - pchRes))
+        if (cbRes - sizeof(uint16_t) < sizeof(WCHAR) * (pchCur - pchRes))
             goto LError;
 
-        cch = (*(WORD *) pchCur) + 1;
+        cch = (*(uint16_t *) pchCur) + 1;
 
         if (cch <= 0)
             goto LError;
@@ -72,9 +72,9 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
         pchCur += cch;
     }
 
-    if (cbRes - sizeof(WORD) < sizeof(WCHAR) * (pchCur - pchRes))
+    if (cbRes - sizeof(uint16_t) < sizeof(WCHAR) * (pchCur - pchRes))
         goto LError;
-    cch = * (WORD *) pchCur;
+    cch = * (uint16_t *) pchCur;
 
     if (cch <= 0)
         goto LError;
@@ -122,7 +122,7 @@ BSTR BstrGetResourceString(int32 isz)
 
     const char16* LoadResourceStr(UINT id);
 
-    UINT id = (WORD)isz;
+    UINT id = (uint16_t)isz;
     const char16* szT = LoadResourceStr(id);
     if (!szT || !szT[0])
     {

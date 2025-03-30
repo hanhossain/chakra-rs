@@ -502,14 +502,14 @@ struct tagVARIANT
 #if BIGENDIAN
             // We need to make sure vt overlaps with DECIMAL's wReserved.
             // See the DECIMAL type for details.
-            WORD wReserved1;
+            uint16_t wReserved1;
             VARTYPE vt;
 #else
             VARTYPE vt;
-            WORD wReserved1;
+            uint16_t wReserved1;
 #endif
-            WORD wReserved2;
-            WORD wReserved3;
+            uint16_t wReserved2;
+            uint16_t wReserved3;
             union
                 {
                 LONGLONG llVal;
@@ -1289,7 +1289,7 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 
 /******************* resources ***************************************/
 
-#define MAKEINTRESOURCEW(i) ((LPWSTR)((size_t)((WORD)(i))))
+#define MAKEINTRESOURCEW(i) ((LPWSTR)((size_t)((uint16_t)(i))))
 #define RT_RCDATA           MAKEINTRESOURCE(10)
 #define RT_VERSION          MAKEINTRESOURCE(16)
 
@@ -1365,7 +1365,7 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
     LPVOID lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
     LPVOID lpImageName;
-    WORD fUnicode;
+    uint16_t fUnicode;
 } CREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
 
 typedef struct _EXIT_THREAD_DEBUG_INFO {
@@ -1382,7 +1382,7 @@ typedef struct _LOAD_DLL_DEBUG_INFO {
     DWORD dwDebugInfoFileOffset;
     DWORD nDebugInfoSize;
     LPVOID lpImageName;
-    WORD fUnicode;
+    uint16_t fUnicode;
 } LOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
 
 typedef struct _UNLOAD_DLL_DEBUG_INFO {
@@ -1391,8 +1391,8 @@ typedef struct _UNLOAD_DLL_DEBUG_INFO {
 
 typedef struct _OUTPUT_DEBUG_STRING_INFO {
     LPSTR lpDebugStringData;
-    WORD fUnicode;
-    WORD nDebugStringLength;
+    uint16_t fUnicode;
+    uint16_t nDebugStringLength;
 } OUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
 
 typedef struct _RIP_INFO {

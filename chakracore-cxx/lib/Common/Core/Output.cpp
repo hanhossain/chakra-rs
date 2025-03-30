@@ -38,7 +38,7 @@ unsigned int Output::s_traceEntryId = 0;
 
 THREAD_ST FILE*    Output::s_file = nullptr;
 THREAD_ST size_t   Output::s_Column  = 0;
-THREAD_ST WORD     Output::s_color = 0;
+THREAD_ST uint16_t     Output::s_color = 0;
 THREAD_ST bool     Output::s_hasColor = false;
 THREAD_ST bool     Output::s_capture = false;
 
@@ -517,8 +517,8 @@ Output::SetStackTraceHelper(Js::IStackTraceHelper* helper)
 // Sets the foreground color and returns the old color. Returns 0 on failure
 //
 
-WORD
-Output::SetConsoleForeground(WORD color)
+uint16_t
+Output::SetConsoleForeground(uint16_t color)
 {
     AutoCriticalSection autocs(&s_critsect);
     return 0;

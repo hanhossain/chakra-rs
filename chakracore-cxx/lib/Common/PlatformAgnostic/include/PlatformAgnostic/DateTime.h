@@ -48,17 +48,17 @@ namespace DateTime
 
         void ToSystemTime(SYSTEMTIME *sys)
         {
-            sys->wYear = (WORD)year;
-            sys->wMonth = (WORD)(mon + 1);
-            sys->wDay =(WORD)(mday + 1);
+            sys->wYear = (uint16_t)year;
+            sys->wMonth = (uint16_t)(mon + 1);
+            sys->wDay =(uint16_t)(mday + 1);
             int t = time;
-            sys->wMilliseconds = (WORD)(t % 1000);
+            sys->wMilliseconds = (uint16_t)(t % 1000);
             t /= 1000;
-            sys->wSecond = (WORD)(t % 60);
+            sys->wSecond = (uint16_t)(t % 60);
             t /= 60;
-            sys->wMinute = (WORD)(t % 60);
+            sys->wMinute = (uint16_t)(t % 60);
             t /= 60;
-            sys->wHour = (WORD)t;
+            sys->wHour = (uint16_t)t;
         }
     };
 

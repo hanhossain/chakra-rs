@@ -102,7 +102,7 @@ Return value:
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
     WCHAR uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
-    WORD  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
+    uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
 
     if (*((INT*)pnKey) < uValue)
     {
@@ -260,7 +260,7 @@ See MSDN doc.
 --*/
 LPSTR
 CharNextExA(
-     WORD CodePage,
+     uint16_t CodePage,
      LPCSTR lpCurrentChar,
      DWORD dwFlags)
 {
@@ -416,7 +416,7 @@ GetStringTypeExW(
       DWORD dwInfoType,
       LPCWSTR lpSrcStr,
       int cchSrc,
-      LPWORD lpCharType)
+      uint16_t * lpCharType)
 {
 
 

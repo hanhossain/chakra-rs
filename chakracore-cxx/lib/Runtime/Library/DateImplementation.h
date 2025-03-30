@@ -419,7 +419,7 @@ namespace Js {
             bs->AppendChars(g_rgpszMonth[pymd->mon]);
             bs->AppendChars(_u(' '));
             // sz - as %02d - output is "01" to "31"
-            bs->AppendChars(static_cast<WORD>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>(pymd->mday + 1), 2, ConvertUInt16ToString_ZeroPad_2);
             bs->AppendChars(_u(' '));
 
             // year is directly after day, month, daydigit for IE11+
@@ -445,13 +445,13 @@ namespace Js {
         if(!(noDateTime & DateTimeFlag::NoTime))
         {
             // sz - as %02d - HOUR
-            bs->AppendChars(static_cast<WORD>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>(pymd->time / 3600000), 2, ConvertUInt16ToString_ZeroPad_2);
             bs->AppendChars(_u(':'));
             // sz - as %02d - MINUTE
-            bs->AppendChars(static_cast<WORD>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>((pymd->time / 60000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
             bs->AppendChars(_u(':'));
             // sz - as %02d - SECOND
-            bs->AppendChars(static_cast<WORD>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>((pymd->time / 1000) % 60), 2, ConvertUInt16ToString_ZeroPad_2);
 
             bs->AppendChars(_u(" GMT"));
 
@@ -470,10 +470,10 @@ namespace Js {
             hour = min / 60;
             min %= 60;
             // sz - as %02d - HOUR
-            bs->AppendChars(static_cast<WORD>(hour), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>(hour), 2, ConvertUInt16ToString_ZeroPad_2);
 
             // sz - as %02d - MIN
-            bs->AppendChars(static_cast<WORD>(min), 2, ConvertUInt16ToString_ZeroPad_2);
+            bs->AppendChars(static_cast<uint16_t>(min), 2, ConvertUInt16ToString_ZeroPad_2);
 
             bs->AppendChars(_u(" ("));
 

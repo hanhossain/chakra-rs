@@ -39,7 +39,7 @@ typedef __w64 unsigned long SIZE_T;
 #endif
 typedef          int        INT;
 typedef          long       LONG;
-typedef unsigned short      WORD;
+typedef unsigned short      uint16_t;
 typedef unsigned int        UINT;
 typedef unsigned long       ULONG;
 typedef unsigned long       DWORD;
@@ -63,11 +63,11 @@ typedef LONG HRESULT;
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       ((HRESULT)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 #ifndef LOWORD
-#define LOWORD(l)       ((WORD)(((DWORD_PTR)(l)) & 0xffff))
+#define LOWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) & 0xffff))
 #endif
 
 #ifndef HIWORD
-#define HIWORD(l)       ((WORD)(((DWORD_PTR)(l)) >> 16))
+#define HIWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) >> 16))
 #endif
 
 #define HIDWORD(_qw)    ((ULONG)((_qw) >> 32))
@@ -755,7 +755,7 @@ ULongPtrToUInt(
 #define ULongToByte ULongToUChar
 
 //
-// * -> WORD conversion (WORD is always unsigned short)
+// * -> uint16_t conversion (uint16_t is always unsigned short)
 //
 #define IntToWord               IntToUShort
 #define LongToWord              LongToUShort
@@ -769,7 +769,7 @@ ULongPtrToUInt(
 #define SIZETToWord             SIZETToUShort
 
 //
-// WORD -> * conversion (WORD is always unsigned short)
+// uint16_t -> * conversion (uint16_t is always unsigned short)
 //
 #define WordToUChar             UShortToUChar
 #define WordToByte              UShortToByte
@@ -1101,7 +1101,7 @@ UShortAdd(
 }
 
 //
-// WORD addtition
+// uint16_t addtition
 //
 #define WordAdd     UShortAdd
 
@@ -1253,7 +1253,7 @@ UShortSub(
 }
 
 //
-// WORD subtraction
+// uint16_t subtraction
 //
 #define WordSub     UShortSub
 
@@ -1400,7 +1400,7 @@ UShortMult(
 }
 
 //
-// WORD multiplication
+// uint16_t multiplication
 //
 #define WordMult      UShortMult
 
