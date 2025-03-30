@@ -195,8 +195,8 @@ static int __check_float_string(size_t nFloatStrUsed,
 #define ASCII       32           /* # of bytes needed to hold 256 bits */
 
 #define SCAN_SHORT     0         /* also for float */
-#define SCAN_LONG      1         /* also for DOUBLE */
-#define SCAN_L_DOUBLE  2         /* only for int32_t DOUBLE */
+#define SCAN_LONG      1         /* also for double */
+#define SCAN_L_DOUBLE  2         /* only for int32_t double */
 
 #define SCAN_NEAR    0
 #define SCAN_FAR     1

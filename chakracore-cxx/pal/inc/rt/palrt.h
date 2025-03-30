@@ -517,7 +517,7 @@ struct tagVARIANT
                 BYTE bVal;
                 short iVal;
                 float fltVal;
-                DOUBLE dblVal;
+                double dblVal;
                 VARIANT_BOOL boolVal;
                 SCODE scode;
                 CY cyVal;
@@ -531,7 +531,7 @@ struct tagVARIANT
                 int32_t *plVal;
                 LONGLONG *pllVal;
                 float *pfltVal;
-                DOUBLE *pdblVal;
+                double *pdblVal;
                 VARIANT_BOOL *pboolVal;
                 SCODE *pscode;
                 CY *pcyVal;

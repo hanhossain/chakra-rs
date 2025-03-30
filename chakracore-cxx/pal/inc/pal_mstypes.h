@@ -145,7 +145,6 @@ typedef unsigned int DWORD32, *PDWORD32;
 
 typedef int BOOL;
 typedef unsigned char BYTE;
-typedef double DOUBLE;
 typedef BOOL *PBOOL;
 typedef BOOL *LPBOOL;
 typedef BYTE *PBYTE;
