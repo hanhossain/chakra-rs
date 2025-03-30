@@ -175,7 +175,7 @@ typedef enum tagEFaultRepRetVal
 #endif
 #define PAL_safe_offsetof(type, field) __builtin_offsetof(type, field)
 #else
-#define FIELD_OFFSET(type, field) (((LONG)(LONG_PTR)&(((type *)64)->field)) - 64)
+#define FIELD_OFFSET(type, field) (((LONG)(ptrdiff_t)&(((type *)64)->field)) - 64)
 #ifndef offsetof
 #define offsetof(s,m)          ((size_t)((ptrdiff_t)&(((s *)64)->m)) - 64)
 #endif
@@ -183,7 +183,7 @@ typedef enum tagEFaultRepRetVal
 #endif
 
 #define CONTAINING_RECORD(address, type, field) \
-    ((type *)((LONG_PTR)(address) - FIELD_OFFSET(type, field)))
+    ((type *)((ptrdiff_t)(address) - FIELD_OFFSET(type, field)))
 
 #define ARGUMENT_PRESENT(ArgumentPointer)    (\
     (char *)(ArgumentPointer) != (char *)(NULL) )
@@ -295,7 +295,7 @@ typedef GUID CLSID;
 typedef CLSID *LPCLSID;
 
 typedef UINT_PTR WPARAM;
-typedef LONG_PTR LRESULT;
+typedef ptrdiff_t LRESULT;
 
 typedef LONG SCODE;
 

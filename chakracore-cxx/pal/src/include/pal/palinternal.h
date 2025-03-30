@@ -316,7 +316,6 @@ function_name() to call the system's implementation
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
 
-#define ptrdiff_t PAL_ptrdiff_t
 #define uintptr_t PAL_uintptr_t
 #define timeval PAL_timeval
 #define FILE PAL_FILE

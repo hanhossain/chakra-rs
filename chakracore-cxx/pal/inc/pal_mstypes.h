@@ -21,6 +21,7 @@
 #define __MSTYPES_DEFINED
 
 #include <stdint.h>
+#include <stddef.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -193,7 +194,7 @@ typedef signed __int64 LONG64;
 
 typedef __int64 INT_PTR, *PINT_PTR;
 typedef unsigned __int64 UINT_PTR, *PUINT_PTR;
-typedef __int64 LONG_PTR, *PLONG_PTR;
+typedef __int64 *PLONG_PTR;
 typedef unsigned __int64 *PULONG_PTR;
 typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 
@@ -207,18 +208,18 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #endif
 
 #define HandleToULong( h ) ((ULONG)(size_t)(h) )
-#define HandleToLong( h )  ((LONG)(LONG_PTR) (h) )
+#define HandleToLong( h )  ((LONG)(ptrdiff_t) (h) )
 #define ULongToHandle( ul ) ((HANDLE)(size_t) (ul) )
-#define LongToHandle( h )   ((HANDLE)(LONG_PTR) (h) )
+#define LongToHandle( h )   ((HANDLE)(ptrdiff_t) (h) )
 #define PtrToUlong( p ) ((ULONG)(size_t) (p) )
-#define PtrToLong( p )  ((LONG)(LONG_PTR) (p) )
+#define PtrToLong( p )  ((LONG)(ptrdiff_t) (p) )
 #define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
 #define PtrToUshort( p ) ((unsigned short)(size_t)(p) )
-#define PtrToShort( p )  ((short)(LONG_PTR)(p) )
+#define PtrToShort( p )  ((short)(ptrdiff_t)(p) )
 #define IntToPtr( i )    ((void *)(INT_PTR)((int)(i)))
 #define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)(ui)))
-#define LongToPtr( l )   ((void *)(LONG_PTR)((long)(l)))
+#define LongToPtr( l )   ((void *)(ptrdiff_t)((long)(l)))
 #define ULongToPtr( ul ) ((void *)(size_t)((unsigned long)(ul)))
 #define ShortToPtr( s )  ((void *)(INT_PTR)((short)(s)))
 #define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)(s)))
@@ -229,7 +230,7 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define UintToPtr(ui)  UIntToPtr(ui)
 
 typedef size_t SIZE_T, *PSIZE_T;
-typedef LONG_PTR SSIZE_T, *PSSIZE_T;
+typedef ptrdiff_t SSIZE_T, *PSSIZE_T;
 
 #ifndef SIZE_T_MAX
 #define SIZE_T_MAX ULONG_PTR_MAX
@@ -243,16 +244,7 @@ typedef LONG_PTR SSIZE_T, *PSSIZE_T;
 #define SSIZE_T_MIN I64(-9223372036854775808)
 #endif
 
-#ifndef PAL_STDCPP_COMPAT
-#if defined(__APPLE__) || defined(__LINUX__)
-typedef long ptrdiff_t;
-#else
-typedef LONG_PTR ptrdiff_t;
-#endif
-#endif // !PAL_STDCPP_COMPAT
-#define _SIZE_T_DEFINED
-
-typedef LONG_PTR LPARAM;
+typedef ptrdiff_t LPARAM;
 
 #define _PTRDIFF_T_DEFINED
 #ifdef _MINGW_

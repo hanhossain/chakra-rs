@@ -7,9 +7,9 @@
 #include "Language/JavascriptFunctionArgIndex.h"
 #include "Language/InterpreterStackFrame.h"
 
-#define FAligned(VALUE, TYPE) ((((LONG_PTR)VALUE) & (sizeof(TYPE)-1)) == 0)
+#define FAligned(VALUE, TYPE) ((((ptrdiff_t)VALUE) & (sizeof(TYPE)-1)) == 0)
 
-#define AlignIt(VALUE, TYPE) (~(~((LONG_PTR)(VALUE) + (sizeof(TYPE)-1)) | (sizeof(TYPE)-1)))
+#define AlignIt(VALUE, TYPE) (~(~((ptrdiff_t)(VALUE) + (sizeof(TYPE)-1)) | (sizeof(TYPE)-1)))
 
 namespace Js
 {

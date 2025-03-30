@@ -564,7 +564,7 @@ ReadProcessMemory(
 #if HAVE_VM_READ
     kern_return_t result;
     vm_map_t task;
-    LONG_PTR bytesToRead;
+    ptrdiff_t bytesToRead;
 #elif HAVE_PROCFS_CTL
     int fd;
     char memPath[64];
@@ -654,7 +654,7 @@ ReadProcessMemory(
         vm_size_t bytesRead;
 
         bytesToRead = VIRTUAL_PAGE_SIZE - offset;
-        if (bytesToRead > (LONG_PTR)nSize)
+        if (bytesToRead > (ptrdiff_t)nSize)
         {
             bytesToRead = nSize;
         }
@@ -857,7 +857,7 @@ WriteProcessMemory(
 #elif HAVE_PROCFS_CTL
     int fd;
     char memPath[64];
-    LONG_PTR bytesWritten;
+    ptrdiff_t bytesWritten;
     off_t offset;
 #elif !HAVE_TTRACE
     SIZE_T FirstIntOffset;
