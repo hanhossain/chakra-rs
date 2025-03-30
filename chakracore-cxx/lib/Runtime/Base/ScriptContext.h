@@ -254,7 +254,7 @@ namespace Js
             , uint32_t _sourceLocationLineNumber
             , uint32_t _sourceLocationColumnNumber
             , uint32_t _methodIDOrNameIndex
-            , UINT8 _isFrameIndex)
+            , uint8_t _isFrameIndex)
             : scriptContextID(_scriptContextID)
             , sourceLocationLineNumber(_sourceLocationLineNumber)
             , sourceLocationColumnNumber(_sourceLocationColumnNumber)
@@ -266,7 +266,7 @@ namespace Js
         uint32_t sourceLocationLineNumber;
         uint32_t sourceLocationColumnNumber;
         uint32_t methodIDOrNameIndex;
-        UINT8  isFrameIndex;
+        uint8_t  isFrameIndex;
     };
 #pragma pack(pop)
 
