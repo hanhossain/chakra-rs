@@ -125,18 +125,6 @@ extern "C" {
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
 // includes are not included, so we need to define them.
 // Types below are already defined by stdint.h on __APPLE__.
-#if !defined(PAL_IMPLEMENTATION) && !defined(__APPLE__)
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int8 int8_t;
-#define __int8_t_defined
-
-typedef unsigned __int8 uint8_t;
-#endif // PAL_IMPLEMENTATION
 
 #if _WIN64
 typedef long double LONG_DOUBLE;
