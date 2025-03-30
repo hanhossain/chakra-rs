@@ -195,8 +195,6 @@ typedef unsigned int *PUINT;
 typedef BYTE BOOLEAN;
 typedef BOOLEAN *PBOOLEAN;
 
-typedef uint8_t UINT8;
-typedef int8_t INT8;
 typedef unsigned __int16 UINT16;
 typedef signed __int16 INT16;
 typedef signed __int32 INT32, *PINT32;
