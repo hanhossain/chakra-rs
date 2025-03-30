@@ -139,22 +139,14 @@ typedef ULONGLONG *PULONGLONG;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-typedef unsigned int DWORD; // NOTE: diff from  windows.h, for LP64 compat
+typedef unsigned int DWORD, *PDWORD, *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
 
 typedef unsigned int DWORD32, *PDWORD32;
 
-typedef int BOOL;
-typedef BOOL *PBOOL;
-typedef BOOL *LPBOOL;
-typedef int *PINT;
-typedef int *LPINT;
-typedef DWORD *PDWORD;
-typedef DWORD *LPDWORD;
-typedef int INT;
-typedef unsigned int UINT;
-typedef unsigned int *PUINT;
-typedef uint8_t BOOLEAN;
-typedef BOOLEAN *PBOOLEAN;
+typedef int BOOL, *PBOOL, *LPBOOL;
+typedef int INT, *PINT, *LPINT;
+typedef unsigned int UINT, *PUINT;
+typedef uint8_t BOOLEAN, *PBOOLEAN;
 
 typedef signed __int32 INT32, *PINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
