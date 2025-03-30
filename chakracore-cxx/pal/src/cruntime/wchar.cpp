@@ -487,11 +487,11 @@ Notes :
     Windows behavior, we must return long's in the 32 bit range.
 --*/
 
-/* The use of LONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "long" is used instead of LONG, then a 64 bit
+/* The use of int32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "long" is used instead of int32_t, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
-LONG
+int32_t
 PAL_wcstol(
         const char16_t *nptr,
         char16_t **endptr,
@@ -560,9 +560,9 @@ PAL_wcstolExit:
     PAL_free(s_nptr);
     LOGEXIT("wcstol returning long %ld\n", res);
     PERF_EXIT(wcstol);
-    /* This explicit cast to LONG is used to silence any potential warnings
-    due to implicitly casting the native long res to LONG when returning. */
-    return (LONG)res;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+    due to implicitly casting the native long res to int32_t when returning. */
+    return (int32_t)res;
 }
 
 /*++

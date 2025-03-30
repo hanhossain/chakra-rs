@@ -19,7 +19,7 @@
 #pragma init_seg(".CRT$XCAD")
 
 #pragma warning(push)
-#pragma warning(disable:4838) // conversion from 'unsigned long' to 'LONG' requires a narrowing conversion
+#pragma warning(disable:4838) // conversion from 'unsigned long' to 'int32_t' requires a narrowing conversion
 #include "Microsoft-Scripting-Jscript9.InternalCounters.h"
 #pragma warning(pop)
 

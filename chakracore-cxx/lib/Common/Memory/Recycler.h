@@ -548,10 +548,10 @@ struct RecyclerCollectionStats
 };
 #define RECYCLER_STATS_INC_IF(cond, r, f) if (cond) { RECYCLER_STATS_INC(r, f); }
 #define RECYCLER_STATS_INC(r, f) ++r->collectionStats.f
-#define RECYCLER_STATS_INTERLOCKED_INC(r, f) { InterlockedIncrement((LONG *)&r->collectionStats.f); }
+#define RECYCLER_STATS_INTERLOCKED_INC(r, f) { InterlockedIncrement((int32_t *)&r->collectionStats.f); }
 #define RECYCLER_STATS_DEC(r, f) --r->collectionStats.f
 #define RECYCLER_STATS_ADD(r, f, v) r->collectionStats.f += (v)
-#define RECYCLER_STATS_INTERLOCKED_ADD(r, f, v) { InterlockedAdd((LONG *)&r->collectionStats.f, (LONG)(v)); }
+#define RECYCLER_STATS_INTERLOCKED_ADD(r, f, v) { InterlockedAdd((int32_t *)&r->collectionStats.f, (int32_t)(v)); }
 #define RECYCLER_STATS_SUB(r, f, v) r->collectionStats.f -= (v)
 #define RECYCLER_STATS_SET(r, f, v) r->collectionStats.f = v
 #else
@@ -1074,7 +1074,7 @@ private:
 
 #ifdef IDLE_DECOMMIT_ENABLED
     HANDLE concurrentIdleDecommitEvent;
-    LONG needIdleDecommitSignal;
+    int32_t needIdleDecommitSignal;
 #endif
 
 #if ENABLE_PARTIAL_GC

@@ -74,8 +74,8 @@ namespace CorUnix
     {   
         WaitType wtWaitType;
         WaitDomain wdWaitDomain;
-        LONG lObjCount;
-        LONG lSharedObjCount;
+        int32_t lObjCount;
+        int32_t lSharedObjCount;
         CPalThread * pthrOwner;        
         PWaitingThreadsListNode rgpWTLNodes[MAXIMUM_WAIT_OBJECTS];
         
@@ -122,8 +122,8 @@ namespace CorUnix
 
         THREAD_STATE          m_tsThreadState; 
         SharedID              m_shridWaitAwakened;
-        Volatile<LONG>        m_lLocalSynchLockCount;
-        Volatile<LONG>        m_lSharedSynchLockCount;
+        Volatile<int32_t>        m_lLocalSynchLockCount;
+        Volatile<int32_t>        m_lSharedSynchLockCount;
         LIST_ENTRY            m_leOwnedObjsList;
 
         ThreadNativeWaitData  m_tnwdNativeData;
@@ -131,7 +131,7 @@ namespace CorUnix
 
 #ifdef SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         static const int      PendingSignalingsArraySize = 10;
-        LONG                  m_lPendingSignalingCount;
+        int32_t                  m_lPendingSignalingCount;
         CPalThread *          m_rgpthrPendingSignalings[PendingSignalingsArraySize];
         LIST_ENTRY            m_lePendingSignalingsOverflowList;
 #endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING

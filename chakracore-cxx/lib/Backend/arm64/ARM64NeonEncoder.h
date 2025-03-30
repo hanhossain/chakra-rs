@@ -4792,7 +4792,7 @@ EmitNeonLdrStrOffsetCommon(
     NeonRegisterParam SrcDest,
     NEON_SIZE SrcDestSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset,
+    int32_t Offset,
     ULONG Opcode,
     ULONG OpcodeUnscaled
     )
@@ -4802,7 +4802,7 @@ EmitNeonLdrStrOffsetCommon(
     ULONG SizeBits = ((SrcDestSize & 3) << 30) | ((SrcDestSize >> 2) << 23);
 
     if (Opcode != 0) {
-        LONG EncodeOffset = Offset >> SrcDestSize;
+        int32_t EncodeOffset = Offset >> SrcDestSize;
         if ((EncodeOffset << SrcDestSize) == Offset && (EncodeOffset & 0xfff) == EncodeOffset) {
             return Emitter.EmitFourBytes(Opcode | SizeBits | ((EncodeOffset & 0xfff) << 10) | (Addr.RawRegister() << 5) | SrcDest.RawRegister());
         }
@@ -4822,7 +4822,7 @@ EmitNeonLdrOffset(
     NeonRegisterParam Dest,
     NEON_SIZE DestSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitNeonLdrStrOffsetCommon(Emitter, Dest, DestSize, Addr, Offset, 0x3d400000, 0x3c400000);
@@ -4835,7 +4835,7 @@ EmitNeonStrOffset(
     NeonRegisterParam Source,
     NEON_SIZE SourceSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitNeonLdrStrOffsetCommon(Emitter, Source, SourceSize, Addr, Offset, 0x3d000000, 0x3c000000);
@@ -4853,7 +4853,7 @@ EmitNeonLdpStpOffsetCommon(
     NeonRegisterParam SrcDest2,
     NEON_SIZE SrcDestSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset,
+    int32_t Offset,
     ULONG Opcode
     )
 {
@@ -4861,7 +4861,7 @@ EmitNeonLdpStpOffsetCommon(
 
     ULONG Opc = (SrcDestSize - 2);
 
-    LONG EncodeOffset = Offset >> SrcDestSize;
+    int32_t EncodeOffset = Offset >> SrcDestSize;
     if ((EncodeOffset << SrcDestSize) == Offset && EncodeOffset >= -0x40 && EncodeOffset <= 0x3f) {
         return Emitter.EmitFourBytes(Opcode | (Opc << 30) | ((EncodeOffset & 0x7f) << 15) | (SrcDest2.RawRegister() << 10) | (Addr.RawRegister() << 5) | SrcDest1.RawRegister());
     }
@@ -4877,7 +4877,7 @@ EmitNeonLdpOffset(
     NeonRegisterParam Dest2,
     NEON_SIZE DestSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitNeonLdpStpOffsetCommon(Emitter, Dest1, Dest2, DestSize, Addr, Offset, 0x2d400000);
@@ -4891,7 +4891,7 @@ EmitNeonStpOffset(
     NeonRegisterParam Source2,
     NEON_SIZE SourceSize,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitNeonLdpStpOffsetCommon(Emitter, Source1, Source2, SourceSize, Addr, Offset, 0x2d000000);
@@ -4906,7 +4906,7 @@ int
 EmitNeonLd1St1Common(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam SrcDest,
-    LONG Index,
+    int32_t Index,
     Arm64SimpleRegisterParam Addr,
     NEON_SIZE SrcDestSize,
     ULONG Opcode
@@ -4928,7 +4928,7 @@ int
 EmitNeonLd1(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam SrcDest,
-    LONG Index,
+    int32_t Index,
     Arm64SimpleRegisterParam Addr,
     NEON_SIZE SrcDestSize
     )
@@ -4941,7 +4941,7 @@ int
 EmitNeonSt1(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam SrcDest,
-    LONG Index,
+    int32_t Index,
     Arm64SimpleRegisterParam Addr,
     NEON_SIZE SrcDestSize
     )

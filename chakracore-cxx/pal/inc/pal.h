@@ -887,8 +887,8 @@ SetEndOfFile(
 DWORD
 SetFilePointer(
             HANDLE hFile,
-            LONG lDistanceToMove,
-            PLONG lpDistanceToMoveHigh,
+            int32_t lDistanceToMove,
+            int32_t * lpDistanceToMoveHigh,
             DWORD dwMoveMethod);
 
 BOOL
@@ -913,7 +913,7 @@ GetFileInformationByHandle(
          HANDLE hFile,
          BY_HANDLE_FILE_INFORMATION* lpFileInformation);
 
-LONG
+int32_t
 CompareFileTime(
          const FILETIME *lpFileTime1,
          const FILETIME *lpFileTime2);
@@ -1109,15 +1109,15 @@ GetComputerNameW(
 HANDLE
 CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          LONG lInitialCount,
-          LONG lMaximumCount,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
           LPCSTR lpName);
 
 HANDLE
 CreateSemaphoreExA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          LONG lInitialCount,
-          LONG lMaximumCount,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
           LPCSTR lpName,
           /*_Reserved_*/  DWORD dwFlags,
           DWORD dwDesiredAccess);
@@ -1125,15 +1125,15 @@ CreateSemaphoreExA(
 HANDLE
 CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          LONG lInitialCount,
-          LONG lMaximumCount,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
           LPCWSTR lpName);
 
 HANDLE
 CreateSemaphoreExW(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         LONG lInitialCount,
-         LONG lMaximumCount,
+         int32_t lInitialCount,
+         int32_t lMaximumCount,
          LPCWSTR lpName,
          /*_Reserved_*/  DWORD dwFlags,
          DWORD dwDesiredAccess);
@@ -1155,8 +1155,8 @@ OpenSemaphoreW(
 BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
-          LONG lReleaseCount,
-          LPLONG lpPreviousCount);
+          int32_t lReleaseCount,
+          int32_t * lpPreviousCount);
 
 HANDLE
 CreateEventA(
@@ -2936,8 +2936,8 @@ BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
 //
 typedef struct _CRITICAL_SECTION {
     PVOID DebugInfo;
-    LONG LockCount;
-    LONG RecursionCount;
+    int32_t LockCount;
+    int32_t RecursionCount;
     HANDLE OwningThread;
     HANDLE LockSemaphore;
     size_t SpinCount;
@@ -4236,7 +4236,7 @@ typedef struct _EXCEPTION_POINTERS {
 
 #ifdef FEATURE_PAL_SXS
 
-typedef LONG EXCEPTION_DISPOSITION;
+typedef int32_t EXCEPTION_DISPOSITION;
 
 enum {
     ExceptionContinueExecution,
@@ -4493,7 +4493,7 @@ QueryThreadCycleTime(
 
 #ifndef FEATURE_PAL_SXS
 
-typedef LONG (*PTOP_LEVEL_EXCEPTION_FILTER)(
+typedef int32_t (*PTOP_LEVEL_EXCEPTION_FILTER)(
                            struct _EXCEPTION_POINTERS *ExceptionInfo);
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 
@@ -4501,7 +4501,7 @@ LPTOP_LEVEL_EXCEPTION_FILTER
 SetUnhandledExceptionFilter(
                  LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
 
-LONG
+int32_t
 UnhandledExceptionFilter(
                  struct _EXCEPTION_POINTERS *ExceptionInfo);
 
@@ -4629,11 +4629,11 @@ The return value is the resulting incremented value.
 --*/
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedIncrement(
-      LONG volatile *lpAddend)
+      int32_t volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (LONG)1);
+    return __sync_add_and_fetch(lpAddend, (int32_t)1);
 }
 
 EXTERN_C
@@ -4675,11 +4675,11 @@ The return value is the resulting decremented value.
 --*/
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedDecrement(
-      LONG volatile *lpAddend)
+      int32_t volatile *lpAddend)
 {
-    return __sync_sub_and_fetch(lpAddend, (LONG)1);
+    return __sync_sub_and_fetch(lpAddend, (int32_t)1);
 }
 
 EXTERN_C
@@ -4734,10 +4734,10 @@ InterlockedExchange16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedExchange(
-      LONG volatile *Target,
-     LONG Value)
+      int32_t volatile *Target,
+     int32_t Value)
 {
     return __sync_swap(Target, Value);
 }
@@ -4805,11 +4805,11 @@ InterlockedCompareExchange16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedCompareExchange(
-      LONG volatile *Destination,
-     LONG Exchange,
-     LONG Comperand)
+      int32_t volatile *Destination,
+     int32_t Exchange,
+     int32_t Comperand)
 {
     return __sync_val_compare_and_swap(
         Destination, /* The pointer to a variable whose value is to be compared with. */
@@ -4819,11 +4819,11 @@ InterlockedCompareExchange(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedCompareExchangeAcquire(
-      LONG volatile *Destination,
-     LONG Exchange,
-     LONG Comperand)
+      int32_t volatile *Destination,
+     int32_t Exchange,
+     int32_t Comperand)
 {
     // TODO: implement the version with only the acquire semantics
     return __sync_val_compare_and_swap(
@@ -4834,11 +4834,11 @@ InterlockedCompareExchangeAcquire(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedCompareExchangeRelease(
-      LONG volatile *Destination,
-     LONG Exchange,
-     LONG Comperand)
+      int32_t volatile *Destination,
+     int32_t Exchange,
+     int32_t Comperand)
 {
     // TODO: implement the version with only the release semantics
     return __sync_val_compare_and_swap(
@@ -4901,20 +4901,20 @@ InterlockedExchangeAdd16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedExchangeAdd(
-      LONG volatile *Addend,
-     LONG Value)
+      int32_t volatile *Addend,
+     int32_t Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedAdd(
-      LONG volatile *Addend,
-     LONG Value)
+      int32_t volatile *Addend,
+     int32_t Value)
 {
     return InterlockedExchangeAdd(Addend, Value) + Value;
 }
@@ -4951,10 +4951,10 @@ InterlockedAnd16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedAnd(
-      LONG volatile *Destination,
-     LONG Value)
+      int32_t volatile *Destination,
+     int32_t Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
@@ -4991,10 +4991,10 @@ InterlockedOr16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedOr(
-      LONG volatile *Destination,
-     LONG Value)
+      int32_t volatile *Destination,
+     int32_t Value)
 {
     return __sync_fetch_and_or(Destination, Value);
 }
@@ -5031,10 +5031,10 @@ InterlockedXor16(
 
 EXTERN_C
 inline
-LONG
+int32_t
 InterlockedXor(
-      LONG volatile *Destination,
-     LONG Value)
+      int32_t volatile *Destination,
+     int32_t Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
@@ -5050,21 +5050,21 @@ InterlockedXor64(
 }
 
 #define BITS_IN_BYTE 8
-#define BITS_IN_LONG (sizeof(LONG) * BITS_IN_BYTE)
+#define BITS_IN_LONG (sizeof(int32_t) * BITS_IN_BYTE)
 
 EXTERN_C
 inline
 unsigned char
 InterlockedBitTestAndReset(
-      LONG volatile *Base,
-     LONG Bit)
+      int32_t volatile *Base,
+     int32_t Bit)
 {
     // The BitTestAndReset family of functions allow for arbitrary bit
     // indices- so a bit index can be greater than the number of bits in
-    // LONG. We need to account for this in all BitTest/BitTestAndSet
+    // int32_t. We need to account for this in all BitTest/BitTestAndSet
     // related functions.
-    volatile LONG* longToTest = Base + (Bit / BITS_IN_LONG);
-    LONG bitToTest  = Bit % BITS_IN_LONG;
+    volatile int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest  = Bit % BITS_IN_LONG;
     return (InterlockedAnd(longToTest, ~(1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
@@ -5072,11 +5072,11 @@ EXTERN_C
 inline
 unsigned char
 InterlockedBitTestAndSet(
-      LONG volatile *Base,
-     LONG Bit)
+      int32_t volatile *Base,
+     int32_t Bit)
 {
-    volatile LONG* longToTest = Base + (Bit / BITS_IN_LONG);
-    LONG bitToTest  = Bit % BITS_IN_LONG;
+    volatile int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest  = Bit % BITS_IN_LONG;
     return (InterlockedOr(longToTest, (1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
@@ -5084,11 +5084,11 @@ EXTERN_C
 inline
 unsigned char
 BitTest(
-     LONG *Base,
-     LONG Bit)
+     int32_t *Base,
+     int32_t Bit)
 {
-    LONG* longToTest = Base + (Bit / BITS_IN_LONG);
-    LONG bitToTest  = Bit % BITS_IN_LONG;
+    int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest  = Bit % BITS_IN_LONG;
     return ((*longToTest) & (1 << bitToTest)) != 0;
 }
 
@@ -5096,13 +5096,13 @@ EXTERN_C
 inline
 unsigned char
 BitTestAndSet(
-      LONG *Base,
-     LONG Bit)
+      int32_t *Base,
+     int32_t Bit)
 {
     // xplat-todo: Benchmark whether this is better than
     // using the inline assembler to generate a bts instruction
-    LONG* longToTest = Base + (Bit / BITS_IN_LONG);
-    LONG bitToTest  = Bit % BITS_IN_LONG;
+    int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest  = Bit % BITS_IN_LONG;
 
     // Save whether the bit was set or not. Then, unconditionally set the
     // bit. Return whether the bit was set or not.
@@ -5535,7 +5535,7 @@ int sprintf(char *, const char *, ...);
 int vsprintf(char *, const char *, va_list);
 int sscanf(const char *, const char *, ...);
 int atoi(const char *);
-LONG atol(const char *);
+int32_t atol(const char *);
 //long long int atoll(const char *) __THROW;
 ULONG strtoul(const char *, char **, int);
 double atof(const char *);
@@ -5591,7 +5591,7 @@ int PAL_swprintf(WCHAR *, const WCHAR *, ...);
 int PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
 int _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
 int PAL_swscanf(const WCHAR *, const WCHAR *, ...);
-LONG PAL_wcstol(const WCHAR *, WCHAR **, int);
+int32_t PAL_wcstol(const WCHAR *, WCHAR **, int);
 ULONG PAL_wcstoul(const WCHAR *, WCHAR **, int);
 LONGLONG PAL_wcstoll(const WCHAR *, WCHAR **, int);
 size_t PAL_wcsspn (const WCHAR *, const WCHAR *);
@@ -5822,10 +5822,10 @@ int PAL_fputc(int c, PAL_FILE *stream);
 int PAL_putchar(int c);
 int PAL_fprintf(PAL_FILE *, const char *, ...);
 int PAL_vfprintf(PAL_FILE *, const char *, va_list);
-int PAL_fseek(PAL_FILE *, LONG, int);
+int PAL_fseek(PAL_FILE *, int32_t, int);
 int PAL_fgetpos(PAL_FILE *, fpos_t *);
 int PAL_fsetpos(PAL_FILE *, const fpos_t *);
-LONG PAL_ftell(PAL_FILE *);
+int32_t PAL_ftell(PAL_FILE *);
 int PAL_feof(PAL_FILE *);
 int PAL_ferror(PAL_FILE *);
 PAL_FILE * PAL_fopen(const char *, const char *);

@@ -358,7 +358,7 @@ Volatile<LPVOID> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
 SHMRelease). Because we take the critical section while inside a
 SHMLock/SHMRelease pair, this is actually the number of locks held by a single
 thread. */
-static Volatile<LONG> lock_count PAL_GLOBAL;
+static Volatile<int32_t> lock_count PAL_GLOBAL;
 
 /* thread ID of thread holding the SHM lock. used for debugging purposes :
    SHMGet/SetInfo will verify that the calling thread holds the lock */
@@ -418,7 +418,7 @@ BOOL SHMInitialize(void)
         /* Initialize first segment's header */
         header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
 
-        InterlockedExchange((LONG *)&header->spinlock, 0);
+        InterlockedExchange((int32_t *)&header->spinlock, 0);
 
 #ifdef TRACK_SHMLOCK_OWNERSHIP
         header->dwHeadCanaries[0] = HeadSignature;

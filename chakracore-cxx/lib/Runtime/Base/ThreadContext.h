@@ -779,7 +779,7 @@ private:
     // Number of script context attached with probe manager.
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
-    LONG crefSContextForDiag;
+    int32_t crefSContextForDiag;
 
     Entropy entropy;
 

@@ -750,7 +750,7 @@ Return value:
 bool
 CSharedMemoryObject::DereferenceSharedData()
 {
-    LONG fSharedDataAlreadDereferenced;
+    int32_t fSharedDataAlreadDereferenced;
 
     ENTRY("CSharedMemoryObject::DereferenceSharedData(this = %p)\n", this);
 

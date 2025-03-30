@@ -705,7 +705,7 @@ Function :
 
     See MSDN for more details.
 --*/
-LONG
+int32_t
 PAL_ftell(PAL_FILE * f)
 {
     long lRetVal = 0;
@@ -725,9 +725,9 @@ PAL_ftell(PAL_FILE * f)
 
     LOGEXIT( "ftell returning %ld\n", lRetVal );
     PERF_EXIT(ftell);
-    /* This explicit cast to LONG is used to silence any potential warnings
-    due to implicitly casting the native long lRetVal to LONG when returning. */
-    return (LONG)lRetVal;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+    due to implicitly casting the native long lRetVal to int32_t when returning. */
+    return (int32_t)lRetVal;
 }
 
 /*++

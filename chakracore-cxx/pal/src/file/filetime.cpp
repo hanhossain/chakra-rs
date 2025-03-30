@@ -110,7 +110,7 @@ Function:
 
 See MSDN doc.
 --*/
-LONG
+int32_t
 CompareFileTime(
          const FILETIME *lpFileTime1,
          const FILETIME *lpFileTime2)
@@ -142,7 +142,7 @@ CompareFileTime(
         Ret = 0;
     }
     
-    LOGEXIT("CompareFileTime returns LONG %ld\n", Ret);
+    LOGEXIT("CompareFileTime returns int32_t %ld\n", Ret);
     PERF_EXIT(CompareFileTime);
     return Ret;
 }

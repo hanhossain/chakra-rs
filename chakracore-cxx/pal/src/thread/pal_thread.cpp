@@ -2065,7 +2065,7 @@ CPalThread::ReleaseThreadReference(
     void
     )
 {
-    LONG lRefCount = InterlockedDecrement(&m_lRefCount);
+    int32_t lRefCount = InterlockedDecrement(&m_lRefCount);
     _ASSERT_MSG(lRefCount >= 0, "Released a thread and ended with a negative refcount (%ld)\n", lRefCount);
     if (0 == lRefCount)
     {

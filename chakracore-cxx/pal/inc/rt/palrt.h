@@ -175,7 +175,7 @@ typedef enum tagEFaultRepRetVal
 #endif
 #define PAL_safe_offsetof(type, field) __builtin_offsetof(type, field)
 #else
-#define FIELD_OFFSET(type, field) (((LONG)(ptrdiff_t)&(((type *)64)->field)) - 64)
+#define FIELD_OFFSET(type, field) (((int32_t)(ptrdiff_t)&(((type *)64)->field)) - 64)
 #ifndef offsetof
 #define offsetof(s,m)          ((size_t)((ptrdiff_t)&(((s *)64)->m)) - 64)
 #endif
@@ -297,7 +297,7 @@ typedef CLSID *LPCLSID;
 typedef UINT_PTR WPARAM;
 typedef ptrdiff_t LRESULT;
 
-typedef LONG SCODE;
+typedef int32_t SCODE;
 
 
 typedef union _ULARGE_INTEGER {
@@ -346,7 +346,7 @@ typedef union _ULARGE_INTEGER {
 #define MAKE_HRESULT(sev,fac,code) \
     ((HRESULT) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((ULONG)(code))) )
 #define MAKE_SCODE(sev,fac,code) \
-    ((SCODE) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((LONG)(code))) )
+    ((SCODE) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((int32_t)(code))) )
 
 #define FACILITY_NT_BIT                 0x10000000
 #define HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
@@ -382,11 +382,11 @@ typedef double DATE;
 typedef union tagCY {
     struct {
 #if BIGENDIAN
-        LONG    Hi;
+        int32_t    Hi;
         ULONG   Lo;
 #else
         ULONG   Lo;
-        LONG    Hi;
+        int32_t    Hi;
 #endif
     } u;
     LONGLONG int64;
@@ -513,7 +513,7 @@ struct tagVARIANT
             union
                 {
                 LONGLONG llVal;
-                LONG lVal;
+                int32_t lVal;
                 BYTE bVal;
                 short iVal;
                 FLOAT fltVal;
@@ -528,7 +528,7 @@ struct tagVARIANT
                 SAFEARRAY *parray;
                 BYTE *pbVal;
                 short *piVal;
-                LONG *plVal;
+                int32_t *plVal;
                 LONGLONG *pllVal;
                 FLOAT *pfltVal;
                 DOUBLE *pdblVal;
@@ -1300,7 +1300,7 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 typedef struct tagSAFEARRAYBOUND
     {
     ULONG cElements;
-    LONG lLbound;
+    int32_t lLbound;
     } 	SAFEARRAYBOUND;
 
 typedef struct tagSAFEARRAYBOUND *LPSAFEARRAYBOUND;
@@ -1318,13 +1318,13 @@ typedef struct tagSAFEARRAY
 typedef SAFEARRAY *LPSAFEARRAY;
 
 
-STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, LONG lLbound, ULONG cElements);
+STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, int32_t lLbound, ULONG cElements);
 STDAPI_(UINT) SafeArrayGetDim(SAFEARRAY * psa);
-STDAPI SafeArrayGetElement(SAFEARRAY * psa, LONG * rgIndices, void * pv);
-STDAPI SafeArrayGetLBound(SAFEARRAY * psa, UINT nDim, LONG * plLbound);
-STDAPI SafeArrayGetUBound(SAFEARRAY * psa, UINT nDim, LONG * plUbound);
+STDAPI SafeArrayGetElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
+STDAPI SafeArrayGetLBound(SAFEARRAY * psa, UINT nDim, int32_t * plLbound);
+STDAPI SafeArrayGetUBound(SAFEARRAY * psa, UINT nDim, int32_t * plUbound);
 STDAPI SafeArrayGetVartype(SAFEARRAY * psa, VARTYPE * pvt);
-STDAPI SafeArrayPutElement(SAFEARRAY * psa, LONG * rgIndices, void * pv);
+STDAPI SafeArrayPutElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
 STDAPI SafeArrayDestroy(SAFEARRAY * psa);
 
 EXTERN_C void * _stdcall _lfind(const void *, const void *, unsigned int *, unsigned int,
@@ -1445,7 +1445,7 @@ typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_C
 #if defined(FEATURE_PAL_SXS)
 
 // #if !defined(__APPLE__)
-// typedef LONG (*PEXCEPTION_ROUTINE)(
+// typedef int32_t (*PEXCEPTION_ROUTINE)(
     // IN PEXCEPTION_POINTERS pExceptionPointers,
     // IN LPVOID lpvParam);
 
@@ -1564,7 +1564,7 @@ typedef struct _EXCEPTION_RECORD64 {
     ULONG64 ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
 
-typedef LONG (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
+typedef int32_t (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
      struct _EXCEPTION_POINTERS *ExceptionInfo
     );
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;

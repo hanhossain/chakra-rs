@@ -135,14 +135,14 @@ uint _trace_ring_next_id();
 // A buffer of size "T[count]", dynamically allocated (!useStatic) or
 // statically embedded (useStatic).
 //
-template <class T, LONG count, bool useStatic>
+template <class T, int32_t count, bool useStatic>
 struct _TraceRingBuffer
 {
     T* buf;
     _TraceRingBuffer() { buf = HeapNewArray(T, count); }
     ~_TraceRingBuffer() { HeapDeleteArray(count, buf); }
 };
-template <class T, LONG count>
+template <class T, int32_t count>
 struct _TraceRingBuffer<T, count, true>
 {
     T buf[count];
@@ -195,7 +195,7 @@ struct _TraceRingFrame
 //      ?? &s_ev.buf[i]
 //      dds/dqs [above address]
 //
-template <class Header, LONG COUNT,
+template <class Header, int32_t COUNT,
           uint STACK_FRAMES = 30,
           bool USE_STATIC_BUFFER = false,
           uint SKIP_TOP_FRAMES = 1>
@@ -203,7 +203,7 @@ class TraceRing:
     protected _TraceRingBuffer<_TraceRingFrame<Header, STACK_FRAMES>, COUNT, USE_STATIC_BUFFER>
 {
 protected:
-    LONG cur;
+    int32_t cur;
 
 public:
     TraceRing()
@@ -214,7 +214,7 @@ public:
     template <class HeaderFunc>
     void Capture(const HeaderFunc& writeHeader)
     {
-        LONG i = InterlockedIncrement(&cur);
+        int32_t i = InterlockedIncrement(&cur);
         if (i >= COUNT)
         {
             InterlockedCompareExchange(&cur, i % COUNT, i);

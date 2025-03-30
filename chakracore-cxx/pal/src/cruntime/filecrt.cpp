@@ -566,7 +566,7 @@ Return value:
 int
 PAL_fseek(
     PAL_FILE * pf,
-    LONG lOffset,
+    int32_t lOffset,
     int nWhence
     )
 {

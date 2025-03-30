@@ -104,7 +104,7 @@ namespace CorUnix
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
     typedef struct _NativeMapHolder
     {
-        Volatile<LONG> ref_count;
+        Volatile<int32_t> ref_count;
         LPVOID address;
         SIZE_T size;
         SIZE_T offset; /* for future use */

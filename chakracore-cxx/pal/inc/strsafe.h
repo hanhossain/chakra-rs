@@ -52,7 +52,7 @@ typedef char16_t WCHAR;
 #ifndef FEATURE_PAL
 #ifndef _HRESULT_DEFINED
 #define _HRESULT_DEFINED
-typedef LONG HRESULT;
+typedef int32_t HRESULT;
 #endif // !_HRESULT_DEFINED
 #endif // !FEATURE_PAL
 

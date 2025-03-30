@@ -66,7 +66,7 @@ namespace CorUnix
         SHMPTR shmObjImmutableData;
         SHMPTR shmObjSharedData;
 
-        LONG lProcessRefCount;
+        int32_t lProcessRefCount;
         DWORD dwNameLength;
 
         PalObjectTypeId eTypeId;
@@ -120,15 +120,15 @@ namespace CorUnix
 
         //
         // m_fSharedDataDereferenced will be TRUE if DereferenceSharedData
-        // has already been called. (N.B. -- this is a LONG instead of a bool
+        // has already been called. (N.B. -- this is a int32_t instead of a bool
         // because it is passed to InterlockedExchange). If the shared data blob
         // should be freed in the object's destructor (i.e., SHMfree should be
         // called on the appropriate SHMPTRs) DereferenceSharedData will
         // set m_fDeleteSharedData to TRUE.
         //
 
-        LONG m_fSharedDataDereferenced;
-        LONG m_fDeleteSharedData;
+        int32_t m_fSharedDataDereferenced;
+        int32_t m_fDeleteSharedData;
 
         PAL_ERROR
         AllocateSharedDataItems(

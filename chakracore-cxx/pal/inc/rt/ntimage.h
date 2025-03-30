@@ -80,7 +80,7 @@ typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
     unsigned short e_oemid;                     // OEM identifier (for e_oeminfo)
     unsigned short e_oeminfo;                   // OEM information; e_oemid specific
     unsigned short e_res2[10];                  // Reserved words
-    LONG   e_lfanew;                    // File address of new exe header
+    int32_t   e_lfanew;                    // File address of new exe header
   } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 
 typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
@@ -89,13 +89,13 @@ typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
     char   ne_rev;                      // Revision number
     unsigned short ne_enttab;                   // Offset of Entry Table
     unsigned short ne_cbenttab;                 // Number of bytes in Entry Table
-    LONG   ne_crc;                      // Checksum of whole file
+    int32_t   ne_crc;                      // Checksum of whole file
     unsigned short ne_flags;                    // Flag word
     unsigned short ne_autodata;                 // Automatic data segment number
     unsigned short ne_heap;                     // Initial heap allocation
     unsigned short ne_stack;                    // Initial stack allocation
-    LONG   ne_csip;                     // Initial CS:IP setting
-    LONG   ne_sssp;                     // Initial SS:SP setting
+    int32_t   ne_csip;                     // Initial CS:IP setting
+    int32_t   ne_sssp;                     // Initial SS:SP setting
     unsigned short ne_cseg;                     // Count of file segments
     unsigned short ne_cmod;                     // Entries in Module Reference Table
     unsigned short ne_cbnrestab;                // Size of non-resident name table
@@ -104,7 +104,7 @@ typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
     unsigned short ne_restab;                   // Offset of resident name table
     unsigned short ne_modtab;                   // Offset of Module Reference Table
     unsigned short ne_imptab;                   // Offset of Imported Names Table
-    LONG   ne_nrestab;                  // Offset of Non-resident Names Table
+    int32_t   ne_nrestab;                  // Offset of Non-resident Names Table
     unsigned short ne_cmovent;                  // Count of movable entries
     unsigned short ne_align;                    // Segment alignment shift count
     unsigned short ne_cres;                     // Count of resource segments

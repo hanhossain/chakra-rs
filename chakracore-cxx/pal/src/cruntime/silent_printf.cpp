@@ -205,7 +205,7 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = BufferPtr - Buffer;
+                    *(va_arg(ap, int32_t *)) = BufferPtr - Buffer;
                 }
             }
             else if (Type == PFF_TYPE_CHAR && (Flags & PFF_ZERO) != 0)
@@ -251,7 +251,7 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
 
                     TempInt = snprintf(BufferPtr, TempCount, TempBuff, trunc2);
@@ -490,7 +490,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = written;
+                    *(va_arg(ap, int32_t *)) = written;
                 }
             }
             /* types that sprintf can handle */
@@ -506,7 +506,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
 
                     TempInt = fprintf((FILE*)stream, TempBuff, trunc2);

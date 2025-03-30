@@ -854,7 +854,7 @@ public:
 
 class RefCounted
 {
-    volatile LONG refCount;
+    volatile int32_t refCount;
 
 protected:
     RefCounted()

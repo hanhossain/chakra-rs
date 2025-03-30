@@ -88,7 +88,7 @@ SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
 Volatile<INT> init_count PAL_GLOBAL = 0;
 Volatile<BOOL> shutdown_intent PAL_GLOBAL = 0;
-Volatile<LONG> g_chakraCoreInitialized PAL_GLOBAL = 0;
+Volatile<int32_t> g_chakraCoreInitialized PAL_GLOBAL = 0;
 static BOOL g_fThreadDataAvailable = FALSE;
 static pthread_mutex_t init_critsec_mutex = PTHREAD_MUTEX_INITIALIZER;
 

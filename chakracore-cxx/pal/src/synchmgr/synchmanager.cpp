@@ -120,7 +120,7 @@ namespace CorUnix
     IPalSynchronizationManager * g_pSynchronizationManager = NULL;
 
     CPalSynchronizationManager * CPalSynchronizationManager::s_pObjSynchMgr = NULL;
-    Volatile<LONG> CPalSynchronizationManager::s_lInitStatus PAL_GLOBAL = SynchMgrStatusIdle;
+    Volatile<int32_t> CPalSynchronizationManager::s_lInitStatus PAL_GLOBAL = SynchMgrStatusIdle;
     CRITICAL_SECTION CPalSynchronizationManager::s_csSynchProcessLock PAL_GLOBAL;
     CRITICAL_SECTION CPalSynchronizationManager::s_csMonitoredProcessesLock PAL_GLOBAL;
 
@@ -222,7 +222,7 @@ namespace CorUnix
                       "[current *pdwWaitState=%u]\n",
                       pdwWaitState, dwWaitState, *pdwWaitState);
 
-                dwWaitState = InterlockedCompareExchange((LONG *)pdwWaitState,
+                dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
                                                          dwWaitState,
                                                          TWS_ACTIVE);
 
@@ -297,8 +297,8 @@ namespace CorUnix
                    pdwWaitState, dwWaitState, *pdwWaitState);
 
             DWORD dwOldWaitState = InterlockedCompareExchange(
-                                        (LONG *)pdwWaitState,
-                                        TWS_ACTIVE, (LONG)dwWaitState);
+                                        (int32_t *)pdwWaitState,
+                                        TWS_ACTIVE, (int32_t)dwWaitState);
 
             switch (dwOldWaitState)
             {
@@ -713,17 +713,17 @@ namespace CorUnix
             // The TWS_EARLYDEATH wait-state will also prevent the thread from
             // successfully registering for a possible new wait in the same
             // time window.
-            LONG lTWState;
+            int32_t lTWState;
             DWORD * pdwWaitState;
 
             pdwWaitState = SharedIDToTypePointer(DWORD,
                 pthrTarget->synchronizationInfo.m_shridWaitAwakened);
 
-            lTWState = InterlockedExchange((LONG *)pdwWaitState,
+            lTWState = InterlockedExchange((int32_t *)pdwWaitState,
                                            TWS_EARLYDEATH);
 
-            if ( (((LONG)TWS_WAITING == lTWState) ||
-                  ((LONG)TWS_ALERTABLE == lTWState)) &&
+            if ( (((int32_t)TWS_WAITING == lTWState) ||
+                  ((int32_t)TWS_ALERTABLE == lTWState)) &&
                  (0 < pSynchInfo->m_twiWaitInfo.lObjCount) )
             {
                 // Unregister the wait
@@ -1300,9 +1300,9 @@ namespace CorUnix
         TRACE("APC %p with parameter %p added to APC queue\n",
              pfnAPC, uptrData);
 
-        dwWaitState = InterlockedCompareExchange((LONG *)pdwWaitState,
-                                                 (LONG)TWS_ACTIVE,
-                                                 (LONG)TWS_ALERTABLE);
+        dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
+                                                 (int32_t)TWS_ACTIVE,
+                                                 (int32_t)TWS_ALERTABLE);
 
         // Release thread lock
         pthrTarget->Unlock(pthrCurrent);
@@ -1486,13 +1486,13 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::Initialize()
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lInit;
+        int32_t lInit;
         CPalSynchronizationManager * pSynchManager = NULL;
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-                                           (LONG)SynchMgrStatusInitializing,
-                                           (LONG)SynchMgrStatusIdle);
-        if ((LONG)SynchMgrStatusIdle != lInit)
+                                           (int32_t)SynchMgrStatusInitializing,
+                                           (int32_t)SynchMgrStatusIdle);
+        if ((int32_t)SynchMgrStatusIdle != lInit)
         {
             ASSERT("Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
@@ -1522,12 +1522,12 @@ namespace CorUnix
         // Initialization was successful
         g_pSynchronizationManager =
             static_cast<IPalSynchronizationManager *>(pSynchManager);
-        s_lInitStatus = (LONG)SynchMgrStatusRunning;
+        s_lInitStatus = (int32_t)SynchMgrStatusRunning;
 
     I_exit:
         if (NO_ERROR != palErr)
         {
-            s_lInitStatus = (LONG)SynchMgrStatusError;
+            s_lInitStatus = (int32_t)SynchMgrStatusError;
             if (NULL != pSynchManager)
             {
                 pSynchManager->ShutdownProcessPipe();
@@ -1551,7 +1551,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::PrepareForShutdown()
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lInit;
+        int32_t lInit;
         CPalSynchronizationManager * pSynchManager = GetInstance();
         CPalThread * pthrCurrent = InternalGetCurrentThread();
         int iRet;
@@ -1568,9 +1568,9 @@ namespace CorUnix
 #endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-            (LONG)SynchMgrStatusShuttingDown, (LONG)SynchMgrStatusRunning);
+            (int32_t)SynchMgrStatusShuttingDown, (int32_t)SynchMgrStatusRunning);
 
-        if ((LONG)SynchMgrStatusRunning != lInit)
+        if ((int32_t)SynchMgrStatusRunning != lInit)
         {
             ASSERT("Unexpected initialization status found "
                    "in PrepareForShutdown [expected=%d current=%d]\n",
@@ -1865,14 +1865,14 @@ namespace CorUnix
     int CPalSynchronizationManager::ReadBytesFromProcessPipe(
         int iTimeout,
         BYTE * pRecvBuf,
-        LONG iBytes)
+        int32_t iBytes)
     {
 #if !HAVE_KQUEUE
         struct pollfd Poll;
 #endif // !HAVE_KQUEUE
         int iRet = -1;
         int iConsecutiveEintrs = 0;
-        LONG iBytesRead = 0;
+        int32_t iBytesRead = 0;
         BYTE * pPos = pRecvBuf;
 #if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
         struct kevent keChanges;
@@ -2172,7 +2172,7 @@ namespace CorUnix
         CPalThread * pthrTarget)
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lCount = pthrCurrent->synchronizationInfo.m_lPendingSignalingCount;
+        int32_t lCount = pthrCurrent->synchronizationInfo.m_lPendingSignalingCount;
 
         _ASSERTE(pthrTarget != pthrCurrent);
 
@@ -3082,12 +3082,12 @@ namespace CorUnix
     This method is called by the worker thread to execute one step of
     monitoring for all the process currently registered for monitoring
     --*/
-    LONG CPalSynchronizationManager::DoMonitorProcesses(
+    int32_t CPalSynchronizationManager::DoMonitorProcesses(
         CPalThread * pthrCurrent)
     {
         MonitoredProcessesListNode * pNode, * pPrev = NULL, * pNext;
-        LONG lInitialNodeCount;
-        LONG lRemovingCount = 0;
+        int32_t lInitialNodeCount;
+        int32_t lRemovingCount = 0;
         bool fLocalSynchLock = false;
         bool fSharedSynchLock = false;
         bool fMonitoredProcessesLock = false;
@@ -4011,9 +4011,9 @@ namespace CorUnix
 
         if (0 < m_lPendingSignalingCount)
         {
-            LONG lArrayPendingSignalingCount =
+            int32_t lArrayPendingSignalingCount =
                 min(PendingSignalingsArraySize, m_lPendingSignalingCount);
-            LONG lIdx = 0;
+            int32_t lIdx = 0;
             PAL_ERROR palTempErr;
 
             // Signal all the pending signalings from the array
@@ -4186,7 +4186,7 @@ namespace CorUnix
     {
         DWORD dwPrevState;
 
-        dwPrevState = InterlockedCompareExchange((LONG *)pWaitState,
+        dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
                                                  TWS_ACTIVE, TWS_ALERTABLE);
         if(TWS_ALERTABLE != dwPrevState)
         {
@@ -4195,7 +4195,7 @@ namespace CorUnix
                 return false;
             }
 
-            dwPrevState = InterlockedCompareExchange((LONG *)pWaitState,
+            dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
                                                      TWS_ACTIVE, TWS_WAITING);
             if(TWS_WAITING == dwPrevState)
             {

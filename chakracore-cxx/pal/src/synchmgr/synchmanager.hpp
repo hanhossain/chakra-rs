@@ -156,11 +156,11 @@ namespace CorUnix
         SharedID m_shridThis;
         ObjectDomain m_odObjectDomain; 
         PalObjectTypeId m_otiObjectTypeId;
-        LONG  m_lRefCount;
-        LONG  m_lSignalCount;
+        int32_t  m_lRefCount;
+        int32_t  m_lSignalCount;
 
         // Ownership data
-        LONG  m_lOwnershipCount;
+        int32_t  m_lOwnershipCount;
         DWORD m_dwOwnerPid;
         DWORD m_dwOwnerTid; // used only by remote processes
                             // (thread ids may be recycled)
@@ -195,12 +195,12 @@ namespace CorUnix
 #endif
         }
 
-        LONG AddRef() 
+        int32_t AddRef()
         { 
             return InterlockedIncrement(&m_lRefCount); 
         }
                  
-        LONG Release(CPalThread * pthrCurrent);
+        int32_t Release(CPalThread * pthrCurrent);
         
         bool CanWaiterWaitWithoutBlocking(
             CPalThread * pWaiterThread,
@@ -253,7 +253,7 @@ namespace CorUnix
 
         void Signal(
             CPalThread * pthrCurrent, 
-            LONG lSignalCount, 
+            int32_t lSignalCount,
             bool fWorkerThread);
 
         bool ReleaseFirstWaiter(
@@ -261,25 +261,25 @@ namespace CorUnix
             bool * pfDelegated,
             bool fWorkerThread);
 
-        LONG ReleaseAllLocalWaiters(
+        int32_t ReleaseAllLocalWaiters(
             CPalThread * pthrCurrent);
 
         WaitCompletionState IsRestOfWaitAllSatisfied(
             WaitingThreadsListNode * pwtlnNode);
 
         // Object signal count accessor methods
-        LONG GetSignalCount(void) 
+        int32_t GetSignalCount(void)
         {
             _ASSERTE(m_lSignalCount >= 0);
             return m_lSignalCount; 
         }
-        void SetSignalCount(LONG lSignalCount) 
+        void SetSignalCount(int32_t lSignalCount)
         { 
             _ASSERTE(m_lSignalCount >= 0);
             _ASSERTE(lSignalCount >= 0);
             m_lSignalCount = lSignalCount; 
         }
-        LONG DecrementSignalCount(void) 
+        int32_t DecrementSignalCount(void)
         {
             _ASSERTE(m_lSignalCount > 0);
             return --m_lSignalCount; 
@@ -313,11 +313,11 @@ namespace CorUnix
         }
 
         // Object ownership count accessor methods
-        LONG GetOwnershipCount(void) 
+        int32_t GetOwnershipCount(void)
         { 
             return m_lOwnershipCount; 
         }
-        void SetOwnershipCount(LONG lOwnershipCount) 
+        void SetOwnershipCount(int32_t lOwnershipCount)
         { 
             m_lOwnershipCount = lOwnershipCount;
         }
@@ -346,7 +346,7 @@ namespace CorUnix
         {
             m_lStatWaitCount++;
         }
-        LONG GetStatWaitCount(void)
+        int32_t GetStatWaitCount(void)
         {
             return m_lStatWaitCount;
         }
@@ -354,7 +354,7 @@ namespace CorUnix
         {
             m_lStatContentionCount++;
         }
-        LONG GetStatContentionCount(void)
+        int32_t GetStatContentionCount(void)
         {
             return m_lStatContentionCount;
         }
@@ -485,10 +485,10 @@ namespace CorUnix
         //
         // ISynchStateController methods
         //
-        virtual PAL_ERROR GetSignalCount(LONG *plSignalCount);
-        virtual PAL_ERROR SetSignalCount(LONG lNewCount);
-        virtual PAL_ERROR IncrementSignalCount(LONG lAmountToIncrement);
-        virtual PAL_ERROR DecrementSignalCount(LONG lAmountToDecrement);
+        virtual PAL_ERROR GetSignalCount(int32_t *plSignalCount);
+        virtual PAL_ERROR SetSignalCount(int32_t lNewCount);
+        virtual PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement);
+        virtual PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement);
         virtual PAL_ERROR SetOwner(CPalThread *pNewOwningThread);
         virtual PAL_ERROR DecrementOwnershipCount(void);
         virtual void ReleaseController(void);
@@ -533,7 +533,7 @@ namespace CorUnix
         typedef struct _MonitoredProcessesListNode
         {
             struct _MonitoredProcessesListNode * pNext;
-            LONG lRefCount;
+            int32_t lRefCount;
             CSynchData * psdSynchData;
             DWORD dwPid;
             DWORD dwExitCode;
@@ -557,7 +557,7 @@ namespace CorUnix
 
         // static members
         static CPalSynchronizationManager * s_pObjSynchMgr;        
-        static Volatile<LONG>               s_lInitStatus;
+        static Volatile<int32_t>               s_lInitStatus;
         static CRITICAL_SECTION             s_csSynchProcessLock;
         static CRITICAL_SECTION             s_csMonitoredProcessesLock;
         
@@ -573,7 +573,7 @@ namespace CorUnix
 #endif // HAVE_KQUEUE
 
         MonitoredProcessesListNode *    m_pmplnMonitoredProcesses;
-        LONG                            m_lMonitoredProcessesCount;
+        int32_t                            m_lMonitoredProcessesCount;
         MonitoredProcessesListNode *    m_pmplnExitedNodes;
 
         // caches
@@ -638,9 +638,9 @@ namespace CorUnix
 #endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             }
         }
-        static LONG ResetLocalSynchLock(CPalThread * pthrCurrent) 
+        static int32_t ResetLocalSynchLock(CPalThread * pthrCurrent)
         {
-            LONG lRet = pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
+            int32_t lRet = pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
 
             _ASSERTE(0 <= lRet);
             if (0 < lRet)
@@ -654,7 +654,7 @@ namespace CorUnix
             }            
             return lRet;
         }
-        static LONG GetLocalSynchLockCount(CPalThread * pthrCurrent) 
+        static int32_t GetLocalSynchLockCount(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             return pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
@@ -683,9 +683,9 @@ namespace CorUnix
                 SHMRelease();
             }                
         }
-        static LONG ResetSharedSynchLock(CPalThread * pthrCurrent) 
+        static int32_t ResetSharedSynchLock(CPalThread * pthrCurrent)
         {   
-            LONG lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
+            int32_t lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
 
             _ASSERTE(0 <= lRet);
             _ASSERTE(0 == lRet || 
@@ -697,7 +697,7 @@ namespace CorUnix
             }
             return lRet;
         }
-        static LONG GetSharedSynchLockCount(CPalThread * pthrCurrent) 
+        static int32_t GetSharedSynchLockCount(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             _ASSERTE(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount || 
@@ -948,7 +948,7 @@ namespace CorUnix
         // Non-static helper methods
         //
     private:
-        LONG DoMonitorProcesses(CPalThread * pthrCurrent);
+        int32_t DoMonitorProcesses(CPalThread * pthrCurrent);
 
         void DiscardMonitoredProcesses(CPalThread * pthrCurrent);
 
@@ -968,7 +968,7 @@ namespace CorUnix
         int ReadBytesFromProcessPipe(
             int iTimeout,
             BYTE * pRecvBuf,
-            LONG lBytes);
+            int32_t lBytes);
 
         bool CreateProcessPipe();
 

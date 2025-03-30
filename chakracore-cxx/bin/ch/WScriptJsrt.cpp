@@ -1264,7 +1264,7 @@ bool WScriptJsrt::Uninitialize()
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
     {
-        LONG count = (LONG)threadData->children.size();
+        int32_t count = (int32_t)threadData->children.size();
         std::vector<HANDLE> childrenHandles;
 
         //Clang does not support "for each" yet
@@ -1579,7 +1579,7 @@ JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCal
         {
             ChakraRTInterface::JsGetSharedArrayBufferContent(arguments[1], &threadData->sharedContent);
 
-            LONG count = (LONG)threadData->children.size();
+            int32_t count = (int32_t)threadData->children.size();
             threadData->hSemaphore = CreateSemaphore(NULL, 0, count, NULL);
             if (threadData->hSemaphore)
             {

@@ -2744,7 +2744,7 @@ double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
 
     Assert(pdecIn->scale >= 0 && pdecIn->scale < 29);
     __analysis_assume(pdecIn->scale >= 0 && pdecIn->scale < 29);
-    if ((LONG)pdecIn->Mid32 < 0)
+    if ((int32_t)pdecIn->Mid32 < 0)
     {
 
         dblRet = (cdbl_2to64 + (double)(LONGLONG)pdecIn->Lo64 +

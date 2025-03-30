@@ -307,7 +307,7 @@ nWhence = method used to determine the file_position indicator location relative
 Return value:
     0 on success, -1 on failure.
 --*/
-int PAL_fseek(PAL_FILE *pf, LONG lOffset, int nWhence);
+int PAL_fseek(PAL_FILE *pf, int32_t lOffset, int nWhence);
 
 #ifdef __cplusplus
 }

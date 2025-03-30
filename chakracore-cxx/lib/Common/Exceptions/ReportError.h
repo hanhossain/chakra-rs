@@ -143,7 +143,7 @@ inline void OutOfMemoryAllocationPolicy_unrecoverable_error(BYTE visibility)
 #ifndef DISABLE_SEH
 // RtlReportException is available on Vista and up, but we cannot use it for OOB release.
 // Use UnhandleExceptionFilter to let the default handler handles it.
-inline LONG FatalExceptionFilter(
+inline int32_t FatalExceptionFilter(
     __in LPEXCEPTION_POINTERS lpep, 
     __in void * addressToBlame = nullptr)
 {
@@ -152,7 +152,7 @@ inline LONG FatalExceptionFilter(
         lpep->ExceptionRecord->ExceptionAddress = addressToBlame;
     }
 
-    LONG rc = UnhandledExceptionFilter(lpep);
+    int32_t rc = UnhandledExceptionFilter(lpep);
 
     // re == EXCEPTION_EXECUTE_HANDLER means there is no debugger attached, let's terminate
     // the process. Otherwise give control to the debugger.

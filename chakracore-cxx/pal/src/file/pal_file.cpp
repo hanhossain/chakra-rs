@@ -50,10 +50,10 @@ int MaxWCharToAcpLengthFactor = 3;
 PAL_ERROR
 InternalSetFilePointerForUnixFd(
     int iUnixFd,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
     DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t * lpNewFilePointerLow
     );
 
 void
@@ -2024,7 +2024,7 @@ CorUnix::InternalWriteFile(
     IFileTransactionLock *pTransactionLock = NULL;
     int ifd;
 
-    LONG writeOffsetStartLow = 0, writeOffsetStartHigh = 0;
+    int32_t writeOffsetStartLow = 0, writeOffsetStartHigh = 0;
     int res;
 
     if (NULL != lpNumberOfBytesWritten)
@@ -2244,7 +2244,7 @@ CorUnix::InternalReadFile(
     IFileTransactionLock *pTransactionLock = NULL;
     int ifd;
     
-    LONG readOffsetStartLow = 0, readOffsetStartHigh = 0;
+    int32_t readOffsetStartLow = 0, readOffsetStartHigh = 0;
     int res;
 
     if (NULL != lpNumberOfBytesRead)
@@ -2677,10 +2677,10 @@ SetEndOfFile(
 PAL_ERROR
 InternalSetFilePointerForUnixFd(
     int iUnixFd,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
     DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t * lpNewFilePointerLow
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -2804,10 +2804,10 @@ PAL_ERROR
 CorUnix::InternalSetFilePointer(
     CPalThread *pThread,
     HANDLE hFile,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
     DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t * lpNewFilePointerLow
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -2879,13 +2879,13 @@ See MSDN doc.
 DWORD
 SetFilePointer(
             HANDLE hFile,
-            LONG lDistanceToMove,
-            PLONG lpDistanceToMoveHigh,
+            int32_t lDistanceToMove,
+            int32_t * lpDistanceToMoveHigh,
             DWORD dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
-    LONG lNewFilePointerLow = 0;
+    int32_t lNewFilePointerLow = 0;
 
     PERF_ENTRY(SetFilePointer);
     ENTRY("SetFilePointer(hFile=%p, lDistance=%d, lpDistanceHigh=%p, "
@@ -2950,12 +2950,12 @@ SetFilePointerEx(
            liDistanceToMove.QuadPart, lpNewFilePointer, 
            (lpNewFilePointer) ? (*lpNewFilePointer).QuadPart : 0, dwMoveMethod);
 
-    LONG lDistanceToMove;
-    lDistanceToMove = (LONG)liDistanceToMove.u.LowPart;
-    LONG lDistanceToMoveHigh;
+    int32_t lDistanceToMove;
+    lDistanceToMove = (int32_t)liDistanceToMove.u.LowPart;
+    int32_t lDistanceToMoveHigh;
     lDistanceToMoveHigh = liDistanceToMove.u.HighPart;
 
-    LONG lNewFilePointerLow = 0;
+    int32_t lNewFilePointerLow = 0;
 
     pThread = InternalGetCurrentThread();
 

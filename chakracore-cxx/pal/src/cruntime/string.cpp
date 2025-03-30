@@ -259,14 +259,14 @@ the return value is undefined.
 
 Parameters
 
-szNumber  Null-terminated string to convert to a LONG
+szNumber  Null-terminated string to convert to a int32_t
 --*/
 
-/* The use of LONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "long" is used instead of LONG, then a 64 bit
+/* The use of int32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "long" is used instead of int32_t, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
-LONG
+int32_t
 PAL_atol(const char *szNumber)
 {
     long lResult;
@@ -278,10 +278,10 @@ PAL_atol(const char *szNumber)
 
     lResult = atol(szNumber);
 
-    LOGEXIT("atol returning long %ld\n", (LONG)lResult);
+    LOGEXIT("atol returning long %ld\n", (int32_t)lResult);
     PERF_EXIT(atol);
-    /* This explicit cast to LONG is used to silence any potential warnings
-        due to implicitly casting the native long lResult to LONG when returning. */
-    return (LONG)lResult;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+        due to implicitly casting the native long lResult to int32_t when returning. */
+    return (int32_t)lResult;
 
 }

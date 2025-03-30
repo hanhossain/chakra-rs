@@ -591,7 +591,7 @@ CHAKRA_API JsDiagGetFunctionPosition(
                     ULONG columnNumber = functionBody->GetColumnNumber();
                     uint startOffset = functionBody->GetStatementStartOffset(0);
                     ULONG firstStatementLine;
-                    LONG firstStatementColumn;
+                    int32_t firstStatementColumn;
 
                     if (functionBody->GetLineCharOffsetFromStartChar(startOffset, &firstStatementLine, &firstStatementColumn))
                     {

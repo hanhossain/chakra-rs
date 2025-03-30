@@ -620,7 +620,7 @@ extern _PHNDLR __get_sigabrt(void);
  * Type from ntdef.h
  */
 
-typedef LONG NTSTATUS;
+typedef int32_t NTSTATUS;
 
 /*
  * Exception code used in _invalid_parameter

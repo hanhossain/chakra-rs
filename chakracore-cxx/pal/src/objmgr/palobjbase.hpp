@@ -91,7 +91,7 @@ namespace CorUnix
         
     protected:
 
-        LONG m_lRefCount;
+        int32_t m_lRefCount;
 
         void *m_pvImmutableData;
         void *m_pvLocalData;

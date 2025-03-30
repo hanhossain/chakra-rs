@@ -237,7 +237,7 @@ CPalObjectBase::AddReference(
     void
     )
 {
-    LONG lRefCount;
+    int32_t lRefCount;
 
     ENTRY("CPalObjectBase::AddReference(this = %p)\n", this);
 
@@ -265,7 +265,7 @@ CPalObjectBase::ReleaseReference(
     CPalThread *pthr
     )
 {
-    LONG lRefCount;
+    int32_t lRefCount;
 
     _ASSERTE(NULL != pthr);
 

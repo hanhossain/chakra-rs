@@ -1360,7 +1360,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = written;
+                    *(va_arg(ap, int32_t *)) = written;
                 }
             }
             else
@@ -1389,7 +1389,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
                     trunc1 = trunc2;
 
@@ -1736,7 +1736,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = BufferPtr - Buffer;
+                    *(va_arg(ap, int32_t *)) = BufferPtr - Buffer;
                 }
             }
             else if (Type == PFF_TYPE_CHAR && (Flags & PFF_ZERO) != 0)
@@ -1792,7 +1792,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short) trunc1;
                     trunc1 = trunc2;
 
@@ -2067,7 +2067,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = BufferPtr - Buffer;
+                    *(va_arg(ap, int32_t *)) = BufferPtr - Buffer;
                 }
             }
             else
@@ -2099,7 +2099,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
                     trunc1 = trunc2;
 
@@ -2417,7 +2417,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = written;
+                    *(va_arg(ap, int32_t *)) = written;
                 }
             }
             else if (Type == PFF_TYPE_CHAR && (Flags & PFF_ZERO) != 0)
@@ -2480,7 +2480,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
                     trunc1 = trunc2;
 

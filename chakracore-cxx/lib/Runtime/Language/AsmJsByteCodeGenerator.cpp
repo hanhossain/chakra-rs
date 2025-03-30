@@ -258,7 +258,7 @@ namespace Js
     {
         uint offset = mWriter.GetCurrentOffset();
         ULONG line = 0;
-        LONG col = 0;
+        int32_t col = 0;
         if (!mFunction->GetFuncBody()->GetLineCharOffset(offset, &line, &col))
         {
             line = 0;

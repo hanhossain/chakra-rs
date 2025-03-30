@@ -72,11 +72,11 @@ GetLastBitSet(DWORD *Index, UnitWord64 Mask)
 namespace {
 
 //ShiftValue is essentially log(sizeof(T))
-template <typename T> constexpr LONG BVUnitT_GetShiftValue();
+template <typename T> constexpr int32_t BVUnitT_GetShiftValue();
 
-template<> constexpr LONG BVUnitT_GetShiftValue<UnitWord32>() { return 5; }
+template<> constexpr int32_t BVUnitT_GetShiftValue<UnitWord32>() { return 5; }
 
-template<> constexpr LONG BVUnitT_GetShiftValue<UnitWord64>() { return 6; }
+template<> constexpr int32_t BVUnitT_GetShiftValue<UnitWord64>() { return 6; }
 
 }
 
@@ -233,7 +233,7 @@ public:
         AllOnesMask  = -1
     };
 
-    enum : LONG {
+    enum : int32_t {
         ShiftValue = BVUnitT_GetShiftValue<T>()
     };
 

@@ -82,7 +82,7 @@ namespace CorUnix
         DWORD dwProcessId;
         PROCESS_STATE ps;
         DWORD dwExitCode;
-        LONG lAttachCount;
+        int32_t lAttachCount;
         ProcessModules *pProcessModules;
     };
 

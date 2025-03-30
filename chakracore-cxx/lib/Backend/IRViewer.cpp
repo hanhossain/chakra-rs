@@ -483,7 +483,7 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
     LPCUTF8 sourceBegin = NULL;
     LPCUTF8 sourceEnd = NULL;
     ULONG line = 0;
-    LONG col = 0;
+    int32_t col = 0;
 
     Js::FunctionBody *fnBody = func->GetJnFunction()->GetFunctionBody();
     fnBody->GetStatementSourceInfo(statementIndex, &sourceBegin, &sourceEnd, &line, &col);

@@ -186,7 +186,7 @@ LPWSTR g_lpwstrCmdLine = NULL;
 LPWSTR g_lpwstrAppDir = NULL;
 
 // Thread ID of thread that has started the ExitProcess process
-Volatile<LONG> terminator PAL_GLOBAL = 0;
+Volatile<int32_t> terminator PAL_GLOBAL = 0;
 
 // Process and session ID of this process.
 DWORD gPID = (DWORD) -1;

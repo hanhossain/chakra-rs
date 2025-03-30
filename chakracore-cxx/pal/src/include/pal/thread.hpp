@@ -289,7 +289,7 @@ namespace CorUnix
         // the freeing of the enclosing thread object has completed.
         //
 
-        LONG m_lRefCount;
+        int32_t m_lRefCount;
 
         //
         // The IPalObject for this thread. The thread will release its reference

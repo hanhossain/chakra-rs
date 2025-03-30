@@ -143,7 +143,7 @@ namespace Js
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
         static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
-        static LONG WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
+        static int32_t WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };
 #endif

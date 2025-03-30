@@ -2636,8 +2636,8 @@ namespace Js
 
         // Find out an offset falls within the range. returns TRUE if found.
         BOOL GetBranchOffsetWithin(uint start, uint end, StatementAdjustmentRecord* record);
-        bool GetLineCharOffset(int byteCodeOffset, ULONG* line, LONG* charOffset, bool canAllocateLineCache = true);
-        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffset(int byteCodeOffset, ULONG* line, int32_t* charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache = true);
 
         // Given bytecode position, returns the start position of the statement and length of the statement.
         bool GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength);
@@ -3293,13 +3293,13 @@ namespace Js
 
 #ifdef IR_VIEWER
         void GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, LONG * col);
+            ULONG * line, int32_t * col);
         void GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, LONG * col);
+            ULONG * line, int32_t * col);
 #endif
 
 #if ENABLE_TTD
-        void GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, LONG* col);
+        void GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, int32_t* col);
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING

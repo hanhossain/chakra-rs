@@ -74,8 +74,8 @@ See MSDN doc.
 HANDLE
 CreateSemaphoreExA(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         LONG lInitialCount,
-         LONG lMaximumCount,
+         int32_t lInitialCount,
+         int32_t lMaximumCount,
          LPCSTR lpName,
          /*_Reserved_*/  DWORD dwFlags,
          DWORD dwDesiredAccess)
@@ -108,8 +108,8 @@ Parameters:
 HANDLE
 CreateSemaphoreA(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          LONG lInitialCount,
-          LONG lMaximumCount,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
           LPCSTR lpName)
 {
     HANDLE hSemaphore = NULL;
@@ -170,8 +170,8 @@ See MSDN doc.
 HANDLE
 CreateSemaphoreExW(
          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         LONG lInitialCount,
-         LONG lMaximumCount,
+         int32_t lInitialCount,
+         int32_t lMaximumCount,
          LPCWSTR lpName,
          /*_Reserved_*/  DWORD dwFlags,
          DWORD dwDesiredAccess)
@@ -201,8 +201,8 @@ Parameters:
 HANDLE
 CreateSemaphoreW(
           LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-          LONG lInitialCount,
-          LONG lMaximumCount,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
           LPCWSTR lpName)
 {
     HANDLE hSemaphore = NULL;
@@ -260,8 +260,8 @@ PAL_ERROR
 CorUnix::InternalCreateSemaphore(
     CPalThread *pthr,
     LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-    LONG lInitialCount,
-    LONG lMaximumCount,
+    int32_t lInitialCount,
+    int32_t lMaximumCount,
     LPCWSTR lpName,
     HANDLE *phSemaphore
     )
@@ -396,8 +396,8 @@ Parameters:
 BOOL
 ReleaseSemaphore(
           HANDLE hSemaphore,
-          LONG lReleaseCount,
-          LPLONG lpPreviousCount)
+          int32_t lReleaseCount,
+          int32_t * lpPreviousCount)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -440,15 +440,15 @@ PAL_ERROR
 CorUnix::InternalReleaseSemaphore(
     CPalThread *pthr,
     HANDLE hSemaphore,
-    LONG lReleaseCount,
-    LPLONG lpPreviousCount
+    int32_t lReleaseCount,
+    int32_t * lpPreviousCount
     )
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjSemaphore = NULL;
     ISynchStateController *pssc = NULL;
     SemaphoreImmutableData *pSemaphoreData;
-    LONG lOldCount;
+    int32_t lOldCount;
 
     _ASSERTE(NULL != pthr);
 

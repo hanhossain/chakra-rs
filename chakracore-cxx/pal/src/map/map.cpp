@@ -69,8 +69,8 @@ static DWORD MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
 static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address, SIZE_T size, 
                                      SIZE_T offset, long init_ref_count);
-static LONG NativeMapHolderAddRef(NativeMapHolder * thisPMH);
-static LONG NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
+static int32_t NativeMapHolderAddRef(NativeMapHolder * thisPMH);
+static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
 static PMAPPED_VIEW_LIST FindSharedMappingReplacement(CPalThread *pThread, dev_t deviceNum, ino_t inodeNum,
                                                       SIZE_T size, SIZE_T offset);
 #endif
@@ -2114,15 +2114,15 @@ static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address,
     return pThisMapHolder;
 }
 
-static LONG NativeMapHolderAddRef(NativeMapHolder * thisNMH)
+static int32_t NativeMapHolderAddRef(NativeMapHolder * thisNMH)
 {
-    LONG ret = InterlockedIncrement(&thisNMH->ref_count);
+    int32_t ret = InterlockedIncrement(&thisNMH->ref_count);
     return ret;
 }
 
-static LONG NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisNMH)
+static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisNMH)
 {
-    LONG ret = InterlockedDecrement(&thisNMH->ref_count);
+    int32_t ret = InterlockedDecrement(&thisNMH->ref_count);
     if (ret == 0)
     {
         if (-1 == munmap(thisNMH->address, thisNMH->size))

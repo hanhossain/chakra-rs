@@ -600,25 +600,25 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetSignalCount(
-            LONG *plSignalCount
+            int32_t *plSignalCount
             ) = 0;
 
         virtual
         PAL_ERROR
         SetSignalCount(
-            LONG lNewCount
+            int32_t lNewCount
             ) = 0;
 
         virtual
         PAL_ERROR
         IncrementSignalCount(
-            LONG lAmountToIncrement
+            int32_t lAmountToIncrement
             ) = 0;
 
         virtual
         PAL_ERROR
         DecrementSignalCount(
-            LONG lAmountToDecrement
+            int32_t lAmountToDecrement
             ) = 0;
 
         //

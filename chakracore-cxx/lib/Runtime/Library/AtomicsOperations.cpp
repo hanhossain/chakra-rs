@@ -17,8 +17,8 @@ template<> struct ConvertType<int8> { typedef char _t; };
 template<> struct ConvertType<uint8> { typedef char _t; };
 template<> struct ConvertType<int16> { typedef short _t; };
 template<> struct ConvertType<uint16> { typedef short _t; };
-template<> struct ConvertType<int32> { typedef LONG _t; };
-template<> struct ConvertType<uint32> { typedef LONG _t; };
+template<> struct ConvertType<int32> { typedef int32_t _t; };
+template<> struct ConvertType<uint32> { typedef int32_t _t; };
 template<> struct ConvertType<int64> { typedef LONGLONG _t; };
 
 #define MakeInterLockArgDef1(type) type value
@@ -29,7 +29,7 @@ template<> struct ConvertType<int64> { typedef LONGLONG _t; };
 template<typename T> T Interlocked##op##_t(T* target, argDef(T));\
 template<> char Interlocked##op##_t(char* target, argDef(char))   { return Interlocked##op##8 (target, argUse); }\
 template<> short Interlocked##op##_t(short* target, argDef(short)){ return Interlocked##op##16(target, argUse); }\
-template<> LONG Interlocked##op##_t(LONG* target, argDef(LONG))   { return Interlocked##op##32(target, argUse); }\
+template<> int32_t Interlocked##op##_t(int32_t* target, argDef(int32_t))   { return Interlocked##op##32(target, argUse); }\
 template<> LONGLONG Interlocked##op##_t(LONGLONG* target, argDef(LONGLONG)) { return Interlocked##op##64(target, argUse); }
 #define MakeInterlockTemplate(op, nArgs) _MakeInterlockTemplate(op, MakeInterLockArgDef##nArgs, MakeInterLockArgUse##nArgs)
 MakeInterlockTemplate(ExchangeAdd, 1)

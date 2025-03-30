@@ -6,7 +6,7 @@
 
 #include "DataStructures/ContinuousPageStack.h"
 
-typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
+typedef _Return_type_success_(return >= 0) int32_t NTSTATUS;
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 #define MAKE_HR(errnum) (MAKE_HRESULT(SEVERITY_ERROR, FACILITY_CONTROL, errnum))
 

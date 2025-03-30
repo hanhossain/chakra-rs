@@ -1173,7 +1173,7 @@ namespace Js
         {
             Js::JavascriptExceptionContext::StackFrame& currFrame = stackTrace->Item(i);
             ULONG lineNumber = 0;
-            LONG characterPosition = 0;
+            int32_t characterPosition = 0;
             if (currFrame.IsScriptFunction() && !currFrame.GetFunctionBody()->GetUtf8SourceInfo()->GetIsLibraryCode())
             {
                 currFrame.GetFunctionBody()->GetLineCharOffset(currFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
@@ -1577,7 +1577,7 @@ namespace Js
                 {
                     LPCWSTR pUrl = NULL;
                     ULONG lineNumber = 0;
-                    LONG characterPosition = 0;
+                    int32_t characterPosition = 0;
 
                     functionBody->GetLineCharOffset(currentFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
                     pUrl = functionBody->GetSourceName();
@@ -1656,7 +1656,7 @@ namespace Js
         return limit;
     }
 
-    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, ULONG lineNumber, LONG characterPosition)
+    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, ULONG lineNumber, int32_t characterPosition)
     {
         // format is equivalent to wprintf("\n   at %s (%s:%d:%d)", functionName, filename, lineNumber, characterPosition);
 

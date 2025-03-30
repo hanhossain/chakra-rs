@@ -614,7 +614,7 @@ void TryFinally(const TryFunc& tryFunc, const FinallyFunc& finallyFunc)
 
 namespace PlatformAgnostic
 {
-    __forceinline unsigned char _BitTestAndSet(LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _BitTestAndSet(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittestandset intrinic to bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -632,7 +632,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _BitTest(LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _BitTest(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittest intrinic to bt, and it's implemention also doesn't work for _BitPos >= 32
@@ -650,7 +650,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndSet(volatile LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _InterlockedBitTestAndSet(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -668,7 +668,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndReset(volatile LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _InterlockedBitTestAndReset(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock btr, and it's implemention also doesn't work for _BitPos >= 32

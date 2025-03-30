@@ -97,7 +97,7 @@ namespace CorUnix
             BOOL m_fSuspendedForShutdown; // TRUE once the thread is suspended during PAL cleanup
             int m_nBlockingPipe; // blocking pipe used for a process that was created suspended
 #ifdef _DEBUG
-            Volatile<LONG> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
+            Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
 #endif
 #if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
             CCLock m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
@@ -304,7 +304,7 @@ namespace CorUnix
             virtual ~CThreadSuspensionInfo();
 
 #ifdef _DEBUG
-            LONG
+            int32_t
             GetNumThreadsSuspendedByThisThread(
                 void
                 )

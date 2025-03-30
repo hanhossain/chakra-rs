@@ -59,7 +59,7 @@ namespace Js {
         uint32 offset = recordedException->GetByteCodeOffset();
         FunctionBody * functionBody = recordedException->GetFunctionBody();
         ULONG line;
-        LONG column;
+        int32_t column;
         if (functionBody->GetUtf8SourceInfo()->GetIsLibraryCode() ||
             !functionBody->GetLineCharOffset(offset, &line, &column)) {
             line = 0;

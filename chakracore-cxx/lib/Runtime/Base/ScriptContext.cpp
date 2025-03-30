@@ -6560,7 +6560,7 @@ ScriptContext::GetJitFuncRangeCache()
             ushort frameCount = walker.WalkUntil((ushort)maxFrameCount, [&](Js::JavascriptFunction* function, ushort frameIndex) -> bool
             {
                 ULONG lineNumber = 0;
-                LONG columnNumber = 0;
+                int32_t columnNumber = 0;
                 uint32_t methodIdOrNameId = 0;
                 uint8_t isFrameIndex = 0; // FALSE
                 const WCHAR* name = nullptr;

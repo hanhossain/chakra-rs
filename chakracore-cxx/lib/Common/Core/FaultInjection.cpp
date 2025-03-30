@@ -880,11 +880,11 @@ namespace Js
             }
             //C28725:    Use Watson instead of this SetUnhandledExceptionFilter.
 #pragma prefast(suppress: 28725)
-            SetUnhandledExceptionFilter([](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->LONG
+            SetUnhandledExceptionFilter([](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->int32_t
             {
                 return FaultInjectionExceptionFilter(ExceptionInfo);
             });
-            vectoredExceptionHandler = AddVectoredExceptionHandler(0, [](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->LONG
+            vectoredExceptionHandler = AddVectoredExceptionHandler(0, [](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->int32_t
             {
                 switch (ExceptionInfo->ExceptionRecord->ExceptionCode)
                 {
@@ -1428,7 +1428,7 @@ namespace Js
     }
 
     static volatile bool inExceptionHandler = false;
-    LONG WINAPI FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
+    int32_t WINAPI FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
     {
         if (inExceptionHandler)
         {

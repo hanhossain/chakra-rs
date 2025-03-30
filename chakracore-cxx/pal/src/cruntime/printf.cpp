@@ -184,7 +184,7 @@ PAL_printf(
       const char *format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(printf);
@@ -209,7 +209,7 @@ __attribute__((no_instrument_function))
 int
 PAL_fprintf(PAL_FILE *stream,const char *format,...)
 {
-    LONG Length = 0;
+    int32_t Length = 0;
     va_list ap;
 
     PERF_ENTRY(fprintf);
@@ -236,7 +236,7 @@ PAL_wprintf(
       const char16_t *format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wprintf);
@@ -265,7 +265,7 @@ PAL_vprintf(
       const char *format,
       va_list ap)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vprintf);
     ENTRY("PAL_vprintf (format=%p (%s))\n", format, format);
@@ -291,7 +291,7 @@ wsprintfA(
        LPCSTR format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wsprintfA);
@@ -319,7 +319,7 @@ wsprintfW(
        LPCWSTR format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wsprintfW);
@@ -349,7 +349,7 @@ _snprintf(
      const char *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(_snprintf);
@@ -380,7 +380,7 @@ _snwprintf(
      const char16_t *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(_snwprintf);
@@ -409,7 +409,7 @@ PAL_fwprintf(
      const char16_t *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(fwprintf);
@@ -1157,7 +1157,7 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = Buff - Buffer;
+                    *(va_arg(ap, int32_t *)) = Buff - Buffer;
                 }
             }
             /* types that sscanf can handle */
@@ -1328,7 +1328,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = Buff - Buffer;
+                    *(va_arg(ap, int32_t *)) = Buff - Buffer;
                 }
             }
             /* types that sscanf can handle */
@@ -1521,7 +1521,7 @@ PAL_sprintf(
           const char *format,
           ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(sprintf);
@@ -1550,7 +1550,7 @@ PAL_swprintf(
           const char16_t *format,
           ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(swprintf);
@@ -1606,7 +1606,7 @@ PAL_vsprintf(char *buffer,
          const char *format,
          va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vsprintf);
     ENTRY("PAL_vsprintf (buffer=%p, format=%p (%s), argptr=%p)\n",
@@ -1634,7 +1634,7 @@ _vsnprintf(char *buffer,
            const char *format,
            va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(_vsnprintf);
     ENTRY("_vsnprintf (buffer=%p, count=%d, format=%p (%s), argptr=%p)\n",
@@ -1662,7 +1662,7 @@ PAL_vswprintf(char16_t *buffer,
               const char16_t *format,
               va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vswprintf);
     ENTRY("PAL_vswprintf (buffer=%p, format=%p (%S), argptr=%p)\n",
@@ -1690,7 +1690,7 @@ _vsnwprintf(char16_t *buffer,
             const char16_t *format,
             va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(_vsnwprintf);
     ENTRY("_vsnwprintf (buffer=%p, count=%lu, format=%p (%S), argptr=%p)\n",

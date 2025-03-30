@@ -129,7 +129,6 @@ typedef long double LONG_DOUBLE;
 
 #endif // !PAL_STDCPP_COMPAT
 
-typedef int LONG;       // NOTE: diff from windows.h, for LP64 compat
 typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
 
 typedef __int64 LONGLONG;
@@ -158,8 +157,6 @@ typedef BYTE *LPBYTE;
 typedef const BYTE *LPCBYTE;
 typedef int *PINT;
 typedef int *LPINT;
-typedef LONG *LPLONG;
-typedef LPLONG PLONG;
 typedef DWORD *PDWORD;
 typedef DWORD *LPDWORD;
 typedef void *PVOID;
@@ -199,11 +196,11 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #endif
 
 #define HandleToULong( h ) ((ULONG)(size_t)(h) )
-#define HandleToLong( h )  ((LONG)(ptrdiff_t) (h) )
+#define HandleToLong( h )  ((int32_t)(ptrdiff_t) (h) )
 #define ULongToHandle( ul ) ((HANDLE)(size_t) (ul) )
 #define LongToHandle( h )   ((HANDLE)(ptrdiff_t) (h) )
 #define PtrToUlong( p ) ((ULONG)(size_t) (p) )
-#define PtrToLong( p )  ((LONG)(ptrdiff_t) (p) )
+#define PtrToLong( p )  ((int32_t)(ptrdiff_t) (p) )
 #define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
 #define PtrToUshort( p ) ((unsigned short)(size_t)(p) )
@@ -307,7 +304,7 @@ typedef TCHAR *LPTSTR, *PTSTR;
 typedef const TCHAR *LPCTSTR;
 
 #define MAKEWORD(a, b)      ((uint16_t)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
-#define MAKELONG(a, b)      ((LONG)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
+#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
 #define LOWORD(l)           ((uint16_t)((DWORD_PTR)(l) & 0xffff))
 #define HIWORD(l)           ((uint16_t)((DWORD_PTR)(l) >> 16))
 #define LOBYTE(w)           ((BYTE)((DWORD_PTR)(w) & 0xff))
@@ -327,26 +324,26 @@ typedef HANDLE HGLOBAL;
 typedef HANDLE HLOCAL;
 typedef HANDLE HRSRC;
 
-typedef LONG HRESULT;
-typedef LONG NTSTATUS;
+typedef int32_t HRESULT;
+typedef int32_t NTSTATUS;
 
 typedef union _LARGE_INTEGER {
     struct {
 #if BIGENDIAN
-        LONG HighPart;
+        int32_t HighPart;
         DWORD LowPart;
 #else
         DWORD LowPart;
-        LONG HighPart;
+        int32_t HighPart;
 #endif
     };
     struct {
 #if BIGENDIAN
-        LONG HighPart;
+        int32_t HighPart;
         DWORD LowPart;
 #else
         DWORD LowPart;
-        LONG HighPart;
+        int32_t HighPart;
 #endif
     } u;
     LONGLONG QuadPart;

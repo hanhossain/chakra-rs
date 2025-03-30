@@ -24,7 +24,7 @@ void WritePerfHint(PerfHints hint, Js::FunctionBody * functionBody, uint byteCod
     if ((int)item.level <= level)
     {
         ULONG lineNumber = functionBody->GetLineNumber();
-        LONG columnNumber = functionBody->GetColumnNumber();
+        int32_t columnNumber = functionBody->GetColumnNumber();
         if (byteCodeOffset != Js::Constants::NoByteCodeOffset)
         {
             functionBody->GetLineCharOffset(byteCodeOffset, &lineNumber, &columnNumber, false /*canAllocateLineCache*/);

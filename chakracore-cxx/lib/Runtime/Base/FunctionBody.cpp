@@ -3158,7 +3158,7 @@ namespace Js
     //
     // The function determine the line and column for a bytecode offset within the current script buffer.
     //
-    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode());
 
@@ -3189,7 +3189,7 @@ namespace Js
         return this->GetLineCharOffsetFromStartChar(startCharOfStatement, _line, _charOffset, canAllocateLineCache);
     }
 
-    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode() || this->IsJsBuiltInCode());
 
@@ -3249,7 +3249,7 @@ namespace Js
             // If we are at the beginning of the host code, adjust the offset based on the host provided offset
             if (this->GetHostSrcInfo()->dlnHost == line)
             {
-                *_charOffset += (LONG)this->GetHostStartColumn();
+                *_charOffset += (int32_t)this->GetHostStartColumn();
             }
         }
 
@@ -4573,7 +4573,7 @@ namespace Js
     void FunctionBody::PrintStatementSourceLineFromStartOffset(uint cchStartOffset)
     {
         ULONG line;
-        LONG col;
+        int32_t col;
 
         LPCUTF8 source = GetStartOfDocument(_u("FunctionBody::PrintStatementSourceLineFromStartOffset"));
         Utf8SourceInfo* sourceInfo = this->GetUtf8SourceInfo();
@@ -4676,7 +4676,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-                                                    ULONG * line, LONG * col)
+                                                    ULONG * line, int32_t * col)
     {
         //
         // get source info
@@ -4734,7 +4734,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-        ULONG * line, LONG * col)
+        ULONG * line, int32_t * col)
     {
         const size_t startOffset = GetStatementStartOffset(statementIndex);
 
@@ -4757,7 +4757,7 @@ namespace Js
 #endif /* IR_VIEWER */
 
 #if ENABLE_TTD
-    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, LONG* col)
+    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, int32_t* col)
     {
         GetLineCharOffsetFromStartChar(startOffset, line, col);
     }

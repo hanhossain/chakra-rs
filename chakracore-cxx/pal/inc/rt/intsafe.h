@@ -38,7 +38,7 @@ typedef __w64 unsigned long DWORD_PTR;
 typedef __w64 unsigned long SIZE_T;
 #endif
 typedef          int        INT;
-typedef          long       LONG;
+typedef          long       int32_t;
 typedef unsigned short      uint16_t;
 typedef unsigned int        UINT;
 typedef unsigned long       ULONG;
@@ -46,7 +46,7 @@ typedef unsigned long       DWORD;
 typedef unsigned __int64    ULONGLONG;
 
 
-typedef LONG HRESULT;
+typedef int32_t HRESULT;
 
 #ifndef SUCCEEDED
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
@@ -167,12 +167,12 @@ IntToUChar(
 }
 
 //
-// LONG -> unsigned char conversion
+// int32_t -> unsigned char conversion
 //
 __inline
 HRESULT
 LongToUChar(
-     LONG lOperand,
+     int32_t lOperand,
      unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -380,17 +380,17 @@ UIntToInt(
 }
 
 //
-// UINT -> LONG conversion
+// UINT -> int32_t conversion
 //
 __inline
 HRESULT
 UIntToLong(
      UINT Operand,
-     LONG* Result)
+     int32_t* Result)
 {
     if (Operand <= LONG_MAX)
     {
-        *Result = (LONG)Operand;
+        *Result = (int32_t)Operand;
         return S_OK;
     }
     else
@@ -533,17 +533,17 @@ ULongToUInt(
 }
 
 //
-// ULONG -> LONG conversion
+// ULONG -> int32_t conversion
 //
 __inline
 HRESULT
 ULongToLong(
      ULONG Operand,
-     LONG* Result)
+     int32_t* Result)
 {
     if (Operand <= LONG_MAX)
     {
-        *Result = (LONG)Operand;
+        *Result = (int32_t)Operand;
         return S_OK;
     }
     else
@@ -575,17 +575,17 @@ ULongLongToInt(
 }
 
 //
-// ULONGLONG -> LONG conversion
+// ULONGLONG -> int32_t conversion
 //
 __inline
 HRESULT
 ULongLongToLong(
      ULONGLONG Operand,
-     LONG* Result)
+     int32_t* Result)
 {
     if (Operand <= LONG_MAX)
     {
-        *Result = (LONG)Operand;
+        *Result = (int32_t)Operand;
         return S_OK;
     }
     else
@@ -897,7 +897,7 @@ __inline
 HRESULT
 UIntPtrToLong(
      UINT_PTR Operand,
-     LONG* Result)
+     int32_t* Result)
 {
 	return UIntToLong((UINT)Operand, Result);
 }
@@ -990,7 +990,7 @@ __inline
 HRESULT
 ULongPtrToLong(
      size_t Operand,
-     LONG* Result)
+     int32_t* Result)
 {
 	return ULongToLong((ULONG)Operand, Result);
 }

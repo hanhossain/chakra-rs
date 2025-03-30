@@ -39,7 +39,7 @@ extern "C"
    calls to CreateThread from succeeding once shutdown has started 
    [defined in process.c]
 */
-extern Volatile<LONG> terminator;
+extern Volatile<int32_t> terminator;
 
 // The process ID of this process, so we can avoid excessive calls to getpid().
 extern DWORD gPID;

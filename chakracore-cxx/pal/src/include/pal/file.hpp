@@ -142,10 +142,10 @@ namespace CorUnix
     InternalSetFilePointer(
         CPalThread *pThread,
         HANDLE hFile,
-        LONG lDistanceToMove,
-        PLONG lpDistanceToMoveHigh,
+        int32_t lDistanceToMove,
+        int32_t * lpDistanceToMoveHigh,
         DWORD dwMoveMethod,
-        PLONG lpNewFilePointerLow
+        int32_t * lpNewFilePointerLow
         );
 
     PAL_ERROR

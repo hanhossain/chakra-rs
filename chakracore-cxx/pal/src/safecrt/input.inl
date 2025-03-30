@@ -196,7 +196,7 @@ static int __check_float_string(size_t nFloatStrUsed,
 
 #define SCAN_SHORT     0         /* also for FLOAT */
 #define SCAN_LONG      1         /* also for DOUBLE */
-#define SCAN_L_DOUBLE  2         /* only for LONG DOUBLE */
+#define SCAN_L_DOUBLE  2         /* only for int32_t DOUBLE */
 
 #define SCAN_NEAR    0
 #define SCAN_FAR     1
@@ -292,7 +292,7 @@ static int __check_float_string(size_t nFloatStrUsed,
 
 
     char done_flag;                     /* general purpose loop monitor      */
-    char longone;                       /* 0 = short, 1 = LONG, 2 = L_DOUBLE */
+    char longone;                       /* 0 = short, 1 = int32_t, 2 = L_DOUBLE */
 #if _INTEGRAL_MAX_BITS >= 64   
     int integer64;                      /* 1 for 64-bit integer, 0 otherwise */
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */

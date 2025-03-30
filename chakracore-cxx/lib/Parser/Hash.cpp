@@ -263,7 +263,7 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
 
     IdentPtr * ppid = nullptr;
     IdentPtr pid;
-    LONG cb;
+    int32_t cb;
     int32 bucketCount;
 
 
