@@ -435,7 +435,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 #if PDATA_ENABLED
         if(pdataCount > 0)
         {
-            if (!this->codePageAllocators->AllocSecondary(segment, (ULONG_PTR) address, bytes, pdataCount, xdataSize, &xdata))
+            if (!this->codePageAllocators->AllocSecondary(segment, (size_t) address, bytes, pdataCount, xdataSize, &xdata))
             {
                 this->codePageAllocators->Release(address, pages, segment);
                 return nullptr;
@@ -578,7 +578,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     BVIndex index = GetFreeIndexForPage(page, bytes);
     if (index == BVInvalidIndex)
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
     char* address = page->address + Page::Alignment * index;
@@ -601,7 +601,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
             return false;
         }
 
-        if (!this->codePageAllocators->AllocSecondary(page->segment, (ULONG_PTR)address, bytes, pdataCount, xdataSize, &xdata))
+        if (!this->codePageAllocators->AllocSecondary(page->segment, (size_t)address, bytes, pdataCount, xdataSize, &xdata))
         {
             Adelete(this->auxiliaryAllocator, allocation);
             return true;
@@ -627,14 +627,14 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 
@@ -821,7 +821,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
     // Make sure that the section under interest or the whole page has not already been freed
     if (page->IsEmpty() || page->freeBitVector.TestAnyInRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 

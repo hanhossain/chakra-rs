@@ -136,7 +136,7 @@ namespace CorUnix
     {
         struct _ThreadApcInfoNode * pNext;
         PAPCFUNC pfnAPC;
-        ULONG_PTR pAPCData;        
+        size_t pAPCData;
     } ThreadApcInfoNode;
 
     class CPalSynchronizationManager; // fwd declaration
@@ -867,7 +867,7 @@ namespace CorUnix
             CPalThread * pthrCurrent,
             CPalThread *pthrTarget,
             PAPCFUNC pfnAPC,
-            ULONG_PTR uptrData);
+            size_t uptrData);
 
         virtual bool AreAPCsPending(CPalThread * pthrTarget);
 

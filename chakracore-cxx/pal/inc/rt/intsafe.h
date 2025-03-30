@@ -29,13 +29,11 @@ extern "C" {
 #ifdef  _WIN64
 typedef unsigned __int64    size_t;
 typedef unsigned __int64    UINT_PTR;
-typedef unsigned __int64    ULONG_PTR;
 typedef unsigned __int64    DWORD_PTR;
 typedef unsigned __int64    SIZE_T;
 #else
 typedef __w64 unsigned int  size_t;
 typedef __w64 unsigned int  UINT_PTR;
-typedef __w64 unsigned long ULONG_PTR;
 typedef __w64 unsigned long DWORD_PTR;
 typedef __w64 unsigned long SIZE_T;
 #endif
@@ -665,7 +663,7 @@ ULongLongToULong(
 
 //
 // UINT_PTR -> ULONG conversion
-// ULONG_PTR -> ULONG conversion
+// size_t -> ULONG conversion
 //
 #ifdef _WIN64
 
@@ -687,7 +685,7 @@ UIntPtrToULong(
 __inline
 HRESULT
 ULongPtrToULong(
-     ULONG_PTR Operand,
+     size_t Operand,
      ULONG* pResult)
 {
     *pResult = (ULONG)Operand;
@@ -719,7 +717,7 @@ ULongLongToUInt(
 
 //
 // UINT_PTR -> UINT conversion
-// ULONG_PTR -> UINT conversion
+// size_t -> UINT conversion
 //
 #ifdef _WIN64
 
@@ -741,7 +739,7 @@ UIntPtrToUInt(
 __inline
 HRESULT
 ULongPtrToUInt(
-     ULONG_PTR Operand,
+     size_t Operand,
      UINT* pResult)
 {
     *pResult = (UINT)Operand;
@@ -913,7 +911,7 @@ UIntPtrToLong(
 
 
 //
-// * -> ULONG_PTR conversion (ULONG_PTR is ULONG on Win32, ULONGLONG on Win64)
+// * -> size_t conversion (size_t is ULONG on Win32, ULONGLONG on Win64)
 //
 #ifdef _WIN64
 #define CharToULongPtr          CharToULongLong
@@ -933,7 +931,7 @@ __inline
 HRESULT
 IntToULongPtr(
      INT iOperand,
-     ULONG_PTR* pulResult)
+     size_t* pulResult)
 {
 	return IntToULong(iOperand, (ULONG*)pulResult);
 }
@@ -949,7 +947,7 @@ __inline
 HRESULT
 ULongLongToULongPtr(
      ULONGLONG ullOperand,
-     ULONG_PTR* pulResult)
+     size_t* pulResult)
 {
 #ifdef _WIN64
 	*pulResult = ullOperand;
@@ -961,7 +959,7 @@ ULongLongToULongPtr(
 
 
 //
-// ULONG_PTR -> * conversion (ULONG_PTR is ULONG on Win32, ULONGLONG on Win64)
+// size_t -> * conversion (size_t is ULONG on Win32, ULONGLONG on Win64)
 //
 #ifdef _WIN64
 #define ULongPtrToUShort        ULongLongToUShort
@@ -975,7 +973,7 @@ ULongLongToULongPtr(
 __inline
 HRESULT
 ULongPtrToUShort(
-     ULONG_PTR ulOperand,
+     size_t ulOperand,
      USHORT* pusResult)
 {
 	return ULongToUShort((ULONG)ulOperand, pusResult);
@@ -984,7 +982,7 @@ ULongPtrToUShort(
 __inline
 HRESULT
 ULongPtrToInt(
-     ULONG_PTR ulOperand,
+     size_t ulOperand,
      INT* piResult)
 {
 	return ULongToInt((ULONG)ulOperand, piResult);
@@ -993,7 +991,7 @@ ULongPtrToInt(
 __inline
 HRESULT
 ULongPtrToLong(
-     ULONG_PTR Operand,
+     size_t Operand,
      LONG* Result)
 {
 	return ULongToLong((ULONG)Operand, Result);
@@ -1030,7 +1028,7 @@ ULongPtrToLong(
 #define SizeTToLongPtr          UIntPtrToLongPtr
 
 //
-// * -> SIZE_T conversion (SIZE_T is always ULONG_PTR)
+// * -> SIZE_T conversion (SIZE_T is always size_t)
 //
 #define CharToSIZET             CharToULongPtr
 #define SignedCharToSIZET       SignedCharToULongPtr
@@ -1043,7 +1041,7 @@ ULongPtrToLong(
 #define ULongLongToSIZET        ULongLongToULongPtr
 
 //
-// SIZE_T -> * conversion (SIZE_T is always ULONG_PTR)
+// SIZE_T -> * conversion (SIZE_T is always size_t)
 //
 #define SIZETToUShort           ULongPtrToUShort
 #define SIZETToUInt             ULongPtrToUInt
@@ -1057,7 +1055,7 @@ ULongPtrToLong(
 #define SIZETToLongPtr          ULongPtrToLongPtr
 
 //
-// * -> DWORD_PTR conversion (DWORD_PTR is always ULONG_PTR)
+// * -> DWORD_PTR conversion (DWORD_PTR is always size_t)
 //
 #define CharToDWordPtr             CharToULongPtr
 #define SignedCharToDWordPtr       SignedCharToULongPtr
@@ -1070,7 +1068,7 @@ ULongPtrToLong(
 #define LongPtrToDWordPtr          LongPtrToULongPtr
 
 //
-// DWORD_PTR -> * conversion (DWORD_PTR is always ULONG_PTR)
+// DWORD_PTR -> * conversion (DWORD_PTR is always size_t)
 //
 #define DWordPtrToUShort           ULongPtrToUShort
 #define DWordPtrToUInt             ULongPtrToUInt
@@ -1159,7 +1157,7 @@ ULongAdd(
 }
 
 //
-// ULONG_PTR addition
+// size_t addition
 //
 #ifdef _WIN64
 #define ULongPtrAdd     ULongLongAdd
@@ -1167,9 +1165,9 @@ ULongAdd(
 __inline
 HRESULT
 ULongPtrAdd(
-     ULONG_PTR ulAugend,
-     ULONG_PTR ulAddend,
-     ULONG_PTR* pulResult)
+     size_t ulAugend,
+     size_t ulAddend,
+     size_t* pulResult)
 {
 	return ULongAdd((ULONG)ulAugend, (ULONG)ulAddend, (ULONG*)pulResult);
 }
@@ -1312,7 +1310,7 @@ ULongSub(
 }
 
 //
-// ULONG_PTR subtraction
+// size_t subtraction
 //
 #ifdef _WIN64
 #define ULongPtrSub ULongLongSub
@@ -1320,9 +1318,9 @@ ULongSub(
 __inline
 HRESULT
 ULongPtrSub(
-     ULONG_PTR ulMinuend,
-     ULONG_PTR ulSubtrahend,
-     ULONG_PTR* pulResult)
+     size_t ulMinuend,
+     size_t ulSubtrahend,
+     size_t* pulResult)
 {
 	return ULongSub((ULONG)ulMinuend, (ULONG)ulSubtrahend, (ULONG*)pulResult);
 }
@@ -1454,15 +1452,15 @@ ULongMult(
 }
 
 //
-// ULONG_PTR multiplication
+// size_t multiplication
 //
 #ifndef _WIN64
 __inline
 HRESULT
 ULongPtrMult(
-     ULONG_PTR ulMultiplicand,
-     ULONG_PTR ulMultiplier,
-     ULONG_PTR* pulResult)
+     size_t ulMultiplicand,
+     size_t ulMultiplier,
+     size_t* pulResult)
 {
 	return ULongMult((ULONG)ulMultiplicand, (ULONG)ulMultiplier, (ULONG*)pulResult);
 }

@@ -296,7 +296,7 @@ public:
         }
     }
 
-    bool AllocSecondary(void* segment, ULONG_PTR functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+    bool AllocSecondary(void* segment, size_t functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
     {
         Assert(this->cs.IsLocked());
         Assert(functionSize_t <= MAXUINT32);

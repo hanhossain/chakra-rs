@@ -406,8 +406,8 @@ inline __int64 _abs64(__int64 n)
     return n < 0 ? -n : n;
 }
 
-int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
-bool IsAddressOnStack(ULONG_PTR address);
+int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
+bool IsAddressOnStack(size_t address);
 
 errno_t rand_s(unsigned int* randomValue);
 

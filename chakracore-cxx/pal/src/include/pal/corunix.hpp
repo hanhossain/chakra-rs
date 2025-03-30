@@ -1111,7 +1111,7 @@ namespace CorUnix
             CPalThread *pThread,
             CPalThread *pTargetThread,
             PAPCFUNC pfnAPC,
-            ULONG_PTR dwData
+            size_t dwData
             ) = 0;
 
         virtual

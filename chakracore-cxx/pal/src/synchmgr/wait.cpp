@@ -223,7 +223,7 @@ DWORD
 QueueUserAPC(
     PAPCFUNC pfnAPC,
     HANDLE hThread,
-    ULONG_PTR dwData)
+    size_t dwData)
 {
     CPalThread * pCurrentThread = NULL;
     CPalThread * pTargetThread = NULL;

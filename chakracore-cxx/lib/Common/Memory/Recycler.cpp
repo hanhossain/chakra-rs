@@ -1508,8 +1508,8 @@ void Recycler::TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBl
 
 static void* GetStackBase()
 {
-    ULONG_PTR highLimit = 0;
-    ULONG_PTR lowLimit = 0;
+    size_t highLimit = 0;
+    size_t lowLimit = 0;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     return (void*) highLimit;
 }
@@ -1982,7 +1982,7 @@ Recycler::TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks)
         while (currentAddress < endAddress)
         {
             void * written;
-            ULONG_PTR count = 1;
+            size_t count = 1;
             if (::GetWriteWatch(writeWatchFlags, currentPageStart, AutoSystemInfo::PageSize, &written, &count, &pageSize) != 0 || count == 1)
             {
                 char * currentEnd = min(currentPageStart + pageSize, endAddress);

@@ -2433,7 +2433,7 @@ int CorUnix::CThreadMachExceptionHandlers::GetIndexOfHandler(exception_mask_t bm
 
 #ifdef __APPLE__
 #define EXPECTED_ALIGNMENT 16 * 1024
-static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_PTR *lowLimit)
+static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *lowLimit)
 {
     size_t stack = pthread_get_stacksize_np(thread);
 
@@ -2452,7 +2452,7 @@ static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_
 #endif
     }
 
-    *highLimit = (ULONG_PTR)pthread_get_stackaddr_np(thread);
+    *highLimit = (size_t)pthread_get_stackaddr_np(thread);
     stack = *highLimit - stack;
 
     *lowLimit = ((stack + (EXPECTED_ALIGNMENT - 1)) & ~(EXPECTED_ALIGNMENT - 1));
@@ -2461,11 +2461,11 @@ static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_
 #endif
 
 #ifndef __IOS__
-static THREAD_LOCAL ULONG_PTR s_cachedHighLimit = 0;
-static THREAD_LOCAL ULONG_PTR s_cachedLowLimit = 0;
+static THREAD_LOCAL size_t s_cachedHighLimit = 0;
+static THREAD_LOCAL size_t s_cachedLowLimit = 0;
 #endif
 
-void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
+void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
 {
 #ifndef __IOS__
     if (s_cachedLowLimit)
@@ -2502,8 +2502,8 @@ void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
 
     pthread_attr_destroy(&attr);
 
-    *lowLimit = (ULONG_PTR) stackend;
-    *highLimit = (ULONG_PTR) stackbase;
+    *lowLimit = (size_t) stackend;
+    *highLimit = (size_t) stackbase;
 #endif
 
 #ifndef __IOS__
@@ -2514,17 +2514,17 @@ void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
 
 #ifndef _ARM64_
 
-bool IsAddressOnStack(ULONG_PTR address)
+bool IsAddressOnStack(size_t address)
 {
     // Assumption: Stack always grows, never shrinks and the high limit is stable
     // Assumption: pthread_getattr_np is slow, so we need to cache the current stack
     // bounds to speed up checking if a given address is on the stack
     // The semantics of IsAddressOnStack is that we care if a given address is
     // in the range of the current stack pointer
-    ULONG_PTR lowLimit, highLimit;
+    size_t lowLimit, highLimit;
     GetCurrentThreadStackLimits(&lowLimit, &highLimit);
 
-    ULONG_PTR currentStackPtr = GetCurrentSP();
+    size_t currentStackPtr = GetCurrentSP();
 
     if (currentStackPtr <= address && address < highLimit)
     {

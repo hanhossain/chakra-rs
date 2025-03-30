@@ -607,7 +607,7 @@ public:
         PULONG Target
         )
     {
-        ULONG_PTR Delta = ULONG_PTR(Target) - ULONG_PTR(Emitter.GetEmitAreaBase());
+        size_t Delta = size_t(Target) - size_t(Emitter.GetEmitAreaBase());
         Assert(INT32(Delta) == Delta);
         SetTarget(INT32(Delta));
         Resolve(Emitter);

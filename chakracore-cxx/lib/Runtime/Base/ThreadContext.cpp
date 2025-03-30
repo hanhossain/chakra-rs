@@ -1525,7 +1525,7 @@ ThreadContext::IsOnStack(void const *ptr)
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
 #else
-    return ::IsAddressOnStack((ULONG_PTR) ptr);
+    return ::IsAddressOnStack((size_t) ptr);
 #endif
 }
 

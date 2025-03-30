@@ -242,7 +242,7 @@ JITOutput::RecordUnwindInfo(size_t offset, const BYTE *unwindInfo, size_t size, 
     BYTE *xdataFinal = xdataAddr + offset;
 
     Assert(xdataFinal);
-    Assert(((ULONG_PTR)xdataFinal & 0x3) == 0); // 4 byte aligned
+    Assert(((size_t)xdataFinal & 0x3) == 0); // 4 byte aligned
     memcpy_s(xdataFinal, size, unwindInfo, size);
 
     return (size_t)xdataFinal;

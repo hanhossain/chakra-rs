@@ -10,7 +10,7 @@ void
 RaiseException( DWORD dwExceptionCode,
                 DWORD dwExceptionFlags,
                 DWORD nNumberOfArguments,
-                const ULONG_PTR *lpArguments)
+                const size_t *lpArguments)
 {
     if (dwExceptionCode == DBG_TERMINATE_PROCESS || dwExceptionFlags & EXCEPTION_NONCONTINUABLE)
     {

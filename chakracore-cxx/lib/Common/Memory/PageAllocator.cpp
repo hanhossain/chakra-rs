@@ -133,7 +133,7 @@ SegmentBase<T>::Initialize(DWORD allocFlags, bool excludeGuardPages)
         return false;
     }
 
-    Assert( ((ULONG_PTR)this->address % (64 * 1024)) == 0 );
+    Assert( ((size_t)this->address % (64 * 1024)) == 0 );
 
     originalAddress = this->address;
     bool committed = (allocFlags & MEM_COMMIT) != 0;
@@ -2639,7 +2639,7 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
         || ((uint)(((char *)address) - segment->GetAddress()) > (segment->GetPageCount() - pageCount) * AutoSystemInfo::PageSize))
     {
         // OOPJIT TODO: don't bring down the whole JIT process
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return FALSE;
     }
 
@@ -2661,7 +2661,7 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
         || memBasicInfo.RegionSize < pageCount * AutoSystemInfo::PageSize
         || desiredOldProtectFlag != memBasicInfo.Protect)
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return FALSE;
     }
 
@@ -2682,7 +2682,7 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
     BOOL retVal = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, dwVirtualProtectFlags, &oldProtect);
     if (retVal == FALSE)
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
     }
     else
     {
@@ -2710,7 +2710,7 @@ HeapPageAllocator<T>::TrackDecommittedPages(void * address, uint pageCount, __in
 }
 
 template<typename T>
-bool HeapPageAllocator<T>::AllocSecondary(void* segmentParam, ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+bool HeapPageAllocator<T>::AllocSecondary(void* segmentParam, size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
 {
     SegmentBase<T> * segment = (SegmentBase<T> *)segmentParam;
     Assert(segment->GetSecondaryAllocator());

@@ -194,7 +194,7 @@ typedef signed __int64 LONG64;
 typedef __int64 INT_PTR, *PINT_PTR;
 typedef unsigned __int64 UINT_PTR, *PUINT_PTR;
 typedef __int64 LONG_PTR, *PLONG_PTR;
-typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;
+typedef unsigned __int64 *PULONG_PTR;
 typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 
 /* maximum signed 64 bit value */
@@ -206,20 +206,20 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define SIZE_MAX _UI64_MAX
 #endif
 
-#define HandleToULong( h ) ((ULONG)(ULONG_PTR)(h) )
+#define HandleToULong( h ) ((ULONG)(size_t)(h) )
 #define HandleToLong( h )  ((LONG)(LONG_PTR) (h) )
-#define ULongToHandle( ul ) ((HANDLE)(ULONG_PTR) (ul) )
+#define ULongToHandle( ul ) ((HANDLE)(size_t) (ul) )
 #define LongToHandle( h )   ((HANDLE)(LONG_PTR) (h) )
-#define PtrToUlong( p ) ((ULONG)(ULONG_PTR) (p) )
+#define PtrToUlong( p ) ((ULONG)(size_t) (p) )
 #define PtrToLong( p )  ((LONG)(LONG_PTR) (p) )
 #define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
-#define PtrToUshort( p ) ((unsigned short)(ULONG_PTR)(p) )
+#define PtrToUshort( p ) ((unsigned short)(size_t)(p) )
 #define PtrToShort( p )  ((short)(LONG_PTR)(p) )
 #define IntToPtr( i )    ((void *)(INT_PTR)((int)(i)))
 #define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)(ui)))
 #define LongToPtr( l )   ((void *)(LONG_PTR)((long)(l)))
-#define ULongToPtr( ul ) ((void *)(ULONG_PTR)((unsigned long)(ul)))
+#define ULongToPtr( ul ) ((void *)(size_t)((unsigned long)(ul)))
 #define ShortToPtr( s )  ((void *)(INT_PTR)((short)(s)))
 #define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)(s)))
 
@@ -228,7 +228,7 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define UlongToPtr(ul) ULongToPtr(ul)
 #define UintToPtr(ui)  UIntToPtr(ui)
 
-typedef ULONG_PTR SIZE_T, *PSIZE_T;
+typedef size_t SIZE_T, *PSIZE_T;
 typedef LONG_PTR SSIZE_T, *PSSIZE_T;
 
 #ifndef SIZE_T_MAX
@@ -245,10 +245,8 @@ typedef LONG_PTR SSIZE_T, *PSSIZE_T;
 
 #ifndef PAL_STDCPP_COMPAT
 #if defined(__APPLE__) || defined(__LINUX__)
-typedef unsigned long size_t;
 typedef long ptrdiff_t;
 #else
-typedef ULONG_PTR size_t;
 typedef LONG_PTR ptrdiff_t;
 #endif
 #endif // !PAL_STDCPP_COMPAT

@@ -1228,7 +1228,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::QueueUserAPC(CPalThread * pthrCurrent,
         CPalThread * pthrTarget,
         PAPCFUNC pfnAPC,
-        ULONG_PTR uptrData)
+        size_t uptrData)
     {
         PAL_ERROR palErr = NO_ERROR;
         ThreadApcInfoNode * ptainNode = NULL;

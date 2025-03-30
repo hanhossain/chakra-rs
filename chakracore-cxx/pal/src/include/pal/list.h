@@ -132,7 +132,7 @@ typedef struct _LIST_ENTRY {
 
 #define CONTAINING_RECORD(address, type, field) ((type *)( \
                                                   (PCHAR)(address) - \
-                                                  (ULONG_PTR)(&((type *)0)->field)))
+                                                  (size_t)(&((type *)0)->field)))
 
 #ifdef __cplusplus
 }

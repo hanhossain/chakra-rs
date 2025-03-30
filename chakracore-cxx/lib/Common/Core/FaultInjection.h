@@ -87,7 +87,7 @@ namespace Js
         uint baselineFrameCount;
         char16 *baselineStack[MAX_FRAME_COUNT];
         UINT_PTR baselineAddresses[MAX_FRAME_COUNT];
-        ULONG_PTR* stackHashOfAllInjectionPoints;
+        size_t* stackHashOfAllInjectionPoints;
         UINT stackHashOfAllInjectionPointsSize;
 
     public:

@@ -29,7 +29,7 @@ bool XDataAllocator::Initialize(void* segmentStart, void* segmentEnd)
     return true;
 }
 
-bool XDataAllocator::Alloc(ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+bool XDataAllocator::Alloc(size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
 {
     XDataAllocation* xdata = static_cast<XDataAllocation*>(allocation);
     Assert(pdataCount > 0);

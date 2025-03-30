@@ -1564,7 +1564,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
     {
         PULONG relocAddress = PULONG(reloc->m_consumerOffset);
         PULONG targetAddress = PULONG(reloc->m_relocInstr->AsLabelInstr()->GetPC());
-        ULONG_PTR immediate;
+        size_t immediate;
 
         switch (reloc->m_relocType)
         {
@@ -1576,7 +1576,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
 
         case RelocTypeLabelAdr:
             Assert(!reloc->m_relocInstr->isInlineeEntryInstr);
-            immediate = ULONG_PTR(targetAddress) - ULONG_PTR(relocAddress);
+            immediate = size_t(targetAddress) - size_t(relocAddress);
             Assert(IS_CONST_INT21(immediate));
             *relocAddress = (*relocAddress & ~(3 << 29)) | ULONG((immediate & 3) << 29);
             *relocAddress = (*relocAddress & ~(0x7ffff << 5)) | ULONG(((immediate >> 2) & 0x7ffff) << 5);
@@ -1586,7 +1586,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
         {
             // read the shift from the encoded instruction.
             uint32 shift = ((*relocAddress & (0x3 << 21)) >> 21) * 16;
-            uintptr_t fullvalue = ULONG_PTR(targetAddress) - ULONG_PTR(m_encoder->m_encodeBuffer) + ULONG_PTR(codeBufferAddress);
+            uintptr_t fullvalue = size_t(targetAddress) - size_t(m_encoder->m_encodeBuffer) + size_t(codeBufferAddress);
             immediate = (fullvalue >> shift) & 0xffff;
 
             // replace the immediate value in the encoded instruction.
@@ -1595,7 +1595,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
         }
 
         case RelocTypeLabel:
-            *(ULONG_PTR*)relocAddress = ULONG_PTR(targetAddress) - ULONG_PTR(m_encoder->m_encodeBuffer) + ULONG_PTR(codeBufferAddress);
+            *(size_t*)relocAddress = size_t(targetAddress) - size_t(m_encoder->m_encodeBuffer) + size_t(codeBufferAddress);
             break;
 
         default:

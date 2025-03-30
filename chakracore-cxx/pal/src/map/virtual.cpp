@@ -1823,7 +1823,7 @@ VirtualFreeEnclosing_(
 #ifdef DEBUG
     _ASSERTE(dwSize + dwAlignmentSize == beforeRegionSize + dwSize + afterRegionSize);
 
-    SIZE_T alignmentDiff = ((ULONG_PTR)lpRegionStartAddress % dwAlignmentSize);
+    SIZE_T alignmentDiff = ((size_t)lpRegionStartAddress % dwAlignmentSize);
     size_t beforeRegionSize2 = dwAlignmentSize - alignmentDiff;
     _ASSERTE(beforeRegionSize == beforeRegionSize2);
 #endif
@@ -1945,7 +1945,7 @@ VirtualAlloc(
             flAllocationType &= ~MEM_RESERVE;
         }
 
-        SIZE_T diff = ((ULONG_PTR)address % KB64);
+        SIZE_T diff = ((size_t)address % KB64);
         if (diff != 0)
         {
             // Free the previously allocated address as it's not 64K aligned.
@@ -1960,7 +1960,7 @@ VirtualAlloc(
                 return nullptr;
             }
 
-            diff = ((ULONG_PTR)address % KB64);
+            diff = ((size_t)address % KB64);
             char * addr64 = address + (KB64 - diff);
 
             // Free the regions enclosing the 64K aligned region we intend to use.

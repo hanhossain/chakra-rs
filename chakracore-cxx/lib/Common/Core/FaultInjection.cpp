@@ -416,7 +416,7 @@ namespace Js
         FaultInjectionCookie = 0;
         baselineFrameCount = 0;
         stackHashOfAllInjectionPointsSize = 256;
-        stackHashOfAllInjectionPoints = (ULONG_PTR*)malloc(stackHashOfAllInjectionPointsSize*sizeof(ULONG_PTR));
+        stackHashOfAllInjectionPoints = (size_t*)malloc(stackHashOfAllInjectionPointsSize*sizeof(size_t));
         faultInjectionTypes = nullptr;
         symInitialized = false;
 
@@ -1077,8 +1077,8 @@ namespace Js
             if (countOfInjectionPoints > stackHashOfAllInjectionPointsSize)
             {
                 stackHashOfAllInjectionPointsSize += 1024;
-                auto extended = (ULONG_PTR*)realloc(stackHashOfAllInjectionPoints,
-                    stackHashOfAllInjectionPointsSize*sizeof(ULONG_PTR));
+                auto extended = (size_t*)realloc(stackHashOfAllInjectionPoints,
+                    stackHashOfAllInjectionPointsSize*sizeof(size_t));
                 AssertMsg(extended, "OOM in FaultInjection Infra");
                 stackHashOfAllInjectionPoints = extended;
             }

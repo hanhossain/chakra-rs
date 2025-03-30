@@ -112,9 +112,9 @@ private:
 #if ENABLE_CONCURRENT_GC
 #ifdef RECYCLER_WRITE_WATCH
     static UINT GetWriteWatchHelper(Recycler * recycler, DWORD writeWatchFlags, void* baseAddress, size_t regionSize,
-        void** addresses, ULONG_PTR* count, LPDWORD granularity);
+        void** addresses, size_t* count, LPDWORD granularity);
     static UINT GetWriteWatchHelperOnOOM(DWORD writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
-        _Out_writes_(*count) void** addresses, _Inout_ ULONG_PTR* count, LPDWORD granularity);
+        _Out_writes_(*count) void** addresses, _Inout_ size_t* count, LPDWORD granularity);
 #endif
 #endif
 

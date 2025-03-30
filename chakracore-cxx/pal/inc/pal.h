@@ -1475,13 +1475,13 @@ DWORD
 ResumeThread(
           HANDLE hThread);
 
-typedef void (*PAPCFUNC)(ULONG_PTR dwParam);
+typedef void (*PAPCFUNC)(size_t dwParam);
 
 DWORD
 QueueUserAPC(
           PAPCFUNC pfnAPC,
           HANDLE hThread,
-          ULONG_PTR dwData);
+          size_t dwData);
 
 #ifdef _X86_
 
@@ -2940,7 +2940,7 @@ typedef struct _CRITICAL_SECTION {
     LONG RecursionCount;
     HANDLE OwningThread;
     HANDLE LockSemaphore;
-    ULONG_PTR SpinCount;
+    size_t SpinCount;
 
     BOOL bInternal;
     volatile DWORD dwInitState;
@@ -4226,7 +4226,7 @@ typedef struct _EXCEPTION_RECORD {
     struct _EXCEPTION_RECORD *ExceptionRecord;
     PVOID ExceptionAddress;
     DWORD NumberParameters;
-    ULONG_PTR ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
+    size_t ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD, *PEXCEPTION_RECORD;
 
 typedef struct _EXCEPTION_POINTERS {
@@ -4460,7 +4460,7 @@ RaiseException(
             DWORD dwExceptionCode,
             DWORD dwExceptionFlags,
             DWORD nNumberOfArguments,
-            const ULONG_PTR *lpArguments);
+            const size_t *lpArguments);
 
 #ifdef FEATURE_PAL_SXS
 __attribute__((noreturn))
@@ -6171,7 +6171,7 @@ public:
 #define _O_TEXT     0x4000
 #define _O_BINARY   0x8000
 
-ULONG_PTR GetCurrentSP();
+size_t GetCurrentSP();
 
 // xplat-todo: implement me
 #define IsProcessorFeaturePresent(x) false

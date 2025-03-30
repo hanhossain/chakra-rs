@@ -51,7 +51,7 @@ public:
 
     bool Initialize(void* segmentStart, void* segmentEnd);
     void Delete();
-    bool Alloc(ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
+    bool Alloc(size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
     void Release(const SecondaryAllocation& address);
     bool CanAllocate();
     static DWORD GetAllocSize(ushort pdataCount, ushort xdataSize)

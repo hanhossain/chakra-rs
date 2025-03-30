@@ -57,8 +57,8 @@ X64WriteBarrierCardTableManager::OnThreadInit()
 
     // ToDo (SaAgarwa) __readgsqword is not on ARM64?
     // xplat-todo: Replace this on Windows too with GetCurrentThreadStackBounds
-    ULONG_PTR stackBase = 0;
-    ULONG_PTR stackEnd = 0;
+    size_t stackBase = 0;
+    size_t stackEnd = 0;
     ::GetCurrentThreadStackLimits(&stackEnd, &stackBase);
 
 #ifdef X64_WB_DIAG

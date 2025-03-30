@@ -630,11 +630,11 @@ public:
 
     TaggedPointer() : ptr(NULL) {};
 private:
-    T * GetPointerValue() const { return reinterpret_cast<T*>(reinterpret_cast<ULONG_PTR>(ptr) & ~3); }
+    T * GetPointerValue() const { return reinterpret_cast<T*>(reinterpret_cast<size_t>(ptr) & ~3); }
     T * SetPointerValue(T* inPtr)
     {
-        AssertMsg((reinterpret_cast<ULONG_PTR>(inPtr) & 3) == 0, "Invalid pointer value, 2 least significant bits must be zero");
-        ptr = reinterpret_cast<T*>((reinterpret_cast<ULONG_PTR>(inPtr) | 3));
+        AssertMsg((reinterpret_cast<size_t>(inPtr) & 3) == 0, "Invalid pointer value, 2 least significant bits must be zero");
+        ptr = reinterpret_cast<T*>((reinterpret_cast<size_t>(inPtr) | 3));
         return ptr;
     }
 

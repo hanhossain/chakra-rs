@@ -333,7 +333,7 @@ bool InterpreterThunkEmitter::NewThunkBlock()
     auto block = this->thunkBlocks.PrependNode(allocator, buffer, count);
 #if PDATA_ENABLED
     void* pdataTable;
-    PDataManager::RegisterPdata((PRUNTIME_FUNCTION)pdataStart, (ULONG_PTR)buffer, (ULONG_PTR)epilogEnd, &pdataTable);
+    PDataManager::RegisterPdata((PRUNTIME_FUNCTION)pdataStart, (size_t)buffer, (size_t)epilogEnd, &pdataTable);
     block->SetPdata(pdataTable);
 #else
     Unused(block);
@@ -377,7 +377,7 @@ bool InterpreterThunkEmitter::NewOOPJITThunkBlock()
     auto block = this->thunkBlocks.PrependNode(allocator, buffer, thunkOutput.thunkCount);
 #if PDATA_ENABLED
     void* pdataTable;
-    PDataManager::RegisterPdata((PRUNTIME_FUNCTION)thunkOutput.pdataTableStart, (ULONG_PTR)thunkOutput.mappedBaseAddr, (ULONG_PTR)thunkOutput.epilogEndAddr, &pdataTable);
+    PDataManager::RegisterPdata((PRUNTIME_FUNCTION)thunkOutput.pdataTableStart, (size_t)thunkOutput.mappedBaseAddr, (size_t)thunkOutput.epilogEndAddr, &pdataTable);
     block->SetPdata(pdataTable);
 #else
     Unused(block);

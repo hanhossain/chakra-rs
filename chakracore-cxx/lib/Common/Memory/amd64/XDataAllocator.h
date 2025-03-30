@@ -61,11 +61,11 @@ public:
 
     bool Initialize(void* segmentStart, void* segmentEnd);
     void Delete();
-    bool Alloc(ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
+    bool Alloc(size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
     void Release(const SecondaryAllocation& address);
     bool CanAllocate();
 
-    static void Register(XDataAllocation * xdataInfo, ULONG_PTR functionStart, DWORD functionSize);
+    static void Register(XDataAllocation * xdataInfo, size_t functionStart, DWORD functionSize);
     static void Unregister(XDataAllocation * xdataInfo);
 
 // -------- Private helpers ---------/

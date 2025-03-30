@@ -131,7 +131,7 @@ Others are set to zero.
 
 --*/
 
-int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
+int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
 
 void
 GetSystemInfo(
@@ -176,7 +176,7 @@ GetSystemInfo(
 
 // TODO: (BSD) is it a good idea to take maxOf(GetCurrentThreadStackLimits, USRSTACKXX) ?
 #ifdef __APPLE__ // defined(USRSTACK64) || defined(USRSTACK)
-ULONG_PTR lowl, highl;
+size_t lowl, highl;
 GetCurrentThreadStackLimits(&lowl, &highl);
 #ifndef PAL_MAX
 #define PAL_MAX(a, b) ((a > b) ? (a) : (b))

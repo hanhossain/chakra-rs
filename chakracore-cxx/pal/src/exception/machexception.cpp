@@ -820,33 +820,33 @@ HijackFaultingThread(
 #endif
 
     // Put the context on the stack
-    FramePointer = (void **)((ULONG_PTR)FramePointer - sizeof(CONTEXT));
+    FramePointer = (void **)((size_t)FramePointer - sizeof(CONTEXT));
     // Make sure it's aligned - CONTEXT has 16-byte alignment
-    FramePointer = (void **)((ULONG_PTR)FramePointer - ((ULONG_PTR)FramePointer % 16));
+    FramePointer = (void **)((size_t)FramePointer - ((size_t)FramePointer % 16));
     CONTEXT *pContext = (CONTEXT *)FramePointer;
     *pContext = threadContext;
 
     // Put the exception record on the stack
-    FramePointer = (void **)((ULONG_PTR)FramePointer - sizeof(EXCEPTION_RECORD));
+    FramePointer = (void **)((size_t)FramePointer - sizeof(EXCEPTION_RECORD));
     EXCEPTION_RECORD *pExceptionRecord = (EXCEPTION_RECORD *)FramePointer;
     *pExceptionRecord = exceptionRecord;
 
-    FramePointer = (void **)((ULONG_PTR)FramePointer - sizeof(MachExceptionInfo));
+    FramePointer = (void **)((size_t)FramePointer - sizeof(MachExceptionInfo));
     MachExceptionInfo *pMachExceptionInfo = (MachExceptionInfo *)FramePointer;
     *pMachExceptionInfo = exceptionInfo;
 
 #if defined(__amd64__)
     // Push arguments to PAL_DispatchException
-    FramePointer = (void **)((ULONG_PTR)FramePointer - 3 * sizeof(void *));
+    FramePointer = (void **)((size_t)FramePointer - 3 * sizeof(void *));
 
     // Make sure it's aligned - ABI requires 16-byte alignment
-    FramePointer = (void **)((ULONG_PTR)FramePointer - ((ULONG_PTR)FramePointer % 16));
+    FramePointer = (void **)((size_t)FramePointer - ((size_t)FramePointer % 16));
     FramePointer[0] = pContext;
     FramePointer[1] = pExceptionRecord;
     FramePointer[2] = pMachExceptionInfo;
 
     // Place the return address to right after the fake call in PAL_DispatchExceptionWrapper
-    FramePointer[-1] = (void *)((ULONG_PTR)PAL_DispatchExceptionWrapper + PAL_DispatchExceptionReturnOffset);
+    FramePointer[-1] = (void *)((size_t)PAL_DispatchExceptionWrapper + PAL_DispatchExceptionReturnOffset);
 
     // Make the instruction register point to DispatchException
     ts64.__rip = (SIZE_T)PAL_DispatchException;
@@ -862,7 +862,7 @@ HijackFaultingThread(
     ts64.__x[2] = (uint64_t)pMachExceptionInfo;
 
     // Make sure it's aligned - SP has 16-byte alignment
-    FramePointer = (void **)((ULONG_PTR)FramePointer - ((ULONG_PTR)FramePointer % 16));
+    FramePointer = (void **)((size_t)FramePointer - ((size_t)FramePointer % 16));
     arm_thread_state64_set_sp(ts64, FramePointer);
 
     // Make the call to DispatchException

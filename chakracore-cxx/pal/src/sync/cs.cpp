@@ -160,7 +160,7 @@ typedef struct _PAL_CRITICAL_SECTION {
     LONG RecursionCount;
     SIZE_T OwningThread;
     HANDLE LockSemaphore;
-    ULONG_PTR SpinCount;
+    size_t SpinCount;
     // Private Unix part
     BOOL fInternal;
     Volatile<PalCsInitState> cisInitState;

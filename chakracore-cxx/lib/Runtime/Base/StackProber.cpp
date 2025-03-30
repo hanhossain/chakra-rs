@@ -53,8 +53,8 @@ StackProber::Initialize()
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     stackBottom =  lowLimit;
 #else
-    ULONG_PTR lowLimit = 0;
-    ULONG_PTR highLimit = 0;
+    size_t lowLimit = 0;
+    size_t highLimit = 0;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     stackBottom = lowLimit;
 #endif

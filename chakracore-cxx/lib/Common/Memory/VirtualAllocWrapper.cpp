@@ -252,7 +252,7 @@ LPVOID PreReservedVirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageC
                 || memBasicInfo.RegionSize < requestedNumOfSegments * AutoSystemInfo::Data.GetAllocationGranularityPageSize()
                 || memBasicInfo.State == MEM_COMMIT)
             {
-                CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+                CustomHeap_BadPageState_unrecoverable_error((size_t)this);
             }
         }
         else

@@ -93,7 +93,7 @@ LargeObjectHeader::GetNext(uint cookie)
     unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((ULONG_PTR)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
     }
     // If checksum matches return the up-to-date next (in case other thread changed it from last time
     // we read it in this method.
@@ -133,7 +133,7 @@ LargeObjectHeader::GetAttributes(uint cookie)
     unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((ULONG_PTR)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
     }
 
     // If checksum matches return the up-to-date attributes (in case other thread changed it from last time
@@ -1204,7 +1204,7 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
 #ifdef RECYCLER_WRITE_WATCH
     if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
-        ULONG_PTR count = 1;
+        size_t count = 1;
         DWORD pageSize = AutoSystemInfo::PageSize;
         DWORD const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
         void * written = nullptr;
