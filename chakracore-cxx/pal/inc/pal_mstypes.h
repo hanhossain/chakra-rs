@@ -140,8 +140,6 @@ typedef LONGLONG *PLONG64;
 typedef ULONGLONG *PULONG64;
 typedef ULONGLONG *PULONGLONG;
 typedef ULONG *PULONG;
-typedef unsigned char UCHAR;
-typedef UCHAR *PUCHAR;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
@@ -362,7 +360,7 @@ typedef struct _GUID {
     ULONG   Data1;    // NOTE: diff from Win32, for LP64
     unsigned short  Data2;
     unsigned short  Data3;
-    UCHAR   Data4[ 8 ];
+    unsigned char   Data4[ 8 ];
 } GUID;
 typedef const GUID *LPCGUID;
 #define GUID_DEFINED

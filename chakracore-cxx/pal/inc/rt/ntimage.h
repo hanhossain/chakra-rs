@@ -108,8 +108,8 @@ typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
     unsigned short ne_cmovent;                  // Count of movable entries
     unsigned short ne_align;                    // Segment alignment shift count
     unsigned short ne_cres;                     // Count of resource segments
-    UCHAR  ne_exetyp;                   // Target Operating system
-    UCHAR  ne_flagsothers;              // Other .EXE flags
+    unsigned char  ne_exetyp;                   // Target Operating system
+    unsigned char  ne_flagsothers;              // Other .EXE flags
     unsigned short ne_pretthunks;               // offset to return thunks
     unsigned short ne_psegrefbytes;             // offset to segment ref. bytes
     unsigned short ne_swaparea;                 // Minimum code swap area size
@@ -118,8 +118,8 @@ typedef struct _IMAGE_OS2_HEADER {      // OS/2 .EXE header
 
 typedef struct _IMAGE_VXD_HEADER {      // Windows VXD header
     unsigned short e32_magic;                   // Magic number
-    UCHAR  e32_border;                  // The byte ordering for the VXD
-    UCHAR  e32_worder;                  // The word ordering for the VXD
+    unsigned char  e32_border;                  // The byte ordering for the VXD
+    unsigned char  e32_worder;                  // The word ordering for the VXD
     ULONG  e32_level;                   // The EXE format level for now = 0
     unsigned short e32_cpu;                     // The CPU type
     unsigned short e32_os;                      // The OS type
@@ -163,7 +163,7 @@ typedef struct _IMAGE_VXD_HEADER {      // Windows VXD header
     ULONG  e32_instpreload;             // Number of instance pages in preload section of VXD file
     ULONG  e32_instdemand;              // Number of instance pages in demand load section of VXD file
     ULONG  e32_heapsize;                // Size of heap - for 16-bit apps
-    UCHAR  e32_res3[12];                // Reserved words
+    unsigned char  e32_res3[12];                // Reserved words
     ULONG  e32_winresoff;
     ULONG  e32_winreslen;
     unsigned short e32_devid;                   // Device ID for VxD
@@ -259,8 +259,8 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     //
 
     unsigned short  Magic;
-    UCHAR   MajorLinkerVersion;
-    UCHAR   MinorLinkerVersion;
+    unsigned char   MajorLinkerVersion;
+    unsigned char   MinorLinkerVersion;
     ULONG   SizeOfCode;
     ULONG   SizeOfInitializedData;
     ULONG   SizeOfUninitializedData;
@@ -298,8 +298,8 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
 
 typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
     unsigned short Magic;
-    UCHAR  MajorLinkerVersion;
-    UCHAR  MinorLinkerVersion;
+    unsigned char  MajorLinkerVersion;
+    unsigned char  MinorLinkerVersion;
     ULONG  SizeOfCode;
     ULONG  SizeOfInitializedData;
     ULONG  SizeOfUninitializedData;
@@ -314,8 +314,8 @@ typedef struct _IMAGE_ROM_OPTIONAL_HEADER {
 
 typedef struct _IMAGE_OPTIONAL_HEADER64 {
     unsigned short      Magic;
-    UCHAR       MajorLinkerVersion;
-    UCHAR       MinorLinkerVersion;
+    unsigned char       MajorLinkerVersion;
+    unsigned char       MinorLinkerVersion;
     ULONG       SizeOfCode;
     ULONG       SizeOfInitializedData;
     ULONG       SizeOfUninitializedData;
@@ -470,7 +470,7 @@ typedef PIMAGE_NT_HEADERS32                 PIMAGE_NT_HEADERS;
 #define IMAGE_SIZEOF_SHORT_NAME              8
 
 typedef struct _IMAGE_SECTION_HEADER {
-    UCHAR   Name[IMAGE_SIZEOF_SHORT_NAME];
+    unsigned char   Name[IMAGE_SIZEOF_SHORT_NAME];
     union {
             ULONG   PhysicalAddress;
             ULONG   VirtualSize;
@@ -558,7 +558,7 @@ typedef struct _IMAGE_SECTION_HEADER {
 
 typedef struct _IMAGE_SYMBOL {
     union {
-        UCHAR   ShortName[8];
+        unsigned char   ShortName[8];
         struct {
             ULONG   Short;     // if 0, use LongName
             ULONG   Long;      // offset into string table
@@ -568,8 +568,8 @@ typedef struct _IMAGE_SYMBOL {
     ULONG   Value;
     short   SectionNumber;
     unsigned short  Type;
-    UCHAR   StorageClass;
-    UCHAR   NumberOfAuxSymbols;
+    unsigned char   StorageClass;
+    unsigned char   NumberOfAuxSymbols;
 } IMAGE_SYMBOL;
 typedef IMAGE_SYMBOL UNALIGNED *PIMAGE_SYMBOL;
 
@@ -621,7 +621,7 @@ typedef IMAGE_SYMBOL UNALIGNED *PIMAGE_SYMBOL;
 //
 // Storage classes.
 //
-#define IMAGE_SYM_CLASS_END_OF_FUNCTION     (UCHAR)-1
+#define IMAGE_SYM_CLASS_END_OF_FUNCTION     (unsigned char)-1
 #define IMAGE_SYM_CLASS_NULL                0x0000
 #define IMAGE_SYM_CLASS_AUTOMATIC           0x0001
 #define IMAGE_SYM_CLASS_EXTERNAL            0x0002
@@ -721,7 +721,7 @@ typedef union _IMAGE_AUX_SYMBOL {
         unsigned short  TvIndex;                        // tv index
     } Sym;
     struct {
-        UCHAR   Name[IMAGE_SIZEOF_SYMBOL];
+        unsigned char   Name[IMAGE_SIZEOF_SYMBOL];
     } File;
     struct {
         ULONG   Length;                         // section length
@@ -729,7 +729,7 @@ typedef union _IMAGE_AUX_SYMBOL {
         unsigned short  NumberOfLinenumbers;            // number of line numbers
         ULONG   CheckSum;                       // checksum for communal
         short   Number;                         // section number to associate with
-        UCHAR   Selection;                      // communal selection type
+        unsigned char   Selection;                      // communal selection type
     } Section;
 } IMAGE_AUX_SYMBOL;
 typedef IMAGE_AUX_SYMBOL UNALIGNED *PIMAGE_AUX_SYMBOL;
@@ -743,10 +743,10 @@ typedef enum IMAGE_AUX_SYMBOL_TYPE {
 #include "pshpack2.h"
 
 typedef struct IMAGE_AUX_SYMBOL_TOKEN_DEF {
-    UCHAR bAuxType;                  // IMAGE_AUX_SYMBOL_TYPE
-    UCHAR bReserved;                 // Must be 0
+    unsigned char bAuxType;                  // IMAGE_AUX_SYMBOL_TYPE
+    unsigned char bReserved;                 // Must be 0
     ULONG SymbolTableIndex;
-    UCHAR rgbReserved[12];           // Must be 0
+    unsigned char rgbReserved[12];           // Must be 0
 } IMAGE_AUX_SYMBOL_TOKEN_DEF;
 
 typedef IMAGE_AUX_SYMBOL_TOKEN_DEF UNALIGNED *PIMAGE_AUX_SYMBOL_TOKEN_DEF;
@@ -1163,13 +1163,13 @@ typedef IMAGE_BASE_RELOCATION UNALIGNED * PIMAGE_BASE_RELOCATION;
 #define IMAGE_ARCHIVE_LONGNAMES_MEMBER       "//              "
 
 typedef struct _IMAGE_ARCHIVE_MEMBER_HEADER {
-    UCHAR    Name[16];                          // File member name - `/' terminated.
-    UCHAR    Date[12];                          // File member date - decimal.
-    UCHAR    UserID[6];                         // File member user id - decimal.
-    UCHAR    GroupID[6];                        // File member group id - decimal.
-    UCHAR    Mode[8];                           // File member mode - octal.
-    UCHAR    Size[10];                          // File member size - decimal.
-    UCHAR    EndHeader[2];                      // String to end header.
+    unsigned char    Name[16];                          // File member name - `/' terminated.
+    unsigned char    Date[12];                          // File member date - decimal.
+    unsigned char    UserID[6];                         // File member user id - decimal.
+    unsigned char    GroupID[6];                        // File member group id - decimal.
+    unsigned char    Mode[8];                           // File member mode - octal.
+    unsigned char    Size[10];                          // File member size - decimal.
+    unsigned char    EndHeader[2];                      // String to end header.
 } IMAGE_ARCHIVE_MEMBER_HEADER, *PIMAGE_ARCHIVE_MEMBER_HEADER;
 
 #define IMAGE_SIZEOF_ARCHIVE_MEMBER_HDR      60
@@ -1202,7 +1202,7 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
 
 typedef struct _IMAGE_IMPORT_BY_NAME {
     unsigned short  Hint;
-    UCHAR   Name[1];
+    unsigned char   Name[1];
 } IMAGE_IMPORT_BY_NAME, *PIMAGE_IMPORT_BY_NAME;
 
 #include "pshpack8.h"                       // Use align 8 for the 64-bit IAT.
@@ -1585,8 +1585,8 @@ typedef struct _IMAGE_DEBUG_MISC {
     ULONG       Length;                 // total length of record, rounded to four
                                         // byte multiple.
     BOOLEAN     Unicode;                // TRUE if data is unicode string
-    UCHAR       Reserved[ 3 ];
-    UCHAR       Data[ 1 ];              // Actual data
+    unsigned char       Reserved[ 3 ];
+    unsigned char       Data[ 1 ];              // Actual data
 } IMAGE_DEBUG_MISC, *PIMAGE_DEBUG_MISC;
 
 

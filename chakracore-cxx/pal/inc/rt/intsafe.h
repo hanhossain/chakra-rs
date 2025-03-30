@@ -39,8 +39,6 @@ typedef __w64 unsigned long SIZE_T;
 #endif
 typedef          int        INT;
 typedef          long       LONG;
-typedef unsigned char       UCHAR;
-typedef unsigned short      unsigned short;
 typedef unsigned short      WORD;
 typedef unsigned int        UINT;
 typedef unsigned long       ULONG;
@@ -148,20 +146,20 @@ IntToSignedChar(
 }
 
 //
-// INT -> UCHAR conversion
+// INT -> unsigned char conversion
 //
 __inline
 HRESULT
 IntToUChar(
      INT iOperand,
-     UCHAR* pch)
+     unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if ((iOperand >= 0) && (iOperand <= 255))
     {
-        *pch = (UCHAR)iOperand;
+        *pch = (unsigned char)iOperand;
         hr = S_OK;
     }
 
@@ -169,20 +167,20 @@ IntToUChar(
 }
 
 //
-// LONG -> UCHAR conversion
+// LONG -> unsigned char conversion
 //
 __inline
 HRESULT
 LongToUChar(
      LONG lOperand,
-     UCHAR* pch)
+     unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if ((lOperand >= 0) && (lOperand <= 255))
     {
-        *pch = (UCHAR)lOperand;
+        *pch = (unsigned char)lOperand;
         hr = S_OK;
     }
 
@@ -203,7 +201,7 @@ IntToChar(
      char* pch)
 {
 #ifdef _CHAR_UNSIGNED
-    return IntToUChar(iOperand, (UCHAR*)pch);
+    return IntToUChar(iOperand, (unsigned char*)pch);
 #else
     return IntToSignedChar(iOperand, (signed char*)pch);
 #endif
@@ -315,20 +313,20 @@ UIntToSignedChar(
 }
 
 //
-// UINT -> UCHAR conversion
+// UINT -> unsigned char conversion
 //
 __inline
 HRESULT
 UIntToUChar(
      UINT uOperand,
-     UCHAR* pch)
+     unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pch = 0;
 
     if (uOperand <= 255)
     {
-        *pch = (UCHAR)uOperand;
+        *pch = (unsigned char)uOperand;
         hr = S_OK;
     }
 
@@ -354,7 +352,7 @@ UIntToChar(
      char* pch)
 {
 #ifdef _CHAR_UNSIGNED
-    return UIntToUChar(uOperand, (UCHAR*)pch);
+    return UIntToUChar(uOperand, (unsigned char*)pch);
 #else
     return UIntToSignedChar(uOperand, (signed char*)pch);
 #endif // _CHAR_UNSIGNED
@@ -417,7 +415,7 @@ UIntToULong(
 }
 
 //
-// ULONG -> UCHAR conversion
+// ULONG -> unsigned char conversion
 //
 __inline
 HRESULT
@@ -438,7 +436,7 @@ ULongToSignedChar(
 }
 
 //
-// ULONG -> UCHAR conversion
+// ULONG -> unsigned char conversion
 //
 __inline
 HRESULT

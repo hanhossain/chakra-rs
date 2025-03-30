@@ -10,16 +10,16 @@
 
 #pragma once
 
-typedef UCHAR NEON_REGISTER;
+typedef unsigned char NEON_REGISTER;
 
 class NeonRegisterParam
 {
-    static const UCHAR REGISTER_SHIFT = 0;
-    static const UCHAR REGISTER_MASK = 0xff;
+    static const unsigned char REGISTER_SHIFT = 0;
+    static const unsigned char REGISTER_MASK = 0xff;
     static const ULONG REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
 
-    static const UCHAR SIZE_SHIFT = 8;
-    static const UCHAR SIZE_MASK = 0x07;
+    static const unsigned char SIZE_SHIFT = 8;
+    static const unsigned char SIZE_MASK = 0x07;
     static const ULONG SIZE_MASK_SHIFTED = SIZE_MASK << SIZE_SHIFT;
 
     NeonRegisterParam()
@@ -34,7 +34,7 @@ public:
 
     NeonRegisterParam(
         NEON_REGISTER Reg,
-        UCHAR Size = 8
+        unsigned char Size = 8
     )
         : m_Encoded(((Reg & REGISTER_MASK) << REGISTER_SHIFT) |
         (EncodeSize(Size) << SIZE_SHIFT))
@@ -49,19 +49,19 @@ public:
         return (m_Encoded >> REGISTER_SHIFT) & REGISTER_MASK;
     }
 
-    UCHAR
+    unsigned char
     RawRegister() const
     {
-        return UCHAR(Register() - NEONREG_FIRST);
+        return (unsigned char)(Register() - NEONREG_FIRST);
     }
 
-    UCHAR
+    unsigned char
     SizeShift() const
     {
         return (m_Encoded >> SIZE_SHIFT) & SIZE_MASK;
     }
 
-    UCHAR
+    unsigned char
     Size() const
     {
         return 1 << SizeShift();
@@ -71,7 +71,7 @@ protected:
     static
     ULONG
     EncodeSize(
-        UCHAR Size
+        unsigned char Size
         )
     {
         return (Size == 1) ? 0 :
@@ -94,7 +94,7 @@ protected:
     static
     void
     AssertValidSize(
-        UCHAR Size
+        unsigned char Size
         )
     {
         UNREFERENCED_PARAMETER(Size);
@@ -1286,7 +1286,7 @@ int
 EmitNeonFmovImmediate(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
-    UCHAR Immediate,
+    unsigned char Immediate,
     NEON_SIZE DestSize
     )
 {

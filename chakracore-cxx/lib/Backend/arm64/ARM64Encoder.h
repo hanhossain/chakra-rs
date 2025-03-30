@@ -25,7 +25,7 @@
 // Core types
 //
 
-typedef UCHAR ARM64_REGISTER;
+typedef unsigned char ARM64_REGISTER;
 
 enum
 {
@@ -344,17 +344,17 @@ private:
 
 class Arm64RegisterParam
 {
-    static const UCHAR REGISTER_SHIFT = 0;
-    static const UCHAR REGISTER_MASK = 0xff;
+    static const unsigned char REGISTER_SHIFT = 0;
+    static const unsigned char REGISTER_MASK = 0xff;
     static const ULONG REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
 
-    static const UCHAR SHIFT_TYPE_SHIFT = 8;
-    static const UCHAR SHIFT_TYPE_MASK = 0x0f;
+    static const unsigned char SHIFT_TYPE_SHIFT = 8;
+    static const unsigned char SHIFT_TYPE_MASK = 0x0f;
     static const ULONG SHIFT_TYPE_MASK_SHIFTED = SHIFT_TYPE_MASK << SHIFT_TYPE_SHIFT;
     static const ULONG SHIFT_NONE_SHIFTED = SHIFT_NONE << SHIFT_TYPE_SHIFT;
 
-    static const UCHAR SHIFT_COUNT_SHIFT = 12;
-    static const UCHAR SHIFT_COUNT_MASK = 0x3f;
+    static const unsigned char SHIFT_COUNT_SHIFT = 12;
+    static const unsigned char SHIFT_COUNT_MASK = 0x3f;
     static const ULONG SHIFT_COUNT_MASK_SHIFTED = SHIFT_COUNT_MASK << SHIFT_COUNT_SHIFT;
 
 protected:
@@ -369,7 +369,7 @@ public:
     Arm64RegisterParam(
         ARM64_REGISTER Reg,
         SHIFT_EXTEND_TYPE Type = SHIFT_NONE,
-        UCHAR Amount = 0
+        unsigned char Amount = 0
         )
         : m_Encoded(((Reg & REGISTER_MASK) << REGISTER_SHIFT) |
                     ((Type & SHIFT_TYPE_MASK) << SHIFT_TYPE_SHIFT) |
@@ -385,10 +385,10 @@ public:
         return (m_Encoded >> REGISTER_SHIFT) & REGISTER_MASK;
     }
 
-    UCHAR
+    unsigned char
     RawRegister() const
     {
-        return UCHAR(Register() - ARMREG_FIRST);
+        return (unsigned char)(Register() - ARMREG_FIRST);
     }
 
     SHIFT_EXTEND_TYPE
@@ -397,7 +397,7 @@ public:
         return SHIFT_EXTEND_TYPE((m_Encoded >> SHIFT_TYPE_SHIFT) & SHIFT_TYPE_MASK);
     }
 
-    UCHAR
+    unsigned char
     ShiftCount() const
     {
         return (m_Encoded >> SHIFT_COUNT_SHIFT) & SHIFT_COUNT_MASK;
@@ -448,7 +448,7 @@ protected:
     void
     AssertValidShift(
         SHIFT_EXTEND_TYPE Type,
-        UCHAR Amount
+        unsigned char Amount
         )
     {
         UNREFERENCED_PARAMETER(Type);

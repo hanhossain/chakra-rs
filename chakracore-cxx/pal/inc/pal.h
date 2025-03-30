@@ -1555,7 +1555,7 @@ typedef struct _CONTEXT {
     ULONG   Esp;
     ULONG   SegSs;
 
-    UCHAR   ExtendedRegisters[MAXIMUM_SUPPORTED_EXTENSION];
+    unsigned char   ExtendedRegisters[MAXIMUM_SUPPORTED_EXTENSION];
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
@@ -5054,7 +5054,7 @@ InterlockedXor64(
 
 EXTERN_C
 inline
-UCHAR
+unsigned char
 InterlockedBitTestAndReset(
       LONG volatile *Base,
      LONG Bit)
@@ -5070,7 +5070,7 @@ InterlockedBitTestAndReset(
 
 EXTERN_C
 inline
-UCHAR
+unsigned char
 InterlockedBitTestAndSet(
       LONG volatile *Base,
      LONG Bit)
@@ -5082,7 +5082,7 @@ InterlockedBitTestAndSet(
 
 EXTERN_C
 inline
-UCHAR
+unsigned char
 BitTest(
      LONG *Base,
      LONG Bit)
@@ -5094,7 +5094,7 @@ BitTest(
 
 EXTERN_C
 inline
-UCHAR
+unsigned char
 BitTestAndSet(
       LONG *Base,
      LONG Bit)
@@ -5106,7 +5106,7 @@ BitTestAndSet(
 
     // Save whether the bit was set or not. Then, unconditionally set the
     // bit. Return whether the bit was set or not.
-    UCHAR wasBitSet = (((*longToTest) & (1 << bitToTest)) != 0);
+    unsigned char wasBitSet = (((*longToTest) & (1 << bitToTest)) != 0);
     *longToTest = *longToTest | (1 << bitToTest);
     return wasBitSet;
 }
