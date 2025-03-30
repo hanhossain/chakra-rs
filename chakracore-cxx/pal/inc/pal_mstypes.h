@@ -140,8 +140,6 @@ typedef LONGLONG *PLONG64;
 typedef ULONGLONG *PULONG64;
 typedef ULONGLONG *PULONGLONG;
 typedef ULONG *PULONG;
-typedef short SHORT;
-typedef SHORT *PSHORT;
 typedef unsigned short USHORT;
 typedef USHORT *PUSHORT;
 typedef unsigned char UCHAR;

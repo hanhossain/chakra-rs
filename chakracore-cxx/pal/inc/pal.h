@@ -4640,9 +4640,9 @@ EXTERN_C
 inline
 LONGLONG
 InterlockedIncrement16(
-      SHORT volatile *lpAddend)
+      short volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (SHORT)1);
+    return __sync_add_and_fetch(lpAddend, (short)1);
 }
 
 EXTERN_C

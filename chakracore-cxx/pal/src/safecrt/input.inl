@@ -292,7 +292,7 @@ static int __check_float_string(size_t nFloatStrUsed,
 
 
     char done_flag;                     /* general purpose loop monitor      */
-    char longone;                       /* 0 = SHORT, 1 = LONG, 2 = L_DOUBLE */
+    char longone;                       /* 0 = short, 1 = LONG, 2 = L_DOUBLE */
 #if _INTEGRAL_MAX_BITS >= 64   
     int integer64;                      /* 1 for 64-bit integer, 0 otherwise */
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */

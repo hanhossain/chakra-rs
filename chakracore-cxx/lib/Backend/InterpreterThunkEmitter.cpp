@@ -160,7 +160,7 @@ constexpr BYTE InterpreterThunk[InterpreterThunkEmitter::InterpreterThunkSize] =
     0x8b, 0xc1,                                                     //   mov         eax, ecx
     0x2d, 0x00, 0x00, 0x00, 0x00,                                   //   sub         eax, CallBlockStartAddress
     0x3d, 0x00, 0x00, 0x00, 0x00,                                   //   cmp         eax, ThunkSize
-    0x76, 0x07,                                                     //   jbe         SHORT $safe
+    0x76, 0x07,                                                     //   jbe         short $safe
     0xb9, 0x00, 0x00, 0x00, 0x00,                                   //   mov         ecx, errorcode
     0xCD, 0x29,                                                     //   int         29h
 

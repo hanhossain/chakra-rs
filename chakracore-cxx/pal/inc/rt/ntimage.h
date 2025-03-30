@@ -566,7 +566,7 @@ typedef struct _IMAGE_SYMBOL {
         ULONG   LongName[2];    // PUCHAR[2]
     } N;
     ULONG   Value;
-    SHORT   SectionNumber;
+    short   SectionNumber;
     USHORT  Type;
     UCHAR   StorageClass;
     UCHAR   NumberOfAuxSymbols;
@@ -583,9 +583,9 @@ typedef IMAGE_SYMBOL UNALIGNED *PIMAGE_SYMBOL;
 // defined. Otherwise, section numbers have the following meanings:
 //
 
-#define IMAGE_SYM_UNDEFINED           (SHORT)0          // Symbol is undefined or is common.
-#define IMAGE_SYM_ABSOLUTE            (SHORT)-1         // Symbol is an absolute value.
-#define IMAGE_SYM_DEBUG               (SHORT)-2         // Symbol is a special debug item.
+#define IMAGE_SYM_UNDEFINED           (short)0          // Symbol is undefined or is common.
+#define IMAGE_SYM_ABSOLUTE            (short)-1         // Symbol is an absolute value.
+#define IMAGE_SYM_DEBUG               (short)-2         // Symbol is a special debug item.
 #define IMAGE_SYM_SECTION_MAX         0xFEFF            // Values 0xFF00-0xFFFF are special
 
 //
@@ -728,7 +728,7 @@ typedef union _IMAGE_AUX_SYMBOL {
         USHORT  NumberOfRelocations;            // number of relocation entries
         USHORT  NumberOfLinenumbers;            // number of line numbers
         ULONG   CheckSum;                       // checksum for communal
-        SHORT   Number;                         // section number to associate with
+        short   Number;                         // section number to associate with
         UCHAR   Selection;                      // communal selection type
     } Section;
 } IMAGE_AUX_SYMBOL;

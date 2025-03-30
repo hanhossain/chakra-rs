@@ -360,7 +360,7 @@ STDAPI_(LPVOID) CoTaskMemAlloc(SIZE_T cb);
 STDAPI_(LPVOID) CoTaskMemRealloc(LPVOID pv, SIZE_T cb);
 STDAPI_(void) CoTaskMemFree(LPVOID pv);
 
-typedef SHORT VARIANT_BOOL;
+typedef short VARIANT_BOOL;
 #define VARIANT_TRUE ((VARIANT_BOOL)-1)
 #define VARIANT_FALSE ((VARIANT_BOOL)0)
 
@@ -515,7 +515,7 @@ struct tagVARIANT
                 LONGLONG llVal;
                 LONG lVal;
                 BYTE bVal;
-                SHORT iVal;
+                short iVal;
                 FLOAT fltVal;
                 DOUBLE dblVal;
                 VARIANT_BOOL boolVal;
@@ -527,7 +527,7 @@ struct tagVARIANT
                 interface IDispatch *pdispVal;
                 SAFEARRAY *parray;
                 BYTE *pbVal;
-                SHORT *piVal;
+                short *piVal;
                 LONG *plVal;
                 LONGLONG *pllVal;
                 FLOAT *pfltVal;
