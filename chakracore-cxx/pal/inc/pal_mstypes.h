@@ -206,8 +206,6 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define SIZE_MAX _UI64_MAX
 #endif
 
-#define __int3264   __int64
-
 #define HandleToULong( h ) ((ULONG)(ULONG_PTR)(h) )
 #define HandleToLong( h )  ((LONG)(LONG_PTR) (h) )
 #define ULongToHandle( ul ) ((HANDLE)(ULONG_PTR) (ul) )
