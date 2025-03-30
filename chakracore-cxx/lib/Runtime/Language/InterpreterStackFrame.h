@@ -14,7 +14,7 @@ extern "C" void _alloca_probe_16();
 namespace Js
 {
     class EHBailoutData;
-    enum InterpreterStackFrameFlags : UINT16
+    enum InterpreterStackFrameFlags : uint16_t
     {
         InterpreterStackFrameFlags_None = 0,
         InterpreterStackFrameFlags_WithinTryBlock = 1,
@@ -142,7 +142,7 @@ namespace Js
         uint currentLoopCounter;       // This keeps tracks of how many times the current loop is executed. It's hit only in cases where jitloopbodies are not hit
                                        // such as loops inside try\catch.
 
-        UINT16 m_flags;                // based on InterpreterStackFrameFlags
+        uint16_t m_flags;                // based on InterpreterStackFrameFlags
 
         bool closureInitDone : 1;
         bool isParamScopeDone : 1;
@@ -291,10 +291,10 @@ namespace Js
         void SetPreviousFrame(InterpreterStackFrame *interpreterFrame) {previousInterpreterFrame = interpreterFrame;}
         Var GetArgumentsObject() const { return m_arguments; }
         void SetArgumentsObject(Var args) { m_arguments = args; }
-        UINT16 GetFlags() const { return m_flags; }
-        void OrFlags(UINT16 addTo) { m_flags |= addTo; }
-        void ClearFlags(UINT16 flags) { m_flags &= ~flags; }
-        bool TestFlags(UINT16 flags) { return (m_flags & flags) != 0; }
+        uint16_t GetFlags() const { return m_flags; }
+        void OrFlags(uint16_t addTo) { m_flags |= addTo; }
+        void ClearFlags(uint16_t flags) { m_flags &= ~flags; }
+        bool TestFlags(uint16_t flags) { return (m_flags & flags) != 0; }
         bool IsInCatchOrFinallyBlock();
         static bool IsDelayDynamicInterpreterThunk(JavascriptMethod entryPoint);
 

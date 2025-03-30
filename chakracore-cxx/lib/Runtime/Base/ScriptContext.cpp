@@ -6291,14 +6291,14 @@ ScriptContext::GetJitFuncRangeCache()
     {
         if (this->rejitReasonCounts != nullptr)
         {
-            for (UINT16 i = 0; i < NumRejitReasons; i++)
+            for (uint16_t i = 0; i < NumRejitReasons; i++)
             {
                 this->rejitReasonCounts[i] = 0;
             }
         }
         if (this->rejitReasonCountsCap != nullptr)
         {
-            for (UINT16 i = 0; i < NumRejitReasons; i++)
+            for (uint16_t i = 0; i < NumRejitReasons; i++)
             {
                 this->rejitReasonCountsCap[i] = 0;
             }

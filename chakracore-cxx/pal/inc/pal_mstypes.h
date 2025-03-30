@@ -179,8 +179,6 @@ typedef unsigned int *PUINT;
 typedef BYTE BOOLEAN;
 typedef BOOLEAN *PBOOLEAN;
 
-typedef unsigned __int16 UINT16;
-typedef signed __int16 INT16;
 typedef signed __int32 INT32, *PINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
 

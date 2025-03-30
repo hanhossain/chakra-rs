@@ -109,7 +109,7 @@ namespace Js
         static float VECTORCALL ReinterpretBits(int value);
         static double VECTORCALL ReinterpretBits(int64 value);
 
-        // Convert a given UINT16 into its corresponding string.
+        // Convert a given uint16_t into its corresponding string.
         // outBufferSize is in WCHAR elements (and used only for ASSERTs)
         // Returns the number of characters written to outBuffer (not including the \0)
         static charcount_t UInt16ToString(uint16 integer, __out __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces);
