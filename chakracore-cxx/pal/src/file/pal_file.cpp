@@ -1822,7 +1822,7 @@ BOOL
 GetFileAttributesExW(
               LPCWSTR lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
-              LPVOID lpFileInformation)
+              void * lpFileInformation)
 {
     CPalThread *pThread;
     BOOL bRet = FALSE;
@@ -2011,7 +2011,7 @@ PAL_ERROR
 CorUnix::InternalWriteFile(
     CPalThread *pThread,
     HANDLE hFile,
-    LPCVOID lpBuffer,
+    const void * lpBuffer,
     DWORD nNumberOfBytesToWrite,
     LPDWORD lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped
@@ -2193,7 +2193,7 @@ See MSDN doc.
 BOOL
 WriteFile(
        HANDLE hFile,
-       LPCVOID lpBuffer,
+       const void * lpBuffer,
        DWORD nNumberOfBytesToWrite,
        LPDWORD lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped)
@@ -2231,7 +2231,7 @@ PAL_ERROR
 CorUnix::InternalReadFile(
     CPalThread *pThread,
     HANDLE hFile,
-    LPVOID lpBuffer,
+    void * lpBuffer,
     DWORD nNumberOfBytesToRead,
     LPDWORD lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped
@@ -2416,7 +2416,7 @@ See MSDN doc.
 BOOL
 ReadFile(
       HANDLE hFile,
-      LPVOID lpBuffer,
+      void * lpBuffer,
       DWORD nNumberOfBytesToRead,
       LPDWORD lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped)

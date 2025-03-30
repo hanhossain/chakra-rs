@@ -105,9 +105,9 @@ Function:
     to reserve virtual memory from the OS.
 
 --*/
-static LPVOID ReserveVirtualMemory(
+static void * ReserveVirtualMemory(
                 CPalThread *pthrCurrent, /* Currently executing thread */
-                LPVOID lpAddress,        /* Region to reserve or commit */
+                void * lpAddress,        /* Region to reserve or commit */
                 SIZE_T dwSize);          /* Size of Region */
 
 /*++
@@ -970,14 +970,14 @@ done:
  *              exists, and that would be very complicated to work around.
  *
  */
-static LPVOID VIRTUALReserveMemory(
+static void * VIRTUALReserveMemory(
                  CPalThread *pthrCurrent, /* Currently executing thread */
-                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 void * lpAddress,        /* Region to reserve or commit */
                  SIZE_T dwSize,           /* Size of Region */
                  DWORD flAllocationType,  /* Type of allocation */
                  DWORD flProtect)         /* Type of access protection */
 {
-    LPVOID pRetVal      = NULL;
+    void * pRetVal      = NULL;
     UINT_PTR StartBoundary;
     SIZE_T MemSize;
 
@@ -1002,7 +1002,7 @@ static LPVOID VIRTUALReserveMemory(
     if (pRetVal == NULL)
     {
         // Try to reserve memory from the OS
-        pRetVal = ReserveVirtualMemory(pthrCurrent, (LPVOID)StartBoundary, MemSize);
+        pRetVal = ReserveVirtualMemory(pthrCurrent, (void *)StartBoundary, MemSize);
     }
 
     if (pRetVal != NULL)
@@ -1039,12 +1039,12 @@ static LPVOID VIRTUALReserveMemory(
  *  and ExecutableMemoryAllocator to reserve virtual memory from the OS.
  *
  */
-static LPVOID ReserveVirtualMemory(
+static void * ReserveVirtualMemory(
                  CPalThread *pthrCurrent, /* Currently executing thread */
-                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 void * lpAddress,        /* Region to reserve or commit */
                  SIZE_T dwSize)           /* Size of Region */
 {
-    LPVOID pRetVal = NULL;
+    void * pRetVal = NULL;
 #if !defined(__APPLE__) && !defined(vm_address_t)
 #define vm_address_t UINT_PTR
 #endif
@@ -1068,7 +1068,7 @@ static LPVOID ReserveVirtualMemory(
 #if HAVE_VM_ALLOCATE
     // Allocate with vm_allocate first, then map at the fixed address.
     result = vm_allocate(mach_task_self(), &StartBoundary, MemSize,
-                          ((LPVOID) StartBoundary != NULL) ? FALSE : TRUE);
+                          ((void *) StartBoundary != NULL) ? FALSE : TRUE);
     if (result != KERN_SUCCESS) {
         ERROR("vm_allocate failed to allocated the requested region!\n");
         pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
@@ -1086,7 +1086,7 @@ static LPVOID ReserveVirtualMemory(
     mmapFlags |= MAP_ANON | MAP_PRIVATE;
 #endif // RESERVE_FROM_BACKING_FILE
 
-    pRetVal = mmap((LPVOID) StartBoundary, MemSize, PROT_NONE,
+    pRetVal = mmap((void *) StartBoundary, MemSize, PROT_NONE,
                    mmapFlags, mmapFile, mmapOffset);
 
     /* Check to see if the region is what we asked for. */
@@ -1137,9 +1137,9 @@ done:
  *              exists, and that would be very complicated to work around.
  *
  */
-static LPVOID VIRTUALCommitMemory(
+static void * VIRTUALCommitMemory(
                  CPalThread *pthrCurrent, /* Currently executing thread */
-                 LPVOID lpAddress,        /* Region to reserve or commit */
+                 void * lpAddress,        /* Region to reserve or commit */
                  SIZE_T dwSize,           /* Size of Region */
                  DWORD flAllocationType,  /* Type of allocation */
                  DWORD flProtect)         /* Type of access protection */
@@ -1147,7 +1147,7 @@ static LPVOID VIRTUALCommitMemory(
     UINT_PTR StartBoundary      = 0;
     SIZE_T MemSize              = 0;
     PCMI pInformation           = 0;
-    LPVOID pRetVal              = NULL;
+    void * pRetVal              = NULL;
     BOOL IsLocallyReserved      = FALSE;
     SIZE_T totalPages;
     INT allocationType, curAllocationType;
@@ -1179,7 +1179,7 @@ static LPVOID VIRTUALCommitMemory(
         /* According to the new MSDN docs, if MEM_COMMIT is specified,
         and the memory is not reserved, you reserve and then commit.
         */
-        LPVOID pReservedMemory =
+        void * pReservedMemory =
                 VIRTUALReserveMemory( pthrCurrent, lpAddress, dwSize,
                                       flAllocationType, flProtect );
 
@@ -1673,10 +1673,10 @@ done:
 }
 #endif // RESERVE_FROM_BACKING_FILE
 
-LPVOID
+void *
 VirtualAllocEx(
           HANDLE hProcess,
-          LPVOID lpAddress,       /* Region to reserve or commit */
+          void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
           DWORD flAllocationType, /* Type of allocation */
           DWORD flProtect)        /* Type of access protection */
@@ -1702,9 +1702,9 @@ Note:
 
 See MSDN doc.
 --*/
-LPVOID
+void *
 VirtualAlloc_(
-          LPVOID lpAddress,       /* Region to reserve or commit */
+          void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
           DWORD flAllocationType, /* Type of allocation */
           DWORD flProtect)        /* Type of access protection */
@@ -1714,7 +1714,7 @@ VirtualAlloc_(
     _ASSERTE(was_pal_initialized);
 #endif
 
-    LPVOID  pRetVal       = NULL;
+    void *  pRetVal       = NULL;
     CPalThread *pthrCurrent;
 
     PERF_ENTRY(VirtualAlloc);
@@ -1800,10 +1800,10 @@ Function:
 --*/
 BOOL
 VirtualFreeEnclosing_(
-     LPVOID lpRegionStartAddress,         /* Starting address of the original region. */
+     void * lpRegionStartAddress,         /* Starting address of the original region. */
      SIZE_T dwSize,                       /* Size of the requested region i.e. the intended size of the VirtualAlloc call.*/
      SIZE_T dwAlignmentSize,              /* The intended alignment of the returned address. This is also the size of the extra memory reserved i.e. 64KB in our case whenw e try a 64K alignment. */
-     LPVOID lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
+     void * lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
 {
     BOOL bRetVal = TRUE;
 
@@ -1857,7 +1857,7 @@ VirtualFreeEnclosing_(
     if (mmap((void *)beforeRegionStart, beforeRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
         (char *)beforeRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-    if (munmap((LPVOID)beforeRegionStart, beforeRegionSize) == 0)
+    if (munmap((void *)beforeRegionStart, beforeRegionSize) == 0)
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
     {
         beforeRegionFreed = true;
@@ -1883,7 +1883,7 @@ VirtualFreeEnclosing_(
         if (mmap((void *)afterRegionStart, afterRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
             (char *)afterRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-        if (munmap((LPVOID)afterRegionStart, afterRegionSize) == 0)
+        if (munmap((void *)afterRegionStart, afterRegionSize) == 0)
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
             afterRegionFreed = true;
@@ -1917,9 +1917,9 @@ VirtualFreeEnclosingExit:
 #define KB64 (64 * 1024)
 #define MB64 (KB64 * 1024)
 
-LPVOID
+void *
 VirtualAlloc(
-          LPVOID lpAddress,       /* Region to reserve or commit */
+          void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
           DWORD flAllocationType, /* Type of allocation */
           DWORD flProtect)        /* Type of access protection */
@@ -1998,7 +1998,7 @@ VirtualAlloc(
 BOOL
 VirtualFreeEx(
          HANDLE hProcess,
-         LPVOID lpAddress,    /* Address of region. */
+         void * lpAddress,    /* Address of region. */
          SIZE_T dwSize,       /* Size of region. */
          DWORD dwFreeType )   /* Operation type. */
 {
@@ -2013,7 +2013,7 @@ See MSDN doc.
 --*/
 BOOL
 VirtualFree(
-         LPVOID lpAddress,    /* Address of region. */
+         void * lpAddress,    /* Address of region. */
          SIZE_T dwSize,       /* Size of region. */
          DWORD dwFreeType )   /* Operation type. */
 {
@@ -2091,28 +2091,28 @@ VirtualFree(
 #if MMAP_DOESNOT_ALLOW_REMAP
         // if no double mapping is supported,
         // just mprotect the memory with no access
-        if (mprotect((LPVOID)StartBoundary, MemSize, PROT_NONE) == 0)
+        if (mprotect((void *)StartBoundary, MemSize, PROT_NONE) == 0)
 #else // MMAP_DOESNOT_ALLOW_REMAP
         // Explicitly calling mmap instead of mprotect here makes it
         // that much more clear to the operating system that we no
         // longer need these pages.
 #if RESERVE_FROM_BACKING_FILE
-        if ( mmap( (LPVOID)StartBoundary, MemSize, PROT_NONE,
+        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
                    MAP_FIXED | MAP_PRIVATE, gBackingFile,
                    (char *) StartBoundary - (char *) gBackingBaseAddress ) !=
              MAP_FAILED )
 #else   // RESERVE_FROM_BACKING_FILE
-        if ( mmap( (LPVOID)StartBoundary, MemSize, PROT_NONE,
+        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
                    MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0 ) != MAP_FAILED )
 #endif  // RESERVE_FROM_BACKING_FILE
 #endif // MMAP_DOESNOT_ALLOW_REMAP
         {
 #if (MMAP_ANON_IGNORES_PROTECTION && !MMAP_DOESNOT_ALLOW_REMAP)
-            if (mprotect((LPVOID) StartBoundary, MemSize, PROT_NONE) != 0)
+            if (mprotect((void *) StartBoundary, MemSize, PROT_NONE) != 0)
             {
                 ASSERT("mprotect failed to protect the region!\n");
                 pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
-                munmap((LPVOID) StartBoundary, MemSize);
+                munmap((void *) StartBoundary, MemSize);
                 bRetVal = FALSE;
                 goto VirtualFreeExit;
             }
@@ -2173,7 +2173,7 @@ VirtualFree(
                  (char *) pMemoryToBeReleased->startBoundary -
                  (char *) gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-        if ( munmap( (LPVOID)pMemoryToBeReleased->startBoundary,
+        if ( munmap( (void *)pMemoryToBeReleased->startBoundary,
                      pMemoryToBeReleased->memSize ) == 0 )
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
@@ -2211,7 +2211,7 @@ VirtualFreeExit:
 BOOL
 VirtualProtectEx(
             HANDLE hProcess,
-            LPVOID lpAddress,
+            void * lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
             PDWORD lpflOldProtect)
@@ -2227,7 +2227,7 @@ See MSDN doc.
 --*/
 BOOL
 VirtualProtect(
-            LPVOID lpAddress,
+            void * lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
             PDWORD lpflOldProtect)
@@ -2294,7 +2294,7 @@ VirtualProtect(
         }
     }
 
-    if ( 0 == mprotect( (LPVOID)StartBoundary, MemSize,
+    if ( 0 == mprotect( (void *)StartBoundary, MemSize,
                    W32toUnixAccessControl( flNewProtect ) ) )
     {
         /* Reset the access protection. */
@@ -2406,7 +2406,7 @@ static DWORD VirtualMapMachProtectToWinProtect(vm_prot_t protection)
     }
 }
 
-static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer)
+static void VM_ALLOCATE_VirtualQuery(const void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer)
 {
     kern_return_t MachRet;
     vm_address_t vm_address;
@@ -2437,7 +2437,7 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
         return;
     }
 
-    lpBuffer->BaseAddress = (PVOID)vm_address;
+    lpBuffer->BaseAddress = (void *)vm_address;
 
     // We don't actually have any information on the Mach kernel which maps to AllocationProtect.
     lpBuffer->AllocationProtect = VM_PROT_NONE;
@@ -2474,7 +2474,7 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
 SIZE_T
 VirtualQueryEx(
      HANDLE hProcess,
-     LPCVOID lpAddress,
+     const void * lpAddress,
      PMEMORY_BASIC_INFORMATION lpBuffer,
      SIZE_T dwLength)
 {
@@ -2489,7 +2489,7 @@ See MSDN doc.
 --*/
 SIZE_T
 VirtualQuery(
-          LPCVOID lpAddress,
+          const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength)
 {
@@ -2553,13 +2553,13 @@ VirtualQuery(
     {
         /* Can't find a match, or no list present. */
         /* Next, looking for this region in file maps */
-        if (!MAPGetRegionInfo((LPVOID)StartBoundary, lpBuffer))
+        if (!MAPGetRegionInfo((void *)StartBoundary, lpBuffer))
         {
             // When all else fails, call vm_region() if it's available.
 
             // Initialize the State to be MEM_FREE, in which case AllocationBase, AllocationProtect,
             // Protect, and Type are all undefined.
-            lpBuffer->BaseAddress = (LPVOID)StartBoundary;
+            lpBuffer->BaseAddress = (void *)StartBoundary;
             lpBuffer->RegionSize = 0;
             lpBuffer->State = MEM_FREE;
 #if HAVE_VM_ALLOCATE
@@ -2592,7 +2592,7 @@ VirtualQuery(
 
         /* Fill the structure.*/
         lpBuffer->AllocationProtect = pEntry->accessProtection;
-        lpBuffer->BaseAddress = (LPVOID)StartBoundary;
+        lpBuffer->BaseAddress = (void *)StartBoundary;
 
         lpBuffer->Protect = AllocationType == MEM_COMMIT ?
             VIRTUALConvertVirtualFlags( AccessProtection ) : 0;

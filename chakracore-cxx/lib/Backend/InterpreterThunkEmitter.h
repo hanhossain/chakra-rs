@@ -111,14 +111,14 @@ private:
         *(T*)(dest + offset) = value;
     };
 
-    uint8_t* AllocateFromFreeList(PVOID* ppDynamicInterpreterThunk);
+    uint8_t* AllocateFromFreeList(void ** ppDynamicInterpreterThunk);
 public:
     static const uint8_t ThunkSize;
     static constexpr uint BlockSize = AutoSystemInfo::PageSize * PageCount;
-    static void* ConvertToEntryPoint(PVOID dynamicInterpreterThunk);
+    static void* ConvertToEntryPoint(void * dynamicInterpreterThunk);
 
     InterpreterThunkEmitter(Js::ScriptContext * context, ArenaAllocator* allocator, CustomHeap::InProcCodePageAllocators * codePageAllocators, bool isAsmInterpreterThunk = false);
-    uint8_t* GetNextThunk(PVOID* ppDynamicInterpreterThunk);
+    uint8_t* GetNextThunk(void ** ppDynamicInterpreterThunk);
     SListBase<ThunkBlock>* GetThunkBlocksList();
 
     void Close();

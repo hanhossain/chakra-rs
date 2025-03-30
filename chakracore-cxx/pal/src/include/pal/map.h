@@ -43,7 +43,7 @@ Function :
     Returns TRUE if this function finds information about the specified address
 --*/
 
-BOOL MAPGetRegionInfo(LPVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
+BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 
 #ifdef __cplusplus
 }

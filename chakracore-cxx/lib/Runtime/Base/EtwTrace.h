@@ -28,7 +28,7 @@
 extern "C" {
     void EtwCallback(
         uint32_t controlCode,
-        PVOID callbackContext);
+        void * callbackContext);
 }
 
 #include "TestEtwEventSink.h"

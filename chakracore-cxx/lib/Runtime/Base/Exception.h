@@ -17,7 +17,7 @@ namespace Js {
             ExceptionKind_StackOverflow
         };
 
-        static bool RaiseIfScriptActive(ScriptContext *scriptContext, unsigned kind, PVOID returnAddress = NULL);
+        static bool RaiseIfScriptActive(ScriptContext *scriptContext, unsigned kind, void * returnAddress = NULL);
 
         static void RecoverUnusedMemory();
     };

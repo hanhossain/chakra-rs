@@ -1165,13 +1165,13 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
             {
                 int ret;
                 int n;
-                LPVOID voidPtr = NULL;
+                void * voidPtr = NULL;
 
                 if (Store)
                 {
                     // sscanf_s requires that if we are trying to read "%s" or "%c" or "%[", then
                     // the size of the buffer must follow the buffer we are trying to read into.
-                    voidPtr = va_arg(ap, LPVOID);
+                    voidPtr = va_arg(ap, void *);
                     unsigned typeLen = 0;
                     if ((Type == SCANF_TYPE_STRING) || (Type == SCANF_TYPE_BRACKETS))
                     {
@@ -1338,7 +1338,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 int n;
                 int size;
                 LPSTR newBuff = 0;
-                LPVOID voidPtr = NULL;
+                void * voidPtr = NULL;
 
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0, 0);
                 if (!size)
@@ -1408,7 +1408,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                     }
                     else
                     {
-                        voidPtr = va_arg(ap, LPVOID);
+                        voidPtr = va_arg(ap, void *);
                         // sscanf_s requires that if we are trying to read "%s" or "%c", then
                         // the size of the buffer must follow the buffer we are trying to read into.
                         unsigned typeLen = 0;

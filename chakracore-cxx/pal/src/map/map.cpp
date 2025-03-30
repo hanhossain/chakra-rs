@@ -57,7 +57,7 @@ CRITICAL_SECTION mapping_critsec PAL_GLOBAL;
 LIST_ENTRY MappedViewList PAL_GLOBAL;
 
 static PAL_ERROR MAPGrowLocalFile(INT, UINT);
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( LPCVOID );
+static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
 static PAL_ERROR MAPDesiredAccessAllowed( DWORD, DWORD, DWORD );
 
 static INT MAPProtectionToFileOpenFlags( DWORD );
@@ -67,7 +67,7 @@ static DWORD MAPConvertProtectToAccess( DWORD );
 static INT MAPFileMapToMmapFlags( DWORD );
 static DWORD MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address, SIZE_T size, 
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
                                      SIZE_T offset, long init_ref_count);
 static int32_t NativeMapHolderAddRef(NativeMapHolder * thisPMH);
 static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
@@ -94,7 +94,7 @@ MAPmmapAndRecord(
     int flags,
     int fd,
     off_t offset,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     );
 
 #if !HAVE_MMAP_DEV_ZERO
@@ -934,7 +934,7 @@ Function:
 
 See MSDN doc.
 --*/
-LPVOID
+void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
            DWORD dwDesiredAccess,
@@ -944,7 +944,7 @@ MapViewOfFile(
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
-    LPVOID pvMappedBaseAddress = NULL;
+    void * pvMappedBaseAddress = NULL;
 
     PERF_ENTRY(MapViewOfFile);
     ENTRY("MapViewOfFile(hFileMapping=%p, dwDesiredAccess=%u, "
@@ -974,18 +974,18 @@ MapViewOfFile(
     return pvMappedBaseAddress;
 }
 
-LPVOID
+void *
 MapViewOfFileEx(
            HANDLE hFileMappingObject,
            DWORD dwDesiredAccess,
            DWORD dwFileOffsetHigh,
            DWORD dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap,
-           LPVOID lpBaseAddress)
+           void * lpBaseAddress)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
-    LPVOID pvMappedBaseAddress = NULL;
+    void * pvMappedBaseAddress = NULL;
 
     PERF_ENTRY(MapViewOfFileEx);
     ENTRY("MapViewOfFileEx(hFileMapping=%p, dwDesiredAccess=%u, "
@@ -1031,7 +1031,7 @@ See MSDN doc.
 --*/
 BOOL
 FlushViewOfFile(
-     LPVOID lpBaseAddress,
+     void * lpBaseAddress,
      SIZE_T dwNumberOfBytesToFlush)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1104,7 +1104,7 @@ See MSDN doc.
 --*/
 BOOL
 UnmapViewOfFile(
-         LPCVOID lpBaseAddress)
+         const void * lpBaseAddress)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1134,7 +1134,7 @@ CorUnix::InternalMapViewOfFile(
     DWORD dwFileOffsetHigh,
     DWORD dwFileOffsetLow,
     SIZE_T dwNumberOfBytesToMap,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1145,7 +1145,7 @@ CorUnix::InternalMapViewOfFile(
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
     PMAPPED_VIEW_LIST pReusedMapping = NULL;
 #endif
-    LPVOID pvBaseAddress = NULL;
+    void * pvBaseAddress = NULL;
 
     /* Sanity checks */
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) )
@@ -1438,7 +1438,7 @@ InternalMapViewOfFileExit:
 PAL_ERROR
 CorUnix::InternalUnmapViewOfFile(
     CPalThread *pThread,
-    LPCVOID lpBaseAddress
+    const void * lpBaseAddress
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1459,7 +1459,7 @@ CorUnix::InternalUnmapViewOfFile(
     NativeMapHolderRelease(pThread, pView->pNMHolder);
     pView->pNMHolder = NULL;
 #else
-    if (-1 == munmap((LPVOID)lpBaseAddress, pView->NumberOfBytesToMap))
+    if (-1 == munmap((void *)lpBaseAddress, pView->NumberOfBytesToMap))
     {
         ASSERT( "Unable to unmap the memory. Error=%s.\n",
                 strerror( errno ) );
@@ -1543,7 +1543,7 @@ Function :
 
     Callers to this function must hold mapping_critsec
 --*/
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( LPCVOID lpAddress )
+static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * lpAddress )
 {       
     if ( NULL == lpAddress )
     {
@@ -1823,7 +1823,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
 
         for ( x = 0; x < NewSize - OrigSize - BUFFER_SIZE; x += BUFFER_SIZE )
         {
-            if ( write( UnixFD, (LPVOID)buf, BUFFER_SIZE ) == -1 )
+            if ( write( UnixFD, (void *)buf, BUFFER_SIZE ) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1840,7 +1840,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
         /* Catch any left overs. */
         if ( x != NewSize )
         {
-            if ( write( UnixFD, (LPVOID)buf, NewSize - OrigSize - x) == -1 )
+            if ( write( UnixFD, (void *)buf, NewSize - OrigSize - x) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1954,7 +1954,7 @@ static BOOL MAPIsRequestPermissible( DWORD flProtect, CFileProcessLocalData * pF
 }
 
 // returns TRUE if we have information about the specified address
-BOOL MAPGetRegionInfo(LPVOID lpAddress,
+BOOL MAPGetRegionInfo(void * lpAddress,
                       PMEMORY_BASIC_INFORMATION lpBuffer)
 {
     BOOL fFound = FALSE;
@@ -2089,7 +2089,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
     return pNewView;
 }
 
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address, SIZE_T size, 
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
                                      SIZE_T offset, long init_ref_count)
 {
     NativeMapHolder * pThisMapHolder;
@@ -2200,13 +2200,13 @@ MAPmmapAndRecord(
     int flags,
     int fd,
     off_t offset,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     )
 {
     _ASSERTE(pPEBaseAddress != NULL);
 
     PAL_ERROR palError = NO_ERROR;
-    LPVOID pvBaseAddress = NULL;
+    void * pvBaseAddress = NULL;
 
     pvBaseAddress = mmap(addr, len, prot, flags, fd, offset);
     if (MAP_FAILED == pvBaseAddress)
@@ -2621,7 +2621,7 @@ Function :
 
     returns TRUE if successful, FALSE otherwise
 --*/
-BOOL MAPUnmapPEFile(LPCVOID lpAddress)
+BOOL MAPUnmapPEFile(const void * lpAddress)
 {
     TRACE_(LOADER)("MAPUnmapPEFile(lpAddress=%p)\n", lpAddress);
 

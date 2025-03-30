@@ -179,7 +179,7 @@ namespace Js
         friend Js::ScriptContext;
 
     public:
-        JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext = TRUE /* use leafinterpreterframe of entryexit record */, PVOID returnAddress = NULL, bool _forceFullWalk = false);
+        JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext = TRUE /* use leafinterpreterframe of entryexit record */, void * returnAddress = NULL, bool _forceFullWalk = false);
 #if ENABLE_NATIVE_CODEGEN
         ~JavascriptStackWalker() { inlinedFrameWalker.Close(); }
 #endif

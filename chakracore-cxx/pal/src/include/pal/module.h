@@ -26,7 +26,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-typedef BOOL (*PDLLMAIN)(HINSTANCE, DWORD, LPVOID);   /* entry point of module */
+typedef BOOL (*PDLLMAIN)(HINSTANCE, DWORD, void *);   /* entry point of module */
 typedef HINSTANCE (*PREGISTER_MODULE)(LPCSTR);           /* used to create the HINSTANCE for above DLLMain entry point */
 typedef void (*PUNREGISTER_MODULE)(HINSTANCE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
 
@@ -94,7 +94,7 @@ Parameters :
     DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH, 
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpReserved : parameter to pass down to DllMain
+    void * lpReserved : parameter to pass down to DllMain
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary 
             and non-NULL if DllMain has been called during process termination. 
@@ -104,7 +104,7 @@ Parameters :
 Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
-void LOADCallDllMain(DWORD dwReason, LPVOID lpReserved);
+void LOADCallDllMain(DWORD dwReason, void * lpReserved);
 
 /*++
 Function:

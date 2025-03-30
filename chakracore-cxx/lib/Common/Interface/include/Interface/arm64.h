@@ -12,9 +12,9 @@
 #endif
 
 #if defined(__getReg) || defined(_WIN64)
-#define arm64_GET_CURRENT_FRAME() ((LPVOID)__getReg(29))
+#define arm64_GET_CURRENT_FRAME() ((void *)__getReg(29))
 #else
-extern "C" LPVOID arm64_GET_CURRENT_FRAME(void);
+extern "C" void * arm64_GET_CURRENT_FRAME(void);
 #endif
 
 extern "C" void arm64_SAVE_REGISTERS(void*);

@@ -53,7 +53,7 @@ namespace CorUnix
     typedef struct
     {
         DWORD processId;
-        PVOID pvControllerInstance;
+        void * pvControllerInstance;
         UINT64 lockRgnStart; 
         UINT64 nbBytesLocked;
         LOCK_TYPE lockType;
@@ -152,7 +152,7 @@ namespace CorUnix
     private:
 
         SHMPTR m_shmFileLocks;
-        PVOID m_pvControllerInstance;
+        void * m_pvControllerInstance;
         UINT64 m_lockRgnStart;
         UINT64 m_nbBytesToLock;
     protected:
@@ -164,7 +164,7 @@ namespace CorUnix
 
         CSharedMemoryFileTransactionLock(
             SHMPTR shmFileLocks,
-            PVOID pvControllerInstance,
+            void * pvControllerInstance,
             UINT64 lockRgnStart,
             UINT64 nbBytesToLock
             )

@@ -55,7 +55,7 @@ Function :
     Processor-dependent implementation of FlushInstructionCache
 
 Parameters :
-    LPCVOID lpBaseAddress: start of region to flush
+    const void * lpBaseAddress: start of region to flush
     SIZE_T dwSize : length of region to flush
 
 Return value :
@@ -64,7 +64,7 @@ Return value :
 --*/
 BOOL
 DBG_FlushInstructionCache(
-                       LPCVOID lpBaseAddress,
+                       const void * lpBaseAddress,
                        SIZE_T dwSize);
 
 #ifdef __cplusplus

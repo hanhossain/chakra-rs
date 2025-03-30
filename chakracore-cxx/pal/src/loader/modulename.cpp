@@ -164,7 +164,7 @@ Notes:
     the system running)  It is only safe to use it immediately after calling
     this function.
 --*/
-const char *PAL_dladdr(LPVOID ProcAddress)
+const char *PAL_dladdr(void * ProcAddress)
 {
 #if defined(_AIX) || defined(__hppa__)
     /* dladdr is not supported on AIX or 32-bit HPUX-PARISC */

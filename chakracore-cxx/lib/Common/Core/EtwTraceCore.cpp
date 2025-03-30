@@ -10,7 +10,7 @@ extern "C" {
     ETW_INLINE
         void EtwCallback(
         uint32_t controlCode,
-        PVOID callbackContext)
+        void * callbackContext)
     {
         EtwCallbackApi::OnSessionChange(controlCode, callbackContext);
     }

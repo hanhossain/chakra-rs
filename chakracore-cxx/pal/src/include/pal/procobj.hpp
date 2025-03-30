@@ -41,7 +41,7 @@ namespace CorUnix
     struct ProcessModules
     {
         ProcessModules *Next;
-        PVOID BaseAddress;
+        void * BaseAddress;
         char Name[0];
     };
 
@@ -101,7 +101,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         BOOL bInheritHandles,
         DWORD dwCreationFlags,
-        LPVOID lpEnvironment,
+        void * lpEnvironment,
         LPCWSTR lpCurrentDirectory,
         LPSTARTUPINFOW lpStartupInfo,
         LPPROCESS_INFORMATION lpProcessInformation

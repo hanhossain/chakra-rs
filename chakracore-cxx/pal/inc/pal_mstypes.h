@@ -150,9 +150,6 @@ typedef int *PINT;
 typedef int *LPINT;
 typedef DWORD *PDWORD;
 typedef DWORD *LPDWORD;
-typedef void *PVOID;
-typedef void *LPVOID;
-typedef const void *LPCVOID;
 typedef int INT;
 typedef unsigned int UINT;
 typedef unsigned int *PUINT;
@@ -367,7 +364,7 @@ typedef struct _FILETIME {
 #define CP_UTF7     65000   /* UTF-7 translation */
 #define CP_UTF8     65001   /* UTF-8 translation */
 
-typedef PVOID PSID;
+typedef void * PSID;
 
 #ifdef  __cplusplus
 }

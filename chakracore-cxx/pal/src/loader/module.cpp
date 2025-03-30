@@ -112,7 +112,7 @@ static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
 static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic);
 static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic);
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpReserved);
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
 
@@ -348,7 +348,7 @@ GetProcAddress(
         /* if we don't know the module's full name yet, this is our chance to obtain it */
         if (!module->lib_name && module->dl_handle)
         {
-            const char* libName = PAL_dladdr((LPVOID)ProcAddress);
+            const char* libName = PAL_dladdr((void *)ProcAddress);
             if (libName)
             {
                 module->lib_name = UTIL_MBToWC_Alloc(libName, -1);
@@ -773,10 +773,10 @@ Parameters:
 Return value:
     module base address
 --*/
-LPCVOID
+const void *
 PAL_GetSymbolModuleBase(void *symbol)
 {
-    LPCVOID retval = nullptr;
+    const void * retval = nullptr;
 
     PERF_ENTRY(PAL_GetPalModuleBase);
     ENTRY("PAL_GetPalModuleBase\n");
@@ -921,7 +921,7 @@ Parameters :
     DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpReserved : parameter to pass down to DllMain
+    void * lpReserved : parameter to pass down to DllMain
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary
             and non-NULL if DllMain has been called during process termination.
@@ -932,7 +932,7 @@ Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
 extern "C"
-void LOADCallDllMain(DWORD dwReason, LPVOID lpReserved)
+void LOADCallDllMain(DWORD dwReason, void * lpReserved)
 {
     MODSTRUCT *module = nullptr;
     BOOL InLoadOrder = TRUE; /* true if in load order, false for reverse */
@@ -1098,7 +1098,7 @@ Parameters :
     DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpvReserved : parameter to pass down to DllMain,
+    void * lpvReserved : parameter to pass down to DllMain,
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary
             and non-NULL if DllMain has been called during process termination.
@@ -1106,7 +1106,7 @@ Parameters :
 Returns:
     BOOL : DllMain's return value
 */
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpReserved)
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, void * lpReserved)
 {
 #if _ENABLE_DEBUG_MESSAGES_
     /* reset ENTRY nesting level back to zero while inside the callback... */
@@ -1117,7 +1117,7 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpRese
     {
         MODSTRUCT *module;
         DWORD dwReason;
-        LPVOID lpReserved;
+        void * lpReserved;
         BOOL ret;
     } param;
     param.module = module;
@@ -1530,7 +1530,7 @@ static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPa
             }
         }
 
-        BOOL dllMainRetVal = LOADCallDllMainSafe(module, DLL_PROCESS_ATTACH, fDynamic ? nullptr : (LPVOID)-1);
+        BOOL dllMainRetVal = LOADCallDllMainSafe(module, DLL_PROCESS_ATTACH, fDynamic ? nullptr : (void *)-1);
 
         // If DlMain(DLL_PROCESS_ATTACH) returns FALSE, we must immediately unload the module
         if (!dllMainRetVal)
@@ -1624,7 +1624,7 @@ MODSTRUCT *LOADGetPalLibrary()
         TRACE("Loading module for PAL library\n");
 
         Dl_info info;
-        if (dladdr((PVOID)&LOADGetPalLibrary, &info) == 0)
+        if (dladdr((void *)&LOADGetPalLibrary, &info) == 0)
         {
             ERROR("LOADGetPalLibrary: dladdr() failed. dlerror message is \"%s\"\n", dlerror());
             goto exit;

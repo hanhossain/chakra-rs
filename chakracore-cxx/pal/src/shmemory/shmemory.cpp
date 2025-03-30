@@ -352,7 +352,7 @@ static CCLock shm_critsec(false);
 int shm_numsegments;
 
 /* array containing the base address of each segment */
-Volatile<LPVOID> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
+Volatile<void *> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
 
 /* number of locks the process currently holds (SHMLock calls without matching
 SHMRelease). Because we take the critical section while inside a
@@ -812,7 +812,7 @@ we must obtain an address for that new segment and add it to our array
 In the simplest case (no need to map new segments), there is no need to hold
 the lock, since we don't access any information that can change
 --*/
-LPVOID SHMPtrToPtr(SHMPTR shmptr)
+void * SHMPtrToPtr(SHMPTR shmptr)
 {
     void *retval;
     int segment;
@@ -1106,7 +1106,7 @@ Notes :
 --*/
 static BOOL SHMAddSegment(void)
 {
-    LPVOID segment_base;
+    void * segment_base;
     SHM_SEGMENT_HEADER *header;
     SHM_FIRST_HEADER *first_header;
     SHMPTR first_shmptr;
@@ -1281,7 +1281,7 @@ SHMPTR SHMStrDup( LPCSTR string )
 
         if ( retVal != 0 )
         {
-            LPVOID ptr = SHMPTR_TO_PTR( retVal );
+            void * ptr = SHMPTR_TO_PTR( retVal );
             _ASSERT_MSG(ptr != NULL, "SHMPTR_TO_PTR returned NULL.\n");
             if (ptr != NULL)
             {
@@ -1324,7 +1324,7 @@ SHMPTR SHMWStrDup( LPCWSTR string )
 
         if ( retVal != 0 )
         {
-            LPVOID ptr = SHMPTR_TO_PTR(retVal);
+            void * ptr = SHMPTR_TO_PTR(retVal);
             _ASSERT_MSG(ptr != NULL, "SHMPTR_TO_PTR returned NULL.\n");
             if (ptr != NULL)
             {

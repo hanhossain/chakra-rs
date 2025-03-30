@@ -34,7 +34,7 @@ void ForcedMemoryConstraint::FragmentAddressSpace(size_t usableSize)
     // Reserve the reset the address space
     for (uint i = 1; i < _countof(address); i++)
     {
-        address[i] = ::VirtualAlloc((LPVOID)(i * allocationGranularity), allocationGranularity, MEM_RESERVE, PAGE_NOACCESS);
+        address[i] = ::VirtualAlloc((void *)(i * allocationGranularity), allocationGranularity, MEM_RESERVE, PAGE_NOACCESS);
     }
 
     // fragment

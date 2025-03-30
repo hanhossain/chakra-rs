@@ -10,7 +10,7 @@
 #error Include arm.h in builds of ARM targets only.
 #endif
 
-extern "C" LPVOID arm_GET_CURRENT_FRAME(void);
+extern "C" void * arm_GET_CURRENT_FRAME(void);
 extern "C" void arm_SAVE_REGISTERS(void*);
 
 /*

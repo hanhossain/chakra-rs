@@ -287,7 +287,7 @@ namespace Js
     BOOL DelayLoadWinCoreProcessThreads::GetProcessInformation(
         __in HANDLE hProcess,
         __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
-        __out_bcount(nLength) PVOID lpBuffer,
+        __out_bcount(nLength) void * lpBuffer,
         __in SIZE_T nLength
     )
     {

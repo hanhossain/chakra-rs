@@ -1181,7 +1181,7 @@ CodePageAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper>::AllocLo
 {
     AutoCriticalSection autoLock(&this->cs);
     Assert(segment);
-    LPVOID address = nullptr;
+    void * address = nullptr;
     if (IsPreReservedSegment(segment))
     {
         address = ((SegmentBase<PreReservedSectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->AllocLocal(remoteAddr, size);

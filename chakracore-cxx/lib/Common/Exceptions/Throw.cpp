@@ -128,7 +128,7 @@ namespace Js {
         throw OutOfMemoryException();
     }
 
-    void Throw::StackOverflow(ScriptContext *scriptContext, PVOID returnAddress)
+    void Throw::StackOverflow(ScriptContext *scriptContext, void * returnAddress)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))

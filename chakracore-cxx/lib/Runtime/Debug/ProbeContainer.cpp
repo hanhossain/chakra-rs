@@ -941,7 +941,7 @@ namespace Js
     void ProbeContainer::AsyncActivate(HaltCallback* haltCallback)
     {
         OUTPUT_TRACE(Js::DebuggerPhase, _u("Async break activated\n"));
-        InterlockedExchangePointer((PVOID*)&this->pAsyncHaltCallback, haltCallback);
+        InterlockedExchangePointer((void **)&this->pAsyncHaltCallback, haltCallback);
 
         Assert(debugManager);
         debugManager->asyncBreakController.Activate(haltCallback);
@@ -949,7 +949,7 @@ namespace Js
 
     void ProbeContainer::AsyncDeactivate()
     {
-        InterlockedExchangePointer((PVOID*)&this->pAsyncHaltCallback, nullptr);
+        InterlockedExchangePointer((void **)&this->pAsyncHaltCallback, nullptr);
 
         Assert(debugManager);
         debugManager->asyncBreakController.Deactivate();

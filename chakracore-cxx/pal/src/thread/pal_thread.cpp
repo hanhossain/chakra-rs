@@ -441,7 +441,7 @@ CreateThread(
      LPSECURITY_ATTRIBUTES lpThreadAttributes,
      DWORD dwStackSize,
      LPTHREAD_START_ROUTINE lpStartAddress,
-     LPVOID lpParameter,
+     void * lpParameter,
      DWORD dwCreationFlags,
      LPDWORD lpThreadId)
 {
@@ -490,7 +490,7 @@ CorUnix::InternalCreateThread(
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     DWORD dwStackSize,
     LPTHREAD_START_ROUTINE lpStartAddress,
-    LPVOID lpParameter,
+    void * lpParameter,
     DWORD dwCreationFlags,
     PalThreadType eThreadType,
     SIZE_T* pThreadId,
@@ -1458,7 +1458,7 @@ CPalThread::ThreadEntry(
     PAL_ERROR palError;
     CPalThread *pThread;
     PTHREAD_START_ROUTINE pfnStartRoutine;
-    LPVOID pvPar;
+    void * pvPar;
     DWORD retValue;
 
     pThread = reinterpret_cast<CPalThread*>(pvParam);
@@ -2342,14 +2342,14 @@ CPalThread::GetStackLimit()
     return stackLimit;
 }
 
-PVOID
+void *
 PAL_GetStackBase()
 {
     CPalThread* thread = InternalGetCurrentThread();
     return thread->GetStackBase();
 }
 
-PVOID
+void *
 PAL_GetStackLimit()
 {
     CPalThread* thread = InternalGetCurrentThread();

@@ -78,7 +78,7 @@ namespace MarkStack
                     {
                         char* page = (((char*)chunk) + ChunkSize - PageSize);
                         // Don't write to the old page when a new chunk is pushed.
-                        ::VirtualProtect((LPVOID)page, PageSize, PAGE_NOACCESS, NULL);
+                        ::VirtualProtect((void *)page, PageSize, PAGE_NOACCESS, NULL);
                     }
                 }
             }

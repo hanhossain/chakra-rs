@@ -112,14 +112,14 @@ namespace Js
     _NOINLINE
         uint16_t StackTrace64(_In_ DWORD FramesToSkip,
         _In_ DWORD FramesToCapture,
-        _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
+        _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
         _Out_opt_ PDWORD BackTraceHash,
         _In_opt_ const CONTEXT* pCtx = nullptr)
     {
         CONTEXT                         Context;
         UNWIND_HISTORY_TABLE            UnwindHistoryTable;
         PRUNTIME_FUNCTION               RuntimeFunction;
-        PVOID                           HandlerData;
+        void *                           HandlerData;
         ULONG64                         EstablisherFrame;
         ULONG64                         ImageBase;
         uint32_t                           Frame = 0;
@@ -168,7 +168,7 @@ namespace Js
                 break;
             }
 
-            BackTrace[Frame] = (PVOID)Context.Rip;
+            BackTrace[Frame] = (void *)Context.Rip;
             if (BackTraceHash)
             {
                 *BackTraceHash += (Context.Rip & 0xffffffff);
@@ -189,7 +189,7 @@ namespace Js
     uint16_t StackTrace86(
         _In_ DWORD FramesToSkip,
         _In_ DWORD FramesToCapture,
-        _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
+        _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
         _Inout_opt_ PDWORD BackTraceHash,
         __in_opt const PCONTEXT InitialContext = NULL
         )
@@ -243,7 +243,7 @@ namespace Js
                 {
 #pragma warning(suppress: 22102)
 #pragma warning(suppress: 26014)
-                    BackTrace[FrameCount - FramesToSkip] = (PVOID)StackFrame.AddrPC.Offset;
+                    BackTrace[FrameCount - FramesToSkip] = (void *)StackFrame.AddrPC.Offset;
                     if (BackTraceHash)
                     {
                         *BackTraceHash += (StackFrame.AddrPC.Offset & 0xffffffff);
@@ -346,7 +346,7 @@ namespace Js
     FaultInjection FaultInjection::Global;
     static CriticalSection cs_Sym; // for Sym* method is not thread safe
     const auto& globalFlags = Js::Configuration::Global.flags;
-    PVOID FaultInjection::vectoredExceptionHandler = nullptr;
+    void * FaultInjection::vectoredExceptionHandler = nullptr;
     DWORD FaultInjection::exceptionFilterRemovalLastError = 0;
     THREAD_LOCAL int(*Js::FaultInjection::pfnHandleAV)(int, PEXCEPTION_POINTERS) = nullptr;
     static SymbolInfoPackage sip;
@@ -746,7 +746,7 @@ namespace Js
 
                 // enum symbols, if succeed we compare with address when doing stack matching
                 pfnSymEnumSymbolsW(GetCurrentProcess(), 0, baselineStack[i],
-                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ uint32_t SymbolSize, _In_opt_  PVOID UserContext)->BOOL
+                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ uint32_t SymbolSize, _In_opt_  void * UserContext)->BOOL
                 {
                     Assert(UserContext != nullptr); // did passed in the user context
                     if (pSymInfo->Size > 0)
@@ -1133,7 +1133,7 @@ namespace Js
         // this can be used for additional stack matching repro
         HANDLE hProcess = GetCurrentProcess();
         DWORD64 dwSymDisplacement = 0;
-        auto printFrame = [&](LPVOID addr)
+        auto printFrame = [&](void * addr)
         {
             sip.Init();
             if (pfnSymFromAddrW(hProcess, (DWORD64)addr, &dwSymDisplacement, &sip.si))
@@ -1148,7 +1148,7 @@ namespace Js
             }
         };
 
-        LPVOID backTrace[MAX_FRAME_COUNT] = { 0 };
+        void * backTrace[MAX_FRAME_COUNT] = { 0 };
         DWORD64 displacements[MAX_FRAME_COUNT] = { 0 };
 #if _M_IX86
         uint16_t nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
@@ -1167,7 +1167,7 @@ namespace Js
             displacements[i] = dwSymDisplacement;
         }
 
-        LPVOID internalExceptionAddr = nullptr;
+        void * internalExceptionAddr = nullptr;
         for (int i = 0; i < nStackCount - 1 && internalExceptionAddr == nullptr; i++)
         {
             if (backTrace[i] == (char*)Js::Throw::FatalInternalError + displacements[i])

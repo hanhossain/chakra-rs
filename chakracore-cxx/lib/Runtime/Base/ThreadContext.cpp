@@ -1618,7 +1618,7 @@ ThreadContext::IsCurrentStackAvailable(size_t size)
     but not in a->b->a recursion).
 */
 void
-ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress)
+ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, void * returnAddress)
 {
     AssertCanHandleStackOverflow();
     if (!this->IsStackAvailable(size))
@@ -1648,7 +1648,7 @@ ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext
 }
 
 void
-ThreadContext::ProbeStack(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress)
+ThreadContext::ProbeStack(size_t size, Js::ScriptContext *scriptContext, void * returnAddress)
 {
     this->ProbeStackNoDispose(size, scriptContext, returnAddress);
 

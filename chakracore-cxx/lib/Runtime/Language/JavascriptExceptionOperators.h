@@ -77,7 +77,7 @@ namespace Js
 
         static void __declspec(noreturn) OP_Throw(Var object, ScriptContext* scriptContext);
         static void __declspec(noreturn) Throw(Var object, ScriptContext* scriptContext);
-        static void __declspec(noreturn) ThrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false, PVOID returnAddress = NULL, bool resetStack = false);
+        static void __declspec(noreturn) ThrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false, void * returnAddress = NULL, bool resetStack = false);
         static void __declspec(noreturn) RethrowExceptionObject(Js::JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger = false);
 
         static void __declspec(noreturn) DoThrow(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext);
@@ -106,14 +106,14 @@ namespace Js
         static Var OP_RuntimeReferenceError(MessageId messageId, ScriptContext* scriptContext);
         static Var OP_WebAssemblyRuntimeError(MessageId messageId, ScriptContext* scriptContext);
         static void __declspec(noreturn) ThrowOutOfMemory(ScriptContext* scriptContext);
-        static void __declspec(noreturn) ThrowStackOverflow(ScriptContext* scriptContext, PVOID returnAddress);
+        static void __declspec(noreturn) ThrowStackOverflow(ScriptContext* scriptContext, void * returnAddress);
 
         static uint64 GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext);
         static Var ThrowTypeErrorRestrictedPropertyAccessor(RecyclableObject* function, CallInfo callInfo, ...);
         static Var StackTraceAccessor(RecyclableObject* function, CallInfo callInfo, ...);
-        static void WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException = true, bool resetSatck = false);
+        static void WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException = true, bool resetSatck = false);
 #if ENABLE_NATIVE_CODEGEN
-        static void WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, PVOID returnAddress, PVOID tryCatchFrameAddr);
+        static void WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, void * returnAddress, void * tryCatchFrameAddr);
 #endif
         static void AddStackTraceToObject(Var obj, JavascriptExceptionContext::StackTrace* stackTrace, ScriptContext& scriptContext, bool isThrownException = true, bool resetSatck = false);
         static uint64 StackCrawlLimitOnThrow(Var thrownObject, ScriptContext& scriptContext);
@@ -129,9 +129,9 @@ namespace Js
 
       private:
         static JavascriptFunction * WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint32& callerByteCodeOffset,
-            uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException, bool resetStack = false);
+            uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack = false);
 
-        static void ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, PVOID returnAddress, bool resetStack);
+        static void ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack);
         static BOOL GetCaller(JavascriptStackWalker& walker, _Out_opt_ JavascriptFunction*& jsFunc);
         static void DumpStackTrace(JavascriptExceptionContext& exceptionContext, bool isThrownException = true);
         static JavascriptExceptionContext::StackTrace* TrimStackTraceForThrownObject(JavascriptExceptionContext::StackTrace* stackTraceOriginal, Var thrownObject, ScriptContext& scriptContext);

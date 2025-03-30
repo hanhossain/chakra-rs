@@ -138,7 +138,7 @@ namespace Js
 
     private:
         bool symInitialized;
-        static PVOID vectoredExceptionHandler;
+        static void * vectoredExceptionHandler;
         static DWORD exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();

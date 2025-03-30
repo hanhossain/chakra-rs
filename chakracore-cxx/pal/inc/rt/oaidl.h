@@ -24,7 +24,7 @@ typedef struct tagEXCEPINFO {
     BSTR bstrDescription;
     BSTR bstrHelpFile;
     DWORD dwHelpContext;
-    PVOID pvReserved;
+    void * pvReserved;
     HRESULT (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
 } EXCEPINFO, * LPEXCEPINFO;

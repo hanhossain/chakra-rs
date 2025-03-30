@@ -71,7 +71,7 @@ namespace CorUnix
 
         PalObjectTypeId eTypeId;
 
-        PVOID pvSynchData;
+        void * pvSynchData;
     } SHMObjData;
 
     class CSharedMemoryObject : public CPalObjectBase

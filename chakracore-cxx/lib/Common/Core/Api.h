@@ -35,7 +35,7 @@ namespace JsUtil
         static ThreadContextId GetCurrentThreadContextId();
 
         static bool RaiseOutOfMemoryIfScriptActive();
-        static bool RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, PVOID returnAddress);
+        static bool RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, void * returnAddress);
         static bool RaiseOnIntOverflow();
         static void RecoverUnusedMemory();
 #if DBG || defined(EXCEPTION_CHECK)

@@ -397,7 +397,7 @@ Parameters :
 Return value :
     The program counter from the native context.
 --*/
-LPVOID GetNativeContextPC(const native_context_t *context);
+void * GetNativeContextPC(const native_context_t *context);
 
 /*++
 Function :

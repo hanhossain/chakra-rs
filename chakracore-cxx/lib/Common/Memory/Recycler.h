@@ -617,7 +617,7 @@ public:
 
 private:
     // Static entry point for thread creation
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int CALLBACK StaticThreadProc(void * lpParameter);
 
     // Static entry point for thread service usage
     static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
@@ -1784,7 +1784,7 @@ private:
     bool AbortConcurrent(bool restoreState);
     void FinalizeConcurrent(bool restoreState);
 
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int CALLBACK StaticThreadProc(void * lpParameter);
     static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
     DWORD ThreadProc();
 

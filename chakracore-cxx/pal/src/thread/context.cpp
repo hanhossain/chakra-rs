@@ -858,18 +858,18 @@ Return value :
     The program counter from the native context.
 
 --*/
-LPVOID GetNativeContextPC(const native_context_t *context)
+void * GetNativeContextPC(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (LPVOID)MCREG_Rip(context->uc_mcontext);
+    return (void *)MCREG_Rip(context->uc_mcontext);
 #elif defined(_X86_)
-    return (LPVOID) MCREG_Eip(context->uc_mcontext);
+    return (void *) MCREG_Eip(context->uc_mcontext);
 #elif defined(HOST_S390X)
-    return (LPVOID) MCREG_PSWAddr(context->uc_mcontext);
+    return (void *) MCREG_PSWAddr(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (LPVOID) MCREG_Nip(context->uc_mcontext);
+    return (void *) MCREG_Nip(context->uc_mcontext);
 #else
-    return (LPVOID) MCREG_Pc(context->uc_mcontext);
+    return (void *) MCREG_Pc(context->uc_mcontext);
 #endif
 }
 
@@ -886,18 +886,18 @@ Return value :
     The stack pointer from the native context.
 
 --*/
-LPVOID GetNativeContextSP(const native_context_t *context)
+void * GetNativeContextSP(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (LPVOID)MCREG_Rsp(context->uc_mcontext);
+    return (void *)MCREG_Rsp(context->uc_mcontext);
 #elif defined(_X86_)
-    return (LPVOID) MCREG_Esp(context->uc_mcontext);
+    return (void *) MCREG_Esp(context->uc_mcontext);
 #elif defined(HOST_S390X)
-    return (LPVOID) MCREG_R15(context->uc_mcontext);
+    return (void *) MCREG_R15(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (LPVOID) MCREG_R31(context->uc_mcontext);
+    return (void *) MCREG_R31(context->uc_mcontext);
 #else
-    return (LPVOID) MCREG_Sp(context->uc_mcontext);
+    return (void *) MCREG_Sp(context->uc_mcontext);
 #endif
 }
 
@@ -1624,7 +1624,7 @@ See MSDN doc.
 --*/
 BOOL
 DBG_FlushInstructionCache(
-                           LPCVOID lpBaseAddress,
+                           const void * lpBaseAddress,
                            SIZE_T dwSize)
 {
 #if defined(__linux__) && defined(_ARM_)

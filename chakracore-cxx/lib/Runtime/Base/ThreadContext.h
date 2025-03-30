@@ -199,7 +199,7 @@ public:
         Js::RecyclableObject* function;
         Js::CallInfo callInfo;
         PCWSTR name;
-        PVOID addr;
+        void * addr;
         Entry* next;
     };
 
@@ -1434,8 +1434,8 @@ public:
     _NOINLINE bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
     _NOINLINE bool IsStackAvailableNoThrow(size_t size = Js::Constants::MinStackDefault);
     static bool IsCurrentStackAvailable(size_t size);
-    void ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress = nullptr);
-    void ProbeStack(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress = nullptr);
+    void ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);
+    void ProbeStack(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);
     void ProbeStack(size_t size, Js::RecyclableObject * obj, Js::ScriptContext *scriptContext);
     void ProbeStack(size_t size);
     static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);

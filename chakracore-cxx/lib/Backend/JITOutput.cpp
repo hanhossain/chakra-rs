@@ -280,7 +280,7 @@ JITOutput::FinalizeNativeCode()
     m_outputData->thunkAddress = allocation->thunkAddress;
     if (!allocation->thunkAddress && CONFIG_FLAG(OOPCFGRegistration))
     {
-        PVOID callTarget = (PVOID)m_outputData->codeAddress;
+        void * callTarget = (void *)m_outputData->codeAddress;
 #if ENABLE_OOP_NATIVE_CODEGEN
         if (JITManager::GetJITManager()->IsJITServer())
         {

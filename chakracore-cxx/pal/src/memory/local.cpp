@@ -62,7 +62,7 @@ LocalAlloc(
 	    UINT uFlags,
 	    SIZE_T uBytes)
 {
-    LPVOID lpRetVal = NULL;
+    void * lpRetVal = NULL;
     PERF_ENTRY(LocalAlloc);
     ENTRY("LocalAlloc (uFlags=%#x, uBytes=%u)\n", uFlags, uBytes);
 
@@ -90,7 +90,7 @@ LocalReAlloc(
         SIZE_T uBytes,
         UINT   uFlags)
 {
-    LPVOID lpRetVal = NULL;
+    void * lpRetVal = NULL;
     PERF_ENTRY(LocalReAlloc);
     ENTRY("LocalReAlloc (hMem=%p, uBytes=%u, uFlags=%#x)\n", hMem, uBytes, uFlags);
 
@@ -138,17 +138,17 @@ LocalFree(
     return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
 }
 
-extern "C" LPVOID CoTaskMemAlloc( SIZE_T cb)
+extern "C" void * CoTaskMemAlloc( SIZE_T cb)
 {
     return HeapAlloc(GetProcessHeap(), 0, cb);
 }
 
-extern "C" LPVOID CoTaskMemRealloc( LPVOID pv,  SIZE_T cb)
+extern "C" void * CoTaskMemRealloc( void * pv,  SIZE_T cb)
 {
     return HeapReAlloc(GetProcessHeap(), 0, pv, cb);
 }
 
-extern "C" void CoTaskMemFree( LPVOID pv)
+extern "C" void CoTaskMemFree( void * pv)
 {
     HeapFree(GetProcessHeap(), 0, pv);
 }

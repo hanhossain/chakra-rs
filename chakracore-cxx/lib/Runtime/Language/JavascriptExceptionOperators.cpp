@@ -1037,7 +1037,7 @@ namespace Js
     }
 #if ENABLE_NATIVE_CODEGEN
     // TODO: Add code address of throwing function on exception context, and use that for returnAddress instead of passing nullptr which starts stackwalk from the top
-    void JavascriptExceptionOperators::WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, PVOID returnAddress, PVOID tryHandlerAddrOfReturnAddr)
+    void JavascriptExceptionOperators::WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, void * returnAddress, void * tryHandlerAddrOfReturnAddr)
     {
         Assert(tryHandlerAddrOfReturnAddr != nullptr);
         JavascriptStackWalker walker(scriptContext, /*useEERContext*/ true, returnAddress);
@@ -1048,7 +1048,7 @@ namespace Js
     }
 #endif
     void
-        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException, bool resetSatck)
+        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetSatck)
     {
         uint32 callerBytecodeOffset;
         JavascriptFunction * jsFunc = WalkStackForExceptionContextInternal(scriptContext, exceptionContext, thrownObject, callerBytecodeOffset, stackCrawlLimit, returnAddress, isThrownException, resetSatck);
@@ -1064,7 +1064,7 @@ namespace Js
 
     JavascriptFunction *
     JavascriptExceptionOperators::WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject,
-        uint32& callerByteCodeOffset, uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException, bool resetStack)
+        uint32& callerByteCodeOffset, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
     {
         JavascriptStackWalker walker(&scriptContext, true, returnAddress);
         JavascriptFunction* jsFunc = nullptr;
@@ -1234,7 +1234,7 @@ namespace Js
         }
     }
 
-    void JavascriptExceptionOperators::ThrowStackOverflow(ScriptContext *scriptContext, PVOID returnAddress)
+    void JavascriptExceptionOperators::ThrowStackOverflow(ScriptContext *scriptContext, void * returnAddress)
     {
         Assert(scriptContext);
         DebugOnly(++scriptContext->soExceptionCount);
@@ -1256,7 +1256,7 @@ namespace Js
         JavascriptExceptionOperators::ThrowExceptionObject(so, scriptContext, false, returnAddress);
     }
 
-    void JavascriptExceptionOperators::ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, PVOID returnAddress, bool resetStack)
+    void JavascriptExceptionOperators::ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)
     {
         if (scriptContext)
         {
@@ -1332,7 +1332,7 @@ namespace Js
 #endif
     }
 
-    void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, PVOID returnAddress, bool resetStack)
+    void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)
     {
         ThrowExceptionObjectInternal(exceptionObject, scriptContext, true, considerPassingToDebugger, returnAddress, resetStack);
     }

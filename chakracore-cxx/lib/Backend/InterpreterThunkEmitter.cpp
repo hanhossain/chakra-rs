@@ -214,7 +214,7 @@ InterpreterThunkEmitter::GetThunkBlocksList()
 //
 // Returns the next thunk. Batch allocated PageCount pages of thunks and issue them one at a time
 //
-uint8_t* InterpreterThunkEmitter::GetNextThunk(PVOID* ppDynamicInterpreterThunk)
+uint8_t* InterpreterThunkEmitter::GetNextThunk(void ** ppDynamicInterpreterThunk)
 {
     Assert(ppDynamicInterpreterThunk);
     Assert(*ppDynamicInterpreterThunk == nullptr);
@@ -254,7 +254,7 @@ uint8_t* InterpreterThunkEmitter::GetNextThunk(PVOID* ppDynamicInterpreterThunk)
 // Interpreter thunks have an entrypoint at the beginning of the page boundary. Each function has a unique thunk return address
 // and this function can convert to the unique thunk return address to the beginning of the page which corresponds with the entrypoint
 //
-void* InterpreterThunkEmitter::ConvertToEntryPoint(PVOID dynamicInterpreterThunk)
+void* InterpreterThunkEmitter::ConvertToEntryPoint(void * dynamicInterpreterThunk)
 {
     Assert(dynamicInterpreterThunk != nullptr);
     void* entryPoint = (void*)((size_t)dynamicInterpreterThunk & (~((size_t)(BlockSize) - 1)));
@@ -810,7 +810,7 @@ void InterpreterThunkEmitter::Release(uint8_t* thunkAddress, bool addtoFreeList)
     }
 }
 
-uint8_t* InterpreterThunkEmitter::AllocateFromFreeList(PVOID* ppDynamicInterpreterThunk )
+uint8_t* InterpreterThunkEmitter::AllocateFromFreeList(void ** ppDynamicInterpreterThunk )
 {
     ThunkBlock& block = this->freeListedThunkBlocks.Head();
     uint8_t* thunk = block.AllocateFromFreeList();

@@ -5655,7 +5655,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
 #if DYNAMIC_INTERPRETER_THUNK
-    JavascriptMethod ScriptContext::GetNextDynamicAsmJsInterpreterThunk(PVOID* ppDynamicInterpreterThunk)
+    JavascriptMethod ScriptContext::GetNextDynamicAsmJsInterpreterThunk(void ** ppDynamicInterpreterThunk)
     {
 #ifdef ASMJS_PLAT
         return (JavascriptMethod)this->asmJsInterpreterThunkEmitter->GetNextThunk(ppDynamicInterpreterThunk);
@@ -5665,7 +5665,7 @@ ScriptContext::GetJitFuncRangeCache()
 #endif
     }
 
-    JavascriptMethod ScriptContext::GetNextDynamicInterpreterThunk(PVOID* ppDynamicInterpreterThunk)
+    JavascriptMethod ScriptContext::GetNextDynamicInterpreterThunk(void ** ppDynamicInterpreterThunk)
     {
         return (JavascriptMethod)this->interpreterThunkEmitter->GetNextThunk(ppDynamicInterpreterThunk);
     }

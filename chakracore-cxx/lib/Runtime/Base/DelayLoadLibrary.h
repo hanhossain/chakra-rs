@@ -134,7 +134,7 @@ namespace Js
     private:
         // LoadWinCoreMemory specific functions
 
-        typedef BOOL FNCGetProcessInformation(HANDLE, PROCESS_INFORMATION_CLASS, PVOID, SIZE_T);
+        typedef BOOL FNCGetProcessInformation(HANDLE, PROCESS_INFORMATION_CLASS, void *, SIZE_T);
         typedef FNCGetProcessInformation* PFNCGetProcessInformation;
         PFNCGetProcessInformation m_pfnGetProcessInformation;
 
@@ -150,7 +150,7 @@ namespace Js
         BOOL GetProcessInformation(
             __in HANDLE hProcess,
             __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
-            __out_bcount(nLength) PVOID lpBuffer,
+            __out_bcount(nLength) void * lpBuffer,
             __in SIZE_T nLength
         );
     };

@@ -130,7 +130,7 @@ void PageAllocatorPool::IdleCleanup()
 
 void CALLBACK PageAllocatorPool::IdleCleanupRoutine(
     _Inout_     PTP_CALLBACK_INSTANCE,
-    _Inout_opt_ PVOID,
+    _Inout_opt_ void *,
     _Inout_     PTP_TIMER)
 {
     AutoCriticalSection autoCS(&cs);

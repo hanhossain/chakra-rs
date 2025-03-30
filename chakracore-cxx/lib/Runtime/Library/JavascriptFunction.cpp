@@ -2343,7 +2343,7 @@ LABEL1:
         else
         {
             MEMORY_BASIC_INFORMATION info = { 0 };
-            size_t size = VirtualQuery((LPCVOID)faultingAddr, &info, sizeof(info));
+            size_t size = VirtualQuery((const void *)faultingAddr, &info, sizeof(info));
             if (size == 0)
             {
                 return false;

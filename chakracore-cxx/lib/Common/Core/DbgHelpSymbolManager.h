@@ -15,10 +15,10 @@ class DbgHelpSymbolManager
 {
 public:
     static void EnsureInitialized() { Instance.Initialize(); }
-    static BOOL SymFromAddr(PVOID address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol);
-    static BOOL SymGetLineFromAddr64(_In_ PVOID address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine);
+    static BOOL SymFromAddr(void * address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol);
+    static BOOL SymGetLineFromAddr64(_In_ void * address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine);
 
-    static size_t PrintSymbol(PVOID address);
+    static size_t PrintSymbol(void * address);
 private:
     DbgHelpSymbolManager() : isInitialized(false), hDbgHelpModule(nullptr), pfnSymFromAddrW(nullptr) {}
     ~DbgHelpSymbolManager();

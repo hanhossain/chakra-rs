@@ -655,7 +655,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileNa
     }
 
     JsScriptContents scriptContents = { 0 };
-    scriptContents.container = (LPVOID)fileContents;
+    scriptContents.container = (void *)fileContents;
     scriptContents.containerType = JsScriptContainerType::HeapAllocatedBuffer;
     scriptContents.encodingType = JsScriptEncodingType::Utf8;
     scriptContents.contentLengthInBytes = lengthBytes;

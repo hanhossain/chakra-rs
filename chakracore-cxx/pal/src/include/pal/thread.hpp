@@ -55,7 +55,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         DWORD dwStackSize,
         LPTHREAD_START_ROUTINE lpStartAddress,
-        LPVOID lpParameter,
+        void * lpParameter,
         DWORD dwCreationFlags,
         PalThreadType eThreadType,
         SIZE_T* pThreadId,
@@ -230,7 +230,7 @@ namespace CorUnix
                 LPSECURITY_ATTRIBUTES,
                 DWORD,
                 LPTHREAD_START_ROUTINE,
-                LPVOID,
+                void *,
                 DWORD,
                 PalThreadType,
                 SIZE_T*,
@@ -319,7 +319,7 @@ namespace CorUnix
         //
 
         LPTHREAD_START_ROUTINE m_lpStartAddress;
-        LPVOID m_lpStartParameter;
+        void * m_lpStartParameter;
         BOOL m_bCreateSuspended;
 
         int m_iThreadPriority;
@@ -582,7 +582,7 @@ namespace CorUnix
             return m_lpStartAddress;
         };
 
-        LPVOID
+        void *
         GetStartParameter(
             void
             )

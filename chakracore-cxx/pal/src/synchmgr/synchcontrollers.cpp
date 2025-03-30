@@ -781,7 +781,7 @@ namespace CorUnix
             TRACE("Disposing %s waitable object with SynchData @ "
                   "{shrid=%p, p=%p}\n",
                   (SharedObject == m_odObjectDomain) ? "shared" : "local",
-                  (PVOID)m_shridThis, this);
+                  (void *)m_shridThis, this);
             
 
 #ifdef SYNCH_STATISTICS

@@ -1668,8 +1668,8 @@ private:
 
     public:
 #if DYNAMIC_INTERPRETER_THUNK
-        JavascriptMethod GetNextDynamicAsmJsInterpreterThunk(PVOID* ppDynamicInterpreterThunk);
-        JavascriptMethod GetNextDynamicInterpreterThunk(PVOID* ppDynamicInterpreterThunk);
+        JavascriptMethod GetNextDynamicAsmJsInterpreterThunk(void ** ppDynamicInterpreterThunk);
+        JavascriptMethod GetNextDynamicInterpreterThunk(void ** ppDynamicInterpreterThunk);
 #if DBG
         BOOL IsDynamicInterpreterThunk(JavascriptMethod address);
 #endif

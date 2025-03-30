@@ -709,7 +709,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
                 {
                     nesting--;
                     if ((ret = pthread_setspecific(entry_level_key,
-                                                     (LPVOID)nesting)) != 0)
+                                                     (void *)nesting)) != 0)
                     {
                         fprintf(stderr, "ERROR : pthread_setspecific() failed "
                                 "error:%d (%s)\n", ret, strerror(ret));
@@ -721,7 +721,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
                 nesting = (INT_PTR) pthread_getspecific(entry_level_key);
 
                 if ((ret = pthread_setspecific(entry_level_key,
-                                                 (LPVOID)(nesting+1))) != 0)
+                                                 (void *)(nesting+1))) != 0)
                 {
                     fprintf(stderr, "ERROR : pthread_setspecific() failed "
                             "error:%d (%s)\n", ret, strerror(ret));
@@ -781,7 +781,7 @@ int DBG_change_entrylevel(int new_level)
     old_level = PtrToInt(pthread_getspecific(entry_level_key));
     if(-1 != new_level)
     {
-        if ((ret = pthread_setspecific(entry_level_key,(LPVOID)(IntToPtr(new_level)))) != 0)
+        if ((ret = pthread_setspecific(entry_level_key,(void *)(IntToPtr(new_level)))) != 0)
         {
             fprintf(stderr, "ERROR : pthread_setspecific() failed "
                     "error:%d (%s)\n", ret, strerror(ret));

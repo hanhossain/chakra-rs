@@ -198,12 +198,12 @@ Js::Amd64StackFrame::SkipToFrame(void * returnAddress)
     bool found = false;
     while (Next())
     {
-        if (((PVOID)currentContext->Rip) == returnAddress)
+        if (((void *)currentContext->Rip) == returnAddress)
         {
             found = true;
             break;
         }
-        else if (!ThreadContext::IsOnStack((PVOID)currentContext->Rsp))
+        else if (!ThreadContext::IsOnStack((void *)currentContext->Rsp))
         {
             AssertMsg(FALSE, "Amd64StackFrame: while doing initial unwind SP got out of stack.");
             break;

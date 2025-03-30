@@ -149,7 +149,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
     Assert(commitSize % pageSize == 0);
     Assert(commitSize / pageSize == sectionLastIndex - sectionStartIndex + 1);
 
-    LPVOID ret = ::VirtualAlloc((LPVOID) sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
+    void * ret = ::VirtualAlloc((void *) sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
     if (!ret)
     {
         // If this is the error that occurred while trying to commit the page, this likely means
@@ -191,7 +191,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
         }
 
 #pragma prefast(suppress:6250, "This method decommits memory")
-        BOOL result = ::VirtualFree((LPVOID)sectionStart, commitSize, MEM_DECOMMIT);
+        BOOL result = ::VirtualFree((void *)sectionStart, commitSize, MEM_DECOMMIT);
         Assert(result != 0);
         return false;
     }
@@ -259,7 +259,7 @@ X64WriteBarrierCardTableManager::Initialize()
         _cardTableNumEntries = Math::Align<size_t>(maxUmProcessAddressSpace / AutoSystemInfo::PageSize,
             AutoSystemInfo::PageSize) /* s_writeBarrierPageSize */;
 
-        LPVOID cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
+        void * cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
         if (!cardTableSpace) // Crash Early with a meaningful message. Otherwise the behavior is undefined.
         {
             fprintf(stderr, "Out of Memory\n"); fflush(stderr);

@@ -66,7 +66,7 @@ namespace CorUnix
     InternalWriteFile(
         CPalThread *pThread,
         HANDLE hFile,
-        LPCVOID lpBuffer,
+        const void * lpBuffer,
         DWORD nNumberOfBytesToWrite,
         LPDWORD lpNumberOfBytesWritten,
         LPOVERLAPPED lpOverlapped
@@ -76,7 +76,7 @@ namespace CorUnix
     InternalReadFile(
         CPalThread *pThread,
         HANDLE hFile,
-        LPVOID lpBuffer,
+        void * lpBuffer,
         DWORD nNumberOfBytesToRead,
         LPDWORD lpNumberOfBytesRead,
         LPOVERLAPPED lpOverlapped

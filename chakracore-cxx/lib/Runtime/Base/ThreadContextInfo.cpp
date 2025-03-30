@@ -398,9 +398,9 @@ ThreadContextInfo::ResetIsAllJITCodeInPreReservedRegion()
 template <bool useFileAPI>
 void
 ThreadContextInfo::SetValidCallTargetInternal(
-    _In_ PVOID callTargetAddress,
+    _In_ void * callTargetAddress,
     _In_opt_ HANDLE fileHandle,
-    _In_opt_ PVOID viewBase,
+    _In_opt_ void * viewBase,
     bool isSetValid)
 {
     AnalysisAssert(!useFileAPI || fileHandle);
@@ -408,13 +408,13 @@ ThreadContextInfo::SetValidCallTargetInternal(
 }
 
 void
-ThreadContextInfo::SetValidCallTargetFile(PVOID callTargetAddress, HANDLE fileHandle, PVOID viewBase, bool isSetValid)
+ThreadContextInfo::SetValidCallTargetFile(void * callTargetAddress, HANDLE fileHandle, void * viewBase, bool isSetValid)
 {
     ThreadContextInfo::SetValidCallTargetInternal<true>(callTargetAddress, fileHandle, viewBase, isSetValid);
 }
 
 void
-ThreadContextInfo::SetValidCallTargetForCFG(PVOID callTargetAddress, bool isSetValid)
+ThreadContextInfo::SetValidCallTargetForCFG(void * callTargetAddress, bool isSetValid)
 {
     ThreadContextInfo::SetValidCallTargetInternal<false>(callTargetAddress, nullptr, nullptr, isSetValid);
 }

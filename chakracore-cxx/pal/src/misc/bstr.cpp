@@ -136,7 +136,7 @@ extern "C" void SysFreeString(BSTR bstr)
 #if defined(_WIN64)
         bstr = (BSTR) ((char*) bstr - sizeof(DWORD));
 #endif
-        HeapFree(GetProcessHeap(), 0, (LPVOID) bstr);
+        HeapFree(GetProcessHeap(), 0, (void *) bstr);
     }
 }
 

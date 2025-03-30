@@ -35,26 +35,26 @@ private:
 
     uint32_t requestedFramesToCapture;
     uint32_t framesCount;
-    PVOID stackBackTrace[];
+    void * stackBackTrace[];
 };
 
 template <typename TAllocator>
 StackBackTrace *
 StackBackTrace::Capture(TAllocator * alloc, uint32_t framesToSkip, uint32_t framesToCapture)
 {
-    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID) * framesToCapture, StackBackTrace, framesToSkip, framesToCapture);
+    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(void *) * framesToCapture, StackBackTrace, framesToSkip, framesToCapture);
 }
 
 template <typename TAllocator>
 StackBackTrace* StackBackTrace::Create(TAllocator * alloc, uint32_t framesToCaptureLater)
 {
-    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID)* framesToCaptureLater, StackBackTrace, framesToCaptureLater);
+    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(void *)* framesToCaptureLater, StackBackTrace, framesToCaptureLater);
 }
 
 template <typename TAllocator>
 void StackBackTrace::Delete(TAllocator * alloc)
 {
-    AllocatorDeletePlus(TAllocator, alloc, sizeof(PVOID)* requestedFramesToCapture, this);
+    AllocatorDeletePlus(TAllocator, alloc, sizeof(void *)* requestedFramesToCapture, this);
 }
 
 template <typename Fn>

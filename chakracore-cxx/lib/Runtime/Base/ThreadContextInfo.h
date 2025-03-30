@@ -88,8 +88,8 @@ public:
     intptr_t GetStringMatchNameAddr() const;
 #endif
 
-    void SetValidCallTargetForCFG(PVOID callTargetAddress, bool isSetValid = true);
-    void SetValidCallTargetFile(PVOID callTargetAddress, HANDLE fileHandle, PVOID viewBase, bool isSetValid);
+    void SetValidCallTargetForCFG(void * callTargetAddress, bool isSetValid = true);
+    void SetValidCallTargetFile(void * callTargetAddress, HANDLE fileHandle, void * viewBase, bool isSetValid);
     void ResetIsAllJITCodeInPreReservedRegion();
     bool IsAllJITCodeInPreReservedRegion() const;
 
@@ -123,9 +123,9 @@ public:
     private:
         template<bool useFileAPI>
         void SetValidCallTargetInternal(
-            _In_ PVOID callTargetAddress,
+            _In_ void * callTargetAddress,
             _In_opt_ HANDLE fileHandle,
-            _In_opt_ PVOID viewBase,
+            _In_opt_ void * viewBase,
             bool isSetValid);
 protected:
     class AutoCloseHandle

@@ -70,7 +70,7 @@ extern "C"
         Returns TRUE if this function finds information about the specified address
     --*/
 
-    BOOL MAPGetRegionInfo(LPVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
+    BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 
     /*++
         MAPMapPEFile -
@@ -94,7 +94,7 @@ extern "C"
 
         returns TRUE if successful, FALSE otherwise
     --*/
-    BOOL MAPUnmapPEFile(LPCVOID lpAddress);
+    BOOL MAPUnmapPEFile(const void * lpAddress);
 }
 
 namespace CorUnix
@@ -105,7 +105,7 @@ namespace CorUnix
     typedef struct _NativeMapHolder
     {
         Volatile<int32_t> ref_count;
-        LPVOID address;
+        void * address;
         SIZE_T size;
         SIZE_T offset; /* for future use */
     } NativeMapHolder;
@@ -133,10 +133,10 @@ namespace CorUnix
                                                more than one shared mmapping per region of 
                                                physical file, per process */
 #endif
-        LPVOID lpAddress;           /* The pointer to the mapped memory. */
+        void * lpAddress;           /* The pointer to the mapped memory. */
         SIZE_T NumberOfBytesToMap;  /* Number of bytes to map. */
         DWORD dwDesiredAccess;      /* Desired access. */
-        LPVOID lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
+        void * lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
                                        base address pointer of the PE file (used to find all
                                        parts of the PE file mapping to allow PE file unload).
                                        Otherwise, it is NULL. */
@@ -196,13 +196,13 @@ namespace CorUnix
         DWORD dwFileOffsetHigh,
         DWORD dwFileOffsetLow,
         SIZE_T dwNumberOfBytesToMap,
-        LPVOID *ppvBaseAddress
+        void * *ppvBaseAddress
         );
 
     PAL_ERROR
     InternalUnmapViewOfFile(
         CPalThread *pThread,
-        LPCVOID lpBaseAddress
+        const void * lpBaseAddress
         );
 
 }

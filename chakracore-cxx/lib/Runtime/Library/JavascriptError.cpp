@@ -610,7 +610,7 @@ namespace Js
         JavascriptExceptionOperators::ThrowOutOfMemory(scriptContext);
     }
 
-    void __declspec(noreturn) JavascriptError::ThrowStackOverflowError(ScriptContext *scriptContext, PVOID returnAddress)
+    void __declspec(noreturn) JavascriptError::ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress)
     {
         JavascriptExceptionOperators::ThrowStackOverflow(scriptContext, returnAddress);
     }

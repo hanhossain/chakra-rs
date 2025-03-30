@@ -184,26 +184,26 @@ GetCurrentThreadStackLimits(&lowl, &highl);
 #endif
 
 #ifdef VM_MAXUSER_ADDRESS
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) VM_MAXUSER_ADDRESS;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) VM_MAXUSER_ADDRESS;
 #elif defined(__LINUX__)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) MAX_PROCESS_VA_SPACE_LINUX;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) MAX_PROCESS_VA_SPACE_LINUX;
 #elif defined(USERLIMIT)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) USERLIMIT;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
 #elif defined(_WIN64)
 #if defined(_M_ARM64)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) (1ull << 47);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) (1ull << 47);
 #elif defined(USRSTACK64)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) PAL_MAX(highl, USRSTACK64);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK64);
 #else // !USRSTACK64
 #error How come USRSTACK64 is not defined for 64bit?
 #endif // USRSTACK64
 #elif defined(USRSTACK)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) PAL_MAX(highl, USRSTACK);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK);
 #else
 #error The maximum application address is not known on this platform.
 #endif
 
-    lpSystemInfo->lpMinimumApplicationAddress = (PVOID) pagesize;
+    lpSystemInfo->lpMinimumApplicationAddress = (void *) pagesize;
 
     lpSystemInfo->dwProcessorType_PAL_Undefined = 0;
 

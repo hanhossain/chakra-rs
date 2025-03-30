@@ -65,7 +65,7 @@ See MSDN doc.
 --*/
 void
 RtlMoveMemory(
-           PVOID Destination,
+           void * Destination,
            const void *Source,
            SIZE_T Length)
 {
@@ -87,7 +87,7 @@ See MSDN doc.
 --*/
 void
 RtlZeroMemory(
-    PVOID Destination,
+    void * Destination,
     SIZE_T Length
 )
 {
@@ -205,7 +205,7 @@ Abstract
 
 See MSDN doc.
 --*/
-LPVOID
+void *
 HeapAlloc(
      HANDLE hHeap,
      DWORD dwFlags,
@@ -282,7 +282,7 @@ BOOL
 HeapFree(
      HANDLE hHeap,
      DWORD dwFlags,
-     LPVOID lpMem)
+     void * lpMem)
 {
     BOOL bRetVal = FALSE;
 
@@ -340,11 +340,11 @@ Abstract
 
 See MSDN doc.
 --*/
-LPVOID
+void *
 HeapReAlloc(
      HANDLE hHeap,
      DWORD dwFlags,
-     LPVOID lpmem,
+     void * lpmem,
      SIZE_T numberOfBytes)
 {
     uint8_t *pMem = NULL;
@@ -412,7 +412,7 @@ BOOL
 HeapSetInformation(
           HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
-         PVOID HeapInformation,
+         void * HeapInformation,
          SIZE_T HeapInformationLength)
 {
     return TRUE;

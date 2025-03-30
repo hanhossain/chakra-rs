@@ -259,7 +259,7 @@ struct UnambiguousProcessDescriptor
 static
 DWORD
 StartupHelperThread(
-    LPVOID p);
+    void * p);
 
 PAL_ERROR
 PROCGetProcessStatus(
@@ -350,7 +350,7 @@ CreateProcessW(
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             DWORD dwCreationFlags,
-            LPVOID lpEnvironment,
+            void * lpEnvironment,
             LPCWSTR lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation)
@@ -493,7 +493,7 @@ CorUnix::InternalCreateProcess(
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles,
     DWORD dwCreationFlags,
-    LPVOID lpEnvironment,
+    void * lpEnvironment,
     LPCWSTR lpCurrentDirectory,
     LPSTARTUPINFOW lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation

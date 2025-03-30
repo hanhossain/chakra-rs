@@ -188,7 +188,7 @@ DbgHelpSymbolManager::~DbgHelpSymbolManager()
 }
 
 BOOL
-DbgHelpSymbolManager::SymFromAddr(PVOID address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol)
+DbgHelpSymbolManager::SymFromAddr(void * address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol)
 {
     if (Instance.pfnSymFromAddrW)
     {
@@ -198,7 +198,7 @@ DbgHelpSymbolManager::SymFromAddr(PVOID address, DWORD64 * dwDisplacement, PSYMB
 }
 
 BOOL
-DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ PVOID address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine)
+DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ void * address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine)
 {
     if (pdwDisplacement != nullptr)
     {
@@ -218,7 +218,7 @@ DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ PVOID address, _Out_ PDWORD pdwD
     return FALSE;
 }
 
-size_t DbgHelpSymbolManager::PrintSymbol(PVOID address)
+size_t DbgHelpSymbolManager::PrintSymbol(void * address)
 {
     size_t retValue = 0;
     DWORD64  dwDisplacement = 0;

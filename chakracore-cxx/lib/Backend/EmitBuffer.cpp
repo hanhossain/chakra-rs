@@ -207,7 +207,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::SetValidCallTarget(TEm
             ? allocation->allocation->largeObjectAllocation.segment
             : allocation->allocation->page->segment;
         HANDLE fileHandle = nullptr;
-        PVOID baseAddress = nullptr;
+        void * baseAddress = nullptr;
         bool found = false;
         if (this->allocationHeap.IsPreReservedSegment(segment))
         {

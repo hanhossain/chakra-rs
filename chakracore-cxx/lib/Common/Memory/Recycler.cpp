@@ -6077,7 +6077,7 @@ Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
 #endif
 
 unsigned int
-Recycler::StaticThreadProc(LPVOID lpParameter)
+Recycler::StaticThreadProc(void * lpParameter)
 {
     DWORD ret = (DWORD)-1;
 #if !DISABLE_SEH
@@ -6950,7 +6950,7 @@ RecyclerParallelThread::Shutdown()
 
 // static
 unsigned int
-RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
+RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 {
     DWORD ret = (DWORD)-1;
 #if !DISABLE_SEH

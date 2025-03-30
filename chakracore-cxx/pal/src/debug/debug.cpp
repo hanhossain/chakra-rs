@@ -130,7 +130,7 @@ usually maps to a kernel API to flush the D-caches on all processors.
 BOOL
 FlushInstructionCache(
          HANDLE hProcess,
-         LPCVOID lpBaseAddress,
+         const void * lpBaseAddress,
          SIZE_T dwSize)
 {
     BOOL Ret;
@@ -551,8 +551,8 @@ See MSDN doc.
 BOOL
 ReadProcessMemory(
             HANDLE hProcess,
-            LPCVOID lpBaseAddress,
-            LPVOID lpBuffer,
+            const void * lpBaseAddress,
+            void * lpBuffer,
             SIZE_T nSize,
             SIZE_T * lpNumberOfBytesRead
            )
@@ -601,8 +601,8 @@ ReadProcessMemory(
 
         struct Param
         {
-            LPCVOID lpBaseAddress;
-            LPVOID lpBuffer;
+            const void * lpBaseAddress;
+            void * lpBuffer;
             SIZE_T nSize;
             SIZE_T numberOfBytesRead;
             BOOL ret;
@@ -840,8 +840,8 @@ See MSDN doc.
 BOOL
 WriteProcessMemory(
             HANDLE hProcess,
-            LPVOID lpBaseAddress,
-            LPCVOID lpBuffer,
+            void * lpBaseAddress,
+            const void * lpBuffer,
             SIZE_T nSize,
             SIZE_T * lpNumberOfBytesWritten
            )
@@ -892,8 +892,8 @@ WriteProcessMemory(
 
         struct Param
         {
-            LPVOID lpBaseAddress;
-            LPCVOID lpBuffer;
+            void * lpBaseAddress;
+            const void * lpBuffer;
             SIZE_T nSize;
             SIZE_T numberOfBytesWritten;
             BOOL ret;
@@ -1593,7 +1593,7 @@ Return
 DWORD
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     )
 {
     PERF_ENTRY(PAL_CreateExecWatchpoint);
@@ -1715,7 +1715,7 @@ Return
 DWORD
 PAL_DeleteExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     )
 {
     PERF_ENTRY(PAL_DeleteExecWatchpoint);

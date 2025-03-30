@@ -1689,7 +1689,7 @@ template<>
 void
 PageAllocatorBase<SectionAllocWrapper>::MemSetLocal(_In_ void *dst, int val, size_t sizeInBytes)
 {
-    LPVOID localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
+    void * localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
     if (localAddr == nullptr)
     {
         MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
@@ -1705,7 +1705,7 @@ template<>
 void
 PageAllocatorBase<PreReservedSectionAllocWrapper>::MemSetLocal(_In_ void *dst, int val, size_t sizeInBytes)
 {
-    LPVOID localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
+    void * localAddr = this->GetVirtualAllocator()->AllocLocal(dst, sizeInBytes);
     if (localAddr == nullptr)
     {
         MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);

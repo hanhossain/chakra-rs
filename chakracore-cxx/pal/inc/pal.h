@@ -377,7 +377,7 @@ typedef __int64 time_t;
 #define DLL_THREAD_DETACH  3
 #define DLL_PROCESS_DETACH 0
 
-typedef DWORD (*PTHREAD_START_ROUTINE)(LPVOID lpThreadParameter);
+typedef DWORD (*PTHREAD_START_ROUTINE)(void * lpThreadParameter);
 typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 /******************* PAL-Specific Entrypoints *****************************/
@@ -430,19 +430,19 @@ PAL_GetPALDirectoryA(
 BOOL
 PAL_Random(
      BOOL bStrong,
-      LPVOID lpBuffer,
+      void * lpBuffer,
      DWORD dwLength);
 
 DWORD
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     );
 
 DWORD
 PAL_DeleteExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     );
 
 /******************* winuser.h Entrypoints *******************************/
@@ -502,7 +502,7 @@ AreFileApisANSI(
 
 typedef struct _SECURITY_ATTRIBUTES {
             DWORD nLength;
-            LPVOID lpSecurityDescriptor;
+            void * lpSecurityDescriptor;
             BOOL bInheritHandle;
 } SECURITY_ATTRIBUTES, *PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
 
@@ -832,7 +832,7 @@ BOOL
 GetFileAttributesExW(
               LPCWSTR lpFileName,
               GET_FILEEX_INFO_LEVELS fInfoLevelId,
-              LPVOID lpFileInformation);
+              void * lpFileInformation);
 
 #ifdef UNICODE
 #define GetFileAttributesEx GetFileAttributesExW
@@ -854,12 +854,12 @@ SetFileAttributesW(
 #define SetFileAttributes SetFileAttributesA
 #endif
 
-typedef LPVOID LPOVERLAPPED;  // diff from winbase.h
+typedef void * LPOVERLAPPED;  // diff from winbase.h
 
 BOOL
 WriteFile(
        HANDLE hFile,
-       LPCVOID lpBuffer,
+       const void * lpBuffer,
        DWORD nNumberOfBytesToWrite,
        LPDWORD lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
@@ -867,7 +867,7 @@ WriteFile(
 BOOL
 ReadFile(
       HANDLE hFile,
-      LPVOID lpBuffer,
+      void * lpBuffer,
       DWORD nNumberOfBytesToRead,
       LPDWORD lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped);
@@ -1330,7 +1330,7 @@ CreateProcessA(
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             DWORD dwCreationFlags,
-            LPVOID lpEnvironment,
+            void * lpEnvironment,
             LPCSTR lpCurrentDirectory,
             LPSTARTUPINFOA lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
@@ -1343,7 +1343,7 @@ CreateProcessW(
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
             DWORD dwCreationFlags,
-            LPVOID lpEnvironment,
+            void * lpEnvironment,
             LPCWSTR lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
             LPPROCESS_INFORMATION lpProcessInformation);
@@ -1457,7 +1457,7 @@ CreateThread(
           LPSECURITY_ATTRIBUTES lpThreadAttributes,
           DWORD dwStackSize,
           LPTHREAD_START_ROUTINE lpStartAddress,
-          LPVOID lpParameter,
+          void * lpParameter,
           DWORD dwCreationFlags,
           LPDWORD lpThreadId);
 
@@ -2935,7 +2935,7 @@ BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
 
 //
 typedef struct _CRITICAL_SECTION {
-    PVOID DebugInfo;
+    void * DebugInfo;
     int32_t LockCount;
     int32_t RecursionCount;
     HANDLE OwningThread;
@@ -3038,7 +3038,7 @@ OpenFileMappingW(
 #define OpenFileMapping OpenFileMappingA
 #endif
 
-LPVOID
+void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
            DWORD dwDesiredAccess,
@@ -3046,23 +3046,23 @@ MapViewOfFile(
            DWORD dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap);
 
-LPVOID
+void *
 MapViewOfFileEx(
            HANDLE hFileMappingObject,
            DWORD dwDesiredAccess,
            DWORD dwFileOffsetHigh,
            DWORD dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap,
-           LPVOID lpBaseAddress);
+           void * lpBaseAddress);
 
 BOOL
 FlushViewOfFile(
-         LPVOID lpBaseAddress,
+         void * lpBaseAddress,
          SIZE_T dwNumberOfBytesToFlush);
 
 BOOL
 UnmapViewOfFile(
-         LPCVOID lpBaseAddress);
+         const void * lpBaseAddress);
 
 HMODULE
 LoadLibraryA(
@@ -3205,27 +3205,27 @@ GetModuleHandleExW(
 #endif
 
 // Get base address of the module containing a given symbol
-LPCVOID
+const void *
 PAL_GetSymbolModuleBase(void *symbol);
 
-LPVOID
+void *
 VirtualAlloc(
-          LPVOID lpAddress,
+          void * lpAddress,
           SIZE_T dwSize,
           DWORD flAllocationType,
           DWORD flProtect);
 
-LPVOID
+void *
 VirtualAllocEx(
           HANDLE hProcess,
-          LPVOID lpAddress,
+          void * lpAddress,
           SIZE_T dwSize,
           DWORD flAllocationType,
           DWORD flProtect);
 
 BOOL
 VirtualFree(
-         LPVOID lpAddress,
+         void * lpAddress,
          SIZE_T dwSize,
          DWORD dwFreeType);
 
@@ -3233,13 +3233,13 @@ VirtualFree(
 BOOL
 VirtualFreeEx(
          HANDLE hProcess,
-         LPVOID lpAddress,
+         void * lpAddress,
          SIZE_T dwSize,
          DWORD dwFreeType);
 
 BOOL
 VirtualProtect(
-            LPVOID lpAddress,
+            void * lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
             PDWORD lpflOldProtect);
@@ -3247,7 +3247,7 @@ VirtualProtect(
 BOOL
 VirtualProtectEx(
             HANDLE hProcess,
-            LPVOID lpAddress,
+            void * lpAddress,
             SIZE_T dwSize,
             DWORD flNewProtect,
             PDWORD lpflOldProtect);
@@ -3269,8 +3269,8 @@ GlobalMemoryStatusEx(
               LPMEMORYSTATUSEX lpBuffer);
 
 typedef struct _MEMORY_BASIC_INFORMATION {
-    PVOID BaseAddress;
-    PVOID AllocationBase_PAL_Undefined;
+    void * BaseAddress;
+    void * AllocationBase_PAL_Undefined;
     DWORD AllocationProtect;
     SIZE_T RegionSize;
     DWORD State;
@@ -3280,34 +3280,34 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 
 SIZE_T
 VirtualQuery(
-          LPCVOID lpAddress,
+          const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength);
 
 SIZE_T
 VirtualQueryEx(
           HANDLE hProcess,
-          LPCVOID lpAddress,
+          const void * lpAddress,
           PMEMORY_BASIC_INFORMATION lpBuffer,
           SIZE_T dwLength);
 
 BOOL
 ReadProcessMemory(
            HANDLE hProcess,
-           LPCVOID lpBaseAddress,
-           LPVOID lpBuffer,
+           const void * lpBaseAddress,
+           void * lpBuffer,
            SIZE_T nSize,
            SIZE_T * lpNumberOfBytesRead);
 
 void
 RtlMoveMemory(
-           PVOID Destination,
+           void * Destination,
            const void *Source,
            SIZE_T Length);
 
 void
 RtlZeroMemory(
-     PVOID Destination,
+     void * Destination,
      SIZE_T Length);
 
 #define MoveMemory memmove
@@ -3328,17 +3328,17 @@ HeapCreate(
 	        SIZE_T dwInitialSize,
 	        SIZE_T dwMaximumSize);
 
-LPVOID
+void *
 HeapAlloc(
        HANDLE hHeap,
        DWORD dwFlags,
        SIZE_T dwBytes);
 
-LPVOID
+void *
 HeapReAlloc(
      HANDLE hHeap,
      DWORD dwFlags,
-     LPVOID lpMem,
+     void * lpMem,
      SIZE_T dwBytes
     );
 
@@ -3346,7 +3346,7 @@ BOOL
 HeapFree(
       HANDLE hHeap,
       DWORD dwFlags,
-      LPVOID lpMem);
+      void * lpMem);
 
 typedef enum _HEAP_INFORMATION_CLASS {
     HeapCompatibilityInformation,
@@ -3357,7 +3357,7 @@ BOOL
 HeapSetInformation(
           HANDLE HeapHandle,
          HEAP_INFORMATION_CLASS HeapInformationClass,
-         PVOID HeapInformation,
+         void * HeapInformation,
          SIZE_T HeapInformationLength);
 
 #define LMEM_FIXED          0x0000
@@ -3383,7 +3383,7 @@ LocalFree(
 BOOL
 FlushInstructionCache(
                HANDLE hProcess,
-               LPCVOID lpBaseAddress,
+               const void * lpBaseAddress,
                SIZE_T dwSize);
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
@@ -3470,7 +3470,7 @@ CompareStringEx(
      LPCWSTR  lpString2,
      int      cchCount2,
      LPNLSVERSIONINFO lpVersionInformation,
-     LPVOID lpReserved,
+     void * lpReserved,
      LPARAM lParam);
 
 
@@ -3840,7 +3840,7 @@ FindNLSStringEx(
 	 int cchValue,
 	 LPINT pcchFound,
 	 LPNLSVERSIONINFOEX lpVersionInformation,
-	 LPVOID lpReserved,
+	 void * lpReserved,
 	 LPARAM lParam );
 
 typedef enum {
@@ -4074,7 +4074,7 @@ LCMapStringEx(
      LPWSTR lpDestStr,
      int     cchDest,
      LPNLSVERSIONINFO lpVersionInformation,
-     LPVOID lpReserved,
+     void * lpReserved,
      LPARAM lParam );
 
 int
@@ -4084,7 +4084,7 @@ PAL_LCMapCharW(
      WCHAR   srcChar,
      WCHAR  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
-    LPVOID lpReserved,
+    void * lpReserved,
     LPARAM lParam );
 
 int
@@ -4224,7 +4224,7 @@ typedef struct _EXCEPTION_RECORD {
     DWORD ExceptionCode;
     DWORD ExceptionFlags;
     struct _EXCEPTION_RECORD *ExceptionRecord;
-    PVOID ExceptionAddress;
+    void * ExceptionAddress;
     DWORD NumberParameters;
     size_t ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD, *PEXCEPTION_RECORD;
@@ -4276,8 +4276,8 @@ typedef struct _RUNTIME_FUNCTION {
 
 BOOL
 WriteProcessMemory( HANDLE hProcess,
-                    LPVOID lpBaseAddress,
-                    LPCVOID lpBuffer,
+                    void * lpBaseAddress,
+                    const void * lpBuffer,
                     SIZE_T nSize,
                     SIZE_T * lpNumberOfBytesWritten);
 
@@ -5112,10 +5112,10 @@ BitTestAndSet(
 }
 
 #define InterlockedExchangePointer(Target, Value) \
-    ((PVOID)InterlockedExchange64((PLONG64)(Target), (LONGLONG)(Value)))
+    ((void *)InterlockedExchange64((PLONG64)(Target), (LONGLONG)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((PVOID)InterlockedCompareExchange64((PLONG64)(Destination), (LONGLONG)(ExChange), (LONGLONG)(Comperand)))
+    ((void *)InterlockedCompareExchange64((PLONG64)(Destination), (LONGLONG)(ExChange), (LONGLONG)(Comperand)))
 
 /*++
 Function:
@@ -5160,7 +5160,7 @@ PAL_HasGetCurrentProcessorNumber();
 DWORD
 FormatMessageW(
             DWORD dwFlags,
-            LPCVOID lpSource,
+            const void * lpSource,
             DWORD dwMessageId,
             DWORD dwLanguageId,
             LPWSTR lpBffer,
@@ -5299,8 +5299,8 @@ typedef struct _SYSTEM_INFO {
     uint16_t wProcessorArchitecture_PAL_Undefined;
     uint16_t wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union
     DWORD dwPageSize;
-    LPVOID lpMinimumApplicationAddress;
-    LPVOID lpMaximumApplicationAddress;
+    void * lpMinimumApplicationAddress;
+    void * lpMaximumApplicationAddress;
     DWORD_PTR dwActiveProcessorMask_PAL_Undefined;
     DWORD dwNumberOfProcessors;
     DWORD dwProcessorType_PAL_Undefined;
@@ -5374,7 +5374,7 @@ ReportEventA (
          uint16_t       wNumStrings,
          DWORD      dwDataSize,
       LPCSTR *lpStrings,
-      LPVOID lpRawData
+      void * lpRawData
     );
 BOOL
 ReportEventW (
@@ -5386,7 +5386,7 @@ ReportEventW (
          uint16_t       wNumStrings,
          DWORD      dwDataSize,
       LPCWSTR *lpStrings,
-      LPVOID lpRawData
+      void * lpRawData
     );
 #ifdef UNICODE
 #define ReportEvent  ReportEventW

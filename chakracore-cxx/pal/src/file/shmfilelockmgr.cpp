@@ -30,7 +30,7 @@ SET_DEFAULT_DEBUG_CHANNEL(FILE);
 PAL_ERROR
 FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock, 
@@ -40,7 +40,7 @@ FILEAddNewLockedRgn(
 PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock,
     LOCK_TYPE lockAction
@@ -49,7 +49,7 @@ FILELockFileRegion(
 PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     UINT64 unlockRgnStart, 
     UINT64 nbBytesToUnlock,
     LOCK_TYPE unlockType
@@ -59,7 +59,7 @@ void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
     DWORD dwAccessRights,
-    PVOID pvControllerInstance
+    void * pvControllerInstance
     );
 
 PAL_ERROR
@@ -327,7 +327,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
 
     palError = FILELockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         lockRgnStart, 
         nbBytesToLock,
         RDWR_LOCK_RGN
@@ -336,7 +336,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
     if (NO_ERROR == palError)
     {
         *ppTransactionLock = InternalNew<CSharedMemoryFileTransactionLock>(m_shmFileLocks,
-                                                                           reinterpret_cast<PVOID>(this),
+                                                                           reinterpret_cast<void *>(this),
                                                                            lockRgnStart, 
                                                                            nbBytesToLock);
         if (NULL == *ppTransactionLock)
@@ -344,7 +344,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
             palError = ERROR_OUTOFMEMORY;
             FILEUnlockFileRegion(
                 m_shmFileLocks,
-                reinterpret_cast<PVOID>(this),
+                reinterpret_cast<void *>(this),
                 lockRgnStart, 
                 nbBytesToLock,
                 RDWR_LOCK_RGN
@@ -384,7 +384,7 @@ CSharedMemoryFileLockController::CreateFileLock(
 
     palError = FILELockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         lockRgnStart, 
         nbBytesToLock,
         USER_LOCK_RGN
@@ -414,7 +414,7 @@ CSharedMemoryFileLockController::ReleaseFileLock(
 
     palError = FILEUnlockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         unlockRgnStart, 
         nbBytesToUnlock,
         USER_LOCK_RGN
@@ -431,7 +431,7 @@ CSharedMemoryFileLockController::ReleaseController()
         FILECleanUpLockedRgn(
             m_shmFileLocks,
             m_dwAccessRights,
-            reinterpret_cast<PVOID>(this)
+            reinterpret_cast<void *>(this)
             );
     }
 
@@ -455,7 +455,7 @@ CSharedMemoryFileTransactionLock::ReleaseLock()
 PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock,
     LOCK_TYPE lockAction
@@ -604,7 +604,7 @@ EXIT:
 PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 unlockRgnStart, 
     UINT64 nbBytesToUnlock,
     LOCK_TYPE unlockType
@@ -800,7 +800,7 @@ EXIT:
 PAL_ERROR
 FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock, 
@@ -912,7 +912,7 @@ void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
     DWORD dwAccessRights,
-    PVOID pvControllerInstance
+    void * pvControllerInstance
     )
 {
     SHMFILELOCKRGNS *curLockRgn = NULL, *prevLock = NULL;

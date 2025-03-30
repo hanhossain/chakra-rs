@@ -617,8 +617,8 @@ T* InterlockedExchangePointerT(
     T* Value)
 {
     return (T*)(InterlockedExchangePointer(
-        (PVOID volatile*)Target,
-        (PVOID)Value));
+        (void * volatile*)Target,
+        (void *)Value));
 }
 
 template <typename T>
@@ -629,9 +629,9 @@ T* InterlockedCompareExchangePointerT(
     T* comparand)
 {
     return (T*)(InterlockedCompareExchangePointer(
-        (PVOID volatile*)destination,
-        (PVOID)exchange,
-        (PVOID)comparand));
+        (void * volatile*)destination,
+        (void *)exchange,
+        (void *)comparand));
 }
 
 template <typename T>

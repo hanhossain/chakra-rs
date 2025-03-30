@@ -356,9 +356,9 @@ typedef union _ULARGE_INTEGER {
 
 /******************* OLE, BSTR, VARIANT *************************/
 
-STDAPI_(LPVOID) CoTaskMemAlloc(SIZE_T cb);
-STDAPI_(LPVOID) CoTaskMemRealloc(LPVOID pv, SIZE_T cb);
-STDAPI_(void) CoTaskMemFree(LPVOID pv);
+STDAPI_(void *) CoTaskMemAlloc(SIZE_T cb);
+STDAPI_(void *) CoTaskMemRealloc(void * pv, SIZE_T cb);
+STDAPI_(void) CoTaskMemFree(void * pv);
 
 typedef short VARIANT_BOOL;
 #define VARIANT_TRUE ((VARIANT_BOOL)-1)
@@ -539,7 +539,7 @@ struct tagVARIANT
                 BSTR *pbstrVal;
                 interface IUnknown **ppunkVal;
                 VARIANT *pvarVal;
-                PVOID byref;
+                void * byref;
                 char cVal;
                 unsigned short uiVal;
                 uint32_t ulVal;
@@ -555,7 +555,7 @@ struct tagVARIANT
                 UINT *puintVal;
                 struct __tagBRECORD
                     {
-                    PVOID pvRecord;
+                    void * pvRecord;
                     interface IRecordInfo *pRecInfo;
                     } brecVal;
                 } n3;
@@ -633,7 +633,7 @@ STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
 
 #define V_ISBYREF(X)     (V_VT(X)&VT_BYREF)
 
-STDAPI CreateStreamOnHGlobal(PVOID hGlobal, BOOL fDeleteOnRelease, interface IStream** ppstm);
+STDAPI CreateStreamOnHGlobal(void * hGlobal, BOOL fDeleteOnRelease, interface IStream** ppstm);
 
 STDAPI IIDFromString(LPOLESTR lpsz, IID* lpiid);
 STDAPI_(int) StringFromGUID2(REFGUID rguid, LPOLESTR lpsz, int cchMax);
@@ -1180,7 +1180,7 @@ typedef DWORD OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
 
-typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (PVOID, BOOLEAN );
+typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
 
 typedef HANDLE HWND;
 
@@ -1194,7 +1194,7 @@ typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
-typedef void (*WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
+typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 
 // PORTABILITY_ASSERT and PORTABILITY_WARNING macros are meant to be used to
 // mark places in the code that needs attention for portability. The usual
@@ -1311,7 +1311,7 @@ typedef struct tagSAFEARRAY
     unsigned short fFeatures;
     uint32_t cbElements;
     uint32_t cLocks;
-    PVOID pvData;
+    void * pvData;
     SAFEARRAYBOUND rgsabound[ 1 ];
     } 	SAFEARRAY;
 
@@ -1338,7 +1338,7 @@ interface IMoniker;
 typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
     DWORD dwErrorCode,
     DWORD dwNumberOfBytesTransfered,
-    LPVOID lpOverlapped);
+    void * lpOverlapped);
 
 //
 // Debug APIs
@@ -1351,7 +1351,7 @@ typedef struct _EXCEPTION_DEBUG_INFO {
 
 typedef struct _CREATE_THREAD_DEBUG_INFO {
     HANDLE hThread;
-    LPVOID lpThreadLocalBase;
+    void * lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
 } CREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
 
@@ -1359,12 +1359,12 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
     HANDLE hFile;
     HANDLE hProcess;
     HANDLE hThread;
-    LPVOID lpBaseOfImage;
+    void * lpBaseOfImage;
     DWORD dwDebugInfoFileOffset;
     DWORD nDebugInfoSize;
-    LPVOID lpThreadLocalBase;
+    void * lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
-    LPVOID lpImageName;
+    void * lpImageName;
     uint16_t fUnicode;
 } CREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
 
@@ -1378,15 +1378,15 @@ typedef struct _EXIT_PROCESS_DEBUG_INFO {
 
 typedef struct _LOAD_DLL_DEBUG_INFO {
     HANDLE hFile;
-    LPVOID lpBaseOfDll;
+    void * lpBaseOfDll;
     DWORD dwDebugInfoFileOffset;
     DWORD nDebugInfoSize;
-    LPVOID lpImageName;
+    void * lpImageName;
     uint16_t fUnicode;
 } LOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
 
 typedef struct _UNLOAD_DLL_DEBUG_INFO {
-    LPVOID lpBaseOfDll;
+    void * lpBaseOfDll;
 } UNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
 
 typedef struct _OUTPUT_DEBUG_STRING_INFO {
@@ -1425,7 +1425,7 @@ typedef
 PRUNTIME_FUNCTION
 GET_RUNTIME_FUNCTION_CALLBACK (
     DWORD64 ControlPc,
-    PVOID Context
+    void * Context
     );
 typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
 
@@ -1433,7 +1433,7 @@ typedef
 DWORD
 OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
     HANDLE Process,
-    PVOID TableAddress,
+    void * TableAddress,
     PDWORD Entries,
     PRUNTIME_FUNCTION* Functions
     );
@@ -1447,9 +1447,9 @@ typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_C
 // #if !defined(__APPLE__)
 // typedef int32_t (*PEXCEPTION_ROUTINE)(
     // IN PEXCEPTION_POINTERS pExceptionPointers,
-    // IN LPVOID lpvParam);
+    // IN void * lpvParam);
 
-// #define DISPATCHER_CONTEXT    LPVOID
+// #define DISPATCHER_CONTEXT    void *
 
 // #else // defined(__APPLE__)
 
@@ -1481,7 +1481,7 @@ EXCEPTION_DISPOSITION
     PEXCEPTION_RECORD ExceptionRecord,
     ULONG64 EstablisherFrame,
     PCONTEXT ContextRecord,
-    PVOID DispatcherContext
+    void * DispatcherContext
     );
 
 #if defined(_ARM_)
@@ -1494,7 +1494,7 @@ typedef struct _DISPATCHER_CONTEXT {
     DWORD TargetPc;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
     DWORD ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
@@ -1512,7 +1512,7 @@ typedef struct _DISPATCHER_CONTEXT {
     ULONG64 TargetPc;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
     ULONG64 ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
@@ -1530,7 +1530,7 @@ typedef struct _DISPATCHER_CONTEXT {
     ULONG64 TargetIp;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
@@ -1549,10 +1549,10 @@ typedef DISPATCHER_CONTEXT *PDISPATCHER_CONTEXT;
 typedef struct _EXCEPTION_REGISTRATION_RECORD EXCEPTION_REGISTRATION_RECORD;
 typedef EXCEPTION_REGISTRATION_RECORD *PEXCEPTION_REGISTRATION_RECORD;
 
-typedef LPVOID HKEY;
-typedef LPVOID PACL;
-typedef LPVOID LPBC;
-typedef LPVOID PSECURITY_DESCRIPTOR;
+typedef void * HKEY;
+typedef void * PACL;
+typedef void * LPBC;
+typedef void * PSECURITY_DESCRIPTOR;
 
 typedef struct _EXCEPTION_RECORD64 {
     DWORD ExceptionCode;

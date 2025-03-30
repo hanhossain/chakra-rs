@@ -1174,11 +1174,11 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     {
         if (jitWriteData.thunkAddress)
         {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((PVOID)jitWriteData.thunkAddress);
+            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.thunkAddress);
         }
         else
         {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((PVOID)jitWriteData.codeAddress);
+            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.codeAddress);
         }
     }
     if (workItem->Type() == JsLoopBodyWorkItemType)
