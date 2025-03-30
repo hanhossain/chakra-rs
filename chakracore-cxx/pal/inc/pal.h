@@ -99,7 +99,6 @@ typedef __builtin_va_list va_list;
 extern "C" {
 #endif
 
-#if defined (PLATFORM_UNIX)
 // This macro is used to standardize the wide character string literals between UNIX and Windows.
 // Unix L"" is UTF32, and on windows it's UTF16.  Because of built-in assumptions on the size
 // of string literals, it's important to match behaviour between Unix and Windows.  Unix will be defined
@@ -113,8 +112,6 @@ extern "C" {
 #define QUOTE_MACRO_L(x) QUOTE_MACRO_u(x)
 #define QUOTE_MACRO_u_HELPER(x)     u###x
 #define QUOTE_MACRO_u(x)            QUOTE_MACRO_u_HELPER(x)
-
-#endif
 
 #include <pal_error.h>
 #include <pal_mstypes.h>
@@ -436,8 +433,6 @@ PAL_Random(
       LPVOID lpBuffer,
      DWORD dwLength);
 
-#ifdef PLATFORM_UNIX
-
 DWORD
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
@@ -449,9 +444,6 @@ PAL_DeleteExecWatchpoint(
     HANDLE hThread,
     PVOID pvInstruction
     );
-
-#endif
-
 
 /******************* winuser.h Entrypoints *******************************/
 
@@ -2910,8 +2902,6 @@ BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
 
 #define GetLogicalProcessorCacheSizeFromOS PAL_GetLogicalProcessorCacheSizeFromOS
 
-#ifdef PLATFORM_UNIX
-
 #if defined(__FreeBSD__) && defined(_X86_)
 #define PAL_CS_NATIVE_DATA_SIZE 12
 #elif defined(__FreeBSD__) && defined(__x86_64__)
@@ -2943,8 +2933,6 @@ BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
 #error  PAL_CS_NATIVE_DATA_SIZE is not defined for this architecture
 #endif
 
-#endif // PLATFORM_UNIX
-
 //
 typedef struct _CRITICAL_SECTION {
     PVOID DebugInfo;
@@ -2954,7 +2942,6 @@ typedef struct _CRITICAL_SECTION {
     HANDLE LockSemaphore;
     ULONG_PTR SpinCount;
 
-#ifdef PLATFORM_UNIX
     BOOL bInternal;
     volatile DWORD dwInitState;
     union CSNativeDataStorage
@@ -2962,7 +2949,6 @@ typedef struct _CRITICAL_SECTION {
         BYTE rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
         void * pvAlign; // make sure the storage is machine-pointer-size aligned
     } csnds;
-#endif // PLATFORM_UNIX
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
 void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
@@ -5424,7 +5410,6 @@ CoCreateGuid( GUID * pguid);
 /* Some C runtime functions needs to be reimplemented by the PAL.
    To avoid name collisions, those functions have been renamed using
    defines */
-#ifdef PLATFORM_UNIX
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
 #define atexit        PAL_atexit
@@ -5508,7 +5493,6 @@ CoCreateGuid( GUID * pguid);
 #define _flushall     PAL__flushall
 
 #endif // !PAL_STDCPP_COMPAT
-#endif // PLATFORM_UNIX
 
 #ifndef _CONST_RETURN
 #ifdef  __cplusplus
@@ -5763,7 +5747,7 @@ char * _strdup(const char *);
 
 #define _alloca alloca
 
-#if defined(__GNUC__) && defined(PLATFORM_UNIX)
+#if defined(__GNUC__)
 // we set -fno-builtin on the command line. This requires that if
 // we use alloca, with either have to call __builtin_alloca, or
 // ensure that the alloca call doesn't happen in code which is
@@ -6092,7 +6076,6 @@ public:
 
 // Platform-specific library naming
 //
-#ifdef PLATFORM_UNIX
 #ifdef __APPLE__
 #define MAKEDLLNAME_W(name) u"lib" name u".dylib"
 #define MAKEDLLNAME_A(name)  "lib" name  ".dylib"
@@ -6105,10 +6088,6 @@ public:
 #else
 #define MAKEDLLNAME_W(name) u"lib" name u".so"
 #define MAKEDLLNAME_A(name)  "lib" name  ".so"
-#endif
-#else
-#define MAKEDLLNAME_W(name) name L".dll"
-#define MAKEDLLNAME_A(name) name  ".dll"
 #endif
 
 #ifdef UNICODE

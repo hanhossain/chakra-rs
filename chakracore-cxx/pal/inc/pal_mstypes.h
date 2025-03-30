@@ -142,13 +142,8 @@ typedef long double LONG_DOUBLE;
 
 #endif // !PAL_STDCPP_COMPAT
 
-#ifndef PLATFORM_UNIX
-typedef long LONG;
-typedef unsigned long ULONG;
-#else
 typedef int LONG;       // NOTE: diff from windows.h, for LP64 compat
 typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
-#endif
 
 typedef __int64 LONGLONG;
 typedef unsigned __int64 ULONGLONG;
@@ -167,11 +162,7 @@ typedef UCHAR *PUCHAR;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-#ifndef PLATFORM_UNIX
-typedef unsigned long DWORD;
-#else
 typedef unsigned int DWORD; // NOTE: diff from  windows.h, for LP64 compat
-#endif
 
 typedef unsigned int DWORD32, *PDWORD32;
 
