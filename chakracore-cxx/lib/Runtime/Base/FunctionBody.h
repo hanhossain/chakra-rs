@@ -1176,8 +1176,8 @@ namespace Js
                 );
         }
 
-        ULONG GetHostStartLine() const;
-        ULONG GetHostStartColumn() const;
+        uint32_t GetHostStartLine() const;
+        uint32_t GetHostStartColumn() const;
 
     protected:
         // Static method(s)
@@ -1208,9 +1208,9 @@ namespace Js
             PERF_COUNTER_DEC(Code, TotalFunction);
         }
 
-        ULONG ComputeAbsoluteLineNumber(ULONG relativeLineNumber) const;
-        ULONG ComputeAbsoluteColumnNumber(ULONG relativeLineNumber, ULONG relativeColumnNumber) const;
-        ULONG GetLineNumberInHostBuffer(ULONG relativeLineNumber) const;
+        uint32_t ComputeAbsoluteLineNumber(uint32_t relativeLineNumber) const;
+        uint32_t ComputeAbsoluteColumnNumber(uint32_t relativeLineNumber, uint32_t relativeColumnNumber) const;
+        uint32_t GetLineNumberInHostBuffer(uint32_t relativeLineNumber) const;
 
     private:
         ScriptFunctionType * AllocDeferredPrototypeType();
@@ -1670,15 +1670,15 @@ namespace Js
         uint LengthInBytes() const { return m_cbLength; }
         uint StartOffset() const;
         uint PrintableStartOffset() const;
-        ULONG GetLineNumber() const;
-        ULONG GetColumnNumber() const;
+        uint32_t GetLineNumber() const;
+        uint32_t GetColumnNumber() const;
         template <class T>
         LPCWSTR GetSourceName(const T& sourceContextInfo) const;
         template <class T>
         static LPCWSTR GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction);
         LPCWSTR GetSourceName() const;
-        ULONG GetRelativeLineNumber() const { return m_lineNumber; }
-        ULONG GetRelativeColumnNumber() const { return m_columnNumber; }
+        uint32_t GetRelativeLineNumber() const { return m_lineNumber; }
+        uint32_t GetRelativeColumnNumber() const { return m_columnNumber; }
         uint GetSourceIndex() const;
         LPCUTF8 GetSource(const  char16* reason = nullptr) const;
         LPCUTF8 GetToStringSource(const  char16* reason = nullptr) const;
@@ -1856,8 +1856,8 @@ namespace Js
         FieldWithBarrier(uint) m_cbStartOffset;         // pUtf8Source is this many bytes from the start of the scriptContext's source buffer.
                                                         // This is generally the same as m_cchStartOffset unless the buffer has a BOM or other non-ascii characters
 
-        FieldWithBarrier(ULONG) m_lineNumber;
-        FieldWithBarrier(ULONG) m_columnNumber;
+        FieldWithBarrier(uint32_t) m_lineNumber;
+        FieldWithBarrier(uint32_t) m_columnNumber;
         FieldWithBarrier(const char16*) m_displayName;  // Optional name
         FieldWithBarrier(uint) m_displayNameLength;
         FieldWithBarrier(NestedArray*) nestedArray;
@@ -2636,8 +2636,8 @@ namespace Js
 
         // Find out an offset falls within the range. returns TRUE if found.
         BOOL GetBranchOffsetWithin(uint start, uint end, StatementAdjustmentRecord* record);
-        bool GetLineCharOffset(int byteCodeOffset, ULONG* line, int32_t* charOffset, bool canAllocateLineCache = true);
-        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffset(int byteCodeOffset, uint32_t* line, int32_t* charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache = true);
 
         // Given bytecode position, returns the start position of the statement and length of the statement.
         bool GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength);
@@ -2682,7 +2682,7 @@ namespace Js
 
 #ifdef VTUNE_PROFILING
         uint GetStartOffset(uint statementIndex) const;
-        ULONG GetSourceLineNumber(uint statementIndex);
+        uint32_t GetSourceLineNumber(uint statementIndex);
 #endif
 
 #pragma endregion
@@ -3293,13 +3293,13 @@ namespace Js
 
 #ifdef IR_VIEWER
         void GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, int32_t * col);
+            uint32_t * line, int32_t * col);
         void GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, int32_t * col);
+            uint32_t * line, int32_t * col);
 #endif
 
 #if ENABLE_TTD
-        void GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, int32_t* col);
+        void GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col);
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING

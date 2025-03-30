@@ -8804,13 +8804,13 @@ Recycler::SetInDetachProcess()
 
 #ifdef ENABLE_JS_ETW
 
-ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
+uint32_t Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
 {
     if (EventEnabledJSCRIPT_RECYCLER_FREE_MEMORY_BLOCK())
     {
         char* memoryAddress = NULL;
-        ULONG objectSize = 0;
-        ULONG blockSize = 0;
+        uint32_t objectSize = 0;
+        uint32_t blockSize = 0;
         switch (heapBlock->GetHeapBlockType())
         {
         case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
@@ -8823,7 +8823,7 @@ ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
             {
                 SmallHeapBlock* smallHeapBlock = static_cast<SmallHeapBlock*>(heapBlock);
                 memoryAddress = smallHeapBlock->GetAddress();
-                blockSize = (ULONG)(smallHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(smallHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = smallHeapBlock->GetObjectSize();
             }
             break;
@@ -8837,14 +8837,14 @@ ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
             {
                 MediumHeapBlock* mediumHeapBlock = static_cast<MediumHeapBlock*>(heapBlock);
                 memoryAddress = mediumHeapBlock->GetAddress();
-                blockSize = (ULONG)(mediumHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(mediumHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = mediumHeapBlock->GetObjectSize();
             }
         case HeapBlock::HeapBlockType::LargeBlockType:
                 {
                 LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
                 memoryAddress = largeHeapBlock->GetBeginAddress();
-                blockSize = (ULONG)(largeHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(largeHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = blockSize;
             }
             break;

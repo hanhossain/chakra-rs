@@ -1515,7 +1515,7 @@ ThreadContext::IsOnStack(void const *ptr)
     }
 
 #if defined(_M_ARM)
-    ULONG lowLimit, highLimit;
+    uint32_t lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
@@ -4463,7 +4463,7 @@ void InterruptPoller::CheckInterruptPoll()
 }
 
 
-void InterruptPoller::GetStatementCount(ULONG *pluHi, ULONG *pluLo)
+void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
 {
     DWORD resetTick = this->lastResetTick;
     DWORD pollTick = this->lastPollTick;
@@ -4472,8 +4472,8 @@ void InterruptPoller::GetStatementCount(ULONG *pluHi, ULONG *pluLo)
     elapsed = pollTick - resetTick;
 
     ULONGLONG statements = (ULONGLONG)elapsed * InterruptPoller::TicksToStatements;
-    *pluLo = (ULONG)statements;
-    *pluHi = (ULONG)(statements >> 32);
+    *pluLo = (uint32_t)statements;
+    *pluHi = (uint32_t)(statements >> 32);
 }
 
 void ThreadContext::DisableExecution()

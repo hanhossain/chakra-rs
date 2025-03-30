@@ -212,7 +212,7 @@ private:
     BYTE *          m_pc;
     EncodeReloc *   m_relocList;
 private:
-    ULONG           GenerateEncoding(IR::Instr* instr, BYTE *pc);
+    uint32_t           GenerateEncoding(IR::Instr* instr, BYTE *pc);
     bool            CanonicalizeInstr(IR::Instr *instr);
     void            CanonicalizeLea(IR::Instr * instr);
     bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, BYTE &indexScale, int32 &offset);

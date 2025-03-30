@@ -257,7 +257,7 @@ namespace Js
     void AsmJSByteCodeGenerator::PrintAsmJsCompilationError(__out_ecount(256)  char16* msg)
     {
         uint offset = mWriter.GetCurrentOffset();
-        ULONG line = 0;
+        uint32_t line = 0;
         int32_t col = 0;
         if (!mFunction->GetFuncBody()->GetLineCharOffset(offset, &line, &col))
         {

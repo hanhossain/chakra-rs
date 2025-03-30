@@ -34,7 +34,7 @@ WCHAR* DumpCallStackFull(uint frameCount, bool print)
             Js::FunctionBody * jsBody = jsFunc->GetFunctionBody();
             const Js::CallInfo callInfo = walker.GetCallInfo();
             const WCHAR* sourceFileName = _u("NULL");
-            ULONG line = 0; int32_t column = 0;
+            uint32_t line = 0; int32_t column = 0;
             walker.GetSourcePosition(&sourceFileName, &line, &column);
 
             StringCchPrintf(buffer, _countof(buffer), _u("%s [%s] (0x%p, Args=%u"), jsBody->GetDisplayName(), jsBody->GetDebugNumberSet(debugStringBuffer), jsFunc,

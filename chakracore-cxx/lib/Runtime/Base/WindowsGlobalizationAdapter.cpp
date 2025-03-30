@@ -137,7 +137,7 @@ namespace Js
             *trustLvl = BaseTrust;
             return S_OK;
         }
-        IFACEMETHOD(GetIids)(_Out_ ULONG *iidCount, _Outptr_result_buffer_(*iidCount) IID **)
+        IFACEMETHOD(GetIids)(_Out_ uint32_t *iidCount, _Outptr_result_buffer_(*iidCount) IID **)
         {
             iidCount;
             return E_NOTIMPL;
@@ -196,7 +196,7 @@ namespace Js
             *trustLvl = BaseTrust;
             return S_OK;
         }
-        IFACEMETHOD(GetIids)(_Out_ ULONG *iidCount, _Outptr_result_buffer_(*iidCount) IID **)
+        IFACEMETHOD(GetIids)(_Out_ uint32_t *iidCount, _Outptr_result_buffer_(*iidCount) IID **)
         {
             iidCount;
             return E_NOTIMPL;

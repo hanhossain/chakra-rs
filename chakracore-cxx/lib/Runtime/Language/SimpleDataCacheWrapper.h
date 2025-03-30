@@ -46,11 +46,11 @@ namespace Js
         // Begin to write a block into the cache.
         // Note: Must be called before writing bytes into the block as the block header is
         //       used to lookup the block when reading.
-        HRESULT StartBlock(_In_ BlockType blockType, _In_ ULONG byteCount);
+        HRESULT StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount);
 
         // A counter of bytes written to the cache as part of the current block.
         // A new block begins (resets this counter to 0) when StartBlock is called.
-        ULONG BytesWrittenInBlock() { return this->bytesWrittenInBlock; }
+        uint32_t BytesWrittenInBlock() { return this->bytesWrittenInBlock; }
 
         // Counter for the number of blocks written to the cache.
         // Counts only when a new block is created via StartBlock.
@@ -58,7 +58,7 @@ namespace Js
 
         // Seek the read stream to a block.
         // After this call, calls to Read or ReadArray will read bytes from the block itself.
-        HRESULT SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ ULONG* bytesInBlock = nullptr);
+        HRESULT SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock = nullptr);
 
         HRESULT SaveWriteStream();
 
@@ -68,7 +68,7 @@ namespace Js
             HRESULT hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            ULONG bytesWritten = 0;
+            uint32_t bytesWritten = 0;
             hr = this->outStream->Write(&data, sizeof(T), &bytesWritten);
             Assert(bytesWritten == sizeof(T) || FAILED(hr) || hr == S_FALSE);
             bytesWrittenInBlock += bytesWritten;
@@ -82,13 +82,13 @@ namespace Js
         }
 
         template <typename T>
-        HRESULT WriteArray(_In_reads_(len) T * data, _In_ ULONG len)
+        HRESULT WriteArray(_In_reads_(len) T * data, _In_ uint32_t len)
         {
             HRESULT hr = E_FAIL;
             IFFAILRET(EnsureWriteStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            ULONG bytesSize = sizeof(T) * len;
-            ULONG bytesWritten = 0;
+            uint32_t bytesSize = sizeof(T) * len;
+            uint32_t bytesWritten = 0;
             hr = this->outStream->Write(data, bytesSize, &bytesWritten);
             Assert(bytesWritten == bytesSize || FAILED(hr) || hr == S_FALSE);
             bytesWrittenInBlock += bytesWritten;
@@ -107,7 +107,7 @@ namespace Js
             HRESULT hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            ULONG bytesRead = 0;
+            uint32_t bytesRead = 0;
             hr = this->inStream->Read(data, sizeof(T), &bytesRead);
             // hr should be S_FALSE if bytesRead < sizeof(T) but this is not always the case
             // Just assert we didn't overflow data and convert S_FALSE into a failing hr.
@@ -121,13 +121,13 @@ namespace Js
         }
 
         template <typename T>
-        HRESULT ReadArray(_Out_writes_(len) T * data, ULONG len)
+        HRESULT ReadArray(_Out_writes_(len) T * data, uint32_t len)
         {
             HRESULT hr = E_FAIL;
             IFFAILRET(EnsureReadStream());
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
-            ULONG bytesSize = sizeof(T) * len;
-            ULONG bytesRead = 0;
+            uint32_t bytesSize = sizeof(T) * len;
+            uint32_t bytesRead = 0;
             hr = this->inStream->Read(data, bytesSize, &bytesRead);
             // hr should be S_FALSE if bytesRead < bytesSize but this is not always the case
             // Just assert we didn't overflow data and convert S_FALSE into a failing hr.
@@ -160,13 +160,13 @@ namespace Js
         HRESULT ReadHeader();
         HRESULT ResetReadStream();
 
-        HRESULT SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ ULONG* bytesInBlock);
+        HRESULT SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock);
         HRESULT Close();
 
         Field(IActiveScriptDataCache*) dataCache;
         Field(IStream*) outStream;
         Field(IStream*) inStream;
-        Field(ULONG) bytesWrittenInBlock;
+        Field(uint32_t) bytesWrittenInBlock;
         Field(uint) blocksWritten;
     };
 }

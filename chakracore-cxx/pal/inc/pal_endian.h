@@ -61,7 +61,7 @@ inline void SwapString(WCHAR *szString)
     }
 }
 
-inline void SwapStringLength(WCHAR *szString, ULONG StringLength)
+inline void SwapStringLength(WCHAR *szString, uint32_t StringLength)
 {
     unsigned i;
     for (i = 0; i < StringLength; i++)

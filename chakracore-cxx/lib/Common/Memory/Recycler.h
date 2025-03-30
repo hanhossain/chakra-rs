@@ -1837,7 +1837,7 @@ private:
     void CleanupPendingUnroot();
 
 #ifdef ENABLE_JS_ETW
-    ULONG EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
+    uint32_t EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
     void FlushFreeRecord();
     void AppendFreeMemoryETWRecord(__in char *address, size_t size);
     static const uint BulkFreeMemoryCount = 400;

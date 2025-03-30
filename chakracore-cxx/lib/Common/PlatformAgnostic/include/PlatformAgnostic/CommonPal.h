@@ -578,7 +578,7 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 }
 
 __inline
-HRESULT ULongMult(ULONG ulMultiplicand, ULONG ulMultiplier, ULONG* pulResult);
+HRESULT ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t* pulResult);
 
 /* **** WARNING : finallyFunc is not allowed to raise exception *****
  * **** DO NOT ADD stack probe or memory allocations within the finallyFunc ****

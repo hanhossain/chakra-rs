@@ -41,7 +41,7 @@ typedef          int        INT;
 typedef          long       int32_t;
 typedef unsigned short      uint16_t;
 typedef unsigned int        UINT;
-typedef unsigned long       ULONG;
+typedef unsigned long       uint32_t;
 typedef unsigned long       DWORD;
 typedef unsigned __int64    ULONGLONG;
 
@@ -70,21 +70,21 @@ typedef int32_t HRESULT;
 #define HIWORD(l)       ((uint16_t)(((DWORD_PTR)(l)) >> 16))
 #endif
 
-#define HIDWORD(_qw)    ((ULONG)((_qw) >> 32))
-#define LODWORD(_qw)    ((ULONG)(_qw))
+#define HIDWORD(_qw)    ((uint32_t)((_qw) >> 32))
+#define LODWORD(_qw)    ((uint32_t)(_qw))
 
 #if defined(MIDL_PASS) || defined(RC_INVOKED) || defined(_M_CEE_PURE) \
     || defined(_68K_) || defined(_MPPC_) || defined(_PPC_)            \
     || defined(_M_IA64) || defined(_M_AMD64) || defined(__ARM_ARCH)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) ((unsigned __int64)((ULONG)(a)) * (unsigned __int64)((ULONG)(b)))
+#define UInt32x32To64(a, b) ((unsigned __int64)((uint32_t)(a)) * (unsigned __int64)((uint32_t)(b)))
 #endif
 
 #elif defined(_M_IX86)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) (unsigned __int64)((unsigned __int64)(ULONG)(a) * (ULONG)(b))
+#define UInt32x32To64(a, b) (unsigned __int64)((unsigned __int64)(uint32_t)(a) * (uint32_t)(b))
 #endif
 
 #else
@@ -122,7 +122,7 @@ typedef int32_t HRESULT;
 //
 C_ASSERT(sizeof(unsigned short) == 2);
 C_ASSERT(sizeof(unsigned int) == 4);
-C_ASSERT(sizeof(ULONG) == 4);
+C_ASSERT(sizeof(uint32_t) == 4);
 
 //
 // INT -> signed char conversion
@@ -250,20 +250,20 @@ IntToUInt(
 }
 
 //
-// INT -> ULONG conversion
+// INT -> uint32_t conversion
 //
 __inline
 HRESULT
 IntToULong(
      INT iOperand,
-     ULONG* pulResult)
+     uint32_t* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if (iOperand >= 0)
     {
-        *pulResult = (ULONG)iOperand;
+        *pulResult = (uint32_t)iOperand;
         hr = S_OK;
     }
 
@@ -401,26 +401,26 @@ UIntToLong(
 }
 
 //
-// UINT -> ULONG conversion
+// UINT -> uint32_t conversion
 //
 __inline
 HRESULT
 UIntToULong(
      UINT uOperand,
-     ULONG* pulResult)
+     uint32_t* pulResult)
 {
-    *pulResult = (ULONG)uOperand;
+    *pulResult = (uint32_t)uOperand;
 
     return S_OK;
 }
 
 //
-// ULONG -> unsigned char conversion
+// uint32_t -> unsigned char conversion
 //
 __inline
 HRESULT
 ULongToSignedChar(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      signed char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -436,12 +436,12 @@ ULongToSignedChar(
 }
 
 //
-// ULONG -> unsigned char conversion
+// uint32_t -> unsigned char conversion
 //
 __inline
 HRESULT
 ULongToUChar(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      unsigned char* pch)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -461,12 +461,12 @@ ULongToUChar(
 // If the function is not inlined and you link .objs compiled with different compiler switches,
 // you get one or the other function arbitrarily chosen.
 //
-// ULONG -> char conversion
+// uint32_t -> char conversion
 //
 __forceinline
 HRESULT
 ULongToChar(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      char* pch)
 {
 #ifdef _CHAR_UNSIGNED
@@ -477,12 +477,12 @@ ULongToChar(
 }
 
 //
-// ULONG -> unsigned short conversion
+// uint32_t -> unsigned short conversion
 //
 __inline
 HRESULT
 ULongToUShort(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      unsigned short* pusResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
@@ -498,12 +498,12 @@ ULongToUShort(
 }
 
 //
-// ULONG -> INT conversion
+// uint32_t -> INT conversion
 //
 __inline
 HRESULT
 ULongToInt(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      INT* piResult)
 {
     if (ulOperand <= INT_MAX)
@@ -519,12 +519,12 @@ ULongToInt(
 }
 
 //
-// ULONG -> UINT conversion
+// uint32_t -> UINT conversion
 //
 __inline
 HRESULT
 ULongToUInt(
-     ULONG ulOperand,
+     uint32_t ulOperand,
      UINT* puResult)
 {
     *puResult = (UINT)ulOperand;
@@ -533,12 +533,12 @@ ULongToUInt(
 }
 
 //
-// ULONG -> int32_t conversion
+// uint32_t -> int32_t conversion
 //
 __inline
 HRESULT
 ULongToLong(
-     ULONG Operand,
+     uint32_t Operand,
      int32_t* Result)
 {
     if (Operand <= LONG_MAX)
@@ -639,20 +639,20 @@ ULongLongToUShort(
 }
 
 //
-// ULONGLONG -> ULONG conversion
+// ULONGLONG -> uint32_t conversion
 //
 __inline
 HRESULT
 ULongLongToULong(
      ULONGLONG ullOperand,
-     ULONG* pulResult)
+     uint32_t* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
 
     if (ullOperand <= ULONG_MAX)
     {
-        *pulResult = (ULONG)ullOperand;
+        *pulResult = (uint32_t)ullOperand;
         hr = S_OK;
     }
 
@@ -660,8 +660,8 @@ ULongLongToULong(
 }
 
 //
-// UINT_PTR -> ULONG conversion
-// size_t -> ULONG conversion
+// UINT_PTR -> uint32_t conversion
+// size_t -> uint32_t conversion
 //
 #ifdef _WIN64
 
@@ -674,9 +674,9 @@ __inline
 HRESULT
 UIntPtrToULong(
      UINT_PTR Operand,
-     ULONG* pResult)
+     uint32_t* pResult)
 {
-    *pResult = (ULONG)Operand;
+    *pResult = (uint32_t)Operand;
     return S_OK;
 }
 
@@ -684,9 +684,9 @@ __inline
 HRESULT
 ULongPtrToULong(
      size_t Operand,
-     ULONG* pResult)
+     uint32_t* pResult)
 {
-    *pResult = (ULONG)Operand;
+    *pResult = (uint32_t)Operand;
     return S_OK;
 }
 
@@ -782,7 +782,7 @@ ULongPtrToUInt(
 #define WordToLongPtr           UShortToLongPtr
 
 //
-// * -> DWORD conversion (DWORD is always ULONG)
+// * -> DWORD conversion (DWORD is always uint32_t)
 //
 #define CharToDWord             CharToULong
 #define SignedCharToDWord       SignedCharToULong
@@ -800,7 +800,7 @@ ULongPtrToUInt(
 #define SIZETToDWord            SIZETToULong
 
 //
-// DWORD -> * conversion (DWORD is always ULONG)
+// DWORD -> * conversion (DWORD is always uint32_t)
 //
 #define DWordToChar             ULongToChar
 #define DWordToUChar            ULongToUChar
@@ -909,7 +909,7 @@ UIntPtrToLong(
 
 
 //
-// * -> size_t conversion (size_t is ULONG on Win32, ULONGLONG on Win64)
+// * -> size_t conversion (size_t is uint32_t on Win32, ULONGLONG on Win64)
 //
 #ifdef _WIN64
 #define CharToULongPtr          CharToULongLong
@@ -931,7 +931,7 @@ IntToULongPtr(
      INT iOperand,
      size_t* pulResult)
 {
-	return IntToULong(iOperand, (ULONG*)pulResult);
+	return IntToULong(iOperand, (uint32_t*)pulResult);
 }
 
 #define LongToULongPtr          LongToULong
@@ -951,13 +951,13 @@ ULongLongToULongPtr(
 	*pulResult = ullOperand;
 	return S_OK;
 #else
-	return ULongLongToULong(ullOperand, (ULONG*)pulResult);
+	return ULongLongToULong(ullOperand, (uint32_t*)pulResult);
 #endif
 }
 
 
 //
-// size_t -> * conversion (size_t is ULONG on Win32, ULONGLONG on Win64)
+// size_t -> * conversion (size_t is uint32_t on Win32, ULONGLONG on Win64)
 //
 #ifdef _WIN64
 #define ULongPtrToUShort        ULongLongToUShort
@@ -974,7 +974,7 @@ ULongPtrToUShort(
      size_t ulOperand,
      unsigned short* pusResult)
 {
-	return ULongToUShort((ULONG)ulOperand, pusResult);
+	return ULongToUShort((uint32_t)ulOperand, pusResult);
 }
 
 __inline
@@ -983,7 +983,7 @@ ULongPtrToInt(
      size_t ulOperand,
      INT* piResult)
 {
-	return ULongToInt((ULONG)ulOperand, piResult);
+	return ULongToInt((uint32_t)ulOperand, piResult);
 }
 
 __inline
@@ -992,7 +992,7 @@ ULongPtrToLong(
      size_t Operand,
      int32_t* Result)
 {
-	return ULongToLong((ULONG)Operand, Result);
+	return ULongToLong((uint32_t)Operand, Result);
 }
 
 #define ULongPtrToLongLong      ULongToLongLong
@@ -1133,14 +1133,14 @@ UIntAdd(
 #define UIntPtrAdd		SizeTAdd
 
 //
-// ULONG addition
+// uint32_t addition
 //
 __inline
 HRESULT
 ULongAdd(
-     ULONG ulAugend,
-     ULONG ulAddend,
-     ULONG* pulResult)
+     uint32_t ulAugend,
+     uint32_t ulAddend,
+     uint32_t* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
@@ -1167,7 +1167,7 @@ ULongPtrAdd(
      size_t ulAddend,
      size_t* pulResult)
 {
-	return ULongAdd((ULONG)ulAugend, (ULONG)ulAddend, (ULONG*)pulResult);
+	return ULongAdd((uint32_t)ulAugend, (uint32_t)ulAddend, (uint32_t*)pulResult);
 }
 #endif // _WIN64
 
@@ -1286,14 +1286,14 @@ UIntSub(
 #define UIntPtrSub	SizeTSub
 
 //
-// ULONG subtraction
+// uint32_t subtraction
 //
 __inline
 HRESULT
 ULongSub(
-     ULONG ulMinuend,
-     ULONG ulSubtrahend,
-     ULONG* pulResult)
+     uint32_t ulMinuend,
+     uint32_t ulSubtrahend,
+     uint32_t* pulResult)
 {
     HRESULT hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = ULONG_ERROR;
@@ -1320,7 +1320,7 @@ ULongPtrSub(
      size_t ulSubtrahend,
      size_t* pulResult)
 {
-	return ULongSub((ULONG)ulMinuend, (ULONG)ulSubtrahend, (ULONG*)pulResult);
+	return ULongSub((uint32_t)ulMinuend, (uint32_t)ulSubtrahend, (uint32_t*)pulResult);
 }
 #endif // _WIN64
 
@@ -1394,7 +1394,7 @@ UShortMult(
      unsigned short usMultiplier,
      unsigned short* pusResult)
 {
-    ULONG ulResult = ((ULONG)usMultiplicand) * (ULONG)usMultiplier;
+    uint32_t ulResult = ((uint32_t)usMultiplicand) * (uint32_t)usMultiplier;
 
     return ULongToUShort(ulResult, pusResult);
 }
@@ -1435,14 +1435,14 @@ UIntPtrMult(
 #endif // _WIN64
 
 //
-// ULONG multiplication
+// uint32_t multiplication
 //
 __inline
 HRESULT
 ULongMult(
-     ULONG ulMultiplicand,
-     ULONG ulMultiplier,
-     ULONG* pulResult)
+     uint32_t ulMultiplicand,
+     uint32_t ulMultiplier,
+     uint32_t* pulResult)
 {
     ULONGLONG ull64Result = UInt32x32To64(ulMultiplicand, ulMultiplier);
 
@@ -1460,7 +1460,7 @@ ULongPtrMult(
      size_t ulMultiplier,
      size_t* pulResult)
 {
-	return ULongMult((ULONG)ulMultiplicand, (ULONG)ulMultiplier, (ULONG*)pulResult);
+	return ULongMult((uint32_t)ulMultiplicand, (uint32_t)ulMultiplier, (uint32_t*)pulResult);
 }
 #endif // _WIN64
 

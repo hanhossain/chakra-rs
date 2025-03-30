@@ -129,8 +129,6 @@ typedef long double LONG_DOUBLE;
 
 #endif // !PAL_STDCPP_COMPAT
 
-typedef unsigned int ULONG; // NOTE: diff from windows.h, for LP64 compat
-
 typedef __int64 LONGLONG;
 typedef unsigned __int64 ULONGLONG;
 typedef ULONGLONG DWORD64;
@@ -138,7 +136,6 @@ typedef DWORD64 *PDWORD64;
 typedef LONGLONG *PLONG64;
 typedef ULONGLONG *PULONG64;
 typedef ULONGLONG *PULONGLONG;
-typedef ULONG *PULONG;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
@@ -195,11 +192,11 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define SIZE_MAX _UI64_MAX
 #endif
 
-#define HandleToULong( h ) ((ULONG)(size_t)(h) )
+#define HandleToULong( h ) ((uint32_t)(size_t)(h) )
 #define HandleToLong( h )  ((int32_t)(ptrdiff_t) (h) )
 #define ULongToHandle( ul ) ((HANDLE)(size_t) (ul) )
 #define LongToHandle( h )   ((HANDLE)(ptrdiff_t) (h) )
-#define PtrToUlong( p ) ((ULONG)(size_t) (p) )
+#define PtrToUlong( p ) ((uint32_t)(size_t) (p) )
 #define PtrToLong( p )  ((int32_t)(ptrdiff_t) (p) )
 #define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
@@ -351,7 +348,7 @@ typedef union _LARGE_INTEGER {
 
 #ifndef GUID_DEFINED
 typedef struct _GUID {
-    ULONG   Data1;    // NOTE: diff from Win32, for LP64
+    uint32_t   Data1;    // NOTE: diff from Win32, for LP64
     unsigned short  Data2;
     unsigned short  Data3;
     unsigned char   Data4[ 8 ];

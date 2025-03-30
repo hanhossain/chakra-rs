@@ -328,7 +328,7 @@ typedef struct
     Volatile<DWORD> dwTailCanaries[2];
     pid_and_tid pidtidCurrentOwner;
     pid_and_tid pidtidOwners[SHMLOCK_OWNERSHIP_HISTORY_ARRAY_SIZE];
-    Volatile<ULONG> ulOwnersIdx;
+    Volatile<uint32_t> ulOwnersIdx;
 #endif // TRACK_SHMLOCK_OWNERSHIP
     SHM_POOL_INFO pools[SPS_LAST]; /* information about each memory pool */
     Volatile<SHMPTR> shm_info[SIID_LAST]; /* basic blocks of shared information.*/

@@ -688,7 +688,7 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         int numOnes = 0;
         for (int wordNum = 0; wordNum < 4; wordNum++)
         {
-            ULONG curWord = (immed >> (16 * wordNum)) & 0xffff;
+            uint32_t curWord = (immed >> (16 * wordNum)) & 0xffff;
             if (curWord == 0)
             {
                 numZeros++;
@@ -703,8 +703,8 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         bool fDontEncode = Security::DontEncode(instr->GetSrc1());
 
         // Determine whether the initial opcode will be a MOVZ or a MOVN
-        ULONG wordMask = (numOnes > numZeros) ? 0xffff : 0x0000;
-        ULONG wordXor = wordMask;
+        uint32_t wordMask = (numOnes > numZeros) ? 0xffff : 0x0000;
+        uint32_t wordXor = wordMask;
         Js::OpCode curOpcode = (wordMask == 0xffff) ? Js::OpCode::MOVN : Js::OpCode::MOVZ;
 
         // Build a theoretical list of opcodes
@@ -712,7 +712,7 @@ void LegalizeMD::LegalizeLDIMM(IR::Instr * instr, IntConstType immed)
         int opcodeListIndex = 0;
         for (int wordNum = 0; wordNum < 4; wordNum++)
         {
-            ULONG curWord = (immed >> (16 * wordNum)) & 0xffff;
+            uint32_t curWord = (immed >> (16 * wordNum)) & 0xffff;
             if (curWord != wordMask)
             {
                 opcodeList[opcodeListIndex++].Set(curOpcode, curWord ^ wordXor, 16 * wordNum);

@@ -1817,7 +1817,7 @@ namespace Js
     // We subtract the lnMinHost because it is the number of lines we have added to augment scriptlets passed through
     // ParseProcedureText to have a function name.
     //
-    ULONG FunctionProxy::GetHostStartLine() const
+    uint32_t FunctionProxy::GetHostStartLine() const
     {
         return this->GetHostSrcInfo()->dlnHost - this->GetHostSrcInfo()->lnMinHost;
     }
@@ -1825,7 +1825,7 @@ namespace Js
     //
     // Returns the start column of the first line for the script buffer of this current function.
     //
-    ULONG FunctionProxy::GetHostStartColumn() const
+    uint32_t FunctionProxy::GetHostStartColumn() const
     {
         return this->GetHostSrcInfo()->ulColumnHost;
     }
@@ -1834,9 +1834,9 @@ namespace Js
     // Returns line number in unmodified host buffer (i.e. without extra scriptlet code added by ParseProcedureText --
     // when e.g. we add extra code for event handlers, such as "function onclick(event)\n{\n").
     //
-    ULONG FunctionProxy::GetLineNumberInHostBuffer(ULONG relativeLineNumber) const
+    uint32_t FunctionProxy::GetLineNumberInHostBuffer(uint32_t relativeLineNumber) const
     {
-        ULONG lineNumber = relativeLineNumber;
+        uint32_t lineNumber = relativeLineNumber;
         if (lineNumber >= this->GetHostSrcInfo()->lnMinHost)
         {
             lineNumber -= this->GetHostSrcInfo()->lnMinHost;
@@ -1846,13 +1846,13 @@ namespace Js
         return lineNumber;
     }
 
-    ULONG FunctionProxy::ComputeAbsoluteLineNumber(ULONG relativeLineNumber) const
+    uint32_t FunctionProxy::ComputeAbsoluteLineNumber(uint32_t relativeLineNumber) const
     {
         // We add 1 because the line numbers start from 0.
         return this->GetHostSrcInfo()->dlnHost + GetLineNumberInHostBuffer(relativeLineNumber) + 1;
     }
 
-    ULONG FunctionProxy::ComputeAbsoluteColumnNumber(ULONG relativeLineNumber, ULONG relativeColumnNumber) const
+    uint32_t FunctionProxy::ComputeAbsoluteColumnNumber(uint32_t relativeLineNumber, uint32_t relativeColumnNumber) const
     {
         if (this->GetLineNumberInHostBuffer(relativeLineNumber) == 0)
         {
@@ -1867,7 +1867,7 @@ namespace Js
     //
     // Returns the line number of the function declaration in the source file.
     //
-    ULONG
+    uint32_t
     ParseableFunctionInfo::GetLineNumber() const
     {
         return this->ComputeAbsoluteLineNumber(this->m_lineNumber);
@@ -1877,7 +1877,7 @@ namespace Js
     //
     // Returns the column number of the function declaration in the source file.
     //
-    ULONG
+    uint32_t
     ParseableFunctionInfo::GetColumnNumber() const
     {
         return ComputeAbsoluteColumnNumber(this->m_lineNumber, m_columnNumber);
@@ -3158,7 +3158,7 @@ namespace Js
     //
     // The function determine the line and column for a bytecode offset within the current script buffer.
     //
-    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode());
 
@@ -3189,14 +3189,14 @@ namespace Js
         return this->GetLineCharOffsetFromStartChar(startCharOfStatement, _line, _charOffset, canAllocateLineCache);
     }
 
-    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode() || this->IsJsBuiltInCode());
 
         // The following adjusts for where the script is within the document
-        ULONG line = this->GetHostStartLine();
+        uint32_t line = this->GetHostStartLine();
         charcount_t column = 0;
-        ULONG lineCharOffset = 0;
+        uint32_t lineCharOffset = 0;
         charcount_t lineByteOffset = 0;
 
         if (startCharOfStatement > 0)
@@ -3279,7 +3279,7 @@ namespace Js
         // Offset from the beginning of the document minus any host-supplied source characters.
         // Host supplied characters are inserted (for example) around onload:
         //      onload="foo('somestring', 0)" -> function onload(event).{.foo('somestring', 0).}
-        ULONG offsetFromDocumentBegin = srcInfo ? srcInfo->ulCharOffset - srcInfo->ichMinHost : 0;
+        uint32_t offsetFromDocumentBegin = srcInfo ? srcInfo->ulCharOffset - srcInfo->ichMinHost : 0;
 
         *statementIndex = statement->sourceSpan.Begin() + offsetFromDocumentBegin;
         *statementLength = statement->sourceSpan.End() - statement->sourceSpan.Begin();
@@ -4572,7 +4572,7 @@ namespace Js
 
     void FunctionBody::PrintStatementSourceLineFromStartOffset(uint cchStartOffset)
     {
-        ULONG line;
+        uint32_t line;
         int32_t col;
 
         LPCUTF8 source = GetStartOfDocument(_u("FunctionBody::PrintStatementSourceLineFromStartOffset"));
@@ -4676,7 +4676,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-                                                    ULONG * line, int32_t * col)
+                                                    uint32_t * line, int32_t * col)
     {
         //
         // get source info
@@ -4734,7 +4734,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-        ULONG * line, int32_t * col)
+        uint32_t * line, int32_t * col)
     {
         const size_t startOffset = GetStatementStartOffset(statementIndex);
 
@@ -4757,7 +4757,7 @@ namespace Js
 #endif /* IR_VIEWER */
 
 #if ENABLE_TTD
-    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, int32_t* col)
+    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col)
     {
         GetLineCharOffsetFromStartChar(startOffset, line, col);
     }
@@ -4787,7 +4787,7 @@ namespace Js
     {
         auto& nativeOffsetMaps = this->GetNativeEntryPointData()->GetNativeOffsetMaps();
         LineNumberInfo* pLineInfo = (LineNumberInfo*)pInfo;
-        ULONG functionLineNumber = body->GetLineNumber();
+        uint32_t functionLineNumber = body->GetLineNumber();
         pLineInfo[0].Offset = 0;
         pLineInfo[0].LineNumber = functionLineNumber;
 
@@ -4818,9 +4818,9 @@ namespace Js
         return j;
     }
 
-    ULONG FunctionBody::GetSourceLineNumber(uint statementIndex)
+    uint32_t FunctionBody::GetSourceLineNumber(uint statementIndex)
     {
-        ULONG line = 0;
+        uint32_t line = 0;
         if (statementIndex != Js::Constants::NoStatementIndex)
         {
             uint startOffset = GetStartOffset(statementIndex);

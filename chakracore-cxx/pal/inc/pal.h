@@ -1525,35 +1525,35 @@ typedef struct _FLOATING_SAVE_AREA {
 typedef FLOATING_SAVE_AREA *PFLOATING_SAVE_AREA;
 
 typedef struct _CONTEXT {
-    ULONG ContextFlags;
+    uint32_t ContextFlags;
 
-    ULONG   Dr0_PAL_Undefined;
-    ULONG   Dr1_PAL_Undefined;
-    ULONG   Dr2_PAL_Undefined;
-    ULONG   Dr3_PAL_Undefined;
-    ULONG   Dr6_PAL_Undefined;
-    ULONG   Dr7_PAL_Undefined;
+    uint32_t   Dr0_PAL_Undefined;
+    uint32_t   Dr1_PAL_Undefined;
+    uint32_t   Dr2_PAL_Undefined;
+    uint32_t   Dr3_PAL_Undefined;
+    uint32_t   Dr6_PAL_Undefined;
+    uint32_t   Dr7_PAL_Undefined;
 
     FLOATING_SAVE_AREA FloatSave;
 
-    ULONG   SegGs_PAL_Undefined;
-    ULONG   SegFs_PAL_Undefined;
-    ULONG   SegEs_PAL_Undefined;
-    ULONG   SegDs_PAL_Undefined;
+    uint32_t   SegGs_PAL_Undefined;
+    uint32_t   SegFs_PAL_Undefined;
+    uint32_t   SegEs_PAL_Undefined;
+    uint32_t   SegDs_PAL_Undefined;
 
-    ULONG   Edi;
-    ULONG   Esi;
-    ULONG   Ebx;
-    ULONG   Edx;
-    ULONG   Ecx;
-    ULONG   Eax;
+    uint32_t   Edi;
+    uint32_t   Esi;
+    uint32_t   Ebx;
+    uint32_t   Edx;
+    uint32_t   Ecx;
+    uint32_t   Eax;
 
-    ULONG   Ebp;
-    ULONG   Eip;
-    ULONG   SegCs;
-    ULONG   EFlags;
-    ULONG   Esp;
-    ULONG   SegSs;
+    uint32_t   Ebp;
+    uint32_t   Eip;
+    uint32_t   SegCs;
+    uint32_t   EFlags;
+    uint32_t   Esp;
+    uint32_t   SegSs;
 
     unsigned char   ExtendedRegisters[MAXIMUM_SUPPORTED_EXTENSION];
 
@@ -1633,51 +1633,51 @@ typedef struct _CONTEXT {
     // the flag CONTEXT_INTEGER.
     //
 
-    ULONG Gpr0;                         // General registers 0..31
-    ULONG Gpr1;                         // StackPointer
-    ULONG Gpr2;
-    ULONG Gpr3;
-    ULONG Gpr4;
-    ULONG Gpr5;
-    ULONG Gpr6;
-    ULONG Gpr7;
-    ULONG Gpr8;
-    ULONG Gpr9;
-    ULONG Gpr10;
-    ULONG Gpr11;
-    ULONG Gpr12;
-    ULONG Gpr13;
-    ULONG Gpr14;
-    ULONG Gpr15;
-    ULONG Gpr16;
-    ULONG Gpr17;
-    ULONG Gpr18;
-    ULONG Gpr19;
-    ULONG Gpr20;
-    ULONG Gpr21;
-    ULONG Gpr22;
-    ULONG Gpr23;
-    ULONG Gpr24;
-    ULONG Gpr25;
-    ULONG Gpr26;
-    ULONG Gpr27;
-    ULONG Gpr28;
-    ULONG Gpr29;
-    ULONG Gpr30;
-    ULONG Gpr31;
+    uint32_t Gpr0;                         // General registers 0..31
+    uint32_t Gpr1;                         // StackPointer
+    uint32_t Gpr2;
+    uint32_t Gpr3;
+    uint32_t Gpr4;
+    uint32_t Gpr5;
+    uint32_t Gpr6;
+    uint32_t Gpr7;
+    uint32_t Gpr8;
+    uint32_t Gpr9;
+    uint32_t Gpr10;
+    uint32_t Gpr11;
+    uint32_t Gpr12;
+    uint32_t Gpr13;
+    uint32_t Gpr14;
+    uint32_t Gpr15;
+    uint32_t Gpr16;
+    uint32_t Gpr17;
+    uint32_t Gpr18;
+    uint32_t Gpr19;
+    uint32_t Gpr20;
+    uint32_t Gpr21;
+    uint32_t Gpr22;
+    uint32_t Gpr23;
+    uint32_t Gpr24;
+    uint32_t Gpr25;
+    uint32_t Gpr26;
+    uint32_t Gpr27;
+    uint32_t Gpr28;
+    uint32_t Gpr29;
+    uint32_t Gpr30;
+    uint32_t Gpr31;
 
-    ULONG Cr;                           // Condition register
-    ULONG Xer;                          // Fixed point exception register
+    uint32_t Cr;                           // Condition register
+    uint32_t Xer;                          // Fixed point exception register
 
     //
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_CONTROL.
     //
 
-    ULONG Msr;                          // Machine status register
-    ULONG Iar;                          // Instruction address register
-    ULONG Lr;                           // Link register
-    ULONG Ctr;                          // Count register
+    uint32_t Msr;                          // Machine status register
+    uint32_t Iar;                          // Instruction address register
+    uint32_t Lr;                           // Link register
+    uint32_t Ctr;                          // Count register
 
     //
     // The flags values within this flag control the contents of
@@ -1697,23 +1697,23 @@ typedef struct _CONTEXT {
     // The context record is never used as an OUT only parameter.
     //
 
-    ULONG ContextFlags;
+    uint32_t ContextFlags;
 
-    ULONG Fill[3];                      // Pad out to multiple of 16 bytes
+    uint32_t Fill[3];                      // Pad out to multiple of 16 bytes
 
     //
     // This section is specified/returned if CONTEXT_DEBUG_REGISTERS is
     // set in ContextFlags.  Note that CONTEXT_DEBUG_REGISTERS is NOT
     // included in CONTEXT_FULL.
     //
-    ULONG Dr0;                          // Breakpoint Register 1
-    ULONG Dr1;                          // Breakpoint Register 2
-    ULONG Dr2;                          // Breakpoint Register 3
-    ULONG Dr3;                          // Breakpoint Register 4
-    ULONG Dr4;                          // Breakpoint Register 5
-    ULONG Dr5;                          // Breakpoint Register 6
-    ULONG Dr6;                          // Debug Status Register
-    ULONG Dr7;                          // Debug Control Register
+    uint32_t Dr0;                          // Breakpoint Register 1
+    uint32_t Dr1;                          // Breakpoint Register 2
+    uint32_t Dr2;                          // Breakpoint Register 3
+    uint32_t Dr3;                          // Breakpoint Register 4
+    uint32_t Dr4;                          // Breakpoint Register 5
+    uint32_t Dr5;                          // Breakpoint Register 6
+    uint32_t Dr6;                          // Debug Status Register
+    uint32_t Dr7;                          // Debug Control Register
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
@@ -1733,54 +1733,54 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_INTEGER.
     //
-    ULONG g0;
-    ULONG g1;
-    ULONG g2;
-    ULONG g3;
-    ULONG g4;
-    ULONG g5;
-    ULONG g6;
-    ULONG g7;
-    ULONG o0;
-    ULONG o1;
-    ULONG o2;
-    ULONG o3;
-    ULONG o4;
-    ULONG o5;
-    ULONG sp;
-    ULONG o7;
-    ULONG l0;
-    ULONG l1;
-    ULONG l2;
-    ULONG l3;
-    ULONG l4;
-    ULONG l5;
-    ULONG l6;
-    ULONG l7;
-    ULONG i0;
-    ULONG i1;
-    ULONG i2;
-    ULONG i3;
-    ULONG i4;
-    ULONG i5;
-    ULONG fp;
-    ULONG i7;
+    uint32_t g0;
+    uint32_t g1;
+    uint32_t g2;
+    uint32_t g3;
+    uint32_t g4;
+    uint32_t g5;
+    uint32_t g6;
+    uint32_t g7;
+    uint32_t o0;
+    uint32_t o1;
+    uint32_t o2;
+    uint32_t o3;
+    uint32_t o4;
+    uint32_t o5;
+    uint32_t sp;
+    uint32_t o7;
+    uint32_t l0;
+    uint32_t l1;
+    uint32_t l2;
+    uint32_t l3;
+    uint32_t l4;
+    uint32_t l5;
+    uint32_t l6;
+    uint32_t l7;
+    uint32_t i0;
+    uint32_t i1;
+    uint32_t i2;
+    uint32_t i3;
+    uint32_t i4;
+    uint32_t i5;
+    uint32_t fp;
+    uint32_t i7;
 
-    ULONG y;
+    uint32_t y;
 
     //
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_CONTROL.
     //
 #if defined(__sparcv9)
-    ULONG ccr;
+    uint32_t ccr;
 #else
-    ULONG psr;
+    uint32_t psr;
 #endif
-    ULONG pc;     // program counter
-    ULONG npc;    // next address to be executed
+    uint32_t pc;     // program counter
+    uint32_t npc;    // next address to be executed
 
-    ULONG ContextFlags;
+    uint32_t ContextFlags;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -1811,50 +1811,50 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_INTEGER.
     //
-    ULONG g0;
-    ULONG g1;
-    ULONG g2;
-    ULONG g3;
-    ULONG g4;
-    ULONG g5;
-    ULONG g6;
-    ULONG g7;
-    ULONG o0;
-    ULONG o1;
-    ULONG o2;
-    ULONG o3;
-    ULONG o4;
-    ULONG o5;
-    ULONG sp;
-    ULONG o7;
-    ULONG l0;
-    ULONG l1;
-    ULONG l2;
-    ULONG l3;
-    ULONG l4;
-    ULONG l5;
-    ULONG l6;
-    ULONG l7;
-    ULONG i0;
-    ULONG i1;
-    ULONG i2;
-    ULONG i3;
-    ULONG i4;
-    ULONG i5;
-    ULONG fp;
-    ULONG i7;
+    uint32_t g0;
+    uint32_t g1;
+    uint32_t g2;
+    uint32_t g3;
+    uint32_t g4;
+    uint32_t g5;
+    uint32_t g6;
+    uint32_t g7;
+    uint32_t o0;
+    uint32_t o1;
+    uint32_t o2;
+    uint32_t o3;
+    uint32_t o4;
+    uint32_t o5;
+    uint32_t sp;
+    uint32_t o7;
+    uint32_t l0;
+    uint32_t l1;
+    uint32_t l2;
+    uint32_t l3;
+    uint32_t l4;
+    uint32_t l5;
+    uint32_t l6;
+    uint32_t l7;
+    uint32_t i0;
+    uint32_t i1;
+    uint32_t i2;
+    uint32_t i3;
+    uint32_t i4;
+    uint32_t i5;
+    uint32_t fp;
+    uint32_t i7;
 
-    ULONG y;
+    uint32_t y;
 
     //
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_CONTROL.
     //
-    ULONG psr;
-    ULONG pc;     // program counter
-    ULONG npc;    // next address to be executed
+    uint32_t psr;
+    uint32_t pc;     // program counter
+    uint32_t npc;    // next address to be executed
 
-    ULONG ContextFlags;
+    uint32_t ContextFlags;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -3865,9 +3865,9 @@ ResolveLocaleName(
 BOOL
 GetThreadPreferredUILanguages(
      DWORD  dwFlags,
-     PULONG  pulNumLanguages,
+     uint32_t *  pulNumLanguages,
      PWSTR  pwszLanguagesBuffer,
-      PULONG  pcchLanguagesBuffer);
+      uint32_t *  pcchLanguagesBuffer);
 
 
 int
@@ -5537,7 +5537,7 @@ int sscanf(const char *, const char *, ...);
 int atoi(const char *);
 int32_t atol(const char *);
 //long long int atoll(const char *) __THROW;
-ULONG strtoul(const char *, char **, int);
+uint32_t strtoul(const char *, char **, int);
 double atof(const char *);
 double strtod(const char *, char **);
 int isprint(int);
@@ -5592,7 +5592,7 @@ int PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
 int _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
 int PAL_swscanf(const WCHAR *, const WCHAR *, ...);
 int32_t PAL_wcstol(const WCHAR *, WCHAR **, int);
-ULONG PAL_wcstoul(const WCHAR *, WCHAR **, int);
+uint32_t PAL_wcstoul(const WCHAR *, WCHAR **, int);
 LONGLONG PAL_wcstoll(const WCHAR *, WCHAR **, int);
 size_t PAL_wcsspn (const WCHAR *, const WCHAR *);
 double PAL_wcstod(const WCHAR *, WCHAR **);

@@ -122,7 +122,7 @@ namespace Js
         PVOID                           HandlerData;
         ULONG64                         EstablisherFrame;
         ULONG64                         ImageBase;
-        ULONG                           Frame = 0;
+        uint32_t                           Frame = 0;
 
         if (BackTraceHash)
         {
@@ -746,7 +746,7 @@ namespace Js
 
                 // enum symbols, if succeed we compare with address when doing stack matching
                 pfnSymEnumSymbolsW(GetCurrentProcess(), 0, baselineStack[i],
-                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ ULONG SymbolSize, _In_opt_  PVOID UserContext)->BOOL
+                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ uint32_t SymbolSize, _In_opt_  PVOID UserContext)->BOOL
                 {
                     Assert(UserContext != nullptr); // did passed in the user context
                     if (pSymInfo->Size > 0)
@@ -1404,7 +1404,7 @@ namespace Js
                 MINIDUMP_USER_STREAM UserStreams[1];
                 UserStreams[0].Type = CommentStreamW;
                 UserStreams[0].Buffer = dbgTip;
-                UserStreams[0].BufferSize = (ULONG)wcslen(dbgTip)*sizeof(char16);
+                UserStreams[0].BufferSize = (uint32_t)wcslen(dbgTip)*sizeof(char16);
                 MINIDUMP_USER_STREAM_INFORMATION musi;
                 musi.UserStreamCount = 1;
                 musi.UserStreamArray = UserStreams;

@@ -482,7 +482,7 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
     int32 statementIndex = (int32)inst->m_statementIndex;
     LPCUTF8 sourceBegin = NULL;
     LPCUTF8 sourceEnd = NULL;
-    ULONG line = 0;
+    uint32_t line = 0;
     int32_t col = 0;
 
     Js::FunctionBody *fnBody = func->GetJnFunction()->GetFunctionBody();

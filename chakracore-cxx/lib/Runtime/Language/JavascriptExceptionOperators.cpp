@@ -1172,7 +1172,7 @@ namespace Js
         for (int i=0; i < stackTrace->Count(); i++)
         {
             Js::JavascriptExceptionContext::StackFrame& currFrame = stackTrace->Item(i);
-            ULONG lineNumber = 0;
+            uint32_t lineNumber = 0;
             int32_t characterPosition = 0;
             if (currFrame.IsScriptFunction() && !currFrame.GetFunctionBody()->GetUtf8SourceInfo()->GetIsLibraryCode())
             {
@@ -1576,7 +1576,7 @@ namespace Js
                 else
                 {
                     LPCWSTR pUrl = NULL;
-                    ULONG lineNumber = 0;
+                    uint32_t lineNumber = 0;
                     int32_t characterPosition = 0;
 
                     functionBody->GetLineCharOffset(currentFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
@@ -1656,12 +1656,12 @@ namespace Js
         return limit;
     }
 
-    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, ULONG lineNumber, int32_t characterPosition)
+    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, uint32_t lineNumber, int32_t characterPosition)
     {
         // format is equivalent to wprintf("\n   at %s (%s:%d:%d)", functionName, filename, lineNumber, characterPosition);
 
         const CharCount maxULongStringLength = 10; // excluding null terminator
-        const auto ConvertULongToString = [](const ULONG value, char16 *const buffer, const CharCount charCapacity)
+        const auto ConvertULongToString = [](const uint32_t value, char16 *const buffer, const CharCount charCapacity)
         {
             const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);

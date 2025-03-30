@@ -36,7 +36,7 @@ size_t PAL_wcslen(const WCHAR *);
 typedef WCHAR OLECHAR;
 typedef WCHAR *BSTR;
 
-inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
+inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *result)
 {
     if (result == nullptr)
         return E_INVALIDARG;
@@ -55,7 +55,7 @@ inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
     }
     else
     {
-        ULONG temp = 0; // should not use in-place addition in ULongAdd
+        uint32_t temp = 0; // should not use in-place addition in ULongAdd
         if (SUCCEEDED(ULongMult(cchSize, sizeof(WCHAR), &temp)) &
             SUCCEEDED(ULongAdd(temp, constant, result)))
         {

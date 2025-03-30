@@ -31,9 +31,9 @@ IUnknown
         REFIID riid,
         void **ppvObject) = 0;
         
-    virtual ULONG STDMETHODCALLTYPE AddRef( void) = 0;
+    virtual uint32_t STDMETHODCALLTYPE AddRef( void) = 0;
         
-    virtual ULONG STDMETHODCALLTYPE Release( void) = 0;
+    virtual uint32_t STDMETHODCALLTYPE Release( void) = 0;
 
     template<class Q>
     HRESULT

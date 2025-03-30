@@ -308,7 +308,7 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
     //               '((cch+1))*sizeof(OLECHAR)'. This can be caused by integer overflows
     //               or underflows. This could yield an incorrect buffer all
     /* Allocate space for the identifier */
-    ULONG Len;
+    uint32_t Len;
 
     if (FAILED(ULongAdd(cch, 1, &Len)) ||
         FAILED(ULongMult(Len, sizeof(OLECHAR), &Len)) ||

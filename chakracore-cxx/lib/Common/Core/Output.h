@@ -59,8 +59,8 @@ namespace Js
 #ifdef STACK_BACK_TRACE
     struct IStackTraceHelper
     {
-        virtual size_t PrintStackTrace(ULONG framesToSkip, ULONG framesToCapture) = 0;  // Returns # of chars printed.
-        virtual ULONG GetStackTrace(ULONG framesToSkip, ULONG framesToCapture, void** stackFrames) = 0; // Returns # of frames captured.
+        virtual size_t PrintStackTrace(uint32_t framesToSkip, uint32_t framesToCapture) = 0;  // Returns # of chars printed.
+        virtual uint32_t GetStackTrace(uint32_t framesToSkip, uint32_t framesToCapture, void** stackFrames) = 0; // Returns # of frames captured.
     };
 #endif
 } // namespace Js.

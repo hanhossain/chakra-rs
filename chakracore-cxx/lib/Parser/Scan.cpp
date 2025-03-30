@@ -143,7 +143,7 @@ void Scanner<EncodingPolicy>::Clear()
 *  Initializes the scanner to prepare to scan the given source text.
 */
 template <typename EncodingPolicy>
-void Scanner<EncodingPolicy>::SetText(EncodedCharPtr pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, ULONG grfscr, ULONG lineNumber)
+void Scanner<EncodingPolicy>::SetText(EncodedCharPtr pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, uint32_t grfscr, uint32_t lineNumber)
 {
     // Save the start of the script and add the offset to get the point where we should start scanning.
     m_pchBase = pszSrc;
@@ -2023,7 +2023,7 @@ LEcmaCommentLineBreak:
 LCommentLineBreak:
                         // Subtract the comment length from the total char count for the purpose
                         // of deciding whether to defer AST and byte code generation.
-                        m_parser->ReduceDeferredScriptLength((ULONG)(p - m_pchMinTok));
+                        m_parser->ReduceDeferredScriptLength((uint32_t)(p - m_pchMinTok));
                         break;
                     case kchNUL:
                         // Because we used ReadFirst, we have advanced p. The character that we are looking at is actually is p - 1.
@@ -2075,7 +2075,7 @@ LCommentLineBreak:
                 {
                     // Subtract the comment length from the total char count for the purpose
                     // of deciding whether to defer AST and byte code generation.
-                    m_parser->ReduceDeferredScriptLength((ULONG)(pchT - m_pchMinTok));
+                    m_parser->ReduceDeferredScriptLength((uint32_t)(pchT - m_pchMinTok));
                     p = pchT;
                     seenDelimitedCommentEnd = true;
                     goto LLoop;

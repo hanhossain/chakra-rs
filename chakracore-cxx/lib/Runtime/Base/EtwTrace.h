@@ -27,7 +27,7 @@
 // C-style callback
 extern "C" {
     void EtwCallback(
-        ULONG controlCode,
+        uint32_t controlCode,
         PVOID callbackContext);
 }
 

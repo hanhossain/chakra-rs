@@ -191,7 +191,7 @@ typedef enum tagEFaultRepRetVal
 #if defined(_WIN64) || defined(_M_ALPHA)
 #define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
 #else
-#define MAX_NATURAL_ALIGNMENT sizeof(ULONG)
+#define MAX_NATURAL_ALIGNMENT sizeof(uint32_t)
 #endif
 
 #define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
@@ -334,7 +334,7 @@ typedef union _ULARGE_INTEGER {
 
 #define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
 #define FAILED(Status) ((HRESULT)(Status)<0)
-#define IS_ERROR(Status) ((ULONG)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
+#define IS_ERROR(Status) ((uint32_t)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
 #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
 #define SCODE_CODE(sc)      ((sc) & 0xFFFF)
 #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
@@ -344,9 +344,9 @@ typedef union _ULARGE_INTEGER {
 
 // both macros diff from Win32
 #define MAKE_HRESULT(sev,fac,code) \
-    ((HRESULT) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((ULONG)(code))) )
+    ((HRESULT) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((uint32_t)(code))) )
 #define MAKE_SCODE(sev,fac,code) \
-    ((SCODE) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((int32_t)(code))) )
+    ((SCODE) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((int32_t)(code))) )
 
 #define FACILITY_NT_BIT                 0x10000000
 #define HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
@@ -383,9 +383,9 @@ typedef union tagCY {
     struct {
 #if BIGENDIAN
         int32_t    Hi;
-        ULONG   Lo;
+        uint32_t   Lo;
 #else
-        ULONG   Lo;
+        uint32_t   Lo;
         int32_t    Hi;
 #endif
     } u;
@@ -418,18 +418,18 @@ typedef struct tagDEC {
         unsigned short signscale;
     };
 #endif
-    ULONG Hi32;
+    uint32_t Hi32;
     union {
         struct {
-            ULONG Lo32;
-            ULONG Mid32;
+            uint32_t Lo32;
+            uint32_t Mid32;
         };
         ULONGLONG Lo64;
     };
 } DECIMAL, *LPDECIMAL;
 
 typedef struct tagBLOB {
-    ULONG cbSize;
+    uint32_t cbSize;
     BYTE *pBlobData;
 } BLOB, *LPBLOB;
 
@@ -542,14 +542,14 @@ struct tagVARIANT
                 PVOID byref;
                 char cVal;
                 unsigned short uiVal;
-                ULONG ulVal;
+                uint32_t ulVal;
                 ULONGLONG ullVal;
                 INT intVal;
                 UINT uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
                 unsigned short *puiVal;
-                ULONG *pulVal;
+                uint32_t *pulVal;
                 ULONGLONG *pullVal;
                 INT *pintVal;
                 UINT *puintVal;
@@ -1299,7 +1299,7 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 
 typedef struct tagSAFEARRAYBOUND
     {
-    ULONG cElements;
+    uint32_t cElements;
     int32_t lLbound;
     } 	SAFEARRAYBOUND;
 
@@ -1309,8 +1309,8 @@ typedef struct tagSAFEARRAY
     {
     unsigned short cDims;
     unsigned short fFeatures;
-    ULONG cbElements;
-    ULONG cLocks;
+    uint32_t cbElements;
+    uint32_t cLocks;
     PVOID pvData;
     SAFEARRAYBOUND rgsabound[ 1 ];
     } 	SAFEARRAY;
@@ -1318,7 +1318,7 @@ typedef struct tagSAFEARRAY
 typedef SAFEARRAY *LPSAFEARRAY;
 
 
-STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, int32_t lLbound, ULONG cElements);
+STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, int32_t lLbound, uint32_t cElements);
 STDAPI_(UINT) SafeArrayGetDim(SAFEARRAY * psa);
 STDAPI SafeArrayGetElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
 STDAPI SafeArrayGetLBound(SAFEARRAY * psa, UINT nDim, int32_t * plLbound);
@@ -1556,11 +1556,11 @@ typedef LPVOID PSECURITY_DESCRIPTOR;
 
 typedef struct _EXCEPTION_RECORD64 {
     DWORD ExceptionCode;
-    ULONG ExceptionFlags;
+    uint32_t ExceptionFlags;
     ULONG64 ExceptionRecord;
     ULONG64 ExceptionAddress;
-    ULONG NumberParameters;
-    ULONG __unusedAlignment;
+    uint32_t NumberParameters;
+    uint32_t __unusedAlignment;
     ULONG64 ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
 
@@ -1578,8 +1578,8 @@ typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 /******************* winnt ************************************/
 
 typedef struct LIST_ENTRY32 {
-    ULONG Flink;
-    ULONG Blink;
+    uint32_t Flink;
+    uint32_t Blink;
 } LIST_ENTRY32;
 typedef LIST_ENTRY32 *PLIST_ENTRY32;
 

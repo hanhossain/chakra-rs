@@ -23,7 +23,7 @@ void WritePerfHint(PerfHints hint, Js::FunctionBody * functionBody, uint byteCod
 
     if ((int)item.level <= level)
     {
-        ULONG lineNumber = functionBody->GetLineNumber();
+        uint32_t lineNumber = functionBody->GetLineNumber();
         int32_t columnNumber = functionBody->GetColumnNumber();
         if (byteCodeOffset != Js::Constants::NoByteCodeOffset)
         {

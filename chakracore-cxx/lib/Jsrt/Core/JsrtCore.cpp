@@ -93,7 +93,7 @@ JsParseModuleSource(
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<ULONG>(sourceLength),
+            /* ichLimHost          */ static_cast<uint32_t>(sourceLength),
             /* ulCharOffset        */ 0,
             /* mod                 */ 0,
             /* grfsi               */ 0

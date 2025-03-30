@@ -164,8 +164,8 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
     // Print stack trace.
     if (s_stackTraceHelper)
     {
-        const ULONG c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
-        const ULONG c_frameCount = 10;  // TODO: make it configurable.
+        const uint32_t c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
+        const uint32_t c_frameCount = 10;  // TODO: make it configurable.
         const char16 callStackPrefix[] = _u("call stack:");
         if (s_inMemoryLogger)
         {
@@ -181,9 +181,9 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
             Assert(temp != -1);
             start += temp;
 
-            ULONG framesObtained = s_stackTraceHelper->GetStackTrace(c_framesToSkip, c_frameCount, frames);
+            uint32_t framesObtained = s_stackTraceHelper->GetStackTrace(c_framesToSkip, c_frameCount, frames);
             Assert(framesObtained <= c_frameCount);
-            for (ULONG i = 0; i < framesObtained && i < c_frameCount; ++i)
+            for (uint32_t i = 0; i < framesObtained && i < c_frameCount; ++i)
             {
                 Assert(_countof(callStackMsg) >= start);
                 temp = _snwprintf_s(callStackMsg + start, _countof(callStackMsg) - start, _TRUNCATE, _u(" %p"), frames[i]);

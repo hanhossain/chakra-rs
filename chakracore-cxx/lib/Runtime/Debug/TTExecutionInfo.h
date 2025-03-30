@@ -115,9 +115,9 @@ namespace TTD
         void SetLocationCopy(const TTDebuggerSourceLocation& other);
         void SetLocationFromFrame(int64 topLevelETime, const SingleCallCounter& callFrame);
         void SetLocationFromFunctionEntryAnyTime(int64 topLevelETime, Js::FunctionBody* body);
-        void SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, ULONG line, int32_t column);
-        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, ULONG line, int32_t column);
-        void SetLocationWithBP(int64 bpId, Js::FunctionBody* body, ULONG line, int32_t column);
+        void SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, uint32_t line, int32_t column);
+        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column);
+        void SetLocationWithBP(int64 bpId, Js::FunctionBody* body, uint32_t line, int32_t column);
 
         int64 GetRootEventTime() const;
         int64 GetFunctionTime() const;

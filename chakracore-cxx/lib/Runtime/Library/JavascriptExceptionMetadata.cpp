@@ -58,7 +58,7 @@ namespace Js {
     bool JavascriptExceptionMetadata::PopulateMetadataFromException(Var metadata, JavascriptExceptionObject * recordedException, ScriptContext * scriptContext) {
         uint32 offset = recordedException->GetByteCodeOffset();
         FunctionBody * functionBody = recordedException->GetFunctionBody();
-        ULONG line;
+        uint32_t line;
         int32_t column;
         if (functionBody->GetUtf8SourceInfo()->GetIsLibraryCode() ||
             !functionBody->GetLineCharOffset(offset, &line, &column)) {

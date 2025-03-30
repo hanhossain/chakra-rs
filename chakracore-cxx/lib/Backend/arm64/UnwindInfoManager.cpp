@@ -37,11 +37,11 @@ DWORD UnwindInfoManager::GetFunctionOffset(UnwindFunctionOffsets which)
 void UnwindInfoManager::FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize)
 {
     // fetch the appropriate offsets and hand off to the generic code
-    m_xdata.Generate(PULONG(functionStart + this->GetFunctionOffset(UnwindPrologStart)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindPrologEnd)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindEpilogStart)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindEpilogEnd)),
-                     PULONG(functionStart + codeSize));
+    m_xdata.Generate((uint32_t *)(functionStart + this->GetFunctionOffset(UnwindPrologStart)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindPrologEnd)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindEpilogStart)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindEpilogEnd)),
+                     (uint32_t *)(functionStart + codeSize));
 }
 
 void UnwindInfoManager::SetFunctionOffsetLabel(UnwindFunctionOffsets which, IR::LabelInstr *label)

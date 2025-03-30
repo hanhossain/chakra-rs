@@ -3447,7 +3447,7 @@ namespace CorUnix
         SharedID shridSynchData = NULLSharedID;
         SharedID *rgshridWTLNodes = NULL;
         CObjectType *pot = NULL;
-        ULONG ulcWaitingThreads;
+        uint32_t ulcWaitingThreads;
 
         _ASSERTE(NULL != pthrCurrent);
         _ASSERTE(NULL != pvLocalSynchData);
@@ -3499,7 +3499,7 @@ namespace CorUnix
                     rgshridWTLNodes
                     );
 
-            if (static_cast<ULONG>(i) != ulcWaitingThreads)
+            if (static_cast<uint32_t>(i) != ulcWaitingThreads)
             {
                 for (i -= 1; i >= 0; i -= 1)
                 {

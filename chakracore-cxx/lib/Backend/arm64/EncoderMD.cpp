@@ -298,7 +298,7 @@ int EncoderMD::EmitOp3Immediate(Arm64CodeEmitter &Emitter, IR::Instr* instr, _Im
     }
     else
     {
-        return imm32(Emitter, this->GetRegEncode(dst->AsRegOpnd()), this->GetRegEncode(src1->AsRegOpnd()), ULONG(immediate));
+        return imm32(Emitter, this->GetRegEncode(dst->AsRegOpnd()), this->GetRegEncode(src1->AsRegOpnd()), uint32_t(immediate));
     }
 }
 
@@ -520,7 +520,7 @@ int EncoderMD::EmitTestAndBranch(Arm64CodeEmitter &Emitter, IR::Instr* instr, _E
 
     int64 immediate = src2->GetImmediateValue(instr->m_func);
     Assert(immediate >= 0 && immediate < 64);
-    return emitter(Emitter, this->GetRegEncode(src1->AsRegOpnd()), ULONG(immediate), Linker);
+    return emitter(Emitter, this->GetRegEncode(src1->AsRegOpnd()), uint32_t(immediate), Linker);
 }
 
 template<typename _Emitter, typename _Emitter64>
@@ -570,11 +570,11 @@ int EncoderMD::EmitMovConstant(Arm64CodeEmitter &Emitter, IR::Instr *instr, _Emi
 
     if (size == 8)
     {
-        return emitter64(Emitter, this->GetRegEncode(dst->AsRegOpnd()), ULONG(immediate), shift);
+        return emitter64(Emitter, this->GetRegEncode(dst->AsRegOpnd()), uint32_t(immediate), shift);
     }
     else
     {
-        return emitter(Emitter, this->GetRegEncode(dst->AsRegOpnd()), ULONG(immediate), shift);
+        return emitter(Emitter, this->GetRegEncode(dst->AsRegOpnd()), uint32_t(immediate), shift);
     }
 }
 
@@ -787,7 +787,7 @@ int EncoderMD::EmitConditionalSelectFp(Arm64CodeEmitter &Emitter, IR::Instr *ins
 // associated encoding steps
 //
 //---------------------------------------------------------------------------
-ULONG
+uint32_t
 EncoderMD::GenerateEncoding(IR::Instr* instr, BYTE *pc)
 {
     Arm64LocalCodeEmitter<1> Emitter;
@@ -1562,8 +1562,8 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
 {
     for (EncodeReloc *reloc = m_relocList; reloc; reloc = reloc->m_next)
     {
-        PULONG relocAddress = PULONG(reloc->m_consumerOffset);
-        PULONG targetAddress = PULONG(reloc->m_relocInstr->AsLabelInstr()->GetPC());
+        uint32_t * relocAddress = (uint32_t *)reloc->m_consumerOffset;
+        uint32_t * targetAddress = (uint32_t *)reloc->m_relocInstr->AsLabelInstr()->GetPC();
         size_t immediate;
 
         switch (reloc->m_relocType)
@@ -1578,8 +1578,8 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
             Assert(!reloc->m_relocInstr->isInlineeEntryInstr);
             immediate = size_t(targetAddress) - size_t(relocAddress);
             Assert(IS_CONST_INT21(immediate));
-            *relocAddress = (*relocAddress & ~(3 << 29)) | ULONG((immediate & 3) << 29);
-            *relocAddress = (*relocAddress & ~(0x7ffff << 5)) | ULONG(((immediate >> 2) & 0x7ffff) << 5);
+            *relocAddress = (*relocAddress & ~(3 << 29)) | uint32_t((immediate & 3) << 29);
+            *relocAddress = (*relocAddress & ~(0x7ffff << 5)) | uint32_t(((immediate >> 2) & 0x7ffff) << 5);
             break;
 
         case RelocTypeLabelImmed:
@@ -1590,7 +1590,7 @@ EncoderMD::ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCR
             immediate = (fullvalue >> shift) & 0xffff;
 
             // replace the immediate value in the encoded instruction.
-            *relocAddress = (*relocAddress & ~(0xffff << 5)) | ULONG((immediate & 0xffff) << 5);
+            *relocAddress = (*relocAddress & ~(0xffff << 5)) | uint32_t((immediate & 0xffff) << 5);
             break;
         }
 

@@ -521,8 +521,8 @@ public:
     size_t cbStringMin;
     size_t cbStringLim;
     size_t cbLim;
-    ULONG lineNumber;   // Line number relative to the current source buffer of the function declaration.
-    ULONG columnNumber; // Column number of the declaration.
+    uint32_t lineNumber;   // Line number relative to the current source buffer of the function declaration.
+    uint32_t columnNumber; // Column number of the declaration.
     Js::LocalFunctionId functionId;
 #if DBG
     Js::LocalFunctionId deferredParseNextFunctionId;

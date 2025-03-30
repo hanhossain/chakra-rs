@@ -83,10 +83,10 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
     };
     
 STDAPI
-SetErrorInfo(ULONG dwReserved, IErrorInfo * perrinfo);
+SetErrorInfo(uint32_t dwReserved, IErrorInfo * perrinfo);
 
 STDAPI
-GetErrorInfo(ULONG dwReserved, IErrorInfo * * pperrinfo);
+GetErrorInfo(uint32_t dwReserved, IErrorInfo * * pperrinfo);
 
 STDAPI
 CreateErrorInfo(ICreateErrorInfo * * pperrinfo);

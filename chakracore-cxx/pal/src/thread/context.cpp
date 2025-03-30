@@ -685,7 +685,7 @@ Function :
 Parameters :
     const native_context_t *native : native context to convert
     LPCONTEXT lpContext : CONTEXT to fill in
-    ULONG contextFlags : flags that determine which registers are valid in
+    uint32_t contextFlags : flags that determine which registers are valid in
                          native and which ones to set in lpContext
 
 Return value :
@@ -693,7 +693,7 @@ Return value :
 
 --*/
 void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext,
-                              ULONG contextFlags)
+                              uint32_t contextFlags)
 {
     lpContext->ContextFlags = contextFlags;
 
@@ -730,8 +730,8 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         // the architecture bits. We determine what those are by inverting the union of
         // CONTEXT_CONTROL and CONTEXT_INTEGER, both of which should also have the
         // architecture bit(s) set.
-        const ULONG floatingPointFlags = CONTEXT_FLOATING_POINT & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
-        const ULONG xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+        const uint32_t floatingPointFlags = CONTEXT_FLOATING_POINT & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+        const uint32_t xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
 
         lpContext->ContextFlags &= ~(floatingPointFlags | xstateFlags);
 
@@ -802,7 +802,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         {
             // Floating point state is not valid
             // Mark the context correctly
-            lpContext->ContextFlags &= ~(ULONG)CONTEXT_FLOATING_POINT;
+            lpContext->ContextFlags &= ~(uint32_t)CONTEXT_FLOATING_POINT;
         }
 #elif defined(HOST_S390X)
         const fpregset_t *fp = &native->uc_mcontext.fpregs;
@@ -837,7 +837,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         {
             // Reset the CONTEXT_XSTATE bit(s) so it's clear that the extended state data in
             // the CONTEXT is not valid.
-            const ULONG xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+            const uint32_t xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
             lpContext->ContextFlags &= ~xstateFlags;
         }
     }

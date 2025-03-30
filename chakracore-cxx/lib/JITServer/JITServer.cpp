@@ -35,7 +35,7 @@ HRESULT JsInitializeJITServer(
             NULL,
             RPC_IF_AUTOLISTEN,
             RPC_C_LISTEN_MAX_CALLS_DEFAULT,
-            (ULONG)-1,
+            (uint32_t)-1,
             NULL,
             securityDescriptor);
     }
@@ -47,7 +47,7 @@ HRESULT JsInitializeJITServer(
             NULL,
             RPC_IF_AUTOLISTEN,
             RPC_C_LISTEN_MAX_CALLS_DEFAULT,
-            (ULONG)-1,
+            (uint32_t)-1,
             NULL);
     }
     if (status != RPC_S_OK)

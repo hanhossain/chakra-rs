@@ -111,8 +111,8 @@ struct ParseContext
     size_t length;
     charcount_t characterOffset;
     int nextBlockId;
-    ULONG grfscr;
-    ULONG lineNumber;
+    uint32_t grfscr;
+    uint32_t lineNumber;
     ParseNodeProg * pnodeProg;
     SourceContextInfo* sourceContextInfo;
     BlockInfoStack* currentBlockInfo;
@@ -243,7 +243,7 @@ public:
 
     size_t GetSourceLength() { return m_length; }
     size_t GetOriginalSourceLength() { return m_originalLength; }
-    static ULONG GetDeferralThreshold(bool isProfileLoaded);
+    static uint32_t GetDeferralThreshold(bool isProfileLoaded);
     BOOL WillDeferParse(Js::LocalFunctionId functionId);
     BOOL IsDeferredFnc();
     void ReduceDeferredScriptLength(size_t chars);
@@ -259,18 +259,18 @@ public:
     // the UTF-16 characters pre-canonicalization. Converting this UTF-16 with invalid sequences to valid UTF-8 and back would cause
     // all invalid UTF-16 sequences to be replaced by one or more Unicode replacement characters (0xFFFD), losing the original
     // invalid sequences.
-    HRESULT ParseCesu8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, ULONG grfsrc, CompileScriptException *pse,
+    HRESULT ParseCesu8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
         Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo);
 
     // Should be called when the source is UTF-8 and invalid UTF-8 sequences should be replaced with the unicode replacement character
     // (0xFFFD). Security concerns require externally produced UTF-8 only allow valid UTF-8 otherwise an attacker could use invalid
     // UTF-8 sequences to fool a filter and cause Javascript to be executed that might otherwise have been rejected.
-    HRESULT ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, ULONG grfsrc, CompileScriptException *pse,
+    HRESULT ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
         Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo);
 
     // Used by deferred parsing to parse a deferred function.
     HRESULT ParseSourceWithOffset(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
-        bool isCesu8, ULONG grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, ULONG lineNumber,
+        bool isCesu8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber,
         SourceContextInfo * sourceContextInfo, Js::ParseableFunctionInfo* functionInfo);
 
 protected:
@@ -280,9 +280,9 @@ protected:
     HRESULT ParseSourceInternal(
         __out ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes,
         size_t lengthInCodePoints, charcount_t offsetInChars, bool isUtf8,
-        ULONG grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, ULONG lineNumber, SourceContextInfo * sourceContextInfo);
+        uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo);
 
-    ParseNodeProg * Parse(LPCUTF8 pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, ULONG grfscr, ULONG lineNumber,
+    ParseNodeProg * Parse(LPCUTF8 pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, uint32_t grfscr, uint32_t lineNumber,
         Js::LocalFunctionId * nextFunctionId, CompileScriptException *pse);
 
 private:
@@ -395,7 +395,7 @@ private:
     ParseNodeName * CreateNameNode(IdentPtr pid, PidRefStack * ref, charcount_t ichMin, charcount_t ichLim);
     ParseNodeSpecialName * CreateSpecialNameNode(IdentPtr pid, PidRefStack * ref, charcount_t ichMin, charcount_t ichLim);
     ParseNodeSuperReference * CreateSuperReferenceNode(OpCode nop, ParseNodeSpecialName * pnode1, ParseNodePtr pnode2);
-    ParseNodeProg * CreateProgNode(bool isModuleSource, ULONG lineNumber);
+    ParseNodeProg * CreateProgNode(bool isModuleSource, uint32_t lineNumber);
 
     ParseNodeCall * CreateCallNode(OpCode nop, ParseNodePtr pnode1, ParseNodePtr pnode2);
     ParseNodeCall * CreateCallNode(OpCode nop, ParseNodePtr pnode1, ParseNodePtr pnode2, charcount_t ichMin, charcount_t ichLim);
@@ -919,7 +919,7 @@ private:
     LPCOLESTR AppendNameHints(LPCOLESTR left, IdentPtr  right, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
     LPCOLESTR AppendNameHints(LPCOLESTR left, LPCOLESTR right, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
     LPCOLESTR AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR rightStr, uint32 rightLen, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
-    WCHAR * AllocateStringOfLength(ULONG length);
+    WCHAR * AllocateStringOfLength(uint32_t length);
 
     void FinishFncNode(ParseNodeFnc * pnodeFnc, bool fAllowIn = true);
 

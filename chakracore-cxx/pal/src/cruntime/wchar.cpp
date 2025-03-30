@@ -104,7 +104,7 @@ LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
     }
     if (FALSE == isI64)
     {
-        uval = (ULONG) uval;
+        uval = (uint32_t) uval;
     }
     if (10 == radix && value < 0)
     {
@@ -705,11 +705,11 @@ Notes :
     Windows behavior, we must return long's in the 32 bit range.
 --*/
 
-/* The use of ULONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "unsigned long" is used instead of ULONG,
+/* The use of uint32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "unsigned long" is used instead of uint32_t,
 then a 64 bit value could be returned on 64 bit platforms like HP-UX, thus
 breaking Windows behavior .*/
-ULONG
+uint32_t
 PAL_wcstoul(
         const char16_t *nptr,
         char16_t **endptr,
@@ -786,14 +786,14 @@ PAL_wcstoulExit:
     PERF_EXIT(wcstoul);
 
     /* When returning unsigned long res from this function, it will be
-    implicitly cast to ULONG. This handles situations where a string that
+    implicitly cast to uint32_t. This handles situations where a string that
     represents a negative number is passed in to wcstoul. The Windows
     behavior is analogous to taking the binary equivalent of the negative
-    value and treating it as a positive number. Returning a ULONG from
+    value and treating it as a positive number. Returning a uint32_t from
     this function, as opposed to native unsigned long, allows us to match
-    this behavior. The explicit case to ULONG below is used to silence any
+    this behavior. The explicit case to uint32_t below is used to silence any
     potential warnings due to the implicit casting.  */
-    return (ULONG)res;
+    return (uint32_t)res;
 }
 
 ULONGLONG

@@ -398,7 +398,7 @@ public:
     tokens Scan();
     tokens ScanNoKeywords();
     tokens ScanForcingPid();
-    void SetText(EncodedCharPtr psz, size_t offset, size_t length, charcount_t characterOffset, bool isUtf8, ULONG grfscr, ULONG lineNumber = 0);
+    void SetText(EncodedCharPtr psz, size_t offset, size_t length, charcount_t characterOffset, bool isUtf8, uint32_t grfscr, uint32_t lineNumber = 0);
 #if ENABLE_BACKGROUND_PARSING
     void PrepareForBackgroundParse(Js::ScriptContext *scriptContext);
 #endif
@@ -581,7 +581,7 @@ public:
     // Returns the current line number
     charcount_t LineCur(void) const { return m_line; }
 
-    void SetCurrentCharacter(charcount_t offset, ULONG lineNumber = 0)
+    void SetCurrentCharacter(charcount_t offset, uint32_t lineNumber = 0)
     {
         DebugOnly(m_iecpLimTokPrevious = (size_t)-1);
         DebugOnly(m_ichLimTokPrevious = (charcount_t)-1);
@@ -684,7 +684,7 @@ public:
             byte *prgbNew;
             byte *prgbOld = (byte *)m_prgch;
 
-            ULONG cbNew;
+            uint32_t cbNew;
             if (FAILED(ULongMult(m_cchMax, sizeof(OLECHAR) * 2, &cbNew)))
             {
                 m_pscanner->Error(ERRnoMemory);

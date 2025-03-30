@@ -216,7 +216,7 @@ using namespace Js;
     }
 
     Var GlobalObject::FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16 *file,
-        const char16 *function, ULONG lineNum, ULONG colNum,
+        const char16 *function, uint32_t lineNum, uint32_t colNum,
         uint functionId, Js::Utf8SourceInfo *utf8SrcInfo, Js::Var source)
     {
         Js::DynamicObject *fnInfoObj = scriptContext->GetLibrary()->CreateObject();
@@ -332,8 +332,8 @@ using namespace Js;
                 {
                     char16 const *functionName = functionBody->GetExternalDisplayName();
 
-                    ULONG lineNum = functionBody->GetLineNumber();
-                    ULONG colNum = functionBody->GetColumnNumber();
+                    uint32_t lineNum = functionBody->GetLineNumber();
+                    uint32_t colNum = functionBody->GetColumnNumber();
 
                     uint funcId = functionBody->GetLocalFunctionId();
                     Js::Utf8SourceInfo *utf8SrcInfo = functionBody->GetUtf8SourceInfo();
@@ -862,8 +862,8 @@ using namespace Js;
             ParseNodeProg * parseTree = nullptr;
 
             SourceContextInfo * sourceContextInfo = pSrcInfo->sourceContextInfo;
-            ULONG deferParseThreshold = Parser::GetDeferralThreshold(sourceContextInfo->IsSourceProfileLoaded());
-            if ((ULONG)sourceLength > deferParseThreshold && !PHASE_OFF1(Phase::DeferParsePhase))
+            uint32_t deferParseThreshold = Parser::GetDeferralThreshold(sourceContextInfo->IsSourceProfileLoaded());
+            if ((uint32_t)sourceLength > deferParseThreshold && !PHASE_OFF1(Phase::DeferParsePhase))
             {
                 // Defer function bodies declared inside large dynamic blocks.
                 grfscr |= fscrWillDeferFncParse;

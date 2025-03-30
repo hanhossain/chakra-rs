@@ -620,21 +620,21 @@ void InterpreterThunkEmitter::EncodeInterpreterThunk(
     Emit(thunkBuffer, addrOffset, movK);
 
     // Encode LDR - Load of function Body
-    ULONG offsetOfFunctionInfo = Js::JavascriptFunction::GetOffsetOfFunctionInfo();
+    uint32_t offsetOfFunctionInfo = Js::JavascriptFunction::GetOffsetOfFunctionInfo();
     AssertMsg(offsetOfFunctionInfo % 8 == 0, "Immediate offset for LDR must be 8 byte aligned");
     AssertMsg(offsetOfFunctionInfo < 0x8000, "Immediate offset for LDR must be less than 0x8000");
-    *(PULONG)&thunkBuffer[FunctionInfoOffset] |= (offsetOfFunctionInfo / 8) << 10;
+    *(uint32_t *)&thunkBuffer[FunctionInfoOffset] |= (offsetOfFunctionInfo / 8) << 10;
 
-    ULONG offsetOfFunctionProxy = Js::FunctionInfo::GetOffsetOfFunctionProxy();
+    uint32_t offsetOfFunctionProxy = Js::FunctionInfo::GetOffsetOfFunctionProxy();
     AssertMsg(offsetOfFunctionProxy % 8 == 0, "Immediate offset for LDR must be 8 byte aligned");
     AssertMsg(offsetOfFunctionProxy < 0x8000, "Immediate offset for LDR must be less than 0x8000");
-    *(PULONG)&thunkBuffer[FunctionProxyOffset] |= (offsetOfFunctionProxy / 8) << 10;
+    *(uint32_t *)&thunkBuffer[FunctionProxyOffset] |= (offsetOfFunctionProxy / 8) << 10;
 
     // Encode LDR - Load of interpreter thunk number
-    ULONG offsetOfDynamicInterpreterThunk = Js::FunctionBody::GetOffsetOfDynamicInterpreterThunk();
+    uint32_t offsetOfDynamicInterpreterThunk = Js::FunctionBody::GetOffsetOfDynamicInterpreterThunk();
     AssertMsg(offsetOfDynamicInterpreterThunk % 8 == 0, "Immediate offset for LDR must be 8 byte aligned");
     AssertMsg(offsetOfDynamicInterpreterThunk < 0x8000, "Immediate offset for LDR must be less than 0x8000");
-    *(PULONG)&thunkBuffer[DynamicThunkAddressOffset] |= (offsetOfDynamicInterpreterThunk / 8) << 10;
+    *(uint32_t *)&thunkBuffer[DynamicThunkAddressOffset] |= (offsetOfDynamicInterpreterThunk / 8) << 10;
 }
 
 DWORD InterpreterThunkEmitter::EncodeMove(DWORD opCode, int reg, DWORD imm16)

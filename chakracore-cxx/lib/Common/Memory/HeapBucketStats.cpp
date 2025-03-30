@@ -48,9 +48,9 @@ void HeapBucketStats::Dump() const
 {
     Output::Print(_u("%5d %7d %7d %11lu %11lu %11lu   %6.2f%%\n"),
         totalBlockCount, objectCount, finalizeCount,
-        static_cast<ULONG>(objectByteCount),
-        static_cast<ULONG>(FreeBytes()),
-        static_cast<ULONG>(totalByteCount),
+        static_cast<uint32_t>(objectByteCount),
+        static_cast<uint32_t>(FreeBytes()),
+        static_cast<uint32_t>(totalByteCount),
         UsedRatio() * 100);
 }
 #endif

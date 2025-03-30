@@ -13,40 +13,40 @@
 class StackBackTrace
 {
 public:
-    static const ULONG DefaultFramesToCapture = 30;
-    static StackBackTrace * Capture(char* buffer, size_t bufSize, ULONG framesToSkip = 0);
+    static const uint32_t DefaultFramesToCapture = 30;
+    static StackBackTrace * Capture(char* buffer, size_t bufSize, uint32_t framesToSkip = 0);
     template <typename TAllocator> _NOINLINE
-        static StackBackTrace * Capture(TAllocator * alloc, ULONG framesToSkip = 0, ULONG framesToCapture = DefaultFramesToCapture);
+        static StackBackTrace * Capture(TAllocator * alloc, uint32_t framesToSkip = 0, uint32_t framesToCapture = DefaultFramesToCapture);
 
     template <typename TAllocator> _NOINLINE
-        static StackBackTrace * Create(TAllocator * alloc, ULONG framesToCaptureLater = DefaultFramesToCapture);
+        static StackBackTrace * Create(TAllocator * alloc, uint32_t framesToCaptureLater = DefaultFramesToCapture);
     size_t Print();
     template<typename Fn>void Map(Fn fn);   // The Fn is expected to be: void Fn(void*).
-    ULONG Capture(ULONG framesToSkip);
-    ULONG GetRequestedFrameCount() { return this->requestedFramesToCapture; }
+    uint32_t Capture(uint32_t framesToSkip);
+    uint32_t GetRequestedFrameCount() { return this->requestedFramesToCapture; }
     template <typename TAllocator>
     void Delete(TAllocator * alloc);
 private:
     // We want to skip at lease the StackBackTrace::Capture and the constructor frames
-    static const ULONG BaseFramesToSkip = 2;
+    static const uint32_t BaseFramesToSkip = 2;
 
-    _NOINLINE StackBackTrace(ULONG framesToSkip, ULONG framesToCapture);
-    _NOINLINE StackBackTrace(ULONG framesToCapture);
+    _NOINLINE StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture);
+    _NOINLINE StackBackTrace(uint32_t framesToCapture);
 
-    ULONG requestedFramesToCapture;
-    ULONG framesCount;
+    uint32_t requestedFramesToCapture;
+    uint32_t framesCount;
     PVOID stackBackTrace[];
 };
 
 template <typename TAllocator>
 StackBackTrace *
-StackBackTrace::Capture(TAllocator * alloc, ULONG framesToSkip, ULONG framesToCapture)
+StackBackTrace::Capture(TAllocator * alloc, uint32_t framesToSkip, uint32_t framesToCapture)
 {
     return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID) * framesToCapture, StackBackTrace, framesToSkip, framesToCapture);
 }
 
 template <typename TAllocator>
-StackBackTrace* StackBackTrace::Create(TAllocator * alloc, ULONG framesToCaptureLater)
+StackBackTrace* StackBackTrace::Create(TAllocator * alloc, uint32_t framesToCaptureLater)
 {
     return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID)* framesToCaptureLater, StackBackTrace, framesToCaptureLater);
 }
@@ -60,7 +60,7 @@ void StackBackTrace::Delete(TAllocator * alloc)
 template <typename Fn>
 void StackBackTrace::Map(Fn fn)
 {
-    for (ULONG i = 0; i < this->framesCount; ++i)
+    for (uint32_t i = 0; i < this->framesCount; ++i)
     {
         fn(this->stackBackTrace[i]);
     }

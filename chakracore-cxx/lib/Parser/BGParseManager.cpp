@@ -514,7 +514,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
         0, // ulColumnHost
         0, // lnMinHost
         0, // ichMinHost
-        static_cast<ULONG>(cb / sizeof(utf8char_t)), // ichLimHost
+        static_cast<uint32_t>(cb / sizeof(utf8char_t)), // ichLimHost
         0, // ulCharOffset
         kmodGlobal, // mod
         0 // grfsi

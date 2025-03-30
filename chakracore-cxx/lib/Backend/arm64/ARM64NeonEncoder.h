@@ -16,11 +16,11 @@ class NeonRegisterParam
 {
     static const unsigned char REGISTER_SHIFT = 0;
     static const unsigned char REGISTER_MASK = 0xff;
-    static const ULONG REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
+    static const uint32_t REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
 
     static const unsigned char SIZE_SHIFT = 8;
     static const unsigned char SIZE_MASK = 0x07;
-    static const ULONG SIZE_MASK_SHIFTED = SIZE_MASK << SIZE_SHIFT;
+    static const uint32_t SIZE_MASK_SHIFTED = SIZE_MASK << SIZE_SHIFT;
 
     NeonRegisterParam()
     {
@@ -69,7 +69,7 @@ public:
 
 protected:
     static
-    ULONG
+    uint32_t
     EncodeSize(
         unsigned char Size
         )
@@ -101,7 +101,7 @@ protected:
         Assert(Size == 4 || Size == 8 || Size == 16);
     }
 
-    ULONG m_Encoded;
+    uint32_t m_Encoded;
 };
 
 enum NEON_SIZE
@@ -126,8 +126,8 @@ enum NEON_SIZE
 inline
 NEON_SIZE
 NeonSize(
-    ULONG ElementSizeInBytes,
-    ULONG NumElements
+    uint32_t ElementSizeInBytes,
+    uint32_t NumElements
     )
 {
     switch (ElementSizeInBytes)
@@ -161,7 +161,7 @@ NeonSize(
 inline
 NEON_SIZE
 NeonSizeScalar(
-    ULONG ElementSizeInBytes
+    uint32_t ElementSizeInBytes
     )
 {
     return NeonSize(ElementSizeInBytes, 1);
@@ -170,7 +170,7 @@ NeonSizeScalar(
 inline
 NEON_SIZE
 NeonSizeFullVector(
-    ULONG ElementSizeInBytes
+    uint32_t ElementSizeInBytes
     )
 {
     return NeonSize(ElementSizeInBytes, 16 / ElementSizeInBytes);
@@ -179,7 +179,7 @@ NeonSizeFullVector(
 inline
 NEON_SIZE
 NeonSizeHalfVector(
-    ULONG ElementSizeInBytes
+    uint32_t ElementSizeInBytes
     )
 {
     return NeonSize(ElementSizeInBytes, 8 / ElementSizeInBytes);
@@ -207,7 +207,7 @@ inline
 bool
 NeonSizeIsValid(
     NEON_SIZE Valid,
-    ULONG ValidMask
+    uint32_t ValidMask
     )
 {
     return ((ValidMask >> int(Valid)) & 1) ? true : false;
@@ -251,8 +251,8 @@ EmitNeonBinaryCommon(
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
 
@@ -835,8 +835,8 @@ EmitNeonFloatBinaryCommon(
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
 
@@ -1291,7 +1291,7 @@ EmitNeonFmovImmediate(
     )
 {
     Assert(NeonSizeIsValid(DestSize, VALID_1S | VALID_1D));
-    return Emitter.EmitFourBytes(0x1e201000 | ((DestSize & 1) << 22) | (ULONG(Immediate) << 13) | Dest.RawRegister());
+    return Emitter.EmitFourBytes(0x1e201000 | ((DestSize & 1) << 22) | (uint32_t(Immediate) << 13) | Dest.RawRegister());
 }
 
 inline
@@ -1488,8 +1488,8 @@ EmitNeonTrinaryCommon(
     NeonRegisterParam Src1,
     NeonRegisterParam Src2,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
 
@@ -3081,8 +3081,8 @@ EmitNeonFloatTrinaryCommon(
     NeonRegisterParam Src1,
     NeonRegisterParam Src2,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
 
@@ -3509,16 +3509,16 @@ EmitNeonShiftLeftImmediateCommon(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
-    ULONG Size = SrcSize & 3;
+    uint32_t Size = SrcSize & 3;
     Assert(Immediate < (8U << Size));
 
-    ULONG EffShift = Immediate + (8 << Size);
+    uint32_t EffShift = Immediate + (8 << Size);
 
     if (NeonSizeIsScalar(SrcSize)) {
         Assert(ScalarOpcode != 0);
@@ -3535,16 +3535,16 @@ EmitNeonShiftRightImmediateCommon(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize,
-    ULONG VectorOpcode,
-    ULONG ScalarOpcode = 0
+    uint32_t VectorOpcode,
+    uint32_t ScalarOpcode = 0
     )
 {
-    ULONG Size = SrcSize & 3;
+    uint32_t Size = SrcSize & 3;
     Assert(Immediate <= (8U << Size));
 
-    ULONG EffShift = (16 << Size) - Immediate;
+    uint32_t EffShift = (16 << Size) - Immediate;
 
     if (NeonSizeIsScalar(SrcSize)) {
         Assert(ScalarOpcode != 0);
@@ -3561,7 +3561,7 @@ EmitNeonRshrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3575,7 +3575,7 @@ EmitNeonRshrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3589,7 +3589,7 @@ EmitNeonShl(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3603,7 +3603,7 @@ EmitNeonShrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3617,7 +3617,7 @@ EmitNeonShrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3631,7 +3631,7 @@ EmitNeonSli(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3645,7 +3645,7 @@ EmitNeonSqrshrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3659,7 +3659,7 @@ EmitNeonSqrshrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3673,7 +3673,7 @@ EmitNeonSqrshrun(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3687,7 +3687,7 @@ EmitNeonSqrshrun2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3701,7 +3701,7 @@ EmitNeonSqshl(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3715,7 +3715,7 @@ EmitNeonSqshlu(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3729,7 +3729,7 @@ EmitNeonSqshrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3743,7 +3743,7 @@ EmitNeonSqshrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3757,7 +3757,7 @@ EmitNeonSri(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3771,7 +3771,7 @@ EmitNeonSrshr(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3785,7 +3785,7 @@ EmitNeonSrsra(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3799,7 +3799,7 @@ EmitNeonSshll(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3813,7 +3813,7 @@ EmitNeonSshll2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3827,7 +3827,7 @@ EmitNeonSshr(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3841,7 +3841,7 @@ EmitNeonSsra(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3881,7 +3881,7 @@ EmitNeonUqrshrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3895,7 +3895,7 @@ EmitNeonUqrshrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3909,7 +3909,7 @@ EmitNeonUqshl(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3923,7 +3923,7 @@ EmitNeonUqshrn(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3937,7 +3937,7 @@ EmitNeonUqshrn2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3951,7 +3951,7 @@ EmitNeonUrshr(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3965,7 +3965,7 @@ EmitNeonUrsra(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3979,7 +3979,7 @@ EmitNeonUshll(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -3993,7 +3993,7 @@ EmitNeonUshll2(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -4007,7 +4007,7 @@ EmitNeonUshr(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -4021,7 +4021,7 @@ EmitNeonUsra(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -4066,7 +4066,7 @@ EmitNeonConvertScalarCommon(
     Arm64SimpleRegisterParam Dest,
     NeonRegisterParam Src,
     NEON_SIZE SrcSize,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | ((SrcSize & 1) << 22) | (Src.RawRegister() << 5) | Dest.RawRegister());
@@ -4341,7 +4341,7 @@ EmitNeonConvertScalarCommon(
     NeonRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
     NEON_SIZE DstSize,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | ((DstSize & 1) << 22) | (Src.RawRegister() << 5) | Dest.RawRegister());
@@ -4459,12 +4459,12 @@ EmitNeonMovElementCommon(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
-    ULONG Size = SrcSize & 3;
+    uint32_t Size = SrcSize & 3;
     Assert((SrcIndex << Size) < 16);
 
     SrcIndex = ((SrcIndex << 1) | 1) << Size;
@@ -4478,7 +4478,7 @@ EmitNeonDupElement(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE DestSize
     )
 {
@@ -4504,7 +4504,7 @@ int
 EmitNeonIns(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
-    ULONG DestIndex,
+    uint32_t DestIndex,
     Arm64SimpleRegisterParam Src,
     NEON_SIZE DestSize
     )
@@ -4519,7 +4519,7 @@ EmitNeonSmov(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize
     )
 {
@@ -4533,7 +4533,7 @@ EmitNeonSmov64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize
     )
 {
@@ -4547,7 +4547,7 @@ EmitNeonUmov(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize
     )
 {
@@ -4561,7 +4561,7 @@ EmitNeonUmov64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize
     )
 {
@@ -4578,15 +4578,15 @@ int
 EmitNeonInsElement(
     Arm64CodeEmitter &Emitter,
     NeonRegisterParam Dest,
-    ULONG DestIndex,
+    uint32_t DestIndex,
     NeonRegisterParam Src,
-    ULONG SrcIndex,
+    uint32_t SrcIndex,
     NEON_SIZE SrcSize
     )
 {
     Assert(NeonSizeIsValid(SrcSize, VALID_816B | VALID_48H | VALID_24S | VALID_2D));
 
-    ULONG Size = SrcSize & 3;
+    uint32_t Size = SrcSize & 3;
     Assert((DestIndex << Size) < 16);
     Assert((SrcIndex << Size) < 16);
 
@@ -4607,7 +4607,7 @@ EmitNeonFcsel(
     NeonRegisterParam Dest,
     NeonRegisterParam Src1,
     NeonRegisterParam Src2,
-    ULONG Condition,
+    uint32_t Condition,
     NEON_SIZE SrcSize
     )
 {
@@ -4620,7 +4620,7 @@ EmitNeonFcsel(
 //
 
 inline
-ULONG
+uint32_t
 ComputeNeonImmediate(
     ULONG64 Immediate,
     NEON_SIZE DestSize
@@ -4631,7 +4631,7 @@ ComputeNeonImmediate(
     // Expand the immediate
     //
 
-    ULONG OpSize = DestSize & 3;
+    uint32_t OpSize = DestSize & 3;
     if (OpSize == 0) {
         Immediate &= 0xff;
         Immediate |= Immediate << 8;
@@ -4651,9 +4651,9 @@ ComputeNeonImmediate(
     // Determine CMODE and Op
     //
 
-    ULONG Op = 0;
-    ULONG Cmode;
-    ULONG EncImmediate;
+    uint32_t Op = 0;
+    uint32_t Cmode;
+    uint32_t EncImmediate;
     if (Replicated2x && (Immediate & 0xffffff00) == 0) {
         Cmode = 0;
         EncImmediate = Immediate & 0xff;
@@ -4692,7 +4692,7 @@ ComputeNeonImmediate(
     } else {
         EncImmediate = 0;
         for (int Index = 0; Index < 8; Index++) {
-            ULONG Temp = (Immediate >> (8 * Index)) & 0xff;
+            uint32_t Temp = (Immediate >> (8 * Index)) & 0xff;
             if (Temp == 0xff) {
                 EncImmediate |= 1 << Index;
             } else if (Temp != 0) {
@@ -4718,7 +4718,7 @@ EmitNeonMovi(
 {
     Assert(NeonSizeIsValid(DestSize, VALID_816B | VALID_48H | VALID_24S | VALID_2D | VALID_1D));
 
-    ULONG EncImmediate = ComputeNeonImmediate(Immediate, DestSize);
+    uint32_t EncImmediate = ComputeNeonImmediate(Immediate, DestSize);
     if (EncImmediate != 1) {
         return Emitter.EmitFourBytes(0x0f000400 | (((DestSize >> 2) & 1) << 30) | EncImmediate | Dest.RawRegister());
     }
@@ -4770,7 +4770,7 @@ EmitNeonExt(
     NeonRegisterParam Dest,
     NeonRegisterParam Src1,
     NeonRegisterParam Src2,
-    ULONG Immediate,
+    uint32_t Immediate,
     NEON_SIZE SrcSize
     )
 {
@@ -4793,13 +4793,13 @@ EmitNeonLdrStrOffsetCommon(
     NEON_SIZE SrcDestSize,
     Arm64SimpleRegisterParam Addr,
     int32_t Offset,
-    ULONG Opcode,
-    ULONG OpcodeUnscaled
+    uint32_t Opcode,
+    uint32_t OpcodeUnscaled
     )
 {
     Assert(NeonSizeIsScalar(SrcDestSize));
 
-    ULONG SizeBits = ((SrcDestSize & 3) << 30) | ((SrcDestSize >> 2) << 23);
+    uint32_t SizeBits = ((SrcDestSize & 3) << 30) | ((SrcDestSize >> 2) << 23);
 
     if (Opcode != 0) {
         int32_t EncodeOffset = Offset >> SrcDestSize;
@@ -4854,12 +4854,12 @@ EmitNeonLdpStpOffsetCommon(
     NEON_SIZE SrcDestSize,
     Arm64SimpleRegisterParam Addr,
     int32_t Offset,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     Assert(NeonSizeIsValid(SrcDestSize, VALID_1S | VALID_1D | VALID_1Q));
 
-    ULONG Opc = (SrcDestSize - 2);
+    uint32_t Opc = (SrcDestSize - 2);
 
     int32_t EncodeOffset = Offset >> SrcDestSize;
     if ((EncodeOffset << SrcDestSize) == Offset && EncodeOffset >= -0x40 && EncodeOffset <= 0x3f) {
@@ -4909,16 +4909,16 @@ EmitNeonLd1St1Common(
     int32_t Index,
     Arm64SimpleRegisterParam Addr,
     NEON_SIZE SrcDestSize,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
-    ULONG QSSize = Index << (SrcDestSize & 3);
+    uint32_t QSSize = Index << (SrcDestSize & 3);
     if (SrcDestSize == SIZE_1D) {
         QSSize |= 1;
     }
 
     Assert(QSSize < 16);
-    ULONG Op = (SrcDestSize == SIZE_1B) ? 0 : (SrcDestSize == SIZE_1H) ? 2 : 4;
+    uint32_t Op = (SrcDestSize == SIZE_1B) ? 0 : (SrcDestSize == SIZE_1H) ? 2 : 4;
 
     return Emitter.EmitFourBytes(Opcode | ((QSSize >> 3) << 30) | (Op << 13) | ((QSSize & 7) << 10) | (Addr.RawRegister() << 5) | SrcDest.RawRegister());
 }

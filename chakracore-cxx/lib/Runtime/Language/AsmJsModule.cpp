@@ -540,7 +540,7 @@ namespace Js
 
         Js::ParseableFunctionInfo* deferParseFunction = fncNode->funcInfo->byteCodeFunction;
         Utf8SourceInfo * utf8SourceInfo = deferParseFunction->GetUtf8SourceInfo();
-        ULONG grfscr = utf8SourceInfo->GetParseFlags();
+        uint32_t grfscr = utf8SourceInfo->GetParseFlags();
         grfscr = grfscr & (~fscrGlobalCode);
         func->SetOrigParseFlags(grfscr);
         deferParseFunction->SetGrfscr(grfscr | (grfscr & ~fscrDeferredFncExpression));

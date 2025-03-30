@@ -202,7 +202,7 @@ namespace TTD
 
     void TTDebuggerSourceLocation::SetLocationFromFrame(int64 topLevelETime, const SingleCallCounter& callFrame)
     {
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = callFrame.Function->GetStatementStartOffset(callFrame.CurrentStatementIndex);
         callFrame.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -212,7 +212,7 @@ namespace TTD
 
     void TTDebuggerSourceLocation::SetLocationFromFunctionEntryAnyTime(int64 topLevelETime, Js::FunctionBody* body)
     {
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = body->GetStatementStartOffset(0);
         body->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -220,7 +220,7 @@ namespace TTD
         this->SetLocationFull(topLevelETime, -1, -1, body, (uint32)srcLine, (uint32)srcColumn);
     }
 
-    void TTDebuggerSourceLocation::SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, ULONG line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = body->GetScriptContext()->ScriptContextLogTag;
         this->m_bpId = -1;
@@ -238,7 +238,7 @@ namespace TTD
         this->m_column = (uint32)column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, ULONG line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = sourceScriptLogId;
         this->m_bpId = -1;
@@ -256,7 +256,7 @@ namespace TTD
         this->m_column = (uint32)column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationWithBP(int64 bpId, Js::FunctionBody* body, ULONG line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationWithBP(int64 bpId, Js::FunctionBody* body, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = body->GetScriptContext()->ScriptContextLogTag;
         this->m_bpId = bpId;
@@ -708,7 +708,7 @@ namespace TTD
             return false;
         }
 
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -814,7 +814,7 @@ namespace TTD
                     Js::FunctionBody* body = bp->GetFunctionBody();
                     int32 bpIndex = body->GetEnclosingStatementIndexFromByteCode(bp->GetBytecodeOffset());
 
-                    ULONG srcLine = 0;
+                    uint32_t srcLine = 0;
                     int32_t srcColumn = -1;
                     uint32 startOffset = body->GetStatementStartOffset(bpIndex);
                     body->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -913,7 +913,7 @@ namespace TTD
                     cfinfo.CurrentStatementBytecodeMax = (uint32)pstmt->byteCodeSpan.end;
 
 #if ENABLE_FULL_BC_TRACE
-                    ULONG srcLine = 0;
+                    uint32_t srcLine = 0;
                     int32_t srcColumn = -1;
                     uint32 startOffset = cfinfo.Function->GetFunctionBody()->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
                     cfinfo.Function->GetFunctionBody()->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -955,7 +955,7 @@ namespace TTD
             return false;
         }
 
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -966,7 +966,7 @@ namespace TTD
     {
         const SingleCallCounter& cfinfo = this->GetTopCallCounter();
 
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -979,7 +979,7 @@ namespace TTD
     {
         const SingleCallCounter& cfinfo = this->GetTopCallCounter();
 
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = cfinfo.Function->GetStatementStartOffset(cfinfo.CurrentStatementIndex);
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -1031,7 +1031,7 @@ namespace TTD
             statementIndex = cfinfo.LastStatementIndex;
         }
 
-        ULONG srcLine = 0;
+        uint32_t srcLine = 0;
         int32_t srcColumn = -1;
         uint32 startOffset = fbody->GetStatementStartOffset(statementIndex);
         fbody->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
@@ -1052,7 +1052,7 @@ namespace TTD
         }
         else
         {
-            ULONG srcLine = 0;
+            uint32_t srcLine = 0;
             int32_t srcColumn = -1;
             uint32 startOffset = cframe.GetLocation().Function->GetStatementStartOffset(cframe.GetLocation().CurrentStatementIndex);
             cframe.GetLocation().Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);

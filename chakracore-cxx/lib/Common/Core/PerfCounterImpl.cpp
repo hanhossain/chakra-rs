@@ -42,7 +42,7 @@ private:
 
 #ifdef ENABLE_COUNTER_NOTIFICATION_CALLBACK
     PERFLIBREQUEST pfnNotificationCallBack;
-    static ULONG WINAPI NotificationCallBack(ULONG RequestCode, PVOID Buffer, ULONG BufferSize);
+    static uint32_t WINAPI NotificationCallBack(uint32_t RequestCode, PVOID Buffer, uint32_t BufferSize);
 #endif
     HANDLE& handle;
     bool isInitialized;
@@ -53,8 +53,8 @@ private:
 Provider Provider::InternalCounter(JS9InternalCounterProvider);
 
 #ifdef ENABLE_COUNTER_NOTIFICATION_CALLBACK
-ULONG WINAPI
-Provider::NotificationCallBack(ULONG RequestCode, PVOID Buffer, ULONG BufferSize)
+uint32_t WINAPI
+Provider::NotificationCallBack(uint32_t RequestCode, PVOID Buffer, uint32_t BufferSize)
 {
     if (Provider::InternalCounter.pfnNotificationCallBack != NULL)
     {

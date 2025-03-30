@@ -23,9 +23,9 @@ typedef StaticSymLen<0> StaticSym;
 /***************************************************************************
 Hashing functions. Definitions in core\hashfunc.cpp.
 ***************************************************************************/
-ULONG CaseSensitiveComputeHash(LPCOLESTR prgch, LPCOLESTR end);
-ULONG CaseSensitiveComputeHash(LPCUTF8 prgch, LPCUTF8 end);
-ULONG CaseInsensitiveComputeHash(LPCOLESTR posz);
+uint32_t CaseSensitiveComputeHash(LPCOLESTR prgch, LPCOLESTR end);
+uint32_t CaseSensitiveComputeHash(LPCUTF8 prgch, LPCUTF8 end);
+uint32_t CaseInsensitiveComputeHash(LPCOLESTR posz);
 
 enum
 {

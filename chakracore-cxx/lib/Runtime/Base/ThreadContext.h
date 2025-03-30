@@ -65,7 +65,7 @@ public:
     virtual ~InterruptPoller() { }
 
     void CheckInterruptPoll();
-    void GetStatementCount(ULONG *pluHi, ULONG *pluLo);
+    void GetStatementCount(uint32_t *pluHi, uint32_t *pluLo);
     void ResetStatementCount() { lastResetTick = lastPollTick; }
     void StartScript() { lastResetTick = lastPollTick = ::GetTickCount(); }
     void EndScript() { lastResetTick = lastPollTick = 0;}

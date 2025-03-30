@@ -1975,10 +1975,10 @@ namespace Js
         }
     }
 
-    ULONG ScriptContext::GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo)
+    uint32_t ScriptContext::GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo)
     {
         // TODO: yongqu handle non-global code.
-        ULONG grfscr = fscrGlobalCode | ((loadScriptFlag & LoadScriptFlag_Expression) == LoadScriptFlag_Expression ? fscrReturnExpression : 0);
+        uint32_t grfscr = fscrGlobalCode | ((loadScriptFlag & LoadScriptFlag_Expression) == LoadScriptFlag_Expression ? fscrReturnExpression : 0);
 
         if ((loadScriptFlag & LoadScriptFlag_CreateParserState) == LoadScriptFlag_CreateParserState)
         {
@@ -2055,7 +2055,7 @@ namespace Js
 
         // Invoke the parser, passing in the global function name, which we will then run to execute
         // the script.
-        ULONG grfscr = GetParseFlags(loadScriptFlag, *ppSourceInfo, sourceContextInfo);
+        uint32_t grfscr = GetParseFlags(loadScriptFlag, *ppSourceInfo, sourceContextInfo);
 
         ParseNodeProg * parseTree;
         if((loadScriptFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source)
@@ -2092,7 +2092,7 @@ namespace Js
     }
 
     HRESULT ScriptContext::TryDeserializeParserState(
-        _In_ ULONG grfscr,
+        _In_ uint32_t grfscr,
         _In_ uint sourceCRC,
         _In_ charcount_t cchLength,
         _In_ SRCINFO *srcInfo,
@@ -2118,7 +2118,7 @@ namespace Js
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         // Find the parser state block in the read stream and get the size of the block in bytes.
-        ULONG blockByteCount = 0;
+        uint32_t blockByteCount = 0;
         DebugOnly(auto url = !srcInfo->sourceContextInfo->isHostDynamicDocument ? srcInfo->sourceContextInfo->url : this->GetUrl());
 
         OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to read parser state cache for '%s'\n"), url);
@@ -2147,7 +2147,7 @@ namespace Js
         }
 
         // The block includes a 4-byte CRC before the parser state cache.
-        ULONG compressedBufferByteCount = blockByteCount - sizeof(uint);
+        uint32_t compressedBufferByteCount = blockByteCount - sizeof(uint);
 
         // The contract for this bytecode buffer is that it is available as long as we have this ScriptContext.
         // We will use this buffer as the string table needed to back the deferred stubs as well as bytecode
@@ -2329,7 +2329,7 @@ Error:
                 compressedSize = serializeParserStateCacheSize;
             }
 
-            hr = pDataCache->StartBlock(Js::SimpleDataCacheWrapper::BlockType_ParserState, (ULONG)compressedSize + sizeof(uint));
+            hr = pDataCache->StartBlock(Js::SimpleDataCacheWrapper::BlockType_ParserState, (uint32_t)compressedSize + sizeof(uint));
 
             if (FAILED(hr))
             {
@@ -2347,7 +2347,7 @@ Error:
                 goto ExitTempAllocator;
             }
 
-            hr = pDataCache->WriteArray(compressedBuffer, (ULONG)compressedSize);
+            hr = pDataCache->WriteArray(compressedBuffer, (uint32_t)compressedSize);
 
             if (FAILED(hr))
             {
@@ -2376,7 +2376,7 @@ ExitTempAllocator:
         __in BOOL fOriginalUTF8Code,
         _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
         __in size_t cbLength,
-        __in ULONG grfscr,
+        __in uint32_t grfscr,
         __in CompileScriptException *pse,
         __inout charcount_t& cchLength,
         __out size_t& srcLength,
@@ -6559,7 +6559,7 @@ ScriptContext::GetJitFuncRangeCache()
 
             ushort frameCount = walker.WalkUntil((ushort)maxFrameCount, [&](Js::JavascriptFunction* function, ushort frameIndex) -> bool
             {
-                ULONG lineNumber = 0;
+                uint32_t lineNumber = 0;
                 int32_t columnNumber = 0;
                 uint32_t methodIdOrNameId = 0;
                 uint8_t isFrameIndex = 0; // FALSE

@@ -18,7 +18,7 @@ namespace Js
 
     private:
         RecyclerRootPtr<PropertyDictionary> m_properties;
-        ULONG m_refCount;
+        uint32_t m_refCount;
 
         SCAPropBag(ScriptContext* scriptContext);
         HRESULT InternalAdd(LPCWSTR name, charcount_t len, Var value);
@@ -27,8 +27,8 @@ namespace Js
         ~SCAPropBag();
         static void CreateInstance(ScriptContext* scriptContext, SCAPropBag** ppInstance);
 
-        STDMETHODIMP_(ULONG) AddRef();
-        STDMETHODIMP_(ULONG) Release();
+        STDMETHODIMP_(uint32_t) AddRef();
+        STDMETHODIMP_(uint32_t) Release();
         STDMETHODIMP QueryInterface(REFIID riid, void** ppv);
 
         HRESULT Add(LPCWSTR name, Var value);

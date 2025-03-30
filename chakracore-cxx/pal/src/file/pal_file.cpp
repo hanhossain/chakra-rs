@@ -2719,7 +2719,7 @@ InternalSetFilePointerForUnixFd(
         
         /* set the low 32 bits */
         /* cast to unsigned long to avoid sign extension */
-        seek_offset |= (ULONG) lDistanceToMove;
+        seek_offset |= (uint32_t) lDistanceToMove;
     }
     else
     {

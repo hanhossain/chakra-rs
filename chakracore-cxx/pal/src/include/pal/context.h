@@ -379,13 +379,13 @@ Function :
 Parameters :
     const native_context_t *native : native context to convert
     LPCONTEXT lpContext : CONTEXT to fill in
-    ULONG contextFlags : flags that determine which registers are valid in
+    uint32_t contextFlags : flags that determine which registers are valid in
                          native and which ones to set in lpContext
 Return value :
     None
 --*/
 void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext,
-                              ULONG contextFlags);
+                              uint32_t contextFlags);
 
 /*++
 Function :

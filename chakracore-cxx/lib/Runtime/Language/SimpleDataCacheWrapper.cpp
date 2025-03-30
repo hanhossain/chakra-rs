@@ -168,7 +168,7 @@ namespace Js
         return OpenReadStream();
     }
 
-    HRESULT SimpleDataCacheWrapper::StartBlock(_In_ BlockType blockType, _In_ ULONG byteCount)
+    HRESULT SimpleDataCacheWrapper::StartBlock(_In_ BlockType blockType, _In_ uint32_t byteCount)
     {
         HRESULT hr = E_FAIL;
 
@@ -220,11 +220,11 @@ namespace Js
         return hr;
     }
 
-    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ ULONG* bytesInBlock)
+    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlockHelper(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
     {
         HRESULT hr;
         BlockType currentBlockType = BlockType_Invalid;
-        ULONG byteCount = 0;
+        uint32_t byteCount = 0;
 
         IFFAILRET(Read(&currentBlockType));
         IFFAILRET(Read(&byteCount));
@@ -252,7 +252,7 @@ namespace Js
         return SeekReadStreamToBlockHelper(blockType, bytesInBlock);
     }
 
-    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ ULONG* bytesInBlock)
+    HRESULT SimpleDataCacheWrapper::SeekReadStreamToBlock(_In_ BlockType blockType, _Out_opt_ uint32_t* bytesInBlock)
     {
         HRESULT hr;
 

@@ -141,8 +141,8 @@ typedef struct _CRITICAL_SECTION_DEBUG_INFO
 {
     LIST_ENTRY Link;
     struct _PAL_CRITICAL_SECTION * pOwnerCS;
-    Volatile<ULONG> lAcquireCount;
-    Volatile<ULONG> lEnterCount;
+    Volatile<uint32_t> lAcquireCount;
+    Volatile<uint32_t> lEnterCount;
     Volatile<int32_t> lContentionCount;
 } CRITICAL_SECTION_DEBUG_INFO, *PCRITICAL_SECTION_DEBUG_INFO;
 

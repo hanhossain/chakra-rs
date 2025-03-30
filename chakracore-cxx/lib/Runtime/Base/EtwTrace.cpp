@@ -15,7 +15,7 @@ using namespace Js;
 // by an ETW controller for the Jscript and MSHTML providers.
 //
 
-void EtwCallbackApi::OnSessionChange(ULONG controlCode, PVOID callbackContext)
+void EtwCallbackApi::OnSessionChange(uint32_t controlCode, PVOID callbackContext)
 {
     PMCGEN_TRACE_CONTEXT context = (PMCGEN_TRACE_CONTEXT)callbackContext;
 

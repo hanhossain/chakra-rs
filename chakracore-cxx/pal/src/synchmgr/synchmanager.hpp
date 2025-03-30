@@ -152,7 +152,7 @@ namespace CorUnix
 
         WTLNodeGenrPtr  m_ptrWTLHead;
         WTLNodeGenrPtr  m_ptrWTLTail;
-        ULONG m_ulcWaitingThreads;
+        uint32_t m_ulcWaitingThreads;
         SharedID m_shridThis;
         ObjectDomain m_odObjectDomain; 
         PalObjectTypeId m_otiObjectTypeId;
@@ -169,8 +169,8 @@ namespace CorUnix
         bool m_fAbandoned;
 
 #ifdef SYNCH_STATISTICS
-        ULONG m_lStatWaitCount;
-        ULONG m_lStatContentionCount;
+        uint32_t m_lStatWaitCount;
+        uint32_t m_lStatContentionCount;
 #endif
 
     public:
@@ -335,7 +335,7 @@ namespace CorUnix
         {
             m_ulcWaitingThreads -= 1;
         }
-        ULONG GetWaitingThreadCount(void)
+        uint32_t GetWaitingThreadCount(void)
         {
             return m_ulcWaitingThreads;
         }

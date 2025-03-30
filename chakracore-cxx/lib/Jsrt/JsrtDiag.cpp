@@ -587,10 +587,10 @@ CHAKRA_API JsDiagGetFunctionPosition(
                 Js::Utf8SourceInfo* utf8SourceInfo = functionBody->GetUtf8SourceInfo();
                 if (utf8SourceInfo != nullptr && !utf8SourceInfo->GetIsLibraryCode())
                 {
-                    ULONG lineNumber = functionBody->GetLineNumber();
-                    ULONG columnNumber = functionBody->GetColumnNumber();
+                    uint32_t lineNumber = functionBody->GetLineNumber();
+                    uint32_t columnNumber = functionBody->GetColumnNumber();
                     uint startOffset = functionBody->GetStatementStartOffset(0);
-                    ULONG firstStatementLine;
+                    uint32_t firstStatementLine;
                     int32_t firstStatementColumn;
 
                     if (functionBody->GetLineCharOffsetFromStartChar(startOffset, &firstStatementLine, &firstStatementColumn))

@@ -45,14 +45,14 @@ class SRCINFO
     // we can move variables m_isGlobalFunc and m_isEval from FunctionBody.cpp here.
 public:
     Field(SourceContextInfo *) sourceContextInfo;
-    Field(ULONG) dlnHost;             // Line number passed to ParseScriptText
-    Field(ULONG) ulColumnHost;        // Column number on the line where the parse script text started
-    Field(ULONG) lnMinHost;           // Line offset of first host-supplied line
-    Field(ULONG) ichMinHost;          // Range of host supplied characters
-    Field(ULONG) ichLimHost;
-    Field(ULONG) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
+    Field(uint32_t) dlnHost;             // Line number passed to ParseScriptText
+    Field(uint32_t) ulColumnHost;        // Column number on the line where the parse script text started
+    Field(uint32_t) lnMinHost;           // Line offset of first host-supplied line
+    Field(uint32_t) ichMinHost;          // Range of host supplied characters
+    Field(uint32_t) ichLimHost;
+    Field(uint32_t) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
     Field(Js::ModuleID) moduleID;
-    Field(ULONG) grfsi;
+    Field(uint32_t) grfsi;
 
     static SRCINFO* Copy(Recycler* recycler, const SRCINFO* srcInfo)
     {
@@ -77,14 +77,14 @@ public:
     }
     SRCINFO(
         SourceContextInfo*sourceContextInfo,
-        ULONG dlnHost,
-        ULONG ulColumnHost,
-        ULONG lnMinHost,
-        ULONG ichMinHost,
-        ULONG ichLimHost,
-        ULONG ulCharOffset,
+        uint32_t dlnHost,
+        uint32_t ulColumnHost,
+        uint32_t lnMinHost,
+        uint32_t ichMinHost,
+        uint32_t ichLimHost,
+        uint32_t ulCharOffset,
         Js::ModuleID moduleID,
-        ULONG grfsi
+        uint32_t grfsi
     ):sourceContextInfo(sourceContextInfo),
         dlnHost(dlnHost),
         ulColumnHost(ulColumnHost),
@@ -1245,7 +1245,7 @@ private:
             Js::Var scriptSource = nullptr);
 
         HRESULT TryDeserializeParserState(
-            _In_ ULONG grfscr,
+            _In_ uint32_t grfscr,
             _In_ uint sourceCRC,
             _In_ charcount_t cchLength,
             _In_ SRCINFO *srcInfo,
@@ -1275,7 +1275,7 @@ private:
             __in BOOL fOriginalUTF8Code,
             _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
             __in size_t cbLength,
-            __in ULONG grfscr,
+            __in uint32_t grfscr,
             __in CompileScriptException *pse,
             __inout charcount_t& cchLength,
             __out size_t& srcLength,
@@ -1298,7 +1298,7 @@ private:
             LoadScriptFlag loadScriptFlag,
             Js::Var scriptSource);
 
-        ULONG GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo);
+        uint32_t GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo);
 
         ArenaAllocator* GeneralAllocator() { return &generalAllocator; }
 
