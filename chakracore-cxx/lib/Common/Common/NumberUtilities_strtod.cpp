@@ -2747,12 +2747,12 @@ double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
     if ((int32_t)pdecIn->Mid32 < 0)
     {
 
-        dblRet = (cdbl_2to64 + (double)(LONGLONG)pdecIn->Lo64 +
+        dblRet = (cdbl_2to64 + (double)(long)pdecIn->Lo64 +
             (double)pdecIn->Hi32 * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
     }
     else
     {
-        dblRet = ((double)(LONGLONG)pdecIn->Lo64 +
+        dblRet = ((double)(long)pdecIn->Lo64 +
             (double)pdecIn->Hi32 * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
     }
 

@@ -389,7 +389,7 @@ typedef union tagCY {
         int32_t    Hi;
 #endif
     } u;
-    LONGLONG int64;
+    long int64;
 } CY, *LPCY;
 
 typedef CY CURRENCY;
@@ -512,7 +512,7 @@ struct tagVARIANT
             uint16_t wReserved3;
             union
                 {
-                LONGLONG llVal;
+                long llVal;
                 int32_t lVal;
                 uint8_t bVal;
                 short iVal;
@@ -529,7 +529,7 @@ struct tagVARIANT
                 uint8_t *pbVal;
                 short *piVal;
                 int32_t *plVal;
-                LONGLONG *pllVal;
+                long *pllVal;
                 float *pfltVal;
                 double *pdblVal;
                 VARIANT_BOOL *pboolVal;

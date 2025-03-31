@@ -19,7 +19,7 @@ template<> struct ConvertType<int16> { typedef short _t; };
 template<> struct ConvertType<uint16> { typedef short _t; };
 template<> struct ConvertType<int32> { typedef int32_t _t; };
 template<> struct ConvertType<uint32> { typedef int32_t _t; };
-template<> struct ConvertType<int64> { typedef LONGLONG _t; };
+template<> struct ConvertType<int64> { typedef long _t; };
 
 #define MakeInterLockArgDef1(type) type value
 #define MakeInterLockArgDef2(type) type v1, type v2
@@ -30,7 +30,7 @@ template<typename T> T Interlocked##op##_t(T* target, argDef(T));\
 template<> char Interlocked##op##_t(char* target, argDef(char))   { return Interlocked##op##8 (target, argUse); }\
 template<> short Interlocked##op##_t(short* target, argDef(short)){ return Interlocked##op##16(target, argUse); }\
 template<> int32_t Interlocked##op##_t(int32_t* target, argDef(int32_t))   { return Interlocked##op##32(target, argUse); }\
-template<> LONGLONG Interlocked##op##_t(LONGLONG* target, argDef(LONGLONG)) { return Interlocked##op##64(target, argUse); }
+template<> long Interlocked##op##_t(long* target, argDef(long)) { return Interlocked##op##64(target, argUse); }
 #define MakeInterlockTemplate(op, nArgs) _MakeInterlockTemplate(op, MakeInterLockArgDef##nArgs, MakeInterLockArgUse##nArgs)
 MakeInterlockTemplate(ExchangeAdd, 1)
 MakeInterlockTemplate(And, 1)

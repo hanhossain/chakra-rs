@@ -2236,7 +2236,7 @@ typedef struct _CONTEXT {
 
 typedef struct _M128U {
     ULONGLONG Low;
-    LONGLONG High;
+    long High;
 } M128U, *PM128U;
 
 // Same as _M128U but aligned to a 16-byte boundary
@@ -2507,7 +2507,7 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 
 typedef struct _NEON128 {
     ULONGLONG Low;
-    LONGLONG High;
+    long High;
 } NEON128, *PNEON128;
 
 //
@@ -2725,7 +2725,7 @@ typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY {
 
 typedef struct _NEON128 {
     ULONGLONG Low;
-    LONGLONG High;
+    long High;
 } NEON128, *PNEON128;
 
 typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
@@ -4638,7 +4638,7 @@ InterlockedIncrement(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedIncrement16(
       short volatile *lpAddend)
 {
@@ -4647,11 +4647,11 @@ InterlockedIncrement16(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedIncrement64(
-      LONGLONG volatile *lpAddend)
+      long volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (LONGLONG)1);
+    return __sync_add_and_fetch(lpAddend, (long)1);
 }
 
 /*++
@@ -4684,11 +4684,11 @@ InterlockedDecrement(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedDecrement64(
-      LONGLONG volatile *lpAddend)
+      long volatile *lpAddend)
 {
-    return __sync_sub_and_fetch(lpAddend, (LONGLONG)1);
+    return __sync_sub_and_fetch(lpAddend, (long)1);
 }
 
 /*++
@@ -4744,10 +4744,10 @@ InterlockedExchange(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedExchange64(
-      LONGLONG volatile *Target,
-     LONGLONG Value)
+      long volatile *Target,
+     long Value)
 {
     return __sync_swap(Target, Value);
 }
@@ -4850,11 +4850,11 @@ InterlockedCompareExchangeRelease(
 // See the 32-bit variant in interlock2.s
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedCompareExchange64(
-      LONGLONG volatile *Destination,
-     LONGLONG Exchange,
-     LONGLONG Comperand)
+      long volatile *Destination,
+     long Exchange,
+     long Comperand)
 {
     return __sync_val_compare_and_swap(
         Destination, /* The pointer to a variable whose value is to be compared with. */
@@ -4921,10 +4921,10 @@ InterlockedAdd(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedExchangeAdd64(
-      LONGLONG volatile *Addend,
-     LONGLONG Value)
+      long volatile *Addend,
+     long Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
@@ -4961,10 +4961,10 @@ InterlockedAnd(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedAnd64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
@@ -5001,10 +5001,10 @@ InterlockedOr(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedOr64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_or(Destination, Value);
 }
@@ -5041,10 +5041,10 @@ InterlockedXor(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedXor64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
@@ -5112,10 +5112,10 @@ BitTestAndSet(
 }
 
 #define InterlockedExchangePointer(Target, Value) \
-    ((void *)InterlockedExchange64((PLONG64)(Target), (LONGLONG)(Value)))
+    ((void *)InterlockedExchange64((PLONG64)(Target), (long)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((void *)InterlockedCompareExchange64((PLONG64)(Destination), (LONGLONG)(ExChange), (LONGLONG)(Comperand)))
+    ((void *)InterlockedCompareExchange64((PLONG64)(Destination), (long)(ExChange), (long)(Comperand)))
 
 /*++
 Function:
@@ -5593,7 +5593,7 @@ int _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
 int PAL_swscanf(const WCHAR *, const WCHAR *, ...);
 int32_t PAL_wcstol(const WCHAR *, WCHAR **, int);
 uint32_t PAL_wcstoul(const WCHAR *, WCHAR **, int);
-LONGLONG PAL_wcstoll(const WCHAR *, WCHAR **, int);
+long PAL_wcstoll(const WCHAR *, WCHAR **, int);
 size_t PAL_wcsspn (const WCHAR *, const WCHAR *);
 double PAL_wcstod(const WCHAR *, WCHAR **);
 int PAL_iswalpha(WCHAR);

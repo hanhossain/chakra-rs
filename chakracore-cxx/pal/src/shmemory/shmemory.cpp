@@ -1210,7 +1210,7 @@ static BOOL SHMAddSegment(void)
 
         /* amount of memory we want to add to the pool for this block size :
            amount used by this pool/total amount used * new segment's size */
-        new_pool_size = (((LONGLONG)used_pool_size)*new_size)/used_size;
+        new_pool_size = (((long)used_pool_size)*new_size)/used_size;
 
         DBGOUT("Allocating %d bytes of %d to %d-byte pool\n",
                new_pool_size, new_size, block_sizes[sps]);

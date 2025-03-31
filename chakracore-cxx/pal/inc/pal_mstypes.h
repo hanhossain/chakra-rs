@@ -113,23 +113,10 @@ extern "C" {
 #define __int16     short int
 #define __int8      char        // assumes char is signed
 
-
-#ifndef PAL_STDCPP_COMPAT
-// Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
-// includes are not included, so we need to define them.
-// Types below are already defined by stdint.h on __APPLE__.
-
-#if _WIN64
-typedef long double LONG_DOUBLE;
-#endif
-
-#endif // !PAL_STDCPP_COMPAT
-
-typedef long LONGLONG;
 typedef unsigned long ULONGLONG;
 typedef ULONGLONG DWORD64;
 typedef DWORD64 *PDWORD64;
-typedef LONGLONG *PLONG64;
+typedef long *PLONG64;
 typedef ULONGLONG *PULONG64;
 typedef ULONGLONG *PULONGLONG;
 typedef char *PSZ;
@@ -314,7 +301,7 @@ typedef union _LARGE_INTEGER {
         int32_t HighPart;
 #endif
     } u;
-    LONGLONG QuadPart;
+    long QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
 
 #ifndef GUID_DEFINED

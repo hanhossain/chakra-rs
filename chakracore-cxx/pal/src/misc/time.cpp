@@ -213,15 +213,15 @@ QueryPerformanceCounter(
             break;
         }
         lpPerformanceCount->QuadPart =
-            (LONGLONG)ts.tv_sec * (LONGLONG)tccSecondsToNanoSeconds + (LONGLONG)ts.tv_nsec;
+            (long)ts.tv_sec * (long)tccSecondsToNanoSeconds + (long)ts.tv_nsec;
     }
 #elif HAVE_MACH_ABSOLUTE_TIME
     {
-        lpPerformanceCount->QuadPart = (LONGLONG)mach_absolute_time();
+        lpPerformanceCount->QuadPart = (long)mach_absolute_time();
     }
 #elif HAVE_GETHRTIME
     {
-        lpPerformanceCount->QuadPart = (LONGLONG)gethrtime();
+        lpPerformanceCount->QuadPart = (long)gethrtime();
     }
 #elif HAVE_READ_REAL_TIME
     {
@@ -234,7 +234,7 @@ QueryPerformanceCounter(
             break;
         }
         lpPerformanceCount->QuadPart =
-            (LONGLONG)tb.tb_high * (LONGLONG)tccSecondsToNanoSeconds + (LONGLONG)tb.tb_low;
+            (long)tb.tb_high * (long)tccSecondsToNanoSeconds + (long)tb.tb_low;
     }
 #else
     {
@@ -246,7 +246,7 @@ QueryPerformanceCounter(
             break;
         }
         lpPerformanceCount->QuadPart =
-            (LONGLONG)tv.tv_sec * (LONGLONG)tccSecondsToMicroSeconds + (LONGLONG)tv.tv_usec;
+            (long)tv.tv_sec * (long)tccSecondsToMicroSeconds + (long)tv.tv_usec;
     }
 #endif // HAVE_CLOCK_MONOTONIC
     while (false);
@@ -265,7 +265,7 @@ QueryPerformanceFrequency(
     PERF_ENTRY(QueryPerformanceFrequency);
     ENTRY("QueryPerformanceFrequency()\n");
 
-    lpFrequency->QuadPart = (LONGLONG)(tccSecondsToNanoSeconds);
+    lpFrequency->QuadPart = (long)(tccSecondsToNanoSeconds);
 
     LOGEXIT("QueryPerformanceFrequency\n");
     PERF_EXIT(QueryPerformanceFrequency);

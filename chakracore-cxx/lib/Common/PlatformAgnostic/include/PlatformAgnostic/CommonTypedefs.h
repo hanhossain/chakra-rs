@@ -8,6 +8,7 @@
 
 #define _u(s) u##s
 
+// TODO (hanhossain): no int typedefs
 typedef char16 wchar;
 typedef unsigned int uint;
 typedef unsigned short ushort;
