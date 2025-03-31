@@ -456,15 +456,15 @@ typedef unsigned short WCHAR;
     typedef enum _JsTypedArrayType
     {
         /// <summary>
-        ///     An int8 array.
+        ///     An int8_t array.
         /// </summary>
         JsArrayTypeInt8,
         /// <summary>
-        ///     An uint8 array.
+        ///     An uint8_t array.
         /// </summary>
         JsArrayTypeUint8,
         /// <summary>
-        ///     An uint8 clamped array.
+        ///     An uint8_t clamped array.
         /// </summary>
         JsArrayTypeUint8Clamped,
         /// <summary>

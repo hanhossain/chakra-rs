@@ -39,7 +39,7 @@ namespace TTD
         //////////////////
 
         //A tag that we use to flag property entry attributes
-        enum class SnapAttributeTag : uint8
+        enum class SnapAttributeTag : uint8_t
         {
             Clear = 0x0,
             Enumerable   = 0x01, //same value as PropertyEnumerable for fast extraction
@@ -50,7 +50,7 @@ namespace TTD
         DEFINE_ENUM_FLAG_OPERATORS(SnapAttributeTag)
 
         //A tag that we use to flag data/getter/setters in the more complex types
-        enum class SnapEntryDataKindTag : uint8
+        enum class SnapEntryDataKindTag : uint8_t
         {
             Clear = 0x0,
             Uninitialized,

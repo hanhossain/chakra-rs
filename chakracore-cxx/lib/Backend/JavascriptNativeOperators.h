@@ -133,8 +133,8 @@ namespace Js
 #endif        
         static bool CheckIfTypeIsEquivalent(Type* type, JitEquivalentTypeGuard* guard);
         static bool CheckIfTypeIsEquivalentForFixedField(Type* type, JitEquivalentTypeGuard* guard);
-        static bool CheckIfPolyTypeIsEquivalent(Type* type, JitPolyEquivalentTypeGuard* guard, uint8 index);
-        static bool CheckIfPolyTypeIsEquivalentForFixedField(Type* type, JitPolyEquivalentTypeGuard* guard, uint8 index);
+        static bool CheckIfPolyTypeIsEquivalent(Type* type, JitPolyEquivalentTypeGuard* guard, uint8_t index);
+        static bool CheckIfPolyTypeIsEquivalentForFixedField(Type* type, JitPolyEquivalentTypeGuard* guard, uint8_t index);
         static bool EquivalenceCheckHelper(Type* type, JitEquivalentTypeGuard* guard, intptr_t value);
 
         static Var OP_GetElementI_JIT_ExpectingNativeFloatArray(Var instance, Var index, ScriptContext *scriptContext);

@@ -579,7 +579,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteReg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8 B2)
+    bool ByteCodeWriter::TryWriteReg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8_t B2)
     {
         OpLayoutT_Reg2B1<SizePolicy> layout;
         if (SizePolicy::Assign(layout.R0, R0) && SizePolicy::Assign(layout.R1, R1) && SizePolicy::Assign(layout.B2, B2))
@@ -590,7 +590,7 @@ namespace Js
         return false;
     }
 
-    void ByteCodeWriter::Reg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8 B2)
+    void ByteCodeWriter::Reg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8_t B2)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::Reg2B1);
@@ -603,7 +603,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool ByteCodeWriter::TryWriteReg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 B3)
+    bool ByteCodeWriter::TryWriteReg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t B3)
     {
         OpLayoutT_Reg3B1<SizePolicy> layout;
         if (SizePolicy::Assign(layout.R0, R0) && SizePolicy::Assign(layout.R1, R1) && SizePolicy::Assign(layout.R2, R2)
@@ -615,7 +615,7 @@ namespace Js
         return false;
     }
 
-    void ByteCodeWriter::Reg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 B3)
+    void ByteCodeWriter::Reg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t B3)
     {
         CheckOpen();
         CheckOp(op, OpLayoutType::Reg3B1);

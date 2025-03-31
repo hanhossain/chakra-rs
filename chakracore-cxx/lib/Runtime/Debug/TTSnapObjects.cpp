@@ -2402,7 +2402,7 @@ namespace TTD
             sgi->state = reader->ReadUInt32(NSTokens::Key::u32Val, true);
             sgi->scriptFunction = reader->ReadAddr(NSTokens::Key::objectId, true);
             sgi->arguments_callInfo_count = reader->ReadUInt32(NSTokens::Key::u32Val, true);
-            sgi->arguments_callInfo_flags = static_cast<uint8>(reader->ReadUInt32(NSTokens::Key::u32Val, true));
+            sgi->arguments_callInfo_flags = static_cast<uint8_t>(reader->ReadUInt32(NSTokens::Key::u32Val, true));
             sgi->arguments_count = reader->ReadUInt32(NSTokens::Key::u32Val, true);
 
             if(sgi->arguments_count == 0)

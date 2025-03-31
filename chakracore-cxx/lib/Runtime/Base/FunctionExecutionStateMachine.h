@@ -59,7 +59,7 @@ namespace Js
         // described in the banner comment for TryTransitionToNextExecutionMode. Each
         // state has an associated member variable for the state's limit.
         // For more information about ExecutionModes, see ExecutionModes.h.
-        enum class ExecutionState : uint8
+        enum class ExecutionState : uint8_t
         {
             Interpreter,
             AutoProfilingInterpreter0,

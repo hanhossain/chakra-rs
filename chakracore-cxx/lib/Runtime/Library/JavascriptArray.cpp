@@ -8476,7 +8476,7 @@ Case0:
         Var element = nullptr;
         Var testResult = nullptr;
         uint32 loopStart = reversed ? (uint32)length - 1 : 0;
-        int8 loopDelta = reversed ? -1 : 1;
+        int8_t loopDelta = reversed ? -1 : 1;
 
         if (pArr)
         {
@@ -8560,7 +8560,7 @@ Case0:
         Var element = nullptr;
         Var testResult = nullptr;
         uint32 loopStart = reversed ? (uint32)length - 1 : (uint32)start;
-        int8 loopDelta = reversed ? -1 : 1;
+        int8_t loopDelta = reversed ? -1 : 1;
 
         for (uint32 k = loopStart; k < length; k += loopDelta)
         {
@@ -13172,8 +13172,8 @@ Case0:
 
     // Explicit instantiation of Sorting Algorithms for each form of typed array
     template void Js::JavascriptArray::TypedArraySort<char16>(char16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<int8>(int8*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<uint8>(uint8*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<int8_t>(int8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<uint8_t>(uint8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<int16>(int16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<uint16>(uint16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<int32>(int32*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);

@@ -1651,7 +1651,7 @@ namespace UnifiedRegex
             do
             {
                 uint m = n * 8  + standardEncodedChars->DigitValue(ECLookahead());
-                if (m > Chars<uint8>::MaxUChar) // Regex octal codes only support single byte (ASCII) characters.
+                if (m > Chars<uint8_t>::MaxUChar) // Regex octal codes only support single byte (ASCII) characters.
                     break;
                 n = m;
                 ECConsume();
@@ -2447,7 +2447,7 @@ namespace UnifiedRegex
             do
             {
                 uint m = n * 8  + standardEncodedChars->DigitValue(ECLookahead());
-                if (m > Chars<uint8>::MaxUChar) //Regex octal codes only support single byte (ASCII) characters.
+                if (m > Chars<uint8_t>::MaxUChar) //Regex octal codes only support single byte (ASCII) characters.
                     break;
                 n = m;
                 ECConsume();
@@ -2573,7 +2573,7 @@ namespace UnifiedRegex
             do
             {
                 uint m = n * 8  + standardEncodedChars->DigitValue(ECLookahead());
-                if (m > Chars<uint8>::MaxUChar) //Regex octal codes only support single byte (ASCII) characters.
+                if (m > Chars<uint8_t>::MaxUChar) //Regex octal codes only support single byte (ASCII) characters.
                     break;
                 n = m;
                 ECConsume();

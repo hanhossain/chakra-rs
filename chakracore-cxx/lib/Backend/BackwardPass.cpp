@@ -7257,7 +7257,7 @@ BackwardPass::TrackIntUsage(IR::Instr *const instr)
                     AnalysisAssert(dstSym);
                     Assert(dstSym->scratch.globOpt.numCompoundedAddSubUses >= 0);
                     Assert(dstSym->scratch.globOpt.numCompoundedAddSubUses <= MaxCompoundedUsesInAddSubForIgnoringIntOverflow);
-                    instr->ignoreOverflowBitCount = (uint8) (53 - dstSym->scratch.globOpt.numCompoundedAddSubUses);
+                    instr->ignoreOverflowBitCount = (uint8_t) (53 - dstSym->scratch.globOpt.numCompoundedAddSubUses);
 
                     // We have the max number of compounded adds/subs. 32-bit overflow cannot be ignored.
                     if (instr->ignoreOverflowBitCount == 32)

@@ -1933,11 +1933,11 @@ namespace Js
 #undef InstructionFormat_Imm
 #undef InstructionFormat
 
-        int MovHigh8Bits( uint8_t*& buffer, RegNum reg, int8 imm )
+        int MovHigh8Bits( uint8_t*& buffer, RegNum reg, int8_t imm )
         {
             Assert( reg <= RegEBX );
             uint8_t* opDst = buffer;
-            int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsRegImm<int8>(reg, imm) );
+            int size = MOV::EncodeInstruction<int8_t>( buffer, InstrParamsRegImm<int8_t>(reg, imm) );
             *opDst |= 4;
             return size;
         }
@@ -1952,7 +1952,7 @@ namespace Js
             Assert( reg <= RegEBX );
             Assert( reg2 <= RegEBX );
             uint8_t* opDst = buffer;
-            int size = MOV::EncodeInstruction<int8>( buffer, InstrParams2Reg(reg, reg2) );
+            int size = MOV::EncodeInstruction<int8_t>( buffer, InstrParams2Reg(reg, reg2) );
             opDst[1] |= high8BitsRegType;
             return size;
         }
@@ -1960,7 +1960,7 @@ namespace Js
         {
             Assert( reg <= RegEBX );
             uint8_t* opDst = buffer;
-            int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsRegAddr(reg, regEffAddr, offset) );
+            int size = MOV::EncodeInstruction<int8_t>( buffer, InstrParamsRegAddr(reg, regEffAddr, offset) );
             opDst[1] |= 0x20;
             return size;
         }
@@ -1968,7 +1968,7 @@ namespace Js
         {
             Assert( reg <= RegEBX );
             uint8_t* opDst = buffer;
-            int size = MOV::EncodeInstruction<int8>( buffer, InstrParamsAddrReg(regEffAddr, offset, reg) );
+            int size = MOV::EncodeInstruction<int8_t>( buffer, InstrParamsAddrReg(regEffAddr, offset, reg) );
             opDst[1] |= 0x20;
             return size;
         }

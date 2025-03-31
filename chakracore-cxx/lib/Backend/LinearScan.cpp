@@ -25,7 +25,7 @@ char16 const * const RegNamesW[RegNumCount] =
 };
 #endif
 
-static const uint8 RegAttribs[RegNumCount] =
+static const uint8_t RegAttribs[RegNumCount] =
 {
 #define REGDAT(Name, ListName, Encode, Type, Attribs) Attribs,
 #include "RegList.h"
@@ -3290,7 +3290,7 @@ LinearScan::InsertLoad(IR::Instr *instr, StackSym *sym, RegNum reg)
     return load;
 }
 
-uint8
+uint8_t
 LinearScan::GetRegAttribs(RegNum reg)
 {
     return RegAttribs[reg];

@@ -106,7 +106,7 @@ namespace Js
         typename SizePolicy::ArgSlotType     ArgCount;
         typename SizePolicy::RegSlotSType    Return;
         typename SizePolicy::RegSlotType     Function;
-        int8                                 ReturnType;
+        int8_t                                 ReturnType;
     };
     template <typename SizePolicy>
     struct OpLayoutT_AsmReg1
@@ -278,7 +278,7 @@ namespace Js
     template <typename SizePolicy>
     struct OpLayoutT_AsmShuffle
     {
-        uint8                       INDICES[16];
+        uint8_t                       INDICES[16];
         typename SizePolicy::RegSlotType     R0;
         typename SizePolicy::RegSlotType     R1;
         typename SizePolicy::RegSlotType     R2;
@@ -539,7 +539,7 @@ namespace Js
         uint32                               SlotIndex;
         typename SizePolicy::RegSlotType     Value;
         ArrayBufferView::ViewType            ViewType;
-        int8                                 DataWidth; // # of bytes to load/store
+        int8_t                                 DataWidth; // # of bytes to load/store
         uint32                               Offset; //WASM.SIMD
     };
 

@@ -1045,7 +1045,7 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
     IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
     IR::RegOpnd * indexOpnd = src1->AsIndirOpnd()->GetIndexOpnd();
     IR::Opnd * cmpOpnd;
-    const uint8 dataWidth = instr->dataWidth;
+    const uint8_t dataWidth = instr->dataWidth;
 
     Assert(isSimdLoad == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 
@@ -1124,7 +1124,7 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
     IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
     IR::Opnd * cmpOpnd;
     IR::RegOpnd * indexOpnd = dst->AsIndirOpnd()->GetIndexOpnd();
-    const uint8 dataWidth = instr->dataWidth;
+    const uint8_t dataWidth = instr->dataWidth;
 
     Assert(isSimdStore == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 

@@ -1299,7 +1299,7 @@ BailOutRecord::BailOutInlinedHelper(Js::JavascriptCallStackLayout * layout, Bail
             // While bailing out, RestoreFrames should box all Vars on the stack. If there are multiple Vars pointing to the same
             // object, the cached version (that was previously boxed) will be reused to maintain pointer identity and correctness
             // after the transition to the interpreter.
-            InlinedFrameLayout* outerMostFrame = (InlinedFrameLayout *)(((uint8 *)Js::JavascriptCallStackLayout::ToFramePointer(layout)) - entryPointInfo->GetFrameHeight());
+            InlinedFrameLayout* outerMostFrame = (InlinedFrameLayout *)(((uint8_t *)Js::JavascriptCallStackLayout::ToFramePointer(layout)) - entryPointInfo->GetFrameHeight());
             inlineeFrameRecord->RestoreFrames(functionBody, outerMostFrame, layout, true /*boxArgs*/);
         }
     }
@@ -1875,7 +1875,7 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
     Assert(foundEntryPoint);
 #endif
 
-    uint8 callsCount = entryPointInfo->callsCount > 255 ? 255 : static_cast<uint8>(entryPointInfo->callsCount);
+    uint8_t callsCount = entryPointInfo->callsCount > 255 ? 255 : static_cast<uint8_t>(entryPointInfo->callsCount);
     RejitReason rejitReason = RejitReason::None;
     bool reThunk = false;
 
@@ -2478,7 +2478,7 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
 
     entryPointInfo->totalJittedLoopIterations += entryPointInfo->jittedLoopIterationsSinceLastBailout;
     entryPointInfo->jittedLoopIterationsSinceLastBailout = 0;
-    uint8 totalJittedLoopIterations = entryPointInfo->totalJittedLoopIterations > 255 ? 255 : static_cast<uint8>(entryPointInfo->totalJittedLoopIterations);
+    uint8_t totalJittedLoopIterations = entryPointInfo->totalJittedLoopIterations > 255 ? 255 : static_cast<uint8_t>(entryPointInfo->totalJittedLoopIterations);
     totalJittedLoopIterations = totalJittedLoopIterations <= Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() ? 0 : totalJittedLoopIterations - Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout();
 
     CheckPreemptiveRejit(executeFunction, bailOutKind, bailOutRecordNotConst, totalJittedLoopIterations, interpreterFrame->GetCurrentLoopNum());
@@ -2771,7 +2771,7 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
     }
 }
 
-void BailOutRecord::CheckPreemptiveRejit(Js::FunctionBody* executeFunction, IR::BailOutKind bailOutKind, BailOutRecord* bailoutRecord, uint8& callsOrIterationsCount, int loopNumber)
+void BailOutRecord::CheckPreemptiveRejit(Js::FunctionBody* executeFunction, IR::BailOutKind bailOutKind, BailOutRecord* bailoutRecord, uint8_t& callsOrIterationsCount, int loopNumber)
 {
     if (bailOutKind == IR::BailOutOnNoProfile && executeFunction->IncrementBailOnMisingProfileCount() > CONFIG_FLAG(BailOnNoProfileLimit))
     {

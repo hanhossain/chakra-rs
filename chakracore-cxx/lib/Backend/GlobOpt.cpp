@@ -1792,7 +1792,7 @@ GlobOpt::MarkArgumentsUsedForBranch(IR::Instr * instr)
                     // We only support functions with 13 arguments to ensure optimal size of callSiteInfo
                     if (param < Js::Constants::MaximumArgumentCountForConstantArgumentInlining)
                     {
-                        this->func->GetJITOutput()->SetArgUsedForBranch((uint8)param);
+                        this->func->GetJITOutput()->SetArgUsedForBranch((uint8_t)param);
                     }
                 }
             }

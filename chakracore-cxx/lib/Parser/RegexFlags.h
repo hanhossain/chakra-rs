@@ -6,7 +6,7 @@
 
 namespace UnifiedRegex
 {
-    enum RegexFlags : uint8
+    enum RegexFlags : uint8_t
     {
         NoRegexFlags        = 0,
         IgnoreCaseRegexFlag = 1 << 0,

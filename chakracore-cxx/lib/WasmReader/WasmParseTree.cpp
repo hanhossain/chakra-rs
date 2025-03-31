@@ -131,7 +131,7 @@ const char16 * GetTypeName(WasmType type)
 
 } // namespace WasmTypes
 
-WasmTypes::WasmType LanguageTypes::ToWasmType(int8 binType)
+WasmTypes::WasmType LanguageTypes::ToWasmType(int8_t binType)
 {
     switch (binType)
     {

@@ -556,11 +556,11 @@ public:
 #endif
     // These should be together to pack into a uint32
     Js::OpCode      m_opcode;
-    uint8           ignoreOverflowBitCount;      // Number of bits after which ovf matters. Currently used for MULs.
+    uint8_t           ignoreOverflowBitCount;      // Number of bits after which ovf matters. Currently used for MULs.
 
     // used only for SIMD Ld/St from typed arrays.
     // we keep these here to avoid increase in number of opcodes and to not use ExtendedArgs
-    uint8           dataWidth;
+    uint8_t           dataWidth;
 #if DBG
     uint16_t            highlight;
 #endif

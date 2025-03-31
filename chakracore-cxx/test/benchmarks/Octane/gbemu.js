@@ -1731,7 +1731,7 @@ Resize.prototype.generateFloatBuffer = function (bufferLength) {
   }
 }
 Resize.prototype.generateUint8Buffer = function (bufferLength) {
-  //Generate a uint8 typed array buffer:
+  //Generate a uint8_t typed array buffer:
   try {
     return this.checkForOperaMathBug(new Uint8Array(bufferLength));
   }
@@ -5942,7 +5942,7 @@ GameBoyCore.prototype.saveState = function () {"use strict";
 GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   var index = 0;
   var state = returnedFrom.slice(0);
-  this.ROM = this.toTypedArray(state[index++], "uint8");
+  this.ROM = this.toTypedArray(state[index++], "uint8_t");
   this.ROMBankEdge = Math.floor(this.ROM.length / 0x4000);
   this.inBootstrap = state[index++];
   this.registerA = state[index++];
@@ -5962,11 +5962,11 @@ GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   this.hdmaRunning = state[index++];
   this.CPUTicks = state[index++];
   this.doubleSpeedShifter = state[index++];
-  this.memory = this.toTypedArray(state[index++], "uint8");
-  this.MBCRam = this.toTypedArray(state[index++], "uint8");
-  this.VRAM = this.toTypedArray(state[index++], "uint8");
+  this.memory = this.toTypedArray(state[index++], "uint8_t");
+  this.MBCRam = this.toTypedArray(state[index++], "uint8_t");
+  this.VRAM = this.toTypedArray(state[index++], "uint8_t");
   this.currVRAMBank = state[index++];
-  this.GBCMemory = this.toTypedArray(state[index++], "uint8");
+  this.GBCMemory = this.toTypedArray(state[index++], "uint8_t");
   this.MBC1Mode = state[index++];
   this.MBCRAMBanksEnabled = state[index++];
   this.currMBCRAMBank = state[index++];
@@ -6047,7 +6047,7 @@ GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   this.channel3patternType = state[index++];
   this.channel3frequency = state[index++];
   this.channel3consecutive = state[index++];
-  this.channel3PCM = this.toTypedArray(state[index++], "int8");
+  this.channel3PCM = this.toTypedArray(state[index++], "int8_t");
   this.channel4FrequencyPeriod = state[index++];
   this.channel4lastSampleLookup = state[index++];
   this.channel4totalLength = state[index++];
@@ -6128,8 +6128,8 @@ GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   this.numRAMBanks = state[index++];
   this.windowY = state[index++];
   this.windowX = state[index++];
-  this.gbcOBJRawPalette = this.toTypedArray(state[index++], "uint8");
-  this.gbcBGRawPalette = this.toTypedArray(state[index++], "uint8");
+  this.gbcOBJRawPalette = this.toTypedArray(state[index++], "uint8_t");
+  this.gbcBGRawPalette = this.toTypedArray(state[index++], "uint8_t");
   this.gbOBJPalette = this.toTypedArray(state[index++], "int32");
   this.gbBGPalette = this.toTypedArray(state[index++], "int32");
   this.gbcOBJPalette = this.toTypedArray(state[index++], "int32");
@@ -6138,8 +6138,8 @@ GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   this.gbOBJColorizedPalette = this.toTypedArray(state[index++], "int32");
   this.cachedBGPaletteConversion = this.toTypedArray(state[index++], "int32");
   this.cachedOBJPaletteConversion = this.toTypedArray(state[index++], "int32");
-  this.BGCHRBank1 = this.toTypedArray(state[index++], "uint8");
-  this.BGCHRBank2 = this.toTypedArray(state[index++], "uint8");
+  this.BGCHRBank1 = this.toTypedArray(state[index++], "uint8_t");
+  this.BGCHRBank2 = this.toTypedArray(state[index++], "uint8_t");
   this.haltPostClocks = state[index++];
   this.interruptsRequested = state[index++];
   this.interruptsEnabled = state[index++];
@@ -6150,8 +6150,8 @@ GameBoyCore.prototype.returnFromState = function (returnedFrom) {"use strict";
   this.backgroundX = state[index++];
   this.CPUStopped = state[index];
   this.fromSaveState = true;
-  this.TICKTable = this.toTypedArray(this.TICKTable, "uint8");
-  this.SecondaryTICKTable = this.toTypedArray(this.SecondaryTICKTable, "uint8");
+  this.TICKTable = this.toTypedArray(this.TICKTable, "uint8_t");
+  this.SecondaryTICKTable = this.toTypedArray(this.SecondaryTICKTable, "uint8_t");
   this.initializeReferencesFromSaveState();
   this.memoryReadJumpCompile();
   this.memoryWriteJumpCompile();
@@ -6189,18 +6189,18 @@ GameBoyCore.prototype.start = function () {"use strict";
 }
 GameBoyCore.prototype.initMemory = function () {"use strict";
   //Initialize the RAM:
-  this.memory = this.getTypedArray(0x10000, 0, "uint8");
+  this.memory = this.getTypedArray(0x10000, 0, "uint8_t");
   this.frameBuffer = this.getTypedArray(23040, 0xF8F8F8, "int32");
-  this.BGCHRBank1 = this.getTypedArray(0x800, 0, "uint8");
-  this.TICKTable = this.toTypedArray(this.TICKTable, "uint8");
-  this.SecondaryTICKTable = this.toTypedArray(this.SecondaryTICKTable, "uint8");
-  this.channel3PCM = this.getTypedArray(0x20, 0, "int8");
+  this.BGCHRBank1 = this.getTypedArray(0x800, 0, "uint8_t");
+  this.TICKTable = this.toTypedArray(this.TICKTable, "uint8_t");
+  this.SecondaryTICKTable = this.toTypedArray(this.SecondaryTICKTable, "uint8_t");
+  this.channel3PCM = this.getTypedArray(0x20, 0, "int8_t");
 }
 GameBoyCore.prototype.generateCacheArray = function (tileAmount) {"use strict";
   var tileArray = [];
   var tileNumber = 0;
   while (tileNumber < tileAmount) {
-    tileArray[tileNumber++] = this.getTypedArray(64, 0, "uint8");
+    tileArray[tileNumber++] = this.getTypedArray(64, 0, "uint8_t");
   }
   return tileArray;
 }
@@ -6388,7 +6388,7 @@ GameBoyCore.prototype.ROMLoad = function () {"use strict";
   if (maxLength < 0x4000) {
     throw(new Error("ROM image size too small."));
   }
-  this.ROM = this.getTypedArray(maxLength, 0, "uint8");
+  this.ROM = this.getTypedArray(maxLength, 0, "uint8_t");
   var romIndex = 0;
   if (this.usedBootROM) {
     if (!settings[11]) {
@@ -6728,18 +6728,18 @@ GameBoyCore.prototype.setupRAM = function () {"use strict";
     var MBCRam = (typeof this.openMBC == "function") ? this.openMBC(this.name) : [];
     if (MBCRam.length > 0) {
       //Flash the SRAM into memory:
-      this.MBCRam = this.toTypedArray(MBCRam, "uint8");
+      this.MBCRam = this.toTypedArray(MBCRam, "uint8_t");
     }
     else {
-      this.MBCRam = this.getTypedArray(this.numRAMBanks * 0x2000, 0, "uint8");
+      this.MBCRam = this.getTypedArray(this.numRAMBanks * 0x2000, 0, "uint8_t");
     }
   }
   cout("Actual bytes of MBC RAM allocated: " + (this.numRAMBanks * 0x2000), 0);
   this.returnFromRTCState();
   //Setup the RAM for GBC mode.
   if (this.cGBC) {
-    this.VRAM = this.getTypedArray(0x2000, 0, "uint8");
-    this.GBCMemory = this.getTypedArray(0x7000, 0, "uint8");
+    this.VRAM = this.getTypedArray(0x2000, 0, "uint8_t");
+    this.GBCMemory = this.getTypedArray(0x7000, 0, "uint8_t");
   }
   this.memoryReadJumpCompile();
   this.memoryWriteJumpCompile();
@@ -6800,7 +6800,7 @@ GameBoyCore.prototype.initLCD = function () {"use strict";
     this.graphicsBlit();
     this.canvas.style.visibility = "visible";
     if (this.swizzledFrame == null) {
-      this.swizzledFrame = this.getTypedArray(69120, 0xFF, "uint8");
+      this.swizzledFrame = this.getTypedArray(69120, 0xFF, "uint8_t");
     }
     //Test the draw system and browser vblank latching:
     this.drewFrame = true;                    //Copy the latest graphics to buffer.
@@ -6885,7 +6885,7 @@ GameBoyCore.prototype.intializeWhiteNoise = function () {"use strict";
   //Noise Sample Tables:
   var randomFactor = 1;
   //15-bit LSFR Cache Generation:
-  this.LSFR15Table = this.getTypedArray(0x80000, 0, "int8");
+  this.LSFR15Table = this.getTypedArray(0x80000, 0, "int8_t");
   var LSFR = 0x7FFF;  //Seed value has all its bits set.
   var LSFRShifted = 0x3FFF;
   for (var index = 0; index < 0x8000; ++index) {
@@ -6912,7 +6912,7 @@ GameBoyCore.prototype.intializeWhiteNoise = function () {"use strict";
     LSFR = LSFRShifted | (((LSFRShifted ^ LSFR) & 0x1) << 14);
   }
   //7-bit LSFR Cache Generation:
-  this.LSFR7Table = this.getTypedArray(0x800, 0, "int8");
+  this.LSFR7Table = this.getTypedArray(0x800, 0, "int8_t");
   LSFR = 0x7F;  //Seed value has all its bits set.
   for (index = 0; index < 0x80; ++index) {
     //Normalize the last LSFR value for usage:
@@ -8077,11 +8077,11 @@ GameBoyCore.prototype.renderMidScanLine = function () {"use strict";
 GameBoyCore.prototype.initializeModeSpecificArrays = function () {"use strict";
   this.LCDCONTROL = (this.LCDisOn) ? this.LINECONTROL : this.DISPLAYOFFCONTROL;
   if (this.cGBC) {
-    this.gbcOBJRawPalette = this.getTypedArray(0x40, 0, "uint8");
-    this.gbcBGRawPalette = this.getTypedArray(0x40, 0, "uint8");
+    this.gbcOBJRawPalette = this.getTypedArray(0x40, 0, "uint8_t");
+    this.gbcBGRawPalette = this.getTypedArray(0x40, 0, "uint8_t");
     this.gbcOBJPalette = this.getTypedArray(0x20, 0x1000000, "int32");
     this.gbcBGPalette = this.getTypedArray(0x40, 0, "int32");
-    this.BGCHRBank2 = this.getTypedArray(0x800, 0, "uint8");
+    this.BGCHRBank2 = this.getTypedArray(0x800, 0, "uint8_t");
     this.BGCHRCurrentBank = (this.currVRAMBank > 0) ? this.BGCHRBank2 : this.BGCHRBank1;
     this.tileCache = this.generateCacheArray(0xF80);
   }
@@ -8091,7 +8091,7 @@ GameBoyCore.prototype.initializeModeSpecificArrays = function () {"use strict";
     this.BGPalette = this.gbBGPalette;
     this.OBJPalette = this.gbOBJPalette;
     this.tileCache = this.generateCacheArray(0x700);
-    this.sortBuffer = this.getTypedArray(0x100, 0, "uint8");
+    this.sortBuffer = this.getTypedArray(0x100, 0, "uint8_t");
     this.OAMAddressCache = this.getTypedArray(10, 0, "int32");
   }
   this.renderPathBuild();
@@ -8116,7 +8116,7 @@ GameBoyCore.prototype.GBCtoGBModeAdjust = function () {"use strict";
     this.BGPalette = this.gbBGPalette;
     this.OBJPalette = this.gbOBJPalette;
   }
-  this.sortBuffer = this.getTypedArray(0x100, 0, "uint8");
+  this.sortBuffer = this.getTypedArray(0x100, 0, "uint8_t");
   this.OAMAddressCache = this.getTypedArray(10, 0, "int32");
   this.renderPathBuild();
   this.memoryReadJumpCompile();
@@ -8165,7 +8165,7 @@ GameBoyCore.prototype.initializeReferencesFromSaveState = function () {"use stri
     for (tileIndex = 0x9000; tileIndex < 0x9800; tileIndex += 2) {
       this.generateGBTileLine(tileIndex);
     }
-    this.sortBuffer = this.getTypedArray(0x100, 0, "uint8");
+    this.sortBuffer = this.getTypedArray(0x100, 0, "uint8_t");
     this.OAMAddressCache = this.getTypedArray(10, 0, "int32");
   }
   else {
@@ -11019,10 +11019,10 @@ GameBoyCore.prototype.toTypedArray = function (baseArray, memtype) {"use strict"
     }
     var length = baseArray.length;
     switch (memtype) {
-      case "uint8":
+      case "uint8_t":
         var typedArrayTemp = new Uint8Array(length);
         break;
-      case "int8":
+      case "int8_t":
         var typedArrayTemp = new Int8Array(length);
         break;
       case "int32":
@@ -11068,10 +11068,10 @@ GameBoyCore.prototype.getTypedArray = function (length, defaultValue, numberType
       throw(new Error(""));
     }
     switch (numberType) {
-      case "int8":
+      case "int8_t":
         var arrayHandle = new Int8Array(length);
         break;
-      case "uint8":
+      case "uint8_t":
         var arrayHandle = new Uint8Array(length);
         break;
       case "int32":

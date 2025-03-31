@@ -162,7 +162,7 @@ case wb##opname: \
 #define WASM_MEM_OPCODE(opname, ...) case wb##opname: // FallThrough
 #include "WasmBinaryOpCodes.h"
     {
-        const uint8 alignment = GetReader()->m_currentNode.mem.alignment;
+        const uint8_t alignment = GetReader()->m_currentNode.mem.alignment;
         const uint32 offset = GetReader()->m_currentNode.mem.offset;
         switch (((!!alignment) << 1) | (!!offset))
         {
@@ -1567,7 +1567,7 @@ EmitInfo WasmBytecodeGenerator::EmitV8X16Shuffle()
     Js::RegSlot resultReg = GetRegisterSpace(WasmTypes::V128)->AcquireTmpRegister();
     EmitInfo resultInfo(resultReg, WasmTypes::V128);
 
-    uint8* indices = GetReader()->m_currentNode.shuffle.indices;
+    uint8_t* indices = GetReader()->m_currentNode.shuffle.indices;
     for (uint i = 0; i < Simd::MAX_LANES; i++)
     {
         if (indices[i] >= Simd::MAX_LANES * 2)
@@ -1599,7 +1599,7 @@ EmitInfo WasmBytecodeGenerator::EmitExtractLaneExpr(Js::OpCodeAsmJs op, const Wa
     return resultInfo;
 }
 
-EmitInfo WasmBytecodeGenerator::EmitSimdMemAccess(Js::OpCodeAsmJs op, const WasmTypes::WasmType* signature, Js::ArrayBufferView::ViewType viewType, uint8 dataWidth, bool isStore)
+EmitInfo WasmBytecodeGenerator::EmitSimdMemAccess(Js::OpCodeAsmJs op, const WasmTypes::WasmType* signature, Js::ArrayBufferView::ViewType viewType, uint8_t dataWidth, bool isStore)
 {
 
     WasmTypes::WasmType type = signature[0];

@@ -16,7 +16,7 @@ namespace Wasm
     };
 
 #define WASM_SECTION(intName, id, flag, precendent) bSect ## intName,
-    enum SectionCode : uint8
+    enum SectionCode : uint8_t
     {
 #include "WasmSections.h"
         bSectLimit,

@@ -1174,7 +1174,7 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
     IR::Opnd * src1 = instr->UnlinkSrc1();
     IRType type = src1->GetType();
     IR::RegOpnd * indexOpnd = src1->AsIndirOpnd()->GetIndexOpnd();
-    const uint8 dataWidth = instr->dataWidth;
+    const uint8_t dataWidth = instr->dataWidth;
     Assert(isSimdLoad == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 
 #if ENABLE_FAST_ARRAYBUFFER
@@ -1270,7 +1270,7 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
     IR::Instr* done;
     IR::Opnd * dst = instr->UnlinkDst();
     IR::RegOpnd * indexOpnd = dst->AsIndirOpnd()->GetIndexOpnd();
-    const uint8 dataWidth = instr->dataWidth;
+    const uint8_t dataWidth = instr->dataWidth;
 
     Assert(isSimdStore == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 

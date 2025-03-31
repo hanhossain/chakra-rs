@@ -137,7 +137,7 @@ namespace UnifiedRegex
 
         // Maps characters (0..AsciTableSize-1) to 0 if not in alphabet, or 0x1, 0x2, 0x4 or 0x8.
         // Allocated and filled only if invoke Match below.
-        Field(uint8) charToBits[TrigramAlphabet::AsciiTableSize];
+        Field(uint8_t) charToBits[TrigramAlphabet::AsciiTableSize];
 
         Field(uint32) patterns[OctoquadIdentifier::NumPatterns];
 

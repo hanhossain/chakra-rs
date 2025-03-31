@@ -483,10 +483,10 @@ Security::BuildCookieOpnd(IRType type, Func * func)
     switch (type)
     {
     case TyInt8:
-        cookie = (int8)Math::Rand();
+        cookie = (int8_t)Math::Rand();
         break;
     case TyUint8:
-        cookie = (uint8)Math::Rand();
+        cookie = (uint8_t)Math::Rand();
         break;
     case TyInt16:
         cookie = (int16)Math::Rand();

@@ -180,7 +180,7 @@ public:
     }
 };
 
-enum class PathDependentRelationship : uint8
+enum class PathDependentRelationship : uint8_t
 {
     Equal,
     NotEqual,

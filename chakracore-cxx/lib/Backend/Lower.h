@@ -351,7 +351,7 @@ public:
     static uint32   GetArrayOffsetOfLength(const ValueType valueType);
     static IRType   GetArrayIndirType(const ValueType valueType);
     static uint8_t     GetArrayIndirScale(const ValueType valueType);
-    static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8 dataWidth);
+    static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8_t dataWidth);
 private:
     bool            ShouldGenerateArrayFastPath(const IR::Opnd *const arrayOpnd, const bool supportsObjectsWithArrays, const bool supportsTypedArrays, const bool requiresSse2ForFloatArrays) const;
     IR::RegOpnd *   LoadObjectArray(IR::RegOpnd *const baseOpnd, IR::Instr *const insertBeforeInstr);

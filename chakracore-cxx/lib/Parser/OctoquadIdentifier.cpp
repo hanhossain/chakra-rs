@@ -382,9 +382,9 @@ namespace UnifiedRegex
                 w->Print(_u("|"));
             for (int j = 0; j < TrigramInfo::PatternLength; j++)
             {
-                uint8 v = (patterns[i] >> ((TrigramInfo::PatternLength - j - 1) * TrigramAlphabet::AlphaCount)) & 0xf;
+                uint8_t v = (patterns[i] >> ((TrigramInfo::PatternLength - j - 1) * TrigramAlphabet::AlphaCount)) & 0xf;
                 int n = 0;
-                uint8 x = v;
+                uint8_t x = v;
                 while (x > 0)
                 {
                     x &= x-1;

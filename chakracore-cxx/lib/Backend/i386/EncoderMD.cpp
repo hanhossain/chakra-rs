@@ -408,7 +408,7 @@ EncoderMD::EmitConst(size_t val, int size)
         return;
 
     case 1:
-        *(uint8*)m_pc = (char)val;
+        *(uint8_t*)m_pc = (char)val;
         break;
 
     case 2:

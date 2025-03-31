@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-enum TypeFlagMask : uint8
+enum TypeFlagMask : uint8_t
 {
     TypeFlagMask_None                                                              = 0x00,
     TypeFlagMask_AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties       = 0x01,
@@ -18,7 +18,7 @@ enum TypeFlagMask : uint8
     TypeFlagMask_JsrtExternal                                                      = 0x40,
     TypeFlagMask_HasBeenCached                                                     = 0x80
 };
-ENUM_CLASS_HELPERS(TypeFlagMask, uint8);
+ENUM_CLASS_HELPERS(TypeFlagMask, uint8_t);
 
 namespace Js
 {

@@ -523,15 +523,15 @@ namespace Js
         switch (typeId)
         {
         case SCA_Int8Array:
-            ReadTypedArray<int8, false>(dst);
+            ReadTypedArray<int8_t, false>(dst);
             break;
 
         case SCA_Uint8Array:
-            ReadTypedArray<uint8, false>(dst);
+            ReadTypedArray<uint8_t, false>(dst);
             break;
 
         case SCA_Uint8ClampedArray:
-            ReadTypedArray<uint8, true>(dst);
+            ReadTypedArray<uint8_t, true>(dst);
             break;
 
         case SCA_Int16Array:

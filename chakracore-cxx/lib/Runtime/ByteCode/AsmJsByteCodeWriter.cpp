@@ -253,7 +253,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteAsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 indices[])
+    bool AsmJsByteCodeWriter::TryWriteAsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t indices[])
     {
         OpLayoutT_AsmShuffle<SizePolicy> layout;
         if (SizePolicy::Assign(layout.R0, R0) && SizePolicy::Assign(layout.R1, R1) && SizePolicy::Assign(layout.R2, R2))
@@ -375,7 +375,7 @@ namespace Js
     {
         OpLayoutT_AsmCall<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Return, returnValueRegister) && SizePolicy::Assign(layout.Function, functionRegister)
-            && SizePolicy::Assign(layout.ArgCount, givenArgCount) && SizePolicy::template Assign<int8>(layout.ReturnType, (int8)retType.which()))
+            && SizePolicy::Assign(layout.ArgCount, givenArgCount) && SizePolicy::template Assign<int8_t>(layout.ReturnType, (int8_t)retType.which()))
         {
             m_byteCodeData.EncodeT<SizePolicy::LayoutEnum>(op, &layout, sizeof(layout), this);
             return true;
@@ -424,11 +424,11 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteAsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8 dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
+    bool AsmJsByteCodeWriter::TryWriteAsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
     {
         OpLayoutT_AsmSimdTypedArr<SizePolicy> layout;
         if (SizePolicy::Assign(layout.Value, value) && SizePolicy::template Assign<ArrayBufferView::ViewType>(layout.ViewType, viewType)
-            && SizePolicy::Assign(layout.SlotIndex, slotIndex) && SizePolicy::template Assign<int8>(layout.DataWidth, dataWidth) && SizePolicy::Assign(layout.Offset, offset))
+            && SizePolicy::Assign(layout.SlotIndex, slotIndex) && SizePolicy::template Assign<int8_t>(layout.DataWidth, dataWidth) && SizePolicy::Assign(layout.Offset, offset))
         {
             m_byteCodeData.EncodeT<SizePolicy::LayoutEnum>(op, &layout, sizeof(layout), this);
             return true;
@@ -532,7 +532,7 @@ namespace Js
         MULTISIZE_LAYOUT_WRITE(AsmReg18, op, R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, R14, R15, R16, R17);
     }
 
-    void AsmJsByteCodeWriter::AsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 indices[])
+    void AsmJsByteCodeWriter::AsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t indices[])
     {
         MULTISIZE_LAYOUT_WRITE(AsmShuffle, op, R0, R1, R2, indices);
     }
@@ -617,7 +617,7 @@ namespace Js
         MULTISIZE_LAYOUT_WRITE(WasmMemAccess, op, value, slotIndex, offset, viewType);
     }
 
-    void AsmJsByteCodeWriter::AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8 dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
+    void AsmJsByteCodeWriter::AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32 slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32 offset)
     {
         Assert(dataWidth >= 4 && dataWidth <= 16);
         MULTISIZE_LAYOUT_WRITE(AsmSimdTypedArr, op, value, slotIndex, dataWidth, viewType, offset);

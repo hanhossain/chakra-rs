@@ -69,20 +69,20 @@ public:
     uint32              lastAllocationStart;
     RegNum              reg;
     uint                totalOpHelperLengthByEnd;
-    uint8               isSpilled:1;
-    uint8               isLiveAcrossCalls:1;
-    uint8               isLiveAcrossUserCalls:1;
-    uint8               isDeadStore:1;
-    uint8               isOpHelperSpilled:1;
-    uint8               isOpHelperSpillAsArg : 1;
-    uint8               cantOpHelperSpill:1;
-    uint8               cantSpill:1;
-    uint8               dontAllocate:1;
-    uint8               isSecondChanceAllocated:1;
-    uint8               isCheapSpill:1;
-    uint8               needsStoreCompensation:1;
-    uint8               cantStackPack : 1;
-    uint8               isFloat : 1;
+    uint8_t               isSpilled:1;
+    uint8_t               isLiveAcrossCalls:1;
+    uint8_t               isLiveAcrossUserCalls:1;
+    uint8_t               isDeadStore:1;
+    uint8_t               isOpHelperSpilled:1;
+    uint8_t               isOpHelperSpillAsArg : 1;
+    uint8_t               cantOpHelperSpill:1;
+    uint8_t               cantSpill:1;
+    uint8_t               dontAllocate:1;
+    uint8_t               isSecondChanceAllocated:1;
+    uint8_t               isCheapSpill:1;
+    uint8_t               needsStoreCompensation:1;
+    uint8_t               cantStackPack : 1;
+    uint8_t               isFloat : 1;
 
     bool IsInt()
     {

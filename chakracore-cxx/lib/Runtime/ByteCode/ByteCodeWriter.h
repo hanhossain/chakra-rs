@@ -251,8 +251,8 @@ namespace Js
         void Reg4(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3);
         void Reg4U(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, uint slotIndex);
         void Reg1Unsigned1(OpCode op, RegSlot R0, uint C1);
-        void Reg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8 B3);
-        void Reg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 B3);
+        void Reg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8_t B3);
+        void Reg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t B3);
         void Reg5(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4);
         void Reg5U(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4, uint slotIndex);
         void ArgIn0(RegSlot arg);
@@ -307,8 +307,8 @@ namespace Js
         template <typename SizePolicy> bool TryWriteReg3C(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, CacheId cacheId);
         template <typename SizePolicy> bool TryWriteReg4(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3);
         template <typename SizePolicy> bool TryWriteReg4U(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, uint slotIndex);
-        template <typename SizePolicy> bool TryWriteReg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8 B2);
-        template <typename SizePolicy> bool TryWriteReg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8 B3);
+        template <typename SizePolicy> bool TryWriteReg2B1(OpCode op, RegSlot R0, RegSlot R1, uint8_t B2);
+        template <typename SizePolicy> bool TryWriteReg3B1(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t B3);
         template <typename SizePolicy> bool TryWriteReg5(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4);
         template <typename SizePolicy> bool TryWriteReg5U(OpCode op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4, uint slotIndex);
         template <typename SizePolicy> bool TryWriteUnsigned1(OpCode op, uint C1);

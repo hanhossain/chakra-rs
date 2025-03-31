@@ -79,8 +79,8 @@ namespace Js
         template<typename TypeName>
         void SwapRoutine(TypeName* input, TypeName* dest);
 
-        template<> void SwapRoutine(int8* input, int8* dest) {*dest =  *input; }
-        template<> void SwapRoutine(uint8* input, uint8* dest) {*dest =  *input; }
+        template<> void SwapRoutine(int8_t* input, int8_t* dest) {*dest =  *input; }
+        template<> void SwapRoutine(uint8_t* input, uint8_t* dest) {*dest =  *input; }
         template<> void SwapRoutine(int16* input, int16* dest) {*dest =  RtlUshortByteSwap(*input); }
         template<> void SwapRoutine(uint16* input, uint16* dest) {*dest =  RtlUshortByteSwap(*input);}
         template<> void SwapRoutine(int32* input, int32* dest) {*dest =  RtlUlongByteSwap(*input);}

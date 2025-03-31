@@ -7,10 +7,10 @@
 class PrologEncoderMD
 {
 public:
-    static unsigned __int8 GetRequiredNodeCountForAlloca(size_t size);
-    static unsigned __int8 GetOp(IR::Instr *instr);
-    static unsigned __int8 GetNonVolRegToSave(IR::Instr *instr);
-    static unsigned __int8 GetXmmRegToSave(IR::Instr *instr, unsigned __int16 *scaledOffset);
+    static uint8_t GetRequiredNodeCountForAlloca(size_t size);
+    static uint8_t GetOp(IR::Instr *instr);
+    static uint8_t GetNonVolRegToSave(IR::Instr *instr);
+    static uint8_t GetXmmRegToSave(IR::Instr *instr, unsigned __int16 *scaledOffset);
     static size_t          GetAllocaSize(IR::Instr *instr);
-    static unsigned __int8 GetFPReg();
+    static uint8_t GetFPReg();
 };

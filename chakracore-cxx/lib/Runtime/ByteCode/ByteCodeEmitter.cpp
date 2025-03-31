@@ -10286,7 +10286,7 @@ void EmitConcat3(ParseNode *pnode, ParseNode *pnode1, ParseNode *pnode2, ParseNo
     byteCodeGenerator->EndStatement(pnode);
 }
 
-void EmitNewConcatStrMulti(ParseNode *pnode, uint8 count, ParseNode *pnode1, ParseNode *pnode2, ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo)
+void EmitNewConcatStrMulti(ParseNode *pnode, uint8_t count, ParseNode *pnode1, ParseNode *pnode2, ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo)
 {
     EmitBinaryOpnds(pnode1, pnode2, byteCodeGenerator, funcInfo);
     funcInfo->ReleaseLoc(pnode2);
@@ -10348,7 +10348,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                 funcInfo->AcquireLoc(pnode);
 
                 // CONSIDER: this may cause the backend not able CSE repeating pattern within the concat.
-                EmitNewConcatStrMulti(pnode, (uint8)concatCount, pnode1, pnode2, byteCodeGenerator, funcInfo);
+                EmitNewConcatStrMulti(pnode, (uint8_t)concatCount, pnode1, pnode2, byteCodeGenerator, funcInfo);
 
                 uint i = 2;
                 do
@@ -10362,7 +10362,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                     funcInfo->ReleaseLoc(currNode2);
                     funcInfo->ReleaseLoc(currNode);
                     byteCodeGenerator->Writer()->Reg3B1(
-                        Js::OpCode::SetConcatStrMultiItem2, pnode->location, currNode->location, currNode2->location, (uint8)i);
+                        Js::OpCode::SetConcatStrMultiItem2, pnode->location, currNode->location, currNode2->location, (uint8_t)i);
                     i += 2;
                 } while (concatOpnds.Count() > 1);
 
@@ -10372,7 +10372,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                     Emit(currNode, byteCodeGenerator, funcInfo, false);
                     funcInfo->ReleaseLoc(currNode);
                     byteCodeGenerator->Writer()->Reg2B1(
-                        Js::OpCode::SetConcatStrMultiItem, pnode->location, currNode->location, (uint8)i);
+                        Js::OpCode::SetConcatStrMultiItem, pnode->location, currNode->location, (uint8_t)i);
                     i++;
                 }
 

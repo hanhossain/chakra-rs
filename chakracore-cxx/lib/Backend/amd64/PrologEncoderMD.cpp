@@ -5,7 +5,7 @@
 #include "Backend.h"
 #include "PrologEncoderMD.h"
 
-unsigned __int8 PrologEncoderMD::GetRequiredNodeCountForAlloca(size_t size)
+uint8_t PrologEncoderMD::GetRequiredNodeCountForAlloca(size_t size)
 {
     Assert(size);
     Assert(size % 8 == 0);
@@ -18,7 +18,7 @@ unsigned __int8 PrologEncoderMD::GetRequiredNodeCountForAlloca(size_t size)
         return 3;
 }
 
-unsigned __int8 PrologEncoderMD::GetOp(IR::Instr *instr)
+uint8_t PrologEncoderMD::GetOp(IR::Instr *instr)
 {
     switch (instr->m_opcode)
     {
@@ -59,19 +59,19 @@ unsigned __int8 PrologEncoderMD::GetOp(IR::Instr *instr)
     return UWOP_IGNORE;
 }
 
-unsigned __int8 PrologEncoderMD::GetNonVolRegToSave(IR::Instr *instr)
+uint8_t PrologEncoderMD::GetNonVolRegToSave(IR::Instr *instr)
 {
     Assert(instr->m_opcode == Js::OpCode::PUSH);
     return (instr->GetSrc1()->AsRegOpnd()->GetReg() - 1) & 0xFF;
 }
 
-unsigned __int8 PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, unsigned __int16 *scaledOffset)
+uint8_t PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, unsigned __int16 *scaledOffset)
 {
     Assert(scaledOffset);
     Assert(instr->m_opcode == Js::OpCode::MOVAPD || instr->m_opcode == Js::OpCode::MOVAPS);
     Assert(instr->GetDst() && instr->GetDst()->IsIndirOpnd());
 
-    unsigned __int8 reg = ((instr->GetSrc1()->AsRegOpnd()->GetReg() - FIRST_XMM_REG) & 0xFF);
+    uint8_t reg = ((instr->GetSrc1()->AsRegOpnd()->GetReg() - FIRST_XMM_REG) & 0xFF);
     unsigned __int32 offsetFromInstr = instr->GetDst()->AsIndirOpnd()->GetOffset();
 
     // The offset in the instruction is relative to the stack pointer before the saved reg size and stack args size were
@@ -108,7 +108,7 @@ size_t PrologEncoderMD::GetAllocaSize(IR::Instr *instr)
     return instr->GetSrc2()->AsIntConstOpnd()->GetValue();
 }
 
-unsigned __int8 PrologEncoderMD::GetFPReg()
+uint8_t PrologEncoderMD::GetFPReg()
 {
     return RegRBP - 1;
 }

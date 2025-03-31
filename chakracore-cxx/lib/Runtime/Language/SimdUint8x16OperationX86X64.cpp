@@ -10,14 +10,14 @@
 namespace Js
 {
     // SIMD.UInt8x16 operation wrappers that cover instrinsics for x86/x64 system
-    SIMDValue SIMDUint8x16Operation::OpUint8x16(uint8 values[])
+    SIMDValue SIMDUint8x16Operation::OpUint8x16(uint8_t values[])
     {
         X86SIMDValue x86Result;
         // Sets the 16 signed 8-bit integer values, note in revised order: starts with x15 below
-        x86Result.m128i_value = _mm_set_epi8((int8)values[15], (int8)values[14], (int8)values[13], (int8)values[12],
-                                             (int8)values[11], (int8)values[10], (int8)values[9], (int8)values[8],
-                                             (int8)values[7], (int8)values[6], (int8)values[5], (int8)values[4],
-                                             (int8)values[3], (int8)values[2], (int8)values[1], (int8)values[0]);
+        x86Result.m128i_value = _mm_set_epi8((int8_t)values[15], (int8_t)values[14], (int8_t)values[13], (int8_t)values[12],
+                                             (int8_t)values[11], (int8_t)values[10], (int8_t)values[9], (int8_t)values[8],
+                                             (int8_t)values[7], (int8_t)values[6], (int8_t)values[5], (int8_t)values[4],
+                                             (int8_t)values[3], (int8_t)values[2], (int8_t)values[1], (int8_t)values[0]);
 
         return X86SIMDValue::ToSIMDValue(x86Result);
     }

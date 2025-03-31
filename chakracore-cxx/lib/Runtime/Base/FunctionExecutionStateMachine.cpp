@@ -330,7 +330,7 @@ namespace Js
         Assert(owner->GetDefaultFunctionEntryPointInfo() == owner->GetSimpleJitEntryPointInfo());
 
         // Simple JIT counts down and transitions on overflow
-        const uint8 limit = static_cast<uint8>(min(0xffui16, simpleJitLimit));
+        const uint8_t limit = static_cast<uint8_t>(min(0xffui16, simpleJitLimit));
         owner->GetSimpleJitEntryPointInfo()->callsCount = limit == 0 ? 0 : limit - 1;
     }
 
@@ -579,7 +579,7 @@ namespace Js
                     if (newState != ExecutionState::Interpreter)
                     {
                         // Most states simply advance to the next state
-                        newState = static_cast<ExecutionState>(static_cast<uint8>(newState) + 1);
+                        newState = static_cast<ExecutionState>(static_cast<uint8_t>(newState) + 1);
                     }
                     else
                     {
@@ -714,7 +714,7 @@ namespace Js
 
         SetExecutionState(ExecutionState::SimpleJit);
 
-        const uint16 simpleJitNewLimit = static_cast<uint8>(Configuration::Global.flags.SimpleJitLimit);
+        const uint16 simpleJitNewLimit = static_cast<uint8_t>(Configuration::Global.flags.SimpleJitLimit);
         if (simpleJitLimit < simpleJitNewLimit)
         {
             fullJitThreshold += simpleJitNewLimit - simpleJitLimit;

@@ -158,7 +158,7 @@ namespace Js
 
         bool GetPropertyBuiltIns(PropertyId propertyId, Var* value, ScriptContext* scriptContext);
         static const char stringToIntegerMap[128];
-        static const uint8 maxUintStringLengthTable[37];
+        static const uint8_t maxUintStringLengthTable[37];
     protected:
         JavascriptString(StaticType * type);
         JavascriptString(StaticType * type, charcount_t charLength, const char16* szValue);

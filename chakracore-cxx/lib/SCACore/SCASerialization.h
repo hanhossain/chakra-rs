@@ -244,15 +244,15 @@ namespace Js
             return TypedArrayType::Create(arrayBuffer, byteOffset, length, lib);
         }
     };
-    template<> struct TypedArrayTrace<int8>: TypedArrayTraceBase<int8>
+    template<> struct TypedArrayTrace<int8_t>: TypedArrayTraceBase<int8_t>
     {
         static SCATypeId GetSCATypeId() { return SCA_Int8Array; }
     };
-    template<> struct TypedArrayTrace<uint8, false>: TypedArrayTraceBase<uint8, false>
+    template<> struct TypedArrayTrace<uint8_t, false>: TypedArrayTraceBase<uint8_t, false>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint8Array; }
     };
-    template<> struct TypedArrayTrace<uint8, true>: TypedArrayTraceBase<uint8, true>
+    template<> struct TypedArrayTrace<uint8_t, true>: TypedArrayTraceBase<uint8_t, true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint8ClampedArray; }
     };
@@ -280,15 +280,15 @@ namespace Js
     {
         static SCATypeId GetSCATypeId() { return SCA_Float64Array; }
     };
-    template<> struct TypedArrayTrace<int8, false,true>: TypedArrayTraceBase<int8,false,true>
+    template<> struct TypedArrayTrace<int8_t, false,true>: TypedArrayTraceBase<int8_t,false,true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Int8Array; }
     };
-    template<> struct TypedArrayTrace<uint8, false,true>: TypedArrayTraceBase<uint8, false,true>
+    template<> struct TypedArrayTrace<uint8_t, false,true>: TypedArrayTraceBase<uint8_t, false,true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint8Array; }
     };
-    template<> struct TypedArrayTrace<uint8, true,true>: TypedArrayTraceBase<uint8, true,true>
+    template<> struct TypedArrayTrace<uint8_t, true,true>: TypedArrayTraceBase<uint8_t, true,true>
     {
         static SCATypeId GetSCATypeId() { return SCA_Uint8ClampedArray; }
     };

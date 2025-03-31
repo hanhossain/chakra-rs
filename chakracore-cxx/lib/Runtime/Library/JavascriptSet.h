@@ -15,7 +15,7 @@ namespace Js
         typedef JsUtil::BaseDictionary<Var, SetDataNode*, Recycler> SimpleVarDataSet;
 
     private:
-        enum class SetKind : uint8
+        enum class SetKind : uint8_t
         {
             // An EmptySet is a set containing no elements
             EmptySet,

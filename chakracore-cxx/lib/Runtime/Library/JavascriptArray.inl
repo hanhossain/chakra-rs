@@ -1819,7 +1819,7 @@ SECOND_PASS:
     void JavascriptArray::EnsureCalculationOfAllocationBuckets()
     {
         uint temp;
-        for (uint8 i = 0;i < ArrayType::AllocationBucketsCount;i++)
+        for (uint8_t i = 0;i < ArrayType::AllocationBucketsCount;i++)
         {
             ArrayType::allocationBuckets[i][AllocationSizeIndex] = (uint)DetermineAllocationSize<ArrayType, 0>(ArrayType::allocationBuckets[i][AllocationBucketIndex], nullptr, &temp);
             ArrayType::allocationBuckets[i][MissingElementsCountIndex] = temp;
@@ -1832,13 +1832,13 @@ SECOND_PASS:
         size_t *const allocationPlusSizeRef,
         uint *const alignedInlineElementSlotsRef)
     {
-        uint8 bucketsCount = ArrayType::AllocationBucketsCount;
+        uint8_t bucketsCount = ArrayType::AllocationBucketsCount;
 
         EnsureCalculationOfAllocationBuckets<ArrayType>();
 
         if (inlineElementSlots >= 0 && inlineElementSlots <= ArrayType::allocationBuckets[bucketsCount - 1][AllocationBucketIndex])
         {
-            for (uint8 i = 0;i < bucketsCount;i++)
+            for (uint8_t i = 0;i < bucketsCount;i++)
             {
                 uint elementsCountToInitialize = ArrayType::allocationBuckets[i][MissingElementsCountIndex];
                 uint allocationSize = ArrayType::allocationBuckets[i][AllocationSizeIndex];

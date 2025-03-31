@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
 
-static const uint8 RegAttribs[RegNumCount] =
+static const uint8_t RegAttribs[RegNumCount] =
 {
 #define REGDAT(Name, ListName, Encode, Type, Attribs) Attribs,
 #include "RegList.h"

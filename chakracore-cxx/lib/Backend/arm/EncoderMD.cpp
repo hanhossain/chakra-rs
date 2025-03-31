@@ -228,7 +228,7 @@ InstructionType EncoderMD::CanonicalizeMov(IR::Instr * instr)
 {
     // 3 possibilities:
     // 1. MOV (T1):
-    // - uint8 to low reg
+    // - uint8_t to low reg
     // - any reg to reg
     // 2. MOVW (T2):
     // - uint16 to reg
@@ -248,7 +248,7 @@ InstructionType EncoderMD::CanonicalizeMov(IR::Instr * instr)
     if (IS_LOWREG(dstOpnd->GetReg()) &&
         IS_CONST_UINT8(immed))
     {
-        // uint8 -> low reg
+        // uint8_t -> low reg
         return InstructionType::Thumb;
     }
 
@@ -357,7 +357,7 @@ bool EncoderMD::IsWideMemInstr(IR::Opnd *memOpnd, IR::RegOpnd *regOpnd)
         uint32 shiftBits = Math::Log2(size);
         if (baseReg == RegSP)
         {
-            // LDR/STR rn, [SP + uint8:00]
+            // LDR/STR rn, [SP + uint8_t:00]
             return !IS_CONST_UINT8(offset >> shiftBits);
         }
         else
@@ -387,7 +387,7 @@ InstructionType EncoderMD::CanonicalizeAdd(IR::Instr * instr)
     {
         immed = src2->GetImmediateValueAsInt32(instr->m_func);
 
-        // Check for rm = ADD SP, uint8:00
+        // Check for rm = ADD SP, uint8_t:00
         if (IS_LOWREG(instr->GetDst()->AsRegOpnd()->GetReg()))
         {
             if (instr->GetSrc1()->AsRegOpnd()->GetReg() == RegSP)
@@ -465,7 +465,7 @@ bool EncoderMD::IsWideAddSub(IR::Instr * instr)
     {
         // low1 = op low2, low3       or
         // low1 = op low2, uint3      or
-        // low1 = op low1, uint8
+        // low1 = op low1, uint8_t
         if (!IS_LOWREG(dst->GetReg()) || !IS_LOWREG(src1->GetReg()))
         {
             return true;
@@ -528,7 +528,7 @@ InstructionType EncoderMD::CanonicalizeLea(IR::Instr * instr)
 InstructionType EncoderMD::CmpEncodeType(IR::Instr * instr)
 {
     // CMP:
-    // - low reg, uint8
+    // - low reg, uint8_t
     // - any reg, any reg
     IR::Opnd *src2 = instr->GetSrc2();
     if (src2->IsRegOpnd())
@@ -550,7 +550,7 @@ InstructionType EncoderMD::CmnEncodeType(IR::Instr * instr)
 {
     // CMN:
     // - low reg, low reg
-    // - any reg, uint8
+    // - any reg, uint8_t
     // - any reg, any reg
     IR::Opnd *src2 = instr->GetSrc2();
 
@@ -563,7 +563,7 @@ InstructionType EncoderMD::CmnEncodeType(IR::Instr * instr)
         }
     }
 
-    // any reg, uint8
+    // any reg, uint8_t
     // any reg, any reg
     return InstructionType::Thumb2;
 }

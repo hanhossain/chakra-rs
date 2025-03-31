@@ -93,7 +93,7 @@ Js::Var StringToVar(const char* src, uint length, void* user_data)
     return JavascriptString::NewCopyBuffer(buf, bufSize, ctx->scriptContext);
 }
 
-Js::Var CreateBuffer(const uint8* buf, uint size, void* user_data)
+Js::Var CreateBuffer(const uint8_t* buf, uint size, void* user_data)
 {
     Context* ctx = (Context*)user_data;
     ArrayBuffer* arrayBuffer = ctx->scriptContext->GetLibrary()->CreateArrayBuffer(size);

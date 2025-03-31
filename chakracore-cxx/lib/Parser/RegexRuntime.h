@@ -21,7 +21,7 @@ namespace UnifiedRegex
     class AssertionStack;
     class OctoquadMatcher;
 
-    enum class ChompMode : uint8
+    enum class ChompMode : uint8_t
     {
         Star,   // min = 0, max = infinite
         Plus    // min = 1, max = infinite
@@ -68,7 +68,7 @@ namespace UnifiedRegex
         Field(RegexFlags) flags;
 
     private:
-        enum class ProgramTag : uint8
+        enum class ProgramTag : uint8_t
         {
             InstructionsTag,
             BOIInstructionsTag,
@@ -85,7 +85,7 @@ namespace UnifiedRegex
         struct Instructions
         {
             // Instruction array, in run-time allocator, owned by program, never null
-            Field(uint8*) insts;
+            Field(uint8_t*) insts;
             Field(CharCount) instsLen; // in bytes
             // Literals
             // In run-time allocator, owned by program, may be 0
@@ -101,31 +101,31 @@ namespace UnifiedRegex
         struct SingleChar
         {
             Field(Char) c;
-            Field(uint8) padding[sizeof(Instructions) - sizeof(Char)];
+            Field(uint8_t) padding[sizeof(Instructions) - sizeof(Char)];
         };
 
         struct Octoquad
         {
             Field(OctoquadMatcher*) matcher;
-            Field(uint8) padding[sizeof(Instructions) - sizeof(void*)];
+            Field(uint8_t) padding[sizeof(Instructions) - sizeof(void*)];
         };
 
         struct BOILiteral2
         {
             Field(uint32_t) literal;
-            Field(uint8) padding[sizeof(Instructions) - sizeof(uint32_t)];
+            Field(uint8_t) padding[sizeof(Instructions) - sizeof(uint32_t)];
         };
 
         struct LeadingTrailingSpaces
         {
             Field(CharCount) beginMinMatch;
             Field(CharCount) endMinMatch;
-            Field(uint8) padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
+            Field(uint8_t) padding[sizeof(Instructions) - (sizeof(CharCount) * 2)];
         };
 
         struct Other
         {
-            Field(uint8) padding[sizeof(Instructions)];
+            Field(uint8_t) padding[sizeof(Instructions)];
         };
 
         union RepType
@@ -665,12 +665,12 @@ namespace UnifiedRegex
 #endif
     };
 
-    template <uint8 n>
+    template <uint8_t n>
     struct SwitchMixin
     {
-        static constexpr uint8 MaxCases = n;
+        static constexpr uint8_t MaxCases = n;
 
-        uint8 numCases;
+        uint8_t numCases;
         // numCases cases, in increasing character order
         SwitchCase cases[MaxCases];
 
@@ -678,7 +678,7 @@ namespace UnifiedRegex
         inline SwitchMixin() : numCases(0)
         {
 #if DBG
-            for (uint8 i = 0; i < MaxCases; i++)
+            for (uint8_t i = 0; i < MaxCases; i++)
             {
                 cases[i].c = (char16)-1;
                 cases[i].targetLabel = (Label)-1;
@@ -702,7 +702,7 @@ namespace UnifiedRegex
 
     struct Inst : protected Chars<char16>
     {
-        enum class InstTag : uint8
+        enum class InstTag : uint8_t
         {
 #define M(TagName) TagName,
 #define MTemplate(TagName, ...) M(TagName)
@@ -738,7 +738,7 @@ namespace UnifiedRegex
 #define INST_BODY_PRINT
 #endif
 
-#define REGEX_INST_EXEC_PARAMETERS Matcher& matcher, const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount& inputOffset, CharCount &nextSyncInputOffset, const uint8*& instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, bool firstIteration
+#define REGEX_INST_EXEC_PARAMETERS Matcher& matcher, const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount& inputOffset, CharCount &nextSyncInputOffset, const uint8_t*& instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, bool firstIteration
 #define INST_BODY bool Exec(REGEX_INST_EXEC_PARAMETERS) const; \
                   INST_BODY_PRINT
 
@@ -1579,7 +1579,7 @@ namespace UnifiedRegex
 
     struct Cont : protected Chars<char16>
     {
-        enum class ContTag : uint8
+        enum class ContTag : uint8_t
         {
 #define M(O) O,
 #include "RegexContcodes.h"
@@ -1601,7 +1601,7 @@ namespace UnifiedRegex
 #define CONT_PRINT
 #endif
 
-#define REGEX_CONT_EXEC_PARAMETERS Matcher& matcher, const Char* const input, CharCount& inputOffset, const uint8*& instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks
+#define REGEX_CONT_EXEC_PARAMETERS Matcher& matcher, const Char* const input, CharCount& inputOffset, const uint8_t*& instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks
 #define CONT_BODY bool Exec(REGEX_CONT_EXEC_PARAMETERS); \
                   CONT_PRINT
 
@@ -1861,7 +1861,7 @@ namespace UnifiedRegex
         }
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-        void Print(DebugWriter* w, const Char* const input, const CharCount inputLength, CharCount inputOffset, const uint8* instPointer, ContStack &contStack, AssertionStack &assertionStack) const;
+        void Print(DebugWriter* w, const Char* const input, const CharCount inputLength, CharCount inputOffset, const uint8_t* instPointer, ContStack &contStack, AssertionStack &assertionStack) const;
 #endif
 
     private:
@@ -1881,25 +1881,25 @@ namespace UnifiedRegex
 
     private:
         // Try backtracking, or return true if should stop. There could be a match using a later starting point.
-        bool Fail(const Char* const input, CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks);
-        bool RunContStack(const Char* const input, CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks);
+        bool Fail(const Char* const input, CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks);
+        bool RunContStack(const Char* const input, CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks);
 
         // As above, but control whether to try backtracking or later matches
-        inline bool HardFail(const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, HardFailMode mode);
+        inline bool HardFail(const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, HardFailMode mode);
 
         inline void Run(const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount &nextSyncInputOffset, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, bool firstIteration);
         inline bool MatchHere(const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount &nextSyncInputOffset, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, bool firstIteration);
 
         // Return true if assertion succeeded
-        inline bool PopAssertion(CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, bool isFailed);
+        inline bool PopAssertion(CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, bool isFailed);
 
-        inline Label InstPointerToLabel(const uint8* inst) const
+        inline Label InstPointerToLabel(const uint8_t* inst) const
         {
             Assert(inst >= program->rep.insts.insts && inst < program->rep.insts.insts + program->rep.insts.instsLen);
-            return (Label)((uint8*)inst - program->rep.insts.insts);
+            return (Label)((uint8_t*)inst - program->rep.insts.insts);
         }
 
-        inline uint8* LabelToInstPointer(Label label) const
+        inline uint8_t* LabelToInstPointer(Label label) const
         {
             Assert(label < program->rep.insts.instsLen);
             return program->rep.insts.insts + label;

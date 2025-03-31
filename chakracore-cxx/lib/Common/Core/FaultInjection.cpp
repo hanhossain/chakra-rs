@@ -80,12 +80,12 @@ namespace Js
         return str;
     }
 
-    static int8 const* hexTable = []()->int8*{
-        static int8 hex[256] = { 0 };
+    static int8_t const* hexTable = []()->int8_t*{
+        static int8_t hex[256] = { 0 };
         memset(hex, 0xff, 256);
-        for (int8 i = '0'; i <= '9'; i++) hex[i] = i - '0';
-        for (int8 i = 'a'; i <= 'f'; i++) hex[i] = i - 'a' + 10;
-        for (int8 i = 'A'; i <= 'F'; i++) hex[i] = i - 'A' + 10;
+        for (int8_t i = '0'; i <= '9'; i++) hex[i] = i - '0';
+        for (int8_t i = 'a'; i <= 'f'; i++) hex[i] = i - 'a' + 10;
+        for (int8_t i = 'A'; i <= 'F'; i++) hex[i] = i - 'A' + 10;
         return hex;
     }();
 

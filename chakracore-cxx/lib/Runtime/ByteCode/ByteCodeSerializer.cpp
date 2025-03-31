@@ -1541,7 +1541,7 @@ public:
         case TypeIds_Integer:
         {
             int32 value = TaggedInt::ToInt32(var);
-            if ((int8)value == value)
+            if ((int8_t)value == value)
             {
                 auto size = PrependByte(builder, _u("Integer Constant"), ctInt8);
                 return size + PrependByte(builder, _u("Integer Constant Value"), (byte)value);
@@ -3387,7 +3387,7 @@ public:
                 }
             case ctInt8:
                 {
-                    int8 value;
+                    int8_t value;
                     current = ReadByte(current, (byte *)&value);
                     function->RecordIntConstant(reg, value);
                     break;
@@ -4728,7 +4728,7 @@ public:
                     }
                 case ctInt8:
                     {
-                        int8 value;
+                        int8_t value;
                         current = ReadByte(current, (byte *)&value);
                         result->elements[index] = Js::TaggedInt::ToVarUnchecked(value);
                         break;

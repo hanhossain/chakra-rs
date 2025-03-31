@@ -243,9 +243,9 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     switch (viewType)
     {
     case ArrayBufferView::ViewType::TYPE_INT8_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_INT8: Output::Print(_u(".int8 = %d\n"), *(int8*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT8: Output::Print(_u(".int8_t = %d\n"), *(int8_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT8_TO_INT64:
-    case ArrayBufferView::ViewType::TYPE_UINT8: Output::Print(_u(".uint8 = %u\n"), *(uint8*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_UINT8: Output::Print(_u(".uint8_t = %u\n"), *(uint8_t*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_INT16_TO_INT64:
     case ArrayBufferView::ViewType::TYPE_INT16: Output::Print(_u(".int16 = %d\n"), *(int16*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_UINT16_TO_INT64:

@@ -9,7 +9,7 @@
 
 namespace Js
 {
-    SIMDValue SIMDUint8x16Operation::OpUint8x16(uint8 values[])
+    SIMDValue SIMDUint8x16Operation::OpUint8x16(uint8_t values[])
     {
         SIMDValue result;
         for (uint i = 0; i < 16; i++)
@@ -103,7 +103,7 @@ namespace Js
             uint16 a = (uint16)aValue.u8[idx];
             uint16 b = (uint16)bValue.u8[idx];
 
-            result.u8[idx] = ((a + b) > MAXUINT8) ? MAXUINT8 : (uint8)(a + b);
+            result.u8[idx] = ((a + b) > MAXUINT8) ? MAXUINT8 : (uint8_t)(a + b);
         }
         return result;
     }
@@ -117,7 +117,7 @@ namespace Js
             int a = (int)aValue.u8[idx];
             int b = (int)bValue.u8[idx];
 
-            result.u8[idx] = ((a - b) < 0) ? 0 : (uint8)(a - b);
+            result.u8[idx] = ((a - b) < 0) ? 0 : (uint8_t)(a - b);
         }
         return result;
     }

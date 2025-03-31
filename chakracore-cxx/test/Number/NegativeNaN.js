@@ -24,8 +24,8 @@ function f(){
     function numberToRawBits(v) {
         var isLittleEndian = new Uint8Array(new Uint16Array([1]).buffer)[0] === 1;
         var reduce = Array.prototype[isLittleEndian ? 'reduceRight' : 'reduce'];
-        var uint8 = new Uint8Array(new Float64Array([v]).buffer);
-        return reduce.call(uint8, (a, v) => a + (v < 16 ? "0" : "") + v.toString(16), "");
+        var uint8_t = new Uint8Array(new Float64Array([v]).buffer);
+        return reduce.call(uint8_t, (a, v) => a + (v < 16 ? "0" : "") + v.toString(16), "");
     }
     
     console.log(numberToRawBits(NaN));

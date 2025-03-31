@@ -152,7 +152,7 @@ private:
                             uint slotIndex);
     void                BuildReg2B1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot srcRegSlot, byte index);
     void                BuildReg3B1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
-                            Js::RegSlot src2RegSlot, uint8 index);
+                            Js::RegSlot src2RegSlot, uint8_t index);
     void                BuildReg5(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
                             Js::RegSlot src2RegSlot, Js::RegSlot src3RegSlot, Js::RegSlot src4RegSlot);
     void                BuildUnsigned1(Js::OpCode newOpcode, uint32 offset, uint32 C1);

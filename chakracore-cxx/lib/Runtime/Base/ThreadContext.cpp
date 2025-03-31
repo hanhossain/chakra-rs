@@ -303,7 +303,7 @@ ThreadContext::GetThreadStackLimitAddr() const
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)
 intptr_t
-ThreadContext::GetSimdTempAreaAddr(uint8 tempIndex) const
+ThreadContext::GetSimdTempAreaAddr(uint8_t tempIndex) const
 {
     return (intptr_t)&X86_TEMP_SIMD[tempIndex];
 }
@@ -4374,7 +4374,7 @@ void ThreadContext::SetAutoProxyName(LPCWSTR objectName)
 // Regex helpers
 //
 
-UnifiedRegex::StandardChars<uint8>* ThreadContext::GetStandardChars(__inout_opt uint8* dummy)
+UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(__inout_opt uint8_t* dummy)
 {
     if (standardUTF8Chars == 0)
     {

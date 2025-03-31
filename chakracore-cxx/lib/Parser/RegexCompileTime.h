@@ -606,14 +606,14 @@ namespace UnifiedRegex
         RegexStats* stats;
 #endif
         Program* program;
-        uint8* instBuf;     // in compile-time allocator, owned by compiler
+        uint8_t* instBuf;     // in compile-time allocator, owned by compiler
         CharCount instLen;  // size of instBuf in bytes
         CharCount instNext; // offset to emit next instruction into
         int nextLoopId;
 
     private:
 
-        uint8* Emit(size_t size);
+        uint8_t* Emit(size_t size);
 
         template <typename T>
         T* Emit();
@@ -623,8 +623,8 @@ namespace UnifiedRegex
         // NOTE: pLabel is declared unaligned because Inst structs are unaligned in the inst buffer (thanks to #pragma pack(1)).
         inline Label GetFixup(unaligned Label* pLabel)
         {
-            Assert((uint8*)pLabel >= instBuf && (uint8*)pLabel < instBuf + instNext);
-            return (Label)((uint8*)pLabel - instBuf);
+            Assert((uint8_t*)pLabel >= instBuf && (uint8_t*)pLabel < instBuf + instNext);
+            return (Label)((uint8_t*)pLabel - instBuf);
         }
 
         inline void DoFixup(Label fixup, Label label)

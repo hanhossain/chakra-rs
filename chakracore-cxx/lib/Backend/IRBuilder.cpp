@@ -2583,7 +2583,7 @@ IRBuilder::BuildReg3B1(Js::OpCode newOpcode, uint32 offset)
 
 void
 IRBuilder::BuildReg3B1(Js::OpCode newOpcode, uint32 offset, Js::RegSlot dstRegSlot, Js::RegSlot src1RegSlot,
-                    Js::RegSlot src2RegSlot, uint8 index)
+                    Js::RegSlot src2RegSlot, uint8_t index)
 {
     Assert(OpCodeAttr::HasMultiSizeLayout(newOpcode));
 

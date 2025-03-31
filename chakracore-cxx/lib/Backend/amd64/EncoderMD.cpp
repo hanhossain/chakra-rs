@@ -445,7 +445,7 @@ EncoderMD::EmitConst(size_t val, int size, bool allowImm64 /* = false */)
         return;
 
     case 1:
-        *(uint8*)m_pc = (char)val;
+        *(uint8_t*)m_pc = (char)val;
         break;
 
     case 2:
@@ -1226,14 +1226,14 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                 if (opr1->IsRegOpnd() && opr1->AsRegOpnd()->GetReg() == RegRAX
                     && opr2->IsRegOpnd())
                 {
-                    uint8 reg = this->GetRegEncode(opr2->AsRegOpnd());
+                    uint8_t reg = this->GetRegEncode(opr2->AsRegOpnd());
                     rexByte |= this->GetRexByte(REXR, opr2);
                     opcodeByte |= reg;
                 }
                 else if (opr2->IsRegOpnd() && opr2->AsRegOpnd()->GetReg() == RegRAX
                     && opr1->IsRegOpnd())
                 {
-                    uint8 reg = this->GetRegEncode(opr1->AsRegOpnd());
+                    uint8_t reg = this->GetRegEncode(opr1->AsRegOpnd());
                     rexByte |= this->GetRexByte(REXB, opr1);
                     opcodeByte |= reg;
                 }

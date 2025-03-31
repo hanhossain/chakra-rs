@@ -3915,9 +3915,9 @@ namespace Js
             Assert(entryPointInfo->GetJitMode() == ExecutionMode::FullJit);
             Assert(isAsmJs || GetExecutionMode() == ExecutionMode::FullJit);
             entryPointInfo->callsCount =
-                static_cast<uint8>(
+                static_cast<uint8_t>(
                     min(
-                        static_cast<uint>(static_cast<uint8>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
+                        static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
                             (Js::FunctionEntryPointInfo::GetDecrCallCountPerBailout() - 1),
                         0xffu));
         }
@@ -3980,9 +3980,9 @@ namespace Js
         entryPointInfo->jsMethod = entryPoint;
 
         ((Js::LoopEntryPointInfo*)entryPointInfo)->totalJittedLoopIterations =
-            static_cast<uint8>(
+            static_cast<uint8_t>(
                 min(
-                    static_cast<uint>(static_cast<uint8>(CONFIG_FLAG(MinBailOutsBeforeRejitForLoops))) *
+                    static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejitForLoops))) *
                     (Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() - 1),
                     0xffu));
 
@@ -7013,7 +7013,7 @@ namespace Js
         Assert(GetDefaultFunctionEntryPointInfo() == GetSimpleJitEntryPointInfo());
 
         // Simple JIT counts down and transitions on overflow
-        const uint8 limit = static_cast<uint8>(min(0xffui16, simpleJitLimit));
+        const uint8_t limit = static_cast<uint8_t>(min(0xffui16, simpleJitLimit));
         GetSimpleJitEntryPointInfo()->callsCount = limit == 0 ? 0 : limit - 1;
     }
 
@@ -8827,7 +8827,7 @@ namespace Js
             if (this->guard->IsPoly())
             {
                 JitPolyEquivalentTypeGuard * polyGuard = this->guard->AsPolyTypeCheckGuard();
-                for (uint8 i = 0; i < polyGuard->GetSize(); i++)
+                for (uint8_t i = 0; i < polyGuard->GetSize(); i++)
                 {
                     intptr_t value = polyGuard->GetPolyValue(i);
                     if (value != PropertyGuard::GuardValue::Uninitialized && value != PropertyGuard::GuardValue::Invalidated_DuringSweep)

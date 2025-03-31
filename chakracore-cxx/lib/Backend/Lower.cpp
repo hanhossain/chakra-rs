@@ -2326,7 +2326,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             // LoopStart:
             //   entryPoint = GetScheduledEntryPoint(framePtr, loopNum)
             // LoopBodyStart:
-            //   uint8 dobailout;
+            //   uint8_t dobailout;
             //   if (entryPoint) {
             //     dobailout = IsLoopCodeGenDone(entryPoint)
             //   } else {
@@ -3937,11 +3937,11 @@ Lowerer::GenerateArrayAlloc(IR::Instr *instr, IR::Opnd * arrayLenOpnd, Js::Array
 
     IR::LabelInstr * doneCalculatingAllocSize = IR::LabelInstr::New(Js::OpCode::Label, func);
     IR::LabelInstr * skipToNextBucket = nullptr;
-    uint8 bucketsCount = ArrayType::AllocationBucketsCount;
+    uint8_t bucketsCount = ArrayType::AllocationBucketsCount;
 
     Js::JavascriptArray::EnsureCalculationOfAllocationBuckets<ArrayType>();
 
-    for (uint8 i = 0;i < bucketsCount;i++)
+    for (uint8_t i = 0;i < bucketsCount;i++)
     {
         uint elementsCountToInitialize = ArrayType::allocationBuckets[i][Js::JavascriptArray::MissingElementsCountIndex];
         uint allocationSize = ArrayType::allocationBuckets[i][Js::JavascriptArray::AllocationSizeIndex];
@@ -4149,7 +4149,7 @@ Lowerer::GenerateProfiledNewScObjArrayFastPath(IR::Instr *instr, Js::ArrayCallSi
     uint missingItemIndex = 0;
     uint maxAllocationSize = allocationBuckets[allocationBucketsCount - 1][Js::JavascriptArray::AllocationSizeIndex];
 
-    for (uint8 i = 0;i < allocationBucketsCount;i++)
+    for (uint8_t i = 0;i < allocationBucketsCount;i++)
     {
         missingItemCount = allocationBuckets[i][Js::JavascriptArray::MissingElementsCountIndex];
 
@@ -12584,7 +12584,7 @@ Lowerer::LowerBailOnNotSpreadable(IR::Instr *instr)
     {
         InsertTestBranch(
             IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, func),
-            IR::IntConstOpnd::New(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, func, true),
+            IR::IntConstOpnd::New(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, func, true),
             Js::OpCode::BrEq_A,
             bailOutLabel,
             instr);
@@ -13274,11 +13274,11 @@ void Lowerer::LowerBailOnMissingValue(IR::Instr *const instr, IR::RegOpnd *const
     // jnz  $skipBailOut
     const IR::AutoReuseOpnd autoReuseArrayOpnd(arrayOpnd, func);
     CompileAssert(
-        static_cast<Js::DynamicObjectFlags>(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
+        static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
         Js::DynamicObjectFlags::HasNoMissingValues);
     InsertTestBranch(
         IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, func),
-        IR::IntConstOpnd::New(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, func, true),
+        IR::IntConstOpnd::New(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, func, true),
         Js::OpCode::BrNeq_A,
         skipBailOutLabel,
         instr);
@@ -15111,27 +15111,27 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::RegExp                   */ static_cast<uint8_t>(-1),
     /* ObjectType::ObjectWithArray          */ LowererMD::GetDefaultIndirScale(),
     /* ObjectType::Array                    */ LowererMD::GetDefaultIndirScale(),
-    /* ObjectType::Int8Array                */ 0, // log2(sizeof(int8))
-    /* ObjectType::Uint8Array               */ 0, // log2(sizeof(uint8))
-    /* ObjectType::Uint8ClampedArray        */ 0, // log2(sizeof(uint8))
+    /* ObjectType::Int8Array                */ 0, // log2(sizeof(int8_t))
+    /* ObjectType::Uint8Array               */ 0, // log2(sizeof(uint8_t))
+    /* ObjectType::Uint8ClampedArray        */ 0, // log2(sizeof(uint8_t))
     /* ObjectType::Int16Array               */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16Array              */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32Array               */ 2, // log2(sizeof(int32))
     /* ObjectType::Uint32Array              */ 2, // log2(sizeof(uint32))
     /* ObjectType::Float32Array             */ 2, // log2(sizeof(float))
     /* ObjectType::Float64Array             */ 3, // log2(sizeof(double))
-    /* ObjectType::Int8VirtualArray         */ 0, // log2(sizeof(int8))
-    /* ObjectType::Uint8VirtualArray        */ 0, // log2(sizeof(uint8))
-    /* ObjectType::Uint8ClampedVirtualArray */ 0, // log2(sizeof(uint8))
+    /* ObjectType::Int8VirtualArray         */ 0, // log2(sizeof(int8_t))
+    /* ObjectType::Uint8VirtualArray        */ 0, // log2(sizeof(uint8_t))
+    /* ObjectType::Uint8ClampedVirtualArray */ 0, // log2(sizeof(uint8_t))
     /* ObjectType::Int16VirtualArray        */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16VirtualArray       */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32VirtualArray        */ 2, // log2(sizeof(int32))
     /* ObjectType::Uint32VirtualArray       */ 2, // log2(sizeof(uint32))
     /* ObjectType::Float32VirtualArray      */ 2, // log2(sizeof(float))
     /* ObjectType::Float64VirtualArray      */ 3, // log2(sizeof(double))
-    /* ObjectType::Int8MixedArray           */ 0, // log2(sizeof(int8))
-    /* ObjectType::Uint8MixedArray          */ 0, // log2(sizeof(uint8))
-    /* ObjectType::Uint8ClampedMixedArray   */ 0, // log2(sizeof(uint8))
+    /* ObjectType::Int8MixedArray           */ 0, // log2(sizeof(int8_t))
+    /* ObjectType::Uint8MixedArray          */ 0, // log2(sizeof(uint8_t))
+    /* ObjectType::Uint8ClampedMixedArray   */ 0, // log2(sizeof(uint8_t))
     /* ObjectType::Int16MixedArray          */ 1, // log2(sizeof(int16))
     /* ObjectType::Uint16MixedArray         */ 1, // log2(sizeof(uint16))
     /* ObjectType::Int32MixedArray          */ 2, // log2(sizeof(int32))
@@ -15213,7 +15213,7 @@ uint8_t Lowerer::GetArrayIndirScale(const ValueType valueType)
     return IndirScales[static_cast<ValueType::TSize>(valueType.GetObjectType())];
 }
 
-int Lowerer::SimdGetElementCountFromBytes(ValueType arrValueType, uint8 dataWidth)
+int Lowerer::SimdGetElementCountFromBytes(ValueType arrValueType, uint8_t dataWidth)
 {
     Assert(dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
     Assert(arrValueType.IsTypedArray());
@@ -17356,13 +17356,13 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                         indexLessThanSizeLabel);
 
                     CompileAssert(
-                        static_cast<Js::DynamicObjectFlags>(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
+                        static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
                         Js::DynamicObjectFlags::HasNoMissingValues);
                     InsertAnd(
                         IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, m_func),
                         IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, m_func),
                         IR::IntConstOpnd::New(
-                            static_cast<uint8>(~Js::DynamicObjectFlags::HasNoMissingValues),
+                            static_cast<uint8_t>(~Js::DynamicObjectFlags::HasNoMissingValues),
                             TyUint8,
                             m_func,
                             true),
@@ -17441,13 +17441,13 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                 updateLengthLabel,
                 updateLengthLabel);
             CompileAssert(
-                static_cast<Js::DynamicObjectFlags>(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
+                static_cast<Js::DynamicObjectFlags>(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues)) ==
                 Js::DynamicObjectFlags::HasNoMissingValues);
             InsertAnd(
                 IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, m_func),
                 IR::IndirOpnd::New(arrayOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, m_func),
                 IR::IntConstOpnd::New(
-                    static_cast<uint8>(~Js::DynamicObjectFlags::HasNoMissingValues),
+                    static_cast<uint8_t>(~Js::DynamicObjectFlags::HasNoMissingValues),
                     TyUint8,
                     m_func,
                     true),
@@ -20905,7 +20905,7 @@ void Lowerer::GenerateFastArrayIsIn(IR::Instr * instr)
 
     InsertTestBranch(
         IR::IndirOpnd::New(src2RegOpnd, Js::JavascriptArray::GetOffsetOfArrayFlags(), TyUint8, m_func),
-        IR::IntConstOpnd::New(static_cast<uint8>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, m_func, true),
+        IR::IntConstOpnd::New(static_cast<uint8_t>(Js::DynamicObjectFlags::HasNoMissingValues), TyUint8, m_func, true),
         Js::OpCode::BrEq_A,
         helperLabel,
         instr);
@@ -26045,7 +26045,7 @@ Lowerer::LowerNewConcatStrMulti(IR::Instr * instr)
 {
     IR::IntConstOpnd * countOpnd = instr->UnlinkSrc1()->AsIntConstOpnd();
     IR::RegOpnd * dstOpnd = instr->UnlinkDst()->AsRegOpnd();
-    uint8 count = (uint8)countOpnd->GetValue();
+    uint8_t count = (uint8_t)countOpnd->GetValue();
 
     Assert(dstOpnd->GetValueType().IsString());
 
@@ -28911,7 +28911,7 @@ Lowerer::GenerateInitForInEnumeratorFastPath(IR::Instr * instr, Js::EnumeratorCa
         IR::IntConstOpnd::New(0, TyInt32, func), instr);
 
     InsertMove(GetForInEnumeratorFieldOpnd(forInEnumeratorOpnd, Js::ForInObjectEnumerator::GetOffsetOfEnumeratorFlags(), TyUint8),
-        IR::IntConstOpnd::New((uint8)(Js::EnumeratorFlags::UseCache | Js::EnumeratorFlags::SnapShotSemantics), TyUint8, func), instr);
+        IR::IntConstOpnd::New((uint8_t)(Js::EnumeratorFlags::UseCache | Js::EnumeratorFlags::SnapShotSemantics), TyUint8, func), instr);
     InsertMove(GetForInEnumeratorFieldOpnd(forInEnumeratorOpnd, Js::ForInObjectEnumerator::GetOffsetOfEnumeratorCachedData(), TyMachPtr),
         forInCacheDataOpnd, instr);
 

@@ -2956,7 +2956,7 @@ case_2:
     }
     logMaxUintTable();
     */
-    const uint8 JavascriptString::maxUintStringLengthTable[] =
+    const uint8_t JavascriptString::maxUintStringLengthTable[] =
         { 0,0,32,20,16,13,12,11,10,10,9,9,8,8,8,8,8,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6 };
 
     // NumberUtil::FIntRadStrToDbl and parts of GlobalObject::EntryParseInt were refactored into ToInteger

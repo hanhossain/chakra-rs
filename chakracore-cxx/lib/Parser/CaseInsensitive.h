@@ -10,7 +10,7 @@ namespace UnifiedRegex
         // the maximum size of an equivalence class is four.
         static const int EquivClassSize = 4;
 
-        enum class MappingSource : uint8
+        enum class MappingSource : uint8_t
         {
             UnicodeData,
             CaseFolding

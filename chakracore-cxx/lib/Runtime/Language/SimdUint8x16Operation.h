@@ -12,7 +12,7 @@ namespace Js {
     {
         // following are operation wrappers for SIMDUint8x16 general implementation
         // input and output are typically SIMDValue
-        static SIMDValue OpUint8x16(uint8 values[]);
+        static SIMDValue OpUint8x16(uint8_t values[]);
 
         //// Unary Ops
         static SIMDValue OpMin(const SIMDValue& aValue, const SIMDValue& bValue);

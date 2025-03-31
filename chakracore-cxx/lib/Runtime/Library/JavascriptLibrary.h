@@ -883,9 +883,9 @@ namespace Js
         template <typename TypeName, bool clamped>
         inline DynamicType* GetTypedArrayType(TypeName);
 
-        template<> inline DynamicType* GetTypedArrayType<int8,false>(int8) { return int8ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<uint8,false>(uint8) { return uint8ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<uint8,true>(uint8) { return uint8ClampedArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<int8_t,false>(int8_t) { return int8ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<uint8_t,false>(uint8_t) { return uint8ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<uint8_t,true>(uint8_t) { return uint8ClampedArrayType; };
         template<> inline DynamicType* GetTypedArrayType<int16,false>(int16) { return int16ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<uint16,false>(uint16) { return uint16ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<int32,false>(int32) { return int32ArrayType; };

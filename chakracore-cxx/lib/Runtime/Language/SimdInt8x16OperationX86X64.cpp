@@ -10,7 +10,7 @@
 namespace Js
 {
     // SIMD.Int8x16 operation wrappers that cover intrinsics for x86/x64 system
-    SIMDValue SIMDInt8x16Operation::OpInt8x16(int8 values[])
+    SIMDValue SIMDInt8x16Operation::OpInt8x16(int8_t values[])
     {
         X86SIMDValue x86Result;
         // Sets the 16 signed 8-bit integer values, note in revised order: starts with x15 below
@@ -22,7 +22,7 @@ namespace Js
         return X86SIMDValue::ToSIMDValue(x86Result);
     }
 
-    SIMDValue SIMDInt8x16Operation::OpSplat(int8 x)
+    SIMDValue SIMDInt8x16Operation::OpSplat(int8_t x)
     {
         X86SIMDValue x86Result;
         // set 16 signed 8-bit integers values to input value x

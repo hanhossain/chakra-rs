@@ -11,8 +11,8 @@
 #define IS_UINT32(x)  (!(((size_t)x) & ~((size_t)0xFFFFFFFF)))
 #define TO_UINT32(x)  (x & 0xFFFFFFFF)
 
-enum UnwindOp : unsigned __int8 {
-    UWOP_IGNORE      =  (unsigned __int8)-1,
+enum UnwindOp : uint8_t {
+    UWOP_IGNORE      =  (uint8_t)-1,
     UWOP_PUSH_NONVOL =  0,
     UWOP_ALLOC_LARGE =  1,
     UWOP_ALLOC_SMALL =  2,
@@ -48,9 +48,9 @@ public:
     void RecordNonVolRegSave() {}
     void RecordXmmRegSave() {}
     void RecordAlloca(size_t size) {}
-    void EncodeInstr(IR::Instr *instr, uint8 size);
+    void EncodeInstr(IR::Instr *instr, uint8_t size);
 
-    void EncodeSmallProlog(uint8 prologSize, size_t size);
+    void EncodeSmallProlog(uint8_t prologSize, size_t size);
     uint32_t SizeOfPData();
     uint8_t *Finalize(uint8_t *functionStart, uint32_t codeSize, uint8_t *pdataBuffer);
 

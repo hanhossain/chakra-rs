@@ -10498,22 +10498,22 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         switch (valueType)
         {
         case JsInt8Type:
-            AnalysisAssert(elementSize == sizeof(int8));
+            AnalysisAssert(elementSize == sizeof(int8_t));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(int8) <= allocSize);
+                AnalysisAssert((i + 1) * sizeof(int8_t) <= allocSize);
 #pragma prefast(suppress:22102)
-                ((int8*)buffer)[i] = Js::JavascriptConversion::ToInt8(element, scriptContext);
+                ((int8_t*)buffer)[i] = Js::JavascriptConversion::ToInt8(element, scriptContext);
             }
             break;
         case JsUint8Type:
-            AnalysisAssert(elementSize == sizeof(uint8));
+            AnalysisAssert(elementSize == sizeof(uint8_t));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(uint8) <= allocSize);
-                ((uint8*)buffer)[i] = Js::JavascriptConversion::ToUInt8(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(uint8_t) <= allocSize);
+                ((uint8_t*)buffer)[i] = Js::JavascriptConversion::ToUInt8(element, scriptContext);
             }
             break;
         case JsInt16Type:

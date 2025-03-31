@@ -48,7 +48,7 @@ namespace Js
             // in which case we won't deem the cache polymorphic.
             Field(bool) hasPrototypeChanged : 1;
 
-            Field(uint8) callCount;
+            Field(uint8_t) callCount;
 
             // Separate from the bit field below for convenient compare from the JIT-ed code. Doesn't currently increase the size.
             // If size becomes an issue, we could merge back into the bit field and use a TEST instead of CMP.
@@ -172,7 +172,7 @@ namespace Js
             return (CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Special && this->content.typeUpdatePending;
         }
 
-        uint8 CallCount() const
+        uint8_t CallCount() const
         {
             return content.callCount;
         }

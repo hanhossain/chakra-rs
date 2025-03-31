@@ -81,7 +81,7 @@ public:
     intptr_t GetX86TwoPower31F4Addr() const;
     intptr_t GetX86TwoPower31I4Addr() const;
     intptr_t GetX86NegTwoPower31F4Addr() const;
-    intptr_t GetX86FourLanesMaskAddr(uint8 minorityLane) const;
+    intptr_t GetX86FourLanesMaskAddr(uint8_t minorityLane) const;
 #endif
 
     intptr_t GetStringReplaceNameAddr() const;
@@ -109,7 +109,7 @@ public:
 
 #if ENABLE_NATIVE_CODEGEN
 #if defined(ENABLE_WASM_SIMD)
-    virtual intptr_t GetSimdTempAreaAddr(uint8 tempIndex) const = 0;
+    virtual intptr_t GetSimdTempAreaAddr(uint8_t tempIndex) const = 0;
 #endif
     virtual intptr_t GetBailOutRegisterSaveSpaceAddr() const = 0;
 #endif

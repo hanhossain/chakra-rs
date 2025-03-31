@@ -1949,7 +1949,7 @@ skipThunk:
         {
         private:
             ThreadContext * const threadContext;
-            const uint8 savedLoopDepth;
+            const uint8_t savedLoopDepth;
 
         public:
             AutoRestore(ThreadContext *const threadContext, FunctionBody *const executeFunction)
@@ -6078,9 +6078,9 @@ skipThunk:
                 {
                     // Reset the totalJittedLoopIterations for the next invocation of this loop entry point
                     entryPointInfo->totalJittedLoopIterations =
-                        static_cast<uint8>(
+                        static_cast<uint8_t>(
                             min(
-                                static_cast<uint>(static_cast<uint8>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
+                                static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
                                 (Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() - 1),
                                 entryPointInfo->totalJittedLoopIterations));
                     entryPointInfo->jittedLoopIterationsSinceLastBailout = 0;
@@ -8099,7 +8099,7 @@ skipThunk:
             GetAsmJsBuffer();
 
         uint8_t* buffer = arr->GetBuffer();
-        uint8 dataWidth = playout->DataWidth;
+        uint8_t dataWidth = playout->DataWidth;
         RegSlot dstReg = playout->Value;
         if (index + dataWidth > arr->GetByteLength())
         {
@@ -8119,7 +8119,7 @@ skipThunk:
         const uint64 index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
-        uint8 dataWidth = playout->DataWidth;
+        uint8_t dataWidth = playout->DataWidth;
         RegSlot dstReg = playout->Value;
 
         if (index + dataWidth > arr->GetByteLength())
@@ -8152,7 +8152,7 @@ skipThunk:
             GetAsmJsBuffer();
 
         uint8_t* buffer = arr->GetBuffer();
-        uint8 dataWidth = playout->DataWidth;
+        uint8_t dataWidth = playout->DataWidth;
         RegSlot srcReg = playout->Value;
 
         if (index + dataWidth > arr->GetByteLength())
@@ -8171,7 +8171,7 @@ skipThunk:
         const uint64 index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
-        uint8 dataWidth = playout->DataWidth;
+        uint8_t dataWidth = playout->DataWidth;
         RegSlot srcReg = playout->Value;
 
         if (index + dataWidth > arr->GetByteLength())
@@ -8281,23 +8281,23 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_SimdInt8x16(const unaligned T* playout)
     {
-        int8 values[16];
-        values[0] = (int8)GetRegRawInt(playout->I1);
-        values[1] = (int8)GetRegRawInt(playout->I2);
-        values[2] = (int8)GetRegRawInt(playout->I3);
-        values[3] = (int8)GetRegRawInt(playout->I4);
-        values[4] = (int8)GetRegRawInt(playout->I5);
-        values[5] = (int8)GetRegRawInt(playout->I6);
-        values[6] = (int8)GetRegRawInt(playout->I7);
-        values[7] = (int8)GetRegRawInt(playout->I8);
-        values[8] = (int8)GetRegRawInt(playout->I9);
-        values[9] = (int8)GetRegRawInt(playout->I10);
-        values[10] = (int8)GetRegRawInt(playout->I11);
-        values[11] = (int8)GetRegRawInt(playout->I12);
-        values[12] = (int8)GetRegRawInt(playout->I13);
-        values[13] = (int8)GetRegRawInt(playout->I14);
-        values[14] = (int8)GetRegRawInt(playout->I15);
-        values[15] = (int8)GetRegRawInt(playout->I16);
+        int8_t values[16];
+        values[0] = (int8_t)GetRegRawInt(playout->I1);
+        values[1] = (int8_t)GetRegRawInt(playout->I2);
+        values[2] = (int8_t)GetRegRawInt(playout->I3);
+        values[3] = (int8_t)GetRegRawInt(playout->I4);
+        values[4] = (int8_t)GetRegRawInt(playout->I5);
+        values[5] = (int8_t)GetRegRawInt(playout->I6);
+        values[6] = (int8_t)GetRegRawInt(playout->I7);
+        values[7] = (int8_t)GetRegRawInt(playout->I8);
+        values[8] = (int8_t)GetRegRawInt(playout->I9);
+        values[9] = (int8_t)GetRegRawInt(playout->I10);
+        values[10] = (int8_t)GetRegRawInt(playout->I11);
+        values[11] = (int8_t)GetRegRawInt(playout->I12);
+        values[12] = (int8_t)GetRegRawInt(playout->I13);
+        values[13] = (int8_t)GetRegRawInt(playout->I14);
+        values[14] = (int8_t)GetRegRawInt(playout->I15);
+        values[15] = (int8_t)GetRegRawInt(playout->I16);
 
         AsmJsSIMDValue result = SIMDInt8x16Operation::OpInt8x16(values);
         SetRegRawSimd(playout->I16_0, result);
@@ -8324,23 +8324,23 @@ skipThunk:
     template <class T>
     void InterpreterStackFrame::OP_SimdUint8x16(const unaligned T* playout)
     {
-        uint8 values[16];
-        values[0] = (uint8)GetRegRawInt(playout->I1);
-        values[1] = (uint8)GetRegRawInt(playout->I2);
-        values[2] = (uint8)GetRegRawInt(playout->I3);
-        values[3] = (uint8)GetRegRawInt(playout->I4);
-        values[4] = (uint8)GetRegRawInt(playout->I5);
-        values[5] = (uint8)GetRegRawInt(playout->I6);
-        values[6] = (uint8)GetRegRawInt(playout->I7);
-        values[7] = (uint8)GetRegRawInt(playout->I8);
-        values[8] = (uint8)GetRegRawInt(playout->I9);
-        values[9] = (uint8)GetRegRawInt(playout->I10);
-        values[10] = (uint8)GetRegRawInt(playout->I11);
-        values[11] = (uint8)GetRegRawInt(playout->I12);
-        values[12] = (uint8)GetRegRawInt(playout->I13);
-        values[13] = (uint8)GetRegRawInt(playout->I14);
-        values[14] = (uint8)GetRegRawInt(playout->I15);
-        values[15] = (uint8)GetRegRawInt(playout->I16);
+        uint8_t values[16];
+        values[0] = (uint8_t)GetRegRawInt(playout->I1);
+        values[1] = (uint8_t)GetRegRawInt(playout->I2);
+        values[2] = (uint8_t)GetRegRawInt(playout->I3);
+        values[3] = (uint8_t)GetRegRawInt(playout->I4);
+        values[4] = (uint8_t)GetRegRawInt(playout->I5);
+        values[5] = (uint8_t)GetRegRawInt(playout->I6);
+        values[6] = (uint8_t)GetRegRawInt(playout->I7);
+        values[7] = (uint8_t)GetRegRawInt(playout->I8);
+        values[8] = (uint8_t)GetRegRawInt(playout->I9);
+        values[9] = (uint8_t)GetRegRawInt(playout->I10);
+        values[10] = (uint8_t)GetRegRawInt(playout->I11);
+        values[11] = (uint8_t)GetRegRawInt(playout->I12);
+        values[12] = (uint8_t)GetRegRawInt(playout->I13);
+        values[13] = (uint8_t)GetRegRawInt(playout->I14);
+        values[14] = (uint8_t)GetRegRawInt(playout->I15);
+        values[15] = (uint8_t)GetRegRawInt(playout->I16);
 
         AsmJsSIMDValue result = SIMDUint8x16Operation::OpUint8x16(values);
         SetRegRawSimd(playout->U16_0, result);

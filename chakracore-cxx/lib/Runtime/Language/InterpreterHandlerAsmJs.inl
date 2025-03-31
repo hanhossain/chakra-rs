@@ -94,9 +94,9 @@ EXDEF3_WMS( CUSTOM_ASMJS     , StArrAtomic  , OP_StArrAtomic               , Was
   DEF2_WMS( L1toL1Mem        , Return_Long  , (int64)                                            )
 
 // Wasm Sign Extension operators
-  DEF2_WMS( I1toI1Mem        , I32Extend8_s , (Wasm::WasmMath::SignExtend<int32, int8> )         )
+  DEF2_WMS( I1toI1Mem        , I32Extend8_s , (Wasm::WasmMath::SignExtend<int32, int8_t> )         )
   DEF2_WMS( I1toI1Mem        , I32Extend16_s, (Wasm::WasmMath::SignExtend<int32, int16>)         )
-  DEF2_WMS( L1toL1Mem        , I64Extend8_s , (Wasm::WasmMath::SignExtend<int64, int8> )         )
+  DEF2_WMS( L1toL1Mem        , I64Extend8_s , (Wasm::WasmMath::SignExtend<int64, int8_t> )         )
   DEF2_WMS( L1toL1Mem        , I64Extend16_s, (Wasm::WasmMath::SignExtend<int64, int16>)         )
   DEF2_WMS( L1toL1Mem        , I64Extend32_s, (Wasm::WasmMath::SignExtend<int64, int32>)         )
 
@@ -347,12 +347,12 @@ EXDEF2_WMS( SIMD_B16_1toB16_1, Simd128_Not_B16             , Js::SIMDInt32x4Oper
 EXDEF2_WMS( SIMD_B2_1toI1, Simd128_AllTrue_B2            , Js::SIMDBool32x4Operation::OpAllTrue<int64>        )
 EXDEF2_WMS( SIMD_B4_1toI1, Simd128_AllTrue_B4            , Js::SIMDBool32x4Operation::OpAllTrue<int32>        )
 EXDEF2_WMS( SIMD_B8_1toI1, Simd128_AllTrue_B8            , Js::SIMDBool32x4Operation::OpAllTrue<int16>        )
-EXDEF2_WMS( SIMD_B16_1toI1, Simd128_AllTrue_B16          , Js::SIMDBool32x4Operation::OpAllTrue<int8>         )
+EXDEF2_WMS( SIMD_B16_1toI1, Simd128_AllTrue_B16          , Js::SIMDBool32x4Operation::OpAllTrue<int8_t>         )
 
 EXDEF2_WMS( SIMD_B2_1toI1, Simd128_AnyTrue_B2            , Js::SIMDBool32x4Operation::OpAnyTrue<int64>        )
 EXDEF2_WMS( SIMD_B4_1toI1, Simd128_AnyTrue_B4            , Js::SIMDBool32x4Operation::OpAnyTrue<int32>        )
 EXDEF2_WMS( SIMD_B8_1toI1, Simd128_AnyTrue_B8            , Js::SIMDBool32x4Operation::OpAnyTrue<int16>        )
-EXDEF2_WMS( SIMD_B16_1toI1, Simd128_AnyTrue_B16          , Js::SIMDBool32x4Operation::OpAnyTrue<int8>         )
+EXDEF2_WMS( SIMD_B16_1toI1, Simd128_AnyTrue_B16          , Js::SIMDBool32x4Operation::OpAnyTrue<int8_t>         )
 
   DEF2_WMS(SIMD_I4_1I1toI4_1 , Simd128_ShLtByScalar_I4     , Js::SIMDInt32x4Operation::OpShiftLeftByScalar)
 EXDEF2_WMS(SIMD_I2_1I1toI2_1 , Simd128_ShLtByScalar_I2     , Js::SIMDInt64x2Operation::OpShiftLeftByScalar)
