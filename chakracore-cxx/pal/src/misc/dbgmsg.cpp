@@ -149,7 +149,7 @@ Function :
 --*/
 BOOL DBG_init_channels(void)
 {
-    INT i;
+    int32_t i;
     LPCSTR env_string;
     LPSTR env_workstring;
     LPSTR env_pcache;
@@ -473,12 +473,12 @@ Notes :
 
 --*/
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, INT line, LPCSTR format, ...)
+                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
 {
     char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
     char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
-    INT output_size;
+    int32_t output_size;
     va_list args;
     void *thread_id;
     int old_errno = 0;
@@ -587,14 +587,14 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, INT line, LPSTR format, ...)
+                   LPSTR file, int32_t line, LPSTR format, ...)
 {
     char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
     char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
-    INT output_size;
+    int32_t output_size;
     va_list args;
-    static INT call_count=0;
+    static int32_t call_count=0;
     void *thread_id;
     int old_errno = 0;
     CPalThread *pthrCurrent = InternalGetCurrentThread();

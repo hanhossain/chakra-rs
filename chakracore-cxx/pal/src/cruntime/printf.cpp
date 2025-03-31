@@ -63,12 +63,12 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 __attribute__((no_instrument_function))
-BOOL Internal_AddPaddingA(LPSTR *Out, INT Count, LPSTR In,
-                                 INT Padding, INT Flags)
+BOOL Internal_AddPaddingA(LPSTR *Out, int32_t Count, LPSTR In,
+                                 int32_t Padding, int32_t Flags)
 {
     LPSTR OutOriginal = *Out;
-    INT PaddingOriginal = Padding;
-    INT LengthInStr;
+    int32_t PaddingOriginal = Padding;
+    int32_t LengthInStr;
     LengthInStr = strlen(In);
 
 
@@ -141,7 +141,7 @@ Parameters:
     - the prefix for the current format option
 *******************************************************************************/
 __attribute__((no_instrument_function))
-void PAL_printf_arg_remover(va_list *ap, INT Width, INT Precision, INT Type, INT Prefix)
+void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32_t Type, int32_t Prefix)
 {
     /* remove arg and precision if needed */
     if (PRECISION_STAR == Precision ||
@@ -1075,14 +1075,14 @@ Parameters:
 __attribute__((no_instrument_function))
 int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
 {
-    INT Length = 0;
+    int32_t Length = 0;
     LPCSTR Buff = Buffer;
     LPCSTR Fmt = Format;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
-    INT Width;
-    INT Prefix;
-    INT Type = -1;
+    int32_t Width;
+    int32_t Prefix;
+    int32_t Type = -1;
 
     while (*Fmt)
     {
@@ -1250,14 +1250,14 @@ Function:
 __attribute__((no_instrument_function))
 int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
 {
-    INT Length = 0;
+    int32_t Length = 0;
     LPCWSTR Buff = Buffer;
     LPCWSTR Fmt = Format;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
-    INT Width;
-    INT Prefix;
-    INT Type = -1;
+    int32_t Width;
+    int32_t Prefix;
+    int32_t Type = -1;
 
     while (*Fmt)
     {

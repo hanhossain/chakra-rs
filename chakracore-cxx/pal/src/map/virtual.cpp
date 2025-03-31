@@ -307,7 +307,7 @@ static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, const PCMI pInformation )
  *      IN pInformation - The virtual memory object.
  *
  */
-static INT VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
+static int32_t VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
 {
     if ( VIRTUALIsPageCommitted( Index, pInformation ) )
     {
@@ -1150,14 +1150,14 @@ static void * VIRTUALCommitMemory(
     void * pRetVal              = NULL;
     BOOL IsLocallyReserved      = FALSE;
     SIZE_T totalPages;
-    INT allocationType, curAllocationType;
-    INT protectionState, curProtectionState;
+    int32_t allocationType, curAllocationType;
+    int32_t protectionState, curProtectionState;
     SIZE_T initialRunStart;
     SIZE_T runStart;
     SIZE_T runLength;
     SIZE_T index;
-    INT nProtect;
-    INT vProtect;
+    int32_t nProtect;
+    int32_t vProtect;
 
     if ( lpAddress )
     {
@@ -2574,7 +2574,7 @@ VirtualQuery(
 
         /* Attributes to check for. */
         uint8_t AccessProtection = pEntry->pProtectionState[ Index ];
-        INT AllocationType = VIRTUALGetAllocationType( Index, pEntry );
+        int32_t AllocationType = VIRTUALGetAllocationType( Index, pEntry );
         SIZE_T RegionSize = 0;
 
         TRACE( "Index = %d, Number of Pages = %d. \n",

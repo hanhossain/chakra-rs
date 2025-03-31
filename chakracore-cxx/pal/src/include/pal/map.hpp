@@ -155,7 +155,7 @@ namespace CorUnix
     class CFileMappingProcessLocalData 
     {
     public:
-        INT     UnixFd;                     /* File descriptor. */
+        int32_t     UnixFd;                     /* File descriptor. */
         
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
         dev_t   MappedFileDevNum;           /* ID of device containing the file to be mapped */

@@ -55,8 +55,8 @@ _open_osfhandle( INT_PTR osfhandle, int flags )
     IPalObject *pobjFile = NULL;
     CFileProcessLocalData *pLocalData = NULL;
     IDataLock *pDataLock = NULL;
-    INT nRetVal = -1;
-    INT openFlags = 0;
+    int32_t nRetVal = -1;
+    int32_t openFlags = 0;
 
     PERF_ENTRY(_open_osfhandle);
     ENTRY( "_open_osfhandle (osfhandle=%#x, flags=%#x)\n", osfhandle, flags );
@@ -526,7 +526,7 @@ CorUnix::InternalFwrite(
     size_t nSize,
     size_t nCount,
     FILE *f,
-    INT *pnErrorCode
+    int32_t *pnErrorCode
     )
 {
     size_t nWrittenBytes = 0;

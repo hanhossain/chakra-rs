@@ -59,7 +59,7 @@ Return value:
   TRUE if the Unicode character was found.
 
 --*/
-BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec);
+BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec);
 
 #endif  /* !HAVE_COREFOUNDATION */
 

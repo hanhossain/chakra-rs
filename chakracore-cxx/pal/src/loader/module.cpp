@@ -104,7 +104,7 @@ template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     LPCWSTR wideLibraryPath,
     LPSTR multibyteLibraryPath,
-    INT *multibyteLibraryPathLengthRef);
+    int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static LPWSTR LOADGetModuleFileName(MODSTRUCT *module);
 static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath);
@@ -219,7 +219,7 @@ LoadLibraryExW(
     }
 
     char * lpstr;
-    INT name_length;
+    int32_t name_length;
     PathCharString pathstr;
     HMODULE hModule = nullptr;
 
@@ -437,7 +437,7 @@ GetModuleFileNameA(
      LPSTR lpFileName,
      uint32_t nSize)
 {
-    INT name_length;
+    int32_t name_length;
     uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
@@ -500,7 +500,7 @@ GetModuleFileNameW(
      LPWSTR lpFileName,
      uint32_t nSize)
 {
-    INT name_length;
+    int32_t name_length;
     uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
@@ -530,7 +530,7 @@ GetModuleFileNameW(
     /* Copy module name into supplied buffer */
 
     name_length = lstrlenW(wide_name);
-    if (name_length >= (INT)nSize)
+    if (name_length >= (int32_t)nSize)
     {
         TRACE("Buffer too small (%u) to copy module's file name (%u).\n", nSize, name_length);
         SetLastError(ERROR_INSUFFICIENT_BUFFER);
@@ -586,7 +586,7 @@ PAL_LoadLibraryDirect(
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
-    INT name_length;
+    int32_t name_length;
     void *dl_handle = nullptr;
 
     PERF_ENTRY(LoadLibraryDirect);
@@ -636,7 +636,7 @@ PAL_RegisterLibraryDirect(
 {
     PathCharString pathstr;
     char * lpstr = nullptr;
-    INT name_length;
+    int32_t name_length;
     HMODULE hModule = nullptr;
 
     PERF_ENTRY(RegisterLibraryDirect);
@@ -1215,7 +1215,7 @@ static bool LOADVerifyLibraryPath(const TChar *libraryPath)
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     LPCWSTR wideLibraryPath,
     LPSTR multibyteLibraryPath,
-    INT *multibyteLibraryPathLengthRef)
+    int32_t *multibyteLibraryPathLengthRef)
 {
     _ASSERTE(multibyteLibraryPathLengthRef != nullptr);
     _ASSERTE(wideLibraryPath != nullptr);

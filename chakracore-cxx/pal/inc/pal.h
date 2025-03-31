@@ -5892,7 +5892,7 @@ typedef struct _PAL_IOCP_CPU_INFORMATION {
     FILETIME ftLastRecordedUserTime;
 } PAL_IOCP_CPU_INFORMATION;
 
-INT
+int32_t
 PAL_GetCPUBusyTime(
       PAL_IOCP_CPU_INFORMATION *lpPrevCPUInfo);
 

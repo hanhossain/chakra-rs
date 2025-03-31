@@ -112,7 +112,7 @@ Parameters:
   Flags
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
-BOOL Internal_AddPaddingA(LPSTR *Out, INT Count, LPSTR In, INT Padding, INT Flags);
+BOOL Internal_AddPaddingA(LPSTR *Out, int32_t Count, LPSTR In, int32_t Padding, int32_t Flags);
 
 /*******************************************************************************
 Function:
@@ -130,7 +130,7 @@ Parameters:
   Prefix
     - the prefix for the current format option
 *******************************************************************************/
-void PAL_printf_arg_remover(va_list *ap, INT Width, INT Precision, INT Type, INT Prefix);
+void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32_t Type, int32_t Prefix);
 
 /*++
 Function:
@@ -138,7 +138,7 @@ Function:
 
 See MSDN doc.
 --*/
-INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list ap);
+int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list ap);
 
 /*++
 Function:
@@ -207,7 +207,7 @@ struct _FILE
    FILE *   bsdFilePtr;     /* The BSD file to be passed to the
                             functions needing it. */
 
-   INT      PALferrorCode;  /* The ferror code that fwrite sets,
+   int32_t      PALferrorCode;  /* The ferror code that fwrite sets,
                             incase of error */
 
    BOOL     bTextMode;     /* Boolean variable to denote that the

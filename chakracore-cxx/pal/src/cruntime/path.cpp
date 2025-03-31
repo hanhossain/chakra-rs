@@ -80,7 +80,7 @@ _wsplitpath(
     WCHAR path[_MAX_PATH+1];
     LPCWSTR slash_ptr = NULL;
     LPCWSTR period_ptr = NULL;
-    INT size = 0;
+    int32_t size = 0;
 
     PERF_ENTRY(_wsplitpath);
     ENTRY("_wsplitpath (path=%p (%S), drive=%p, dir=%p, fname=%p, ext=%p)\n",
@@ -150,7 +150,7 @@ _wsplitpath(
     size = slash_ptr - path + 1;
     if( dir != NULL )
     {
-        INT i;
+        int32_t i;
 
         if( (size + 1 ) > _MAX_DIR )
         {

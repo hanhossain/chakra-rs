@@ -155,10 +155,10 @@ char * _ecvt( double value, int count, int * dec, int * sign )
     LPSTR lpStartOfReturnBuffer = NULL;
     LPSTR lpTempBuffer = NULL;
     LPSTR lpEndOfTempBuffer = NULL;
-    INT nTempBufferLength = 0;
+    int32_t nTempBufferLength = 0;
     char ExponentBuffer[ 6 ];
-    INT nExponentValue = 0;
-    INT LoopIndex = 0;
+    int32_t nExponentValue = 0;
+    int32_t LoopIndex = 0;
 
     PERF_ENTRY(_ecvt);
     ENTRY( "_ecvt( value=%.30g, count=%d, dec=%p, sign=%p )\n",

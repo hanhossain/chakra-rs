@@ -56,15 +56,15 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 CRITICAL_SECTION mapping_critsec PAL_GLOBAL;
 LIST_ENTRY MappedViewList PAL_GLOBAL;
 
-static PAL_ERROR MAPGrowLocalFile(INT, uint32_t);
+static PAL_ERROR MAPGrowLocalFile(int32_t, uint32_t);
 static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
 static PAL_ERROR MAPDesiredAccessAllowed( uint32_t, uint32_t, uint32_t );
 
-static INT MAPProtectionToFileOpenFlags( uint32_t );
+static int32_t MAPProtectionToFileOpenFlags( uint32_t );
 static BOOL MAPIsRequestPermissible( uint32_t, CFileProcessLocalData * );
 static BOOL MAPContainsInvalidFlags( uint32_t );
 static uint32_t MAPConvertProtectToAccess( uint32_t );
-static INT MAPFileMapToMmapFlags( uint32_t );
+static int32_t MAPFileMapToMmapFlags( uint32_t );
 static uint32_t MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
 static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
@@ -409,7 +409,7 @@ CorUnix::InternalCreateFileMapping(
     IDataLock *pFileLocalDataLock = NULL;
     
     struct stat UnixFileInformation;
-    INT UnixFd = -1;
+    int32_t UnixFd = -1;
     BOOL bPALCreatedTempFile = FALSE;
     uint32_t nFileSize = 0;
 
@@ -1242,7 +1242,7 @@ CorUnix::InternalMapViewOfFile(
     }
     else
     {
-        INT prot = MAPFileMapToMmapFlags(dwDesiredAccess);
+        int32_t prot = MAPFileMapToMmapFlags(dwDesiredAccess);
         if (prot != -1)
         {
             int flags = MAP_SHARED;
@@ -1701,7 +1701,7 @@ Function :
 
     Converts the mapping flags to unix protection flags.
 --*/
-static INT MAPFileMapToMmapFlags( uint32_t flags )
+static int32_t MAPFileMapToMmapFlags( uint32_t flags )
 {
     if ( FILE_MAP_READ == flags )
     {
@@ -1775,10 +1775,10 @@ Function :
     Grows the file on disk to match the specified size.
     
 --*/
-static PAL_ERROR MAPGrowLocalFile( INT UnixFD, uint32_t NewSize )
+static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
 {
     PAL_ERROR palError = NO_ERROR;
-    INT  TruncateRetVal = -1;
+    int32_t  TruncateRetVal = -1;
     struct stat FileInfo;
     TRACE( "Entered MapGrowLocalFile (UnixFD=%d,NewSize%d)\n", UnixFD, NewSize );
 
@@ -1796,7 +1796,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, uint32_t NewSize )
 
     if ( TruncateRetVal != 0 || FileInfo.st_size != (int) NewSize )
     {
-        INT OrigSize;
+        int32_t OrigSize;
         const uint32_t  BUFFER_SIZE = 128;
         uint8_t buf[BUFFER_SIZE];
         uint32_t x = 0;
@@ -1894,9 +1894,9 @@ Function :
  
     Returns the file open flags.
 --*/
-static INT MAPProtectionToFileOpenFlags( uint32_t flProtect )
+static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )
 {
-    INT retVal = 0;
+    int32_t retVal = 0;
     switch(flProtect)
     {
     case PAGE_READONLY:

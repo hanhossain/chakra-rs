@@ -581,7 +581,7 @@ function_name() to call the system's implementation
 #if (__GNUC__ >= 4)
 #define OffsetOf(TYPE, MEMBER) __builtin_offsetof(TYPE, MEMBER)
 #else
-#define OffsetOf(s, f) (INT)(SIZE_T)&(((s*)0)->f)
+#define OffsetOf(s, f) (int32_t)(SIZE_T)&(((s*)0)->f)
 #endif /* __GNUC__ version check*/
 
 #undef assert

@@ -779,11 +779,11 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 
-BOOL Internal_AddPaddingW(LPWSTR *Out, INT Count, LPWSTR In, INT Padding, INT Flags)
+BOOL Internal_AddPaddingW(LPWSTR *Out, int32_t Count, LPWSTR In, int32_t Padding, int32_t Flags)
 {
     LPWSTR OutOriginal = *Out;
-    INT PaddingOriginal = Padding;
-    INT LengthInStr;
+    int32_t PaddingOriginal = Padding;
+    int32_t LengthInStr;
     LengthInStr = PAL_wcslen(In);
 
 
@@ -854,14 +854,14 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 
-INT Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, LPSTR In,
-                                       INT Padding, INT Flags)
+int32_t Internal_AddPaddingVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, LPSTR In,
+                                       int32_t Padding, int32_t Flags)
 {
     LPSTR Out;
-    INT LengthInStr;
-    INT Length;
+    int32_t LengthInStr;
+    int32_t Length;
     LPSTR OutOriginal;
-    INT Written;
+    int32_t Written;
 
     LengthInStr = strlen(In);
     Length = LengthInStr;
@@ -955,14 +955,14 @@ Parameters:
   Flags
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
-static INT Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, LPWSTR In,
-                                       INT Padding, INT Flags,BOOL convert)
+static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, LPWSTR In,
+                                       int32_t Padding, int32_t Flags,BOOL convert)
 {
     LPWSTR Out;
     LPWSTR OutOriginal;
-    INT LengthInStr;
-    INT Length;
-    INT Written = 0;
+    int32_t LengthInStr;
+    int32_t Length;
+    int32_t Written = 0;
 
     LengthInStr = PAL_wcslen(In);
     Length = LengthInStr;
@@ -1137,12 +1137,12 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
     LPWSTR TempWStr = NULL;
     LPWSTR WorkingWStr = NULL;
     WCHAR TempWChar[2];
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t TempInt;
     BOOL WStrWasMalloced = FALSE;
     int mbtowcResult;
     int written=0;
@@ -1175,22 +1175,22 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
 
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (Type == PFF_TYPE_STRING || Prefix == PFF_PREFIX_LONG_W)
@@ -1233,7 +1233,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     }
                 }
 
-                INT Length = PAL_wcslen(TempWStr);
+                int32_t Length = PAL_wcslen(TempWStr);
                 WorkingWStr = (LPWSTR) InternalMalloc((sizeof(WCHAR) * (Length + 1)));
                 if (!WorkingWStr)
                 {
@@ -1312,14 +1312,14 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar[0] = va_arg(ap, int);
@@ -1346,12 +1346,12 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
 
                 if (Prefix == PFF_PREFIX_SHORT)
@@ -1568,13 +1568,13 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
     LPWSTR TempWStr;
     LPSTR TempStr;
     WCHAR TempWChar;
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT Length;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t Length;
+    int32_t TempInt;
     int wctombResult;
     va_list ap;
 
@@ -1596,22 +1596,22 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWStr = va_arg(ap, LPWSTR);
@@ -1687,13 +1687,13 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar = va_arg(ap, int);
@@ -1723,11 +1723,11 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
 
                 if (Prefix == PFF_PREFIX_SHORT)
@@ -1863,12 +1863,12 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
     LPWSTR TempWStr = NULL;
     LPWSTR WorkingWStr = NULL;
     WCHAR TempWChar[2];
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t TempInt;
     LPSTR TempNumberBuffer;
     int mbtowcResult;
     va_list(ap);
@@ -1901,23 +1901,23 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
 
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                     precisionSet = true;
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if ((Type == PFF_TYPE_STRING && Prefix == PFF_PREFIX_LONG) ||
@@ -1957,7 +1957,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                     }
                 }
 
-                INT Length = 0;
+                int32_t Length = 0;
                 if (precisionSet)
                 {
                     for(; Length <= Precision && TempWStr[Length] != 0; Length++);
@@ -2027,14 +2027,14 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar[0] = va_arg(ap, int);
@@ -2054,11 +2054,11 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
 
                 if (Prefix == PFF_PREFIX_SHORT)
@@ -2233,13 +2233,13 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
     LPWSTR TempWStr;
     LPSTR TempStr;
     WCHAR TempWChar;
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT Length;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t Length;
+    int32_t TempInt;
     int wctombResult;
     int written = 0;
     int paddingReturnValue;
@@ -2260,22 +2260,22 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWStr = va_arg(ap, LPWSTR);
@@ -2361,13 +2361,13 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar = va_arg(ap, int);
@@ -2404,11 +2404,11 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
 
                 if (Prefix == PFF_PREFIX_SHORT)

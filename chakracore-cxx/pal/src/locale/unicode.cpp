@@ -104,13 +104,13 @@ static int UnicodeDataComp(const void *pnKey, const void *elem)
     WCHAR uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
     uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
 
-    if (*((INT*)pnKey) < uValue)
+    if (*((int32_t*)pnKey) < uValue)
     {
         return -1;
     }
     else
     {
-        if (*((INT*)pnKey) > (uValue + rangeValue))
+        if (*((int32_t*)pnKey) > (uValue + rangeValue))
         {
             return 1;
         }
@@ -136,7 +136,7 @@ Return value:
 TRUE if the Unicode character was found.
 
 --*/
-BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
+BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
 {
     BOOL bRet;
     if (nUnicodeValue <= UNICODE_DATA_DIRECT_ACCESS)
@@ -147,7 +147,7 @@ BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
     else
     {
         UnicodeDataRec *dataRec;
-        INT nNumOfChars = UNICODE_DATA_SIZE;
+        int32_t nNumOfChars = UNICODE_DATA_SIZE;
         dataRec = (UnicodeDataRec *) bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
                        sizeof(UnicodeDataRec), UnicodeDataComp);
         if (dataRec == NULL)
@@ -661,7 +661,7 @@ MultiByteToWideChar(
          LPWSTR lpWideCharStr,
          int cchWideChar)
 {
-    INT retval =0;
+    int32_t retval =0;
 #if HAVE_COREFOUNDATION
     CFStringRef cfString = NULL;
     CFStringEncoding cfEncoding;
@@ -789,7 +789,7 @@ WideCharToMultiByte(
          LPCSTR lpDefaultChar,
          LPBOOL lpUsedDefaultChar)
 {
-    INT retval =0;
+    int32_t retval =0;
     char defaultChar = '?';
     BOOL usedDefaultChar = FALSE;
 #if HAVE_COREFOUNDATION

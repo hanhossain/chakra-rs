@@ -57,8 +57,8 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     char*               pLoadQueryBuf = NULL;
     uint32_t                cbBuf = 1024;
     struct ld_info *    pInfo = NULL;
-    INT                 iLQRetVal = -1;
-    INT                 iRetVal = -1;
+    int32_t                 iLQRetVal = -1;
+    int32_t                 iRetVal = -1;
     CPalThread *pThread = NULL;
 
     if (!pszBuf)

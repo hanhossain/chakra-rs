@@ -33,9 +33,9 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
  * W32toUnixAccessControl( uint32_t ) - Maps Win32 to Unix memory access controls .
  *
  */
-INT W32toUnixAccessControl(  uint32_t flProtect )
+int32_t W32toUnixAccessControl(  uint32_t flProtect )
 {
-    INT MemAccessControl = 0;
+    int32_t MemAccessControl = 0;
 
     switch ( flProtect & 0xff )
     {

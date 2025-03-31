@@ -544,14 +544,14 @@ struct tagVARIANT
                 unsigned short uiVal;
                 uint32_t ulVal;
                 ULONGLONG ullVal;
-                INT intVal;
+                int32_t intVal;
                 uint32_t uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
                 unsigned short *puiVal;
                 uint32_t *pulVal;
                 ULONGLONG *pullVal;
-                INT *pintVal;
+                int32_t *pintVal;
                 uint32_t *puintVal;
                 struct __tagBRECORD
                     {

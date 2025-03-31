@@ -387,7 +387,7 @@ Notes :
     DBG_printf_plain.
 --*/
 BOOL DBG_preprintf(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, INT line);
+                   LPSTR file, int32_t line);
 
 /*++
 Function :
@@ -417,11 +417,11 @@ Notes :
 /* if requested, use an __attribute__ feature to ask gcc to check that format
    specifiers match their parameters */
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, INT line, LPCSTR format, ...)
+                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
                    __attribute__ ((format (printf,7, 8)));
 #else
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, INT line, LPCSTR format, ...);
+                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...);
 #endif
 
 /*++
@@ -449,7 +449,7 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, INT line, LPSTR format, ...);
+                   LPSTR file, int32_t line, LPSTR format, ...);
 
 /*++
 Function :

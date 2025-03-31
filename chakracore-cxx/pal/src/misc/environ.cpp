@@ -139,7 +139,7 @@ GetEnvironmentVariableW(
 {
     char *inBuff = NULL;
     char *outBuff = NULL;
-    INT inBuffSize;
+    int32_t inBuffSize;
     uint32_t size = 0;
 
     PERF_ENTRY(GetEnvironmentVariableW);
@@ -257,8 +257,8 @@ SetEnvironmentVariableW(
 {
     PCHAR name = NULL;
     PCHAR value = NULL;
-    INT nameSize = 0;
-    INT valueSize = 0;
+    int32_t nameSize = 0;
+    int32_t valueSize = 0;
     BOOL bRet = FALSE;
 
     PERF_ENTRY(SetEnvironmentVariableW);

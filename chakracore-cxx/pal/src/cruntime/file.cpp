@@ -175,7 +175,7 @@ Function :
 --*/
 static BOOL WriteOnlyMode(FILE* pFile)
 {
-    INT fd, flags;
+    int32_t fd, flags;
 
     if (pFile != NULL)
     {
@@ -459,7 +459,7 @@ See msdn for more details.
 --*/
 int PAL__close(int handle)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(_close);
     ENTRY( "_close( handle=%d )\n", handle );
@@ -555,7 +555,7 @@ Function :
 int
 PAL_ferror(PAL_FILE * f)
 {
-    INT nErrorCode = PAL_FILE_NOERROR;
+    int32_t nErrorCode = PAL_FILE_NOERROR;
 
     PERF_ENTRY(ferror);
     ENTRY( "ferror( f=%p )\n", f );
@@ -585,7 +585,7 @@ Function :
 int
 PAL_fclose(PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fclose);
     ENTRY( "fclose( f=%p )\n", f );
@@ -633,7 +633,7 @@ Function :
 int
 PAL_fputs(const char * str,  PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fputs);
     ENTRY( "fputs( %p (%s), %p )\n", str, str, f);
@@ -660,7 +660,7 @@ Function :
 int
 PAL_fputc(int c,  PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fputc);
     ENTRY( "fputc( 0x%x (%c), %p )\n", c, c, f);
@@ -686,7 +686,7 @@ Function :
 int
 PAL_putchar( int c )
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(putchar);
     ENTRY( "putchar( 0x%x (%c) )\n", c, c);
@@ -830,7 +830,7 @@ Function :
 int
 PAL_feof(PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(feof);
     ENTRY( "feof( %p )\n", f );
@@ -853,8 +853,8 @@ Function :
 int
 PAL_getc(PAL_FILE * f)
 {
-    INT nRetVal = 0;
-    INT temp =0;
+    int32_t nRetVal = 0;
+    int32_t temp =0;
 
     PERF_ENTRY(getc);
     ENTRY( "getc( %p )\n", f );
@@ -892,7 +892,7 @@ Function :
 int
 PAL_ungetc(int c, PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(ungetc);
     ENTRY( "ungetc( %c, %p )\n", c, f );
@@ -931,7 +931,7 @@ Function :
 int
 PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(setvbuf);
     ENTRY( "setvbuf( %p, %p, %d, %ul )\n", f, buf, type, size);

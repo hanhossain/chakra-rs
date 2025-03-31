@@ -36,7 +36,7 @@ typedef struct _MODSTRUCT
     void *dl_handle;        /* handle returned by dlopen() */
     HINSTANCE hinstance;    /* handle returned by PAL_RegisterLibrary */
     LPWSTR lib_name;        /* full path of module */
-    INT refcount;           /* reference count */
+    int32_t refcount;           /* reference count */
                             /* -1 means infinite reference count - module is never released */
     BOOL threadLibCalls;    /* TRUE for DLL_THREAD_ATTACH/DETACH notifications enabled, FALSE if they are disabled */
 

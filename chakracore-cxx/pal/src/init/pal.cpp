@@ -86,7 +86,7 @@ extern "C" BOOL CRTInitStdStreams( void );
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
-Volatile<INT> init_count PAL_GLOBAL = 0;
+Volatile<int32_t> init_count PAL_GLOBAL = 0;
 Volatile<BOOL> shutdown_intent PAL_GLOBAL = 0;
 Volatile<int32_t> g_chakraCoreInitialized PAL_GLOBAL = 0;
 static BOOL g_fThreadDataAvailable = FALSE;
@@ -752,7 +752,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
     LPWSTR retval;
     LPSTR command_line=NULL, command_ptr;
     LPCSTR arg_ptr;
-    INT length, i,j;
+    int32_t length, i,j;
     BOOL bQuoted = FALSE;
 
     /* list of characters that need no be escaped with \ when building the
@@ -872,10 +872,10 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
     LPSTR env_path;
     LPSTR path_ptr;
     LPSTR cur_dir;
-    INT exe_name_length;
+    int32_t exe_name_length;
     BOOL need_slash;
     LPWSTR return_value;
-    INT return_size;
+    int32_t return_size;
     struct stat theStats;
 
     /* if a path is specified, only search there */
@@ -1132,7 +1132,7 @@ last_resort:
 
     char exec_path[PATH_MAX+1];
     LPWSTR return_value;
-    INT return_size;
+    int32_t return_size;
 
     uint32_t bufsize = sizeof(exec_path);
     if (_NSGetExecutablePath(exec_path, &bufsize))

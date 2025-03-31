@@ -3640,13 +3640,13 @@ GetTempFileNameW(
           LPWSTR lpTempFileName)
 {
     CPalThread *pThread;
-    INT path_size = 0;
-    INT prefix_size = 0;
+    int32_t path_size = 0;
+    int32_t prefix_size = 0;
     char * full_name;
     char * prefix_string;
     char * tempfile_name;
     PathCharString full_namePS, prefix_stringPS;
-    INT length = 0;
+    int32_t length = 0;
     uint32_t   uRet;
 
     PERF_ENTRY(GetTempFileNameW);

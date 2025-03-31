@@ -216,7 +216,7 @@ namespace CorUnix
         size_t nSize,
         size_t nCount,
         FILE *f,
-        INT *pnErrorCode
+        int32_t *pnErrorCode
         );
 
     /*++

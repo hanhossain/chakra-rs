@@ -1972,7 +1972,7 @@ Parameter
 Return
   the number of threads.
 --*/
-INT
+int32_t
 CorUnix::PROCGetNumberOfThreads(
     void)
 {
@@ -2838,9 +2838,9 @@ getPath(
     LPSTR lpNext;
     LPSTR lpCurrent;
     LPWSTR lpwstr;
-    INT n;
-    INT nextLen;
-    INT slashLen;
+    int32_t n;
+    int32_t nextLen;
+    int32_t slashLen;
     CPalThread *pThread = NULL;
 
     /* if a path is specified, only look there */
@@ -2879,7 +2879,7 @@ getPath(
         }
 
         n += strlen(lpFileName) + 2;
-        if (n > (INT)iLen)
+        if (n > (int32_t)iLen)
         {
             ERROR("Buffer too small for full path!\n");
             return FALSE;

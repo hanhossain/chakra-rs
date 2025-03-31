@@ -128,7 +128,7 @@ int * PAL_errno( int caller )
     int *retval;
     PERF_ENTRY(errno);
     ENTRY( "PAL_errno( void )\n" );
-    retval = (INT*)(&errno);
+    retval = (int32_t*)(&errno);
     LOGEXIT("PAL_errno returns %p\n",retval);
     PERF_EXIT(errno);
     return retval;
