@@ -52,6 +52,14 @@ impl Test {
             .collect::<Vec<_>>();
         assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
 
+        // debug should only run exclude_test
+        if !cfg!(feature = "optimized-tests") {
+            assert!(
+                self.tags.contains("exclude_test"),
+                "Debug must contain exclude_test"
+            );
+        }
+
         if self
             .tags
             .iter()

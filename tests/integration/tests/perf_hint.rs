@@ -6,6 +6,7 @@ use std::collections::HashSet;
 const COMMON_TAGS: [&str; 3] = ["exclude_serialized", "exclude_snap", "require_backend"];
 const DIRECTORY: &str = "chakracore-cxx/test/PerfHint";
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn try_with_eval_perfhint_js(#[case] variant: Variant) {
@@ -26,6 +27,7 @@ fn try_with_eval_perfhint_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn try_with_eval_perfhint_js2(#[case] variant: Variant) {
@@ -51,7 +53,7 @@ fn try_with_eval_perfhint_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn arguments1_js(#[case] variant: Variant) {
@@ -73,7 +75,7 @@ fn arguments1_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 fn polymorphictest_js(#[case] variant: Variant) {
