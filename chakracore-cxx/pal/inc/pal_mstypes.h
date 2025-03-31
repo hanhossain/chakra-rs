@@ -112,9 +112,6 @@ extern "C" {
 
 #define __int64     long
 
-// TODO (hanhossain): remove for int32_t
-#define __int32     int
-
 #ifndef PAL_STDCPP_COMPAT
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
 // includes are not included, so we need to define them.

@@ -85,7 +85,7 @@ namespace Js
 #if defined(TARGET_64)
                 __int64 result = ::_abs64(TaggedInt::ToInt32(arg));
 #else
-                __int32 result = ::abs(TaggedInt::ToInt32(arg));
+                int32_t result = ::abs(TaggedInt::ToInt32(arg));
 #endif
                 return JavascriptNumber::ToVar(result, scriptContext);
             }

@@ -26,11 +26,11 @@ public:
     unsigned __int64 GetRand() const;
 
 private:
-    unsigned __int32 previousValue;
+    uint32_t previousValue;
     union
     {
-        unsigned __int32 value;
-        char             array[sizeof(unsigned __int32)];
+        uint32_t value;
+        char             array[sizeof(uint32_t)];
     } u;
     size_t currentIndex;
 

@@ -921,7 +921,7 @@ int _output (
                 else if ( (*format == _T('3')) && (*(format + 1) == _T('2')) )
                 {
                     format += 2;
-                    flags &= ~FL_I64;   /* I32 => __int32 */
+                    flags &= ~FL_I64;   /* I32 => int32_t */
                 }
                 else if ( (*format == _T('d')) ||
                           (*format == _T('i')) ||

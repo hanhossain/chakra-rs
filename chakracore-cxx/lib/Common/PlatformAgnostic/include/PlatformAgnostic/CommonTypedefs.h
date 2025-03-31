@@ -15,13 +15,13 @@ typedef unsigned short ushort;
 typedef signed char sbyte;
 // TODO (hanhossain): remove (u)int typedefs
 typedef int16_t int16;
-typedef __int32 int32;
+typedef int32_t int32;
 typedef __int64 int64;
 
 typedef unsigned char byte;
 
 typedef uint16_t uint16;
-typedef unsigned __int32 uint32;
+typedef uint32_t uint32;
 typedef unsigned __int64 uint64;
 
 // charcount_t represents a count of characters in a JavascriptString

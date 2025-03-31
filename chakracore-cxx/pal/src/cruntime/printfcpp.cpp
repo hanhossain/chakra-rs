@@ -293,7 +293,7 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, in
             *Fmt += 3;
             *Prefix = PFF_PREFIX_LONGLONG;
         }
-        /* grab prefix of 'I32' for __int32 */
+        /* grab prefix of 'I32' for int32_t */
         else if ((*Fmt)[1] == '3' && (*Fmt)[2] == '2')
         {
             *Fmt += 3;
@@ -591,7 +591,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, i
             *Fmt += 3;
             *Prefix = PFF_PREFIX_LONGLONG;
         }
-        /* grab prefix of 'I32' for __int32 */
+        /* grab prefix of 'I32' for int32_t */
         else if ((*Fmt)[1] == '3' && (*Fmt)[2] == '2')
         {
             *Fmt += 3;

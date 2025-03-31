@@ -4742,12 +4742,12 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
 #ifdef _M_X64
         __int64 absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #else
-        __int32 absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
+        int32_t absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #endif
 
         if (!Js::TaggedInt::IsOverflow(absValue))
         {
-            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((__int32)absValue), IR::AddrOpndKindConstantVar);
+            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((int32_t)absValue), IR::AddrOpndKindConstantVar);
 
             instr = IR::Instr::New(Js::OpCode::MOV, dst, varOpnd, this->m_func);
             insertInstr->InsertBefore(instr);
