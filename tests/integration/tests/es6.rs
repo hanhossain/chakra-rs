@@ -2,10 +2,12 @@ use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
 use std::collections::HashSet;
+#[cfg(feature = "optimized-tests")]
 use std::time::Duration;
 
 const DIRECTORY: &str = "chakracore-cxx/test/es6";
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -20,6 +22,7 @@ fn instance_of_proto_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -33,6 +36,7 @@ fn bug_issue_2747_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -47,6 +51,7 @@ fn lambda1_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -61,6 +66,7 @@ fn lambda_expr_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -75,6 +81,7 @@ fn lambda_params_shadow_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -89,6 +96,7 @@ fn numeric_literal_test_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -103,6 +111,7 @@ fn bound_bug3837520_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -117,6 +126,7 @@ fn es6to_length_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -137,6 +147,7 @@ fn es6to_length_js_jsbuiltin(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -150,6 +161,7 @@ fn to_primitive_cross_script_test_case_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -164,6 +176,7 @@ fn computed_property_to_string_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -178,6 +191,7 @@ fn computed_property_side_effect_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -191,6 +205,7 @@ fn bug_fix2214646_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -205,6 +220,7 @@ fn es6is_concat_spreadable_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -219,6 +235,7 @@ fn to_primitive_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -233,6 +250,7 @@ fn unscopables_with_scope_test_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -253,6 +271,7 @@ fn function_name_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -275,6 +294,7 @@ fn function_name_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -289,6 +309,7 @@ fn super_dot_osbug3930962_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -303,6 +324,7 @@ fn to_string_tag_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -317,6 +339,7 @@ fn proto_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -331,6 +354,7 @@ fn proto_disable_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -345,6 +369,7 @@ fn proto_initializer_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -360,6 +385,7 @@ fn proto_initializer_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -374,6 +400,7 @@ fn proto_addprop_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -388,6 +415,7 @@ fn proto_addprop_js_maxinterpretcount2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -402,6 +430,7 @@ fn map_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -416,6 +445,7 @@ fn map_functionality_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -430,6 +460,7 @@ fn set_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -444,6 +475,7 @@ fn set_functionality_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -458,6 +490,7 @@ fn weakmap_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -472,6 +505,7 @@ fn weakmap_functionality_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -486,6 +520,7 @@ fn weakset_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -500,6 +535,7 @@ fn weakset_functionality_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -513,6 +549,7 @@ fn blockscope_activationobject_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -527,6 +564,7 @@ fn blockscope_deferred_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -542,6 +580,7 @@ fn blockscope_deferred_js_deferparse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -556,6 +595,7 @@ fn blockscope_functionbinding_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -587,6 +627,7 @@ fn blockscope_functionbinding_js_invalidstackvar(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -601,6 +642,7 @@ fn letconst_global_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -615,6 +657,7 @@ fn letconst_global_shadowing_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -629,6 +672,7 @@ fn letconst_global_shadow_builtins_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -643,6 +687,7 @@ fn letconst_global_shadow_builtins_nonconfigurable_js(#[case] variant: Variant) 
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -657,6 +702,7 @@ fn letconst_global_shadow_deleted_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -671,6 +717,7 @@ fn letconst_global_shadow_accessor_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -684,6 +731,7 @@ fn letconst_global_bug_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -698,6 +746,7 @@ fn letconst_eval_redecl_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -713,6 +762,7 @@ fn letconst_eval_redecl_js_forcestrictmode(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -727,6 +777,7 @@ fn definegettersetter_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -741,6 +792,7 @@ fn classes_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -755,6 +807,7 @@ fn classes_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -770,6 +823,7 @@ fn classes_bugfixes_js1(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -785,6 +839,7 @@ fn classes_bugfixes_js2(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -805,6 +860,7 @@ fn es6super_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -819,6 +875,7 @@ fn es6super_js_defer_parse_off(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -833,6 +890,7 @@ fn es6super_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -847,6 +905,7 @@ fn classes_bug_os_6471427_js_force_serialized(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -860,6 +919,7 @@ fn classes_bug_os_6471427_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -874,6 +934,7 @@ fn classes_bug_os_7100885_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -896,6 +957,7 @@ fn es6subclassable_builtins_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -918,6 +980,7 @@ fn es6subclassable_builtins_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -933,6 +996,7 @@ fn es6subclassable_async_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -948,6 +1012,7 @@ fn es6subclassable_async_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -962,6 +1027,7 @@ fn es6math_apis_js_es6_math(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -976,6 +1042,7 @@ fn es6math_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -990,6 +1057,7 @@ fn es6number_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1010,6 +1078,7 @@ fn es6string_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1025,6 +1094,7 @@ fn code_point_at_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1039,6 +1109,7 @@ fn stringtemplate_basic_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1053,6 +1124,7 @@ fn es6string_template_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1067,6 +1139,7 @@ fn es6string_template_slow_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1088,6 +1161,7 @@ fn es6typed_array_extensions_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1102,6 +1176,7 @@ fn es6array_api_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1116,6 +1191,7 @@ fn es6array_use_constructor_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1130,6 +1206,7 @@ fn es6array_use_constructor_v5_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1167,6 +1244,7 @@ fn es6symbol_540238_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1181,6 +1259,7 @@ fn es6promise_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1196,6 +1275,7 @@ fn es6promise_async_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1212,6 +1292,7 @@ fn normalize_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1226,6 +1307,7 @@ fn normalize_prop_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1241,6 +1323,7 @@ fn unicode_escape_sequences_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1257,6 +1340,7 @@ fn unicode_6_identifiers_utf8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1272,6 +1356,7 @@ fn unicode_regex_surrogate_atoms_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1286,6 +1371,7 @@ fn spread_iterator_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1300,6 +1386,7 @@ fn reflect_construct_consume_new_target_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1314,6 +1401,7 @@ fn reflect_api_tests_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1328,6 +1416,7 @@ fn proxy_trap_consume_new_target_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1342,6 +1431,7 @@ fn bound_construction_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1355,6 +1445,7 @@ fn cross_context_spreadfunction_call_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1368,6 +1459,7 @@ fn cross_context_promise_file1_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1381,6 +1473,7 @@ fn cross_context_promise_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1395,6 +1488,7 @@ fn spread_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1412,6 +1506,7 @@ fn unicode_convert_utf8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1444,6 +1539,7 @@ fn bug620694_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -1458,6 +1554,7 @@ fn unicode_6_identifier_blue511452_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1473,6 +1570,7 @@ fn unicode_id_defer_parse_functions_utf8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -1487,6 +1585,7 @@ fn unicode_6_identifier_blue524737_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -1501,6 +1600,7 @@ fn supersyntax02_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -1515,6 +1615,7 @@ fn supersyntax05_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -1529,6 +1630,7 @@ fn supersyntax06_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1543,6 +1645,7 @@ fn objlit_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1560,6 +1663,7 @@ fn unicode_regex_surrogate_utf8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1575,6 +1679,7 @@ fn unicode_blue_533163_utf8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1589,6 +1694,7 @@ fn es6iterators_forof_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1603,6 +1709,7 @@ fn es6iterators_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1617,6 +1724,7 @@ fn es6species_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1631,6 +1739,7 @@ fn es6species_bugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1645,6 +1754,7 @@ fn blue595539_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1659,6 +1769,7 @@ fn proxytest6_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1673,6 +1784,7 @@ fn proxy_properties_api_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1687,6 +1799,7 @@ fn proxybugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1701,6 +1814,7 @@ fn proxyconstruction_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1714,6 +1828,7 @@ fn proxybug3_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1728,6 +1843,7 @@ fn proxyprotobug_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1741,6 +1857,7 @@ fn proxybug_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1754,6 +1871,7 @@ fn proxy_call_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1767,6 +1885,7 @@ fn proxyenumremoval_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1781,6 +1900,7 @@ fn proxy_issue884_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1794,6 +1914,7 @@ fn null_property_descriptor_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1808,6 +1929,7 @@ fn object_is_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1822,6 +1944,7 @@ fn object_assign_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1836,6 +1959,7 @@ fn default_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1850,6 +1974,7 @@ fn default_js_off_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1864,6 +1989,7 @@ fn default_js_force_cached_scope(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1878,6 +2004,7 @@ fn default_splitscope_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1892,6 +2019,7 @@ fn default_splitscope_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1906,6 +2034,7 @@ fn default_splitscope_undodeferparse_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1920,6 +2049,7 @@ fn default_splitscope_serialized_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1941,6 +2071,7 @@ fn rest_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1963,7 +2094,7 @@ fn rest_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1978,7 +2109,7 @@ fn generators_syntax_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -1999,6 +2130,7 @@ fn generators_syntax_js_force_deferparse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2013,7 +2145,7 @@ fn for_in_edge_cases_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2028,7 +2160,7 @@ fn generators_deferparse_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2043,7 +2175,7 @@ fn generators_apis_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2058,7 +2190,7 @@ fn generators_functionality_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2073,7 +2205,7 @@ fn generators_deferred_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2089,6 +2221,7 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2103,7 +2236,7 @@ fn generators_undodefer_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2118,7 +2251,7 @@ fn generators_cachedscope_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2133,7 +2266,7 @@ fn generators_applyargs_js_no_inline_apply(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(target_arch = "aarch64"))]
+#[cfg(all(not(target_arch = "aarch64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2148,6 +2281,7 @@ fn generators_applyargs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2162,6 +2296,7 @@ fn destructuring_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2176,6 +2311,7 @@ fn destructuring_obj_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2190,6 +2326,7 @@ fn destructuring_params_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2204,6 +2341,7 @@ fn destructuring_params_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2217,6 +2355,7 @@ fn destructuring_params_arguments_override_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2231,6 +2370,7 @@ fn destructuring_catch_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2245,6 +2385,7 @@ fn destructuring_bugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2275,6 +2416,7 @@ fn blue_641922_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2289,6 +2431,7 @@ fn bug_981217_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2303,6 +2446,7 @@ fn objlit_shorthand_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2318,6 +2462,7 @@ fn generator_strict_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2332,6 +2477,7 @@ fn regex_annex_b_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2368,6 +2514,7 @@ fn regex_octoquad_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2382,6 +2529,7 @@ fn regex_quantifiers_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2396,6 +2544,7 @@ fn regex_code_point_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2410,6 +2559,7 @@ fn regex_unicode_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2428,6 +2578,7 @@ fn regex_unicode_case_insensitive_js(#[case] variant: Variant) {
 //   all of the important cases are covered in regex-unicode-CaseInsensitive.js
 // -->
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2444,6 +2595,7 @@ fn regex_unicode_case_insensitive_all_i_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2460,6 +2612,7 @@ fn regex_unicode_case_insensitive_all_iu_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2474,6 +2627,7 @@ fn regex_set_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2494,6 +2648,7 @@ fn regex_prototype_properties_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2514,6 +2669,7 @@ fn regex_symbols_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2527,6 +2683,7 @@ fn regex_w_sharp_s_kelvin_sign_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2549,6 +2706,7 @@ fn regexflags_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2571,6 +2729,7 @@ fn regexflags_disabled_features_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2591,6 +2750,7 @@ fn reg_exp_apis_test_with_sticky_flag_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2612,6 +2772,7 @@ fn stickyflag_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2626,6 +2787,7 @@ fn utfbug_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2645,6 +2807,7 @@ fn proxybug_with_ld_fld_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2674,6 +2837,7 @@ fn proxy_in_proxy_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2688,6 +2852,7 @@ fn proxy_set_prototype_of_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2702,6 +2867,7 @@ fn arraywithproxy_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2716,6 +2882,7 @@ fn proxytest8_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2730,6 +2897,7 @@ fn proxytest9_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2745,6 +2913,7 @@ fn es6function_bugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2764,6 +2933,7 @@ fn os_2700778_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2777,6 +2947,7 @@ fn bug_os_2184795_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2791,6 +2962,7 @@ fn unicode_whitespace_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2805,6 +2977,7 @@ fn bug_os_2553885_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2818,6 +2991,7 @@ fn bug_os_2915477_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2832,6 +3006,7 @@ fn bug_os3198161_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2852,6 +3027,7 @@ fn bug_os_4498031_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2866,6 +3042,7 @@ fn es6new_target_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2880,6 +3057,7 @@ fn es6new_target_bugfixes_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2894,6 +3072,7 @@ fn es6new_target_bugfixes_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2908,6 +3087,7 @@ fn es6new_target_bugfixes_js_force_undo_defer(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2922,6 +3102,7 @@ fn es6class_super_chain_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2936,6 +3117,7 @@ fn global_lambda_new_target_syntax_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2950,6 +3132,7 @@ fn global_new_target_syntax_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2964,6 +3147,7 @@ fn global_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -2978,6 +3162,7 @@ fn global_param_catch_new_target_syntax_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -2992,6 +3177,7 @@ fn es6class_base_class_construction_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3006,6 +3192,7 @@ fn expo_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3020,6 +3207,7 @@ fn trailingcomma_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3034,6 +3222,7 @@ fn es6has_instance_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3048,6 +3237,7 @@ fn es6restricted_properties_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3062,6 +3252,7 @@ fn es6proto_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3076,6 +3267,7 @@ fn object_literal_bug_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -3097,6 +3289,7 @@ fn os_5403724_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3111,6 +3304,7 @@ fn forloops_per_iteration_bindings_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -3124,7 +3318,7 @@ fn htmlcomments_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(windows)]
+#[cfg(all(windows, feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -3139,6 +3333,7 @@ fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -3153,6 +3348,7 @@ fn os_5500719_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::disable_jit(Variant::DisableJit)]
@@ -3167,6 +3363,7 @@ fn os_8600339_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3181,6 +3378,7 @@ fn iteratorclose_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3195,6 +3393,7 @@ fn iterator_next_caches_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3209,6 +3408,7 @@ fn iteratorclose_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3224,6 +3424,7 @@ fn bug_issue_1496_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3239,6 +3440,7 @@ fn bug_issue_3247_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3253,6 +3455,7 @@ fn typedarray_bugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3275,6 +3478,7 @@ fn bug_os10595959_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3289,6 +3493,7 @@ fn defer_spread_rest_error_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3302,6 +3507,7 @@ fn bug_os10898061_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3316,6 +3522,7 @@ fn bug_os14880030_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3330,6 +3537,7 @@ fn bug_os14880030_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3344,6 +3552,7 @@ fn bug_os13976524_js_force_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3358,6 +3567,7 @@ fn bug_os15679026_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3372,6 +3582,7 @@ fn bug_issue_4635_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3387,6 +3598,7 @@ fn bug_os13976524_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3401,6 +3613,7 @@ fn defer_parse_lambda_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3421,6 +3634,7 @@ fn defer_parse_lambda_js_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3442,6 +3656,7 @@ fn defer_parse_lambda_js_force_undo_defer(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3456,6 +3671,7 @@ fn defer_parse_methods_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3476,6 +3692,7 @@ fn defer_parse_methods_js_defer_parse(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3497,6 +3714,7 @@ fn defer_parse_methods_js_force_undo_defer(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3510,6 +3728,7 @@ fn function_expr_capture_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3523,6 +3742,7 @@ fn set_user_func_as_proto_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3537,6 +3757,7 @@ fn function_expr_capture2_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3551,6 +3772,7 @@ fn supersetter_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3565,6 +3787,7 @@ fn bug_os16649604_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3579,6 +3802,7 @@ fn bug_os17895855_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3593,6 +3817,7 @@ fn super_bugs_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]
@@ -3608,6 +3833,7 @@ fn bug_issue_5994_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
+#[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
 #[case::dynapogo(Variant::Dynapogo)]

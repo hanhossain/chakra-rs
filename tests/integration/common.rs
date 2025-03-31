@@ -132,6 +132,14 @@ pub fn run_test_variant<const N: usize>(
         variant_config.excluded_tags.insert("exclude_windows");
     }
 
+    // debug should only run exclude_test
+    if !cfg!(feature = "optimized-tests") {
+        assert!(
+            variant_config.excluded_tags.contains("exclude_test"),
+            "Debug must contain exclude_test"
+        );
+    }
+
     let both: HashSet<_> = variant_config
         .excluded_tags
         .intersection(&test.tags)
