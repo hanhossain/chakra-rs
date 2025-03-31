@@ -2214,7 +2214,7 @@ VirtualProtectEx(
             void * lpAddress,
             SIZE_T dwSize,
             uint32_t flNewProtect,
-            PDWORD lpflOldProtect)
+            uint32_t * lpflOldProtect)
 {
     return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
 }
@@ -2230,7 +2230,7 @@ VirtualProtect(
             void * lpAddress,
             SIZE_T dwSize,
             uint32_t flNewProtect,
-            PDWORD lpflOldProtect)
+            uint32_t * lpflOldProtect)
 {
     BOOL     bRetVal = FALSE;
     PCMI     pEntry = NULL;

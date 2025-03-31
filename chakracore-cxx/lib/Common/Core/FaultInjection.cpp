@@ -113,7 +113,7 @@ namespace Js
         uint16_t StackTrace64(_In_ uint32_t FramesToSkip,
         _In_ uint32_t FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
-        _Out_opt_ PDWORD BackTraceHash,
+        _Out_opt_ uint32_t * BackTraceHash,
         _In_opt_ const CONTEXT* pCtx = nullptr)
     {
         CONTEXT                         Context;
@@ -190,7 +190,7 @@ namespace Js
         _In_ uint32_t FramesToSkip,
         _In_ uint32_t FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
-        _Inout_opt_ PDWORD BackTraceHash,
+        _Inout_opt_ uint32_t * BackTraceHash,
         __in_opt const PCONTEXT InitialContext = NULL
         )
     {

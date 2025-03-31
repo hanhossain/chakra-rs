@@ -1434,7 +1434,7 @@ uint32_t
 OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
     HANDLE Process,
     void * TableAddress,
-    PDWORD Entries,
+    uint32_t * Entries,
     PRUNTIME_FUNCTION* Functions
     );
 typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK;

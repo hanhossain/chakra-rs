@@ -198,7 +198,7 @@ DbgHelpSymbolManager::SymFromAddr(void * address, DWORD64 * dwDisplacement, PSYM
 }
 
 BOOL
-DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ void * address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine)
+DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ void * address, _Out_ uint32_t * pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine)
 {
     if (pdwDisplacement != nullptr)
     {

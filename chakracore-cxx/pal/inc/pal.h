@@ -2607,15 +2607,15 @@ typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
 
 typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 
-    PDWORD R4;
-    PDWORD R5;
-    PDWORD R6;
-    PDWORD R7;
-    PDWORD R8;
-    PDWORD R9;
-    PDWORD R10;
-    PDWORD R11;
-    PDWORD Lr;
+    uint32_t * R4;
+    uint32_t * R5;
+    uint32_t * R6;
+    uint32_t * R7;
+    uint32_t * R8;
+    uint32_t * R9;
+    uint32_t * R10;
+    uint32_t * R11;
+    uint32_t * Lr;
 
     PULONGLONG D8;
     PULONGLONG D9;
@@ -3242,7 +3242,7 @@ VirtualProtect(
             void * lpAddress,
             SIZE_T dwSize,
             uint32_t flNewProtect,
-            PDWORD lpflOldProtect);
+            uint32_t * lpflOldProtect);
 
 BOOL
 VirtualProtectEx(
@@ -3250,7 +3250,7 @@ VirtualProtectEx(
             void * lpAddress,
             SIZE_T dwSize,
             uint32_t flNewProtect,
-            PDWORD lpflOldProtect);
+            uint32_t * lpflOldProtect);
 
 typedef struct _MEMORYSTATUSEX {
   uint32_t     dwLength;
@@ -4517,7 +4517,7 @@ typedef EXCEPTION_DISPOSITION (*PVECTORED_EXCEPTION_HANDLER)(
 
 // Define BitScanForward64 and BitScanForward
 // Per MSDN, BitScanForward64 will search the mask data from LSB to MSB for a set bit.
-// If one is found, its bit position is returned in the out PDWORD argument and 1 is returned.
+// If one is found, its bit position is returned in the out uint32_t * argument and 1 is returned.
 // Otherwise, 0 is returned.
 //
 // On GCC, the equivalent function is __builtin_ffsl. It returns 1+index of the least
@@ -4528,7 +4528,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanForward(
-      PDWORD Index,
+      uint32_t * Index,
      UINT qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4549,7 +4549,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanForward64(
-      PDWORD Index,
+      uint32_t * Index,
      UINT64 qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4571,7 +4571,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanReverse(
-      PDWORD Index,
+      uint32_t * Index,
      UINT qwMask)
 {
     unsigned char bRet = FALSE;
@@ -4592,7 +4592,7 @@ EXTERN_C
 inline
 unsigned char
 BitScanReverse64(
-      PDWORD Index,
+      uint32_t * Index,
      UINT64 qwMask)
 {
     unsigned char bRet = FALSE;

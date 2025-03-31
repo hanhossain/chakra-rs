@@ -139,7 +139,7 @@ typedef ULONGLONG *PULONGLONG;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-typedef unsigned int *PDWORD, *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
+typedef unsigned int *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
 
 typedef unsigned int DWORD32, *PDWORD32;
 
@@ -252,7 +252,7 @@ typedef UINT_PTR uintptr_t;
 #define _UINTPTR_T_DEFINED
 
 typedef uint32_t LCID;
-typedef PDWORD PLCID;
+typedef uint32_t * PLCID;
 typedef uint16_t LANGID;
 
 typedef uint32_t LCTYPE;
