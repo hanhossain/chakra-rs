@@ -136,15 +136,13 @@ typedef DWORD64 *PDWORD64;
 typedef LONGLONG *PLONG64;
 typedef ULONGLONG *PULONG64;
 typedef ULONGLONG *PULONGLONG;
-typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-typedef int BOOL, *PBOOL, *LPBOOL;
-typedef uint8_t BOOLEAN, *PBOOLEAN;
+typedef int BOOL, *LPBOOL;
+typedef uint8_t BOOLEAN;
 
-typedef unsigned __int64 UINT64, *PUINT64;
+typedef unsigned __int64 UINT64;
 
-typedef signed __int32 LONG32, *PLONG32;
 typedef unsigned __int64 ULONG64;
 typedef signed __int64 LONG64;
 
@@ -152,11 +150,9 @@ typedef signed __int64 LONG64;
 
 #define _atoi64 (__int64)atoll
 
-typedef __int64 INT_PTR, *PINT_PTR;
-typedef unsigned __int64 UINT_PTR, *PUINT_PTR;
-typedef __int64 *PLONG_PTR;
-typedef unsigned __int64 *PULONG_PTR;
-typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
+typedef __int64 INT_PTR;
+typedef unsigned __int64 UINT_PTR;
+typedef unsigned __int64 DWORD_PTR;
 
 /* maximum signed 64 bit value */
 #define LONG_PTR_MAX      I64(9223372036854775807)
@@ -189,8 +185,7 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define UlongToPtr(ul) ULongToPtr(ul)
 #define UintToPtr(ui)  UIntToPtr(ui)
 
-typedef size_t SIZE_T, *PSIZE_T;
-typedef ptrdiff_t SSIZE_T, *PSSIZE_T;
+typedef size_t SIZE_T;
 
 #ifndef SIZE_T_MAX
 #define SIZE_T_MAX ULONG_PTR_MAX
@@ -244,25 +239,18 @@ typedef UINT_PTR uintptr_t;
 #define _UINTPTR_T_DEFINED
 
 typedef uint32_t LCID;
-typedef uint32_t * PLCID;
 typedef uint16_t LANGID;
 
 typedef uint32_t LCTYPE;
 
-typedef WCHAR *PWCHAR;
-typedef WCHAR *LPWCH, *PWCH;
-typedef const WCHAR *LPCWCH, *PCWCH;
-typedef WCHAR *NWPSTR;
+typedef const WCHAR *LPCWCH;
 typedef WCHAR *LPWSTR, *PWSTR;
 
 typedef const WCHAR *LPCWSTR, *PCWSTR;
 
 typedef char *PCHAR;
-typedef char *LPCH, *PCH;
-typedef const char *LPCCH, *PCCH;
-typedef char *NPSTR;
-typedef char *LPSTR, *PSTR;
-typedef const char *LPCSTR, *PCSTR;
+typedef char *LPSTR;
+typedef const char *LPCSTR;
 
 #ifdef UNICODE
 typedef WCHAR TCHAR;
@@ -271,8 +259,7 @@ typedef WCHAR _TCHAR;
 typedef char TCHAR;
 typedef char _TCHAR;
 #endif
-typedef TCHAR *PTCHAR;
-typedef TCHAR *LPTSTR, *PTSTR;
+typedef TCHAR *LPTSTR;
 typedef const TCHAR *LPCTSTR;
 
 #define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
