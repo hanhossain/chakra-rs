@@ -31,7 +31,7 @@ private:
     HANDLE hProcess;
     HMODULE hDbgHelpModule;
 
-    typedef BOOL(*PfnSymFromAddrW)(HANDLE, unsigned long, PDWORD64, PSYMBOL_INFOW);
+    typedef BOOL(*PfnSymFromAddrW)(HANDLE, unsigned long, unsigned long *, PSYMBOL_INFOW);
     PfnSymFromAddrW pfnSymFromAddrW;
 
     typedef BOOL(*PfnSymGetLineFromAddr64W)(HANDLE, unsigned long, uint32_t *, PIMAGEHLP_LINEW64);

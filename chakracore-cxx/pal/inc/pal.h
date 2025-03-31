@@ -2444,24 +2444,24 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
     } ;
 
     union {
-        PDWORD64 IntegerContext[16];
+        unsigned long * IntegerContext[16];
         struct {
-            PDWORD64 Rax;
-            PDWORD64 Rcx;
-            PDWORD64 Rdx;
-            PDWORD64 Rbx;
-            PDWORD64 Rsp;
-            PDWORD64 Rbp;
-            PDWORD64 Rsi;
-            PDWORD64 Rdi;
-            PDWORD64 R8;
-            PDWORD64 R9;
-            PDWORD64 R10;
-            PDWORD64 R11;
-            PDWORD64 R12;
-            PDWORD64 R13;
-            PDWORD64 R14;
-            PDWORD64 R15;
+            unsigned long * Rax;
+            unsigned long * Rcx;
+            unsigned long * Rdx;
+            unsigned long * Rbx;
+            unsigned long * Rsp;
+            unsigned long * Rbp;
+            unsigned long * Rsi;
+            unsigned long * Rdi;
+            unsigned long * R8;
+            unsigned long * R9;
+            unsigned long * R10;
+            unsigned long * R11;
+            unsigned long * R12;
+            unsigned long * R13;
+            unsigned long * R14;
+            unsigned long * R15;
         } ;
     } ;
 
@@ -2806,27 +2806,27 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
 
 typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 
-    PDWORD64 X19;
-    PDWORD64 X20;
-    PDWORD64 X21;
-    PDWORD64 X22;
-    PDWORD64 X23;
-    PDWORD64 X24;
-    PDWORD64 X25;
-    PDWORD64 X26;
-    PDWORD64 X27;
-    PDWORD64 X28;
-    PDWORD64 Fp;
-    PDWORD64 Lr;
+    unsigned long * X19;
+    unsigned long * X20;
+    unsigned long * X21;
+    unsigned long * X22;
+    unsigned long * X23;
+    unsigned long * X24;
+    unsigned long * X25;
+    unsigned long * X26;
+    unsigned long * X27;
+    unsigned long * X28;
+    unsigned long * Fp;
+    unsigned long * Lr;
 
-    PDWORD64 D8;
-    PDWORD64 D9;
-    PDWORD64 D10;
-    PDWORD64 D11;
-    PDWORD64 D12;
-    PDWORD64 D13;
-    PDWORD64 D14;
-    PDWORD64 D15;
+    unsigned long * D8;
+    unsigned long * D9;
+    unsigned long * D10;
+    unsigned long * D11;
+    unsigned long * D12;
+    unsigned long * D13;
+    unsigned long * D14;
+    unsigned long * D15;
 
 } KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
