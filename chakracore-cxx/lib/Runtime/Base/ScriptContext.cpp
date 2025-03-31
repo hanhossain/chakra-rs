@@ -6538,7 +6538,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
 #ifdef ENABLE_JS_ETW
-    void ScriptContext::EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent)
+    void ScriptContext::EmitStackTraceEvent(__in unsigned long operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent)
     {
         // If call root level is zero, there is no EntryExitRecord and the stack walk will fail.
         if (GetThreadContext()->GetCallRootLevel() == 0)

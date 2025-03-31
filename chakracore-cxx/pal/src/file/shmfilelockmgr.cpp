@@ -32,8 +32,8 @@ FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
     void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
-    UINT64 lockRgnStart, 
-    UINT64 nbBytesToLock, 
+    unsigned long lockRgnStart,
+    unsigned long nbBytesToLock,
     LOCK_TYPE lockType
     );
 
@@ -41,8 +41,8 @@ PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
     void * pvControllerInstance,
-    UINT64 lockRgnStart, 
-    UINT64 nbBytesToLock,
+    unsigned long lockRgnStart,
+    unsigned long nbBytesToLock,
     LOCK_TYPE lockAction
     );
 
@@ -50,8 +50,8 @@ PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
     void * pvControllerInstance,
-    UINT64 unlockRgnStart, 
-    UINT64 nbBytesToUnlock,
+    unsigned long unlockRgnStart,
+    unsigned long nbBytesToUnlock,
     LOCK_TYPE unlockType
     );
 
@@ -318,11 +318,11 @@ CSharedMemoryFileLockController::GetTransactionLock(
     )
 {
     PAL_ERROR palError = NO_ERROR;
-    UINT64 lockRgnStart;
-    UINT64 nbBytesToLock;
+    unsigned long lockRgnStart;
+    unsigned long nbBytesToLock;
 
-    lockRgnStart  = ((UINT64)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToLock = ((UINT64)nNumberOfBytesToLockHigh) << 32  | 
+    lockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
+    nbBytesToLock = ((unsigned long)nNumberOfBytesToLockHigh) << 32  |
                              nNumberOfBytesToLockLow;
 
     palError = FILELockFileRegion(
@@ -367,8 +367,8 @@ CSharedMemoryFileLockController::CreateFileLock(
     )
 {
     PAL_ERROR palError = NO_ERROR;
-    UINT64 lockRgnStart;
-    UINT64 nbBytesToLock;
+    unsigned long lockRgnStart;
+    unsigned long nbBytesToLock;
 
     if (ExclusiveFileLock != eFileLockExclusivity
         || FailImmediately != eFileLockWaitMode)
@@ -378,8 +378,8 @@ CSharedMemoryFileLockController::CreateFileLock(
         goto CreateFileLockExit;
     }
 
-    lockRgnStart  = ((UINT64)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToLock = ((UINT64)nNumberOfBytesToLockHigh) << 32  | 
+    lockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
+    nbBytesToLock = ((unsigned long)nNumberOfBytesToLockHigh) << 32  |
                              nNumberOfBytesToLockLow;
 
     palError = FILELockFileRegion(
@@ -405,11 +405,11 @@ CSharedMemoryFileLockController::ReleaseFileLock(
     )
 {
     PAL_ERROR palError = NO_ERROR;
-    UINT64 unlockRgnStart;
-    UINT64 nbBytesToUnlock;
+    unsigned long unlockRgnStart;
+    unsigned long nbBytesToUnlock;
 
-    unlockRgnStart  = ((UINT64)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToUnlock = ((UINT64)nNumberOfBytesToUnlockHigh) << 32  | 
+    unlockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
+    nbBytesToUnlock = ((unsigned long)nNumberOfBytesToUnlockHigh) << 32  |
                              nNumberOfBytesToUnlockLow;
 
     palError = FILEUnlockFileRegion(
@@ -456,8 +456,8 @@ PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
     void * pvControllerInstance,
-    UINT64 lockRgnStart, 
-    UINT64 nbBytesToLock,
+    unsigned long lockRgnStart,
+    unsigned long nbBytesToLock,
     LOCK_TYPE lockAction
     )
 {
@@ -605,8 +605,8 @@ PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
     void * pvControllerInstance,
-    UINT64 unlockRgnStart, 
-    UINT64 nbBytesToUnlock,
+    unsigned long unlockRgnStart,
+    unsigned long nbBytesToUnlock,
     LOCK_TYPE unlockType
     )
 {
@@ -802,8 +802,8 @@ FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
     void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
-    UINT64 lockRgnStart, 
-    UINT64 nbBytesToLock, 
+    unsigned long lockRgnStart,
+    unsigned long nbBytesToLock,
     LOCK_TYPE lockType
     )
 {

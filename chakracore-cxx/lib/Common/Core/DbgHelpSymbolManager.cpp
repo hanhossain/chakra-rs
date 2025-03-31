@@ -188,11 +188,11 @@ DbgHelpSymbolManager::~DbgHelpSymbolManager()
 }
 
 BOOL
-DbgHelpSymbolManager::SymFromAddr(void * address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol)
+DbgHelpSymbolManager::SymFromAddr(void * address, unsigned long * dwDisplacement, PSYMBOL_INFO pSymbol)
 {
     if (Instance.pfnSymFromAddrW)
     {
-        return Instance.pfnSymFromAddrW(Instance.hProcess, (DWORD64)address, dwDisplacement, pSymbol);
+        return Instance.pfnSymFromAddrW(Instance.hProcess, (unsigned long)address, dwDisplacement, pSymbol);
     }
     return FALSE;
 }
@@ -213,7 +213,7 @@ DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ void * address, _Out_ uint32_t *
 
     if (Instance.pfnSymGetLineFromAddr64W)
     {
-        return Instance.pfnSymGetLineFromAddr64W(Instance.hProcess, (DWORD64)address, pdwDisplacement, pLine);
+        return Instance.pfnSymGetLineFromAddr64W(Instance.hProcess, (unsigned long)address, pdwDisplacement, pLine);
     }
     return FALSE;
 }
@@ -221,7 +221,7 @@ DbgHelpSymbolManager::SymGetLineFromAddr64(_In_ void * address, _Out_ uint32_t *
 size_t DbgHelpSymbolManager::PrintSymbol(void * address)
 {
     size_t retValue = 0;
-    DWORD64  dwDisplacement = 0;
+    unsigned long  dwDisplacement = 0;
     char buffer[sizeof(SYMBOL_INFO)+MAX_SYM_NAME * sizeof(TCHAR)];
     PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
 

@@ -319,21 +319,21 @@ typedef struct _SINGLE_LIST_ENTRY SLIST_ENTRY, *PSLIST_ENTRY;
 
 typedef union DECLSPEC_ALIGN(16) _SLIST_HEADER {
   struct {  // original struct
-    ULONGLONG Alignment;
-    ULONGLONG Region;
+    unsigned long Alignment;
+    unsigned long Region;
   } DUMMYSTRUCTNAME;
   struct {  // x64 16-byte header
-    ULONGLONG Depth : 16;
-    ULONGLONG Sequence : 48;
-    ULONGLONG Reserved : 4;
-    ULONGLONG NextEntry : 60; // last 4 bits are always 0's
+    unsigned long Depth : 16;
+    unsigned long Sequence : 48;
+    unsigned long Reserved : 4;
+    unsigned long NextEntry : 60; // last 4 bits are always 0's
   } HeaderX64;
 } SLIST_HEADER, *PSLIST_HEADER;
 
 #elif defined(_X86_)
 
 typedef union _SLIST_HEADER {
-  ULONGLONG Alignment;
+  unsigned long Alignment;
   struct {
     SLIST_ENTRY Next;
     uint16_t   Depth;
@@ -344,7 +344,7 @@ typedef union _SLIST_HEADER {
 #elif defined(_ARM_)
 
 typedef union _SLIST_HEADER {
-  ULONGLONG Alignment;
+  unsigned long Alignment;
   struct {
     SLIST_ENTRY Next;
     uint16_t   Depth;
@@ -355,7 +355,7 @@ typedef union _SLIST_HEADER {
 #elif defined(_ARM64_)
 
 typedef union _SLIST_HEADER {
-  ULONGLONG Alignment;
+  unsigned long Alignment;
   struct {
     SLIST_ENTRY Next;
     uint16_t   Depth;

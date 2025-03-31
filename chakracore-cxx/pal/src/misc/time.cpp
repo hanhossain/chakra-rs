@@ -309,10 +309,10 @@ EXIT:
     return retval;
 }
 
-static ULONGLONG
+static unsigned long
 GetTickCount64Fallback()
 {
-    ULONGLONG retval = 0;
+    unsigned long retval = 0;
 
     // The `__APPLE__` below is unlikely. However, if osx future version
     // supports one of the clock types below, we may miss that and
@@ -345,7 +345,7 @@ GetTickCount64Fallback()
     }
 #elif HAVE_GETHRTIME
     {
-        retval = (ULONGLONG)(gethrtime() / tccMillieSecondsToNanoSeconds);
+        retval = (unsigned long)(gethrtime() / tccMillieSecondsToNanoSeconds);
     }
 #elif HAVE_READ_REAL_TIME
     {
@@ -374,9 +374,9 @@ EXIT:
 }
 
 #if defined(_X86_) || defined(__AMD64__) || defined(__x86_64__)
-inline ULONGLONG rdtsc()
+inline unsigned long rdtsc()
 {
-    ULONGLONG H, L;
+    unsigned long H, L;
     __asm volatile ("rdtsc":"=a"(L), "=d"(H));
 #ifdef _X86_
     return L;
@@ -388,7 +388,7 @@ inline ULONGLONG rdtsc()
 static double CPUFreq()
 {
     struct timeval tstart, tend;
-    ULONGLONG start, end;
+    unsigned long start, end;
 
     struct timezone tzone;
     memset(&tzone, 0, sizeof(tzone));
@@ -401,16 +401,16 @@ static double CPUFreq()
     end = rdtsc();
     gettimeofday(&tend, &tzone);
 
-    ULONGLONG usec = ((tend.tv_sec - tstart.tv_sec)*1e6)
+    unsigned long usec = ((tend.tv_sec - tstart.tv_sec)*1e6)
                 + (tend.tv_usec - tstart.tv_usec);
 
     if (!usec) return 0;
     return (end - start) / usec;
 }
 
-static ULONGLONG cpu_speed = CPUFreq() * 1e3; // 1000 * 1e6 => ns to ms
-typedef ULONGLONG (*GetTickCount64FallbackCB)(void);
-inline ULONGLONG FastTickCount()
+static unsigned long cpu_speed = CPUFreq() * 1e3; // 1000 * 1e6 => ns to ms
+typedef unsigned long (*GetTickCount64FallbackCB)(void);
+inline unsigned long FastTickCount()
 {
   return rdtsc() / cpu_speed;
 }
@@ -426,7 +426,7 @@ to return monotonically increasing counts and avoid being affected by changes
 to the system clock (either due to drift or due to explicit changes to system
 time).
 --*/
-ULONGLONG
+unsigned long
 GetTickCount64()
 {
 #if defined(_X86_) || defined(__AMD64__) || defined(__x86_64__)

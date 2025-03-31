@@ -160,7 +160,7 @@ bool Js::Amd64StackFrame::Next(CONTEXT *context, ULONG64 imageBase, RUNTIME_FUNC
         // Leaf frames are not listed in the PDATA section because they
         // don't use the stack.
         // Manually crawl to the next frame.
-        context->Rip = *((DWORD64 *)context->Rsp);
+        context->Rip = *((unsigned long *)context->Rsp);
         context->Rsp += 8;
     }
 
@@ -185,9 +185,9 @@ Js::Amd64StackFrame::NextFromNativeAddress(CONTEXT * context)
     //
     // Rbp - to walk to the next frame
 
-    context->Rip = *((DWORD64*)context->Rbp + 1);
-    context->Rsp = (DWORD64)((DWORD64*)context->Rbp + 2);
-    context->Rbp = *((DWORD64*)context->Rbp);
+    context->Rip = *((unsigned long*)context->Rbp + 1);
+    context->Rsp = (unsigned long)((unsigned long*)context->Rbp + 2);
+    context->Rbp = *((unsigned long*)context->Rbp);
 
     return true;
 }

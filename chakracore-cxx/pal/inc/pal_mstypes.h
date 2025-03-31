@@ -113,19 +113,15 @@ extern "C" {
 #define __int16     short int
 #define __int8      char        // assumes char is signed
 
-typedef unsigned long ULONGLONG;
-typedef ULONGLONG DWORD64;
-typedef DWORD64 *PDWORD64;
+typedef unsigned long *PDWORD64;
 typedef long *PLONG64;
-typedef ULONGLONG *PULONG64;
-typedef ULONGLONG *PULONGLONG;
-typedef char *PSZ;
-typedef ULONGLONG DWORDLONG;
+typedef unsigned long *PULONG64;
+typedef unsigned long *PULONGLONG;
 
 typedef int BOOL, *PBOOL, *LPBOOL;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
-typedef unsigned long UINT64, *PUINT64;
+typedef unsigned long *PUINT64;
 
 typedef signed int LONG32, *PLONG32;
 typedef unsigned long ULONG64;

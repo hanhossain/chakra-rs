@@ -2390,7 +2390,7 @@ LABEL1:
             Var exceptionInfoReg = exceptionInfo->ContextRecord;
             Var* exceptionInfoIntReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
             Var* exceptionInfoFloatReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
-            Assert((DWORD64)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
+            Assert((unsigned long)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
             Assert((uint64)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
 
             if (instrData.isLoad)

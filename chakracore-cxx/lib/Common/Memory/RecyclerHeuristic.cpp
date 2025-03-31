@@ -30,7 +30,7 @@ RecyclerHeuristic::RecyclerHeuristic()
     BOOL isSuccess = ::GlobalMemoryStatusEx(&mem);
     Assert(isSuccess);
 
-    DWORDLONG physicalMemoryBytes = mem.ullTotalPhys;
+    unsigned long physicalMemoryBytes = mem.ullTotalPhys;
     uint baseFactor;
 
     // xplat-todo: Android sysconf is rather unreliable,

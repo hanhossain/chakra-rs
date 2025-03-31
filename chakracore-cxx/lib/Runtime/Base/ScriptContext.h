@@ -451,7 +451,7 @@ namespace Js
 #endif
 
 #ifdef ENABLE_JS_ETW
-        void EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
+        void EmitStackTraceEvent(__in unsigned long operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
         static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
 #endif
 

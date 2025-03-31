@@ -11,9 +11,9 @@
 using namespace Js;
 
     // Redeclare static constants
-    const UINT64 NumberConstantsBase::k_Nan;
+    const unsigned long NumberConstantsBase::k_Nan;
     const uint32_t NumberConstantsBase::k_Nan32;
-    const UINT64 NumberConstantsBase::k_NegativeNan;
+    const unsigned long NumberConstantsBase::k_NegativeNan;
     const int64_t NumberUtilitiesBase::Pos_InvalidInt64;
     const int64_t NumberUtilitiesBase::Neg_InvalidInt64;
     const uint64 NumberConstants::k_PosInf;
@@ -126,7 +126,7 @@ using namespace Js;
             mov uint32_t PTR[ebx], edx
         }
 #else //!I386_ASM
-        DWORDLONG llu = UInt32x32To64(lu1, lu2);
+        unsigned long llu = UInt32x32To64(lu1, lu2);
 
         *pluHi = (uint32)(llu >> 32);
         return (uint32)llu;

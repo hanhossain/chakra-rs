@@ -90,7 +90,7 @@ LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
     int length = 0;
     int n;
     int r;
-    UINT64 uval = value;
+    unsigned long uval = value;
     LPWSTR stringPtr = string;
     int start = 0;
     int end;
@@ -796,7 +796,7 @@ PAL_wcstoulExit:
     return (uint32_t)res;
 }
 
-ULONGLONG
+unsigned long
 PAL__wcstoui64(
         const char16_t *nptr,
         char16_t **endptr,

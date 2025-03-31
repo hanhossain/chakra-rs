@@ -170,7 +170,7 @@ SetFileTime(
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
-    const UINT64 MAX_FILETIMEVALUE = 0x8000000000000000LL;
+    const unsigned long MAX_FILETIMEVALUE = 0x8000000000000000LL;
 
     PERF_ENTRY(SetFileTime);
     ENTRY("SetFileTime(hFile=%p, lpCreationTime=%p, lpLastAccessTime=%p, "
@@ -180,11 +180,11 @@ SetFileTime(
     pThread = InternalGetCurrentThread();
 
     /* validate filetime values */
-    if ( (lpCreationTime && (((UINT64)lpCreationTime->dwHighDateTime   << 32) + 
+    if ( (lpCreationTime && (((unsigned long)lpCreationTime->dwHighDateTime   << 32) +
           lpCreationTime->dwLowDateTime   >= MAX_FILETIMEVALUE)) ||        
-         (lpLastAccessTime && (((UINT64)lpLastAccessTime->dwHighDateTime << 32) + 
+         (lpLastAccessTime && (((unsigned long)lpLastAccessTime->dwHighDateTime << 32) +
           lpLastAccessTime->dwLowDateTime >= MAX_FILETIMEVALUE)) ||
-         (lpLastWriteTime && (((UINT64)lpLastWriteTime->dwHighDateTime  << 32) + 
+         (lpLastWriteTime && (((unsigned long)lpLastWriteTime->dwHighDateTime  << 32) +
           lpLastWriteTime->dwLowDateTime  >= MAX_FILETIMEVALUE)))
     {
         pThread->SetLastError(ERROR_INVALID_HANDLE);
@@ -646,7 +646,7 @@ Function
 BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
                                   LPSYSTEMTIME lpSystemTime )
 {
-    UINT64 FileTime = 0;
+    unsigned long FileTime = 0;
     time_t UnixFileTime = 0;
     struct tm * UnixSystemTime = 0;
 
@@ -654,7 +654,7 @@ BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
     FileTime = lpFileTime->dwHighDateTime;
     FileTime <<= 32;
     FileTime |= (uint32_t)lpFileTime->dwLowDateTime;
-    const UINT64 since1601 = SECS_BETWEEN_1601_AND_1970_EPOCHS * SECS_TO_100NS;
+    const unsigned long since1601 = SECS_BETWEEN_1601_AND_1970_EPOCHS * SECS_TO_100NS;
 
     if (FileTime > since1601 && since1601 >= 0) 
     {

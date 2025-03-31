@@ -254,7 +254,7 @@ GlobalMemoryStatusEx(
 
     // Get the Physical memory size
     physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
-    lpBuffer->ullTotalPhys = (DWORDLONG)physical_memory;
+    lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
     fRetVal = TRUE;
 #elif HAVE_SYSCTL
     int mib[2];
@@ -272,7 +272,7 @@ GlobalMemoryStatusEx(
     }
     else
     {
-        lpBuffer->ullTotalPhys = (DWORDLONG)physical_memory;
+        lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
         fRetVal = TRUE;
     }
 #else // HAVE_SYSINFO
@@ -317,7 +317,7 @@ GlobalMemoryStatusEx(
     lpBuffer->ullTotalVirtual = MAX_PROCESS_VA_SPACE_LINUX;
 #else
     // xplat-todo: for all the other unices just use 128TB for now.
-    static const UINT64 _128TB = (1ull << 47);
+    static const unsigned long _128TB = (1ull << 47);
     lpBuffer->ullTotalVirtual = _128TB;
 #endif
     lpBuffer->ullAvailVirtual = lpBuffer->ullAvailPhys;

@@ -460,7 +460,7 @@
 #define SEPARATE_ARENA
 
 #ifdef _X64_OR_ARM64
-#define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
+#define MAX_NATURAL_ALIGNMENT sizeof(unsigned long)
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 #else
 #define MAX_NATURAL_ALIGNMENT sizeof(uint32_t)

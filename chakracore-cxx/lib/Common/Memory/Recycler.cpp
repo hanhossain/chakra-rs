@@ -5716,7 +5716,7 @@ uint64 DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
     ul1.LowPart = ft1->dwLowDateTime;
     ul2.HighPart = ft2->dwHighDateTime;
     ul2.LowPart = ft2->dwLowDateTime;
-    ULONGLONG result = ul1.QuadPart - ul2.QuadPart;
+    unsigned long result = ul1.QuadPart - ul2.QuadPart;
     return result;
 }
 

@@ -20,7 +20,7 @@ namespace DateTime
         double quantizationToSelectedScaleFactor = 1.0;
         bool highFreq = false;
         double currentRandomWindowScaled = 0.0;
-        ULONGLONG currentQuantizedQpc = 0;
+        unsigned long currentQuantizedQpc = 0;
     public:
         JitterManager()
         {
@@ -92,8 +92,8 @@ namespace DateTime
             // Convert these back to an integral value, taking the ceiling, even for the floored result.
             // This will give us consistent results as the quantum moves (i.e. what is currently the
             // quantizedQPC ends up being the floored QPC once we roll into the next window).
-            ULONGLONG quantizedQpc = static_cast<ULONGLONG>(ceil(ceilResult));
-            ULONGLONG quantizedQpcFloored = static_cast<ULONGLONG>(ceil(floorResult));
+            unsigned long quantizedQpc = static_cast<unsigned long>(ceil(ceilResult));
+            unsigned long quantizedQpcFloored = static_cast<unsigned long>(ceil(floorResult));
 
             // The below converts the delta to milliseconds and checks that our quantized value does not
             // diverge by more than our target quantization (plus an epsilon equal to 1 tick of the QPC).
@@ -139,7 +139,7 @@ namespace DateTime
             // This fractional portion is then evaluated in order to determine whether or not to snap
             // forward and use the next quantum, or use the floored one. This calculation gives us random
             // windows in which specific 1000us timestamps are observed for a non-deterministic amount of time.
-            double preciseScaledFractional = preciseScaledResult - ((ULONGLONG)preciseScaledResult);
+            double preciseScaledFractional = preciseScaledResult - ((unsigned long)preciseScaledResult);
             if (preciseScaledFractional < currentRandomWindowScaled)
             {
                 quantizedQpc = quantizedQpcFloored;

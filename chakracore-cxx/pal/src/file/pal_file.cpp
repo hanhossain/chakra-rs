@@ -2613,7 +2613,7 @@ InternalSetEndOfFileExit:
     // ERROR_INVALID_PARAMETER.
     // curr has been checked to be positive after getting the value from lseek. The following cast is put to
     // suppress the compilation warning.
-    if (palError == ERROR_DISK_FULL && (static_cast<UINT64>(curr) > 0x00000fffffff0000ULL ) )
+    if (palError == ERROR_DISK_FULL && (static_cast<unsigned long>(curr) > 0x00000fffffff0000ULL ) )
         palError = ERROR_INVALID_PARAMETER;
 
     if (NULL != pLocalDataLock)

@@ -54,8 +54,8 @@ namespace CorUnix
     {
         uint32_t processId;
         void * pvControllerInstance;
-        UINT64 lockRgnStart; 
-        UINT64 nbBytesLocked;
+        unsigned long lockRgnStart;
+        unsigned long nbBytesLocked;
         LOCK_TYPE lockType;
 
         SHMPTR next;
@@ -153,8 +153,8 @@ namespace CorUnix
 
         SHMPTR m_shmFileLocks;
         void * m_pvControllerInstance;
-        UINT64 m_lockRgnStart;
-        UINT64 m_nbBytesToLock;
+        unsigned long m_lockRgnStart;
+        unsigned long m_nbBytesToLock;
     protected:
         virtual ~CSharedMemoryFileTransactionLock()
         {
@@ -165,8 +165,8 @@ namespace CorUnix
         CSharedMemoryFileTransactionLock(
             SHMPTR shmFileLocks,
             void * pvControllerInstance,
-            UINT64 lockRgnStart,
-            UINT64 nbBytesToLock
+            unsigned long lockRgnStart,
+            unsigned long nbBytesToLock
             )
             :
             m_shmFileLocks(shmFileLocks),

@@ -336,10 +336,10 @@ void DoFunctionRelocations(uint8_t *function, uint32_t functionOffset, uint32_t 
 #elif defined(TARGET_64)
                 case IMAGE_REL_BASED_DIR64:
                     {
-                        ULONGLONG *patchAddr64 = (ULONGLONG *) (function + blockOffset + offset - functionOffset);
-                        ULONGLONG patchAddr64Offset = *patchAddr64 - imageBase - textHeader->VirtualAddress;
+                        unsigned long *patchAddr64 = (unsigned long *) (function + blockOffset + offset - functionOffset);
+                        unsigned long patchAddr64Offset = *patchAddr64 - imageBase - textHeader->VirtualAddress;
                         Assert((patchAddr64Offset > functionOffset) && (patchAddr64Offset < (functionOffset + functionSize)));
-                        *patchAddr64 = patchAddr64Offset - functionOffset + (ULONGLONG)function;
+                        *patchAddr64 = patchAddr64Offset - functionOffset + (unsigned long)function;
                     }
                     break;
 #else

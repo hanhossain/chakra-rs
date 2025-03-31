@@ -1786,7 +1786,7 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_FLOATING_POINT.
     //
-    ULONGLONG fsr;
+    unsigned long fsr;
     union {
         float f[COUNT_FLOATING_REGISTER];
         double d[COUNT_DOUBLE_REGISTER];
@@ -1860,7 +1860,7 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_FLOATING_POINT.
     //
-    ULONGLONG fsr;
+    unsigned long fsr;
     union {
         float f[COUNT_FLOATING_REGISTER];
         double d[COUNT_DOUBLE_REGISTER];
@@ -1950,23 +1950,23 @@ typedef struct _CONTEXT {
     // N.B. CONTEXT_DEBUG is *not* part of CONTEXT_FULL.
     //
 
-    ULONGLONG DbI0;
-    ULONGLONG DbI1;
-    ULONGLONG DbI2;
-    ULONGLONG DbI3;
-    ULONGLONG DbI4;
-    ULONGLONG DbI5;
-    ULONGLONG DbI6;
-    ULONGLONG DbI7;
+    unsigned long DbI0;
+    unsigned long DbI1;
+    unsigned long DbI2;
+    unsigned long DbI3;
+    unsigned long DbI4;
+    unsigned long DbI5;
+    unsigned long DbI6;
+    unsigned long DbI7;
 
-    ULONGLONG DbD0;
-    ULONGLONG DbD1;
-    ULONGLONG DbD2;
-    ULONGLONG DbD3;
-    ULONGLONG DbD4;
-    ULONGLONG DbD5;
-    ULONGLONG DbD6;
-    ULONGLONG DbD7;
+    unsigned long DbD0;
+    unsigned long DbD1;
+    unsigned long DbD2;
+    unsigned long DbD3;
+    unsigned long DbD4;
+    unsigned long DbD5;
+    unsigned long DbD6;
+    unsigned long DbD7;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2121,7 +2121,7 @@ typedef struct _CONTEXT {
     // the flag CONTEXT_LOWER_FLOATING_POINT | CONTEXT_HIGHER_FLOATING_POINT | CONTEXT_CONTROL.
     //
 
-    ULONGLONG StFPSR;       //  FP status
+    unsigned long StFPSR;       //  FP status
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2130,50 +2130,50 @@ typedef struct _CONTEXT {
     // N.B. The registers gp, sp, rp are part of the control context
     //
 
-    ULONGLONG IntGp;        //  r1, volatile
-    ULONGLONG IntT0;        //  r2-r3, volatile
-    ULONGLONG IntT1;        //
-    ULONGLONG IntS0;        //  r4-r7, preserved
-    ULONGLONG IntS1;
-    ULONGLONG IntS2;
-    ULONGLONG IntS3;
-    ULONGLONG IntV0;        //  r8, volatile
-    ULONGLONG IntT2;        //  r9-r11, volatile
-    ULONGLONG IntT3;
-    ULONGLONG IntT4;
-    ULONGLONG IntSp;        //  stack pointer (r12), special
-    ULONGLONG IntTeb;       //  teb (r13), special
-    ULONGLONG IntT5;        //  r14-r31, volatile
-    ULONGLONG IntT6;
-    ULONGLONG IntT7;
-    ULONGLONG IntT8;
-    ULONGLONG IntT9;
-    ULONGLONG IntT10;
-    ULONGLONG IntT11;
-    ULONGLONG IntT12;
-    ULONGLONG IntT13;
-    ULONGLONG IntT14;
-    ULONGLONG IntT15;
-    ULONGLONG IntT16;
-    ULONGLONG IntT17;
-    ULONGLONG IntT18;
-    ULONGLONG IntT19;
-    ULONGLONG IntT20;
-    ULONGLONG IntT21;
-    ULONGLONG IntT22;
+    unsigned long IntGp;        //  r1, volatile
+    unsigned long IntT0;        //  r2-r3, volatile
+    unsigned long IntT1;        //
+    unsigned long IntS0;        //  r4-r7, preserved
+    unsigned long IntS1;
+    unsigned long IntS2;
+    unsigned long IntS3;
+    unsigned long IntV0;        //  r8, volatile
+    unsigned long IntT2;        //  r9-r11, volatile
+    unsigned long IntT3;
+    unsigned long IntT4;
+    unsigned long IntSp;        //  stack pointer (r12), special
+    unsigned long IntTeb;       //  teb (r13), special
+    unsigned long IntT5;        //  r14-r31, volatile
+    unsigned long IntT6;
+    unsigned long IntT7;
+    unsigned long IntT8;
+    unsigned long IntT9;
+    unsigned long IntT10;
+    unsigned long IntT11;
+    unsigned long IntT12;
+    unsigned long IntT13;
+    unsigned long IntT14;
+    unsigned long IntT15;
+    unsigned long IntT16;
+    unsigned long IntT17;
+    unsigned long IntT18;
+    unsigned long IntT19;
+    unsigned long IntT20;
+    unsigned long IntT21;
+    unsigned long IntT22;
 
-    ULONGLONG IntNats;      //  Nat bits for r1-r31
+    unsigned long IntNats;      //  Nat bits for r1-r31
                             //  r1-r31 in bits 1 thru 31.
-    ULONGLONG Preds;        //  predicates, preserved
+    unsigned long Preds;        //  predicates, preserved
 
-    ULONGLONG BrRp;         //  return pointer, b0, preserved
-    ULONGLONG BrS0;         //  b1-b5, preserved
-    ULONGLONG BrS1;
-    ULONGLONG BrS2;
-    ULONGLONG BrS3;
-    ULONGLONG BrS4;
-    ULONGLONG BrT0;         //  b6-b7, volatile
-    ULONGLONG BrT1;
+    unsigned long BrRp;         //  return pointer, b0, preserved
+    unsigned long BrS0;         //  b1-b5, preserved
+    unsigned long BrS1;
+    unsigned long BrS2;
+    unsigned long BrS3;
+    unsigned long BrS4;
+    unsigned long BrT0;         //  b6-b7, volatile
+    unsigned long BrT1;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2181,35 +2181,35 @@ typedef struct _CONTEXT {
     //
 
     // Other application registers
-    ULONGLONG ApUNAT;       //  User Nat collection register, preserved
-    ULONGLONG ApLC;         //  Loop counter register, preserved
-    ULONGLONG ApEC;         //  Epilog counter register, preserved
-    ULONGLONG ApCCV;        //  CMPXCHG value register, volatile
-    ULONGLONG ApDCR;        //  Default control register (TBD)
+    unsigned long ApUNAT;       //  User Nat collection register, preserved
+    unsigned long ApLC;         //  Loop counter register, preserved
+    unsigned long ApEC;         //  Epilog counter register, preserved
+    unsigned long ApCCV;        //  CMPXCHG value register, volatile
+    unsigned long ApDCR;        //  Default control register (TBD)
 
     // Register stack info
-    ULONGLONG RsPFS;        //  Previous function state, preserved
-    ULONGLONG RsBSP;        //  Backing store pointer, preserved
-    ULONGLONG RsBSPSTORE;
-    ULONGLONG RsRSC;        //  RSE configuration, volatile
-    ULONGLONG RsRNAT;       //  RSE Nat collection register, preserved
+    unsigned long RsPFS;        //  Previous function state, preserved
+    unsigned long RsBSP;        //  Backing store pointer, preserved
+    unsigned long RsBSPSTORE;
+    unsigned long RsRSC;        //  RSE configuration, volatile
+    unsigned long RsRNAT;       //  RSE Nat collection register, preserved
 
     // Trap Status Information
-    ULONGLONG StIPSR;       //  Interruption Processor Status
-    ULONGLONG StIIP;        //  Interruption IP
-    ULONGLONG StIFS;        //  Interruption Function State
+    unsigned long StIPSR;       //  Interruption Processor Status
+    unsigned long StIIP;        //  Interruption IP
+    unsigned long StIFS;        //  Interruption Function State
 
     // iA32 related control registers
-    ULONGLONG StFCR;        //  copy of Ar21
-    ULONGLONG Eflag;        //  Eflag copy of Ar24
-    ULONGLONG SegCSD;       //  iA32 CSDescriptor (Ar25)
-    ULONGLONG SegSSD;       //  iA32 SSDescriptor (Ar26)
-    ULONGLONG Cflag;        //  Cr0+Cr4 copy of Ar27
-    ULONGLONG StFSR;        //  x86 FP status (copy of AR28)
-    ULONGLONG StFIR;        //  x86 FP status (copy of AR29)
-    ULONGLONG StFDR;        //  x86 FP status (copy of AR30)
+    unsigned long StFCR;        //  copy of Ar21
+    unsigned long Eflag;        //  Eflag copy of Ar24
+    unsigned long SegCSD;       //  iA32 CSDescriptor (Ar25)
+    unsigned long SegSSD;       //  iA32 SSDescriptor (Ar26)
+    unsigned long Cflag;        //  Cr0+Cr4 copy of Ar27
+    unsigned long StFSR;        //  x86 FP status (copy of AR28)
+    unsigned long StFIR;        //  x86 FP status (copy of AR29)
+    unsigned long StFDR;        //  x86 FP status (copy of AR30)
 
-      ULONGLONG UNUSEDPACK;   //  added to pack StFDR to 16-bytes
+      unsigned long UNUSEDPACK;   //  added to pack StFDR to 16-bytes
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 #elif defined(_AMD64_)
@@ -2235,7 +2235,7 @@ typedef struct _CONTEXT {
 #define CONTEXT_EXCEPTION_REPORTING 0x80000000
 
 typedef struct _M128U {
-    ULONGLONG Low;
+    unsigned long Low;
     long High;
 } M128U, *PM128U;
 
@@ -2306,12 +2306,12 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //      context record in the future.
     //
 
-    DWORD64 P1Home;
-    DWORD64 P2Home;
-    DWORD64 P3Home;
-    DWORD64 P4Home;
-    DWORD64 P5Home;
-    DWORD64 P6Home;
+    unsigned long P1Home;
+    unsigned long P2Home;
+    unsigned long P3Home;
+    unsigned long P4Home;
+    unsigned long P5Home;
+    unsigned long P6Home;
 
     //
     // Control flags.
@@ -2336,39 +2336,39 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     // Debug registers
     //
 
-    DWORD64 Dr0;
-    DWORD64 Dr1;
-    DWORD64 Dr2;
-    DWORD64 Dr3;
-    DWORD64 Dr6;
-    DWORD64 Dr7;
+    unsigned long Dr0;
+    unsigned long Dr1;
+    unsigned long Dr2;
+    unsigned long Dr3;
+    unsigned long Dr6;
+    unsigned long Dr7;
 
     //
     // Integer registers.
     //
 
-    DWORD64 Rax;
-    DWORD64 Rcx;
-    DWORD64 Rdx;
-    DWORD64 Rbx;
-    DWORD64 Rsp;
-    DWORD64 Rbp;
-    DWORD64 Rsi;
-    DWORD64 Rdi;
-    DWORD64 R8;
-    DWORD64 R9;
-    DWORD64 R10;
-    DWORD64 R11;
-    DWORD64 R12;
-    DWORD64 R13;
-    DWORD64 R14;
-    DWORD64 R15;
+    unsigned long Rax;
+    unsigned long Rcx;
+    unsigned long Rdx;
+    unsigned long Rbx;
+    unsigned long Rsp;
+    unsigned long Rbp;
+    unsigned long Rsi;
+    unsigned long Rdi;
+    unsigned long R8;
+    unsigned long R9;
+    unsigned long R10;
+    unsigned long R11;
+    unsigned long R12;
+    unsigned long R13;
+    unsigned long R14;
+    unsigned long R15;
 
     //
     // Program counter.
     //
 
-    DWORD64 Rip;
+    unsigned long Rip;
 
     //
     // Floating point state.
@@ -2403,17 +2403,17 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //
 
     M128A VectorRegister[26];
-    DWORD64 VectorControl;
+    unsigned long VectorControl;
 
     //
     // Special debug control registers.
     //
 
-    DWORD64 DebugControl;
-    DWORD64 LastBranchToRip;
-    DWORD64 LastBranchFromRip;
-    DWORD64 LastExceptionToRip;
-    DWORD64 LastExceptionFromRip;
+    unsigned long DebugControl;
+    unsigned long LastBranchToRip;
+    unsigned long LastBranchFromRip;
+    unsigned long LastExceptionToRip;
+    unsigned long LastExceptionFromRip;
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
 //
@@ -2506,7 +2506,7 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 #define ARM_MAX_WATCHPOINTS     1
 
 typedef struct _NEON128 {
-    ULONGLONG Low;
+    unsigned long Low;
     long High;
 } NEON128, *PNEON128;
 
@@ -2584,7 +2584,7 @@ typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
     uint32_t Padding;
     union {
         NEON128 Q[16];
-        ULONGLONG D[32];
+        unsigned long D[32];
         uint32_t S[32];
     };
 
@@ -2724,7 +2724,7 @@ typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY {
 //
 
 typedef struct _NEON128 {
-    ULONGLONG Low;
+    unsigned long Low;
     long High;
 } NEON128, *PNEON128;
 
@@ -2743,42 +2743,42 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     /* +0x004 */ uint32_t Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
     /* +0x008 */ union {
                     struct {
-                        DWORD64 X0;
-                        DWORD64 X1;
-                        DWORD64 X2;
-                        DWORD64 X3;
-                        DWORD64 X4;
-                        DWORD64 X5;
-                        DWORD64 X6;
-                        DWORD64 X7;
-                        DWORD64 X8;
-                        DWORD64 X9;
-                        DWORD64 X10;
-                        DWORD64 X11;
-                        DWORD64 X12;
-                        DWORD64 X13;
-                        DWORD64 X14;
-                        DWORD64 X15;
-                        DWORD64 X16;
-                        DWORD64 X17;
-                        DWORD64 X18;
-                        DWORD64 X19;
-                        DWORD64 X20;
-                        DWORD64 X21;
-                        DWORD64 X22;
-                        DWORD64 X23;
-                        DWORD64 X24;
-                        DWORD64 X25;
-                        DWORD64 X26;
-                        DWORD64 X27;
-                        DWORD64 X28;
+                        unsigned long X0;
+                        unsigned long X1;
+                        unsigned long X2;
+                        unsigned long X3;
+                        unsigned long X4;
+                        unsigned long X5;
+                        unsigned long X6;
+                        unsigned long X7;
+                        unsigned long X8;
+                        unsigned long X9;
+                        unsigned long X10;
+                        unsigned long X11;
+                        unsigned long X12;
+                        unsigned long X13;
+                        unsigned long X14;
+                        unsigned long X15;
+                        unsigned long X16;
+                        unsigned long X17;
+                        unsigned long X18;
+                        unsigned long X19;
+                        unsigned long X20;
+                        unsigned long X21;
+                        unsigned long X22;
+                        unsigned long X23;
+                        unsigned long X24;
+                        unsigned long X25;
+                        unsigned long X26;
+                        unsigned long X27;
+                        unsigned long X28;
                     };
-                    DWORD64 X[29];
+                    unsigned long X[29];
                 };
-    /* +0x0f0 */ DWORD64 Fp;
-    /* +0x0f8 */ DWORD64 Lr;
-    /* +0x100 */ DWORD64 Sp;
-    /* +0x108 */ DWORD64 Pc;
+    /* +0x0f0 */ unsigned long Fp;
+    /* +0x0f8 */ unsigned long Lr;
+    /* +0x100 */ unsigned long Sp;
+    /* +0x108 */ unsigned long Pc;
 
     //
     // Floating Point/NEON Registers
@@ -2793,9 +2793,9 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //
 
     /* +0x318 */ uint32_t Bcr[ARM64_MAX_BREAKPOINTS];
-    /* +0x338 */ DWORD64 Bvr[ARM64_MAX_BREAKPOINTS];
+    /* +0x338 */ unsigned long Bvr[ARM64_MAX_BREAKPOINTS];
     /* +0x378 */ uint32_t Wcr[ARM64_MAX_WATCHPOINTS];
-    /* +0x380 */ DWORD64 Wvr[ARM64_MAX_WATCHPOINTS];
+    /* +0x380 */ unsigned long Wvr[ARM64_MAX_WATCHPOINTS];
     /* +0x390 */
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
@@ -3255,13 +3255,13 @@ VirtualProtectEx(
 typedef struct _MEMORYSTATUSEX {
   uint32_t     dwLength;
   uint32_t     dwMemoryLoad;
-  DWORDLONG ullTotalPhys;
-  DWORDLONG ullAvailPhys;
-  DWORDLONG ullTotalPageFile;
-  DWORDLONG ullAvailPageFile;
-  DWORDLONG ullTotalVirtual;
-  DWORDLONG ullAvailVirtual;
-  DWORDLONG ullAvailExtendedVirtual;
+  unsigned long ullTotalPhys;
+  unsigned long ullAvailPhys;
+  unsigned long ullTotalPageFile;
+  unsigned long ullAvailPageFile;
+  unsigned long ullTotalVirtual;
+  unsigned long ullAvailVirtual;
+  unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
 BOOL
@@ -4116,7 +4116,7 @@ typedef struct PALNUMBER__* PALNUMBER;
 // return NULL on OOM
 PALNUMBER PAL_DoubleToNumber(double);
 PALNUMBER PAL_Int64ToNumber(int64_t);
-PALNUMBER PAL_UInt64ToNumber(UINT64);
+PALNUMBER PAL_UInt64ToNumber(unsigned long);
 PALNUMBER PAL_IntToNumber(int);
 PALNUMBER PAL_UIntToNumber(unsigned int);
 
@@ -4473,7 +4473,7 @@ uint32_t
 GetTickCount(
          void);
 
-ULONGLONG
+unsigned long
 GetTickCount64();
 
 BOOL
@@ -4550,7 +4550,7 @@ inline
 unsigned char
 BitScanForward64(
       uint32_t * Index,
-     UINT64 qwMask)
+     unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
     static_assert(sizeof(qwMask) <= sizeof(long long),
@@ -4593,7 +4593,7 @@ inline
 unsigned char
 BitScanReverse64(
       uint32_t * Index,
-     UINT64 qwMask)
+     unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
     if (qwMask != 0)
@@ -5606,7 +5606,7 @@ WCHAR PAL_towlower(WCHAR);
 WCHAR PAL_towupper(WCHAR);
 
 WCHAR * _wcslwr(WCHAR *);
-ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
+unsigned long _wcstoui64(const WCHAR *, WCHAR **, int);
 WCHAR * _i64tow(long, WCHAR *, int);
 WCHAR * _ui64tow(unsigned long, WCHAR *, int);
 int _wtoi(const WCHAR *);

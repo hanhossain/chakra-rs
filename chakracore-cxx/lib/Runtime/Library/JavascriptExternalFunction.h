@@ -52,7 +52,7 @@ namespace Js
         ExternalMethod GetNativeMethod() { return nativeMethod; }
         BOOL SetLengthProperty(Var length);
 
-        void SetExternalFlags(UINT64 flags) { this->flags = flags; }
+        void SetExternalFlags(unsigned long flags) { this->flags = flags; }
 
         unsigned char GetDeferredLength() const { return deferredLength; }
         void SetDeferredLength(unsigned char deferredLength)
@@ -63,7 +63,7 @@ namespace Js
         void UndeferLength(ScriptContext *scriptContext);
 
     private:
-        Field(UINT64) flags;
+        Field(unsigned long) flags;
         Field(Var) signature;
         Field(void *) callbackState;
         union
