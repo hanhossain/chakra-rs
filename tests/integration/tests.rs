@@ -1,9 +1,9 @@
 mod array;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod asm_js;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod asm_js_float;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod asm_js_parser;
 #[cfg(not(disable_jit))]
 mod bailout;
@@ -42,9 +42,9 @@ mod es6module;
 mod es7;
 #[cfg(feature = "optimized-tests")]
 mod fieldopts;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod fixed_fields;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod flow_graph;
 mod function;
 #[cfg(feature = "optimized-tests")]
@@ -52,7 +52,7 @@ mod generated;
 mod global_functions;
 #[cfg(feature = "optimized-tests")]
 mod inline_caches;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod inlining;
 #[cfg(feature = "optimized-tests")]
 mod intl;
@@ -71,9 +71,9 @@ mod object;
 #[cfg(feature = "optimized-tests")]
 mod operators;
 mod optimizer;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod perf_hint;
-#[cfg(not(disable_jit))]
+#[cfg(all(not(disable_jit), feature = "optimized-tests"))]
 mod pre;
 #[cfg(feature = "optimized-tests")]
 mod prototypes;
@@ -94,7 +94,7 @@ mod strict;
 mod strings;
 #[cfg(feature = "optimized-tests")]
 mod switch_statement;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "optimized-tests"))]
 mod tagged_floats;
 mod tagged_integers;
 #[cfg(feature = "optimized-tests")]
