@@ -5112,10 +5112,10 @@ BitTestAndSet(
 }
 
 #define InterlockedExchangePointer(Target, Value) \
-    ((void *)InterlockedExchange64((PLONG64)(Target), (long)(Value)))
+    ((void *)InterlockedExchange64((long *)(Target), (long)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((void *)InterlockedCompareExchange64((PLONG64)(Destination), (long)(ExChange), (long)(Comperand)))
+    ((void *)InterlockedCompareExchange64((long *)(Destination), (long)(ExChange), (long)(Comperand)))
 
 /*++
 Function:
