@@ -1056,7 +1056,7 @@ See MSDN doc.
 BOOL
 GetExitCodeProcess(
      HANDLE hProcess,
-     LPDWORD lpExitCode)
+     uint32_t * lpExitCode)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;

@@ -443,7 +443,7 @@ CreateThread(
      LPTHREAD_START_ROUTINE lpStartAddress,
      void * lpParameter,
      uint32_t dwCreationFlags,
-     LPDWORD lpThreadId)
+     uint32_t * lpThreadId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;

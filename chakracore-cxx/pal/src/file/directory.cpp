@@ -128,7 +128,7 @@ static
 BOOL
 RemoveDirectoryHelper (
     LPSTR lpPathName,
-    LPDWORD dwLastError
+    uint32_t * dwLastError
 )
 {
     BOOL  bRet = FALSE;

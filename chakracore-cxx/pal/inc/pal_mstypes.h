@@ -139,8 +139,6 @@ typedef ULONGLONG *PULONGLONG;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-typedef unsigned int *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
-
 typedef unsigned int DWORD32, *PDWORD32;
 
 typedef int BOOL, *PBOOL, *LPBOOL;

@@ -861,7 +861,7 @@ WriteFile(
        HANDLE hFile,
        const void * lpBuffer,
        uint32_t nNumberOfBytesToWrite,
-       LPDWORD lpNumberOfBytesWritten,
+       uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
 BOOL
@@ -869,7 +869,7 @@ ReadFile(
       HANDLE hFile,
       void * lpBuffer,
       uint32_t nNumberOfBytesToRead,
-      LPDWORD lpNumberOfBytesRead,
+      uint32_t * lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped);
 
 #define STD_INPUT_HANDLE         ((uint32_t)-10)
@@ -901,7 +901,7 @@ SetFilePointerEx(
 uint32_t
 GetFileSize(
          HANDLE hFile,
-         LPDWORD lpFileSizeHigh);
+         uint32_t * lpFileSizeHigh);
 
 BOOL
 GetFileSizeEx(
@@ -1094,12 +1094,12 @@ SetCurrentDirectoryW(
 BOOL
 GetUserNameW(
      LPWSTR lpBuffer,      // address of name buffer
-      LPDWORD nSize );   // address of size of name buffer
+      uint32_t * nSize );   // address of size of name buffer
 
 BOOL
 GetComputerNameW(
      LPWSTR lpBuffer,     // address of name buffer
-      LPDWORD nSize);   // address of size of name buffer
+      uint32_t * nSize);   // address of size of name buffer
 
 #ifdef UNICODE
 #define GetUserName GetUserNameW
@@ -1367,7 +1367,7 @@ TerminateProcess(
 BOOL
 GetExitCodeProcess(
             HANDLE hProcess,
-            LPDWORD lpExitCode);
+            uint32_t * lpExitCode);
 
 BOOL
 GetProcessTimes(
@@ -1459,7 +1459,7 @@ CreateThread(
           LPTHREAD_START_ROUTINE lpStartAddress,
           void * lpParameter,
           uint32_t dwCreationFlags,
-          LPDWORD lpThreadId);
+          uint32_t * lpThreadId);
 
 __attribute__((noreturn))
 void
@@ -1469,7 +1469,7 @@ ExitThread(
 BOOL
 GetExitCodeThread(
             HANDLE hThread,
-            LPDWORD lpExitCode);
+            uint32_t * lpExitCode);
 
 uint32_t
 ResumeThread(
@@ -3934,7 +3934,7 @@ GetCalendarInfoW(
           CALTYPE CalType,
           LPWSTR lpCalData,
           int cchData,
-          LPDWORD lpValue);
+          uint32_t * lpValue);
 
 #ifdef UNICODE
 #define GetCalendarInfo GetCalendarInfoW
@@ -3951,7 +3951,7 @@ GetCalendarInfoEx(
           CALTYPE CalType,
           LPWSTR lpCalData,
           int cchData,
-          LPDWORD lpValue);
+          uint32_t * lpValue);
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
 typedef BOOL (CALLBACK* LOCALE_ENUMPROCW)(LPWSTR);
@@ -4325,7 +4325,7 @@ EnumProcessModules(
      HANDLE hProcess,
      HMODULE *lphModule,
      uint32_t cb,
-     LPDWORD lpcbNeeded
+     uint32_t * lpcbNeeded
     );
 
 void
@@ -5316,10 +5316,10 @@ GetSystemInfo(
 BOOL
 GetDiskFreeSpaceW(
           LPCWSTR lpDirectoryName,
-          LPDWORD lpSectorsPerCluster,
-          LPDWORD lpBytesPerSector,
-          LPDWORD lpNumberOfFreeClusters,
-          LPDWORD lpTotalNumberOfClusters);
+          uint32_t * lpSectorsPerCluster,
+          uint32_t * lpBytesPerSector,
+          uint32_t * lpNumberOfFreeClusters,
+          uint32_t * lpTotalNumberOfClusters);
 
 #ifdef UNICODE
 #define GetDiskFreeSpace GetDiskFreeSpaceW

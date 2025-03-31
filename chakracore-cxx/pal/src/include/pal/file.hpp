@@ -68,7 +68,7 @@ namespace CorUnix
         HANDLE hFile,
         const void * lpBuffer,
         uint32_t nNumberOfBytesToWrite,
-        LPDWORD lpNumberOfBytesWritten,
+        uint32_t * lpNumberOfBytesWritten,
         LPOVERLAPPED lpOverlapped
         );
 
@@ -78,7 +78,7 @@ namespace CorUnix
         HANDLE hFile,
         void * lpBuffer,
         uint32_t nNumberOfBytesToRead,
-        LPDWORD lpNumberOfBytesRead,
+        uint32_t * lpNumberOfBytesRead,
         LPOVERLAPPED lpOverlapped
         );
 
@@ -358,9 +358,9 @@ Returns the proper error code, based on the
 Windows behavoir.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode );
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode );
 
 }
 

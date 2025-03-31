@@ -153,9 +153,9 @@ Returns the proper error code, based on the
 Windows behavior.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode )
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
 {
     struct stat stat_data;
     LPSTR lpDupedPath = NULL;
@@ -2013,7 +2013,7 @@ CorUnix::InternalWriteFile(
     HANDLE hFile,
     const void * lpBuffer,
     uint32_t nNumberOfBytesToWrite,
-    LPDWORD lpNumberOfBytesWritten,
+    uint32_t * lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped
     )
 {
@@ -2195,7 +2195,7 @@ WriteFile(
        HANDLE hFile,
        const void * lpBuffer,
        uint32_t nNumberOfBytesToWrite,
-       LPDWORD lpNumberOfBytesWritten,
+       uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
@@ -2233,7 +2233,7 @@ CorUnix::InternalReadFile(
     HANDLE hFile,
     void * lpBuffer,
     uint32_t nNumberOfBytesToRead,
-    LPDWORD lpNumberOfBytesRead,
+    uint32_t * lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped
     )
 {
@@ -2418,7 +2418,7 @@ ReadFile(
       HANDLE hFile,
       void * lpBuffer,
       uint32_t nNumberOfBytesToRead,
-      LPDWORD lpNumberOfBytesRead,
+      uint32_t * lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
@@ -3076,7 +3076,7 @@ See MSDN doc.
 uint32_t
 GetFileSize(
          HANDLE hFile,
-         LPDWORD lpFileSizeHigh)
+         uint32_t * lpFileSizeHigh)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;

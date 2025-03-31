@@ -166,9 +166,9 @@ Returns the proper error code, based on the
 Windows behavoir.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode );
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode );
 
 /*++
 PAL__getcwd

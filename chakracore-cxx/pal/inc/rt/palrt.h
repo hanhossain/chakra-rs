@@ -1109,7 +1109,7 @@ STDAPI_(BOOL) PathRenameExtensionW(LPWSTR pszPath, LPCWSTR pszExt);
 STDAPI_(BOOL) PathRemoveFileSpecW(LPWSTR pFile);
 STDAPI_(void) PathStripPathW (LPWSTR pszPath);
 
-STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, LPDWORD pcchPath, uint32_t dwFlags);
+STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, uint32_t * pcchPath, uint32_t dwFlags);
 STDAPI_(BOOL) PathIsURLW(LPCWSTR pszPath);
 
 
@@ -1125,12 +1125,12 @@ typedef enum {
     URL_PART_HOSTNAME   = 2,
 } URL_PART;
 
-STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, LPDWORD pcchCanonicalized, uint32_t dwFlags);
-STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, LPDWORD pcchCombined, uint32_t dwFlags);
-STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, LPDWORD pcchEscaped, uint32_t dwFlags);
-STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, LPDWORD pcchUnescaped, uint32_t dwFlags);
+STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, uint32_t * pcchCanonicalized, uint32_t dwFlags);
+STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, uint32_t * pcchCombined, uint32_t dwFlags);
+STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, uint32_t * pcchEscaped, uint32_t dwFlags);
+STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, uint32_t * pcchUnescaped, uint32_t dwFlags);
 STDAPI_(BOOL) UrlIsW(LPCWSTR pszUrl, URLIS dwUrlIs);
-STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, uint32_t dwPart, uint32_t dwFlags);
+STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
 #ifdef UNICODE
 #define PathAppend          PathAppendW

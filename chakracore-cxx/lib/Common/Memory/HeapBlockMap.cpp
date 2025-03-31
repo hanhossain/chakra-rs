@@ -812,7 +812,7 @@ HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags,
 ///
 UINT
 HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlags, void* baseAddress, size_t regionSize,
-    void** addresses, size_t* count, LPDWORD granularity)
+    void** addresses, size_t* count, uint32_t * granularity)
 {
     UINT ret = 0;
 
@@ -845,7 +845,7 @@ HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlag
 // Factored into its own function to help the compiler inline the parent
 UINT
 HeapBlockMap32::GetWriteWatchHelperOnOOM(uint32_t writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
-    _Out_writes_(*count) void** addresses, _Inout_ size_t* count, LPDWORD granularity)
+    _Out_writes_(*count) void** addresses, _Inout_ size_t* count, uint32_t * granularity)
 {
     const size_t pageCount = (regionSize / AutoSystemInfo::PageSize);
 
