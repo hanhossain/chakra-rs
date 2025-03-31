@@ -428,7 +428,7 @@ public:
         argCount = Js::CallInfo::GetArgCountWithoutExtraArgs((Js::CallFlags)flags, (uint16)argCount);
 #ifdef _M_X64
         // This was defined differently for x64
-        Js::CallInfo callInfo = Js::CallInfo((Js::CallFlags)flags, (unsigned __int16)argCount);
+        Js::CallInfo callInfo = Js::CallInfo((Js::CallFlags)flags, (uint16_t)argCount);
         return IR::IntConstOpnd::New(*((IntConstType *)((void *)&callInfo)), TyInt32, func, true);
 #else
         AssertMsg(!(argCount & 0xFF000000), "Too many arguments"); //final 8 bits are for flags

@@ -65,7 +65,7 @@ uint8_t PrologEncoderMD::GetNonVolRegToSave(IR::Instr *instr)
     return (instr->GetSrc1()->AsRegOpnd()->GetReg() - 1) & 0xFF;
 }
 
-uint8_t PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, unsigned __int16 *scaledOffset)
+uint8_t PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, uint16_t *scaledOffset)
 {
     Assert(scaledOffset);
     Assert(instr->m_opcode == Js::OpCode::MOVAPD || instr->m_opcode == Js::OpCode::MOVAPS);

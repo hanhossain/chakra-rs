@@ -114,7 +114,6 @@ extern "C" {
 
 // TODO (hanhossain): remove for int32_t
 #define __int32     int
-#define __int16     short
 
 #ifndef PAL_STDCPP_COMPAT
 // Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
