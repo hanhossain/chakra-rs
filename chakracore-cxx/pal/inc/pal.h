@@ -2617,14 +2617,14 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
     uint32_t * R11;
     uint32_t * Lr;
 
-    PULONGLONG D8;
-    PULONGLONG D9;
-    PULONGLONG D10;
-    PULONGLONG D11;
-    PULONGLONG D12;
-    PULONGLONG D13;
-    PULONGLONG D14;
-    PULONGLONG D15;
+    unsigned long * D8;
+    unsigned long * D9;
+    unsigned long * D10;
+    unsigned long * D11;
+    unsigned long * D12;
+    unsigned long * D13;
+    unsigned long * D14;
+    unsigned long * D15;
 
 } KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
