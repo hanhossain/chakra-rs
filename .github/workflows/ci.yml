@@ -16,7 +16,8 @@ jobs:
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
-      fail-fast: false
+      # TODO (hanhossain): do not fail fast
+      fail-fast: true
       matrix:
         os:
           - macos
@@ -64,7 +65,8 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
     strategy:
-      fail-fast: false
+      # TODO (hanhossain): do not fail fast
+      fail-fast: true
       matrix:
         os:
           - macos
