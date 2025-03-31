@@ -1486,7 +1486,7 @@ CHAKRA_API JsIsConstructor(_In_ JsValueRef object, _Out_ bool *isConstructor)
 CHAKRA_API
 JsQueueBackgroundParse_Experimental(
     _In_ JsScriptContents* contents,
-    _Out_ DWORD* dwBgParseCookie)
+    _Out_ uint32_t* dwBgParseCookie)
 {
     HRESULT hr;
     if (Js::Configuration::Global.flags.BgParse && !CONFIG_FLAG(ForceDiagnosticsMode)
@@ -1510,7 +1510,7 @@ JsQueueBackgroundParse_Experimental(
 
 CHAKRA_API
 JsDiscardBackgroundParse_Experimental(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ void* buffer,
     _Out_ bool* callerOwnsBuffer)
 {

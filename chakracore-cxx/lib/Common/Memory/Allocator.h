@@ -48,7 +48,7 @@ struct TrackAllocData
     size_t GetPlusSize() const { return plusSize; }
     size_t GetCount() const { return count; }
 
-    static TrackAllocData CreateTrackAllocData(type_info const& typeinfo, size_t size, size_t count, char const * const filename, DWORD line)
+    static TrackAllocData CreateTrackAllocData(type_info const& typeinfo, size_t size, size_t count, char const * const filename, uint32_t line)
     {
         TrackAllocData data;
         data.typeinfo = &typeinfo;
@@ -64,7 +64,7 @@ struct TrackAllocData
     size_t plusSize;
     size_t count;
     char const * filename;
-    DWORD line;
+    uint32_t line;
 };
 
 #define TRACK_ALLOC_INFO(alloc, T, AllocatorType, size, count) static_cast<AllocatorType *>((alloc)->TrackAllocInfo(TrackAllocData::CreateTrackAllocData(typeid(T), size, count, __FILE__, __LINE__)))

@@ -13,10 +13,10 @@ public:
     ScriptContextOptimizationOverrideInfo();
     ~ScriptContextOptimizationOverrideInfo();
 
-    static DWORD GetSideEffectsOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, sideEffects); }
-    static DWORD GetArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, arraySetElementFastPathVtable); }
-    static DWORD GetIntArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, intArraySetElementFastPathVtable); }
-    static DWORD GetFloatArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, floatArraySetElementFastPathVtable); }
+    static uint32_t GetSideEffectsOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, sideEffects); }
+    static uint32_t GetArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, arraySetElementFastPathVtable); }
+    static uint32_t GetIntArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, intArraySetElementFastPathVtable); }
+    static uint32_t GetFloatArraySetElementFastPathVtableOffset() { return offsetof(ScriptContextOptimizationOverrideInfo, floatArraySetElementFastPathVtable); }
 
     void SetSideEffects(SideEffects se);
     SideEffects GetSideEffects() { return sideEffects; }

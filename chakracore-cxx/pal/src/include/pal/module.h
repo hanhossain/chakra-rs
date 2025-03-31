@@ -26,7 +26,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-typedef BOOL (*PDLLMAIN)(HINSTANCE, DWORD, void *);   /* entry point of module */
+typedef BOOL (*PDLLMAIN)(HINSTANCE, uint32_t, void *);   /* entry point of module */
 typedef HINSTANCE (*PREGISTER_MODULE)(LPCSTR);           /* used to create the HINSTANCE for above DLLMain entry point */
 typedef void (*PUNREGISTER_MODULE)(HINSTANCE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
 
@@ -91,7 +91,7 @@ Function :
     Call DllMain for all modules (that have one) with the given "fwReason"
 
 Parameters :
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH, 
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
     void * lpReserved : parameter to pass down to DllMain
@@ -104,7 +104,7 @@ Parameters :
 Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
-void LOADCallDllMain(DWORD dwReason, void * lpReserved);
+void LOADCallDllMain(uint32_t dwReason, void * lpReserved);
 
 /*++
 Function:

@@ -33,7 +33,7 @@ public:
     static const uint32_t maxXdataSize = 8 + 4 + maxOpcodeBytes + 8;
 
 private:
-    void SafeAppendDword(DWORD value);
+    void SafeAppendDword(uint32_t value);
 
     uint32_t m_xdata[(maxXdataSize + 3) / 4];
     uint32_t m_xdataBytes;

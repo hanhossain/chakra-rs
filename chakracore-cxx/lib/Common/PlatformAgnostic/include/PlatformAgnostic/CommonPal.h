@@ -234,7 +234,7 @@ enum tagDBGPROP_ATTRIB_FLAGS
     DBGPROP_ATTRIB_FRAME_INFINALLYBLOCK= 0x4000000,
     DBGPROP_ATTRIB_VALUE_IS_RETURN_VALUE= 0x8000000
 };
-typedef DWORD DBGPROP_ATTRIB_FLAGS;
+typedef uint32_t DBGPROP_ATTRIB_FLAGS;
 
 enum tagDBGPROP_INFO_FLAgS
 {
@@ -249,7 +249,7 @@ enum tagDBGPROP_INFO_FLAgS
     DBGPROP_INFO_AUTOEXPAND= 0x800000
 };
 
-typedef DWORD DBGPROP_INFO_FLAGS;
+typedef uint32_t DBGPROP_INFO_FLAGS;
 
 #define DBGPROP_INFO_STANDARD ((((DBGPROP_INFO_NAME | DBGPROP_INFO_TYPE) | DBGPROP_INFO_VALUE) | DBGPROP_INFO_ATTRIBUTES))
 
@@ -444,8 +444,8 @@ inline errno_t _wcserror_s(char16 (&buffer)[size], int errnum)
 #define midl_user_free(ptr) \
     if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
 
-DWORD CharLowerBuffW(const char16* lpsz, DWORD  cchLength);
-DWORD CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
+uint32_t CharLowerBuffW(const char16* lpsz, uint32_t  cchLength);
+uint32_t CharUpperBuffW(const char16* lpsz, uint32_t  cchLength);
 
 // TODO (hanhossain): replace with std::numeric_limits<uint32_t>::max()
 #define MAXUINT32   ((uint32_t)~((uint32_t)0))

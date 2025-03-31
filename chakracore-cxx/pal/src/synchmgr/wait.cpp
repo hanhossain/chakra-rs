@@ -51,11 +51,11 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 WaitForSingleObject( HANDLE hHandle,
-                     DWORD dwMilliseconds)
+                     uint32_t dwMilliseconds)
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(WaitForSingleObject);
     ENTRY("WaitForSingleObject(hHandle=%p, dwMilliseconds=%u)\n",
@@ -78,12 +78,12 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 WaitForSingleObjectEx( HANDLE hHandle,
-                       DWORD dwMilliseconds,
+                       uint32_t dwMilliseconds,
                        BOOL bAlertable)
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(WaitForSingleObjectEx);
     ENTRY("WaitForSingleObjectEx(hHandle=%p, dwMilliseconds=%u, bAlertable=%s)\n",
@@ -107,13 +107,13 @@ Function:
 See MSDN doc.
 
 --*/
-DWORD
-WaitForMultipleObjects( DWORD nCount,
+uint32_t
+WaitForMultipleObjects( uint32_t nCount,
                         const HANDLE *lpHandles,
                         BOOL bWaitAll,
-                        DWORD dwMilliseconds)
+                        uint32_t dwMilliseconds)
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(WaitForMultipleObjects);
     ENTRY("WaitForMultipleObjects(nCount=%d, lpHandles=%p,"
@@ -136,14 +136,14 @@ Function:
 
 See MSDN doc for info about this function.
 --*/
-DWORD
-WaitForMultipleObjectsEx( DWORD nCount,
+uint32_t
+WaitForMultipleObjectsEx( uint32_t nCount,
                           const HANDLE *lpHandles,
                           BOOL bWaitAll,
-                          DWORD dwMilliseconds,
+                          uint32_t dwMilliseconds,
                           BOOL bAlertable)
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(WaitForMultipleObjectsEx);
     ENTRY("WaitForMultipleObjectsEx(nCount=%d, lpHandles=%p,"
@@ -167,7 +167,7 @@ Function:
 See MSDN doc.
 --*/
 void
-Sleep( DWORD dwMilliseconds)
+Sleep( uint32_t dwMilliseconds)
 {
     PERF_ENTRY(Sleep);
     ENTRY("Sleep(dwMilliseconds=%u)\n", dwMilliseconds);
@@ -194,11 +194,11 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-SleepEx( DWORD dwMilliseconds,
+uint32_t
+SleepEx( uint32_t dwMilliseconds,
          BOOL bAlertable)
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(SleepEx);
     ENTRY("SleepEx(dwMilliseconds=%u, bAlertable=%d)\n", dwMilliseconds, bAlertable);
@@ -219,7 +219,7 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 QueueUserAPC(
     PAPCFUNC pfnAPC,
     HANDLE hThread,
@@ -229,7 +229,7 @@ QueueUserAPC(
     CPalThread * pTargetThread = NULL;
     IPalObject * pTargetThreadObject = NULL;
     PAL_ERROR palErr;
-    DWORD dwRet;
+    uint32_t dwRet;
 
     PERF_ENTRY(QueueUserAPC);
     ENTRY("QueueUserAPC(pfnAPC=%p, hThread=%p, dwData=%#x)\n",
@@ -273,15 +273,15 @@ QueueUserAPC_exit:
     return dwRet;
 }
 
-DWORD CorUnix::InternalWaitForMultipleObjectsEx(
+uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     CPalThread * pThread,
-    DWORD nCount,
+    uint32_t nCount,
     const HANDLE *lpHandles,
     BOOL bWaitAll,
-    DWORD dwMilliseconds,
+    uint32_t dwMilliseconds,
     BOOL bAlertable)
 {
-    DWORD dwRet = WAIT_FAILED;
+    uint32_t dwRet = WAIT_FAILED;
     PAL_ERROR palErr = NO_ERROR;
     int i, iSignaledObjCount, iSignaledObjIndex = -1;
     bool fWAll = (bool)bWaitAll, fNeedToBlock  = false;
@@ -345,10 +345,10 @@ DWORD CorUnix::InternalWaitForMultipleObjectsEx(
         // For a wait-all operation, check for duplicate wait objects in the array. This just uses a brute-force O(n^2)
         // algorithm, but since MAXIMUM_WAIT_OBJECTS is small, the worst case is not so bad, and the average case would involve
         // significantly fewer items.
-        for (DWORD i = 0; i < nCount - 1; ++i)
+        for (uint32_t i = 0; i < nCount - 1; ++i)
         {
             IPalObject *const objectToCheck = ppIPalObjs[i];
-            for (DWORD j = i + 1; j < nCount; ++j)
+            for (uint32_t j = i + 1; j < nCount; ++j)
             {
                 if (ppIPalObjs[j] == objectToCheck)
                 {
@@ -508,7 +508,7 @@ WFMOExIntReleaseControllers:
                                                         (TRUE == bAlertable),
                                                         false,
                                                         &twrWakeupReason,
-                                                        (DWORD *)&iSignaledObjIndex);
+                                                        (uint32_t *)&iSignaledObjIndex);
         //
         // Awakened
         //
@@ -552,7 +552,7 @@ WFMOExIntReleaseControllers:
     {
         _ASSERT_MSG(0 <= iSignaledObjIndex,
                     "Failed to identify signaled/abandoned object\n");
-        _ASSERT_MSG(iSignaledObjIndex >= 0 && nCount > static_cast<DWORD>(iSignaledObjIndex),
+        _ASSERT_MSG(iSignaledObjIndex >= 0 && nCount > static_cast<uint32_t>(iSignaledObjIndex),
                     "SignaledObjIndex object out of range "
                     "[index=%d obj_count=%u\n",
                     iSignaledObjCount, nCount);
@@ -585,11 +585,11 @@ WFMOExIntExit:
 
 PAL_ERROR CorUnix::InternalSleepEx (
     CPalThread * pThread,
-    DWORD dwMilliseconds,
+    uint32_t dwMilliseconds,
     BOOL bAlertable)
 {
     PAL_ERROR palErr = NO_ERROR;
-    DWORD dwRet = WAIT_FAILED;
+    uint32_t dwRet = WAIT_FAILED;
     int iSignaledObjIndex;
 
     TRACE("Sleeping %u ms [bAlertable=%d]", dwMilliseconds, (int)bAlertable);
@@ -621,7 +621,7 @@ PAL_ERROR CorUnix::InternalSleepEx (
                                                         (TRUE == bAlertable),
                                                         true,
                                                         &twrWakeupReason,
-                                                        (DWORD *)&iSignaledObjIndex);
+                                                        (uint32_t *)&iSignaledObjIndex);
         if (NO_ERROR != palErr)
         {
             ERROR("IPalSynchronizationManager::BlockThread failed for thread "

@@ -425,70 +425,70 @@ void BIGNUM::Mul(const BIGNUM *pnumOp)
         lea ebx,rglu
 
         // first "digit" of pnumOp
-        mov ecx,DWORD PTR [esi]
+        mov ecx,uint32_t PTR [esi]
         cmp ecx,0
         jz  LDigit2
 
-        mov eax,DWORD PTR [edi]
+        mov eax,uint32_t PTR [edi]
         mul ecx
-        mov DWORD PTR [ebx],eax
-        mov DWORD PTR [ebx+4],edx
+        mov uint32_t PTR [ebx],eax
+        mov uint32_t PTR [ebx+4],edx
 
-        mov eax,DWORD PTR [edi+4]
+        mov eax,uint32_t PTR [edi+4]
         mul ecx
-        add DWORD PTR [ebx+4],eax
-        adc DWORD PTR [ebx+8],edx
+        add uint32_t PTR [ebx+4],eax
+        adc uint32_t PTR [ebx+8],edx
 
-        mov eax,DWORD PTR [edi+8]
+        mov eax,uint32_t PTR [edi+8]
         mul ecx
-        add DWORD PTR [ebx+8],eax
-        adc DWORD PTR [ebx+12],edx
+        add uint32_t PTR [ebx+8],eax
+        adc uint32_t PTR [ebx+12],edx
 
         // second "digit" of pnumOp
 LDigit2:
-        mov ecx,DWORD PTR [esi+4]
+        mov ecx,uint32_t PTR [esi+4]
         cmp ecx,0
         jz  LDigit3
 
-        mov eax,DWORD PTR [edi]
+        mov eax,uint32_t PTR [edi]
         mul ecx
-        add DWORD PTR [ebx+4],eax
-        adc DWORD PTR [ebx+8],edx
-        adc DWORD PTR [ebx+12],0
-        adc DWORD PTR [ebx+16],0
+        add uint32_t PTR [ebx+4],eax
+        adc uint32_t PTR [ebx+8],edx
+        adc uint32_t PTR [ebx+12],0
+        adc uint32_t PTR [ebx+16],0
 
-        mov eax,DWORD PTR [edi+4]
+        mov eax,uint32_t PTR [edi+4]
         mul ecx
-        add DWORD PTR [ebx+8],eax
-        adc DWORD PTR [ebx+12],edx
-        adc DWORD PTR [ebx+16],0
+        add uint32_t PTR [ebx+8],eax
+        adc uint32_t PTR [ebx+12],edx
+        adc uint32_t PTR [ebx+16],0
 
-        mov eax,DWORD PTR [edi+8]
+        mov eax,uint32_t PTR [edi+8]
         mul ecx
-        add DWORD PTR [ebx+12],eax
-        adc DWORD PTR [ebx+16],edx
+        add uint32_t PTR [ebx+12],eax
+        adc uint32_t PTR [ebx+16],edx
 
         // third "digit" of pnumOp
 LDigit3:
-        mov ecx,DWORD PTR [esi+8]
+        mov ecx,uint32_t PTR [esi+8]
 
-        mov eax,DWORD PTR [edi]
+        mov eax,uint32_t PTR [edi]
         mul ecx
-        add DWORD PTR [ebx+8],eax
-        adc DWORD PTR [ebx+12],edx
-        adc DWORD PTR [ebx+16],0
-        adc DWORD PTR [ebx+20],0
+        add uint32_t PTR [ebx+8],eax
+        adc uint32_t PTR [ebx+12],edx
+        adc uint32_t PTR [ebx+16],0
+        adc uint32_t PTR [ebx+20],0
 
-        mov eax,DWORD PTR [edi+4]
+        mov eax,uint32_t PTR [edi+4]
         mul ecx
-        add DWORD PTR [ebx+12],eax
-        adc DWORD PTR [ebx+16],edx
-        adc DWORD PTR [ebx+20],0
+        add uint32_t PTR [ebx+12],eax
+        adc uint32_t PTR [ebx+16],edx
+        adc uint32_t PTR [ebx+20],0
 
-        mov eax,DWORD PTR [edi+8]
+        mov eax,uint32_t PTR [edi+8]
         mul ecx
-        add DWORD PTR [ebx+16],eax
-        adc DWORD PTR [ebx+20],edx
+        add uint32_t PTR [ebx+16],eax
+        adc uint32_t PTR [ebx+20],edx
     }
 #else //!I386_ASM
     uint32 luLo, luHi, luT;

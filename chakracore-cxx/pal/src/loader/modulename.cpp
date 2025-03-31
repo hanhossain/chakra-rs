@@ -85,7 +85,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
         {
             InternalFree(pThread, pLoadQueryBuf);
             pLoadQueryBuf = NULL;
-            DWORD dwLastError = GetLastError();
+            uint32_t dwLastError = GetLastError();
             if (dwLastError == ERROR_NOT_ENOUGH_MEMORY)
             {
                 // The buffer's too small.  Try twice as large as a guess...

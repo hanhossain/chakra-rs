@@ -36,7 +36,7 @@ public:
     bool leaving;
 
 
-    DWORD ThreadProc();
+    uint32_t ThreadProc();
 
 };
 

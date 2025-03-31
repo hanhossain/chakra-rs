@@ -19,9 +19,9 @@ CriticalSection DynamicProfileStorage::cs;
 DynamicProfileStorage::InfoMap DynamicProfileStorage::infoMap(&NoCheckHeapAllocator::Instance);
 DynamicProfileStorage::TimeType DynamicProfileStorage::creationTime = DynamicProfileStorage::TimeType();
 int32 DynamicProfileStorage::lastOffset = 0;
-DWORD const DynamicProfileStorage::MagicNumber = 20100526;
-DWORD const DynamicProfileStorage::FileFormatVersion = 2;
-DWORD DynamicProfileStorage::nextFileId = 0;
+uint32_t const DynamicProfileStorage::MagicNumber = 20100526;
+uint32_t const DynamicProfileStorage::FileFormatVersion = 2;
+uint32_t DynamicProfileStorage::nextFileId = 0;
 bool DynamicProfileStorage::locked = false;
 
 
@@ -36,7 +36,7 @@ public:
     template <typename T>
     bool ReadArray(T * t, size_t len);
 
-    _Success_(return) bool ReadUtf8String(__deref_out_z char16 ** str, __out DWORD * len);
+    _Success_(return) bool ReadUtf8String(__deref_out_z char16 ** str, __out uint32_t * len);
 
     template <typename T>
     bool Write(T const& t);
@@ -101,9 +101,9 @@ bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
     return true;
 }
 
-_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref_out_z char16 ** str, __out DWORD * len)
+_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref_out_z char16 ** str, __out uint32_t * len)
 {
-    DWORD urllen;
+    uint32_t urllen;
     if (!Read(&urllen))
     {
         return false;
@@ -169,7 +169,7 @@ bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16 const * str)
         Output::Flush();
         return false;
     }
-    DWORD cbNeeded = (DWORD)utf8::EncodeInto<utf8::Utf8EncodingKind::Cesu8>(tempBuffer, cbTempBuffer, str, len);
+    uint32_t cbNeeded = (uint32_t)utf8::EncodeInto<utf8::Utf8EncodingKind::Cesu8>(tempBuffer, cbTempBuffer, str, len);
     bool success = Write(cbNeeded) && WriteArray(tempBuffer, cbNeeded);
     NoCheckHeapDeleteArray(cbTempBuffer, tempBuffer);
     return success;
@@ -252,7 +252,7 @@ char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
     return record;
 }
 
-bool DynamicProfileStorage::StorageInfo::WriteRecord(__in_ecount(sizeof(DWORD) + *record)char const * record) const
+bool DynamicProfileStorage::StorageInfo::WriteRecord(__in_ecount(sizeof(uint32_t) + *record)char const * record) const
 {
     char16 cacheFilename[_MAX_PATH];
     this->GetFilename(cacheFilename);
@@ -517,9 +517,9 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
         }
     }
 
-    DWORD magic;
-    DWORD version;
-    DWORD recordCount;
+    uint32_t magic;
+    uint32_t version;
+    uint32_t recordCount;
     if (!reader.Read(&magic)
         || !reader.Read(&version)
         || !reader.Read(&recordCount))
@@ -548,7 +548,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
 
     for (uint i = 0; i < recordCount; i++)
     {
-        DWORD len;
+        uint32_t len;
         char16 * name;
         if (!reader.ReadUtf8String(&name, &len))
         {
@@ -556,7 +556,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
             return false;
         }
 
-        DWORD recordLen;
+        uint32_t recordLen;
         if (!reader.Read(&recordLen))
         {
             AssertOrFailFast(false);
@@ -618,7 +618,7 @@ bool DynamicProfileStorage::ExportFile(__in_z char16 const * filename)
         Output::Flush();
         return false;
     }
-    DWORD recordCount = infoMap.Count();
+    uint32_t recordCount = infoMap.Count();
     if (!writer.Write(MagicNumber)
         || !writer.Write(FileFormatVersion)
         || !writer.Write(recordCount))
@@ -655,7 +655,7 @@ bool DynamicProfileStorage::ExportFile(__in_z char16 const * filename)
             AssertOrFailFast(!locked);
             record = info.record;
         }
-        DWORD recordSize = GetRecordSize(record);
+        uint32_t recordSize = GetRecordSize(record);
 
         bool failed = (!writer.WriteUtf8String(url)
             || !writer.Write(recordSize)
@@ -700,7 +700,7 @@ bool DynamicProfileStorage::AcquireLock()
 {
     AssertOrFailFast(mutex != nullptr);
     AssertOrFailFast(!locked);
-    DWORD ret = WaitForSingleObject(mutex, INFINITE);
+    uint32_t ret = WaitForSingleObject(mutex, INFINITE);
     if (ret == WAIT_OBJECT_0 || ret == WAIT_ABANDONED)
     {
 #if DBG
@@ -825,10 +825,10 @@ bool DynamicProfileStorage::AppendCacheCatalog(__in_z char16 const * url)
     AssertOrFailFast(enabled);
     AssertOrFailFast(useCacheDir);
     AssertOrFailFast(locked);
-    DWORD magic;
-    DWORD version;
-    DWORD count;
-    DWORD time;
+    uint32_t magic;
+    uint32_t version;
+    uint32_t count;
+    uint32_t time;
     DynamicProfileStorageReaderWriter catalogFile;
     if (!catalogFile.Init(catalogFilename, _u("rcb+"), false))
     {
@@ -873,7 +873,7 @@ bool DynamicProfileStorage::AppendCacheCatalog(__in_z char16 const * url)
 
     if (!catalogFile.SeekToEnd() ||
         !catalogFile.WriteUtf8String(url) ||
-        !catalogFile.Seek(3 * sizeof(DWORD)) ||
+        !catalogFile.Seek(3 * sizeof(uint32_t)) ||
         !catalogFile.Write(nextFileId))
     {
 #if DBG_DUMP
@@ -897,10 +897,10 @@ bool DynamicProfileStorage::LoadCacheCatalog()
     AssertOrFailFast(useCacheDir);
     AssertOrFailFast(locked);
     DynamicProfileStorageReaderWriter catalogFile;
-    DWORD magic;
-    DWORD version;
-    DWORD count;
-    DWORD time;
+    uint32_t magic;
+    uint32_t version;
+    uint32_t count;
+    uint32_t time;
     if (!catalogFile.Init(catalogFilename, _u("rb"), false))
     {
         return CreateCacheCatalog();
@@ -931,7 +931,7 @@ bool DynamicProfileStorage::LoadCacheCatalog()
         return false;
     }
 
-    DWORD start = 0;
+    uint32_t start = 0;
 
     AssertOrFailFast(useCacheDir);
     if (time == creationTime)
@@ -960,9 +960,9 @@ bool DynamicProfileStorage::LoadCacheCatalog()
         Output::Flush();
     }
 
-    for (DWORD i = start; i < count; i++)
+    for (uint32_t i = start; i < count; i++)
     {
-        DWORD len;
+        uint32_t len;
         char16 * url;
         if (!catalogFile.ReadUtf8String(&url, &len))
         {
@@ -1036,7 +1036,7 @@ void DynamicProfileStorage::ClearCacheCatalog()
     }
 }
 
-void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(DWORD) + *record) char const * record)
+void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record)
 {
     AssertOrFailFast(enabled);
     AutoCriticalSection autocs(&cs);
@@ -1145,38 +1145,38 @@ void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecou
     infoMap.Add(newFilename, newInfo);
 }
 
-char * DynamicProfileStorage::AllocRecord(DWORD bufferSize)
+char * DynamicProfileStorage::AllocRecord(uint32_t bufferSize)
 {
     AssertOrFailFast(enabled);
-    char * buffer = NoCheckHeapNewArray(char, bufferSize + sizeof(DWORD));
+    char * buffer = NoCheckHeapNewArray(char, bufferSize + sizeof(uint32_t));
     if (buffer != nullptr)
     {
-        *(DWORD *)buffer = bufferSize;
+        *(uint32_t *)buffer = bufferSize;
     }
     return buffer;
 }
 
-DWORD DynamicProfileStorage::GetRecordSize(__in_ecount(sizeof(DWORD) + *buffer) char const * buffer)
+uint32_t DynamicProfileStorage::GetRecordSize(__in_ecount(sizeof(uint32_t) + *buffer) char const * buffer)
 {
     AssertOrFailFast(enabled);
-    return *(DWORD *)buffer;
+    return *(uint32_t *)buffer;
 }
 
-char const * DynamicProfileStorage::GetRecordBuffer(__in_ecount(sizeof(DWORD) + *buffer) char const * buffer)
+char const * DynamicProfileStorage::GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *buffer) char const * buffer)
 {
     AssertOrFailFast(enabled);
-    return buffer + sizeof(DWORD);
+    return buffer + sizeof(uint32_t);
 }
 
-char * DynamicProfileStorage::GetRecordBuffer(__in_ecount(sizeof(DWORD) + *buffer) char * buffer)
+char * DynamicProfileStorage::GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *buffer) char * buffer)
 {
     AssertOrFailFast(enabled);
-    return buffer + sizeof(DWORD);
+    return buffer + sizeof(uint32_t);
 }
 
-void DynamicProfileStorage::DeleteRecord(__in_ecount(sizeof(DWORD) + *buffer) char const * buffer)
+void DynamicProfileStorage::DeleteRecord(__in_ecount(sizeof(uint32_t) + *buffer) char const * buffer)
 {
     AssertOrFailFast(enabled);
-    NoCheckHeapDeleteArray(GetRecordSize(buffer) + sizeof(DWORD), buffer);
+    NoCheckHeapDeleteArray(GetRecordSize(buffer) + sizeof(uint32_t), buffer);
 }
 #endif

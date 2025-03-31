@@ -92,19 +92,19 @@ static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
 
 #if !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 static int
-DBGWriteProcMem_Int(DWORD processId, int *addr, int data);
+DBGWriteProcMem_Int(uint32_t processId, int *addr, int data);
 static int
-DBGWriteProcMem_IntWithMask(DWORD processId, int *addr, int data,
+DBGWriteProcMem_IntWithMask(uint32_t processId, int *addr, int data,
                             unsigned int mask);
 #endif  // !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
 #if !HAVE_VM_READ && !HAVE_PROCFS_CTL
 
 static BOOL
-DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, DWORD dwProcessId);
+DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 
 static BOOL
-DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, DWORD dwProcessId);
+DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 
 static int
 DBGSetProcessAttached(CPalThread *pThread, HANDLE hProcess, BOOL bAttach);
@@ -558,7 +558,7 @@ ReadProcessMemory(
            )
 {
     CPalThread *pThread;
-    DWORD processId;
+    uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<SIZE_T> numberOfBytesRead = 0;
 #if HAVE_VM_READ
@@ -848,7 +848,7 @@ WriteProcessMemory(
 
 {
     CPalThread *pThread;
-    DWORD processId;
+    uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<SIZE_T> numberOfBytesWritten = 0;
 #if HAVE_VM_READ
@@ -1140,7 +1140,7 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_Int( DWORD processId,
+DBGWriteProcMem_Int( uint32_t processId,
                      int *addr,
                      int data)
 {
@@ -1182,7 +1182,7 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_IntWithMask( DWORD processId,
+DBGWriteProcMem_IntWithMask( uint32_t processId,
                              int *addr,
                              int data,
                              unsigned int mask )
@@ -1241,7 +1241,7 @@ BOOL
 DBGAttachProcess(
     CPalThread *pThread,
     HANDLE hProcess,
-    DWORD processId
+    uint32_t processId
     )
 {
     int attachmentCount;
@@ -1392,7 +1392,7 @@ BOOL
 DBGDetachProcess(
     CPalThread *pThread,
     HANDLE hProcess,
-    DWORD processId
+    uint32_t processId
     )
 {
     int nbAttachLeft;
@@ -1590,7 +1590,7 @@ Return
   A Win32 error code
 --*/
 
-DWORD
+uint32_t
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
     void * pvInstruction
@@ -1599,7 +1599,7 @@ PAL_CreateExecWatchpoint(
     PERF_ENTRY(PAL_CreateExecWatchpoint);
     ENTRY("PAL_CreateExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
-    DWORD dwError = ERROR_NOT_SUPPORTED;
+    uint32_t dwError = ERROR_NOT_SUPPORTED;
 
 #if HAVE_PRWATCH_T
 
@@ -1625,7 +1625,7 @@ PAL_CreateExecWatchpoint(
     //
 
 #if defined(_SPARC_)
-    if (*(DWORD*)pvInstruction == 0x91d02008) // ta 8
+    if (*(uint32_t*)pvInstruction == 0x91d02008) // ta 8
     {
         TRACE("Watchpoint requested on sysenter instruction -- ignoring");
         dwError = ERROR_SUCCESS;
@@ -1662,7 +1662,7 @@ PAL_CreateExecWatchpoint(
 
     ctlStruct.ctlCode = PCWATCH;
     ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(DWORD);
+    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
     ctlStruct.prwatch.pr_wflags = WA_EXEC | WA_TRAPAFTER;
 
     if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))
@@ -1712,7 +1712,7 @@ Return
   underlying operating system.
 --*/
 
-DWORD
+uint32_t
 PAL_DeleteExecWatchpoint(
     HANDLE hThread,
     void * pvInstruction
@@ -1721,7 +1721,7 @@ PAL_DeleteExecWatchpoint(
     PERF_ENTRY(PAL_DeleteExecWatchpoint);
     ENTRY("PAL_DeleteExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
-    DWORD dwError = ERROR_NOT_SUPPORTED;
+    uint32_t dwError = ERROR_NOT_SUPPORTED;
 
 #if HAVE_PRWATCH_T
 
@@ -1765,7 +1765,7 @@ PAL_DeleteExecWatchpoint(
 
     ctlStruct.ctlCode = PCWATCH;
     ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(DWORD);
+    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
     ctlStruct.prwatch.pr_wflags = 0;
 
     if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))

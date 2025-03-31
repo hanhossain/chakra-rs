@@ -175,13 +175,13 @@ namespace CorUnix
             );
 
         virtual
-        DWORD
+        uint32_t
         AddReference(
             void
             );
 
         virtual
-        DWORD
+        uint32_t
         ReleaseReference(
             CPalThread *pthr
             );

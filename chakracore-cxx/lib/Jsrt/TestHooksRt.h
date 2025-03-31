@@ -11,5 +11,5 @@
 
 // Summary : Runtime will generate bytecode buffer by treating current file as library file.
 
-const DWORD JsRuntimeAttributeSerializeLibraryByteCode = 0x8000000;
+const uint32_t JsRuntimeAttributeSerializeLibraryByteCode = 0x8000000;
 

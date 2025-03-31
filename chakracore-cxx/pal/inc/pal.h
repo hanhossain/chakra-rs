@@ -304,10 +304,10 @@ typedef __int64 time_t;
 #endif // !PAL_STDCPP_COMPAT
 
 #if ENABLE_DOWNLEVEL_FOR_NLS
-#define MAKELCID(lgid, srtid)  ((DWORD)((((DWORD)((uint16_t  )(srtid))) << 16) |  \
-                                         ((DWORD)((uint16_t  )(lgid)))))
+#define MAKELCID(lgid, srtid)  ((uint32_t)((((uint32_t)((uint16_t  )(srtid))) << 16) |  \
+                                         ((uint32_t)((uint16_t  )(lgid)))))
 #define LANGIDFROMLCID(lcid)   ((uint16_t)(lcid))
-#define SORTIDFROMLCID(lcid)   ((uint16_t)((((DWORD)(lcid)) >> 16) & 0xf))
+#define SORTIDFROMLCID(lcid)   ((uint16_t)((((uint32_t)(lcid)) >> 16) & 0xf))
 
 #define LANG_NEUTRAL                     0x00
 #define LANG_INVARIANT                   0x7f
@@ -377,7 +377,7 @@ typedef __int64 time_t;
 #define DLL_THREAD_DETACH  3
 #define DLL_PROCESS_DETACH 0
 
-typedef DWORD (*PTHREAD_START_ROUTINE)(void * lpThreadParameter);
+typedef uint32_t (*PTHREAD_START_ROUTINE)(void * lpThreadParameter);
 typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 /******************* PAL-Specific Entrypoints *****************************/
@@ -431,15 +431,15 @@ BOOL
 PAL_Random(
      BOOL bStrong,
       void * lpBuffer,
-     DWORD dwLength);
+     uint32_t dwLength);
 
-DWORD
+uint32_t
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
     void * pvInstruction
     );
 
-DWORD
+uint32_t
 PAL_DeleteExecWatchpoint(
     HANDLE hThread,
     void * pvInstruction
@@ -455,7 +455,7 @@ LPSTR
 CharNextExA(
          uint16_t CodePage,
          LPCSTR lpCurrentChar,
-         DWORD dwFlags);
+         uint32_t dwFlags);
 
 #ifndef UNICODE
 #define CharNext CharNextA
@@ -501,7 +501,7 @@ AreFileApisANSI(
         void);
 
 typedef struct _SECURITY_ATTRIBUTES {
-            DWORD nLength;
+            uint32_t nLength;
             void * lpSecurityDescriptor;
             BOOL bInheritHandle;
 } SECURITY_ATTRIBUTES, *PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
@@ -544,26 +544,26 @@ typedef struct _SECURITY_ATTRIBUTES {
 
 #define STILL_ACTIVE (0x00000103L)
 
-#define INVALID_SET_FILE_POINTER   ((DWORD)-1)
+#define INVALID_SET_FILE_POINTER   ((uint32_t)-1)
 
 HANDLE
 CreateFileA(
          LPCSTR lpFileName,
-         DWORD dwDesiredAccess,
-         DWORD dwShareMode,
+         uint32_t dwDesiredAccess,
+         uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-         DWORD dwCreationDisposition,
-         DWORD dwFlagsAndAttributes,
+         uint32_t dwCreationDisposition,
+         uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
 HANDLE
 CreateFileW(
          LPCWSTR lpFileName,
-         DWORD dwDesiredAccess,
-         DWORD dwShareMode,
+         uint32_t dwDesiredAccess,
+         uint32_t dwShareMode,
          LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-         DWORD dwCreationDisposition,
-         DWORD dwFlagsAndAttributes,
+         uint32_t dwCreationDisposition,
+         uint32_t dwFlagsAndAttributes,
          HANDLE hTemplateFile);
 
 #ifdef UNICODE
@@ -575,37 +575,37 @@ CreateFileW(
 BOOL
 LockFile(
      HANDLE hFile,
-     DWORD dwFileOffsetLow,
-     DWORD dwFileOffsetHigh,
-     DWORD nNumberOfBytesToLockLow,
-     DWORD nNumberOfBytesToLockHigh
+     uint32_t dwFileOffsetLow,
+     uint32_t dwFileOffsetHigh,
+     uint32_t nNumberOfBytesToLockLow,
+     uint32_t nNumberOfBytesToLockHigh
     );
 
 BOOL
 UnlockFile(
      HANDLE hFile,
-     DWORD dwFileOffsetLow,
-     DWORD dwFileOffsetHigh,
-     DWORD nNumberOfBytesToUnlockLow,
-     DWORD nNumberOfBytesToUnlockHigh
+     uint32_t dwFileOffsetLow,
+     uint32_t dwFileOffsetHigh,
+     uint32_t nNumberOfBytesToUnlockLow,
+     uint32_t nNumberOfBytesToUnlockHigh
     );
 
-DWORD
+uint32_t
 SearchPathA(
      LPCSTR lpPath,
      LPCSTR lpFileName,
      LPCSTR lpExtension,
-     DWORD nBufferLength,
+     uint32_t nBufferLength,
      LPSTR lpBuffer,
      LPSTR *lpFilePart
     );
 
-DWORD
+uint32_t
 SearchPathW(
      LPCWSTR lpPath,
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
-     DWORD nBufferLength,
+     uint32_t nBufferLength,
      LPWSTR lpBuffer,
      LPWSTR *lpFilePart
     );
@@ -672,13 +672,13 @@ BOOL
 MoveFileExA(
          LPCSTR lpExistingFileName,
          LPCSTR lpNewFileName,
-         DWORD dwFlags);
+         uint32_t dwFlags);
 
 BOOL
 MoveFileExW(
          LPCWSTR lpExistingFileName,
          LPCWSTR lpNewFileName,
-         DWORD dwFlags);
+         uint32_t dwFlags);
 
 #ifdef UNICODE
 #define MoveFileEx MoveFileExW
@@ -717,40 +717,40 @@ RemoveDirectoryA(
 #endif
 
 typedef struct _BY_HANDLE_FILE_INFORMATION {
-    DWORD dwFileAttributes;
+    uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
     FILETIME ftLastWriteTime;
-    DWORD dwVolumeSerialNumber;
-    DWORD nFileSizeHigh;
-    DWORD nFileSizeLow;
-    DWORD nNumberOfLinks;
-    DWORD nFileIndexHigh;
-    DWORD nFileIndexLow;
+    uint32_t dwVolumeSerialNumber;
+    uint32_t nFileSizeHigh;
+    uint32_t nFileSizeLow;
+    uint32_t nNumberOfLinks;
+    uint32_t nFileIndexHigh;
+    uint32_t nFileIndexLow;
 } BY_HANDLE_FILE_INFORMATION, *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FILE_INFORMATION;
 
 typedef struct _WIN32_FIND_DATAA {
-    DWORD dwFileAttributes;
+    uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
     FILETIME ftLastWriteTime;
-    DWORD nFileSizeHigh;
-    DWORD nFileSizeLow;
-    DWORD dwReserved0;
-    DWORD dwReserved1;
+    uint32_t nFileSizeHigh;
+    uint32_t nFileSizeLow;
+    uint32_t dwReserved0;
+    uint32_t dwReserved1;
     char cFileName[ MAX_PATH_FNAME ];
     char cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAA, *PWIN32_FIND_DATAA, *LPWIN32_FIND_DATAA;
 
 typedef struct _WIN32_FIND_DATAW {
-    DWORD dwFileAttributes;
+    uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
     FILETIME ftLastWriteTime;
-    DWORD nFileSizeHigh;
-    DWORD nFileSizeLow;
-    DWORD dwReserved0;
-    DWORD dwReserved1;
+    uint32_t nFileSizeHigh;
+    uint32_t nFileSizeLow;
+    uint32_t dwReserved0;
+    uint32_t dwReserved1;
     WCHAR cFileName[ MAX_PATH_FNAME ];
     WCHAR cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
@@ -801,11 +801,11 @@ BOOL
 FindClose(
         HANDLE hFindFile);
 
-DWORD
+uint32_t
 GetFileAttributesA(
             LPCSTR lpFileName);
 
-DWORD
+uint32_t
 GetFileAttributesW(
             LPCWSTR lpFileName);
 
@@ -820,12 +820,12 @@ typedef enum _GET_FILEEX_INFO_LEVELS {
 } GET_FILEEX_INFO_LEVELS;
 
 typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
-    DWORD      dwFileAttributes;
+    uint32_t      dwFileAttributes;
     FILETIME   ftCreationTime;
     FILETIME   ftLastAccessTime;
     FILETIME   ftLastWriteTime;
-    DWORD      nFileSizeHigh;
-    DWORD      nFileSizeLow;
+    uint32_t      nFileSizeHigh;
+    uint32_t      nFileSizeLow;
 } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
 BOOL
@@ -841,12 +841,12 @@ GetFileAttributesExW(
 BOOL
 SetFileAttributesA(
             LPCSTR lpFileName,
-            DWORD dwFileAttributes);
+            uint32_t dwFileAttributes);
 
 BOOL
 SetFileAttributesW(
             LPCWSTR lpFileName,
-            DWORD dwFileAttributes);
+            uint32_t dwFileAttributes);
 
 #ifdef UNICODE
 #define SetFileAttributes SetFileAttributesW
@@ -860,7 +860,7 @@ BOOL
 WriteFile(
        HANDLE hFile,
        const void * lpBuffer,
-       DWORD nNumberOfBytesToWrite,
+       uint32_t nNumberOfBytesToWrite,
        LPDWORD lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
@@ -868,37 +868,37 @@ BOOL
 ReadFile(
       HANDLE hFile,
       void * lpBuffer,
-      DWORD nNumberOfBytesToRead,
+      uint32_t nNumberOfBytesToRead,
       LPDWORD lpNumberOfBytesRead,
       LPOVERLAPPED lpOverlapped);
 
-#define STD_INPUT_HANDLE         ((DWORD)-10)
-#define STD_OUTPUT_HANDLE        ((DWORD)-11)
-#define STD_ERROR_HANDLE         ((DWORD)-12)
+#define STD_INPUT_HANDLE         ((uint32_t)-10)
+#define STD_OUTPUT_HANDLE        ((uint32_t)-11)
+#define STD_ERROR_HANDLE         ((uint32_t)-12)
 
 HANDLE
 GetStdHandle(
-          DWORD nStdHandle);
+          uint32_t nStdHandle);
 
 BOOL
 SetEndOfFile(
           HANDLE hFile);
 
-DWORD
+uint32_t
 SetFilePointer(
             HANDLE hFile,
             int32_t lDistanceToMove,
             int32_t * lpDistanceToMoveHigh,
-            DWORD dwMoveMethod);
+            uint32_t dwMoveMethod);
 
 BOOL
 SetFilePointerEx(
             HANDLE hFile,
             LARGE_INTEGER liDistanceToMove,
             PLARGE_INTEGER lpNewFilePointer,
-            DWORD dwMoveMethod);
+            uint32_t dwMoveMethod);
 
-DWORD
+uint32_t
 GetFileSize(
          HANDLE hFile,
          LPDWORD lpFileSizeHigh);
@@ -971,7 +971,7 @@ FlushFileBuffers(
 #define FILE_TYPE_PIPE            0x0003
 #define FILE_TYPE_REMOTE          0x8000
 
-DWORD
+uint32_t
 GetFileType(
          HANDLE hFile);
 
@@ -983,17 +983,17 @@ UINT
 GetConsoleOutputCP(
            void);
 
-DWORD
+uint32_t
 GetFullPathNameA(
           LPCSTR lpFileName,
-          DWORD nBufferLength,
+          uint32_t nBufferLength,
           LPSTR lpBuffer,
           LPSTR *lpFilePart);
 
-DWORD
+uint32_t
 GetFullPathNameW(
           LPCWSTR lpFileName,
-          DWORD nBufferLength,
+          uint32_t nBufferLength,
           LPWSTR lpBuffer,
           LPWSTR *lpFilePart);
 
@@ -1003,21 +1003,21 @@ GetFullPathNameW(
 #define GetFullPathName GetFullPathNameA
 #endif
 
-DWORD
+uint32_t
 GetLongPathNameW(
           LPCWSTR lpszShortPath,
                   LPWSTR lpszLongPath,
-          DWORD cchBuffer);
+          uint32_t cchBuffer);
 
 #ifdef UNICODE
 #define GetLongPathName GetLongPathNameW
 #endif
 
-DWORD
+uint32_t
 GetShortPathNameW(
           LPCWSTR lpszLongPath,
                   LPWSTR lpszShortPath,
-          DWORD cchBuffer);
+          uint32_t cchBuffer);
 
 #ifdef UNICODE
 #define GetShortPathName GetShortPathNameW
@@ -1044,14 +1044,14 @@ GetTempFileNameW(
 #define GetTempFileName GetTempFileNameA
 #endif
 
-DWORD
+uint32_t
 GetTempPathA(
-          DWORD nBufferLength,
+          uint32_t nBufferLength,
           LPSTR lpBuffer);
 
-DWORD
+uint32_t
 GetTempPathW(
-          DWORD nBufferLength,
+          uint32_t nBufferLength,
           LPWSTR lpBuffer);
 
 #ifdef UNICODE
@@ -1060,14 +1060,14 @@ GetTempPathW(
 #define GetTempPath GetTempPathA
 #endif
 
-DWORD
+uint32_t
 GetCurrentDirectoryA(
-              DWORD nBufferLength,
+              uint32_t nBufferLength,
               LPSTR lpBuffer);
 
-DWORD
+uint32_t
 GetCurrentDirectoryW(
-              DWORD nBufferLength,
+              uint32_t nBufferLength,
               LPWSTR lpBuffer);
 
 #ifdef UNICODE
@@ -1119,8 +1119,8 @@ CreateSemaphoreExA(
           int32_t lInitialCount,
           int32_t lMaximumCount,
           LPCSTR lpName,
-          /*_Reserved_*/  DWORD dwFlags,
-          DWORD dwDesiredAccess);
+          /*_Reserved_*/  uint32_t dwFlags,
+          uint32_t dwDesiredAccess);
 
 HANDLE
 CreateSemaphoreW(
@@ -1135,12 +1135,12 @@ CreateSemaphoreExW(
          int32_t lInitialCount,
          int32_t lMaximumCount,
          LPCWSTR lpName,
-         /*_Reserved_*/  DWORD dwFlags,
-         DWORD dwDesiredAccess);
+         /*_Reserved_*/  uint32_t dwFlags,
+         uint32_t dwDesiredAccess);
 
 HANDLE
 OpenSemaphoreW(
-     DWORD dwDesiredAccess,
+     uint32_t dwDesiredAccess,
      BOOL bInheritHandle,
      LPCWSTR lpName);
 
@@ -1188,7 +1188,7 @@ ResetEvent(
 
 HANDLE
 OpenEventW(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName);
 
@@ -1216,13 +1216,13 @@ CreateMutexA(
 
 HANDLE
 OpenMutexW(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName);
 
 HANDLE
 OpenMutexA(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCSTR lpName);
 
@@ -1236,7 +1236,7 @@ BOOL
 ReleaseMutex(
      HANDLE hMutex);
 
-DWORD
+uint32_t
 GetCurrentProcessId(
             void);
 
@@ -1244,11 +1244,11 @@ HANDLE
 GetCurrentProcess(
           void);
 
-DWORD
+uint32_t
 GetCurrentThreadId(
            void);
 
-DWORD
+uint32_t
 GetThreadId(
     HANDLE hThread);
 
@@ -1262,18 +1262,18 @@ GetCurrentThread(
 #define STARTF_USESTDHANDLES       0x00000100
 
 typedef struct _STARTUPINFOW {
-    DWORD cb;
+    uint32_t cb;
     LPWSTR lpReserved_PAL_Undefined;
     LPWSTR lpDesktop_PAL_Undefined;
     LPWSTR lpTitle_PAL_Undefined;
-    DWORD dwX_PAL_Undefined;
-    DWORD dwY_PAL_Undefined;
-    DWORD dwXSize_PAL_Undefined;
-    DWORD dwYSize_PAL_Undefined;
-    DWORD dwXCountChars_PAL_Undefined;
-    DWORD dwYCountChars_PAL_Undefined;
-    DWORD dwFillAttribute_PAL_Undefined;
-    DWORD dwFlags;
+    uint32_t dwX_PAL_Undefined;
+    uint32_t dwY_PAL_Undefined;
+    uint32_t dwXSize_PAL_Undefined;
+    uint32_t dwYSize_PAL_Undefined;
+    uint32_t dwXCountChars_PAL_Undefined;
+    uint32_t dwYCountChars_PAL_Undefined;
+    uint32_t dwFillAttribute_PAL_Undefined;
+    uint32_t dwFlags;
     uint16_t wShowWindow_PAL_Undefined;
     uint16_t cbReserved2_PAL_Undefined;
     uint8_t * lpReserved2_PAL_Undefined;
@@ -1283,18 +1283,18 @@ typedef struct _STARTUPINFOW {
 } STARTUPINFOW, *LPSTARTUPINFOW;
 
 typedef struct _STARTUPINFOA {
-    DWORD cb;
+    uint32_t cb;
     LPSTR lpReserved_PAL_Undefined;
     LPSTR lpDesktop_PAL_Undefined;
     LPSTR lpTitle_PAL_Undefined;
-    DWORD dwX_PAL_Undefined;
-    DWORD dwY_PAL_Undefined;
-    DWORD dwXSize_PAL_Undefined;
-    DWORD dwYSize_PAL_Undefined;
-    DWORD dwXCountChars_PAL_Undefined;
-    DWORD dwYCountChars_PAL_Undefined;
-    DWORD dwFillAttribute_PAL_Undefined;
-    DWORD dwFlags;
+    uint32_t dwX_PAL_Undefined;
+    uint32_t dwY_PAL_Undefined;
+    uint32_t dwXSize_PAL_Undefined;
+    uint32_t dwYSize_PAL_Undefined;
+    uint32_t dwXCountChars_PAL_Undefined;
+    uint32_t dwYCountChars_PAL_Undefined;
+    uint32_t dwFillAttribute_PAL_Undefined;
+    uint32_t dwFlags;
     uint16_t wShowWindow_PAL_Undefined;
     uint16_t cbReserved2_PAL_Undefined;
     uint8_t * lpReserved2_PAL_Undefined;
@@ -1318,8 +1318,8 @@ typedef LPSTARTUPINFOW LPSTARTUPINFO;
 typedef struct _PROCESS_INFORMATION {
     HANDLE hProcess;
     HANDLE hThread;
-    DWORD dwProcessId;
-    DWORD dwThreadId_PAL_Undefined;
+    uint32_t dwProcessId;
+    uint32_t dwThreadId_PAL_Undefined;
 } PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
 
 BOOL
@@ -1329,7 +1329,7 @@ CreateProcessA(
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
-            DWORD dwCreationFlags,
+            uint32_t dwCreationFlags,
             void * lpEnvironment,
             LPCSTR lpCurrentDirectory,
             LPSTARTUPINFOA lpStartupInfo,
@@ -1342,7 +1342,7 @@ CreateProcessW(
             LPSECURITY_ATTRIBUTES lpProcessAttributes,
             LPSECURITY_ATTRIBUTES lpThreadAttributes,
             BOOL bInheritHandles,
-            DWORD dwCreationFlags,
+            uint32_t dwCreationFlags,
             void * lpEnvironment,
             LPCWSTR lpCurrentDirectory,
             LPSTARTUPINFOW lpStartupInfo,
@@ -1382,34 +1382,34 @@ GetProcessTimes(
 #define WAIT_ABANDONED   0x00000080
 #define WAIT_ABANDONED_0 0x00000080
 #define WAIT_TIMEOUT 258
-#define WAIT_FAILED ((DWORD)0xFFFFFFFF)
+#define WAIT_FAILED ((uint32_t)0xFFFFFFFF)
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
-DWORD
+uint32_t
 WaitForSingleObject(
              HANDLE hHandle,
-             DWORD dwMilliseconds);
+             uint32_t dwMilliseconds);
 
-DWORD
+uint32_t
 WaitForSingleObjectEx(
              HANDLE hHandle,
-             DWORD dwMilliseconds,
+             uint32_t dwMilliseconds,
              BOOL bAlertable);
 
-DWORD
+uint32_t
 WaitForMultipleObjects(
-                DWORD nCount,
+                uint32_t nCount,
                 const HANDLE *lpHandles,
                 BOOL bWaitAll,
-                DWORD dwMilliseconds);
+                uint32_t dwMilliseconds);
 
-DWORD
+uint32_t
 WaitForMultipleObjectsEx(
-              DWORD nCount,
+              uint32_t nCount,
               const HANDLE *lpHandles,
               BOOL bWaitAll,
-              DWORD dwMilliseconds,
+              uint32_t dwMilliseconds,
               BOOL bAlertable);
 
 RHANDLE
@@ -1430,17 +1430,17 @@ DuplicateHandle(
          HANDLE hSourceHandle,
          HANDLE hTargetProcessHandle,
          LPHANDLE lpTargetHandle,
-         DWORD dwDesiredAccess,
+         uint32_t dwDesiredAccess,
          BOOL bInheritHandle,
-         DWORD dwOptions);
+         uint32_t dwOptions);
 
 void
 Sleep(
-       DWORD dwMilliseconds);
+       uint32_t dwMilliseconds);
 
-DWORD
+uint32_t
 SleepEx(
-     DWORD dwMilliseconds,
+     uint32_t dwMilliseconds,
      BOOL bAlertable);
 
 BOOL
@@ -1455,29 +1455,29 @@ SwitchToThread(
 HANDLE
 CreateThread(
           LPSECURITY_ATTRIBUTES lpThreadAttributes,
-          DWORD dwStackSize,
+          uint32_t dwStackSize,
           LPTHREAD_START_ROUTINE lpStartAddress,
           void * lpParameter,
-          DWORD dwCreationFlags,
+          uint32_t dwCreationFlags,
           LPDWORD lpThreadId);
 
 __attribute__((noreturn))
 void
 ExitThread(
-        DWORD dwExitCode);
+        uint32_t dwExitCode);
 
 BOOL
 GetExitCodeThread(
             HANDLE hThread,
             LPDWORD lpExitCode);
 
-DWORD
+uint32_t
 ResumeThread(
           HANDLE hThread);
 
 typedef void (*PAPCFUNC)(size_t dwParam);
 
-DWORD
+uint32_t
 QueueUserAPC(
           PAPCFUNC pfnAPC,
           HANDLE hThread,
@@ -1511,15 +1511,15 @@ QueueUserAPC(
 #define MAXIMUM_SUPPORTED_EXTENSION     512
 
 typedef struct _FLOATING_SAVE_AREA {
-    DWORD   ControlWord;
-    DWORD   StatusWord;
-    DWORD   TagWord;
-    DWORD   ErrorOffset;
-    DWORD   ErrorSelector;
-    DWORD   DataOffset;
-    DWORD   DataSelector;
+    uint32_t   ControlWord;
+    uint32_t   StatusWord;
+    uint32_t   TagWord;
+    uint32_t   ErrorOffset;
+    uint32_t   ErrorSelector;
+    uint32_t   DataOffset;
+    uint32_t   DataSelector;
     uint8_t    RegisterArea[SIZE_OF_80387_REGISTERS];
-    DWORD   Cr0NpxState;
+    uint32_t   Cr0NpxState;
 } FLOATING_SAVE_AREA;
 
 typedef FLOATING_SAVE_AREA *PFLOATING_SAVE_AREA;
@@ -1940,8 +1940,8 @@ typedef struct _CONTEXT {
     // The context record is never used as an OUT only parameter.
     //
 
-    DWORD ContextFlags;
-    DWORD Fill1[3];         // for alignment of following on 16-byte boundary
+    uint32_t ContextFlags;
+    uint32_t Fill1[3];         // for alignment of following on 16-byte boundary
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2249,14 +2249,14 @@ typedef struct _XMM_SAVE_AREA32 {
     uint8_t  TagWord;
     uint8_t  Reserved1;
     uint16_t   ErrorOpcode;
-    DWORD ErrorOffset;
+    uint32_t ErrorOffset;
     uint16_t   ErrorSelector;
     uint16_t   Reserved2;
-    DWORD DataOffset;
+    uint32_t DataOffset;
     uint16_t   DataSelector;
     uint16_t   Reserved3;
-    DWORD MxCsr;
-    DWORD MxCsr_Mask;
+    uint32_t MxCsr;
+    uint32_t MxCsr_Mask;
     M128A FloatRegisters[8];
     M128A XmmRegisters[16];
     uint8_t  Reserved4[96];
@@ -2317,8 +2317,8 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     // Control flags.
     //
 
-    DWORD ContextFlags;
-    DWORD MxCsr;
+    uint32_t ContextFlags;
+    uint32_t MxCsr;
 
     //
     // Segment Registers and processor flags.
@@ -2330,7 +2330,7 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     uint16_t   SegFs;
     uint16_t   SegGs;
     uint16_t   SegSs;
-    DWORD EFlags;
+    uint32_t EFlags;
 
     //
     // Debug registers
@@ -2547,57 +2547,57 @@ typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
     // Control flags.
     //
 
-    DWORD ContextFlags;
+    uint32_t ContextFlags;
 
     //
     // Integer registers
     //
 
-    DWORD R0;
-    DWORD R1;
-    DWORD R2;
-    DWORD R3;
-    DWORD R4;
-    DWORD R5;
-    DWORD R6;
-    DWORD R7;
-    DWORD R8;
-    DWORD R9;
-    DWORD R10;
-    DWORD R11;
-    DWORD R12;
+    uint32_t R0;
+    uint32_t R1;
+    uint32_t R2;
+    uint32_t R3;
+    uint32_t R4;
+    uint32_t R5;
+    uint32_t R6;
+    uint32_t R7;
+    uint32_t R8;
+    uint32_t R9;
+    uint32_t R10;
+    uint32_t R11;
+    uint32_t R12;
 
     //
     // Control Registers
     //
 
-    DWORD Sp;
-    DWORD Lr;
-    DWORD Pc;
-    DWORD Cpsr;
+    uint32_t Sp;
+    uint32_t Lr;
+    uint32_t Pc;
+    uint32_t Cpsr;
 
     //
     // Floating Point/NEON Registers
     //
 
-    DWORD Fpscr;
-    DWORD Padding;
+    uint32_t Fpscr;
+    uint32_t Padding;
     union {
         NEON128 Q[16];
         ULONGLONG D[32];
-        DWORD S[32];
+        uint32_t S[32];
     };
 
     //
     // Debug registers
     //
 
-    DWORD Bvr[ARM_MAX_BREAKPOINTS];
-    DWORD Bcr[ARM_MAX_BREAKPOINTS];
-    DWORD Wvr[ARM_MAX_WATCHPOINTS];
-    DWORD Wcr[ARM_MAX_WATCHPOINTS];
+    uint32_t Bvr[ARM_MAX_BREAKPOINTS];
+    uint32_t Bcr[ARM_MAX_BREAKPOINTS];
+    uint32_t Wvr[ARM_MAX_WATCHPOINTS];
+    uint32_t Wcr[ARM_MAX_WATCHPOINTS];
 
-    DWORD Padding2[2];
+    uint32_t Padding2[2];
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
@@ -2629,19 +2629,19 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 } KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
 typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY {
-    DWORD BeginAddress;
+    uint32_t BeginAddress;
     union {
-        DWORD UnwindData;
+        uint32_t UnwindData;
         struct {
-            DWORD Flag : 2;
-            DWORD FunctionLength : 11;
-            DWORD Ret : 2;
-            DWORD H : 1;
-            DWORD Reg : 3;
-            DWORD R : 1;
-            DWORD L : 1;
-            DWORD C : 1;
-            DWORD StackAdjust : 10;
+            uint32_t Flag : 2;
+            uint32_t FunctionLength : 11;
+            uint32_t Ret : 2;
+            uint32_t H : 1;
+            uint32_t Reg : 3;
+            uint32_t R : 1;
+            uint32_t L : 1;
+            uint32_t C : 1;
+            uint32_t StackAdjust : 10;
         };
     };
 } IMAGE_ARM_RUNTIME_FUNCTION_ENTRY, * PIMAGE_ARM_RUNTIME_FUNCTION_ENTRY;
@@ -2734,13 +2734,13 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     // Control flags.
     //
 
-    /* +0x000 */ DWORD ContextFlags;
+    /* +0x000 */ uint32_t ContextFlags;
 
     //
     // Integer registers
     //
 
-    /* +0x004 */ DWORD Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
+    /* +0x004 */ uint32_t Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
     /* +0x008 */ union {
                     struct {
                         DWORD64 X0;
@@ -2785,16 +2785,16 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //
 
     /* +0x110 */ NEON128 V[32];
-    /* +0x310 */ DWORD Fpcr;
-    /* +0x314 */ DWORD Fpsr;
+    /* +0x310 */ uint32_t Fpcr;
+    /* +0x314 */ uint32_t Fpsr;
 
     //
     // Debug registers
     //
 
-    /* +0x318 */ DWORD Bcr[ARM64_MAX_BREAKPOINTS];
+    /* +0x318 */ uint32_t Bcr[ARM64_MAX_BREAKPOINTS];
     /* +0x338 */ DWORD64 Bvr[ARM64_MAX_BREAKPOINTS];
-    /* +0x378 */ DWORD Wcr[ARM64_MAX_WATCHPOINTS];
+    /* +0x378 */ uint32_t Wcr[ARM64_MAX_WATCHPOINTS];
     /* +0x380 */ DWORD64 Wvr[ARM64_MAX_WATCHPOINTS];
     /* +0x390 */
 
@@ -2883,7 +2883,7 @@ PAL_GetStackBase();
 void *
 PAL_GetStackLimit();
 
-DWORD
+uint32_t
 PAL_GetLogicalCpuCountFromOS();
 
 size_t
@@ -2896,7 +2896,7 @@ BOOL PAL_VirtualUnwind(CONTEXT *context, KNONVOLATILE_CONTEXT_POINTERS *contextP
 
 BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
                                                  KNONVOLATILE_CONTEXT_POINTERS *contextPointers,
-                                                 DWORD pid,
+                                                 uint32_t pid,
                                                  ReadMemoryWordCallback readMemCallback);
 #endif
 
@@ -2943,7 +2943,7 @@ typedef struct _CRITICAL_SECTION {
     size_t SpinCount;
 
     BOOL bInternal;
-    volatile DWORD dwInitState;
+    volatile uint32_t dwInitState;
     union CSNativeDataStorage
     {
         uint8_t rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
@@ -2954,8 +2954,8 @@ typedef struct _CRITICAL_SECTION {
 void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
-BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
-BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount);
+BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags);
+BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount);
 void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 BOOL TryEnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 
@@ -2990,18 +2990,18 @@ HANDLE
 CreateFileMappingA(
             HANDLE hFile,
             LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-            DWORD flProtect,
-            DWORD dwMaximumSizeHigh,
-            DWORD dwMaximumSizeLow,
+            uint32_t flProtect,
+            uint32_t dwMaximumSizeHigh,
+            uint32_t dwMaximumSizeLow,
             LPCSTR lpName);
 
 HANDLE
 CreateFileMappingW(
             HANDLE hFile,
             LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-            DWORD flProtect,
-            DWORD dwMaxmimumSizeHigh,
-            DWORD dwMaximumSizeLow,
+            uint32_t flProtect,
+            uint32_t dwMaxmimumSizeHigh,
+            uint32_t dwMaximumSizeLow,
             LPCWSTR lpName);
 
 #ifdef UNICODE
@@ -3022,13 +3022,13 @@ CreateFileMappingW(
 
 HANDLE
 OpenFileMappingA(
-          DWORD dwDesiredAccess,
+          uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           LPCSTR lpName);
 
 HANDLE
 OpenFileMappingW(
-          DWORD dwDesiredAccess,
+          uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           LPCWSTR lpName);
 
@@ -3041,17 +3041,17 @@ OpenFileMappingW(
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
-           DWORD dwDesiredAccess,
-           DWORD dwFileOffsetHigh,
-           DWORD dwFileOffsetLow,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap);
 
 void *
 MapViewOfFileEx(
            HANDLE hFileMappingObject,
-           DWORD dwDesiredAccess,
-           DWORD dwFileOffsetHigh,
-           DWORD dwFileOffsetLow,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap,
            void * lpBaseAddress);
 
@@ -3076,13 +3076,13 @@ HMODULE
 LoadLibraryExA(
          LPCSTR lpLibFileName,
          /*Reserved*/ HANDLE hFile,
-         DWORD dwFlags);
+         uint32_t dwFlags);
 
 HMODULE
 LoadLibraryExW(
          LPCWSTR lpLibFileName,
          /*Reserved*/ HANDLE hFile,
-         DWORD dwFlags);
+         uint32_t dwFlags);
 
 void *
 PAL_LoadLibraryDirect(
@@ -3149,23 +3149,23 @@ __attribute__((noreturn))
 void
 FreeLibraryAndExitThread(
      HMODULE hLibModule,
-     DWORD dwExitCode);
+     uint32_t dwExitCode);
 
 BOOL
 DisableThreadLibraryCalls(
      HMODULE hLibModule);
 
-DWORD
+uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
      LPSTR lpFileName,
-     DWORD nSize);
+     uint32_t nSize);
 
-DWORD
+uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
      LPWSTR lpFileName,
-     DWORD nSize);
+     uint32_t nSize);
 
 #ifdef UNICODE
 #define GetModuleFileName GetModuleFileNameW
@@ -3173,12 +3173,12 @@ GetModuleFileNameW(
 #define GetModuleFileName GetModuleFileNameA
 #endif
 
-DWORD
+uint32_t
 GetModuleFileNameExW(
      HANDLE hProcess,
      HMODULE hModule,
      LPWSTR lpFilename,
-     DWORD nSize
+     uint32_t nSize
     );
 
 #ifdef UNICODE
@@ -3196,7 +3196,7 @@ GetModuleHandleW(
 
 BOOL
 GetModuleHandleExW(
-     DWORD dwFlags,
+     uint32_t dwFlags,
       LPCWSTR lpModuleName,
      HMODULE *phModule);
 
@@ -3212,22 +3212,22 @@ void *
 VirtualAlloc(
           void * lpAddress,
           SIZE_T dwSize,
-          DWORD flAllocationType,
-          DWORD flProtect);
+          uint32_t flAllocationType,
+          uint32_t flProtect);
 
 void *
 VirtualAllocEx(
           HANDLE hProcess,
           void * lpAddress,
           SIZE_T dwSize,
-          DWORD flAllocationType,
-          DWORD flProtect);
+          uint32_t flAllocationType,
+          uint32_t flProtect);
 
 BOOL
 VirtualFree(
          void * lpAddress,
          SIZE_T dwSize,
-         DWORD dwFreeType);
+         uint32_t dwFreeType);
 
 
 BOOL
@@ -3235,13 +3235,13 @@ VirtualFreeEx(
          HANDLE hProcess,
          void * lpAddress,
          SIZE_T dwSize,
-         DWORD dwFreeType);
+         uint32_t dwFreeType);
 
 BOOL
 VirtualProtect(
             void * lpAddress,
             SIZE_T dwSize,
-            DWORD flNewProtect,
+            uint32_t flNewProtect,
             PDWORD lpflOldProtect);
 
 BOOL
@@ -3249,12 +3249,12 @@ VirtualProtectEx(
             HANDLE hProcess,
             void * lpAddress,
             SIZE_T dwSize,
-            DWORD flNewProtect,
+            uint32_t flNewProtect,
             PDWORD lpflOldProtect);
 
 typedef struct _MEMORYSTATUSEX {
-  DWORD     dwLength;
-  DWORD     dwMemoryLoad;
+  uint32_t     dwLength;
+  uint32_t     dwMemoryLoad;
   DWORDLONG ullTotalPhys;
   DWORDLONG ullAvailPhys;
   DWORDLONG ullTotalPageFile;
@@ -3271,11 +3271,11 @@ GlobalMemoryStatusEx(
 typedef struct _MEMORY_BASIC_INFORMATION {
     void * BaseAddress;
     void * AllocationBase_PAL_Undefined;
-    DWORD AllocationProtect;
+    uint32_t AllocationProtect;
     SIZE_T RegionSize;
-    DWORD State;
-    DWORD Protect;
-    DWORD Type;
+    uint32_t State;
+    uint32_t Protect;
+    uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
 SIZE_T
@@ -3324,20 +3324,20 @@ GetProcessHeap(
 
 HANDLE
 HeapCreate(
-	        DWORD flOptions,
+	        uint32_t flOptions,
 	        SIZE_T dwInitialSize,
 	        SIZE_T dwMaximumSize);
 
 void *
 HeapAlloc(
        HANDLE hHeap,
-       DWORD dwFlags,
+       uint32_t dwFlags,
        SIZE_T dwBytes);
 
 void *
 HeapReAlloc(
      HANDLE hHeap,
-     DWORD dwFlags,
+     uint32_t dwFlags,
      void * lpMem,
      SIZE_T dwBytes
     );
@@ -3345,7 +3345,7 @@ HeapReAlloc(
 BOOL
 HeapFree(
       HANDLE hHeap,
-      DWORD dwFlags,
+      uint32_t dwFlags,
       void * lpMem);
 
 typedef enum _HEAP_INFORMATION_CLASS {
@@ -3391,7 +3391,7 @@ FlushInstructionCache(
 BOOL
 GetStringTypeExW(
           LCID Locale,
-          DWORD dwInfoType,
+          uint32_t dwInfoType,
           LPCWSTR lpSrcStr,
           int cchSrc,
           uint16_t * lpCharType);
@@ -3428,9 +3428,9 @@ GetStringTypeExW(
 
 
 typedef struct nlsversioninfo {
-  DWORD     dwNLSVersionInfoSize;
-  DWORD     dwNLSVersion;
-  DWORD     dwDefinedVersion;
+  uint32_t     dwNLSVersionInfoSize;
+  uint32_t     dwNLSVersion;
+  uint32_t     dwDefinedVersion;
 } NLSVERSIONINFO, *LPNLSVERSIONINFO;
 
 #define CSTR_LESS_THAN     1
@@ -3443,7 +3443,7 @@ typedef struct nlsversioninfo {
 int
 CompareStringA(
      LCID     Locale,
-     DWORD    dwCmpFlags,
+     uint32_t    dwCmpFlags,
      LPCSTR   lpString1,
      int      cchCount1,
      LPCSTR   lpString2,
@@ -3452,7 +3452,7 @@ CompareStringA(
 int
 CompareStringW(
      LCID     Locale,
-     DWORD    dwCmpFlags,
+     uint32_t    dwCmpFlags,
      LPCWSTR  lpString1,
      int      cchCount1,
      LPCWSTR  lpString2,
@@ -3464,7 +3464,7 @@ CompareStringW(
 int
 CompareStringEx(
      LPCWSTR lpLocaleName,
-     DWORD    dwCmpFlags,
+     uint32_t    dwCmpFlags,
      LPCWSTR  lpString1,
      int      cchCount1,
      LPCWSTR  lpString2,
@@ -3515,7 +3515,7 @@ IsValidCodePage(
 int
 MultiByteToWideChar(
              UINT CodePage,
-             DWORD dwFlags,
+             uint32_t dwFlags,
              LPCSTR lpMultiByteStr,
              int cbMultiByte,
              LPWSTR lpWideCharStr,
@@ -3526,7 +3526,7 @@ MultiByteToWideChar(
 int
 WideCharToMultiByte(
              UINT CodePage,
-             DWORD dwFlags,
+             uint32_t dwFlags,
              LPCWSTR lpWideCharStr,
              int cchWideChar,
              LPSTR lpMultiByteStr,
@@ -3823,17 +3823,17 @@ CompareStringOrdinal(
 	 BOOL bIgnoreCase);
 
 typedef struct _nlsversioninfoex {
-  DWORD  dwNLSVersionInfoSize;
-  DWORD  dwNLSVersion;
-  DWORD  dwDefinedVersion;
-  DWORD  dwEffectiveId;
+  uint32_t  dwNLSVersionInfoSize;
+  uint32_t  dwNLSVersion;
+  uint32_t  dwDefinedVersion;
+  uint32_t  dwEffectiveId;
   GUID  guidCustomVersion;
   } NLSVERSIONINFOEX, *LPNLSVERSIONINFOEX;
 
 int
 FindNLSStringEx(
      LPCWSTR lpLocaleName,
-	 DWORD dwFindNLSStringFlags,
+	 uint32_t dwFindNLSStringFlags,
 	 LPCWSTR lpStringSource,
 	 int cchSource,
      LPCWSTR lpStringValue,
@@ -3850,7 +3850,7 @@ typedef enum {
 BOOL
 IsNLSDefinedString(
      NLS_FUNCTION Function,
-	 DWORD dwFlags,
+	 uint32_t dwFlags,
 	 LPNLSVERSIONINFOEX lpVersionInfo,
 	 LPCWSTR lpString,
 	 int cchStr );
@@ -3864,7 +3864,7 @@ ResolveLocaleName(
 
 BOOL
 GetThreadPreferredUILanguages(
-     DWORD  dwFlags,
+     uint32_t  dwFlags,
      uint32_t *  pulNumLanguages,
      PWSTR  pwszLanguagesBuffer,
       uint32_t *  pcchLanguagesBuffer);
@@ -3902,12 +3902,12 @@ GetUserDefaultLocaleName(
 BOOL
 IsValidLocale(
            LCID Locale,
-           DWORD dwFlags);
+           uint32_t dwFlags);
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
 
 
-typedef DWORD CALID;
-typedef DWORD CALTYPE;
+typedef uint32_t CALID;
+typedef uint32_t CALTYPE;
 
 #define CAL_ITWODIGITYEARMAX 0x00000030 // two digit year max
 #define CAL_RETURN_NUMBER    0x20000000 // return number instead of string
@@ -3959,7 +3959,7 @@ typedef BOOL (CALLBACK* LOCALE_ENUMPROCW)(LPWSTR);
 BOOL
 EnumSystemLocalesW(
      LOCALE_ENUMPROCW lpLocaleEnumProc,
-     DWORD            dwFlags);
+     uint32_t            dwFlags);
 #endif //  ENABLE_DOWNLEVEL_FOR_NLS
 
 #define DATE_SHORTDATE            0x00000001  // use short date picture
@@ -3974,7 +3974,7 @@ BOOL
 EnumDateFormatsExW(
      DATEFMT_ENUMPROCEXW lpDateFmtEnumProcEx,
      LCID                Locale,
-     DWORD               dwFlags);
+     uint32_t               dwFlags);
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -3984,7 +3984,7 @@ BOOL
 EnumDateFormatsExEx(
      DATEFMT_ENUMPROCEXEXW lpDateFmtEnumProcEx,
      LPCWSTR          lpLocaleName,
-     DWORD               dwFlags,
+     uint32_t               dwFlags,
      LPARAM      lParam);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
@@ -3997,7 +3997,7 @@ BOOL
 EnumTimeFormatsW(
      TIMEFMT_ENUMPROCW lpTimeFmtEnumProc,
      LCID              Locale,
-     DWORD             dwFlags);
+     uint32_t             dwFlags);
 
 #else // ENABLE_DOWNLEVEL_FOR_NLS
 
@@ -4007,7 +4007,7 @@ BOOL
 EnumTimeFormatsEx(
      TIMEFMT_ENUMPROCEXW lpTimeFmtEnumProc,
      LPCWSTR          lpLocaleName,
-     DWORD             dwFlags,
+     uint32_t             dwFlags,
      LPARAM    lParam);
 
 #endif // ENABLE_DOWNLEVEL_FOR_NLS
@@ -4051,7 +4051,7 @@ EnumCalendarInfoExEx(
 int
 LCMapStringW(
      LCID    Locale,
-     DWORD   dwMapFlags,
+     uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
      LPWSTR lpDestStr,
@@ -4068,7 +4068,7 @@ LCMapStringW(
 int
 LCMapStringEx(
      LPCWSTR    lpLocaleName,
-     DWORD   dwMapFlags,
+     uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
      LPWSTR lpDestStr,
@@ -4080,7 +4080,7 @@ LCMapStringEx(
 int
 PAL_LCMapCharW(
      LPCWSTR    lpLocaleName,
-     DWORD   dwMapFlags,
+     uint32_t   dwMapFlags,
      WCHAR   srcChar,
      WCHAR  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
@@ -4090,7 +4090,7 @@ PAL_LCMapCharW(
 int
 PAL_NormalizeStringExW(
      LPCWSTR    lpLocaleName,
-     DWORD   dwMapFlags,
+     uint32_t   dwMapFlags,
      LPCWSTR lpSrcStr,
      int     cchSrc,
      LPWSTR lpDestStr,
@@ -4144,7 +4144,7 @@ int PAL_FormatDecimal(LPCWSTR sLocale, LPWSTR pBuffer, SIZE_T cchBuffer, PALNUMB
 int
 GetDateFormatW(
             LCID Locale,
-            DWORD dwFlags,
+            uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
             LPWSTR lpDateStr,
@@ -4155,7 +4155,7 @@ GetDateFormatW(
 int
 GetDateFormatEx(
             LPCWSTR Locale,
-            DWORD dwFlags,
+            uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
             LPWSTR lpDateStr,
@@ -4168,7 +4168,7 @@ GetDateFormatEx(
 int
 GetDateFormatEx(
             LPCWSTR lpLocaleName,
-            DWORD dwFlags,
+            uint32_t dwFlags,
             const SYSTEMTIME *lpDate,
             LPCWSTR lpFormat,
             LPWSTR lpDateStr,
@@ -4221,11 +4221,11 @@ PAL_BindResources( LPCSTR lpDomain);
 #define NATIVE_EXCEPTION_ASYNC_SLOT (EXCEPTION_MAXIMUM_PARAMETERS-1)
 
 typedef struct _EXCEPTION_RECORD {
-    DWORD ExceptionCode;
-    DWORD ExceptionFlags;
+    uint32_t ExceptionCode;
+    uint32_t ExceptionFlags;
     struct _EXCEPTION_RECORD *ExceptionRecord;
     void * ExceptionAddress;
-    DWORD NumberParameters;
+    uint32_t NumberParameters;
     size_t ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD, *PEXCEPTION_RECORD;
 
@@ -4252,25 +4252,25 @@ enum {
 //
 #ifdef _M_ARM64
 typedef struct _RUNTIME_FUNCTION {
-    DWORD BeginAddress;
+    uint32_t BeginAddress;
     union {
-        DWORD UnwindData;
+        uint32_t UnwindData;
         struct {
-            DWORD Flag           : 2;
-            DWORD FunctionLength : 11;
-            DWORD RegF           : 3;
-            DWORD RegI           : 4;
-            DWORD H              : 1;
-            DWORD CR             : 2;
-            DWORD FrameSize      : 9;
+            uint32_t Flag           : 2;
+            uint32_t FunctionLength : 11;
+            uint32_t RegF           : 3;
+            uint32_t RegI           : 4;
+            uint32_t H              : 1;
+            uint32_t CR             : 2;
+            uint32_t FrameSize      : 9;
         };
     };
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #else
 typedef struct _RUNTIME_FUNCTION {
-    DWORD BeginAddress;
-    DWORD EndAddress;
-    DWORD UnwindData;
+    uint32_t BeginAddress;
+    uint32_t EndAddress;
+    uint32_t UnwindData;
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
@@ -4315,16 +4315,16 @@ WriteProcessMemory( HANDLE hProcess,
 
 HANDLE
 OpenProcess(
-     DWORD dwDesiredAccess, /* PROCESS_DUP_HANDLE or PROCESS_ALL_ACCESS */
+     uint32_t dwDesiredAccess, /* PROCESS_DUP_HANDLE or PROCESS_ALL_ACCESS */
      BOOL bInheritHandle,
-     DWORD dwProcessId
+     uint32_t dwProcessId
     );
 
 BOOL
 EnumProcessModules(
      HANDLE hProcess,
      HMODULE *lphModule,
-     DWORD cb,
+     uint32_t cb,
      LPDWORD lpcbNeeded
     );
 
@@ -4389,17 +4389,17 @@ lstrcpynW(
 #endif
 
 
-DWORD
+uint32_t
 GetEnvironmentVariableA(
              LPCSTR lpName,
              LPSTR lpBuffer,
-             DWORD nSize);
+             uint32_t nSize);
 
-DWORD
+uint32_t
 GetEnvironmentVariableW(
              LPCWSTR lpName,
              LPWSTR lpBuffer,
-             DWORD nSize);
+             uint32_t nSize);
 
 #ifdef UNICODE
 #define GetEnvironmentVariable GetEnvironmentVariableW
@@ -4457,9 +4457,9 @@ CloseHandle(
 
 void
 RaiseException(
-            DWORD dwExceptionCode,
-            DWORD dwExceptionFlags,
-            DWORD nNumberOfArguments,
+            uint32_t dwExceptionCode,
+            uint32_t dwExceptionFlags,
+            uint32_t nNumberOfArguments,
             const size_t *lpArguments);
 
 #ifdef FEATURE_PAL_SXS
@@ -4469,7 +4469,7 @@ PAL_RaiseException(
             PEXCEPTION_POINTERS ExceptionPointers);
 #endif // FEATURE_PAL_SXS
 
-DWORD
+uint32_t
 GetTickCount(
          void);
 
@@ -4538,7 +4538,7 @@ BitScanForward(
     if (iIndex != 0)
     {
         // Set the Index after deducting unity
-        *Index = (DWORD)(iIndex - 1);
+        *Index = (uint32_t)(iIndex - 1);
         bRet = TRUE;
     }
 
@@ -4559,7 +4559,7 @@ BitScanForward64(
     if (iIndex != 0)
     {
         // Set the Index after deducting unity
-        *Index = (DWORD)(iIndex - 1);
+        *Index = (uint32_t)(iIndex - 1);
         bRet = TRUE;
     }
 
@@ -4580,7 +4580,7 @@ BitScanReverse(
         static_assert(sizeof(qwMask) <= sizeof(unsigned int),
                       "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clz(qwMask);
-        *Index = (DWORD)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
+        *Index = (uint32_t)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
     }
 
@@ -4601,7 +4601,7 @@ BitScanReverse64(
         static_assert(sizeof(qwMask) <= sizeof(unsigned long long),
                       "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clzll(qwMask);
-        *Index = (DWORD)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
+        *Index = (uint32_t)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
     }
 
@@ -5137,7 +5137,7 @@ void
 YieldProcessor(
     void);
 
-DWORD
+uint32_t
 GetCurrentProcessorNumber();
 
 /*++
@@ -5157,14 +5157,14 @@ PAL_HasGetCurrentProcessorNumber();
 #define FORMAT_MESSAGE_ARGUMENT_ARRAY  0x00002000
 #define FORMAT_MESSAGE_MAX_WIDTH_MASK  0x000000FF
 
-DWORD
+uint32_t
 FormatMessageW(
-            DWORD dwFlags,
+            uint32_t dwFlags,
             const void * lpSource,
-            DWORD dwMessageId,
-            DWORD dwLanguageId,
+            uint32_t dwMessageId,
+            uint32_t dwLanguageId,
             LPWSTR lpBffer,
-            DWORD nSize,
+            uint32_t nSize,
             va_list *Arguments);
 
 #ifdef UNICODE
@@ -5172,13 +5172,13 @@ FormatMessageW(
 #endif
 
 
-DWORD
+uint32_t
 GetLastError(
          void);
 
 void
 SetLastError(
-          DWORD dwErrCode);
+          uint32_t dwErrCode);
 
 LPWSTR
 GetCommandLineW(
@@ -5213,20 +5213,20 @@ PAL_SetActivationFunction(
 #define VER_PLATFORM_MACOSX          11
 
 typedef struct _OSVERSIONINFOA {
-    DWORD dwOSVersionInfoSize;
-    DWORD dwMajorVersion;
-    DWORD dwMinorVersion;
-    DWORD dwBuildNumber;
-    DWORD dwPlatformId;
+    uint32_t dwOSVersionInfoSize;
+    uint32_t dwMajorVersion;
+    uint32_t dwMinorVersion;
+    uint32_t dwBuildNumber;
+    uint32_t dwPlatformId;
     char szCSDVersion[ 128 ];
 } OSVERSIONINFOA, *POSVERSIONINFOA, *LPOSVERSIONINFOA;
 
 typedef struct _OSVERSIONINFOW {
-    DWORD dwOSVersionInfoSize;
-    DWORD dwMajorVersion;
-    DWORD dwMinorVersion;
-    DWORD dwBuildNumber;
-    DWORD dwPlatformId;
+    uint32_t dwOSVersionInfoSize;
+    uint32_t dwMajorVersion;
+    uint32_t dwMinorVersion;
+    uint32_t dwBuildNumber;
+    uint32_t dwPlatformId;
     WCHAR szCSDVersion[ 128 ];
 } OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW;
 
@@ -5241,11 +5241,11 @@ typedef LPOSVERSIONINFOA LPOSVERSIONINFO;
 #endif
 
 typedef struct _OSVERSIONINFOEXA {
-    DWORD dwOSVersionInfoSize;
-    DWORD dwMajorVersion;
-    DWORD dwMinorVersion;
-    DWORD dwBuildNumber;
-    DWORD dwPlatformId;
+    uint32_t dwOSVersionInfoSize;
+    uint32_t dwMajorVersion;
+    uint32_t dwMinorVersion;
+    uint32_t dwBuildNumber;
+    uint32_t dwPlatformId;
     char szCSDVersion[ 128 ];
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
@@ -5255,11 +5255,11 @@ typedef struct _OSVERSIONINFOEXA {
 } OSVERSIONINFOEXA, *POSVERSIONINFOEXA, *LPOSVERSIONINFOEXA;
 
 typedef struct _OSVERSIONINFOEXW {
-    DWORD dwOSVersionInfoSize;
-    DWORD dwMajorVersion;
-    DWORD dwMinorVersion;
-    DWORD dwBuildNumber;
-    DWORD dwPlatformId;
+    uint32_t dwOSVersionInfoSize;
+    uint32_t dwMajorVersion;
+    uint32_t dwMinorVersion;
+    uint32_t dwBuildNumber;
+    uint32_t dwPlatformId;
     WCHAR szCSDVersion[ 128 ];
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
@@ -5298,13 +5298,13 @@ GetVersionExW(
 typedef struct _SYSTEM_INFO {
     uint16_t wProcessorArchitecture_PAL_Undefined;
     uint16_t wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union
-    DWORD dwPageSize;
+    uint32_t dwPageSize;
     void * lpMinimumApplicationAddress;
     void * lpMaximumApplicationAddress;
     DWORD_PTR dwActiveProcessorMask_PAL_Undefined;
-    DWORD dwNumberOfProcessors;
-    DWORD dwProcessorType_PAL_Undefined;
-    DWORD dwAllocationGranularity;
+    uint32_t dwNumberOfProcessors;
+    uint32_t dwProcessorType_PAL_Undefined;
+    uint32_t dwAllocationGranularity;
     uint16_t wProcessorLevel_PAL_Undefined;
     uint16_t wProcessorRevision_PAL_Undefined;
 } SYSTEM_INFO, *LPSYSTEM_INFO;
@@ -5330,7 +5330,7 @@ CreatePipe(
      PHANDLE hReadPipe,
      PHANDLE hWritePipe,
      LPSECURITY_ATTRIBUTES lpPipeAttributes,
-     DWORD nSize
+     uint32_t nSize
     );
 
 BOOL
@@ -5369,10 +5369,10 @@ ReportEventA (
          HANDLE     hEventLog,
          uint16_t       wType,
          uint16_t       wCategory,
-         DWORD      dwEventID,
+         uint32_t      dwEventID,
       PSID       lpUserSid,
          uint16_t       wNumStrings,
-         DWORD      dwDataSize,
+         uint32_t      dwDataSize,
       LPCSTR *lpStrings,
       void * lpRawData
     );
@@ -5381,10 +5381,10 @@ ReportEventW (
          HANDLE     hEventLog,
          uint16_t       wType,
          uint16_t       wCategory,
-         DWORD      dwEventID,
+         uint32_t      dwEventID,
       PSID       lpUserSid,
          uint16_t       wNumStrings,
-         DWORD      dwDataSize,
+         uint32_t      dwDataSize,
       LPCWSTR *lpStrings,
       void * lpRawData
     );
@@ -5942,7 +5942,7 @@ typedef enum _PAL_Boundary {
 // than an internal error) if this is the first time that the
 // current thread entered this PAL.  Note that PAL_Initialize
 // implies a call to this function.  Does not modify LastError.
-DWORD
+uint32_t
 PAL_Enter(PAL_Boundary boundary);
 
 // Returns TRUE if we this thread has already entered the PAL,
@@ -5952,7 +5952,7 @@ PAL_HasEntered();
 
 // Equivalent to PAL_Enter(PAL_BoundaryTop) and is for stub
 // code generation use.
-DWORD
+uint32_t
 PAL_EnterTop();
 
 // This function needs to be called on a thread when it enters
@@ -5988,7 +5988,7 @@ class PAL_EnterHolder
 {
 private:
     BOOL m_fEntered;
-    DWORD m_palError;
+    uint32_t m_palError;
 public:
     PAL_EnterHolder(BOOL fEnter = TRUE) : m_palError(ERROR_SUCCESS)
     {
@@ -6011,7 +6011,7 @@ public:
         }
     }
 
-    DWORD GetError()
+    uint32_t GetError()
     {
         return m_palError;
     }
@@ -6098,44 +6098,44 @@ public:
 #define PAL_SHLIB_SUFFIX ".so"
 #endif
 
-#define DBG_EXCEPTION_HANDLED            ((DWORD   )0x00010001L)
-#define DBG_CONTINUE                     ((DWORD   )0x00010002L)
-#define DBG_EXCEPTION_NOT_HANDLED        ((DWORD   )0x80010001L)
+#define DBG_EXCEPTION_HANDLED            ((uint32_t   )0x00010001L)
+#define DBG_CONTINUE                     ((uint32_t   )0x00010002L)
+#define DBG_EXCEPTION_NOT_HANDLED        ((uint32_t   )0x80010001L)
 
-#define DBG_TERMINATE_THREAD             ((DWORD   )0x40010003L)
-#define DBG_TERMINATE_PROCESS            ((DWORD   )0x40010004L)
-#define DBG_CONTROL_C                    ((DWORD   )0x40010005L)
-#define DBG_RIPEXCEPTION                 ((DWORD   )0x40010007L)
-#define DBG_CONTROL_BREAK                ((DWORD   )0x40010008L)
-#define DBG_COMMAND_EXCEPTION            ((DWORD   )0x40010009L)
+#define DBG_TERMINATE_THREAD             ((uint32_t   )0x40010003L)
+#define DBG_TERMINATE_PROCESS            ((uint32_t   )0x40010004L)
+#define DBG_CONTROL_C                    ((uint32_t   )0x40010005L)
+#define DBG_RIPEXCEPTION                 ((uint32_t   )0x40010007L)
+#define DBG_CONTROL_BREAK                ((uint32_t   )0x40010008L)
+#define DBG_COMMAND_EXCEPTION            ((uint32_t   )0x40010009L)
 
-#define STATUS_USER_APC                  ((DWORD   )0x000000C0L)
-#define STATUS_GUARD_PAGE_VIOLATION      ((DWORD   )0x80000001L)
-#define STATUS_DATATYPE_MISALIGNMENT     ((DWORD   )0x80000002L)
-#define STATUS_BREAKPOINT                ((DWORD   )0x80000003L)
-#define STATUS_SINGLE_STEP               ((DWORD   )0x80000004L)
-#define STATUS_LONGJUMP                  ((DWORD   )0x80000026L)
-#define STATUS_UNWIND_CONSOLIDATE        ((DWORD   )0x80000029L)
-#define STATUS_ACCESS_VIOLATION          ((DWORD   )0xC0000005L)
-#define STATUS_IN_PAGE_ERROR             ((DWORD   )0xC0000006L)
-#define STATUS_INVALID_HANDLE            ((DWORD   )0xC0000008L)
-#define STATUS_NO_MEMORY                 ((DWORD   )0xC0000017L)
-#define STATUS_ILLEGAL_INSTRUCTION       ((DWORD   )0xC000001DL)
-#define STATUS_NONCONTINUABLE_EXCEPTION  ((DWORD   )0xC0000025L)
-#define STATUS_INVALID_DISPOSITION       ((DWORD   )0xC0000026L)
-#define STATUS_ARRAY_BOUNDS_EXCEEDED     ((DWORD   )0xC000008CL)
-#define STATUS_FLOAT_DENORMAL_OPERAND    ((DWORD   )0xC000008DL)
-#define STATUS_FLOAT_DIVIDE_BY_ZERO      ((DWORD   )0xC000008EL)
-#define STATUS_FLOAT_INEXACT_RESULT      ((DWORD   )0xC000008FL)
-#define STATUS_FLOAT_INVALID_OPERATION   ((DWORD   )0xC0000090L)
-#define STATUS_FLOAT_OVERFLOW            ((DWORD   )0xC0000091L)
-#define STATUS_FLOAT_STACK_CHECK         ((DWORD   )0xC0000092L)
-#define STATUS_FLOAT_UNDERFLOW           ((DWORD   )0xC0000093L)
-#define STATUS_INTEGER_DIVIDE_BY_ZERO    ((DWORD   )0xC0000094L)
-#define STATUS_INTEGER_OVERFLOW          ((DWORD   )0xC0000095L)
-#define STATUS_PRIVILEGED_INSTRUCTION    ((DWORD   )0xC0000096L)
-#define STATUS_STACK_OVERFLOW            ((DWORD   )0xC00000FDL)
-#define STATUS_CONTROL_C_EXIT            ((DWORD   )0xC000013AL)
+#define STATUS_USER_APC                  ((uint32_t   )0x000000C0L)
+#define STATUS_GUARD_PAGE_VIOLATION      ((uint32_t   )0x80000001L)
+#define STATUS_DATATYPE_MISALIGNMENT     ((uint32_t   )0x80000002L)
+#define STATUS_BREAKPOINT                ((uint32_t   )0x80000003L)
+#define STATUS_SINGLE_STEP               ((uint32_t   )0x80000004L)
+#define STATUS_LONGJUMP                  ((uint32_t   )0x80000026L)
+#define STATUS_UNWIND_CONSOLIDATE        ((uint32_t   )0x80000029L)
+#define STATUS_ACCESS_VIOLATION          ((uint32_t   )0xC0000005L)
+#define STATUS_IN_PAGE_ERROR             ((uint32_t   )0xC0000006L)
+#define STATUS_INVALID_HANDLE            ((uint32_t   )0xC0000008L)
+#define STATUS_NO_MEMORY                 ((uint32_t   )0xC0000017L)
+#define STATUS_ILLEGAL_INSTRUCTION       ((uint32_t   )0xC000001DL)
+#define STATUS_NONCONTINUABLE_EXCEPTION  ((uint32_t   )0xC0000025L)
+#define STATUS_INVALID_DISPOSITION       ((uint32_t   )0xC0000026L)
+#define STATUS_ARRAY_BOUNDS_EXCEEDED     ((uint32_t   )0xC000008CL)
+#define STATUS_FLOAT_DENORMAL_OPERAND    ((uint32_t   )0xC000008DL)
+#define STATUS_FLOAT_DIVIDE_BY_ZERO      ((uint32_t   )0xC000008EL)
+#define STATUS_FLOAT_INEXACT_RESULT      ((uint32_t   )0xC000008FL)
+#define STATUS_FLOAT_INVALID_OPERATION   ((uint32_t   )0xC0000090L)
+#define STATUS_FLOAT_OVERFLOW            ((uint32_t   )0xC0000091L)
+#define STATUS_FLOAT_STACK_CHECK         ((uint32_t   )0xC0000092L)
+#define STATUS_FLOAT_UNDERFLOW           ((uint32_t   )0xC0000093L)
+#define STATUS_INTEGER_DIVIDE_BY_ZERO    ((uint32_t   )0xC0000094L)
+#define STATUS_INTEGER_OVERFLOW          ((uint32_t   )0xC0000095L)
+#define STATUS_PRIVILEGED_INSTRUCTION    ((uint32_t   )0xC0000096L)
+#define STATUS_STACK_OVERFLOW            ((uint32_t   )0xC00000FDL)
+#define STATUS_CONTROL_C_EXIT            ((uint32_t   )0xC000013AL)
 
 #define WAIT_IO_COMPLETION                  STATUS_USER_APC
 

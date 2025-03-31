@@ -178,7 +178,7 @@ namespace CorUnix
             // whether or not the process has already exited.
            
             CProcProcessLocalData * pProcLocalData = GetProcessLocalData();
-            DWORD dwExitCode = 0;
+            uint32_t dwExitCode = 0;
             bool fIsActualExitCode = false;
 
             _ASSERT_MSG(NULL != pProcLocalData, 
@@ -258,7 +258,7 @@ namespace CorUnix
     --*/
     PAL_ERROR CSynchWaitController::RegisterWaitingThread(
         WaitType wtWaitType,
-        DWORD dwIndex,
+        uint32_t dwIndex,
         bool fAlertable)
     {
         VALIDATEOBJECT(m_psdSynchData);
@@ -267,7 +267,7 @@ namespace CorUnix
         WaitingThreadsListNode * pwtlnNewNode = NULL;
         SharedID shridNewNode = NULLSharedID;
         ThreadWaitInfo * ptwiWaitInfo; 
-        DWORD * pdwWaitState;
+        uint32_t * pdwWaitState;
         bool fSharedObject = (SharedObject == m_odObjectDomain);
         bool fEarlyDeath = false;
         bool fSynchDataRefd = false;
@@ -281,7 +281,7 @@ namespace CorUnix
 
         _ASSERTE(ptwiWaitInfo->pthrOwner == m_pthrOwner);
         
-        pdwWaitState = SharedIDToTypePointer(DWORD,
+        pdwWaitState = SharedIDToTypePointer(uint32_t,
                 m_pthrOwner->synchronizationInfo.m_shridWaitAwakened);
 
         if (fSharedObject)
@@ -383,19 +383,19 @@ namespace CorUnix
         
         if (0 == ptwiWaitInfo->lObjCount)
         {
-            DWORD dwWaitState;
+            uint32_t dwWaitState;
 
             // Setting the thread in wait state 
-            dwWaitState = (DWORD)(fAlertable ? TWS_ALERTABLE: TWS_WAITING);
+            dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE: TWS_WAITING);
 
             TRACE("Switching my wait state [%p] from TWS_ACTIVE to %u \n", 
                   pdwWaitState, dwWaitState);
 
             dwWaitState = InterlockedCompareExchange(
                 (int32_t *)pdwWaitState, (int32_t)dwWaitState, TWS_ACTIVE);
-            if ((DWORD)TWS_ACTIVE != dwWaitState)
+            if ((uint32_t)TWS_ACTIVE != dwWaitState)
             {
-                if ((DWORD)TWS_EARLYDEATH == dwWaitState)
+                if ((uint32_t)TWS_EARLYDEATH == dwWaitState)
                 {
                     // Process is terminating, this thread will soon be 
                     // suspended (by SuspendOtherThreads).
@@ -1072,11 +1072,11 @@ namespace CorUnix
         bool fSharedObject = (SharedObject == GetObjectDomain());
         bool fThreadAwakened = false;
         bool fDelegatedSignaling = false;
-        DWORD * pdwWaitState;
-        DWORD dwObjIdx;
+        uint32_t * pdwWaitState;
+        uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        DWORD dwPid = gPID;
+        uint32_t dwPid = gPID;
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1100,7 +1100,7 @@ namespace CorUnix
             
             WaitCompletionState wcsWaitCompletionState;
             bool fWaitAll = (0 != (WTLN_FLAG_WAIT_ALL & pwtlnItem->dwFlags));
-            pdwWaitState = SharedIDToTypePointer(DWORD, 
+            pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
             if (fSharedObject)
@@ -1390,11 +1390,11 @@ namespace CorUnix
         int32_t lAwakenedCount = 0;
         bool fSharedSynchLock = false;
         bool fSharedObject = (SharedObject == GetObjectDomain());
-        DWORD * pdwWaitState;
-        DWORD dwObjIdx;
+        uint32_t * pdwWaitState;
+        uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        DWORD dwPid = gPID;
+        uint32_t dwPid = gPID;
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1415,7 +1415,7 @@ namespace CorUnix
             VALIDATEOBJECT(pwtlnItem);
             
             bool fWaitAll = (0 != (WTLN_FLAG_WAIT_ALL & pwtlnItem->dwFlags));
-            pdwWaitState = SharedIDToTypePointer(DWORD, 
+            pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
             if (fSharedObject)

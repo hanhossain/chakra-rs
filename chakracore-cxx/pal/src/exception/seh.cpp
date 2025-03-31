@@ -7,9 +7,9 @@
 #include "pal/handleapi.hpp"
 
 void
-RaiseException( DWORD dwExceptionCode,
-                DWORD dwExceptionFlags,
-                DWORD nNumberOfArguments,
+RaiseException( uint32_t dwExceptionCode,
+                uint32_t dwExceptionFlags,
+                uint32_t nNumberOfArguments,
                 const size_t *lpArguments)
 {
     if (dwExceptionCode == DBG_TERMINATE_PROCESS || dwExceptionFlags & EXCEPTION_NONCONTINUABLE)

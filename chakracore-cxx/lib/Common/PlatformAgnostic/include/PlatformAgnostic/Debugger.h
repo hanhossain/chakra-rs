@@ -59,7 +59,7 @@ interface IDebugDocumentContext : IUnknown
 class IActiveScriptProfilerCallback
 {
 public:
-  HRESULT Initialize(DWORD ctx)
+  HRESULT Initialize(uint32_t ctx)
   {
       return S_OK;
   }

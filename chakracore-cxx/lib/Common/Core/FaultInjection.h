@@ -139,7 +139,7 @@ namespace Js
     private:
         bool symInitialized;
         static void * vectoredExceptionHandler;
-        static DWORD exceptionFilterRemovalLastError;
+        static uint32_t exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
         static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);

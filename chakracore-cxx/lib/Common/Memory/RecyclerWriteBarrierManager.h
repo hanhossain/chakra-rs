@@ -195,7 +195,7 @@ public:
     static uint8_t * GetAddressOfCardTable() { return cardTable; }
 #endif
 #else
-    static DWORD * GetAddressOfCardTable() { return cardTable; }
+    static uint32_t * GetAddressOfCardTable() { return cardTable; }
 #endif
 
     // For GC
@@ -209,7 +209,7 @@ public:
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     static uint8_t  GetWriteBarrier(void * address);
 #else
-    static DWORD GetWriteBarrier(void * address);
+    static uint32_t GetWriteBarrier(void * address);
 #endif
 
 #if defined(__APPLE__) && defined(_M_ARM64)
@@ -243,7 +243,7 @@ private:
 #endif
 
 #else
-    static DWORD cardTable[1 * 1024 * 1024];        // 128 bytes per bit, 4096 per DWORD
+    static uint32_t cardTable[1 * 1024 * 1024];        // 128 bytes per bit, 4096 per uint32_t
 #endif
 };
 

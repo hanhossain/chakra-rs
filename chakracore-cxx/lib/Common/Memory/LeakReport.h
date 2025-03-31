@@ -19,7 +19,7 @@ public:
     private:
         char16 const * url;
         time_t time;
-        DWORD tid;
+        uint32_t tid;
         UrlRecord * next;
 
         void * globalObject;
@@ -34,13 +34,13 @@ public:
     static void Print(char16 const * msg, ...);
 
     static UrlRecord * LogUrl(char16 const * url, void * globalObject);
-    static void DumpUrl(DWORD tid);
+    static void DumpUrl(uint32_t tid);
 private:
     static CriticalSection s_cs;
     static AutoFILE file;
     static bool openReportFileFailed;
-    static DWORD nestedSectionCount;
-    static DWORD nestedRedirectOutputCount;
+    static uint32_t nestedSectionCount;
+    static uint32_t nestedRedirectOutputCount;
 
     static UrlRecord * urlRecordHead;
     static UrlRecord * urlRecordTail;

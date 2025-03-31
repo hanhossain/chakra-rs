@@ -88,7 +88,7 @@ function. The Return Value section of each reference page notes the
 conditions under which the function sets the last-error code.
 
 --*/
-DWORD
+uint32_t
 GetLastError(
          void)
 {
@@ -117,7 +117,7 @@ This function does not return a value.
 --*/
 void
 SetLastError(
-          DWORD dwErrCode)
+          uint32_t dwErrCode)
 {
     CPalThread::SetLastError(dwErrCode);
 }

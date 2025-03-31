@@ -177,16 +177,16 @@ In the ROTOR implementation the return value is the elapsed time since
 the start of the epoch.
 
 --*/
-DWORD
+uint32_t
 GetTickCount(
          void)
 {
-    DWORD retval = 0;
+    uint32_t retval = 0;
     PERF_ENTRY(GetTickCount);
     ENTRY("GetTickCount ()\n");
 
     // Get the 64-bit count from GetTickCount64 and truncate the results.
-    retval = (DWORD) GetTickCount64();
+    retval = (uint32_t) GetTickCount64();
 
     LOGEXIT("GetTickCount returns DWORD %u\n", retval);
     PERF_EXIT(GetTickCount);

@@ -782,7 +782,7 @@ SymOpnd::GetStackSymInternal() const
 /// For example, following two instructions after RegAlloc phase:
 ///          iarg65535(s534)<0>.i32 = MOV      (NULL).var
 ///          iarg65535(s533)<0>.i32 = MOV      (NULL).var
-/// are actually same instructions after encoding: mov dword ptr[ebp-0x1c], 0x0
+/// are actually same instructions after encoding: mov uint32_t ptr[ebp-0x1c], 0x0
 /// Here for dst stack symOpnd, m_sym are different: s534 vs. s533, but offsets and
 /// types are the same. So this function will report true if isAllocated is true.
 /// Note: for property symopnd, still compare type, offset and sym.

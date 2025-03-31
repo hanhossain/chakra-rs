@@ -288,11 +288,11 @@ GlobalMemoryStatusEx(
 #if defined(__ANDROID__)
         lpBuffer->ullAvailPhys = sysconf(_SC_AVPHYS_PAGES) * sysconf( _SC_PAGE_SIZE );
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__LINUX__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__APPLE__)
         vm_size_t page_size;
         mach_port_t mach_port;
@@ -306,7 +306,7 @@ GlobalMemoryStatusEx(
             {
                 lpBuffer->ullAvailPhys = (int64_t)vm_stats.free_count * (int64_t)page_size;
                 int64_t used_memory = ((int64_t)vm_stats.active_count + (int64_t)vm_stats.inactive_count + (int64_t)vm_stats.wire_count) *  (int64_t)page_size;
-                lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+                lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
             }
         }
         mach_port_deallocate(mach_task_self(), mach_port);
@@ -328,7 +328,7 @@ GlobalMemoryStatusEx(
     return fRetVal;
 }
 
-DWORD
+uint32_t
 GetCurrentProcessorNumber()
 {
 #if HAVE_SCHED_GETCPU
@@ -344,10 +344,10 @@ PAL_HasGetCurrentProcessorNumber()
     return HAVE_SCHED_GETCPU;
 }
 
-DWORD
+uint32_t
 PAL_GetLogicalCpuCountFromOS()
 {
-    DWORD numLogicalCores = 0;
+    uint32_t numLogicalCores = 0;
 
 #if HAVE_SYSCONF
     numLogicalCores = sysconf(_SC_NPROCESSORS_ONLN);

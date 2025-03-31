@@ -277,7 +277,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocatio
 {
     Assert(this->criticalSection.IsLocked());
 
-    DWORD bytes = allocation->BytesFree();
+    uint32_t bytes = allocation->BytesFree();
     if(bytes > 0)
     {
         uint8_t* buffer = nullptr;
@@ -434,7 +434,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in DWORD alignPad)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in uint32_t alignPad)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
 
@@ -462,7 +462,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         AnalysisAssert(destBuffer <= currentDestBuffer);
         AnalysisAssert(currentDestBuffer < destBuffer + destBufferBytes);
 
-        DWORD spaceInCurrentPage = AutoSystemInfo::PageSize - ((size_t)currentDestBuffer & (AutoSystemInfo::PageSize - 1));
+        uint32_t spaceInCurrentPage = AutoSystemInfo::PageSize - ((size_t)currentDestBuffer & (AutoSystemInfo::PageSize - 1));
         size_t bytesToChange = bytesLeft > spaceInCurrentPage ? spaceInCurrentPage : bytesLeft;
 
 
@@ -484,7 +484,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         // Pad with debug-breakpoint instructions up to alignBytes or the end of the current page, whichever is less.
         if (alignPad != 0)
         {
-            DWORD alignBytes = alignPad < spaceInCurrentPage ? alignPad : spaceInCurrentPage;
+            uint32_t alignBytes = alignPad < spaceInCurrentPage ? alignPad : spaceInCurrentPage;
             CustomHeap::FillDebugBreak(currentDestBuffer, alignBytes);
 
             alignPad -= alignBytes;
@@ -503,7 +503,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         {
             AssertMsg(alignPad == 0, "If we are copying right now - we should be done with setting alignment.");
 
-            const DWORD bufferBytesFree(allocation->BytesFree());
+            const uint32_t bufferBytesFree(allocation->BytesFree());
             // Use <= here instead of < to allow this memcopy to fill up the rest of destBuffer.  If we do, then FinalizeAllocation,
             // called below, determines that no additional padding is necessary based on the values in `allocation'.
             AnalysisAssert(currentDestBuffer + bufferBytesFree <= destBuffer + destBufferBytes);

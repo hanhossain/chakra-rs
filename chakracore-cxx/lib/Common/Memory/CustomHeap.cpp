@@ -283,7 +283,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::Alloc(size_t bytes, ushort pdataCou
 template<typename TAlloc, typename TPreReservedAlloc>
 BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadWrite(Allocation *allocation, __in_opt char* addressInPage)
 {
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
 
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -303,7 +303,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadWrite(Allo
 template<typename TAlloc, typename TPreReservedAlloc>
 BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadOnly(__in Allocation *allocation, __in_opt char* addressInPage)
 {
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
         protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
@@ -320,7 +320,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadOnly(__in 
 }
 
 template<typename TAlloc, typename TPreReservedAlloc>
-BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(__in Allocation* allocation, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag, __in_opt char* addressInPage)
+BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(__in Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage)
 {
     // Allocate at the page level so that our protections don't
     // transcend allocation page boundaries. Here, allocation->address is page
@@ -421,7 +421,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 
         if (this->processHandle == GetCurrentProcess())
         {
-            DWORD protectFlags = 0;
+            uint32_t protectFlags = 0;
             if (GlobalSecurityPolicy::IsCFGEnabled())
             {
                 protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
@@ -502,21 +502,21 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeDecommittedLargeObjects()
 
 //Called during Free (while shutting down)
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsurePageWriteable(Page* page)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsurePageWriteable(Page* page)
 {
     return EnsurePageReadWrite<PAGE_READWRITE>(page);
 }
 
 // this get called when freeing the whole page
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationWriteable(Allocation* allocation)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationWriteable(Allocation* allocation)
 {
     return EnsureAllocationReadWrite<PAGE_READWRITE>(allocation);
 }
 
 // this get called when only freeing a part in the page
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Allocation* allocation)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Allocation* allocation)
 {
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -688,7 +688,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     FillDebugBreak((uint8_t*)localAddr, AutoSystemInfo::PageSize);
     this->codePageAllocators->FreeLocal(localAddr, pageSegment);
 
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
 
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -888,7 +888,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
 
         // after freeing part of the page, the page should be in PAGE_EXECUTE_READWRITE protection, and turning to PAGE_EXECUTE_READ (always with TARGETS_NO_UPDATE state)
 
-        DWORD protectFlags = 0;
+        uint32_t protectFlags = 0;
 
         if (GlobalSecurityPolicy::IsCFGEnabled())
         {
@@ -962,7 +962,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreePage(Page* page)
 {
     // CodePageAllocators is locked in FreeAll
     Assert(inDtor);
-    DWORD pageSize = AutoSystemInfo::PageSize;
+    uint32_t pageSize = AutoSystemInfo::PageSize;
     EnsurePageWriteable(page);
     size_t freeSpace = page->freeBitVector.Count() * Page::Alignment;
 
@@ -1136,11 +1136,11 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size
     }
 
 #elif defined(_M_ARM64)
-    CompileAssert(sizeof(DWORD) == 4);
-    DWORD pattern = 0xd4200000 | (0xf000 << 5);
+    CompileAssert(sizeof(uint32_t) == 4);
+    uint32_t pattern = 0xd4200000 | (0xf000 << 5);
     for (size_t i = 0; i < byteCount / 4; i++)
     {
-        reinterpret_cast<DWORD*>(buffer)[i] = pattern;
+        reinterpret_cast<uint32_t*>(buffer)[i] = pattern;
     }
     for (size_t i = (byteCount / 4) * 4; i < byteCount; i++)
     {

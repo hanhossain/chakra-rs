@@ -91,7 +91,7 @@ private:
     template <class Fn>
     void ForEachSegment(Recycler * recycler, Fn func);
 
-    void ChangeProtectionLevel(Recycler* recycler, DWORD protectFlags, DWORD expectedOldFlags);
+    void ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags, uint32_t expectedOldFlags);
 
     static uint GetLevel1Id(void * address)
     {
@@ -111,9 +111,9 @@ public:
 private:
 #if ENABLE_CONCURRENT_GC
 #ifdef RECYCLER_WRITE_WATCH
-    static UINT GetWriteWatchHelper(Recycler * recycler, DWORD writeWatchFlags, void* baseAddress, size_t regionSize,
+    static UINT GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlags, void* baseAddress, size_t regionSize,
         void** addresses, size_t* count, LPDWORD granularity);
-    static UINT GetWriteWatchHelperOnOOM(DWORD writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
+    static UINT GetWriteWatchHelperOnOOM(uint32_t writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
         _Out_writes_(*count) void** addresses, _Inout_ size_t* count, LPDWORD granularity);
 #endif
 #endif

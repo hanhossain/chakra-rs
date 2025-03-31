@@ -85,7 +85,7 @@ SegmentBase<T>::~SegmentBase()
 
 template<typename T>
 bool
-SegmentBase<T>::Initialize(DWORD allocFlags, bool excludeGuardPages)
+SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 {
     Assert(this->address == nullptr);
     char* originalAddress = nullptr;
@@ -270,7 +270,7 @@ PageSegmentBase<T>::PageSegmentBase(PageAllocatorBase<T> * allocator, void* addr
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
 template<typename T>
 bool
-PageSegmentBase<T>::Initialize(DWORD allocFlags, bool excludeGuardPages)
+PageSegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 {
     Assert(freePageCount + this->GetAllocator()->secondaryAllocPageCount == this->segmentPageCount || freePageCount == 0);
     if (__super::Initialize(allocFlags, excludeGuardPages))
@@ -279,7 +279,7 @@ PageSegmentBase<T>::Initialize(DWORD allocFlags, bool excludeGuardPages)
         {
             if (this->GetAllocator()->processHandle == GetCurrentProcess())
             {
-                DWORD oldProtect;
+                uint32_t oldProtect;
                 BOOL vpresult = VirtualProtect(this->address, this->GetAvailablePageCount() * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
                 if(vpresult == FALSE)
                 {
@@ -379,7 +379,7 @@ PageSegmentBase<T>::AllocPages(uint pageCount)
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
             if (this->GetAllocator()->processHandle == GetCurrentProcess())
             {
-                DWORD oldProtect;
+                uint32_t oldProtect;
                 BOOL vpresult = VirtualProtect(allocAddress, pageCount * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
                 if (vpresult == FALSE)
                 {
@@ -488,7 +488,7 @@ PageSegmentBase<T>::ReleasePages(__in void * address, uint pageCount)
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
     if (this->GetAllocator()->processHandle == GetCurrentProcess())
     {
-        DWORD oldProtect;
+        uint32_t oldProtect;
         BOOL vpresult = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
         Assert(vpresult != FALSE);
         Assert(oldProtect == PAGE_READWRITE);
@@ -499,7 +499,7 @@ PageSegmentBase<T>::ReleasePages(__in void * address, uint pageCount)
 
 template<typename T>
 void
-PageSegmentBase<T>::ChangeSegmentProtection(DWORD protectFlags, DWORD expectedOldProtectFlags)
+PageSegmentBase<T>::ChangeSegmentProtection(uint32_t protectFlags, uint32_t expectedOldProtectFlags)
 {
     // TODO: There is a discrepancy in PageSegmentBase
     // The segment page count is initialized in PageSegmentBase::Initialize. It takes into account
@@ -529,8 +529,8 @@ PageSegmentBase<T>::ChangeSegmentProtection(DWORD protectFlags, DWORD expectedOl
             } while (endAddress < segmentEndAddress && !IsFreeOrDecommitted(endAddress));
 
             Assert(((uintptr_t)(endAddress - address)) < UINT_MAX);
-            DWORD regionSize = (DWORD) (endAddress - address);
-            DWORD oldProtect = 0;
+            uint32_t regionSize = (uint32_t) (endAddress - address);
+            uint32_t oldProtect = 0;
 
 #if DBG
             MEMORY_BASIC_INFORMATION info = { 0 };
@@ -722,7 +722,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     // By default, a page allocator is not associated with any thread context
     // Any host which wishes to associate it with a thread context must do so explicitly
     this->threadContextHandle = NULL;
-    this->concurrentThreadId = (DWORD)-1;
+    this->concurrentThreadId = (uint32_t)-1;
 #endif
 #if DBG
     this->disableThreadAccessCheck = false;
@@ -2263,7 +2263,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
 #if defined(TARGET_64)
     size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile LONG64 *)&totalUsedBytes, bytes);
 #else
-    DWORD lastTotalUsedBytes = ::InterlockedExchangeAdd(&totalUsedBytes, bytes);
+    uint32_t lastTotalUsedBytes = ::InterlockedExchangeAdd(&totalUsedBytes, bytes);
 #endif
 
     if (totalUsedBytes > maxUsedBytes)
@@ -2297,7 +2297,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
 #if defined(TARGET_64)
     size_t lastTotalUsedBytes = ::InterlockedExchangeAdd64((volatile LONG64 *)&totalUsedBytes, -(LONG64)bytes);
 #else
-    DWORD lastTotalUsedBytes = ::InterlockedExchangeSubtract(&totalUsedBytes, bytes);
+    uint32_t lastTotalUsedBytes = ::InterlockedExchangeSubtract(&totalUsedBytes, bytes);
 #endif
 
     // ETW events from different threads may be reported out of order, producing an
@@ -2618,7 +2618,7 @@ void PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleaseSegmentLis
 
 template<typename T>
 BOOL
-HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in void* segmentParam, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag)
+HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in void* segmentParam, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
 {
     SegmentBase<T> * segment = (SegmentBase<T>*)segmentParam;
 #if DBG
@@ -2678,7 +2678,7 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
     }
 #endif
 
-    DWORD oldProtect; // this is only for first page
+    uint32_t oldProtect; // this is only for first page
     BOOL retVal = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, dwVirtualProtectFlags, &oldProtect);
     if (retVal == FALSE)
     {
@@ -2710,7 +2710,7 @@ HeapPageAllocator<T>::TrackDecommittedPages(void * address, uint pageCount, __in
 }
 
 template<typename T>
-bool HeapPageAllocator<T>::AllocSecondary(void* segmentParam, size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+bool HeapPageAllocator<T>::AllocSecondary(void* segmentParam, size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
 {
     SegmentBase<T> * segment = (SegmentBase<T> *)segmentParam;
     Assert(segment->GetSecondaryAllocator());

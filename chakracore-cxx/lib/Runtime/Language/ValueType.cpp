@@ -1446,7 +1446,7 @@ size_t ValueType::GetLowestBitIndex(const Bits b)
 {
     Assert(b);
 
-    DWORD i;
+    uint32_t i;
     ::GetFirstBitSet(&i, static_cast<UnitWord32>(b));
     return i;
 }

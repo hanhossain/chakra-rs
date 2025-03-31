@@ -59,7 +59,7 @@ typedef unsigned char* ChakraBytePtr;
 typedef void* HANDLE;
 typedef unsigned char uint8_t;
 typedef uint8_t byte;
-typedef uint32_t DWORD;
+typedef uint32_t uint32_t;
 typedef unsigned short WCHAR;
 #endif
 
@@ -2429,7 +2429,7 @@ typedef unsigned short WCHAR;
     CHAKRA_API
         JsQueueBackgroundParse_Experimental(
             _In_ JsScriptContents* contents,
-            _Out_ DWORD* dwBgParseCookie);
+            _Out_ uint32_t* dwBgParseCookie);
 
     /// <summary>
     ///     Note: Experimental API
@@ -2443,7 +2443,7 @@ typedef unsigned short WCHAR;
     /// </returns>
     CHAKRA_API
         JsDiscardBackgroundParse_Experimental(
-            _In_ DWORD dwBgParseCookie,
+            _In_ uint32_t dwBgParseCookie,
             _In_ void* buffer,
             _Out_ bool* callerOwnsBuffer);
 
@@ -2463,7 +2463,7 @@ typedef unsigned short WCHAR;
     /// </returns>
     CHAKRA_API
         JsExecuteBackgroundParse_Experimental(
-            _In_ DWORD dwBgParseCookie,
+            _In_ uint32_t dwBgParseCookie,
             _In_ JsValueRef script,
             _In_ JsSourceContext sourceContext,
             _In_ WCHAR *url,

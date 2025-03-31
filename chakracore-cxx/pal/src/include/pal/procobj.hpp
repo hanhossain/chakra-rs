@@ -79,9 +79,9 @@ namespace CorUnix
 
         ~CProcProcessLocalData();
         
-        DWORD dwProcessId;
+        uint32_t dwProcessId;
         PROCESS_STATE ps;
-        DWORD dwExitCode;
+        uint32_t dwExitCode;
         int32_t lAttachCount;
         ProcessModules *pProcessModules;
     };
@@ -89,7 +89,7 @@ namespace CorUnix
     class CProcSharedData
     {
     public:
-        DWORD dwProcessId;
+        uint32_t dwProcessId;
     };
 
     PAL_ERROR
@@ -100,7 +100,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpProcessAttributes,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         BOOL bInheritHandles,
-        DWORD dwCreationFlags,
+        uint32_t dwCreationFlags,
         void * lpEnvironment,
         LPCWSTR lpCurrentDirectory,
         LPSTARTUPINFOW lpStartupInfo,

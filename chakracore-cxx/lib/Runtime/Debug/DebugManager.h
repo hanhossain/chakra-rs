@@ -32,7 +32,7 @@ namespace Js
         bool isDebuggerAttaching;
         DebuggingFlags debuggingFlags;
         UINT nextBreakPointId;
-        DWORD localsDisplayFlags;
+        uint32_t localsDisplayFlags;
         void * dispatchHaltFrameAddress;
     public:
         StepController stepController;
@@ -109,7 +109,7 @@ namespace Js
 
         bool IsLocalsDisplayFlagsSet(LocalsDisplayFlags localsDisplayFlags)
         {
-            return (this->localsDisplayFlags & localsDisplayFlags) == (DWORD)localsDisplayFlags;
+            return (this->localsDisplayFlags & localsDisplayFlags) == (uint32_t)localsDisplayFlags;
         }
     };
 }

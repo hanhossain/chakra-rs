@@ -136,7 +136,7 @@ static int loadiJIT_Funcs()
     static int bDllWasLoaded = 0;
     char *dllName = (char*)rcsid; /* !! Just to avoid unused code elimination */
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
-    DWORD dNameLength = 0;
+    uint32_t dNameLength = 0;
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
     if(bDllWasLoaded)
@@ -164,7 +164,7 @@ static int loadiJIT_Funcs()
     dNameLength = GetEnvironmentVariableA(NEW_DLL_ENVIRONMENT_VAR, NULL, 0);
     if (dNameLength)
     {
-        DWORD envret = 0;
+        uint32_t envret = 0;
         dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
         if(dllName != NULL)
         {
@@ -183,7 +183,7 @@ static int loadiJIT_Funcs()
         dNameLength = GetEnvironmentVariableA(DLL_ENVIRONMENT_VAR, NULL, 0);
         if (dNameLength)
         {
-            DWORD envret = 0;
+            uint32_t envret = 0;
             dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
             if(dllName != NULL)
             {

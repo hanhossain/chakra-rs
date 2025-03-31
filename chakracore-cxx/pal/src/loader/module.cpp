@@ -112,7 +112,7 @@ static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
 static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic);
 static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic);
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, void * lpReserved);
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
 
@@ -152,7 +152,7 @@ HMODULE
 LoadLibraryExA(
      LPCSTR lpLibFileName,
      /*Reserved*/ HANDLE hFile,
-     DWORD dwFlags)
+     uint32_t dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -209,7 +209,7 @@ HMODULE
 LoadLibraryExW(
      LPCWSTR lpLibFileName,
      /*Reserved*/ HANDLE hFile,
-     DWORD dwFlags)
+     uint32_t dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -296,7 +296,7 @@ GetProcAddress(
     }
 
     /* try to assert on attempt to locate symbol by ordinal */
-    /* this can't be an exact test for HIWORD((DWORD)lpProcName) == 0
+    /* this can't be an exact test for HIWORD((uint32_t)lpProcName) == 0
        because of the address range reserved for ordinals contain can
        be a valid string address on non-Windows systems
     */
@@ -408,7 +408,7 @@ See MSDN doc.
 void
 FreeLibraryAndExitThread(
      HMODULE hLibModule,
-     DWORD dwExitCode)
+     uint32_t dwExitCode)
 {
     PERF_ENTRY(FreeLibraryAndExitThread);
     ENTRY("FreeLibraryAndExitThread()\n");
@@ -431,14 +431,14 @@ Notes :
     the short name as given to LoadLibrary. The exception is if hModule is
     NULL : in this case, the full path of the executable is always returned.
 --*/
-DWORD
+uint32_t
 GetModuleFileNameA(
      HMODULE hModule,
      LPSTR lpFileName,
-     DWORD nSize)
+     uint32_t nSize)
 {
     INT name_length;
-    DWORD retval = 0;
+    uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
     PERF_ENTRY(GetModuleFileNameA);
@@ -494,14 +494,14 @@ Notes :
     the short name as given to LoadLibrary. The exception is if hModule is
     NULL : in this case, the full path of the executable is always returned.
 --*/
-DWORD
+uint32_t
 GetModuleFileNameW(
      HMODULE hModule,
      LPWSTR lpFileName,
-     DWORD nSize)
+     uint32_t nSize)
 {
     INT name_length;
-    DWORD retval = 0;
+    uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
     PERF_ENTRY(GetModuleFileNameW);
@@ -564,7 +564,7 @@ GetModuleHandleW(
 
 BOOL
 GetModuleHandleExW(
-     DWORD dwFlags,
+     uint32_t dwFlags,
       LPCWSTR lpModuleName,
      HMODULE *phModule)
 {
@@ -918,7 +918,7 @@ Function :
     Call DllMain for all modules (that have one) with the given "fwReason"
 
 Parameters :
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
     void * lpReserved : parameter to pass down to DllMain
@@ -932,7 +932,7 @@ Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
 extern "C"
-void LOADCallDllMain(DWORD dwReason, void * lpReserved)
+void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
 {
     MODSTRUCT *module = nullptr;
     BOOL InLoadOrder = TRUE; /* true if in load order, false for reverse */
@@ -1095,7 +1095,7 @@ Function :
 Parameters :
     MODSTRUCT *module : module whose DllMain must be called
 
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
     void * lpvReserved : parameter to pass down to DllMain,
@@ -1106,7 +1106,7 @@ Parameters :
 Returns:
     BOOL : DllMain's return value
 */
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, void * lpReserved)
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved)
 {
 #if _ENABLE_DEBUG_MESSAGES_
     /* reset ENTRY nesting level back to zero while inside the callback... */
@@ -1116,7 +1116,7 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, void * lpRese
     struct Param
     {
         MODSTRUCT *module;
-        DWORD dwReason;
+        uint32_t dwReason;
         void * lpReserved;
         BOOL ret;
     } param;
@@ -1226,7 +1226,7 @@ static bool LOADConvertLibraryPathWideStringToMultibyteString(
 
     if (*multibyteLibraryPathLengthRef == 0)
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if (dwLastError == ERROR_INSUFFICIENT_BUFFER)
         {
             ERROR("wideLibraryPath converted to a multibyte string is longer than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);

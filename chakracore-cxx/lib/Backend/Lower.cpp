@@ -20734,7 +20734,7 @@ Lowerer::GenerateFastInlineRegExpExec(IR::Instr * instr)
             labelNoMatch,
             instr);
 
-        // ...or the DWORD doesn't match the pattern...
+        // ...or the uint32_t doesn't match the pattern...
         IR::RegOpnd *opndBuffer = IR::RegOpnd::New(TyMachReg, m_func);
         Lowerer::InsertMove(
             opndBuffer,

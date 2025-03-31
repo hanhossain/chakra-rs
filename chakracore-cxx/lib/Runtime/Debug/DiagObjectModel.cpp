@@ -545,7 +545,7 @@ namespace Js
         Assert(value);
         Assert(isInDeadZone || !pFrame->GetScriptContext()->IsUndeclBlockVar(value));
 
-        DWORD flags = DebuggerPropertyDisplayInfoFlags_None;
+        uint32_t flags = DebuggerPropertyDisplayInfoFlags_None;
         flags |= isConst ? DebuggerPropertyDisplayInfoFlags_Const : 0;
         flags |= isInDeadZone ? DebuggerPropertyDisplayInfoFlags_InDeadZone : 0;
 
@@ -1061,7 +1061,7 @@ namespace Js
 
     // Locals walker
 
-    LocalsWalker::LocalsWalker(DiagStackFrame* _frame, DWORD _frameWalkerFlags)
+    LocalsWalker::LocalsWalker(DiagStackFrame* _frame, uint32_t _frameWalkerFlags)
         :  pFrame(_frame), frameWalkerFlags(_frameWalkerFlags), pVarWalkers(nullptr), totalLocalsCount(0), hasUserNotDefinedArguments(false)
     {
         Js::FunctionBody *pFBody = pFrame->GetJavascriptFunction()->GetFunctionBody();
@@ -1094,7 +1094,7 @@ namespace Js
             }
 
             DebuggerScope *formalScope = GetScopeWhenHaltAtFormals(pFrame);
-            DWORD localsType = GetCurrentFramesLocalsType(pFrame);
+            uint32_t localsType = GetCurrentFramesLocalsType(pFrame);
 
             // If we are in the formal scope of a split scoped function then we can skip checking the body scope
             if (!VariableWalkerBase::IsInParamScope(formalScope, pFrame) || pFBody->IsParamAndBodyScopeMerged())
@@ -1513,14 +1513,14 @@ namespace Js
     }
 
     /*static*/
-    DWORD LocalsWalker::GetCurrentFramesLocalsType(DiagStackFrame* frame)
+    uint32_t LocalsWalker::GetCurrentFramesLocalsType(DiagStackFrame* frame)
     {
         Assert(frame);
 
         FunctionBody *pFBody = frame->GetJavascriptFunction()->GetFunctionBody();
         Assert(pFBody);
 
-        DWORD localType = FramesLocalType::LocalType_None;
+        uint32_t localType = FramesLocalType::LocalType_None;
 
         if (pFBody->GetFrameDisplayRegister() != 0)
         {
@@ -2755,7 +2755,7 @@ namespace Js
         }
         else
         {
-            DWORD flags = DebuggerPropertyDisplayInfoFlags_None;
+            uint32_t flags = DebuggerPropertyDisplayInfoFlags_None;
             flags |= isConst ? DebuggerPropertyDisplayInfoFlags_Const : 0;
             flags |= isUnscoped ? DebuggerPropertyDisplayInfoFlags_Unscope : 0;
 

@@ -50,7 +50,7 @@ using namespace CorUnix;
 // The port we use to handle exceptions and to set the thread context
 mach_port_t s_ExceptionPort;
 
-static DWORD s_PalInitializeFlags = 0;
+static uint32_t s_PalInitializeFlags = 0;
 
 static const char * PAL_MACH_EXCEPTION_MODE = "PAL_MachExceptionMode";
 
@@ -393,7 +393,7 @@ BuildExceptionRecord(
 {
     memset(pExceptionRecord, 0, sizeof(EXCEPTION_RECORD));
 
-    DWORD exceptionCode = EXCEPTION_ILLEGAL_INSTRUCTION;
+    uint32_t exceptionCode = EXCEPTION_ILLEGAL_INSTRUCTION;
 
     switch(exceptionInfo.ExceptionType)
     {

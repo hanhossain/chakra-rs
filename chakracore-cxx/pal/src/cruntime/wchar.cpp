@@ -501,7 +501,7 @@ PAL_wcstol(
     char *s_endptr = 0;
     long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstol);
     ENTRY("wcstol (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -607,7 +607,7 @@ PAL_wcstoll(
     char *s_endptr = 0;
     long long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoll);
     ENTRY("wcstoll (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -719,7 +719,7 @@ PAL_wcstoul(
     char *s_endptr = 0;
     unsigned long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
     ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -806,7 +806,7 @@ PAL__wcstoui64(
     char *s_endptr = 0;
     unsigned long long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
     ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,

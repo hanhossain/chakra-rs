@@ -322,9 +322,9 @@ namespace Js
             DynamicType *typeToEnumerate, EnumeratorFlags flags, ScriptContext * requestContext, PropertyValueInfo * info);
 
         virtual BOOL HasDeferredTypeHandler() const sealed;
-        static DWORD GetOffsetOfAuxSlots();
-        static DWORD GetOffsetOfObjectArray();
-        static DWORD GetOffsetOfType();
+        static uint32_t GetOffsetOfAuxSlots();
+        static uint32_t GetOffsetOfObjectArray();
+        static uint32_t GetOffsetOfType();
 
         Js::BigPropertyIndex GetPropertyIndexFromInlineSlotIndex(uint inlineSlotIndex);
         Js::BigPropertyIndex GetPropertyIndexFromAuxSlotIndex(uint auxIndex);

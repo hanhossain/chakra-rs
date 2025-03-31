@@ -42,7 +42,7 @@ typedef          long       int32_t;
 typedef unsigned short      uint16_t;
 typedef unsigned int        UINT;
 typedef unsigned long       uint32_t;
-typedef unsigned long       DWORD;
+typedef unsigned long       uint32_t;
 typedef unsigned __int64    ULONGLONG;
 
 
@@ -782,7 +782,7 @@ ULongPtrToUInt(
 #define WordToLongPtr           UShortToLongPtr
 
 //
-// * -> DWORD conversion (DWORD is always uint32_t)
+// * -> uint32_t conversion (uint32_t is always uint32_t)
 //
 #define CharToDWord             CharToULong
 #define SignedCharToDWord       SignedCharToULong
@@ -800,7 +800,7 @@ ULongPtrToUInt(
 #define SIZETToDWord            SIZETToULong
 
 //
-// DWORD -> * conversion (DWORD is always uint32_t)
+// uint32_t -> * conversion (uint32_t is always uint32_t)
 //
 #define DWordToChar             ULongToChar
 #define DWordToUChar            ULongToUChar
@@ -1172,7 +1172,7 @@ ULongPtrAdd(
 #endif // _WIN64
 
 //
-// DWORD addition
+// uint32_t addition
 //
 #define DWordAdd        ULongAdd
 
@@ -1326,7 +1326,7 @@ ULongPtrSub(
 
 
 //
-// DWORD subtraction
+// uint32_t subtraction
 //
 #define DWordSub        ULongSub
 
@@ -1466,7 +1466,7 @@ ULongPtrMult(
 
 
 //
-// DWORD multiplication
+// uint32_t multiplication
 //
 #define DWordMult       ULongMult
 

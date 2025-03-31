@@ -86,7 +86,7 @@ namespace CorUnix
     InternalResumeThread(
         CPalThread *pthrResumer,
         HANDLE hTarget,
-        DWORD *pdwSuspendCount
+        uint32_t *pdwSuspendCount
     );
 
     class CThreadSuspensionInfo : public CThreadInfoInitializer
@@ -354,7 +354,7 @@ namespace CorUnix
             InternalResumeThreadFromData(
                 CPalThread *pthrResumer,
                 CPalThread *pthrTarget,
-                DWORD *pdwSuspendCount
+                uint32_t *pdwSuspendCount
             );
 
             void InitializeSuspensionLock();

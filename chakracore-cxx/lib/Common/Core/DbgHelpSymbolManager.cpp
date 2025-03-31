@@ -63,7 +63,7 @@ DbgHelpSymbolManager::Initialize()
 
     if (wcscmp(wszModule, _u("")) == 0)
     {
-        if (PlatformAgnostic::SystemInfo::GetBinaryLocation(wszModuleName, static_cast<DWORD>(ceModuleName)))
+        if (PlatformAgnostic::SystemInfo::GetBinaryLocation(wszModuleName, static_cast<uint32_t>(ceModuleName)))
         {
             wszModule = wszModuleName;
         }
@@ -102,7 +102,7 @@ DbgHelpSymbolManager::Initialize()
             goto end;
         }
 
-        if (GetEnvironmentVariable(_u("_NT_SYMBOL_PATH"), wszOldSearchPath, static_cast<DWORD>(ceOldSearchPath)) != 0)
+        if (GetEnvironmentVariable(_u("_NT_SYMBOL_PATH"), wszOldSearchPath, static_cast<uint32_t>(ceOldSearchPath)) != 0)
         {
             swprintf_s(wszNewSearchPath, ceNewSearchPath, _u("%s;%s"), wszOldSearchPath, wszModuleName);
             wszSearchPath = wszNewSearchPath;
@@ -129,12 +129,12 @@ DbgHelpSymbolManager::Initialize()
             pfnSymGetLineFromAddr64W = (PfnSymGetLineFromAddr64W)GetProcAddress(hDbgHelpModule, "SymGetLineFromAddrW64");
 
             // load line information
-            typedef DWORD(*PfnSymGetOptions)();
-            typedef void(*PfnSymSetOptions)(DWORD);
+            typedef uint32_t(*PfnSymGetOptions)();
+            typedef void(*PfnSymSetOptions)(uint32_t);
             PfnSymGetOptions pfnSymGetOptions = (PfnSymGetOptions)GetProcAddress(hDbgHelpModule, "SymGetOptions");
             PfnSymSetOptions pfnSymSetOptions = (PfnSymSetOptions)GetProcAddress(hDbgHelpModule, "SymSetOptions");
 
-            DWORD options = pfnSymGetOptions();
+            uint32_t options = pfnSymGetOptions();
             options |= SYMOPT_LOAD_LINES;
             pfnSymSetOptions(options);
         }
@@ -233,7 +233,7 @@ size_t DbgHelpSymbolManager::PrintSymbol(void * address)
 
     if (DbgHelpSymbolManager::SymFromAddr(address, &dwDisplacement, pSymbol))
     {
-        DWORD dwDisplacementDWord = static_cast<DWORD>(dwDisplacement);
+        uint32_t dwDisplacementDWord = static_cast<uint32_t>(dwDisplacement);
         if (DbgHelpSymbolManager::SymGetLineFromAddr64(address, &dwDisplacementDWord, &lineInfo))
         {
             retValue += Output::Print(_u("0x%p %s+0x%llx (%s:%d)"), address, pSymbol->Name, dwDisplacement, lineInfo.FileName, lineInfo.LineNumber);

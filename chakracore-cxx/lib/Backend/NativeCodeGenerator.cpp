@@ -291,12 +291,12 @@ void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediat
 }
 #endif
 
-void DoFunctionRelocations(uint8_t *function, DWORD functionOffset, DWORD functionSize, uint8_t *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
+void DoFunctionRelocations(uint8_t *function, uint32_t functionOffset, uint32_t functionSize, uint8_t *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
 {
     PIMAGE_BASE_RELOCATION relocationBlock = (PIMAGE_BASE_RELOCATION)(module + relocHeader->PointerToRawData);
     for (; relocationBlock->VirtualAddress > 0 && ((uint8_t *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
     {
-        DWORD blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
+        uint32_t blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
 
         // Skip relocation blocks that are before the function
         if ((blockOffset + 0x1000) > functionOffset)
@@ -326,10 +326,10 @@ void DoFunctionRelocations(uint8_t *function, DWORD functionOffset, DWORD functi
 #if _M_IX86
                 case IMAGE_REL_BASED_HIGHLOW:
                     {
-                        DWORD *patchAddrHL = (DWORD *) (function + blockOffset + offset - functionOffset);
-                        DWORD patchAddrHLOffset = *patchAddrHL - imageBase - textHeader->VirtualAddress;
+                        uint32_t *patchAddrHL = (uint32_t *) (function + blockOffset + offset - functionOffset);
+                        uint32_t patchAddrHLOffset = *patchAddrHL - imageBase - textHeader->VirtualAddress;
                         Assert((patchAddrHLOffset > functionOffset) && (patchAddrHLOffset < (functionOffset + functionSize)));
-                        *patchAddrHL = patchAddrHLOffset - functionOffset + (DWORD)function;
+                        *patchAddrHL = patchAddrHLOffset - functionOffset + (uint32_t)function;
                     }
                     break;
 
@@ -346,8 +346,8 @@ void DoFunctionRelocations(uint8_t *function, DWORD functionOffset, DWORD functi
                 case IMAGE_REL_BASED_THUMB_MOV32:
                     {
                         unsigned short *patchAddr = (unsigned short *) (function + blockOffset + offset - functionOffset);
-                        DWORD address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
-                        address = address - imageBase - textHeader->VirtualAddress - functionOffset + (DWORD)function;
+                        uint32_t address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
+                        address = address - imageBase - textHeader->VirtualAddress - functionOffset + (uint32_t)function;
                         ArmInsertThumbImmediate16(patchAddr, (unsigned short)(address & 0xFFFF));
                         ArmInsertThumbImmediate16(patchAddr + 2, (unsigned short)(address >> 16));
                     }
@@ -1155,8 +1155,8 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
                 if (function->Flag == 0)
                 {
                     // UnwindData was set on server as the offset from the beginning of xdata buffer
-                    function->UnwindData = (DWORD)(xdataInfo->address + function->UnwindData);
-                    Assert(((DWORD)function->UnwindData & 0x3) == 0); // 4 byte aligned
+                    function->UnwindData = (uint32_t)(xdataInfo->address + function->UnwindData);
+                    Assert(((uint32_t)function->UnwindData & 0x3) == 0); // 4 byte aligned
                 }
             }
         }

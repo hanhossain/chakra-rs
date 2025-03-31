@@ -202,7 +202,7 @@ namespace Js
 #if DBG
             // This unused variable is to allow one to see the value of lastError in case both LoadLibrary (DelayLoadLibrary::Ensure has one) fail.
             // As the issue might be with the first one, as opposed to the second
-            DWORD errorWhenLoadingBluePlus = GetLastError();
+            uint32_t errorWhenLoadingBluePlus = GetLastError();
             Unused(errorWhenLoadingBluePlus);
 #endif
             //Perform a check to see if Windows.Globalization.dll was loaded; if not try loading jsIntl.dll as we are on Win7.

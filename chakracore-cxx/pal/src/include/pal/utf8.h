@@ -36,7 +36,7 @@ Function :
 
     Convert a string from UTF-8 to UTF-16 (UCS-2)
 --*/
-int UTF8ToUnicode(LPCSTR lpSrcStr, int cchSrc, LPWSTR lpDestStr, int cchDest, DWORD dwFlags);
+int UTF8ToUnicode(LPCSTR lpSrcStr, int cchSrc, LPWSTR lpDestStr, int cchDest, uint32_t dwFlags);
 
 
 /*++

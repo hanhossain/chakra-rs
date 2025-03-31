@@ -37,8 +37,8 @@ typedef struct _CMI {
     UINT_PTR   startBoundary;   /* Starting location of the region. */
     SIZE_T   memSize;         /* Size of the entire region.. */
 
-    DWORD  accessProtection;    /* Initial allocation access protection. */
-    DWORD  allocationType;      /* Initial allocation type. */
+    uint32_t  accessProtection;    /* Initial allocation access protection. */
+    uint32_t  allocationType;      /* Initial allocation type. */
 
     uint8_t * pAllocState;         /* Individual allocation type tracking for each */
                                 /* page in the region. */

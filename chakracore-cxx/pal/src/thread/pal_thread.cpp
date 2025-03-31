@@ -107,7 +107,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 // is zero. This value can be set by setting the
 // environment variable PAL_THREAD_DEFAULT_STACK_SIZE
 // (the value should be in bytes and in hex).
-DWORD CPalThread::s_dwDefaultThreadStackSize = 256*1024;
+uint32_t CPalThread::s_dwDefaultThreadStackSize = 256*1024;
 
 /* list of free CPalThread objects */
 static Volatile<CPalThread*> free_threads_list PAL_GLOBAL = NULL;
@@ -317,13 +317,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetThreadId(
     HANDLE hThread
     // UNIXTODO Should take pThread parameter here (modify callers)
     )
 {
-    DWORD dwThreadId = 0;
+    uint32_t dwThreadId = 0;
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjThread = 0;
@@ -344,7 +344,7 @@ GetThreadId(
 
     if (NO_ERROR != palError)
     {
-        dwThreadId = (DWORD)pThread->GetThreadId();
+        dwThreadId = (uint32_t)pThread->GetThreadId();
     }
 
     if (NULL != pobjThread)
@@ -364,16 +364,16 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetCurrentThreadId(
             void)
 {
-    DWORD dwThreadId;
+    uint32_t dwThreadId;
 
     PERF_ENTRY(GetCurrentThreadId);
     ENTRY("GetCurrentThreadId()\n");
 
-    dwThreadId = (DWORD)THREADSilentGetCurrentThreadId();
+    dwThreadId = (uint32_t)THREADSilentGetCurrentThreadId();
 
     LOGEXIT("GetCurrentThreadId returns DWORD %#x\n", dwThreadId);
     PERF_EXIT(GetCurrentThreadId);
@@ -439,10 +439,10 @@ See MSDN doc.
 HANDLE
 CreateThread(
      LPSECURITY_ATTRIBUTES lpThreadAttributes,
-     DWORD dwStackSize,
+     uint32_t dwStackSize,
      LPTHREAD_START_ROUTINE lpStartAddress,
      void * lpParameter,
-     DWORD dwCreationFlags,
+     uint32_t dwCreationFlags,
      LPDWORD lpThreadId)
 {
     PAL_ERROR palError;
@@ -488,10 +488,10 @@ PAL_ERROR
 CorUnix::InternalCreateThread(
     CPalThread *pThread,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    DWORD dwStackSize,
+    uint32_t dwStackSize,
     LPTHREAD_START_ROUTINE lpStartAddress,
     void * lpParameter,
-    DWORD dwCreationFlags,
+    uint32_t dwCreationFlags,
     PalThreadType eThreadType,
     SIZE_T* pThreadId,
     HANDLE *phThread
@@ -770,7 +770,7 @@ See MSDN doc.
 __attribute__((noreturn))
 void
 ExitThread(
-        DWORD dwExitCode)
+        uint32_t dwExitCode)
 {
     CPalThread *pThread;
 
@@ -1248,15 +1248,15 @@ CorUnix::GetThreadTimesInternal(
     calcTime = (__int64)resUsage.user_time.seconds * SECS_TO_NS;
     calcTime += (__int64)resUsage.user_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpUserTime */
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* Get the time of kernel mode execution, in nanoseconds */
     calcTime = (__int64)resUsage.system_time.seconds * SECS_TO_NS;
     calcTime += (__int64)resUsage.system_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpKernelTime */
-    lpKernelTime->dwLowDateTime = (DWORD)calcTime;
-    lpKernelTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
+    lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     retval = TRUE;
 
@@ -1335,8 +1335,8 @@ CorUnix::GetThreadTimesInternal(
 
     calcTime = (__int64) klwp[i].l_rtime_sec * SECS_TO_NS;
     calcTime += (__int64) klwp[i].l_rtime_usec * USECS_TO_NS;
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* NetBSD as of (7.0) doesn't differentiate used time in user/kernel for lwp */
     lpKernelTime->dwLowDateTime = 0;
@@ -1426,8 +1426,8 @@ CorUnix::GetThreadTimesInternal(
     /* Calculate time in nanoseconds and assign to user time */
     calcTime = (__int64) ts.tv_sec * SECS_TO_NS;
     calcTime += (__int64) ts.tv_nsec;
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* Set kernel time to zero, for now */
     lpKernelTime->dwLowDateTime = 0;
@@ -1459,7 +1459,7 @@ CPalThread::ThreadEntry(
     CPalThread *pThread;
     PTHREAD_START_ROUTINE pfnStartRoutine;
     void * pvPar;
-    DWORD retValue;
+    uint32_t retValue;
 
     pThread = reinterpret_cast<CPalThread*>(pvParam);
 
@@ -1483,9 +1483,9 @@ CPalThread::ThreadEntry(
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
 #if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (DWORD) thread_self();
+    pThread->m_dwLwpId = (uint32_t) thread_self();
 #elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (DWORD) _lwp_self();
+    pThread->m_dwLwpId = (uint32_t) _lwp_self();
 #else
     pThread->m_dwLwpId = 0;
 #endif
@@ -1618,9 +1618,9 @@ CorUnix::CreateThreadData(
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
 #if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (DWORD) thread_self();
+    pThread->m_dwLwpId = (uint32_t) thread_self();
 #elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (DWORD) _lwp_self();
+    pThread->m_dwLwpId = (uint32_t) _lwp_self();
 #else
     pThread->m_dwLwpId = 0;
 #endif
@@ -1904,7 +1904,7 @@ PAL_ERROR
 CorUnix::InternalGetThreadDataFromHandle(
     CPalThread *pThread,
     HANDLE hThread,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     CPalThread **ppTargetThread,
     IPalObject **ppobjThread
     )

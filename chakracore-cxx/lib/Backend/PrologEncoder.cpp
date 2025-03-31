@@ -21,12 +21,12 @@ void PrologEncoder::EncodeSmallProlog(uint8 prologSize, size_t size)
     ehFrame.End();
 }
 
-DWORD PrologEncoder::SizeOfPData()
+uint32_t PrologEncoder::SizeOfPData()
 {
     return ehFrame.Count();
 }
 
-uint8_t* PrologEncoder::Finalize(uint8_t *functionStart, DWORD codeSize, uint8_t *pdataBuffer)
+uint8_t* PrologEncoder::Finalize(uint8_t *functionStart, uint32_t codeSize, uint8_t *pdataBuffer)
 {
     auto fde = ehFrame.GetFDE();
     fde->UpdateAddressRange(functionStart, codeSize);
@@ -45,7 +45,7 @@ void PrologEncoder::End()
     ehFrame.End();
 }
 
-void PrologEncoder::FinalizeUnwindInfo(uint8_t *functionStart, DWORD codeSize)
+void PrologEncoder::FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize)
 {
     auto fde = ehFrame.GetFDE();
     fde->UpdateAddressRange(functionStart, codeSize);

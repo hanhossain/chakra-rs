@@ -171,7 +171,7 @@ RecyclerPageAllocator::GetWriteWatchPageCount(DListBase<PageSegment> * segmentLi
             char * address = segment.GetAddress() + index * AutoSystemInfo::PageSize;
             void * written;
             size_t count = 0;
-            DWORD pageSize = AutoSystemInfo::PageSize;
+            uint32_t pageSize = AutoSystemInfo::PageSize;
             if (::GetWriteWatch(0, address, AutoSystemInfo::PageSize, &written, &count, &pageSize) == 0)
             {
 #if DBG_DUMP
@@ -207,7 +207,7 @@ RecyclerPageAllocator::GetAllWriteWatchPageCount(DListBase<T> * segmentList)
             void * address = segment.GetAddress() + i * AutoSystemInfo::PageSize;
             void * written;
             size_t count = 0;
-            DWORD pageSize = AutoSystemInfo::PageSize;
+            uint32_t pageSize = AutoSystemInfo::PageSize;
             if (::GetWriteWatch(0, address, AutoSystemInfo::PageSize, &written, &count, &pageSize) == 0)
             {
 #if DBG_DUMP

@@ -1862,7 +1862,7 @@ LegalizeDefault:
     // There should be at most 1 memory opnd in an instruction
     if (instr->GetDst() && instr->GetDst()->IsMemoryOpnd())
     {
-        // All memref address need to fit in a dword
+        // All memref address need to fit in a uint32_t
         Assert(!instr->GetDst()->IsMemRefOpnd() || Math::FitsInDWord((size_t)instr->GetDst()->AsMemRefOpnd()->GetMemLoc()));
         if (instr->GetSrc1())
         {
@@ -1875,17 +1875,17 @@ LegalizeDefault:
     }
     else if (instr->GetSrc1() && instr->GetSrc1()->IsMemoryOpnd())
     {
-        // All memref address need to fit in a dword
+        // All memref address need to fit in a uint32_t
         Assert(!instr->GetSrc1()->IsMemRefOpnd() || Math::FitsInDWord((size_t)instr->GetSrc1()->AsMemRefOpnd()->GetMemLoc()));
         Assert(!instr->GetSrc2() || !instr->GetSrc2()->IsMemoryOpnd());
     }
     else if (instr->GetSrc2() && instr->GetSrc2()->IsMemRefOpnd())
     {
-        // All memref address need to fit in a dword
+        // All memref address need to fit in a uint32_t
         Assert(Math::FitsInDWord((size_t)instr->GetSrc2()->AsMemRefOpnd()->GetMemLoc()));
     }
 
-    // Non-MOV (second operand) immediate need to fit in DWORD for AMD64
+    // Non-MOV (second operand) immediate need to fit in uint32_t for AMD64
     Assert(!instr->GetSrc2() || !instr->GetSrc2()->IsImmediateOpnd()
         || (TySize[instr->GetSrc2()->GetType()] != 8) || Math::FitsInDWord(instr->GetSrc2()->GetImmediateValue(instr->m_func)));
 #endif
@@ -7210,7 +7210,7 @@ void LowererMD::ConvertFloatToInt32(IR::Opnd* intOpnd, IR::Opnd* floatOpnd, IR::
         intSym->m_allocated = true;
         IR::Opnd* lowerBitsOpnd = IR::SymOpnd::New(intSym, TyInt32, m_func);
 
-        // MOV dst, dword ptr [tmpDouble]
+        // MOV dst, uint32_t ptr [tmpDouble]
         instr = IR::Instr::New(Js::OpCode::MOV, intOpnd, lowerBitsOpnd, m_func);
         instInsert->InsertBefore(instr);
 

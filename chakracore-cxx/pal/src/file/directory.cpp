@@ -53,7 +53,7 @@ CreateDirectoryW(
           LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     int   mb_size;
     char  *mb_dir = NULL;
 
@@ -186,7 +186,7 @@ BOOL
 RemoveDirectoryA(
           LPCSTR lpPathName)
 {
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
     PathCharString mb_dirPathString;
     size_t length;
@@ -245,7 +245,7 @@ RemoveDirectoryW(
 {
     PathCharString mb_dirPathString;
     int   mb_size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
     size_t length;
     char * mb_dir;
@@ -312,13 +312,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetCurrentDirectoryA(
-              DWORD nBufferLength,
+              uint32_t nBufferLength,
               LPSTR lpBuffer)
 {
-    DWORD dwDirLen = 0;
-    DWORD dwLastError = 0;
+    uint32_t dwDirLen = 0;
+    uint32_t dwLastError = 0;
 
     char  *current_dir;
 
@@ -369,13 +369,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetCurrentDirectoryW(
-              DWORD nBufferLength,
+              uint32_t nBufferLength,
               LPWSTR lpBuffer)
 {
-    DWORD dwWideLen = 0;
-    DWORD dwLastError = 0;
+    uint32_t dwWideLen = 0;
+    uint32_t dwLastError = 0;
 
     char  *current_dir;
     int   dir_len;
@@ -440,7 +440,7 @@ SetCurrentDirectoryW(
              LPCWSTR lpPathName)
 {
     BOOL bRet;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     PathCharString dirPathString;
     int  size;
     size_t length;
@@ -518,7 +518,7 @@ CreateDirectoryA(
           LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     char *realPath;
     LPSTR UnixPathName = NULL;
     int pathLength;
@@ -653,7 +653,7 @@ SetCurrentDirectoryA(
              LPCSTR lpPathName)
 {
     BOOL bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     int result;
     LPSTR UnixPathName = NULL;
 

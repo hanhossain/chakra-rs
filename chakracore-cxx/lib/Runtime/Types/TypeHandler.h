@@ -40,7 +40,7 @@ namespace Js
         // * PropertyTypesWritableDataOnly - when true, the type being handled is known to have only writable data properties
         // * PropertyTypesWritableDataOnlyDetection - set each time SetHasOnlyWritableDataProperties is called.
 
-        // PropertyTypesReserved (0x1) is always on so that the DWORD formed with the following boolean doesn't look like
+        // PropertyTypesReserved (0x1) is always on so that the uint32_t formed with the following boolean doesn't look like
         // a pointer.
         Field(PropertyTypes) propertyTypes;
         Field(uint8_t) flags;

@@ -232,7 +232,7 @@ Function:
   for diagnostic purposes only
 --*/
 
-DWORD
+uint32_t
 CPalObjectBase::AddReference(
     void
     )
@@ -260,7 +260,7 @@ Parameters:
   pthr -- thread data for calling thread
 --*/
 
-DWORD
+uint32_t
 CPalObjectBase::ReleaseReference(
     CPalThread *pthr
     )

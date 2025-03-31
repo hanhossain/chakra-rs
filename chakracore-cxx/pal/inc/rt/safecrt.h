@@ -354,7 +354,7 @@ _SAFECRT__INLINE
 void _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const WCHAR *_FileName, unsigned int _LineNumber, uintptr_t _Reserved)
 {
     /* invoke Watson */
-    RaiseException((DWORD)STATUS_INVALID_PARAMETER, 0, 0, nullptr);
+    RaiseException((uint32_t)STATUS_INVALID_PARAMETER, 0, 0, nullptr);
 }
 
 #endif

@@ -33,7 +33,7 @@ namespace Memory
         virtual bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio) = 0;
         virtual bool IsTelemetryProviderEnabled() const = 0;
         virtual bool IsThreadBound() const = 0;
-        virtual DWORD GetCurrentScriptThreadID() const = 0;
+        virtual uint32_t GetCurrentScriptThreadID() const = 0;
         virtual uint GetClosedContextCount() const = 0;
     };
 
@@ -144,7 +144,7 @@ namespace Memory
 
     private:
         Recycler* recycler;
-        DWORD mainThreadID;
+        uint32_t mainThreadID;
         RecyclerTelemetryHostInterface * hostInterface;
         Js::Tick recyclerStartTime;
         bool inPassActiveState;

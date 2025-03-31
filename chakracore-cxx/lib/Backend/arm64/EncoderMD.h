@@ -197,7 +197,7 @@ public:
         return SETS_SBIT(instr->m_opcode);
     }
 
-    static DWORD BranchOffset_26(int64 x);
+    static uint32_t BranchOffset_26(int64 x);
     
     void            AddLabelReloc(uint8_t* relocAddress);
 
@@ -216,7 +216,7 @@ private:
     bool            CanonicalizeInstr(IR::Instr *instr);
     void            CanonicalizeLea(IR::Instr * instr);
     bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32 &offset);
-    static bool     EncodeLogicalConst(IntConstType constant, DWORD * result, int size);
+    static bool     EncodeLogicalConst(IntConstType constant, uint32_t * result, int size);
 
     // General 1-operand instructions (BR, RET)
     template<typename _RegFunc64> int EmitOp1Register64(Arm64CodeEmitter &Emitter, IR::Instr* instr, _RegFunc64 reg64);

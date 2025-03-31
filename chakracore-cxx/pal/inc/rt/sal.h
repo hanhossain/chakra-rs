@@ -1355,7 +1355,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // buffer maybe zero-terminated after the call
 #define _Post_maybez_                    _SAL1_1_Source_(_Post_maybez_, (), _Post1_impl_(__maybezterm_impl))
 
-// e.g. SIZE_T HeapSize( _In_ HANDLE hHeap, DWORD dwFlags, _Pre_notnull_ _Post_bytecap_(return) const void * lpMem );
+// e.g. SIZE_T HeapSize( _In_ HANDLE hHeap, uint32_t dwFlags, _Pre_notnull_ _Post_bytecap_(return) const void * lpMem );
 #define _Post_cap_(size)                 _SAL1_1_Source_(_Post_cap_, (size), _Post1_impl_(__cap_impl(size)))
 #define _Post_bytecap_(size)             _SAL1_1_Source_(_Post_bytecap_, (size), _Post1_impl_(__bytecap_impl(size)))
 
@@ -2071,7 +2071,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
 
  LWSTDAPI_(BOOL) StrToIntExA(
      __in LPCSTR pszString,
-     DWORD dwFlags,
+     uint32_t dwFlags,
      __out int *piRet                     -- A pointer whose dereference will be filled in.
  );
 
@@ -2087,7 +2087,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
                                           --   be NULL terminated on exit.
      __in LPCSTR pszSrc,
      UINT cchMax,
-     DWORD dwFlags
+     uint32_t dwFlags
  );
 
  HRESULT SHLocalAllocBytes(

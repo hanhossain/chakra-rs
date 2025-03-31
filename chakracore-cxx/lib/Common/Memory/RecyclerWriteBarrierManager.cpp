@@ -42,8 +42,8 @@ bool dummy = RecyclerWriteBarrierManager::Initialize();
 #endif
 
 #else
-// Each *bit* in the card table covers 128 bytes. So each DWORD covers 4096 bytes and therefore the cardTable covers 4GB
-DWORD RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
+// Each *bit* in the card table covers 128 bytes. So each uint32_t covers 4096 bytes and therefore the cardTable covers 4GB
+uint32_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
 #endif
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
@@ -364,7 +364,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 
     size_t remainingBytes = endAddress - alignedAddress;
     size_t fullMaskCount = remainingBytes  / g_WriteBarrierPageSize;
-    memset(&cardTable[cardIndex + 1], 0xFFFFFFFF, fullMaskCount * sizeof(DWORD));
+    memset(&cardTable[cardIndex + 1], 0xFFFFFFFF, fullMaskCount * sizeof(uint32_t));
 
     uint endAddressShift = (((uint)endAddress) >> s_BitArrayCardTableShift);
     uint endAddressBitMask = 0xFFFFFFFF << endAddressShift;
@@ -508,7 +508,7 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
         memset(&cardTable[cardIndex], WRITE_BARRIER_PAGE_BIT, pageCount);
 #else
-        memset(&cardTable[cardIndex], 0, sizeof(DWORD) * pageCount);
+        memset(&cardTable[cardIndex], 0, sizeof(uint32_t) * pageCount);
 #endif
     }
 #endif
@@ -525,7 +525,7 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
 uint8_t
 #else
-DWORD
+uint32_t
 #endif
 RecyclerWriteBarrierManager::GetWriteBarrier(void * address)
 {

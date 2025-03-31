@@ -24,7 +24,7 @@
 #endif
 
 CHAKRA_API RunScriptWithParserStateCore(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,
@@ -3875,19 +3875,19 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         }
 
         LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeScript"));
-        DWORD dwFlags = 0;
+        uint32_t dwFlags = 0;
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         dwFlags = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary() ? GENERATE_BYTE_CODE_BUFFER_LIBRARY : 0;
 #endif
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
-        // We cast buffer size to DWORD* because on Windows, DWORD = unsigned long = unsigned int
+        // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
-        // However, the PAL defines DWORD for us on linux as unsigned int so the cast is safe here.
+        // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
         HRESULT hr = Js::ByteCodeSerializer::SerializeToBuffer(scriptContext,
-            tempAllocator, static_cast<DWORD>(cSourceCodeLength), utf8Code,
+            tempAllocator, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
             functionBody, functionBody->GetHostSrcInfo(), &buffer,
-            (DWORD*) bufferSize, dwFlags);
+            (uint32_t*) bufferSize, dwFlags);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         if (SUCCEEDED(hr))
@@ -3915,7 +3915,7 @@ JsErrorCode RunSerializedScriptCore(
     JsSourceContext scriptLoadSourceContext, // only used by scriptLoadCallback
     unsigned char *buffer, Js::ArrayBuffer* bufferVal,
     JsSourceContext sourceContext, const WCHAR *sourceUrl,
-    DWORD bgParseCookie,
+    uint32_t bgParseCookie,
     bool parseOnly, bool useParserStateCache, JsValueRef *result,
     uint sourceIndex)
 {
@@ -5202,11 +5202,11 @@ CHAKRA_API JsSerializeParserStateCore(
         loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_CreateParserState);
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
-        // We cast buffer size to DWORD* because on Windows, DWORD = unsigned long = unsigned int
+        // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
-        // However, the PAL defines DWORD for us on linux as unsigned int so the cast is safe here.
+        // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
         HRESULT hr = scriptContext->SerializeParserState(script, cb, &si, &se, &sourceInfo,
-            Js::Constants::GlobalCode, loadScriptFlag, &buffer, (DWORD*)bufferSize, tempAllocator, &function, nullptr);
+            Js::Constants::GlobalCode, loadScriptFlag, &buffer, (uint32_t*)bufferSize, tempAllocator, &function, nullptr);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         if (function == nullptr)
@@ -5294,7 +5294,7 @@ static bool DummyScriptLoadSourceCallbackForRunScriptWithParserState(
 }
 
 CHAKRA_API RunScriptWithParserStateCore(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,
@@ -5438,7 +5438,7 @@ CHAKRA_API JsDeserializeParserState(
 
 CHAKRA_API
 JsExecuteBackgroundParse_Experimental(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,

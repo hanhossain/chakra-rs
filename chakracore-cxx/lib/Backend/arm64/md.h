@@ -17,8 +17,8 @@ const IRType TyMachReg = TyInt64;
 const IRType TyMachPtr = TyUint64;
 const IRType TyMachDouble = TyFloat64;
 
-const DWORD EMIT_BUFFER_ALIGNMENT = 16;
-const DWORD INSTR_ALIGNMENT = 2;
+const uint32_t EMIT_BUFFER_ALIGNMENT = 16;
+const uint32_t INSTR_ALIGNMENT = 2;
 
 #ifdef INSERT_NOPS
 const int CountNops = 10;

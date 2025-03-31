@@ -543,8 +543,8 @@ FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec )
     
     Result = ((__int64)sec + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
 
-    Ret.dwLowDateTime = (DWORD)Result;
-    Ret.dwHighDateTime = (DWORD)(Result >> 32);
+    Ret.dwLowDateTime = (uint32_t)Result;
+    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
 
     TRACE("CFAbsoluteTime = [%9f] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, Ret.dwHighDateTime, Ret.dwLowDateTime);
@@ -572,8 +572,8 @@ FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec )
     Result = ((__int64)sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
         (nsec / 100);
 
-    Ret.dwLowDateTime = (DWORD)Result;
-    Ret.dwHighDateTime = (DWORD)(Result >> 32);
+    Ret.dwLowDateTime = (uint32_t)Result;
+    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
 
     TRACE("Unix time = [%ld.%09ld] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, nsec, Ret.dwHighDateTime, Ret.dwLowDateTime);

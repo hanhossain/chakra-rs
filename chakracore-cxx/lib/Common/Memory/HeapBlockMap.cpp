@@ -788,7 +788,7 @@ HeapBlockMap32::MakeAllPagesReadWrite(Recycler* recycler)
 }
 
 void
-HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, DWORD protectFlags, DWORD expectedOldFlags)
+HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags, uint32_t expectedOldFlags)
 {
     this->ForEachSegment(recycler, [&](char* segmentStart, size_t segmentLength, Segment* currentSegment, PageAllocator* segmentPageAllocator)
     {
@@ -811,7 +811,7 @@ HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, DWORD protectFlags, DW
 /// the write-watch one page at a time since that's expected to succeed
 ///
 UINT
-HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, DWORD writeWatchFlags, void* baseAddress, size_t regionSize,
+HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, uint32_t writeWatchFlags, void* baseAddress, size_t regionSize,
     void** addresses, size_t* count, LPDWORD granularity)
 {
     UINT ret = 0;
@@ -844,7 +844,7 @@ HeapBlockMap32::GetWriteWatchHelper(Recycler * recycler, DWORD writeWatchFlags, 
 // It's slow, but we are okay with that during OOM
 // Factored into its own function to help the compiler inline the parent
 UINT
-HeapBlockMap32::GetWriteWatchHelperOnOOM(DWORD writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
+HeapBlockMap32::GetWriteWatchHelperOnOOM(uint32_t writeWatchFlags, _In_ void* baseAddress, size_t regionSize,
     _Out_writes_(*count) void** addresses, _Inout_ size_t* count, LPDWORD granularity)
 {
     const size_t pageCount = (regionSize / AutoSystemInfo::PageSize);
@@ -861,7 +861,7 @@ HeapBlockMap32::GetWriteWatchHelperOnOOM(DWORD writeWatchFlags, _In_ void* baseA
         char* pageAddress = ((char*)baseAddress) + (i * AutoSystemInfo::PageSize);
         size_t resultBufferCount = 1;
 
-        DWORD r = ::GetWriteWatch(writeWatchFlags, pageAddress, AutoSystemInfo::PageSize, &result, &resultBufferCount, granularity);
+        uint32_t r = ::GetWriteWatch(writeWatchFlags, pageAddress, AutoSystemInfo::PageSize, &result, &resultBufferCount, granularity);
         Assert(r == 0);
         Assert(resultBufferCount <= 1);
         AnalysisAssert(dirtyCount < pageCount);
@@ -906,8 +906,8 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
 
                 void * dirtyPageAddresses[MaxGetWriteWatchPages];
                 size_t pageCount = MaxGetWriteWatchPages;
-                DWORD pageSize = PageSize;
-                const DWORD writeWatchFlags = (resetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
+                uint32_t pageSize = PageSize;
+                const uint32_t writeWatchFlags = (resetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
 
                 UINT ret = HeapBlockMap32::GetWriteWatchHelper(recycler, writeWatchFlags, segmentStart, segmentLength, dirtyPageAddresses, &pageCount, &pageSize);
                 Assert(ret == 0);

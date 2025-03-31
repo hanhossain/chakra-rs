@@ -110,8 +110,8 @@ namespace Js
 #if _M_X64
     // for amd64 jit frame, RtlCaptureStackBackTrace stops walking after hitting jit frame on amd64
     _NOINLINE
-        uint16_t StackTrace64(_In_ DWORD FramesToSkip,
-        _In_ DWORD FramesToCapture,
+        uint16_t StackTrace64(_In_ uint32_t FramesToSkip,
+        _In_ uint32_t FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
         _Out_opt_ PDWORD BackTraceHash,
         _In_opt_ const CONTEXT* pCtx = nullptr)
@@ -187,8 +187,8 @@ namespace Js
 #pragma warning( disable : 4748 )
 #pragma warning( disable : 4995 )
     uint16_t StackTrace86(
-        _In_ DWORD FramesToSkip,
-        _In_ DWORD FramesToCapture,
+        _In_ uint32_t FramesToSkip,
+        _In_ uint32_t FramesToCapture,
         _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
         _Inout_opt_ PDWORD BackTraceHash,
         __in_opt const PCONTEXT InitialContext = NULL
@@ -196,7 +196,7 @@ namespace Js
     {
         _Analysis_assume_(FramesToSkip >= 0);
         _Analysis_assume_(FramesToCapture >= 0);
-        DWORD MachineType;
+        uint32_t MachineType;
         CONTEXT Context;
         STACKFRAME64 StackFrame;
 
@@ -347,7 +347,7 @@ namespace Js
     static CriticalSection cs_Sym; // for Sym* method is not thread safe
     const auto& globalFlags = Js::Configuration::Global.flags;
     void * FaultInjection::vectoredExceptionHandler = nullptr;
-    DWORD FaultInjection::exceptionFilterRemovalLastError = 0;
+    uint32_t FaultInjection::exceptionFilterRemovalLastError = 0;
     THREAD_LOCAL int(*Js::FaultInjection::pfnHandleAV)(int, PEXCEPTION_POINTERS) = nullptr;
     static SymbolInfoPackage sip;
     static ModuleInfo mi;

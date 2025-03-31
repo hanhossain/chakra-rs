@@ -46,7 +46,7 @@ Arm64XdataGenerator::Arm64XdataGenerator()
 {
 }
 
-void Arm64XdataGenerator::SafeAppendDword(DWORD value)
+void Arm64XdataGenerator::SafeAppendDword(uint32_t value)
 {
     Assert(m_xdataBytes < sizeof(this->m_xdata));
     if (m_xdataBytes < sizeof(this->m_xdata))

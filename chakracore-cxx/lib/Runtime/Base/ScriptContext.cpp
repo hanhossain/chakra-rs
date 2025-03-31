@@ -2102,7 +2102,7 @@ namespace Js
         _In_opt_ NativeModule* nativeModule,
         _Outptr_ Js::ParseableFunctionInfo ** func,
         _Outptr_result_buffer_(*parserStateCacheByteCount) byte** parserStateCacheBuffer,
-        _Out_ DWORD* parserStateCacheByteCount,
+        _Out_ uint32_t* parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
         HRESULT hr = E_FAIL;
@@ -2242,7 +2242,7 @@ ExitTempAllocator:
 
         *func = functionBody->GetParseableFunctionInfo();
         *parserStateCacheBuffer = decompressedBuffer;
-        *parserStateCacheByteCount = (DWORD)decompressedBufferByteCount;
+        *parserStateCacheByteCount = (uint32_t)decompressedBufferByteCount;
 Error:
         if (FAILED(hr) && decompressedBuffer != nullptr)
         {
@@ -2260,7 +2260,7 @@ Error:
         _In_ SRCINFO *srcInfo,
         _In_ Js::ParseableFunctionInfo* func,
         _In_reads_bytes_(parserStateCacheByteCount) byte* parserStateCacheBuffer,
-        _In_ DWORD parserStateCacheByteCount,
+        _In_ uint32_t parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
         HRESULT hr = E_FAIL;
@@ -2270,8 +2270,8 @@ Error:
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         byte* serializeParserStateCacheBuffer = parserStateCacheBuffer;
-        DWORD serializeParserStateCacheSize = parserStateCacheByteCount;
-        DWORD dwFlags = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
+        uint32_t serializeParserStateCacheSize = parserStateCacheByteCount;
+        uint32_t dwFlags = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
         DebugOnly(auto url = !srcInfo->sourceContextInfo->isHostDynamicDocument ? srcInfo->sourceContextInfo->url : this->GetUrl());
 
         // If we already have a parser state cache serialized into a buffer, we should skip creating it again
@@ -2283,7 +2283,7 @@ Error:
 
             BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("ByteCodeSerializer"));
             hr = Js::ByteCodeSerializer::SerializeToBuffer(this,
-                tempAllocator, (DWORD)cbLength, pszSrc, func->GetFunctionBody(),
+                tempAllocator, (uint32_t)cbLength, pszSrc, func->GetFunctionBody(),
                 func->GetHostSrcInfo(), &serializeParserStateCacheBuffer,
                 &serializeParserStateCacheSize, dwFlags);
             END_TEMP_ALLOCATOR(tempAllocator, this);
@@ -2397,7 +2397,7 @@ ExitTempAllocator:
             && pDataCache != nullptr
             && !this->IsScriptContextInDebugMode();
         byte* parserStateCacheBuffer = nullptr;
-        DWORD parserStateCacheByteCount = 0;
+        uint32_t parserStateCacheByteCount = 0;
         uint computedSourceCRC = 0;
 
         if (fUseParserStateCache)
@@ -2469,7 +2469,7 @@ ExitTempAllocator:
     HRESULT ScriptContext::SerializeParserState(const byte* script, size_t cb,
         SRCINFO const * pSrcInfo, CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
         const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag, byte** buffer,
-        DWORD* bufferSize, ArenaAllocator* alloc, JavascriptFunction** function, Js::Var scriptSource)
+        uint32_t* bufferSize, ArenaAllocator* alloc, JavascriptFunction** function, Js::Var scriptSource)
     {
         Assert(!this->threadContext->IsScriptActive());
         Assert(pse != nullptr);
@@ -2492,10 +2492,10 @@ ExitTempAllocator:
                 const Js::Utf8SourceInfo *sourceInfo = functionBody->GetUtf8SourceInfo();
                 size_t cSourceCodeLength = sourceInfo->GetCbLength(_u("JsSerializeParserState"));
                 LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeParserState"));
-                DWORD dwFlags = GENERATE_BYTE_CODE_PARSER_STATE;
+                uint32_t dwFlags = GENERATE_BYTE_CODE_PARSER_STATE;
 
                 return Js::ByteCodeSerializer::SerializeToBuffer(this,
-                    alloc, static_cast<DWORD>(cSourceCodeLength), utf8Code,
+                    alloc, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
                     functionBody, functionBody->GetHostSrcInfo(), buffer,
                     bufferSize, dwFlags);
             }
@@ -3265,7 +3265,7 @@ ExitTempAllocator:
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    inline void ScriptContext::CoreSetProfileEventMask(DWORD dwEventMask)
+    inline void ScriptContext::CoreSetProfileEventMask(uint32_t dwEventMask)
     {
         AssertMsg(m_pProfileCallback != NULL, "Assigning the event mask when there is no callback");
         m_dwEventMask = dwEventMask;
@@ -3275,7 +3275,7 @@ ExitTempAllocator:
         m_fTraceDomCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_DOM_FUNCTION_CALL);
     }
 
-    HRESULT ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, DWORD dwEventMask, DWORD dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
+    HRESULT ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
     {
         if (m_pProfileCallback != NULL)
         {
@@ -3351,7 +3351,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::SetProfileEventMask(DWORD dwEventMask)
+    HRESULT ScriptContext::SetProfileEventMask(uint32_t dwEventMask)
     {
         if (m_pProfileCallback == NULL)
         {

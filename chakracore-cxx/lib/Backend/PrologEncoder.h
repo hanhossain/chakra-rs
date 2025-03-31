@@ -51,12 +51,12 @@ public:
     void EncodeInstr(IR::Instr *instr, uint8 size);
 
     void EncodeSmallProlog(uint8 prologSize, size_t size);
-    DWORD SizeOfPData();
-    uint8_t *Finalize(uint8_t *functionStart, DWORD codeSize, uint8_t *pdataBuffer);
+    uint32_t SizeOfPData();
+    uint8_t *Finalize(uint8_t *functionStart, uint32_t codeSize, uint8_t *pdataBuffer);
 
     void Begin(size_t prologStartOffset);
     void End();
-    DWORD SizeOfUnwindInfo() { return SizeOfPData(); }
+    uint32_t SizeOfUnwindInfo() { return SizeOfPData(); }
     uint8_t *GetUnwindInfo() { return ehFrame.Buffer(); }
-    void FinalizeUnwindInfo(uint8_t *functionStart, DWORD codeSize);
+    void FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize);
 };

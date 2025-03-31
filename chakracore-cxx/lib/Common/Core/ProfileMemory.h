@@ -137,7 +137,7 @@ private:
     PageMemoryData pageMemoryData[PageAllocatorType_Max];
     RecyclerMemoryData recyclerMemoryData;
     MemoryProfiler * next;
-    DWORD threadId;
+    uint32_t threadId;
 
 };
 

@@ -207,7 +207,7 @@ void VIRTUALCleanup()
  *  VIRTUALContainsInvalidProtectionFlags()
  *          Returns TRUE if an invalid flag is specified. FALSE otherwise.
  */
-static BOOL VIRTUALContainsInvalidProtectionFlags(  DWORD flProtect )
+static BOOL VIRTUALContainsInvalidProtectionFlags(  uint32_t flProtect )
 {
     if ( ( flProtect & ~( PAGE_NOACCESS | PAGE_READONLY |
                           PAGE_READWRITE | PAGE_EXECUTE | PAGE_EXECUTE_READ |
@@ -668,7 +668,7 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
  *          internal VIRTUAL flags.
  *
  */
-static uint8_t VIRTUALConvertWinFlags(  DWORD flProtect )
+static uint8_t VIRTUALConvertWinFlags(  uint32_t flProtect )
 {
     uint8_t MemAccessControl = 0;
 
@@ -705,9 +705,9 @@ static uint8_t VIRTUALConvertWinFlags(  DWORD flProtect )
  *              Converts internal virtual protection
  *              flags to their win32 counterparts.
  */
-static DWORD VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
+static uint32_t VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
 {
-    DWORD MemAccessControl = 0;
+    uint32_t MemAccessControl = 0;
 
     if ( VirtualProtect == VIRTUAL_READONLY )
     {
@@ -751,8 +751,8 @@ static DWORD VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
 static BOOL VIRTUALStoreAllocationInfo(
              UINT_PTR startBoundary,      /* Start of the region. */
              SIZE_T memSize,            /* Size of the region. */
-             DWORD flAllocationType,  /* Allocation Types. */
-             DWORD flProtection )     /* Protections flags on the memory. */
+             uint32_t flAllocationType,  /* Allocation Types. */
+             uint32_t flProtection )     /* Protections flags on the memory. */
 {
     PCMI pNewEntry       = NULL;
     PCMI pMemInfo        = NULL;
@@ -974,8 +974,8 @@ static void * VIRTUALReserveMemory(
                  CPalThread *pthrCurrent, /* Currently executing thread */
                  void * lpAddress,        /* Region to reserve or commit */
                  SIZE_T dwSize,           /* Size of Region */
-                 DWORD flAllocationType,  /* Type of allocation */
-                 DWORD flProtect)         /* Type of access protection */
+                 uint32_t flAllocationType,  /* Type of allocation */
+                 uint32_t flProtect)         /* Type of access protection */
 {
     void * pRetVal      = NULL;
     UINT_PTR StartBoundary;
@@ -1141,8 +1141,8 @@ static void * VIRTUALCommitMemory(
                  CPalThread *pthrCurrent, /* Currently executing thread */
                  void * lpAddress,        /* Region to reserve or commit */
                  SIZE_T dwSize,           /* Size of Region */
-                 DWORD flAllocationType,  /* Type of allocation */
-                 DWORD flProtect)         /* Type of access protection */
+                 uint32_t flAllocationType,  /* Type of allocation */
+                 uint32_t flProtect)         /* Type of access protection */
 {
     UINT_PTR StartBoundary      = 0;
     SIZE_T MemSize              = 0;
@@ -1678,8 +1678,8 @@ VirtualAllocEx(
           HANDLE hProcess,
           void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
-          DWORD flAllocationType, /* Type of allocation */
-          DWORD flProtect)        /* Type of access protection */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
     return VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
 }
@@ -1706,8 +1706,8 @@ void *
 VirtualAlloc_(
           void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
-          DWORD flAllocationType, /* Type of allocation */
-          DWORD flProtect)        /* Type of access protection */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
 #ifdef DEBUG
     static bool was_pal_initialized = PAL_Initialize_Check_Once();
@@ -1921,8 +1921,8 @@ void *
 VirtualAlloc(
           void * lpAddress,       /* Region to reserve or commit */
           SIZE_T dwSize,          /* Size of Region */
-          DWORD flAllocationType, /* Type of allocation */
-          DWORD flProtect)        /* Type of access protection */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
     if (lpAddress)
     {
@@ -2000,7 +2000,7 @@ VirtualFreeEx(
          HANDLE hProcess,
          void * lpAddress,    /* Address of region. */
          SIZE_T dwSize,       /* Size of region. */
-         DWORD dwFreeType )   /* Operation type. */
+         uint32_t dwFreeType )   /* Operation type. */
 {
     return VirtualFree(lpAddress, dwSize, dwFreeType);
 }
@@ -2015,7 +2015,7 @@ BOOL
 VirtualFree(
          void * lpAddress,    /* Address of region. */
          SIZE_T dwSize,       /* Size of region. */
-         DWORD dwFreeType )   /* Operation type. */
+         uint32_t dwFreeType )   /* Operation type. */
 {
     BOOL bRetVal = TRUE;
     CPalThread *pthrCurrent;
@@ -2213,7 +2213,7 @@ VirtualProtectEx(
             HANDLE hProcess,
             void * lpAddress,
             SIZE_T dwSize,
-            DWORD flNewProtect,
+            uint32_t flNewProtect,
             PDWORD lpflOldProtect)
 {
     return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
@@ -2229,7 +2229,7 @@ BOOL
 VirtualProtect(
             void * lpAddress,
             SIZE_T dwSize,
-            DWORD flNewProtect,
+            uint32_t flNewProtect,
             PDWORD lpflOldProtect)
 {
     BOOL     bRetVal = FALSE;
@@ -2352,7 +2352,7 @@ ExitVirtualProtect:
 //    Return the corresponding memory protection on Windows (e.g. PAGE_READ_WRITE, etc.)
 //
 
-static DWORD VirtualMapMachProtectToWinProtect(vm_prot_t protection)
+static uint32_t VirtualMapMachProtectToWinProtect(vm_prot_t protection)
 {
     if (protection & VM_PROT_READ)
     {

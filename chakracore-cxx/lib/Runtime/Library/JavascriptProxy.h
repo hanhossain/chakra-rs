@@ -73,7 +73,7 @@ namespace Js
         static BOOL GetOwnPropertyDescriptor(RecyclableObject* obj, PropertyId propertyId, ScriptContext* requestContext, PropertyDescriptor* propertyDescriptor);
         static BOOL DefineOwnPropertyDescriptor(RecyclableObject* obj, PropertyId propId, const PropertyDescriptor& descriptor, bool throwOnError, ScriptContext* requestContext, PropertyOperationFlags flags);
 
-        static DWORD GetOffsetOfTarget() { return offsetof(JavascriptProxy, target); }
+        static uint32_t GetOffsetOfTarget() { return offsetof(JavascriptProxy, target); }
 
         virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
         virtual BOOL HasOwnProperty(PropertyId propertyId) override;

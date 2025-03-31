@@ -58,14 +58,14 @@ LIST_ENTRY MappedViewList PAL_GLOBAL;
 
 static PAL_ERROR MAPGrowLocalFile(INT, UINT);
 static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
-static PAL_ERROR MAPDesiredAccessAllowed( DWORD, DWORD, DWORD );
+static PAL_ERROR MAPDesiredAccessAllowed( uint32_t, uint32_t, uint32_t );
 
-static INT MAPProtectionToFileOpenFlags( DWORD );
-static BOOL MAPIsRequestPermissible( DWORD, CFileProcessLocalData * );
-static BOOL MAPContainsInvalidFlags( DWORD );
-static DWORD MAPConvertProtectToAccess( DWORD );
-static INT MAPFileMapToMmapFlags( DWORD );
-static DWORD MAPMmapProtToAccessFlags( int prot );
+static INT MAPProtectionToFileOpenFlags( uint32_t );
+static BOOL MAPIsRequestPermissible( uint32_t, CFileProcessLocalData * );
+static BOOL MAPContainsInvalidFlags( uint32_t );
+static uint32_t MAPConvertProtectToAccess( uint32_t );
+static INT MAPFileMapToMmapFlags( uint32_t );
+static uint32_t MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
 static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
                                      SIZE_T offset, long init_ref_count);
@@ -277,9 +277,9 @@ HANDLE
 CreateFileMappingA(
                     HANDLE hFile,
                     LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                    DWORD flProtect,
-                    DWORD dwMaximumSizeHigh,
-                    DWORD dwMaximumSizeLow,
+                    uint32_t flProtect,
+                    uint32_t dwMaximumSizeHigh,
+                    uint32_t dwMaximumSizeLow,
                     LPCSTR lpName)
 {
     HANDLE hFileMapping = NULL;
@@ -343,9 +343,9 @@ HANDLE
 CreateFileMappingW(
                 HANDLE hFile,
                 LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                DWORD flProtect,
-                DWORD dwMaximumSizeHigh,
-                DWORD dwMaximumSizeLow,
+                uint32_t flProtect,
+                uint32_t dwMaximumSizeHigh,
+                uint32_t dwMaximumSizeLow,
                 LPCWSTR lpName)
 {
     HANDLE hFileMapping = NULL;
@@ -390,9 +390,9 @@ CorUnix::InternalCreateFileMapping(
     CPalThread *pThread,
     HANDLE hFile,
     LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-    DWORD flProtect,
-    DWORD dwMaximumSizeHigh,
-    DWORD dwMaximumSizeLow,
+    uint32_t flProtect,
+    uint32_t dwMaximumSizeHigh,
+    uint32_t dwMaximumSizeLow,
     LPCWSTR lpName,
     HANDLE *phMapping
     )
@@ -622,7 +622,7 @@ CorUnix::InternalCreateFileMapping(
         }
 
         if ( INVALID_HANDLE_VALUE != hFile && 
-             dwMaximumSizeLow > (DWORD) UnixFileInformation.st_size && 
+             dwMaximumSizeLow > (uint32_t) UnixFileInformation.st_size &&
              ( PAGE_READONLY == flProtect || PAGE_WRITECOPY == flProtect ) )
         {
             /* In this situation, Windows returns an error, because the
@@ -632,7 +632,7 @@ CorUnix::InternalCreateFileMapping(
             goto ExitInternalCreateFileMapping;
         }
       
-        if ( (DWORD) UnixFileInformation.st_size < dwMaximumSizeLow )
+        if ( (uint32_t) UnixFileInformation.st_size < dwMaximumSizeLow )
         {
             TRACE( "Growing the size of file on disk to match requested size.\n" );
 
@@ -770,7 +770,7 @@ See MSDN doc.
 --*/
 HANDLE
 OpenFileMappingA(
-          DWORD dwDesiredAccess,
+          uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           LPCSTR lpName)
 {
@@ -813,7 +813,7 @@ See MSDN doc.
 --*/
 HANDLE
 OpenFileMappingW(
-          DWORD dwDesiredAccess,
+          uint32_t dwDesiredAccess,
           BOOL bInheritHandle,
           LPCWSTR lpName)
 {
@@ -851,7 +851,7 @@ OpenFileMappingW(
 PAL_ERROR
 CorUnix::InternalOpenFileMapping(
     CPalThread *pThread,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phMapping
@@ -937,9 +937,9 @@ See MSDN doc.
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
-           DWORD dwDesiredAccess,
-           DWORD dwFileOffsetHigh,
-           DWORD dwFileOffsetLow,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap)
 {
     PAL_ERROR palError = NO_ERROR;
@@ -977,9 +977,9 @@ MapViewOfFile(
 void *
 MapViewOfFileEx(
            HANDLE hFileMappingObject,
-           DWORD dwDesiredAccess,
-           DWORD dwFileOffsetHigh,
-           DWORD dwFileOffsetLow,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
            SIZE_T dwNumberOfBytesToMap,
            void * lpBaseAddress)
 {
@@ -1130,9 +1130,9 @@ PAL_ERROR
 CorUnix::InternalMapViewOfFile(
     CPalThread *pThread,
     HANDLE hFileMappingObject,
-    DWORD dwDesiredAccess,
-    DWORD dwFileOffsetHigh,
-    DWORD dwFileOffsetLow,
+    uint32_t dwDesiredAccess,
+    uint32_t dwFileOffsetHigh,
+    uint32_t dwFileOffsetLow,
     SIZE_T dwNumberOfBytesToMap,
     void * *ppvBaseAddress
     )
@@ -1579,9 +1579,9 @@ Function :
     ERROR_INVALID_PARAMETER, if the dwDesiredAccess conflicts with
     dwDesiredAccessWhenOpened, then the error code is ERROR_ACCESS_DENIED
 --*/
-static PAL_ERROR MAPDesiredAccessAllowed( DWORD flProtect,
-                                     DWORD dwUserDesiredAccess,
-                                     DWORD dwDesiredAccessWhenOpened )
+static PAL_ERROR MAPDesiredAccessAllowed( uint32_t flProtect,
+                                     uint32_t dwUserDesiredAccess,
+                                     uint32_t dwDesiredAccessWhenOpened )
 {
     TRACE( "flProtect=%d, dwUserDesiredAccess=%d, dwDesiredAccessWhenOpened=%d\n",
            flProtect, dwUserDesiredAccess, dwDesiredAccessWhenOpened );
@@ -1643,7 +1643,7 @@ Function :
     Converts the PAGE_READONLY type flags to FILE_MAP_READ flags.
 
 --*/
-static DWORD MAPConvertProtectToAccess( DWORD flProtect )
+static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
 {
     if ( PAGE_READONLY == flProtect )
     {
@@ -1660,7 +1660,7 @@ static DWORD MAPConvertProtectToAccess( DWORD flProtect )
 
     ASSERT( "Unknown flag for flProtect. This line "
             "should not have been executed.\n " );
-    return (DWORD) -1;
+    return (uint32_t) -1;
 }
 
 /*++
@@ -1672,7 +1672,7 @@ Function :
     by MAPContainsInvalidFlags().
 
 --*/
-static DWORD MAPConvertAccessToProtect(DWORD flAccess)
+static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
 {
     if (flAccess == FILE_MAP_ALL_ACCESS)
     {
@@ -1692,7 +1692,7 @@ static DWORD MAPConvertAccessToProtect(DWORD flAccess)
     }
 
     ASSERT("Unknown flag for flAccess.\n");
-    return (DWORD) -1;
+    return (uint32_t) -1;
 }
 
 /*++
@@ -1701,7 +1701,7 @@ Function :
 
     Converts the mapping flags to unix protection flags.
 --*/
-static INT MAPFileMapToMmapFlags( DWORD flags )
+static INT MAPFileMapToMmapFlags( uint32_t flags )
 {
     if ( FILE_MAP_READ == flags )
     {
@@ -1739,9 +1739,9 @@ Function :
     Converts unix protection flags to file access flags.
     We ignore PROT_EXEC.
 --*/
-static DWORD MAPMmapProtToAccessFlags( int prot )
+static uint32_t MAPMmapProtToAccessFlags( int prot )
 {
-    DWORD flAccess = 0; // default: no access
+    uint32_t flAccess = 0; // default: no access
 
     if (PROT_NONE == prot)
     {
@@ -1870,7 +1870,7 @@ Function :
     Checks that only valid flags are in the parameter.
     
 --*/
-static BOOL MAPContainsInvalidFlags( DWORD flags )
+static BOOL MAPContainsInvalidFlags( uint32_t flags )
 {
 
     if ( (flags == FILE_MAP_READ) ||
@@ -1894,7 +1894,7 @@ Function :
  
     Returns the file open flags.
 --*/
-static INT MAPProtectionToFileOpenFlags( DWORD flProtect )
+static INT MAPProtectionToFileOpenFlags( uint32_t flProtect )
 {
     INT retVal = 0;
     switch(flProtect)
@@ -1921,11 +1921,11 @@ Function :
     
     MAPIsRequestPermissible
     
-        DWORD flProtect     - The requested file mapping protection .
+        uint32_t flProtect     - The requested file mapping protection .
         file * pFileStruct  - The file structure containing all the information.
 
 --*/
-static BOOL MAPIsRequestPermissible( DWORD flProtect, CFileProcessLocalData * pFileLocalData )
+static BOOL MAPIsRequestPermissible( uint32_t flProtect, CFileProcessLocalData * pFileLocalData )
 {
     if ( ( (flProtect == PAGE_READONLY || flProtect == PAGE_WRITECOPY) && 
            (pFileLocalData->open_flags_deviceaccessonly == TRUE || 

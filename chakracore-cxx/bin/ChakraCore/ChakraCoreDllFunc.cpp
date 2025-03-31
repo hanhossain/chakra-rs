@@ -106,7 +106,7 @@ static void DetachProcess()
 }
 
 /****************************** Public Functions *****************************/
-EXTERN_C BOOL WINAPI DllMain(HINSTANCE hmod, DWORD dwReason, void * pvReserved)
+EXTERN_C BOOL WINAPI DllMain(HINSTANCE hmod, uint32_t dwReason, void * pvReserved)
 {
     switch (dwReason)
     {

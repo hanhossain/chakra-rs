@@ -101,8 +101,8 @@ public:
 struct CustomExternalObjectOperations
 {
     size_t offsetOfOperationsUsage;
-    DWORD operationFlagEquals;
-    DWORD operationFlagStrictEquals;
+    uint32_t operationFlagEquals;
+    uint32_t operationFlagStrictEquals;
 };
 
 enum ExternalJitData
@@ -390,10 +390,10 @@ namespace Js
 
 #if ENABLE_NATIVE_CODEGEN
     public:
-        static DWORD GetThreadContextOffset() { return offsetof(ScriptContext, threadContext); }
-        static DWORD GetOptimizationOverridesOffset() { return offsetof(ScriptContext, optimizationOverrides); }
-        static DWORD GetRecyclerOffset() { return offsetof(ScriptContext, recycler); }
-        static DWORD GetNumberAllocatorOffset() { return offsetof(ScriptContext, numberAllocator); }
+        static uint32_t GetThreadContextOffset() { return offsetof(ScriptContext, threadContext); }
+        static uint32_t GetOptimizationOverridesOffset() { return offsetof(ScriptContext, optimizationOverrides); }
+        static uint32_t GetRecyclerOffset() { return offsetof(ScriptContext, recycler); }
+        static uint32_t GetNumberAllocatorOffset() { return offsetof(ScriptContext, numberAllocator); }
 
         JITPageAddrToFuncRangeCache * GetJitFuncRangeCache();
     private:
@@ -864,7 +864,7 @@ private:
         IActiveScriptProfilerCallback *m_pProfileCallback;
         BOOL m_fTraceFunctionCall;
         BOOL m_fTraceNativeFunctionCall;
-        DWORD m_dwEventMask;
+        uint32_t m_dwEventMask;
 
         IActiveScriptProfilerCallback2 *m_pProfileCallback2;
         BOOL m_fTraceDomCall;
@@ -982,7 +982,7 @@ private:
         uint callCount;
 
         // if the current context is for webworker
-        DWORD webWorkerId;
+        uint32_t webWorkerId;
 
         static ScriptContext * New(ThreadContext * threadContext);
 
@@ -1255,7 +1255,7 @@ private:
             _In_opt_ NativeModule* nativeModule,
             _Outptr_ Js::ParseableFunctionInfo ** func,
             _Outptr_result_buffer_(*parserStateCacheByteCount) byte** parserStateCacheBuffer,
-            _Out_ DWORD* parserStateCacheByteCount,
+            _Out_ uint32_t* parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
         HRESULT TrySerializeParserState(
@@ -1265,7 +1265,7 @@ private:
             _In_ SRCINFO *srcInfo,
             _In_ Js::ParseableFunctionInfo* func,
             _In_reads_bytes_(parserStateCacheByteCount) byte* parserStateCacheBuffer,
-            _In_ DWORD parserStateCacheByteCount,
+            _In_ uint32_t parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
         HRESULT CompileUTF8Core(
@@ -1287,7 +1287,7 @@ private:
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
             const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
-            byte** buffer, DWORD* bufferSize, ArenaAllocator* alloc,
+            byte** buffer, uint32_t* bufferSize, ArenaAllocator* alloc,
             JavascriptFunction** function = nullptr,
             Js::Var scriptSource = nullptr);
 
@@ -1561,13 +1561,13 @@ private:
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-        void CoreSetProfileEventMask(DWORD dwEventMask);
+        void CoreSetProfileEventMask(uint32_t dwEventMask);
         typedef HRESULT(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
-        HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, DWORD dwEventMask, DWORD dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
+        HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
         HRESULT DeRegisterProfileProbe(HRESULT hrReason, JavascriptMethod dispatchInvoke);
         HRESULT RegisterLibraryFunction(const char16 *pwszObjectName, const char16 *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
         HRESULT RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
-        HRESULT SetProfileEventMask(DWORD dwEventMask);
+        HRESULT SetProfileEventMask(uint32_t dwEventMask);
 
         HRESULT RegisterScript(Js::FunctionProxy *pFunctionBody, BOOL fRegisterScript = TRUE);
 

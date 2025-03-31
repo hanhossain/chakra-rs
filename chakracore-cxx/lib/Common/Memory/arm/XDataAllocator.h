@@ -51,15 +51,15 @@ public:
 
     bool Initialize(void* segmentStart, void* segmentEnd);
     void Delete();
-    bool Alloc(size_t functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
+    bool Alloc(size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
     void Release(const SecondaryAllocation& address);
     bool CanAllocate();
-    static DWORD GetAllocSize(ushort pdataCount, ushort xdataSize)
+    static uint32_t GetAllocSize(ushort pdataCount, ushort xdataSize)
     {
         return sizeof(RUNTIME_FUNCTION) * pdataCount + xdataSize;
     }
 
-    static void Register(XDataAllocation * xdataInfo, DWORD functionStart, DWORD functionSize);
+    static void Register(XDataAllocation * xdataInfo, uint32_t functionStart, uint32_t functionSize);
     static void Unregister(XDataAllocation * xdataInfo);
     // Read .eh_frame data head (length record). 0 means empty.
     static uint32 ReadHead(const void* p)

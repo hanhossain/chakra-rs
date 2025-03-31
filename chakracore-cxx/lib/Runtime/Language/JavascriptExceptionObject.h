@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    const DWORD  ExceptionParameters = 1;
+    const uint32_t  ExceptionParameters = 1;
     const int    ExceptionObjectIndex = 0;
 
     class JavascriptExceptionContext;

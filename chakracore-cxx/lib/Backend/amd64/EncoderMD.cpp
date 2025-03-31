@@ -64,8 +64,8 @@ static const enum Forms OpcodeForms[] =
 
 static const uint8_t  Nop1[] = { 0x90 };                   /* nop                     */
 static const uint8_t  Nop2[] = { 0x66, 0x90 };             /* xchg ax, ax             */
-static const uint8_t  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop dword ptr [rax]     */
-static const uint8_t  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop dword ptr [rax + 0] */
+static const uint8_t  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop uint32_t ptr [rax]     */
+static const uint8_t  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop uint32_t ptr [rax + 0] */
 static const uint8_t * const Nop[4] = { Nop1, Nop2, Nop3, Nop4 };
 
 enum CMP_IMM8
@@ -664,7 +664,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
             {
                 //
                 // review: this should eventually be enabled. Currently our type system does not
-                // allow copying from DWORD to QWORD. hence the problem. This is required to read
+                // allow copying from uint32_t to QWORD. hence the problem. This is required to read
                 // JavascriptArray::length which is 4 bytes but the length needs to be operated as
                 // normal Machine Integer.
                 //

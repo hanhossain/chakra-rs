@@ -378,7 +378,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
         }
         else
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             BOOL ret = ::VirtualProtect(pageHeapData->guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_READWRITE, &oldProtect);
             Assert(ret && oldProtect == PAGE_NOACCESS);
         }
@@ -1205,8 +1205,8 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
     if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
         size_t count = 1;
-        DWORD pageSize = AutoSystemInfo::PageSize;
-        DWORD const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
+        uint32_t pageSize = AutoSystemInfo::PageSize;
+        uint32_t const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
         void * written = nullptr;
         UINT ret = GetWriteWatch(writeWatchFlags, page, AutoSystemInfo::PageSize, &written, &count, &pageSize);
         bool isDirty = (ret != 0) || (count == 1);
@@ -2383,7 +2383,7 @@ LargeHeapBlock::PageHeapLockPages()
             VerifyPageHeapPattern();
         }
 
-        DWORD oldProtect;
+        uint32_t oldProtect;
         GetHeaderFromAddress(pageHeapData->objectAddress)->isObjectPageLocked = true;
         if (VirtualProtect(pageHeapData->objectPageAddr, this->pageCount * AutoSystemInfo::PageSize, PAGE_READONLY, &oldProtect))
         {
@@ -2401,7 +2401,7 @@ LargeHeapBlock::PageHeapUnLockPages()
 {
     if (pageHeapData->isLockedWithPageHeap)
     {
-        DWORD oldProtect;
+        uint32_t oldProtect;
         if (VirtualProtect(pageHeapData->objectPageAddr, this->pageCount * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect))
         {
             pageHeapData->isLockedWithPageHeap = false;

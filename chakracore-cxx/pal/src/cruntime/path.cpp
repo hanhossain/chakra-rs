@@ -528,7 +528,7 @@ _fullpath(
     char realpath_buf[PATH_MAX+1];
     char path_copy[PATH_MAX+1];
     char *retval = NULL;
-    DWORD cPathCopy = sizeof(path_copy)/sizeof(path_copy[0]);
+    uint32_t cPathCopy = sizeof(path_copy)/sizeof(path_copy[0]);
     size_t min_length;
     BOOL fBufAllocated = FALSE;
 

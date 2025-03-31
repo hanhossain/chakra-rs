@@ -26,5 +26,5 @@ extern "C" void arm_SAVE_REGISTERS(void*);
  * ...
  */
 
-const DWORD ReturnAddrOffsetFromFramePtr = 1;
-const DWORD ArgOffsetFromFramePtr = 2;
+const uint32_t ReturnAddrOffsetFromFramePtr = 1;
+const uint32_t ArgOffsetFromFramePtr = 2;

@@ -301,7 +301,7 @@ namespace Js
             __asm {
                 movsd xmm0, savedX
                 movsd xmm1, savedY
-                call dword ptr[__libm_sse2_pow]
+                call uint32_t ptr[__libm_sse2_pow]
             }
         }
 

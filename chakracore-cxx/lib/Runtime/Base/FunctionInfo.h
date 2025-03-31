@@ -50,13 +50,13 @@ namespace Js
         FunctionInfo(JavascriptMethod entryPoint, _no_write_barrier_tag, Attributes attributes = None, LocalFunctionId functionId = Js::Constants::NoFunctionId, FunctionProxy* functionBodyImpl = nullptr);
         FunctionInfo(FunctionInfo& that); // Todo: (leish)(swb) find a way to prevent non-static initializer calling this ctor
 
-        static DWORD GetFunctionBodyImplOffset() { return offsetof(FunctionInfo, functionBodyImpl); }
+        static uint32_t GetFunctionBodyImplOffset() { return offsetof(FunctionInfo, functionBodyImpl); }
         static uint8_t GetOffsetOfFunctionProxy()
         {
             CompileAssert(offsetof(FunctionInfo, functionBodyImpl) <= UCHAR_MAX);
             return offsetof(FunctionInfo, functionBodyImpl);
         }
-        static DWORD GetAttributesOffset() { return offsetof(FunctionInfo, attributes); }
+        static uint32_t GetAttributesOffset() { return offsetof(FunctionInfo, attributes); }
 
         void VerifyOriginalEntryPoint() const;
         JavascriptMethod GetOriginalEntryPoint() const;

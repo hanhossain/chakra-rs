@@ -518,7 +518,7 @@ Encoder::Encode()
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsJITServer())
     {
-        EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * alloc = m_func->GetJITOutput()->RecordOOPNativeCodeSize(m_func, (DWORD)codeSize, pdataCount, xdataSize);
+        EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * alloc = m_func->GetJITOutput()->RecordOOPNativeCodeSize(m_func, (uint32_t)codeSize, pdataCount, xdataSize);
         allocation = alloc->allocation;
         inPrereservedRegion = alloc->inPrereservedRegion;
         localAlloc.segment = (alloc->bytesCommitted > CustomHeap::Page::MaxAllocationSize) ? allocation->largeObjectAllocation.segment : allocation->page->segment;
@@ -532,7 +532,7 @@ Encoder::Encode()
     else
 #endif
     {
-        EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * alloc = m_func->GetJITOutput()->RecordInProcNativeCodeSize(m_func, (DWORD)codeSize, pdataCount, xdataSize);
+        EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * alloc = m_func->GetJITOutput()->RecordInProcNativeCodeSize(m_func, (uint32_t)codeSize, pdataCount, xdataSize);
         allocation = alloc->allocation;
         inPrereservedRegion = alloc->inPrereservedRegion;
         localAddress = allocation->address;
@@ -558,10 +558,10 @@ Encoder::Encode()
 #ifdef TARGET_64
 #ifdef _M_X64
     PrologEncoder &unwindInfo = m_func->m_prologEncoder;
-    unwindInfo.FinalizeUnwindInfo((uint8_t*)m_func->GetJITOutput()->GetCodeAddress(), (DWORD)codeSize);
+    unwindInfo.FinalizeUnwindInfo((uint8_t*)m_func->GetJITOutput()->GetCodeAddress(), (uint32_t)codeSize);
 #else
     UnwindInfoManager &unwindInfo = m_func->m_unwindInfo;
-    unwindInfo.FinalizeUnwindInfo((uint8_t*)localAddress, (DWORD)codeSize);
+    unwindInfo.FinalizeUnwindInfo((uint8_t*)localAddress, (uint32_t)codeSize);
 #endif
 
     char * localXdataAddr = nullptr;
@@ -596,7 +596,7 @@ Encoder::Encode()
     }
     else
     {
-        XDataAllocator::Register(&allocation->xdata, m_func->GetJITOutput()->GetCodeAddress(), (DWORD)m_func->GetJITOutput()->GetCodeSize());
+        XDataAllocator::Register(&allocation->xdata, m_func->GetJITOutput()->GetCodeAddress(), (uint32_t)m_func->GetJITOutput()->GetCodeSize());
         m_func->GetInProcJITEntryPointInfo()->GetNativeEntryPointData()->SetXDataInfo(&allocation->xdata);
     }
     m_func->GetJITOutput()->SetCodeAddress(m_func->GetJITOutput()->GetCodeAddress() | 0x1); // Set thumb mode

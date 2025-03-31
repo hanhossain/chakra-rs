@@ -30,8 +30,8 @@ namespace Js
     InternalString *InternalString::New(ArenaAllocator* alloc, const char16* content, charcount_t length)
     {
         size_t bytelength = sizeof(char16) * length;
-        DWORD* allocbuffer = (DWORD*)alloc->Alloc(sizeof(DWORD) + bytelength + sizeof(char16));
-        allocbuffer[0] = (DWORD) bytelength;
+        uint32_t* allocbuffer = (uint32_t*)alloc->Alloc(sizeof(uint32_t) + bytelength + sizeof(char16));
+        allocbuffer[0] = (uint32_t) bytelength;
 
         char16* buffer = (char16*)(allocbuffer+1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
@@ -46,13 +46,13 @@ namespace Js
     {
         size_t bytelength = sizeof(char16) * length;
 
-        // Allocate 3 extra bytes, two for the first DWORD with the size, the third for the null character
+        // Allocate 3 extra bytes, two for the first uint32_t with the size, the third for the null character
         // This is so that we can pretend that internal strings are BSTRs for purposes of clients who want to use
         // it as thus
-        const unsigned char offset = sizeof(DWORD)/sizeof(char16);
-        InternalString* newInstance = RecyclerNewPlusLeaf(recycler, bytelength + (sizeof(DWORD) + sizeof(char16)), InternalString, nullptr, length, offset);
-        DWORD* allocbuffer = (DWORD*) (newInstance + 1);
-        allocbuffer[0] = (DWORD) bytelength;
+        const unsigned char offset = sizeof(uint32_t)/sizeof(char16);
+        InternalString* newInstance = RecyclerNewPlusLeaf(recycler, bytelength + (sizeof(uint32_t) + sizeof(char16)), InternalString, nullptr, length, offset);
+        uint32_t* allocbuffer = (uint32_t*) (newInstance + 1);
+        allocbuffer[0] = (uint32_t) bytelength;
         char16* buffer = (char16*)(allocbuffer + 1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
         buffer[length] = _u('\0');

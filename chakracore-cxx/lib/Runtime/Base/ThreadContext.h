@@ -75,12 +75,12 @@ public:
     virtual void TryInterruptPoll(Js::ScriptContext *scriptContext) = 0;
 
     // Default: throw up QC dialog after 5M statements == 2 minutes
-    static const DWORD TicksToStatements = (5000000 / 120000);
+    static const uint32_t TicksToStatements = (5000000 / 120000);
 
 protected:
     ThreadContext *threadContext;
-    DWORD lastPollTick;
-    DWORD lastResetTick;
+    uint32_t lastPollTick;
+    uint32_t lastResetTick;
     bool isDisabled;
 };
 
@@ -305,7 +305,7 @@ class ThreadContext sealed :
 {
 public:
     static void GlobalInitialize();
-    static const DWORD NoThread = 0xFFFFFFFF;
+    static const uint32_t NoThread = 0xFFFFFFFF;
 
     struct CollectCallBack
     {
@@ -339,8 +339,8 @@ public:
         }
     };
 
-    void SetCurrentThreadId(DWORD threadId) { this->currentThreadId = threadId; }
-    DWORD GetCurrentThreadId() const { return this->currentThreadId; }
+    void SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
+    uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
     void SetIsThreadBound()
     {
         if (this->recycler)
@@ -352,7 +352,7 @@ public:
     bool IsJSRT() const { return !this->isThreadBound; }
     virtual bool IsThreadBound() const override { return this->isThreadBound; }
     void SetStackProber(StackProber * stackProber);
-    static DWORD GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
+    static uint32_t GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
 
     template <class Fn>
     Js::ImplicitCallFlags TryWithDisabledImplicitCall(Fn fn)
@@ -606,7 +606,7 @@ private:
     static ThreadContext * globalListLast;
 
     ThreadContextFlags threadContextFlags;
-    DWORD currentThreadId;
+    uint32_t currentThreadId;
     mutable size_t stackLimitForCurrentThread;
     StackProber * stackProber;
     bool isThreadBound;
@@ -1848,7 +1848,7 @@ public:
 private:
     Js::ScriptContext * rootTrackerScriptContext;
 
-    DWORD threadId;
+    uint32_t threadId;
 #endif
 
 private:
@@ -1865,7 +1865,7 @@ private:
         virtual bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg);
         virtual bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio);
         virtual bool ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const;
-        virtual DWORD ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const;
+        virtual uint32_t ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const;
         virtual bool IsTelemetryProviderEnabled() const;
         virtual uint GetClosedContextCount() const;
 

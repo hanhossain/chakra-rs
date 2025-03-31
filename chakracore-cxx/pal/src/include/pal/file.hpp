@@ -41,7 +41,7 @@ namespace CorUnix
         IFileLockController *pLockController;
 
         int  unix_fd;
-        DWORD dwDesiredAccess; /* Unix assumes files are always opened for reading.
+        uint32_t dwDesiredAccess; /* Unix assumes files are always opened for reading.
                                   In Windows we can open a file for writing only */
         int  open_flags;       /* stores Unix file creation flags */
         BOOL open_flags_deviceaccessonly;
@@ -53,11 +53,11 @@ namespace CorUnix
     InternalCreateFile(
         CPalThread *pThread,
         LPCSTR lpFileName,
-        DWORD dwDesiredAccess,
-        DWORD dwShareMode,
+        uint32_t dwDesiredAccess,
+        uint32_t dwShareMode,
         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        DWORD dwCreationDisposition,
-        DWORD dwFlagsAndAttributes,
+        uint32_t dwCreationDisposition,
+        uint32_t dwFlagsAndAttributes,
         HANDLE hTemplateFile,
         HANDLE *pFileHandle
         );
@@ -67,7 +67,7 @@ namespace CorUnix
         CPalThread *pThread,
         HANDLE hFile,
         const void * lpBuffer,
-        DWORD nNumberOfBytesToWrite,
+        uint32_t nNumberOfBytesToWrite,
         LPDWORD lpNumberOfBytesWritten,
         LPOVERLAPPED lpOverlapped
         );
@@ -77,7 +77,7 @@ namespace CorUnix
         CPalThread *pThread,
         HANDLE hFile,
         void * lpBuffer,
-        DWORD nNumberOfBytesToRead,
+        uint32_t nNumberOfBytesToRead,
         LPDWORD lpNumberOfBytesRead,
         LPOVERLAPPED lpOverlapped
         );
@@ -92,8 +92,8 @@ namespace CorUnix
     InternalGetFileSize(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD *pdwFileSizeLow,
-        DWORD *pdwFileSizeHigh
+        uint32_t *pdwFileSizeLow,
+        uint32_t *pdwFileSizeHigh
         );
 
     PAL_ERROR
@@ -106,7 +106,7 @@ namespace CorUnix
     InternalGetFileType(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD *pdwFileType
+        uint32_t *pdwFileType
         );
 
     PAL_ERROR
@@ -115,27 +115,27 @@ namespace CorUnix
         HANDLE *phReadPipe,
         HANDLE *phWritePipe,
         LPSECURITY_ATTRIBUTES lpPipeAttributes,
-        DWORD nSize
+        uint32_t nSize
         );
 
     PAL_ERROR
     InternalLockFile(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD dwFileOffsetLow,
-        DWORD dwFileOffsetHigh,
-        DWORD nNumberOfBytesToLockLow,
-        DWORD nNumberOfBytesToLockHigh
+        uint32_t dwFileOffsetLow,
+        uint32_t dwFileOffsetHigh,
+        uint32_t nNumberOfBytesToLockLow,
+        uint32_t nNumberOfBytesToLockHigh
         );
 
     PAL_ERROR
     InternalUnlockFile(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD dwFileOffsetLow,
-        DWORD dwFileOffsetHigh,
-        DWORD nNumberOfBytesToUnlockLow,
-        DWORD nNumberOfBytesToUnlockHigh
+        uint32_t dwFileOffsetLow,
+        uint32_t dwFileOffsetHigh,
+        uint32_t nNumberOfBytesToUnlockLow,
+        uint32_t nNumberOfBytesToUnlockHigh
         );
 
     PAL_ERROR
@@ -144,7 +144,7 @@ namespace CorUnix
         HANDLE hFile,
         int32_t lDistanceToMove,
         int32_t * lpDistanceToMoveHigh,
-        DWORD dwMoveMethod,
+        uint32_t dwMoveMethod,
         int32_t * lpNewFilePointerLow
         );
 
@@ -182,7 +182,7 @@ namespace CorUnix
     InternalCanonicalizeRealPath(
         LPCSTR lpUnixPath,
         LPSTR lpBuffer,
-        DWORD cch
+        uint32_t cch
         );
 
     /*++
@@ -308,8 +308,8 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
-                     DWORD  nBufferLength,
+uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+                     uint32_t  nBufferLength,
                      LPSTR  lpBuffer );
 
 /*++
@@ -326,7 +326,7 @@ Function:
   
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno( void );
 
 /*++
 FILEInitStdHandles

@@ -8,14 +8,14 @@ class CriticalSection
 : public CCLock
 {
 public:
-    CriticalSection(DWORD spincount = 0): CCLock(true) { }
+    CriticalSection(uint32_t spincount = 0): CCLock(true) { }
 };
 
 //FakeCriticalSection mimics CriticalSection apis
 class FakeCriticalSection
 {
 public:
-    FakeCriticalSection(DWORD spincount = 0) { /*do nothing*/spincount++; }
+    FakeCriticalSection(uint32_t spincount = 0) { /*do nothing*/spincount++; }
     ~FakeCriticalSection() {}
 #pragma prefast(suppress:__WARNING_FAILING_TO_ACQUIRE_MEDIUM_CONFIDENCE)
     _Success_(return) BOOL _Acquires_lock_(this->cs) TryEnter() { return true; }

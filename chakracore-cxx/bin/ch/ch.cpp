@@ -517,12 +517,12 @@ HRESULT CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCall
     for (unsigned int i = 0; i < bufferSize; i++)
     {
         const unsigned int BYTES_PER_LINE = 32;
-        DWORD written = 0;
+        uint32_t written = 0;
         char scratch[3];
         auto scratchLen = sizeof(scratch);
         int num = _snprintf_s(scratch, scratchLen, _countof(scratch), "%02X", buffer[i]);
         Assert(num == 2);
-        IfFalseGo(WriteFile(fileHandle, scratch, (DWORD)(scratchLen - 1), &written, nullptr));
+        IfFalseGo(WriteFile(fileHandle, scratch, (uint32_t)(scratchLen - 1), &written, nullptr));
 
         // Add line breaks so this block can be readable
         if (i % BYTES_PER_LINE == (BYTES_PER_LINE - 1) && i < bufferSize - 1)
@@ -661,7 +661,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileNa
     scriptContents.contentLengthInBytes = lengthBytes;
     scriptContents.fullPath = fileNameWide;
 
-    DWORD cookie = 0;
+    uint32_t cookie = 0;
     e = ChakraRTInterface::JsQueueBackgroundParse_Experimental(&scriptContents, &cookie);
     Assert(e == JsErrorCode::JsNoError);
 

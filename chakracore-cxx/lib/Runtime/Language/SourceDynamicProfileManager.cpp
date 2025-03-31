@@ -436,7 +436,7 @@ namespace Js
             return;
         }
 
-        char * record = DynamicProfileStorage::AllocRecord(static_cast<DWORD>(counter.GetByteCount()));
+        char * record = DynamicProfileStorage::AllocRecord(static_cast<uint32_t>(counter.GetByteCount()));
 #if DBG_DUMP
         if (PHASE_STATS1(DynamicProfilePhase))
         {

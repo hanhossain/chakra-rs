@@ -818,7 +818,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
         // child initial script completion
         ResetEvent(threadData->hevntInitialScriptCompleted);
 
-        child->hThread = ::CreateThread(NULL, NULL, [](void* param) -> DWORD
+        child->hThread = ::CreateThread(NULL, NULL, [](void* param) -> uint32_t
         {
             return ((RuntimeThreadData*)param)->ThreadProc();
         }, (void*)child, NULL, NULL);
@@ -1275,7 +1275,7 @@ bool WScriptJsrt::Uninitialize()
             SetEvent(child->hevntShutdown);
         }
 
-        DWORD waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
+        uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
         Assert(waitRet == WAIT_OBJECT_0);
 
         for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
@@ -1729,7 +1729,7 @@ JsValueRef WScriptJsrt::SleepCallback(JsValueRef callee, bool isConstructCall, J
     {
         double timeout = 0.0;
         ChakraRTInterface::JsNumberToDouble(arguments[1], &timeout);
-        Sleep((DWORD)timeout);
+        Sleep((uint32_t)timeout);
     }
 
 Error:

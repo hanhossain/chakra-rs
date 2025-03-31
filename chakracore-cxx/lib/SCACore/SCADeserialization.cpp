@@ -167,7 +167,7 @@ namespace Js
                 charcount_t len;
                 const char16* buf = ReadString(&len);
 
-                DWORD flags;
+                uint32_t flags;
                 m_reader->Read(&flags);
                 *dst = JavascriptRegExp::CreateRegEx(buf, len,
                     static_cast<UnifiedRegex::RegexFlags>(flags), scriptContext);

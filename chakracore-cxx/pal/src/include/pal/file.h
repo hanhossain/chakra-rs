@@ -108,8 +108,8 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
-                     DWORD  nBufferLength,
+uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+                     uint32_t  nBufferLength,
                      LPSTR  lpBuffer );
 
 /*++
@@ -126,7 +126,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno( void );
 
 /*++
 Function:
@@ -134,7 +134,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD DIRGetLastErrorFromErrno( void );
+uint32_t DIRGetLastErrorFromErrno( void );
 
 /*++
 FILEInitStdHandles

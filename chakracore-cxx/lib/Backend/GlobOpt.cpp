@@ -6499,7 +6499,7 @@ GlobOpt::OptConstPeep(IR::Instr *instr, IR::Opnd *constSrc, Value **pDstVal, Val
         }
         else
         {
-            // We asserted that the address will fit in a DWORD above
+            // We asserted that the address will fit in a uint32_t above
             value = ::Math::PointerCastToIntegral<int32>(constSrc->AsAddrOpnd()->m_address);
         }
     }
@@ -7315,7 +7315,7 @@ GlobOpt::OptConstFoldUnary(
         break;
 
     case Js::OpCode::InlineMathClz:
-        DWORD clz;
+        uint32_t clz;
         if (_BitScanReverse(&clz, intConstantValue))
         {
             value = 31 - clz;
@@ -7330,7 +7330,7 @@ GlobOpt::OptConstFoldUnary(
     case Js::OpCode::Ctz:
         Assert(func->GetJITFunctionBody()->IsWasmFunction());
         Assert(!instr->HasBailOutInfo());
-        DWORD ctz;
+        uint32_t ctz;
         if (_BitScanForward(&ctz, intConstantValue))
         {
             value = ctz;

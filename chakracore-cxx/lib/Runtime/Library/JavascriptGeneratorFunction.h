@@ -39,7 +39,7 @@ namespace Js
         static JavascriptGeneratorFunction* OP_NewScGenFunc(FrameDisplay* environment, FunctionInfoPtrPtr infoRef);
         static JavascriptGeneratorFunction* OP_NewScGenFuncHomeObj(FrameDisplay* environment, FunctionInfoPtrPtr infoRef, Var homeObj);
         static Var EntryGeneratorFunctionImplementation(RecyclableObject* function, CallInfo callInfo, ...);
-        static DWORD GetOffsetOfScriptFunction() { return offsetof(JavascriptGeneratorFunction, scriptFunction); }
+        static uint32_t GetOffsetOfScriptFunction() { return offsetof(JavascriptGeneratorFunction, scriptFunction); }
 
         void SetScriptFunction(GeneratorVirtualScriptFunction* scriptFunction) {
             this->scriptFunction = scriptFunction;

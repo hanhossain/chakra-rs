@@ -108,7 +108,7 @@ See MSDN doc.
 --*/
 HANDLE
 HeapCreate(
-	        DWORD flOptions,
+	        uint32_t flOptions,
 	        SIZE_T dwInitialSize,
 	        SIZE_T dwMaximumSize)
 {
@@ -208,7 +208,7 @@ See MSDN doc.
 void *
 HeapAlloc(
      HANDLE hHeap,
-     DWORD dwFlags,
+     uint32_t dwFlags,
      SIZE_T numberOfBytes)
 {
     uint8_t *pMem;
@@ -281,7 +281,7 @@ See MSDN doc.
 BOOL
 HeapFree(
      HANDLE hHeap,
-     DWORD dwFlags,
+     uint32_t dwFlags,
      void * lpMem)
 {
     BOOL bRetVal = FALSE;
@@ -343,7 +343,7 @@ See MSDN doc.
 void *
 HeapReAlloc(
      HANDLE hHeap,
-     DWORD dwFlags,
+     uint32_t dwFlags,
      void * lpmem,
      SIZE_T numberOfBytes)
 {

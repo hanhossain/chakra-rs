@@ -65,7 +65,7 @@ namespace CorUnix
                 HANDLE_INDEX hiNextIndex;
             } u;
             
-            DWORD dwAccessRights;
+            uint32_t dwAccessRights;
             bool fInheritable;
             
             bool fEntryAllocated;
@@ -74,8 +74,8 @@ namespace CorUnix
         HANDLE_INDEX m_hiFreeListStart;
         HANDLE_INDEX m_hiFreeListEnd;
         
-        DWORD m_dwTableSize;
-        DWORD m_dwTableGrowthRate;
+        uint32_t m_dwTableSize;
+        uint32_t m_dwTableGrowthRate;
         HANDLE_TABLE_ENTRY* m_rghteHandleTable;
 
         CRITICAL_SECTION m_csLock;
@@ -119,7 +119,7 @@ namespace CorUnix
         AllocateHandle(
             CPalThread *pThread,
             IPalObject *pObject,
-            DWORD dwAccessRights,
+            uint32_t dwAccessRights,
             bool fInheritable,
             HANDLE *ph
             );
@@ -132,7 +132,7 @@ namespace CorUnix
         GetObjectFromHandle(
             CPalThread *pThread,
             HANDLE h,
-            DWORD *pdwRightsGranted,
+            uint32_t *pdwRightsGranted,
             IPalObject **ppObject
             );
 

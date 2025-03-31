@@ -139,7 +139,7 @@ namespace Js
         static const int StackScopeSlotsWithNoArg = 3;
 #endif
 
-        static const DWORD NonWebWorkerContextId = 0;
+        static const uint32_t NonWebWorkerContextId = 0;
 
         // Inlinee constants shared between the backend and the stack walker.
         static const uint InlineeMetaArgIndex_Argc            = 0;

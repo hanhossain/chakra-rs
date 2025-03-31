@@ -14,10 +14,10 @@ private:
 #endif
     uint8_t*    start;
     BVFixed* freeList;
-    DWORD    thunkCount;
+    uint32_t    thunkCount;
 
 public:
-    ThunkBlock(uint8_t* start, DWORD thunkCount) :
+    ThunkBlock(uint8_t* start, uint32_t thunkCount) :
         start(start),
         thunkCount(thunkCount),
         freeList(NULL)
@@ -79,7 +79,7 @@ private:
     uint8_t*                thunkBuffer;
     ArenaAllocator*      allocator;
     Js::ScriptContext *  scriptContext;
-    DWORD thunkCount;                      // Count of thunks available in the current thunk block
+    uint32_t thunkCount;                      // Count of thunks available in the current thunk block
 
     static constexpr uint8_t PageCount = 1;
 
@@ -94,18 +94,18 @@ private:
         __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
         __in const intptr_t thunkBufferStartAddress,
         __in const intptr_t epilogStart,
-        __in const DWORD epilogSize,
+        __in const uint32_t epilogSize,
         __in const intptr_t interpreterThunk);
 #if defined(_M_ARM32_OR_ARM64)
-    static DWORD EncodeMove(DWORD opCode, int reg, DWORD imm16);
-    static void GeneratePdata(_In_ const uint8_t* entryPoint, _In_ const DWORD functionSize, _Out_ RUNTIME_FUNCTION* function);
+    static uint32_t EncodeMove(uint32_t opCode, int reg, uint32_t imm16);
+    static void GeneratePdata(_In_ const uint8_t* entryPoint, _In_ const uint32_t functionSize, _Out_ RUNTIME_FUNCTION* function);
 #endif
 
     /*-------static helpers ---------*/
-    inline static DWORD FillDebugBreak(_Out_writes_bytes_all_(count) uint8_t* dest, _In_ DWORD count);
-    inline static DWORD CopyWithAlignment(_Out_writes_bytes_all_(sizeInBytes) uint8_t* dest, _In_ const DWORD sizeInBytes, _In_reads_bytes_(srcSize) const uint8_t* src, _In_ const DWORD srcSize, _In_ const DWORD alignment);
+    inline static uint32_t FillDebugBreak(_Out_writes_bytes_all_(count) uint8_t* dest, _In_ uint32_t count);
+    inline static uint32_t CopyWithAlignment(_Out_writes_bytes_all_(sizeInBytes) uint8_t* dest, _In_ const uint32_t sizeInBytes, _In_reads_bytes_(srcSize) const uint8_t* src, _In_ const uint32_t srcSize, _In_ const uint32_t alignment);
     template<class T>
-    inline static void Emit(__in_bcount(sizeof(T) + offset) uint8_t* dest, __in const DWORD offset, __in const T value)
+    inline static void Emit(__in_bcount(sizeof(T) + offset) uint8_t* dest, __in const uint32_t offset, __in const T value)
     {
         AssertMsg(*(T*) (dest + offset) == 0, "Overwriting an already existing opcode?");
         *(T*)(dest + offset) = value;
@@ -142,7 +142,7 @@ public:
         _Out_ PRUNTIME_FUNCTION * pdataTableStart,
         _Out_ intptr_t * epilogEndAddr,
 #endif
-        _Out_ DWORD * thunkCount
+        _Out_ uint32_t * thunkCount
     );
 
 };

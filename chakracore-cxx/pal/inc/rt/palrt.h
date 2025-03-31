@@ -303,11 +303,11 @@ typedef int32_t SCODE;
 typedef union _ULARGE_INTEGER {
     struct {
 #if BIGENDIAN
-        DWORD HighPart;
-        DWORD LowPart;
+        uint32_t HighPart;
+        uint32_t LowPart;
 #else
-        DWORD LowPart;
-        DWORD HighPart;
+        uint32_t LowPart;
+        uint32_t HighPart;
 #endif
     }
 #ifndef PAL_STDCPP_COMPAT
@@ -1104,12 +1104,12 @@ STDAPI_(LPWSTR) PathRemoveBackslashW(LPWSTR lpszPath);
 STDAPI_(void) PathRemoveExtensionW(LPWSTR pszPath);
 STDAPI_(LPWSTR) PathCombineW(LPWSTR lpszDest, LPCWSTR lpszDir, LPCWSTR lpszFile);
 STDAPI_(BOOL) PathCanonicalizeW(LPWSTR lpszDst, LPCWSTR lpszSrc);
-STDAPI_(BOOL) PathRelativePathToW(LPWSTR pszPath, LPCWSTR pszFrom, DWORD dwAttrFrom, LPCWSTR pszTo, DWORD dwAttrTo);
+STDAPI_(BOOL) PathRelativePathToW(LPWSTR pszPath, LPCWSTR pszFrom, uint32_t dwAttrFrom, LPCWSTR pszTo, uint32_t dwAttrTo);
 STDAPI_(BOOL) PathRenameExtensionW(LPWSTR pszPath, LPCWSTR pszExt);
 STDAPI_(BOOL) PathRemoveFileSpecW(LPWSTR pFile);
 STDAPI_(void) PathStripPathW (LPWSTR pszPath);
 
-STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, LPDWORD pcchPath, DWORD dwFlags);
+STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, LPDWORD pcchPath, uint32_t dwFlags);
 STDAPI_(BOOL) PathIsURLW(LPCWSTR pszPath);
 
 
@@ -1125,12 +1125,12 @@ typedef enum {
     URL_PART_HOSTNAME   = 2,
 } URL_PART;
 
-STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, LPDWORD pcchCanonicalized, DWORD dwFlags);
-STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, LPDWORD pcchCombined, DWORD dwFlags);
-STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, LPDWORD pcchEscaped, DWORD dwFlags);
-STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, LPDWORD pcchUnescaped, DWORD dwFlags);
+STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, LPDWORD pcchCanonicalized, uint32_t dwFlags);
+STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, LPDWORD pcchCombined, uint32_t dwFlags);
+STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, LPDWORD pcchEscaped, uint32_t dwFlags);
+STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, LPDWORD pcchUnescaped, uint32_t dwFlags);
 STDAPI_(BOOL) UrlIsW(LPCWSTR pszUrl, URLIS dwUrlIs);
-STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, DWORD dwPart, DWORD dwFlags);
+STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
 #ifdef UNICODE
 #define PathAppend          PathAppendW
@@ -1176,7 +1176,7 @@ STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, DWORD dwPart, 
 #define __RPC__inout
 #define __RPC__deref_out_ecount_full_opt(x)
 
-typedef DWORD OLE_COLOR;
+typedef uint32_t OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
 
@@ -1275,10 +1275,10 @@ typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 //
 
 typedef struct _JIT_DEBUG_INFO {
-    DWORD dwSize;
-    DWORD dwProcessorArchitecture;
-    DWORD dwThreadID;
-    DWORD dwReserved0;
+    uint32_t dwSize;
+    uint32_t dwProcessorArchitecture;
+    uint32_t dwThreadID;
+    uint32_t dwReserved0;
     ULONG64 lpExceptionAddress;
     ULONG64 lpExceptionRecord;
     ULONG64 lpContextRecord;
@@ -1336,8 +1336,8 @@ interface ITypeLib;
 interface IMoniker;
 
 typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
-    DWORD dwErrorCode,
-    DWORD dwNumberOfBytesTransfered,
+    uint32_t dwErrorCode,
+    uint32_t dwNumberOfBytesTransfered,
     void * lpOverlapped);
 
 //
@@ -1346,7 +1346,7 @@ typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
 
 typedef struct _EXCEPTION_DEBUG_INFO {
     EXCEPTION_RECORD ExceptionRecord;
-    DWORD dwFirstChance;
+    uint32_t dwFirstChance;
 } EXCEPTION_DEBUG_INFO, *LPEXCEPTION_DEBUG_INFO;
 
 typedef struct _CREATE_THREAD_DEBUG_INFO {
@@ -1360,8 +1360,8 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
     HANDLE hProcess;
     HANDLE hThread;
     void * lpBaseOfImage;
-    DWORD dwDebugInfoFileOffset;
-    DWORD nDebugInfoSize;
+    uint32_t dwDebugInfoFileOffset;
+    uint32_t nDebugInfoSize;
     void * lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
     void * lpImageName;
@@ -1369,18 +1369,18 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
 } CREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
 
 typedef struct _EXIT_THREAD_DEBUG_INFO {
-    DWORD dwExitCode;
+    uint32_t dwExitCode;
 } EXIT_THREAD_DEBUG_INFO, *LPEXIT_THREAD_DEBUG_INFO;
 
 typedef struct _EXIT_PROCESS_DEBUG_INFO {
-    DWORD dwExitCode;
+    uint32_t dwExitCode;
 } EXIT_PROCESS_DEBUG_INFO, *LPEXIT_PROCESS_DEBUG_INFO;
 
 typedef struct _LOAD_DLL_DEBUG_INFO {
     HANDLE hFile;
     void * lpBaseOfDll;
-    DWORD dwDebugInfoFileOffset;
-    DWORD nDebugInfoSize;
+    uint32_t dwDebugInfoFileOffset;
+    uint32_t nDebugInfoSize;
     void * lpImageName;
     uint16_t fUnicode;
 } LOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
@@ -1396,14 +1396,14 @@ typedef struct _OUTPUT_DEBUG_STRING_INFO {
 } OUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
 
 typedef struct _RIP_INFO {
-    DWORD dwError;
-    DWORD dwType;
+    uint32_t dwError;
+    uint32_t dwType;
 } RIP_INFO, *LPRIP_INFO;
 
 typedef struct _DEBUG_EVENT {
-    DWORD dwDebugEventCode;
-    DWORD dwProcessId;
-    DWORD dwThreadId;
+    uint32_t dwDebugEventCode;
+    uint32_t dwProcessId;
+    uint32_t dwThreadId;
     union {
         EXCEPTION_DEBUG_INFO Exception;
         CREATE_THREAD_DEBUG_INFO CreateThread;
@@ -1430,7 +1430,7 @@ GET_RUNTIME_FUNCTION_CALLBACK (
 typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
 
 typedef
-DWORD
+uint32_t
 OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
     HANDLE Process,
     void * TableAddress,
@@ -1465,7 +1465,7 @@ typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
 } UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
 
 typedef struct _UNWIND_HISTORY_TABLE {
-    DWORD Count;
+    uint32_t Count;
     uint8_t  LocalHint;
     uint8_t  GlobalHint;
     uint8_t  Search;
@@ -1487,19 +1487,19 @@ EXCEPTION_DISPOSITION
 #if defined(_ARM_)
 
 typedef struct _DISPATCHER_CONTEXT {
-    DWORD ControlPc;
-    DWORD ImageBase;
+    uint32_t ControlPc;
+    uint32_t ImageBase;
     PRUNTIME_FUNCTION FunctionEntry;
-    DWORD EstablisherFrame;
-    DWORD TargetPc;
+    uint32_t EstablisherFrame;
+    uint32_t TargetPc;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
     void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
-    DWORD ScopeIndex;
+    uint32_t ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
     uint8_t *  NonVolatileRegisters;
-    DWORD Reserved;
+    uint32_t Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
 #elif defined(_ARM64_)
@@ -1555,7 +1555,7 @@ typedef void * LPBC;
 typedef void * PSECURITY_DESCRIPTOR;
 
 typedef struct _EXCEPTION_RECORD64 {
-    DWORD ExceptionCode;
+    uint32_t ExceptionCode;
     uint32_t ExceptionFlags;
     ULONG64 ExceptionRecord;
     ULONG64 ExceptionAddress;
@@ -1626,19 +1626,19 @@ EXTERN_C HRESULT PAL_CoCreateInstance(REFCLSID   rclsid,
 /* ----- Types and structures ----- */
 typedef struct tagVS_FIXEDFILEINFO
 {
-    DWORD   dwSignature;            /* e.g. 0xfeef04bd */
-    DWORD   dwStrucVersion;         /* e.g. 0x00000042 = "0.42" */
-    DWORD   dwFileVersionMS;        /* e.g. 0x00030075 = "3.75" */
-    DWORD   dwFileVersionLS;        /* e.g. 0x00000031 = "0.31" */
-    DWORD   dwProductVersionMS;     /* e.g. 0x00030010 = "3.10" */
-    DWORD   dwProductVersionLS;     /* e.g. 0x00000031 = "0.31" */
-    DWORD   dwFileFlagsMask;        /* = 0x3F for version "0.42" */
-    DWORD   dwFileFlags;            /* e.g. VFF_DEBUG | VFF_PRERELEASE */
-    DWORD   dwFileOS;               /* e.g. VOS_DOS_WINDOWS16 */
-    DWORD   dwFileType;             /* e.g. VFT_DRIVER */
-    DWORD   dwFileSubtype;          /* e.g. VFT2_DRV_KEYBOARD */
-    DWORD   dwFileDateMS;           /* e.g. 0 */
-    DWORD   dwFileDateLS;           /* e.g. 0 */
+    uint32_t   dwSignature;            /* e.g. 0xfeef04bd */
+    uint32_t   dwStrucVersion;         /* e.g. 0x00000042 = "0.42" */
+    uint32_t   dwFileVersionMS;        /* e.g. 0x00030075 = "3.75" */
+    uint32_t   dwFileVersionLS;        /* e.g. 0x00000031 = "0.31" */
+    uint32_t   dwProductVersionMS;     /* e.g. 0x00030010 = "3.10" */
+    uint32_t   dwProductVersionLS;     /* e.g. 0x00000031 = "0.31" */
+    uint32_t   dwFileFlagsMask;        /* = 0x3F for version "0.42" */
+    uint32_t   dwFileFlags;            /* e.g. VFF_DEBUG | VFF_PRERELEASE */
+    uint32_t   dwFileOS;               /* e.g. VOS_DOS_WINDOWS16 */
+    uint32_t   dwFileType;             /* e.g. VFT_DRIVER */
+    uint32_t   dwFileSubtype;          /* e.g. VFT2_DRV_KEYBOARD */
+    uint32_t   dwFileDateMS;           /* e.g. 0 */
+    uint32_t   dwFileDateLS;           /* e.g. 0 */
 } VS_FIXEDFILEINFO;
 
 /************** Byte swapping & unaligned access ******************/

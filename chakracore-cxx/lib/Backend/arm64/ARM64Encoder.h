@@ -326,7 +326,7 @@ public:
         {
         }
     
-    DWORD
+    uint32_t
     Opcode(
         int Index = 0
         )

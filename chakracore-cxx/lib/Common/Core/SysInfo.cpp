@@ -125,7 +125,7 @@ AutoSystemInfo::Initialize()
 bool
 AutoSystemInfo::InitPhysicalProcessorCount()
 {
-    DWORD countPhysicalProcessor = 0;
+    uint32_t countPhysicalProcessor = 0;
     Assert(!this->initialized);
 
     // Initialize physical processor to number of logical processors.
@@ -321,7 +321,7 @@ AutoSystemInfo::IsWin8Point1OrLater()
     return isWindows8Point1OrGreater;
 }
 
-DWORD AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
+uint32_t AutoSystemInfo::SaveModuleFileName(HANDLE hMod)
 {
     return ::GetModuleFileNameW((HMODULE)hMod, Data.binaryName, MAX_PATH);
 }
@@ -361,7 +361,7 @@ void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
 // Returns the major and minor version of the loaded binary. If the version info has been fetched once, it will be cached
 // and returned without any system calls to find the version number.
 //
-HRESULT AutoSystemInfo::GetJscriptFileVersion(DWORD* majorVersion, DWORD* minorVersion, DWORD *buildDateHash, DWORD *buildTimeHash)
+HRESULT AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash, uint32_t *buildTimeHash)
 {
     HRESULT hr = E_FAIL;
     if(AutoSystemInfo::Data.majorVersion == 0 && AutoSystemInfo::Data.minorVersion == 0)
@@ -396,7 +396,7 @@ HRESULT AutoSystemInfo::GetJscriptFileVersion(DWORD* majorVersion, DWORD* minorV
 //
 // Returns the major and minor version of the binary passed as argument.
 //
-HRESULT AutoSystemInfo::GetVersionInfo(__in LPCWSTR pszPath, DWORD* majorVersion, DWORD* minorVersion)
+HRESULT AutoSystemInfo::GetVersionInfo(__in LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
 {
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;

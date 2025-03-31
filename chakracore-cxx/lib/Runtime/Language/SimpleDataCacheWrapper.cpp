@@ -107,8 +107,8 @@ namespace Js
 
     HRESULT SimpleDataCacheWrapper::WriteHeader()
     {
-        DWORD jscriptMajorVersion;
-        DWORD jscriptMinorVersion;
+        uint32_t jscriptMajorVersion;
+        uint32_t jscriptMinorVersion;
         HRESULT hr = E_FAIL;
 
         IFFAILRET(AutoSystemInfo::GetJscriptFileVersion(&jscriptMajorVersion, &jscriptMinorVersion));
@@ -118,27 +118,27 @@ namespace Js
         IFFAILRET(Write(jscriptMajorVersion));
         IFFAILRET(Write(jscriptMinorVersion));
 
-        Assert(this->bytesWrittenInBlock == sizeof(DWORD) * 2);
+        Assert(this->bytesWrittenInBlock == sizeof(uint32_t) * 2);
 
         return hr;
     }
 
     HRESULT SimpleDataCacheWrapper::ReadHeader()
     {
-        DWORD jscriptMajorVersion;
-        DWORD jscriptMinorVersion;
+        uint32_t jscriptMajorVersion;
+        uint32_t jscriptMinorVersion;
         HRESULT hr = E_FAIL;
 
         IFFAILRET(AutoSystemInfo::GetJscriptFileVersion(&jscriptMajorVersion, &jscriptMinorVersion));
 
-        DWORD majorVersion;
+        uint32_t majorVersion;
         IFFAILRET(Read(&majorVersion));
         if (majorVersion != jscriptMajorVersion)
         {
             return E_FAIL;
         }
 
-        DWORD minorVersion;
+        uint32_t minorVersion;
         IFFAILRET(Read(&minorVersion));
         if (minorVersion != jscriptMinorVersion)
         {
@@ -207,7 +207,7 @@ namespace Js
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
             // Reset the read stream to beginning of the stream - after the header
             LARGE_INTEGER dlibMove;
-            dlibMove.QuadPart = sizeof(DWORD) * 2;
+            dlibMove.QuadPart = sizeof(uint32_t) * 2;
             IFFAILRET(this->inStream->Seek(dlibMove, STREAM_SEEK_SET, nullptr));
 #endif
         }

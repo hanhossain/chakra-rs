@@ -105,9 +105,9 @@ struct JsAPIHooks
     typedef JsErrorCode(WINAPI *JsrtSerializeParserState)(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes);
     typedef JsErrorCode(WINAPI *JsrtRunScriptWithParserState)(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result);
     
-    typedef JsErrorCode(WINAPI *JsrtQueueBackgroundParse_Experimental)(JsScriptContents* contents, DWORD* dwBgParseCookie);
-    typedef JsErrorCode(WINAPI *JsrtDiscardBackgroundParse_Experimental)(DWORD dwBgParseCookie, void* buffer, bool* callerOwnsBuffer);
-    typedef JsErrorCode(WINAPI *JsrtExecuteBackgroundParse_Experimental)(DWORD dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, WCHAR *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result);
+    typedef JsErrorCode(WINAPI *JsrtQueueBackgroundParse_Experimental)(JsScriptContents* contents, uint32_t* dwBgParseCookie);
+    typedef JsErrorCode(WINAPI *JsrtDiscardBackgroundParse_Experimental)(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer);
+    typedef JsErrorCode(WINAPI *JsrtExecuteBackgroundParse_Experimental)(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, WCHAR *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result);
 
     typedef JsErrorCode(WINAPI *JsrtTTDCreateRecordRuntimePtr)(JsRuntimeAttributes attributes, bool enableDebugging, size_t snapInterval, size_t snapHistoryLength, TTDOpenResourceStreamCallback openResourceStream, JsTTDWriteBytesToStreamCallback writeBytesToStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime);
     typedef JsErrorCode(WINAPI *JsrtTTDCreateReplayRuntimePtr)(JsRuntimeAttributes attributes, const char* infoUri, size_t infoUriCount, bool enableDebugging, TTDOpenResourceStreamCallback openResourceStream, JsTTDReadBytesFromStreamCallback readBytesFromStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime);
@@ -500,9 +500,9 @@ public:
     static JsErrorCode WINAPI JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return HOOK_JS_API(VarDeserializerFree(deserializerHandle)); }
 
     static JsErrorCode WINAPI JsDetachArrayBuffer(JsValueRef buffer) { return HOOK_JS_API(DetachArrayBuffer(buffer)); }
-    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, DWORD* dwBgParseCookie) { return HOOK_JS_API(QueueBackgroundParse_Experimental)(contents, dwBgParseCookie);  }
-    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(DWORD dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return HOOK_JS_API(DiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer)); }
-    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(DWORD dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, WCHAR *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return HOOK_JS_API(ExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result)); }
+    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return HOOK_JS_API(QueueBackgroundParse_Experimental)(contents, dwBgParseCookie);  }
+    static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return HOOK_JS_API(DiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer)); }
+    static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, WCHAR *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return HOOK_JS_API(ExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result)); }
 
     static JsErrorCode WINAPI JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return HOOK_JS_API(GetArrayBufferFreeFunction(buffer, freeFn)); }
     static JsErrorCode WINAPI JsExternalizeArrayBuffer(JsValueRef buffer) { return HOOK_JS_API(ExternalizeArrayBuffer(buffer)); }

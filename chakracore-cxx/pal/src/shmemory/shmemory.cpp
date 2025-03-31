@@ -312,8 +312,8 @@ typedef struct _pid_and_tid
     Volatile<pthread_t> tid;
 } pid_and_tid;
 
-const DWORD HeadSignature  PAL_GLOBAL = 0x48454144;
-const DWORD TailSignature  PAL_GLOBAL = 0x5441494C;
+const uint32_t HeadSignature  PAL_GLOBAL = 0x48454144;
+const uint32_t TailSignature  PAL_GLOBAL = 0x5441494C;
 
 #endif // TRACK_SHMLOCK_OWNERSHIP
 
@@ -321,11 +321,11 @@ typedef struct
 {
     SHM_SEGMENT_HEADER header;
 #ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<DWORD> dwHeadCanaries[2];
+    Volatile<uint32_t> dwHeadCanaries[2];
 #endif // TRACK_SHMLOCK_OWNERSHIP
     Volatile<pid_t> spinlock;
 #ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<DWORD> dwTailCanaries[2];
+    Volatile<uint32_t> dwTailCanaries[2];
     pid_and_tid pidtidCurrentOwner;
     pid_and_tid pidtidOwners[SHMLOCK_OWNERSHIP_HISTORY_ARRAY_SIZE];
     Volatile<uint32_t> ulOwnersIdx;
@@ -427,7 +427,7 @@ BOOL SHMInitialize(void)
         header->dwTailCanaries[1] = TailSignature;
 
         // Check spinlock size
-        _ASSERTE(sizeof(DWORD) == sizeof(header->spinlock));
+        _ASSERTE(sizeof(uint32_t) == sizeof(header->spinlock));
         // Check spinlock alignment
         _ASSERTE(0 == ((DWORD_PTR)&header->spinlock % (DWORD_PTR)sizeof(void *)));
 #endif // TRACK_SHMLOCK_OWNERSHIP

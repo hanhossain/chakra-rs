@@ -65,9 +65,9 @@ typedef ucontext_t native_context_t;
 #define FPREG_ControlWord(uc) (((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_cw)
 #define FPREG_StatusWord(uc) (((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_sw)
 #define FPREG_TagWord(uc) (((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_tw)
-#define FPREG_ErrorOffset(uc) (*(DWORD*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_ip))
+#define FPREG_ErrorOffset(uc) (*(uint32_t*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_ip))
 #define FPREG_ErrorSelector(uc) *((uint16_t*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_ip) + 2)
-#define FPREG_DataOffset(uc) (*(DWORD*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_dp))
+#define FPREG_DataOffset(uc) (*(uint32_t*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_dp))
 #define FPREG_DataSelector(uc) *((uint16_t*) &(((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_dp) + 2)
 #define FPREG_MxCsr(uc) (((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_mxcsr)
 #define FPREG_MxCsr_Mask(uc) (((struct fxsave*)(&(uc)->uc_mcontext.__fpregs))->fx_mxcsr_mask)
@@ -102,9 +102,9 @@ typedef ucontext_t native_context_t;
 #define FPREG_ControlWord(uc) (FPREG_Fpstate(uc)->cwd)
 #define FPREG_StatusWord(uc) (FPREG_Fpstate(uc)->swd)
 #define FPREG_TagWord(uc) (FPREG_Fpstate(uc)->ftw)
-#define FPREG_ErrorOffset(uc) *(DWORD*)&(FPREG_Fpstate(uc)->rip)
+#define FPREG_ErrorOffset(uc) *(uint32_t*)&(FPREG_Fpstate(uc)->rip)
 #define FPREG_ErrorSelector(uc) *(((uint16_t*)&(FPREG_Fpstate(uc)->rip)) + 2)
-#define FPREG_DataOffset(uc) *(DWORD*)&(FPREG_Fpstate(uc)->rdp)
+#define FPREG_DataOffset(uc) *(uint32_t*)&(FPREG_Fpstate(uc)->rdp)
 #define FPREG_DataSelector(uc) *(((uint16_t*)&(FPREG_Fpstate(uc)->rdp)) + 2)
 #define FPREG_MxCsr(uc) (FPREG_Fpstate(uc)->mxcsr)
 #define FPREG_MxCsr_Mask(uc) (FPREG_Fpstate(uc)->mxcr_mask)
@@ -182,9 +182,9 @@ typedef ucontext_t native_context_t;
 #define FPREG_TagWord(uc)       FPSTATE(uc)->sv_env.en_tw
 #define FPREG_MxCsr(uc)         FPSTATE(uc)->sv_env.en_mxcsr
 #define FPREG_MxCsr_Mask(uc)    FPSTATE(uc)->sv_env.en_mxcsr_mask
-#define FPREG_ErrorOffset(uc)   *(DWORD*) &(FPSTATE(uc)->sv_env.en_rip)
+#define FPREG_ErrorOffset(uc)   *(uint32_t*) &(FPSTATE(uc)->sv_env.en_rip)
 #define FPREG_ErrorSelector(uc) *((uint16_t*) &(FPSTATE(uc)->sv_env.en_rip) + 2)
-#define FPREG_DataOffset(uc)    *(DWORD*) &(FPSTATE(uc)->sv_env.en_rdp)
+#define FPREG_DataOffset(uc)    *(uint32_t*) &(FPSTATE(uc)->sv_env.en_rdp)
 #define FPREG_DataSelector(uc)  *((uint16_t*) &(FPSTATE(uc)->sv_env.en_rdp) + 2)
 
 #define FPREG_Xmm(uc, index)    *(M128A*) &(FPSTATE(uc)->sv_xmm[index])
@@ -302,7 +302,7 @@ Return value :
 --*/
 BOOL
 CONTEXT_SetThreadContext(
-    DWORD dwProcessId,
+    uint32_t dwProcessId,
     pthread_t self,
     const CONTEXT *lpContext
     );
@@ -319,7 +319,7 @@ Return value :
 --*/
 BOOL
 CONTEXT_GetThreadContext(
-         DWORD dwProcessId,
+         uint32_t dwProcessId,
          pthread_t self,
          LPCONTEXT lpContext);
 
@@ -411,7 +411,7 @@ Return value :
     The Win32 exception code that corresponds to the signal and context
     information.
 --*/
-DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context);
 
 #endif  // HAVE_MACH_EXCEPTIONS else

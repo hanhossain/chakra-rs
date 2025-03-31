@@ -151,7 +151,7 @@
 * 
 *  LWSTDAPI_(BOOL) StrToIntExA(
 *      LPCSTR pszString,  //  No annotation required, const implies __in.
-*      DWORD dwFlags,
+*      uint32_t dwFlags,
 *      __out int *piRet   // A pointer whose dereference will be filled in.
 *  );
 * 
@@ -170,7 +170,7 @@
 *      LPCSTR pszSrc,                     //  No annotation required, 
 *                                         //  const implies __in.
 *      UINT cchMax,                              
-*      DWORD dwFlags
+*      uint32_t dwFlags
 *  );
 * 
 *  HRESULT SHLocalAllocBytes(

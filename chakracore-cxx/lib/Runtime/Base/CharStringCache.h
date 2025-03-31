@@ -17,7 +17,7 @@ namespace Js
 
         // For JIT
         static const char16 CharStringCacheSize = 0x80; /*range of ASCII 7-bit chars*/
-        static DWORD GetCharStringCacheAOffset() { return offsetof(CharStringCache, charStringCacheA); }
+        static uint32_t GetCharStringCacheAOffset() { return offsetof(CharStringCache, charStringCacheA); }
 
         static JavascriptString* GetStringForChar(CharStringCache *charStringCache, char16 c) { return charStringCache->GetStringForChar(c); }
         static JavascriptString* GetStringForCharCodePoint(CharStringCache *charStringCache, codepoint_t c)

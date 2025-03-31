@@ -21,7 +21,7 @@ void DummyJSRTCall()
 #endif
 
 __attribute__ ((visibility ("default")))
-EXTERN_C BOOL WINAPI DllMain(HINSTANCE hmod, DWORD dwReason, void * pvReserved)
+EXTERN_C BOOL WINAPI DllMain(HINSTANCE hmod, uint32_t dwReason, void * pvReserved)
 {
     // xplat doesn't need DllMain is being called.
     // Instead, we handle attach / detach stuff internally. (see lib/Jsrt/JsrtHelper.cpp)

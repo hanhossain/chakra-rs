@@ -1015,7 +1015,7 @@ LowererMD::GenerateStackDeallocation(IR::Instr *instr, uint32 allocSize)
 //     MOV r12,0
 // $PrologStart:
 //     <save params and regs, set up frame chain as above>
-//     MOV r4, stack/4   -- input param to chkstk is a DWORD count
+//     MOV r4, stack/4   -- input param to chkstk is a uint32_t count
 //     LDIMM r12, &chkstk
 //     BLX r12
 //     SUB sp, r4        -- byte count returned by chkstk in r4
@@ -1260,7 +1260,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // into account below. Otherwise, the stack will become unbalanced or corrupted.
     //
     // NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE
-    DWORD stackProbeStackHeight = this->m_func->m_localStackHeight;
+    uint32_t stackProbeStackHeight = this->m_func->m_localStackHeight;
 
     // If we've already got calls and we don't have a try, we need to take adjustments
     // below into account to determine whether our not our final stack height is going to be

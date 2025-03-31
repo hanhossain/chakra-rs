@@ -38,8 +38,8 @@ PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsGranted,
-    DWORD dwRightsRequired
+    uint32_t dwRightsGranted,
+    uint32_t dwRightsRequired
     );
 
 /*++
@@ -221,7 +221,7 @@ CSharedMemoryObjectManager::RegisterObject(
     CPalThread *pthr,
     IPalObject *pobjToRegister,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequested,
+    uint32_t dwRightsRequested,
     HANDLE *pHandle,                 // OUT
     IPalObject **ppobjRegistered     // OUT
     )
@@ -732,7 +732,7 @@ PAL_ERROR
 CSharedMemoryObjectManager::ObtainHandleForObject(
     CPalThread *pthr,
     IPalObject *pobj,
-    DWORD dwRightsRequested,
+    uint32_t dwRightsRequested,
     bool fInheritHandle,
     IPalProcess *pProcessForHandle,     // IN, OPTIONAL
     HANDLE *pNewHandle                  // OUT
@@ -835,12 +835,12 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     CPalThread *pthr,
     HANDLE hHandleToReference,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
     )
 {
     PAL_ERROR palError;
-    DWORD dwRightsGranted;
+    uint32_t dwRightsGranted;
     IPalObject *pobj;
 
     _ASSERTE(NULL != pthr);
@@ -917,16 +917,16 @@ PAL_ERROR
 CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     CPalThread *pthr,
     HANDLE rghHandlesToReference[],
-    DWORD dwHandleCount,
+    uint32_t dwHandleCount,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject *rgpobjs[]            // OUT (caller allocated)
     )
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj = NULL;
-    DWORD dwRightsGranted;
-    DWORD dw;
+    uint32_t dwRightsGranted;
+    uint32_t dw;
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != rghHandlesToReference);
@@ -1041,7 +1041,7 @@ CSharedMemoryObjectManager::ReferenceObjectByForeignHandle(
     HANDLE hForeignHandle,
     IPalProcess *pForeignProcess,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
     )
 {
@@ -1519,8 +1519,8 @@ PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsGranted,
-    DWORD dwRightsRequired
+    uint32_t dwRightsGranted,
+    uint32_t dwRightsRequired
     )
 {
     PAL_ERROR palError = NO_ERROR;

@@ -62,13 +62,13 @@ int UTF8ToUnicode(
     int cchSrc,
     LPWSTR lpDestStr,
     int cchDest,
-    DWORD dwFlags
+    uint32_t dwFlags
     )
 {
     int nTB = 0;                   // # trail bytes to follow
     int cchWC = 0;                 // # of Unicode code points generated
     const uint8_t* pUTF8 = (const uint8_t*)lpSrcStr;
-    DWORD dwUnicodeChar = 0;       // Our character with room for full surrogate char
+    uint32_t dwUnicodeChar = 0;       // Our character with room for full surrogate char
     BOOL bSurrogatePair = FALSE;   // Indicate we're collecting a surrogate pair
     BOOL bCheckInvalidBytes = (dwFlags & MB_ERR_INVALID_CHARS);
     uint8_t UTF8;
@@ -342,7 +342,7 @@ int UnicodeToUTF8(
 {
     LPCWSTR lpWC = lpSrcStr;
     int     cchU8 = 0;                // # of UTF8 chars generated
-    DWORD   dwSurrogateChar;
+    uint32_t   dwSurrogateChar;
     WCHAR   wchHighSurrogate = 0;
     BOOL    bHandled;
 

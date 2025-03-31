@@ -14,13 +14,13 @@ static const uint32 Opdope[] =
 #undef MACRO
 };
 
-DWORD
+uint32_t
 EncoderMD::BranchOffset_26(int64 x)
 {
     Assert(IS_CONST_INT26(x >> 1));
     Assert((x & 0x3) == 0);
     x = x >> 2;
-    return (DWORD) x;
+    return (uint32_t) x;
 }
 
 ///----------------------------------------------------------------------------
@@ -1356,29 +1356,29 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, uint8_t *pc)
 }
 
 #ifdef INSERT_NOPS
-ptrdiff_t insertNops(uint8_t *pc, DWORD outInstr, uint count, uint size)
+ptrdiff_t insertNops(uint8_t *pc, uint32_t outInstr, uint count, uint size)
 {
         //Insert count nops in the beginning
         for(int i = 0; i < count;i++)
         {
-            *(DWORD *)(pc + i * sizeof(DWORD)) = 0x8000F3AF;
+            *(uint32_t *)(pc + i * sizeof(uint32_t)) = 0x8000F3AF;
         }
 
         if (size == sizeof(ENCODE_16))
         {
-            *(ENCODE_16 *)(pc + count * sizeof(DWORD)) = (ENCODE_16)(outInstr & 0x0000ffff);
-            *(ENCODE_16 *)(pc + sizeof(ENCODE_16) + count * sizeof(DWORD)) = (ENCODE_16)(0xBF00);
+            *(ENCODE_16 *)(pc + count * sizeof(uint32_t)) = (ENCODE_16)(outInstr & 0x0000ffff);
+            *(ENCODE_16 *)(pc + sizeof(ENCODE_16) + count * sizeof(uint32_t)) = (ENCODE_16)(0xBF00);
         }
         else
         {
-            Assert(size == sizeof(DWORD));
-            *(DWORD *)(pc + count * sizeof(DWORD)) = outInstr;
+            Assert(size == sizeof(uint32_t));
+            *(uint32_t *)(pc + count * sizeof(uint32_t)) = outInstr;
         }
 
         //Insert count nops at the end;
         for(int i = count + 1; i < (2 *count + 1); i++)
         {
-            *(DWORD *)(pc + i * sizeof(DWORD)) = 0x8000F3AF;
+            *(uint32_t *)(pc + i * sizeof(uint32_t)) = 0x8000F3AF;
         }
 
         return MachInt*(2*count + 1);
@@ -1399,7 +1399,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 {
     m_pc = pc;
 
-    DWORD  outInstr;
+    uint32_t  outInstr;
 
     // Instructions must be lowered, we don't handle non-MD opcodes here.
     Assert(instr != nullptr);
@@ -1424,7 +1424,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
             else
             {
                 instr->AsLabelInstr()->SetPC(m_pc);
-                m_func->m_unwindInfo.SetLabelOffset(instr->AsLabelInstr()->m_id, DWORD(m_pc - m_encoder->m_encodeBuffer));
+                m_func->m_unwindInfo.SetLabelOffset(instr->AsLabelInstr()->m_id, uint32_t(m_pc - m_encoder->m_encodeBuffer));
             }
         }
     #if DBG_DUMP
@@ -1448,15 +1448,15 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 
     // TODO: Check if VFP/Neon instructions in Thumb-2 mode we need to swap the instruction halfwords
 #ifdef INSERT_NOPS
-    return insertNops(m_pc, outInstr, CountNops, sizeof(DWORD));
+    return insertNops(m_pc, outInstr, CountNops, sizeof(uint32_t));
 #else
-    *(DWORD *)m_pc = outInstr ;
+    *(uint32_t *)m_pc = outInstr ;
     return MachInt;
 #endif
 }
 
 bool
-EncoderMD::EncodeLogicalConst(IntConstType constant, DWORD * result, int size = 4)
+EncoderMD::EncodeLogicalConst(IntConstType constant, uint32_t * result, int size = 4)
 {
     *result = FindArm64LogicalImmediateEncoding(constant, size);
     return (*result != ARM64_LOGICAL_IMMEDIATE_NO_ENCODING);
@@ -1465,7 +1465,7 @@ EncoderMD::EncodeLogicalConst(IntConstType constant, DWORD * result, int size = 
 bool
 EncoderMD::CanEncodeLogicalConst(IntConstType constant, int size)
 {
-    DWORD encode;
+    uint32_t encode;
     return EncodeLogicalConst(constant, &encode, size);
 }
 

@@ -20,7 +20,7 @@
 #include "Library/ES5Array.h"
 #include "Util/Pinned.h"
 
-void ChakraBinaryBuildDateTimeHash(DWORD * buildDateHash, DWORD * buildTimeHash);
+void ChakraBinaryBuildDateTimeHash(uint32_t * buildDateHash, uint32_t * buildTimeHash);
 
 namespace Js
 {
@@ -143,7 +143,7 @@ struct SerializedFieldList {
     bool has_printOffsets : 1;
 };
 
-C_ASSERT(sizeof(GUID)==sizeof(DWORD)*4);
+C_ASSERT(sizeof(GUID)==sizeof(uint32_t)*4);
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Holds a buffer and size for use by the serializer
@@ -344,10 +344,10 @@ C_ASSERT(sizeof(PropertyId)==sizeof(int32));
 //  0       4       Magic Number                                "ChBc"
 //  4       4       Total File Size
 //  8       1       File Version Scheme                     10 for engineering      20 for release
-//  9       4       Version DWORD 1                             jscript minor version   GUID quad part 1
-//  13      4       Version DWORD 2                             jscript major version   GUID quad part 2
-//  17      4       Version DWORD 3                             hash of __DATE__            GUID quad part 3
-//  21      4       Version DWORD 4                             hash of __TIME__            GUID quad part 4
+//  9       4       Version uint32_t 1                             jscript minor version   GUID quad part 1
+//  13      4       Version uint32_t 2                             jscript major version   GUID quad part 2
+//  17      4       Version uint32_t 3                             hash of __DATE__            GUID quad part 3
+//  21      4       Version uint32_t 4                             hash of __TIME__            GUID quad part 4
 //  25      4       Expected Architecture                       "amd"0, "ia64", "arm"0 or "x86"0
 //  29      4       Expected Function Body Size
 //  33      4       Expected Built In PropertyCount
@@ -408,7 +408,7 @@ class ByteCodeBufferBuilder
     LPCUTF8 utf8Source;
     ScriptContext * scriptContext;
     BufferBuilder * startOfCachedScopeAuxBlock;
-    DWORD dwFlags;
+    uint32_t dwFlags;
 
     //Instead of referencing TotalNumberOfBuiltInProperties directly; or PropertyIds::_countJSOnlyProperty we use this.
     //For library code this will be set to _countJSOnlyProperty and for normal bytecode this will be TotalNumberOfBuiltInProperties
@@ -441,7 +441,7 @@ class ByteCodeBufferBuilder
 
 public:
 
-    ByteCodeBufferBuilder(uint32 sourceSize, uint32 sourceCharLength, LPCUTF8 utf8Source, Utf8SourceInfo* sourceInfo, ScriptContext * scriptContext, ArenaAllocator * alloc, DWORD dwFlags, int builtInPropertyCount)
+    ByteCodeBufferBuilder(uint32 sourceSize, uint32 sourceCharLength, LPCUTF8 utf8Source, Utf8SourceInfo* sourceInfo, ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t dwFlags, int builtInPropertyCount)
         : magic(_u("Magic"), magicConstant),
           totalSize(_u("Total Size"), 0),
           fileVersionKind(_u("FileVersionKind"), 0),
@@ -508,7 +508,7 @@ public:
         case EngineeringVersioningScheme:
             {
                 Assert(!GenerateLibraryByteCode());
-                DWORD jscriptMajor, jscriptMinor, buildDateHash, buildTimeHash;
+                uint32_t jscriptMajor, jscriptMinor, buildDateHash, buildTimeHash;
                 Js::VerifyOkCatastrophic(AutoSystemInfo::GetJscriptFileVersion(&jscriptMajor, &jscriptMinor, &buildDateHash, &buildTimeHash));
                 V1.value = jscriptMajor;
                 V2.value = jscriptMinor;
@@ -520,7 +520,7 @@ public:
         case ReleaseVersioningScheme:
             {
                 Assert(!GenerateLibraryByteCode());
-                auto guidDWORDs = (DWORD*)(&byteCodeCacheReleaseFileVersion);
+                auto guidDWORDs = (uint32_t*)(&byteCodeCacheReleaseFileVersion);
                 V1.value = guidDWORDs[0];
                 V2.value = guidDWORDs[1];
                 V3.value = guidDWORDs[2];
@@ -558,7 +558,7 @@ public:
         scopeInfoToScopeInfoIdMap = Anew(alloc, ScopeInfoToScopeInfoIdMap, alloc);
     }
 
-    HRESULT Create(byte ** buffer, DWORD * bufferBytes)
+    HRESULT Create(byte ** buffer, uint32_t * bufferBytes)
     {
         BufferBuilderList all(_u("Final"));
 
@@ -606,7 +606,7 @@ public:
         string16Count.value = nextString16Id - this->builtInPropertyCount;
 
         // Figure out the size and set all individual offsets
-        DWORD size = all.FixOffset(0);
+        uint32_t size = all.FixOffset(0);
         totalSize.value = size;
 
         // Allocate the bytes
@@ -2266,7 +2266,7 @@ public:
         bool isAnonymous = function->GetIsAnonymousFunction();
 
         // FunctionBody Details
-        DWORD bitFlags =
+        uint32_t bitFlags =
             (function->m_isDeclaration ? ffIsDeclaration : 0)
             | (function->m_hasImplicitArgIns ? ffHasImplicitArgsIn : 0)
             | (function->m_isAccessor ? ffIsAccessor : 0)
@@ -3068,10 +3068,10 @@ public:
             return ByteCodeSerializer::InvalidByteCode;
         }
 
-        DWORD expectedV1 = 0;
-        DWORD expectedV2 = 0;
-        DWORD expectedV3 = 0;
-        DWORD expectedV4 = 0;
+        uint32_t expectedV1 = 0;
+        uint32_t expectedV2 = 0;
+        uint32_t expectedV3 = 0;
+        uint32_t expectedV4 = 0;
 
         switch (expectedFileVersionScheme)
         {
@@ -3085,7 +3085,7 @@ public:
         case ReleaseVersioningScheme:
             {
                 Js::VerifyCatastrophic(!isLibraryCode);
-                auto guidDWORDs = (DWORD*)(&byteCodeCacheReleaseFileVersion);
+                auto guidDWORDs = (uint32_t*)(&byteCodeCacheReleaseFileVersion);
                 expectedV1 = guidDWORDs[0];
                 expectedV2 = guidDWORDs[1];
                 expectedV3 = guidDWORDs[2];
@@ -3120,7 +3120,7 @@ public:
         }
 #endif
         current = ReadConstantSizedInt32(current, &V1);
-        if ((DWORD)V1!=expectedV1)
+        if ((uint32_t)V1!=expectedV1)
         {
             // Incompatible major version
             return ByteCodeSerializer::InvalidByteCode;
@@ -3129,19 +3129,19 @@ public:
         // on the build timestamp hash. Also want to share the generated bytecode between x86/ARM and debug/release, so skip the extra
         // checking. Will rework this validation entirely under TFS 555060
         current = ReadConstantSizedInt32(current, &V2);
-        if ((DWORD)V2 != expectedV2)
+        if ((uint32_t)V2 != expectedV2)
         {
             // Incompatible minor version
             return ByteCodeSerializer::InvalidByteCode;
         }
         current = ReadConstantSizedInt32(current, &V3);
-        if ((DWORD)V3 != expectedV3)
+        if ((uint32_t)V3 != expectedV3)
         {
             // Incompatible 3rd version part
             return ByteCodeSerializer::InvalidByteCode;
         }
         current = ReadConstantSizedInt32(current, &V4);
-        if ((DWORD)V4 != expectedV4)
+        if ((uint32_t)V4 != expectedV4)
         {
             // Incompatible 4th version part
             return ByteCodeSerializer::InvalidByteCode;
@@ -4942,7 +4942,7 @@ ScopeInfo* ByteCodeCache::LookupScopeInfo(ScriptContext * scriptContext, LocalSc
 }
 
 // Serialize function body
-HRESULT ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, DWORD sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, DWORD * bufferBytes, DWORD dwFlags)
+HRESULT ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, ArenaAllocator * alloc, uint32_t sourceByteLength, LPCUTF8 utf8Source, FunctionBody * function, SRCINFO const* srcInfo, byte ** buffer, uint32_t * bufferBytes, uint32_t dwFlags)
 {
     int builtInPropertyCount = (dwFlags & GENERATE_BYTE_CODE_BUFFER_LIBRARY) != 0 ?  PropertyIds::_countJSOnlyProperty : TotalNumberOfBuiltInProperties;
 
@@ -4956,7 +4956,7 @@ HRESULT ByteCodeSerializer::SerializeToBuffer(ScriptContext * scriptContext, Are
 
     ArenaAllocator* codeAllocator = nullptr;
     ByteCodeCache* cache = nullptr;
-    DWORD shouldUseCodeAllocator = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
+    uint32_t shouldUseCodeAllocator = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
     if ((dwFlags & shouldUseCodeAllocator) == shouldUseCodeAllocator) // does this apply for cotaskmemalloc as well?
     {
         codeAllocator = scriptContext->SourceCodeAllocator();

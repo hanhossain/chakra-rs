@@ -24,7 +24,7 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
     WCHAR * pchCur;
     int cch;
     int cstring;
-    DWORD cbRes;
+    uint32_t cbRes;
     int itable = ((uint16_t)istring >> 4) + 1;
     istring &= 0x0F;
     BOOL fRet = FALSE;

@@ -35,7 +35,7 @@ namespace CorUnix
         UINT refCount;
         SHMPTR next;
         SHMPTR prev;
-        DWORD  share_mode; /* FILE_SHARE_READ, FILE_SHARE_WRITE, 
+        uint32_t  share_mode; /* FILE_SHARE_READ, FILE_SHARE_WRITE,
                               FILE_SHARE_DELETE,  0 ( not shared ) or
                               SHARE_MODE_NOT_INITALIZED */
         int nbReadAccess;  /* used to keep track of the minimal
@@ -52,7 +52,7 @@ namespace CorUnix
 
     typedef struct
     {
-        DWORD processId;
+        uint32_t processId;
         void * pvControllerInstance;
         UINT64 lockRgnStart; 
         UINT64 nbBytesLocked;
@@ -70,8 +70,8 @@ namespace CorUnix
         GetLockControllerForFile(
             CPalThread *pThread,                // IN, OPTIONAL
             LPCSTR szFileName,
-            DWORD dwAccessRights,
-            DWORD dwShareMode,
+            uint32_t dwAccessRights,
+            uint32_t dwShareMode,
             IFileLockController **ppLockController  // OUT
             );
 
@@ -79,7 +79,7 @@ namespace CorUnix
         PAL_ERROR
         GetFileShareModeForFile(
             LPCSTR szFileName,
-            DWORD* pdwShareMode);
+            uint32_t* pdwShareMode);
     };
 
     class CSharedMemoryFileLockController : public IFileLockController
@@ -87,7 +87,7 @@ namespace CorUnix
         template <class T> friend void InternalDelete(T *p);
 
     private:
-        DWORD m_dwAccessRights;
+        uint32_t m_dwAccessRights;
         SHMPTR m_shmFileLocks;
     protected:
         virtual ~CSharedMemoryFileLockController()
@@ -97,7 +97,7 @@ namespace CorUnix
     public:
 
         CSharedMemoryFileLockController(
-            DWORD dwAccessRights,
+            uint32_t dwAccessRights,
             SHMPTR shmFileLocks
             )
             :
@@ -111,10 +111,10 @@ namespace CorUnix
         GetTransactionLock(
             CPalThread *pThread,                // IN, OPTIONAL
             FileTransactionLockType eLockType,
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToLockLow,
-            DWORD nNumberOfBytesToLockHigh,
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToLockLow,
+            uint32_t nNumberOfBytesToLockHigh,
             IFileTransactionLock **ppTransactionLock    // OUT
             );
 
@@ -122,10 +122,10 @@ namespace CorUnix
         PAL_ERROR
         CreateFileLock(
             CPalThread *pThread,                // IN, OPTIONAL
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToLockLow,
-            DWORD nNumberOfBytesToLockHigh,
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToLockLow,
+            uint32_t nNumberOfBytesToLockHigh,
             FileLockExclusivity eFileLockExclusivity,
             FileLockWaitMode eFileLockWaitMode
             );
@@ -134,10 +134,10 @@ namespace CorUnix
         PAL_ERROR
         ReleaseFileLock(
             CPalThread *pThread,                // IN, OPTIONAL
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToUnlockLow,
-            DWORD nNumberOfBytesToUnlockHigh
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToUnlockLow,
+            uint32_t nNumberOfBytesToUnlockHigh
             );
 
         virtual

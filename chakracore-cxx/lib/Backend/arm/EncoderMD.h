@@ -96,10 +96,10 @@ public:
 
     void            AddLabelReloc(uint8_t* relocAddress);
 
-    static bool     CanEncodeModConst12(DWORD constant);
+    static bool     CanEncodeModConst12(uint32_t constant);
     static bool     CanEncodeLoadStoreOffset(int32 offset) { return IS_CONST_UINT12(offset); }
     static void     BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *pOffset, Func * func);
-    static bool     EncodeImmediate16(int32 constant, DWORD * result);
+    static bool     EncodeImmediate16(int32 constant, uint32_t * result);
     static ENCODE_32  BranchOffset_T2_24(int x);
     void            EncodeInlineeCallInfo(IR::Instr *instr, uint32 offset);
 private:
@@ -128,7 +128,7 @@ private:
     bool            IsWideAddSub(IR::Instr * instr);
 
     static ENCODE_32 EncodeT2Immediate12(ENCODE_32 encode, int32 constant);
-    static bool     EncodeModConst12(DWORD constant, DWORD * result);
+    static bool     EncodeModConst12(uint32_t constant, uint32_t * result);
     static ENCODE_32 EncodeT2Offset(ENCODE_32 encode, IR::Instr *instr, int offset, int bitOffset);
 
 #ifdef SOFTWARE_FIXFOR_HARDWARE_BUGWIN8_502326

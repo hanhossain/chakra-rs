@@ -140,7 +140,7 @@ namespace Js
                 {
                     JavascriptRegExp* regex = VarTo<JavascriptRegExp>(src);
                     InternalString str = regex->GetSource();
-                    DWORD flags = static_cast<DWORD>(regex->GetFlags());
+                    uint32_t flags = static_cast<uint32_t>(regex->GetFlags());
                     WriteTypeId(SCA_RegExpObject);
                     Write(str.GetBuffer(), str.GetLength());
                     m_writer->Write(flags);

@@ -77,8 +77,8 @@ CreateSemaphoreExA(
          int32_t lInitialCount,
          int32_t lMaximumCount,
          LPCSTR lpName,
-         /*_Reserved_*/  DWORD dwFlags,
-         DWORD dwDesiredAccess)
+         /*_Reserved_*/  uint32_t dwFlags,
+         uint32_t dwDesiredAccess)
 {
     // dwFlags is reserved and unused, and dwDesiredAccess is currently
     // only ever used as SEMAPHORE_ALL_ACCESS.  The other parameters
@@ -173,8 +173,8 @@ CreateSemaphoreExW(
          int32_t lInitialCount,
          int32_t lMaximumCount,
          LPCWSTR lpName,
-         /*_Reserved_*/  DWORD dwFlags,
-         DWORD dwDesiredAccess)
+         /*_Reserved_*/  uint32_t dwFlags,
+         uint32_t dwDesiredAccess)
 {
     // dwFlags is reserved and unused
 
@@ -560,7 +560,7 @@ Parameters:
 
 HANDLE
 OpenSemaphoreW(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName)
 {

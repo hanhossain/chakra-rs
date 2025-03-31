@@ -439,7 +439,7 @@ namespace Js {
         LCID lcid = GetUserDefaultLCID();
         if( !(noDateTime & DateTimeFlag::NoDate))
         {
-            DWORD dwFormat = DATE_LONGDATE;
+            uint32_t dwFormat = DATE_LONGDATE;
 
             if ((PRIMARYLANGID(LANGIDFROMLCID(lcid)) == LANG_ARABIC) ||
                 (PRIMARYLANGID(LANGIDFROMLCID(lcid)) == LANG_HEBREW))
@@ -493,7 +493,7 @@ namespace Js {
 
         if( !(noDateTime & DateTimeFlag::NoDate))
         {
-            DWORD dwFormat = DATE_LONGDATE;
+            uint32_t dwFormat = DATE_LONGDATE;
 
             if ((PRIMARYLANGID(LANGIDFROMLCID(lcid)) == LANG_ARABIC) ||
                 (PRIMARYLANGID(LANGIDFROMLCID(lcid)) == LANG_HEBREW))

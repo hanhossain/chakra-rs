@@ -79,7 +79,7 @@ namespace CorUnix
         InitializePostCreate(
             CPalThread *pThread,
             SIZE_T threadId,
-            DWORD dwLwpId
+            uint32_t dwLwpId
             )
         {
             return NO_ERROR;

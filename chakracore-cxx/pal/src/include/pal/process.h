@@ -42,7 +42,7 @@ extern "C"
 extern Volatile<int32_t> terminator;
 
 // The process ID of this process, so we can avoid excessive calls to getpid().
-extern DWORD gPID;
+extern uint32_t gPID;
 extern LPWSTR pAppDir;
 
 /*++
@@ -52,7 +52,7 @@ Function:
 Abstract
   Return the process ID from a process handle
 --*/
-DWORD PROCGetProcessIDFromHandle(HANDLE hProcess);
+uint32_t PROCGetProcessIDFromHandle(HANDLE hProcess);
 
 /*++
 Function:

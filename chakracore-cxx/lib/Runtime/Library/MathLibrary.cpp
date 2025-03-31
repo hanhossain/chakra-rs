@@ -1508,7 +1508,7 @@ namespace Js
         CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Math_Constructor_clz32);
 
         uint32 uint32value = JavascriptConversion::ToUInt32(value, scriptContext);
-        DWORD index;
+        uint32_t index;
 
         if (!_BitScanReverse(&index, uint32value))
         {

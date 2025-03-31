@@ -65,8 +65,8 @@ static const uint32 OpcodeLeadIn[] =
 
 static const uint8_t  Nop1[] = { 0x90 };                   /* nop                     */
 static const uint8_t  Nop2[] = { 0x66, 0x90 };             /* 66 nop                  */
-static const uint8_t  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop dword ptr [eax]     */
-static const uint8_t  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop dword ptr [eax + 0] */
+static const uint8_t  Nop3[] = { 0x0F, 0x1F, 0x00 };       /* nop uint32_t ptr [eax]     */
+static const uint8_t  Nop4[] = { 0x0F, 0x1F, 0x40, 0x00 }; /* nop uint32_t ptr [eax + 0] */
 static const uint8_t *Nop[4] = { Nop1, Nop2, Nop3, Nop4 };
 
 
@@ -751,7 +751,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                 // If the SBIT is set on this form, then it means
                 // that there is a short immediate form of this instruction
                 // available, and the short immediate encoding is a bit
-                // smaller for DWORD sized instrs
+                // smaller for uint32_t sized instrs
                 if (instrSize == 4)
                 {
                     continue;

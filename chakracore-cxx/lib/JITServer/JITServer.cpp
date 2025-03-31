@@ -130,7 +130,7 @@ ServerConnectProcessWithProcessHandle(
     intptr_t crtBaseAddress
 )
 {
-    DWORD clientPid;
+    uint32_t clientPid;
     HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
@@ -168,7 +168,7 @@ ServerInitializeThreadContext(
 
     ServerThreadContext * contextInfo = nullptr;
 
-    DWORD clientPid;
+    uint32_t clientPid;
     HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
@@ -475,7 +475,7 @@ ServerNewInterpreterThunkBlock(
         PRUNTIME_FUNCTION pdataStart = {0};
         intptr_t epilogEnd = 0;
 #endif
-        DWORD thunkCount = 0;
+        uint32_t thunkCount = 0;
 
         InterpreterThunkEmitter::FillBuffer(
             threadContext,
@@ -764,11 +764,11 @@ JsUtil::BaseHashSet<ServerThreadContext*, HeapAllocator> ServerContextManager::t
 JsUtil::BaseHashSet<ServerScriptContext*, HeapAllocator> ServerContextManager::scriptContexts(&HeapAllocator::Instance);
 CriticalSection ServerContextManager::cs;
 
-BaseDictionary<DWORD, ProcessContext*, HeapAllocator> ProcessContextManager::ProcessContexts(&HeapAllocator::Instance);
+BaseDictionary<uint32_t, ProcessContext*, HeapAllocator> ProcessContextManager::ProcessContexts(&HeapAllocator::Instance);
 CriticalSection ProcessContextManager::cs;
 
 HRESULT
-ProcessContextManager::RegisterNewProcess(DWORD pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress)
+ProcessContextManager::RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress)
 {
     AutoCriticalSection autoCS(&cs);
     for (auto iter = ProcessContexts.GetIteratorWithRemovalSupport(); iter.IsValid(); iter.MoveNext())
@@ -810,7 +810,7 @@ ProcessContextManager::RegisterNewProcess(DWORD pid, HANDLE processHandle, intpt
 }
 
 ProcessContext*
-ProcessContextManager::GetProcessContext(DWORD pid)
+ProcessContextManager::GetProcessContext(uint32_t pid)
 {
     AutoCriticalSection autoCS(&cs);
     ProcessContext* context = nullptr;

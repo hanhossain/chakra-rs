@@ -180,40 +180,40 @@ namespace Js
         Field(CacheForCopyOnAccessArraySegments *) cacheForCopyOnAccessArraySegments;
 #endif
 
-        static DWORD GetScriptContextOffset() { return offsetof(JavascriptLibrary, scriptContext); }
-        static DWORD GetUndeclBlockVarOffset() { return offsetof(JavascriptLibrary, undeclBlockVarSentinel); }
-        static DWORD GetEmptyStringOffset() { return offsetof(JavascriptLibrary, emptyString); }
-        static DWORD GetUndefinedValueOffset() { return offsetof(JavascriptLibrary, undefinedValue); }
-        static DWORD GetNullValueOffset() { return offsetof(JavascriptLibrary, nullValue); }
-        static DWORD GetBooleanTrueOffset() { return offsetof(JavascriptLibrary, booleanTrue); }
-        static DWORD GetBooleanFalseOffset() { return offsetof(JavascriptLibrary, booleanFalse); }
-        static DWORD GetNegativeZeroOffset() { return offsetof(JavascriptLibrary, negativeZero); }
-        static DWORD GetNumberTypeStaticOffset() { return offsetof(JavascriptLibrary, numberTypeStatic); }
-        static DWORD GetBigIntTypeStaticOffset() { return offsetof(JavascriptLibrary, bigintTypeStatic); }
-        static DWORD GetObjectTypesOffset() { return offsetof(JavascriptLibrary, objectTypes); }
-        static DWORD GetObjectHeaderInlinedTypesOffset() { return offsetof(JavascriptLibrary, objectHeaderInlinedTypes); }
-        static DWORD GetRegexTypeOffset() { return offsetof(JavascriptLibrary, regexType); }
-        static DWORD GetArrayConstructorOffset() { return offsetof(JavascriptLibrary, arrayConstructor); }
-        static DWORD GetPositiveInfinityOffset() { return offsetof(JavascriptLibrary, positiveInfinite); }
-        static DWORD GetNaNOffset() { return offsetof(JavascriptLibrary, nan); }
-        static DWORD GetNativeIntArrayTypeOffset() { return offsetof(JavascriptLibrary, nativeIntArrayType); }
+        static uint32_t GetScriptContextOffset() { return offsetof(JavascriptLibrary, scriptContext); }
+        static uint32_t GetUndeclBlockVarOffset() { return offsetof(JavascriptLibrary, undeclBlockVarSentinel); }
+        static uint32_t GetEmptyStringOffset() { return offsetof(JavascriptLibrary, emptyString); }
+        static uint32_t GetUndefinedValueOffset() { return offsetof(JavascriptLibrary, undefinedValue); }
+        static uint32_t GetNullValueOffset() { return offsetof(JavascriptLibrary, nullValue); }
+        static uint32_t GetBooleanTrueOffset() { return offsetof(JavascriptLibrary, booleanTrue); }
+        static uint32_t GetBooleanFalseOffset() { return offsetof(JavascriptLibrary, booleanFalse); }
+        static uint32_t GetNegativeZeroOffset() { return offsetof(JavascriptLibrary, negativeZero); }
+        static uint32_t GetNumberTypeStaticOffset() { return offsetof(JavascriptLibrary, numberTypeStatic); }
+        static uint32_t GetBigIntTypeStaticOffset() { return offsetof(JavascriptLibrary, bigintTypeStatic); }
+        static uint32_t GetObjectTypesOffset() { return offsetof(JavascriptLibrary, objectTypes); }
+        static uint32_t GetObjectHeaderInlinedTypesOffset() { return offsetof(JavascriptLibrary, objectHeaderInlinedTypes); }
+        static uint32_t GetRegexTypeOffset() { return offsetof(JavascriptLibrary, regexType); }
+        static uint32_t GetArrayConstructorOffset() { return offsetof(JavascriptLibrary, arrayConstructor); }
+        static uint32_t GetPositiveInfinityOffset() { return offsetof(JavascriptLibrary, positiveInfinite); }
+        static uint32_t GetNaNOffset() { return offsetof(JavascriptLibrary, nan); }
+        static uint32_t GetNativeIntArrayTypeOffset() { return offsetof(JavascriptLibrary, nativeIntArrayType); }
 #if ENABLE_COPYONACCESS_ARRAY
-        static DWORD GetCopyOnAccessNativeIntArrayTypeOffset() { return offsetof(JavascriptLibrary, copyOnAccessNativeIntArrayType); }
+        static uint32_t GetCopyOnAccessNativeIntArrayTypeOffset() { return offsetof(JavascriptLibrary, copyOnAccessNativeIntArrayType); }
 #endif
-        static DWORD GetNativeFloatArrayTypeOffset() { return offsetof(JavascriptLibrary, nativeFloatArrayType); }
-        static DWORD GetVTableAddressesOffset() { return offsetof(JavascriptLibrary, vtableAddresses); }
-        static DWORD GetConstructorCacheDefaultInstanceOffset() { return offsetof(JavascriptLibrary, constructorCacheDefaultInstance); }
-        static DWORD GetAbsDoubleCstOffset() { return offsetof(JavascriptLibrary, absDoubleCst); }
-        static DWORD GetUintConvertConstOffset() { return offsetof(JavascriptLibrary, uintConvertConst); }
-        static DWORD GetBuiltinFunctionsOffset() { return offsetof(JavascriptLibrary, builtinFunctions); }
-        static DWORD GetCharStringCacheOffset() { return offsetof(JavascriptLibrary, charStringCache); }
-        static DWORD GetCharStringCacheAOffset() { return GetCharStringCacheOffset() + CharStringCache::GetCharStringCacheAOffset(); }
+        static uint32_t GetNativeFloatArrayTypeOffset() { return offsetof(JavascriptLibrary, nativeFloatArrayType); }
+        static uint32_t GetVTableAddressesOffset() { return offsetof(JavascriptLibrary, vtableAddresses); }
+        static uint32_t GetConstructorCacheDefaultInstanceOffset() { return offsetof(JavascriptLibrary, constructorCacheDefaultInstance); }
+        static uint32_t GetAbsDoubleCstOffset() { return offsetof(JavascriptLibrary, absDoubleCst); }
+        static uint32_t GetUintConvertConstOffset() { return offsetof(JavascriptLibrary, uintConvertConst); }
+        static uint32_t GetBuiltinFunctionsOffset() { return offsetof(JavascriptLibrary, builtinFunctions); }
+        static uint32_t GetCharStringCacheOffset() { return offsetof(JavascriptLibrary, charStringCache); }
+        static uint32_t GetCharStringCacheAOffset() { return GetCharStringCacheOffset() + CharStringCache::GetCharStringCacheAOffset(); }
         PolymorphicInlineCache *GetToStringTagCache() const { return cache.toStringTagCache; }
         const  JavascriptLibraryBase* GetLibraryBase() const { return static_cast<const JavascriptLibraryBase*>(this); }
         void SetGlobalObject(GlobalObject* globalObject) {this->globalObject = globalObject; }
-        static DWORD GetRandSeed0Offset() { return offsetof(JavascriptLibrary, randSeed0); }
-        static DWORD GetRandSeed1Offset() { return offsetof(JavascriptLibrary, randSeed1); }
-        static DWORD GetTypeDisplayStringsOffset() { return offsetof(JavascriptLibrary, typeDisplayStrings); }
+        static uint32_t GetRandSeed0Offset() { return offsetof(JavascriptLibrary, randSeed0); }
+        static uint32_t GetRandSeed1Offset() { return offsetof(JavascriptLibrary, randSeed1); }
+        static uint32_t GetTypeDisplayStringsOffset() { return offsetof(JavascriptLibrary, typeDisplayStrings); }
         typedef bool (CALLBACK *PromiseContinuationCallback)(Var task, void *callbackState);
 
         Var GetUndeclBlockVar() const { return undeclBlockVarSentinel; }

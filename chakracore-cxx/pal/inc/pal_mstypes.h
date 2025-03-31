@@ -139,7 +139,7 @@ typedef ULONGLONG *PULONGLONG;
 typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
-typedef unsigned int DWORD, *PDWORD, *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
+typedef unsigned int *PDWORD, *LPDWORD; // NOTE: diff from  windows.h, for LP64 compat
 
 typedef unsigned int DWORD32, *PDWORD32;
 
@@ -251,11 +251,11 @@ typedef UINT_PTR uintptr_t;
 #define _INTPTR_T_DEFINED
 #define _UINTPTR_T_DEFINED
 
-typedef DWORD LCID;
+typedef uint32_t LCID;
 typedef PDWORD PLCID;
 typedef uint16_t LANGID;
 
-typedef DWORD LCTYPE;
+typedef uint32_t LCTYPE;
 
 typedef WCHAR *PWCHAR;
 typedef WCHAR *LPWCH, *PWCH;
@@ -284,7 +284,7 @@ typedef TCHAR *LPTSTR, *PTSTR;
 typedef const TCHAR *LPCTSTR;
 
 #define MAKEWORD(a, b)      ((uint16_t)(((uint8_t)((DWORD_PTR)(a) & 0xff)) | ((uint16_t)((uint8_t)((DWORD_PTR)(b) & 0xff))) << 8))
-#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
+#define MAKELONG(a, b)      ((int32_t)(((uint16_t)((DWORD_PTR)(a) & 0xffff)) | ((uint32_t)((uint16_t)((DWORD_PTR)(b) & 0xffff))) << 16))
 #define LOWORD(l)           ((uint16_t)((DWORD_PTR)(l) & 0xffff))
 #define HIWORD(l)           ((uint16_t)((DWORD_PTR)(l) >> 16))
 #define LOBYTE(w)           ((uint8_t)((DWORD_PTR)(w) & 0xff))
@@ -296,8 +296,8 @@ typedef struct __PAL_RemoteHandle__ { HANDLE h; } *RHANDLE;
 typedef HANDLE *PHANDLE;
 typedef HANDLE *LPHANDLE;
 #define INVALID_HANDLE_VALUE ((void *)(-1))
-#define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF)
-#define INVALID_FILE_ATTRIBUTES ((DWORD) -1)
+#define INVALID_FILE_SIZE ((uint32_t)0xFFFFFFFF)
+#define INVALID_FILE_ATTRIBUTES ((uint32_t) -1)
 typedef HANDLE HMODULE;
 typedef HANDLE HINSTANCE;
 typedef HANDLE HGLOBAL;
@@ -311,18 +311,18 @@ typedef union _LARGE_INTEGER {
     struct {
 #if BIGENDIAN
         int32_t HighPart;
-        DWORD LowPart;
+        uint32_t LowPart;
 #else
-        DWORD LowPart;
+        uint32_t LowPart;
         int32_t HighPart;
 #endif
     };
     struct {
 #if BIGENDIAN
         int32_t HighPart;
-        DWORD LowPart;
+        uint32_t LowPart;
 #else
-        DWORD LowPart;
+        uint32_t LowPart;
         int32_t HighPart;
 #endif
     } u;
@@ -341,8 +341,8 @@ typedef const GUID *LPCGUID;
 #endif // !GUID_DEFINED
 
 typedef struct _FILETIME {
-    DWORD dwLowDateTime;
-    DWORD dwHighDateTime;
+    uint32_t dwLowDateTime;
+    uint32_t dwHighDateTime;
 } FILETIME, *PFILETIME, *LPFILETIME;
 
 /* Code Page Default Values */

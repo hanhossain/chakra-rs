@@ -19,9 +19,9 @@
 
 // Global, process singleton
 BGParseManager* BGParseManager::s_BGParseManager = nullptr;
-DWORD           BGParseManager::s_lastCookie = 0;
-DWORD           BGParseManager::s_completed = 0;
-DWORD           BGParseManager::s_failed = 0;
+uint32_t           BGParseManager::s_lastCookie = 0;
+uint32_t           BGParseManager::s_completed = 0;
+uint32_t           BGParseManager::s_failed = 0;
 CriticalSection BGParseManager::s_staticMemberLock;
 
 // Static member management
@@ -48,18 +48,18 @@ void BGParseManager::DeleteBGParseManager()
     }
 }
 
-DWORD BGParseManager::GetNextCookie()
+uint32_t BGParseManager::GetNextCookie()
 {
     AutoCriticalSection lock(&s_staticMemberLock);
     return ++s_lastCookie;
 }
 
-DWORD BGParseManager::IncCompleted()
+uint32_t BGParseManager::IncCompleted()
 {
     AutoCriticalSection lock(&s_staticMemberLock);
     return ++s_completed;
 }
-DWORD BGParseManager::IncFailed()
+uint32_t BGParseManager::IncFailed()
 {
     AutoCriticalSection lock(&s_staticMemberLock);
     return ++s_failed;
@@ -99,7 +99,7 @@ BGParseManager::~BGParseManager()
 // - waitForResults: creates an event on the returned WorkItem that the caller can wait for
 // - removeJob: removes the job from the list that contained it, and marks it for discard if it is processing
 // Note: runs on any thread
-BGParseWorkItem* BGParseManager::FindJob(DWORD dwCookie, bool waitForResults, bool removeJob)
+BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults, bool removeJob)
 {
     Assert(dwCookie != 0);
     Assert(!waitForResults || !removeJob);
@@ -174,7 +174,7 @@ BGParseWorkItem* BGParseManager::FindJob(DWORD dwCookie, bool waitForResults, bo
 
 // Creates a new job to parse the provided script on a background thread
 // Note: runs on any thread
-HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16 *fullPath, DWORD* dwBgParseCookie)
+HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16 *fullPath, uint32_t* dwBgParseCookie)
 {
     HRESULT hr = S_OK;
     if (cbLength > 0)
@@ -215,7 +215,7 @@ HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
 
 // Returns the data provided when the parse was queued
 // Note: runs on any thread, but the buffer lifetimes are not guaranteed after parse results are returned
-HRESULT BGParseManager::GetInputFromCookie(DWORD cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl)
+HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl)
 {
     HRESULT hr = E_FAIL;
 
@@ -246,7 +246,7 @@ HRESULT BGParseManager::GetInputFromCookie(DWORD cookie, LPCUTF8* ppszSrc, size_
 // Note: *must* run on a UI/Execution thread with an available ScriptContext
 HRESULT BGParseManager::GetParseResults(
     Js::ScriptContext* scriptContextUI,
-    DWORD cookie,
+    uint32_t cookie,
     LPCUTF8 pszSrc,
     SRCINFO const * pSrcInfo,
     Js::FunctionBody** ppFunc,
@@ -308,7 +308,7 @@ HRESULT BGParseManager::GetParseResults(
 // buffer).
 // Returns true when the caller should free the script source buffer. Otherwise, when false is returned,
 // the workitem is responsible for freeing the script source buffer.
-bool BGParseManager::DiscardParseResults(DWORD cookie, void* buffer)
+bool BGParseManager::DiscardParseResults(uint32_t cookie, void* buffer)
 {
     BGParseWorkItem* workitem = FindJob(cookie, false /*waitForResults*/, true /*removeJob*/);
     bool callerOwnsSourceBuffer = true;
@@ -552,7 +552,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
         this->parseHR = Js::ByteCodeSerializer::SerializeToBuffer(
             scriptContext,
             tempAllocator,
-            (DWORD)this->cb,
+            (uint32_t)this->cb,
             this->script,
             functionBody,
             functionBody->GetHostSrcInfo(),

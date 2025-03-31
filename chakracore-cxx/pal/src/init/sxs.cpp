@@ -135,7 +135,7 @@ exit:
     return palError;
 }
 
-DWORD
+uint32_t
 PAL_EnterTop()
 {
     return PAL_Enter(PAL_BoundaryTop);

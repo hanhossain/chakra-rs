@@ -67,7 +67,7 @@ static const char FOPEN_FLAGS[] = "wt";
 
 LPCWSTR W16_NULLSTRING = (LPCWSTR) "N\0U\0L\0L\0\0";
 
-DWORD dbg_channel_flags[DCI_LAST];
+uint32_t dbg_channel_flags[DCI_LAST];
 BOOL g_Dbg_asserts_enabled;
 
 /* we must use stdio functions directly rather that rely on PAL functions for
@@ -156,7 +156,7 @@ BOOL DBG_init_channels(void)
     LPSTR entry_ptr;
     LPSTR level_ptr;
     char plus_or_minus;
-    DWORD flag_mask = 0;
+    uint32_t flag_mask = 0;
     int ret;
 
     InternalInitializeCriticalSection(&fprintf_crit_section);

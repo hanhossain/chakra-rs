@@ -12,7 +12,7 @@
 
 VirtualAllocWrapper VirtualAllocWrapper::Instance;  // single instance
 
-void * VirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount, DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation)
+void * VirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation)
 {
     if (pageCount > AutoSystemInfo::MaxPageCount)
     {
@@ -49,7 +49,7 @@ void * VirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount, DWORD
     return address;
 }
 
-BOOL VirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, DWORD dwFreeType)
+BOOL VirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     AnalysisAssert(dwFreeType == MEM_RELEASE || dwFreeType == MEM_DECOMMIT);
     size_t bytes = (dwFreeType == MEM_RELEASE)? 0 : dwSize;
@@ -194,7 +194,7 @@ void * PreReservedVirtualAllocWrapper::EnsurePreReservedRegionInternal()
 *   -   Returns an Allocated memory region within this preReserved region with the specified protectFlags.
 *   -   Tracks the committed pages
 */
-void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount,  DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation)
+void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount,  uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation)
 {
     if (pageCount > AutoSystemInfo::MaxPageCount)
     {
@@ -321,7 +321,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
 */
 
 BOOL
-PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, DWORD dwFreeType)
+PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     {
         AutoCriticalSection autocs(&this->cs);
@@ -452,9 +452,9 @@ AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
     // If dynamic code is already allowed for this thread, then don't attempt to allow it again.
     //
 
-    DWORD threadPolicy;
+    uint32_t threadPolicy;
 
-    if ((GetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD))) &&
+    if ((GetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t))) &&
         (threadPolicy == THREAD_DYNAMIC_CODE_ALLOW))
     {
         return;
@@ -462,7 +462,7 @@ AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
 
     threadPolicy = THREAD_DYNAMIC_CODE_ALLOW;
 
-    BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD));
+    BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
     Assert(result);
 
     enabled = true;
@@ -472,9 +472,9 @@ AutoEnableDynamicCodeGen::~AutoEnableDynamicCodeGen()
 {
     if (enabled)
     {
-        DWORD threadPolicy = 0;
+        uint32_t threadPolicy = 0;
 
-        BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD));
+        BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
         Assert(result);
 
         enabled = false;

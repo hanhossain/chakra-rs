@@ -659,7 +659,7 @@ bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsThreadBound()
 }
 
 
-DWORD ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const
+uint32_t ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const
 {
     return this->tc->GetCurrentThreadId();
 }
@@ -4465,9 +4465,9 @@ void InterruptPoller::CheckInterruptPoll()
 
 void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
 {
-    DWORD resetTick = this->lastResetTick;
-    DWORD pollTick = this->lastPollTick;
-    DWORD elapsed;
+    uint32_t resetTick = this->lastResetTick;
+    uint32_t pollTick = this->lastPollTick;
+    uint32_t elapsed;
 
     elapsed = pollTick - resetTick;
 

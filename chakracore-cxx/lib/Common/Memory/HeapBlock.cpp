@@ -191,7 +191,7 @@ SmallHeapBlockT<MediumAllocationBlockAttributes>::ProtectUnusablePages()
     if (count > 0)
     {
         char* startPage = this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
-        DWORD oldProtect;
+        uint32_t oldProtect;
         BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READONLY, &oldProtect);
         Assert(ret && oldProtect == PAGE_READWRITE);
 #ifdef RECYCLER_WRITE_WATCH
@@ -211,7 +211,7 @@ SmallHeapBlockT<MediumAllocationBlockAttributes>::RestoreUnusablePages()
     if (count > 0)
     {
         char* startPage = (char*)this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
-        DWORD oldProtect;
+        uint32_t oldProtect;
         BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
 
 #if DBG

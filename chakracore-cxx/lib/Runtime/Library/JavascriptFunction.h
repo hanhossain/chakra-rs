@@ -94,7 +94,7 @@ namespace Js
 
         static const int numberLinesPrependedToAnonymousFunction = 1;
 
-        static DWORD GetFunctionInfoOffset() { return offsetof(JavascriptFunction, functionInfo); }
+        static uint32_t GetFunctionInfoOffset() { return offsetof(JavascriptFunction, functionInfo); }
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var NewInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);

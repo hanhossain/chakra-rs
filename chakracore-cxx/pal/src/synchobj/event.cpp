@@ -463,7 +463,7 @@ Parameters:
 
 HANDLE
 OpenEventW(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName)
 {
@@ -521,7 +521,7 @@ Parameters:
 PAL_ERROR
 CorUnix::InternalOpenEvent(
     CPalThread *pthr,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phEvent

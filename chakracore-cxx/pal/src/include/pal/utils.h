@@ -134,7 +134,7 @@ Function:
 
     Maps a Mach kern_return_t to a Win32 error code.
 --*/
-DWORD UTIL_MachErrorToPalError(kern_return_t MachReturn);
+uint32_t UTIL_MachErrorToPalError(kern_return_t MachReturn);
 
 /*++
 Function:

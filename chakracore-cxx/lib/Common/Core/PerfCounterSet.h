@@ -67,8 +67,8 @@ namespace PerfCounter
             return false;
         }
     private:
-        DWORD defaultData[TCounter::MaxCounter];
-        DWORD * data;
+        uint32_t defaultData[TCounter::MaxCounter];
+        uint32_t * data;
         HANDLE handle;
         Counter counters[TCounter::MaxCounter];
     };

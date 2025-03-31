@@ -967,7 +967,7 @@ private:
     bool needExternalWrapperTracing;
     bool hasDisposableObject;
     bool hasNativeGCHost;
-    DWORD tickCountNextDispose;
+    uint32_t tickCountNextDispose;
     bool inExhaustiveCollection;
     bool hasExhaustiveCandidate;
     bool inCacheCleanupCollection;
@@ -1603,7 +1603,7 @@ private:
 
     bool NeedDisposeTimed()
     {
-        DWORD ticks = ::GetTickCount();
+        uint32_t ticks = ::GetTickCount();
         return (ticks > tickCountNextDispose && this->hasDisposableObject);
     }
 
@@ -1741,8 +1741,8 @@ private:
 
 #endif
 
-    size_t RescanMark(DWORD waitTime);
-    size_t FinishMark(DWORD waitTime);
+    size_t RescanMark(uint32_t waitTime);
+    size_t FinishMark(uint32_t waitTime);
     size_t FinishMarkRescan(bool background);
 #if ENABLE_CONCURRENT_GC
     void ProcessTrackedObjects();
@@ -1786,7 +1786,7 @@ private:
 
     static unsigned int CALLBACK StaticThreadProc(void * lpParameter);
     static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
-    DWORD ThreadProc();
+    uint32_t ThreadProc();
 
     void DoBackgroundWork(bool forceForeground = false);
     static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
@@ -1802,7 +1802,7 @@ private:
     template <CollectionFlags flags>
     BOOL TryFinishConcurrentCollect();
 
-    BOOL WaitForConcurrentThread(DWORD waitTime, RecyclerWaitReason caller = RecyclerWaitReason::Other);
+    BOOL WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller = RecyclerWaitReason::Other);
     void FlushBackgroundPages();
 
     BOOL FinishConcurrentCollect(CollectionFlags flags);

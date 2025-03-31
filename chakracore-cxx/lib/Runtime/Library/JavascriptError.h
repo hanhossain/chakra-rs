@@ -137,7 +137,7 @@ namespace Js
 
         JavascriptExceptionObject *GetJavascriptExceptionObject() { return exceptionObject; }
 
-        static DWORD GetAdjustedResourceStringHr(DWORD hr, bool isFormatString);
+        static uint32_t GetAdjustedResourceStringHr(uint32_t hr, bool isFormatString);
 
         static int32 GetErrorNumberFromResourceID(int32 resourceId);
         static bool ShouldTypeofErrorBeReThrown(Var errorObject);

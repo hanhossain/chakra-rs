@@ -50,14 +50,14 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetFullPathNameA(
       LPCSTR lpFileName,
-      DWORD nBufferLength,
+      uint32_t nBufferLength,
       LPSTR lpBuffer,
       LPSTR *lpFilePart)
 {
-    DWORD  nReqPathLen, nRet = 0;
+    uint32_t  nReqPathLen, nRet = 0;
     LPSTR lpUnixPath = NULL;
     BOOL fullPath = FALSE;
 
@@ -184,10 +184,10 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetFullPathNameW(
       LPCWSTR lpFileName,
-      DWORD nBufferLength,
+      uint32_t nBufferLength,
       LPWSTR lpBuffer,
       LPWSTR *lpFilePart)
 {
@@ -200,8 +200,8 @@ GetFullPathNameW(
     LPSTR lpFilePartA;
     int   fileNameLength;
     int   srcSize;
-    DWORD length;
-    DWORD nRet = 0;
+    uint32_t length;
+    uint32_t nRet = 0;
 
     PERF_ENTRY(GetFullPathNameW);
     ENTRY("GetFullPathNameW(lpFileName=%p (%S), nBufferLength=%u, lpBuffer=%p"
@@ -234,7 +234,7 @@ GetFullPathNameW(
                                    NULL, NULL );
     if( srcSize == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             ERROR("lpFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -311,13 +311,13 @@ Note:
   this function simply copies the given path into the new buffer.
 
 --*/
-DWORD
+uint32_t
 GetLongPathNameW(
 		  LPCWSTR lpszShortPath,
           LPWSTR lpszLongPath,
-  		  DWORD cchBuffer)
+  		  uint32_t cchBuffer)
 {
-    DWORD dwPathLen = 0;
+    uint32_t dwPathLen = 0;
 
     PERF_ENTRY(GetLongPathNameW);
     ENTRY("GetLongPathNameW(lpszShortPath=%p (%S), lpszLongPath=%p (%S), "
@@ -382,13 +382,13 @@ Note:
   this function simply copies the given path into the new buffer.
 
 --*/
-DWORD
+uint32_t
 GetShortPathNameW(
 		  LPCWSTR lpszLongPath,
           LPWSTR lpszShortPath,
-  		  DWORD cchBuffer)
+  		  uint32_t cchBuffer)
 {
-    DWORD dwPathLen = 0;
+    uint32_t dwPathLen = 0;
 
     PERF_ENTRY(GetShortPathNameW);
     ENTRY("GetShortPathNameW(lpszLongPath=%p (%S), lpszShortPath=%p (%S), "
@@ -460,12 +460,12 @@ Notes:
     This is the same approach employed by mktemp.
 
 --*/
-DWORD
+uint32_t
 GetTempPathA(
-	      DWORD nBufferLength,
+	      uint32_t nBufferLength,
 	      LPSTR lpBuffer)
 {
-    DWORD dwPathLen = 0;
+    uint32_t dwPathLen = 0;
 
     PERF_ENTRY(GetTempPathA);
     ENTRY("GetTempPathA(nBufferLength=%u, lpBuffer=%p)\n",
@@ -554,9 +554,9 @@ Function:
 See MSDN.
 See also the comment for GetTempPathA.
 --*/
-DWORD
+uint32_t
 GetTempPathW(
-	      DWORD nBufferLength,
+	      uint32_t nBufferLength,
 	      LPWSTR lpBuffer)
 {
     PERF_ENTRY(GetTempPathW);
@@ -573,7 +573,7 @@ GetTempPathW(
     }
 
     char TempBuffer[nBufferLength > 0 ? nBufferLength : 1];
-    DWORD dwRetVal = GetTempPathA( nBufferLength, TempBuffer );
+    uint32_t dwRetVal = GetTempPathA( nBufferLength, TempBuffer );
 
     if ( dwRetVal >= nBufferLength )
     {
@@ -880,13 +880,13 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
-                     DWORD  nBufferLength,
+uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+                     uint32_t  nBufferLength,
                      LPSTR  lpBuffer )
 {
     int    full_len, dir_len, i;
     LPCSTR lpDirEnd;
-    DWORD  dwRetLength;
+    uint32_t  dwRetLength;
 
     full_len = lstrlenA( lpFullPath );
 
@@ -901,7 +901,7 @@ DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
     {
         dwRetLength = 0;
     }
-    else if (static_cast<DWORD>(dir_len) >= nBufferLength)
+    else if (static_cast<uint32_t>(dir_len) >= nBufferLength)
     {
         dwRetLength = dir_len + 1; /* +1 for NULL char */
     }
@@ -1082,17 +1082,17 @@ PAL-specific notes :
 -lpExtension must be NULL
 -lpFilePart (if non-NULL) doesn't need to be used (but we do)
 --*/
-DWORD
+uint32_t
 SearchPathA(
      LPCSTR lpPath,
      LPCSTR lpFileName,
      LPCSTR lpExtension,
-     DWORD nBufferLength,
+     uint32_t nBufferLength,
      LPSTR lpBuffer,
      LPSTR *lpFilePart
     )
 {
-    DWORD nRet = 0;
+    uint32_t nRet = 0;
     char * FullPath;
     size_t FullPathLength = 0;
     PathCharString FullPathPS;
@@ -1102,8 +1102,8 @@ SearchPathA(
     LPCSTR pPathEnd;
     size_t PathLength;
     size_t FileNameLength;
-    DWORD length;
-    DWORD dw;
+    uint32_t length;
+    uint32_t dw;
 
     PERF_ENTRY(SearchPathA);
     ENTRY("SearchPathA(lpPath=%p (%s), lpFileName=%p (%s), lpExtension=%p, "
@@ -1350,17 +1350,17 @@ PAL-specific notes :
 -lpExtension must be NULL
 -lpFilePart (if non-NULL) doesn't need to be used (but we do)
 --*/
-DWORD
+uint32_t
 SearchPathW(
      LPCWSTR lpPath,
      LPCWSTR lpFileName,
      LPCWSTR lpExtension,
-     DWORD nBufferLength,
+     uint32_t nBufferLength,
      LPWSTR lpBuffer,
      LPWSTR *lpFilePart
     )
 {
-    DWORD nRet = 0;
+    uint32_t nRet = 0;
     WCHAR * FullPath;
     size_t FullPathLength = 0;
     PathWCharString FullPathPS;
@@ -1368,8 +1368,8 @@ SearchPathW(
     LPCWSTR pPathEnd;
     size_t PathLength;
     size_t FileNameLength;
-    DWORD dw;
-    DWORD length;
+    uint32_t dw;
+    uint32_t length;
     char * AnsiPath;
     PathCharString AnsiPathPS;
     size_t CanonicalPathLength;

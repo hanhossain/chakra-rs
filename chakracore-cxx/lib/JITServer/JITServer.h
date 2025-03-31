@@ -7,12 +7,12 @@ class ProcessContextManager
 {
 private:
 
-    static BaseDictionary<DWORD, ProcessContext*, HeapAllocator> ProcessContexts;
+    static BaseDictionary<uint32_t, ProcessContext*, HeapAllocator> ProcessContexts;
     static CriticalSection cs;
 
 public:
-    static HRESULT RegisterNewProcess(DWORD pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress);
-    static ProcessContext* GetProcessContext(DWORD pid);
+    static HRESULT RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress);
+    static ProcessContext* GetProcessContext(uint32_t pid);
 };
 
 class ServerContextManager
@@ -53,7 +53,7 @@ public:
         }
         T* context;
         union {
-            DWORD runtimeProcId;
+            uint32_t runtimeProcId;
             ServerThreadContext* threadCtx;
         };
         StackBackTrace* stack;

@@ -262,7 +262,7 @@ LPSTR
 CharNextExA(
      uint16_t CodePage,
      LPCSTR lpCurrentChar,
-     DWORD dwFlags)
+     uint32_t dwFlags)
 {
     LPSTR pRet = (LPSTR) lpCurrentChar;
 
@@ -413,7 +413,7 @@ See MSDN doc.
 BOOL
 GetStringTypeExW(
       LCID Locale,
-      DWORD dwInfoType,
+      uint32_t dwInfoType,
       LPCWSTR lpSrcStr,
       int cchSrc,
       uint16_t * lpCharType)
@@ -655,7 +655,7 @@ See MSDN doc.
 int
 MultiByteToWideChar(
          UINT CodePage,
-         DWORD dwFlags,
+         uint32_t dwFlags,
          LPCSTR lpMultiByteStr,
          int cbMultiByte,
          LPWSTR lpWideCharStr,
@@ -781,7 +781,7 @@ See MSDN doc.
 int
 WideCharToMultiByte(
          UINT CodePage,
-         DWORD dwFlags,
+         uint32_t dwFlags,
          LPCWSTR lpWideCharStr,
          int cchWideChar,
          LPSTR lpMultiByteStr,

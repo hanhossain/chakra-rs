@@ -9,18 +9,18 @@ namespace Js
     class TinyDictionary
     {
         static const int PowerOf2_BUCKETS = 16;
-        static const int BUCKETS_DWORDS = PowerOf2_BUCKETS / sizeof(DWORD);
+        static const int BUCKETS_DWORDS = PowerOf2_BUCKETS / sizeof(uint32_t);
         static const byte NIL = 0xff;
 
-        Field(DWORD) bucketsData[BUCKETS_DWORDS];  // use DWORDs to enforce alignment
+        Field(uint32_t) bucketsData[BUCKETS_DWORDS];  // use DWORDs to enforce alignment
         Field(byte) next[0];
 
 public:
         TinyDictionary()
         {
-            CompileAssert(BUCKETS_DWORDS * sizeof(DWORD) == PowerOf2_BUCKETS);
+            CompileAssert(BUCKETS_DWORDS * sizeof(uint32_t) == PowerOf2_BUCKETS);
             CompileAssert(BUCKETS_DWORDS == 4);
-            DWORD* init = bucketsData;
+            uint32_t* init = bucketsData;
             init[0] = init[1] = init[2] = init[3] =0xffffffff;
         }
 

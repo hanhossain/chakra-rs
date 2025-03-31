@@ -20,7 +20,7 @@ DelayLoadLibrary::~DelayLoadLibrary()
     }
 }
 
-void DelayLoadLibrary::Ensure(DWORD dwFlags)
+void DelayLoadLibrary::Ensure(uint32_t dwFlags)
 {
     if (!m_isInit)
     {

@@ -1968,9 +1968,9 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     }
 
 #ifdef INTL_WINGLOB
-    static DWORD GetCompareStringComparisonFlags(CollatorSensitivity sensitivity, bool ignorePunctuation, bool numeric)
+    static uint32_t GetCompareStringComparisonFlags(CollatorSensitivity sensitivity, bool ignorePunctuation, bool numeric)
     {
-        DWORD flags = 0;
+        uint32_t flags = 0;
 
         if (sensitivity == CollatorSensitivity::Base)
         {
@@ -2107,7 +2107,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // Default to the strings being equal, because sorting with == causes no change in the order but converges, whereas < would cause an infinite loop.
         int compareResult = 2;
         HRESULT error = S_OK;
-        DWORD comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
+        uint32_t comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
         compareResult = CompareStringEx(locale, comparisonFlags, left, leftLen, right, rightLen, NULL, NULL, 0);
         error = HRESULT_FROM_WIN32(GetLastError());
 

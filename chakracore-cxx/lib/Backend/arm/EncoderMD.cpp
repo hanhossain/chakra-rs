@@ -895,14 +895,14 @@ EncoderMD::GetForm(IR::Instr *instr, int32 size)
     return (form);
 }
 
-bool EncoderMD::EncodeImmediate16(int32 constant, DWORD * result)
+bool EncoderMD::EncodeImmediate16(int32 constant, uint32_t * result)
 {
     if (constant > 0xFFFF)
     {
         return FALSE;
     }
 
-    DWORD encode = ((constant & 0xFF) << 16) |
+    uint32_t encode = ((constant & 0xFF) << 16) |
         ((constant & 0x0700) << 20) |
         ((constant & 0x0800) >> 1) |
         ((constant & 0xF000) >> 12);
@@ -971,7 +971,7 @@ ENCODE_32
 EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 size, InstructionType instrType)
 {
     ENCODE_32 encode = 0 ;
-    DWORD encoded = 0;
+    uint32_t encoded = 0;
 
     IR::Opnd* opn = 0;
     IR::Opnd* dst = 0;
@@ -1633,7 +1633,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 si
                 case STEP_DREG:
                 {
                     int bbit = 0;
-                    DWORD tmp = 0;
+                    uint32_t tmp = 0;
 
                     Assert(opn != nullptr && opn->IsRegOpnd());
 
@@ -1655,7 +1655,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 si
                 case STEP_SREG:
                 {
                     int bbit = 0;
-                    DWORD tmp = 0;
+                    uint32_t tmp = 0;
 
                     Assert(opn != nullptr && opn->IsRegOpnd());
 
@@ -1754,9 +1754,9 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 si
                         }
 
                         BVUnit32 registers = opndRD->AsRegBVOpnd()->GetValue();
-                        DWORD first = registers.GetNextBit();
-                        DWORD last = (DWORD)-1;
-                        _BitScanReverse((DWORD*)&last, (DWORD)registers.GetWord());
+                        uint32_t first = registers.GetNextBit();
+                        uint32_t last = (uint32_t)-1;
+                        _BitScanReverse((uint32_t*)&last, (uint32_t)registers.GetWord());
                         Assert(last >= first && last <= LAST_DOUBLE_CALLEE_SAVED_REG_NUM);
 
                         encode |= (CO_UIMMED8((last - first + 1) * 2)) << 16;
@@ -2049,14 +2049,14 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 }
 
 bool
-EncoderMD::CanEncodeModConst12(DWORD constant)
+EncoderMD::CanEncodeModConst12(uint32_t constant)
 {
-    DWORD encode;
+    uint32_t encode;
     return EncodeModConst12(constant, &encode);
 }
 
 bool
-EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
+EncoderMD::EncodeModConst12(uint32_t constant, uint32_t * result)
 {
     unsigned int a, b, c, d, rotation, firstbit, lastbit, temp=0;
 
@@ -2071,8 +2071,8 @@ EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
     c = (constant >> 16) & 0xff;
     d = (constant >> 24) & 0xff;
 
-    _BitScanReverse((DWORD*)&firstbit, constant);
-    _BitScanForward((DWORD*)&lastbit, constant);
+    _BitScanReverse((uint32_t*)&firstbit, constant);
+    _BitScanForward((uint32_t*)&lastbit, constant);
 
     if (! ((a == 0 && c == 0 && b == d)
         || (b == 0 && d == 0 && a == c)
@@ -2311,7 +2311,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
 
                 pcrel = ((labelInstr->GetPC() - m_encoder->m_encodeBuffer + codeBufferAddress) & 0xFFFF);
 
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }
@@ -2334,7 +2334,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
                     //This is a encoded low 16 bits.
                     pcrel = labelInstr->GetOffset() & 0xFFFF;
                 }
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }
@@ -2357,7 +2357,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
                     //This is a encoded high 16 bits.
                     pcrel = labelInstr->GetOffset() >> 16;
                 }
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }

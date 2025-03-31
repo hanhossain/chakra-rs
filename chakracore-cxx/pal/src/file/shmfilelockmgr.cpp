@@ -58,7 +58,7 @@ FILEUnlockFileRegion(
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
-    DWORD dwAccessRights,
+    uint32_t dwAccessRights,
     void * pvControllerInstance
     );
 
@@ -97,8 +97,8 @@ PAL_ERROR
 CSharedMemoryFileLockMgr::GetLockControllerForFile(
     CPalThread *pThread,                // IN, OPTIONAL
     LPCSTR szFileName,
-    DWORD dwAccessRights,
-    DWORD dwShareMode,
+    uint32_t dwAccessRights,
+    uint32_t dwShareMode,
     IFileLockController **ppLockController  // OUT
     )
 {
@@ -266,7 +266,7 @@ GetLockControllerForFileExit:
 PAL_ERROR
 CSharedMemoryFileLockMgr::GetFileShareModeForFile(
    LPCSTR szFileName,
-   DWORD* pdwShareMode)
+   uint32_t* pdwShareMode)
 {
     PAL_ERROR palError = NO_ERROR;
     *pdwShareMode = SHARE_MODE_NOT_INITALIZED;
@@ -310,10 +310,10 @@ PAL_ERROR
 CSharedMemoryFileLockController::GetTransactionLock(
     CPalThread *pThread,                // IN, OPTIONAL
     FileTransactionLockType eLockType,
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToLockLow,
-    DWORD nNumberOfBytesToLockHigh,
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToLockLow,
+    uint32_t nNumberOfBytesToLockHigh,
     IFileTransactionLock **ppTransactionLock    // OUT
     )
 {
@@ -358,10 +358,10 @@ CSharedMemoryFileLockController::GetTransactionLock(
 PAL_ERROR
 CSharedMemoryFileLockController::CreateFileLock(
     CPalThread *pThread,                // IN, OPTIONAL
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToLockLow,
-    DWORD nNumberOfBytesToLockHigh,
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToLockLow,
+    uint32_t nNumberOfBytesToLockHigh,
     FileLockExclusivity eFileLockExclusivity,
     FileLockWaitMode eFileLockWaitMode
     )
@@ -398,10 +398,10 @@ CreateFileLockExit:
 PAL_ERROR
 CSharedMemoryFileLockController::ReleaseFileLock(
     CPalThread *pThread,                // IN, OPTIONAL
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToUnlockLow,
-    DWORD nNumberOfBytesToUnlockHigh
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToUnlockLow,
+    uint32_t nNumberOfBytesToUnlockHigh
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -911,7 +911,7 @@ EXIT:
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
-    DWORD dwAccessRights,
+    uint32_t dwAccessRights,
     void * pvControllerInstance
     )
 {

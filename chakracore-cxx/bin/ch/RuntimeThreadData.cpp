@@ -46,7 +46,7 @@ RuntimeThreadData::~RuntimeThreadData()
     DeleteCriticalSection(&csReportQ);
 }
 
-DWORD RuntimeThreadData::ThreadProc()
+uint32_t RuntimeThreadData::ThreadProc()
 {
     JsValueRef scriptSource;
     JsValueRef fname;
@@ -81,7 +81,7 @@ DWORD RuntimeThreadData::ThreadProc()
     while (true)
     {
         HANDLE handles[] = { this->hevntReceivedBroadcast, this->hevntShutdown };
-        DWORD waitRet = WaitForMultipleObjects(_countof(handles), handles, false, INFINITE);
+        uint32_t waitRet = WaitForMultipleObjects(_countof(handles), handles, false, INFINITE);
 
         if (waitRet == WAIT_OBJECT_0)
         {

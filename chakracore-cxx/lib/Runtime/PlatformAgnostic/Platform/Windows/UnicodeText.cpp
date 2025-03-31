@@ -242,7 +242,7 @@ namespace PlatformAgnostic
             return (NORM_FORM)normalizationForm;
         }
 
-        static ApiError TranslateWin32Error(DWORD win32Error)
+        static ApiError TranslateWin32Error(uint32_t win32Error)
         {
             switch (win32Error)
             {
@@ -286,7 +286,7 @@ namespace PlatformAgnostic
 
             if (normalizedStringLength <= 0)
             {
-                DWORD win32Error = ::GetLastError();
+                uint32_t win32Error = ::GetLastError();
                 *pErrorOut = TranslateWin32Error(win32Error);
             }
 
@@ -308,7 +308,7 @@ namespace PlatformAgnostic
 
             *pErrorOut = NoError;
 
-            DWORD dwFlags = toUpper ? LCMAP_UPPERCASE : LCMAP_LOWERCASE;
+            uint32_t dwFlags = toUpper ? LCMAP_UPPERCASE : LCMAP_LOWERCASE;
             dwFlags |= LCMAP_LINGUISTIC_CASING;
 
             // REVIEW: The documentation for LCMapStringEx says that it returns "the number of characters or bytes in the translated string

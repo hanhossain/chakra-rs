@@ -24,10 +24,10 @@ namespace PerfCounter
         ~InstanceBase();
 
         bool IsProviderInitialized() const;
-        bool Initialize(char16 const * wszInstanceName, DWORD id);
-        DWORD * InitializeSharedMemory(DWORD numCounter, HANDLE& handle);
-        DWORD * OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const wszObjectNamePrefix[MAX_OBJECT_NAME_PREFIX], DWORD pid, DWORD numCounter, HANDLE& handle);
-        void UninitializeSharedMemory(DWORD * data, HANDLE handle);
+        bool Initialize(char16 const * wszInstanceName, uint32_t id);
+        uint32_t * InitializeSharedMemory(uint32_t numCounter, HANDLE& handle);
+        uint32_t * OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const wszObjectNamePrefix[MAX_OBJECT_NAME_PREFIX], uint32_t pid, uint32_t numCounter, HANDLE& handle);
+        void UninitializeSharedMemory(uint32_t * data, HANDLE handle);
         bool IsEnabled() const;
     private:
         Provider& GetProvider() { return provider; }
@@ -43,24 +43,24 @@ namespace PerfCounter
     {
     public:
         Counter() : count(NULL) {};
-        void Initialize(InstanceBase& instance, DWORD id, DWORD * count);
-        void Uninitialize(InstanceBase& instance, DWORD id);
+        void Initialize(InstanceBase& instance, uint32_t id, uint32_t * count);
+        void Uninitialize(InstanceBase& instance, uint32_t id);
 
         Counter& operator+=(size_t value);
         Counter& operator-=(size_t value);
         Counter& operator++();
         Counter& operator--();
-        DWORD GetValue() { return *count; }
+        uint32_t GetValue() { return *count; }
 
     private:
         /* TODO: 64-bit */
-        DWORD * count;
+        uint32_t * count;
     };
 
     class PageAllocatorCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 24;
+        static uint32_t const MaxCounter = 24;
         static GUID const& GetGuid();
         static Provider& GetProvider();
 
@@ -72,7 +72,7 @@ namespace PerfCounter
     class BasicCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 4;
+        static uint32_t const MaxCounter = 4;
         static GUID const& GetGuid();
         static Provider& GetProvider();
     };
@@ -80,7 +80,7 @@ namespace PerfCounter
     class CodeCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 17;
+        static uint32_t const MaxCounter = 17;
         static GUID const& GetGuid();
         static Provider& GetProvider();
     };
@@ -89,7 +89,7 @@ namespace PerfCounter
     class HeapCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 2;
+        static uint32_t const MaxCounter = 2;
         static GUID const& GetGuid();
         static Provider& GetProvider();
     };
@@ -99,7 +99,7 @@ namespace PerfCounter
     class RecyclerCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 14;
+        static uint32_t const MaxCounter = 14;
         static GUID const& GetGuid();
         static Provider& GetProvider();
     };
@@ -149,7 +149,7 @@ namespace PerfCounter
     class RecyclerTrackerCounterSetDefinition
     {
     public:
-        static DWORD const MaxCounter = 46;
+        static uint32_t const MaxCounter = 46;
         static GUID const& GetGuid();
         static Provider& GetProvider();
 

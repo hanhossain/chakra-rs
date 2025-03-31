@@ -208,7 +208,7 @@ namespace Js
             jsMethod(jsMethod)
         {
         }
-        static DWORD GetAddressOffset() { return offsetof(ProxyEntryPointInfo, jsMethod); }
+        static uint32_t GetAddressOffset() { return offsetof(ProxyEntryPointInfo, jsMethod); }
         virtual void Expire()
         {
             AssertMsg(false, "Expire called on object that doesn't support expiration");
@@ -2103,7 +2103,7 @@ namespace Js
         {
             return cacheIdToPropertyIdMap;
         }
-        static DWORD GetAsmJsTotalLoopCountOffset() { return offsetof(FunctionBody, m_asmJsTotalLoopCount); }
+        static uint32_t GetAsmJsTotalLoopCountOffset() { return offsetof(FunctionBody, m_asmJsTotalLoopCount); }
 #if DBG
         FieldWithBarrier(int) m_DEBUG_executionCount;     // Count of outstanding on InterpreterStackFrame
         FieldWithBarrier(bool) m_nativeEntryPointIsInterpreterThunk; // NativeEntry entry point is in fact InterpreterThunk.
@@ -2732,7 +2732,7 @@ namespace Js
             return m_dynamicInterpreterThunk != nullptr;
         }
 
-        DWORD GetDynamicInterpreterThunkSize() const;
+        uint32_t GetDynamicInterpreterThunkSize() const;
 #endif
 
         bool GetHasHotLoop() const { return hasHotLoop; };

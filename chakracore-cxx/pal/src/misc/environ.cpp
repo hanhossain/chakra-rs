@@ -62,14 +62,14 @@ value is the buffer size, in TCHARs, required to hold the value string
 and its terminating null character.
 
 --*/
-DWORD
+uint32_t
 GetEnvironmentVariableA(
              LPCSTR lpName,
              LPSTR lpBuffer,
-             DWORD nSize)
+             uint32_t nSize)
 {
     char  *value;
-    DWORD dwRet = 0;
+    uint32_t dwRet = 0;
 
     PERF_ENTRY(GetEnvironmentVariableA);
     ENTRY("GetEnvironmentVariableA(lpName=%p (%s), lpBuffer=%p, nSize=%u)\n",
@@ -131,16 +131,16 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 GetEnvironmentVariableW(
              LPCWSTR lpName,
              LPWSTR lpBuffer,
-             DWORD nSize)
+             uint32_t nSize)
 {
     char *inBuff = NULL;
     char *outBuff = NULL;
     INT inBuffSize;
-    DWORD size = 0;
+    uint32_t size = 0;
 
     PERF_ENTRY(GetEnvironmentVariableW);
     ENTRY("GetEnvironmentVariableW(lpName=%p (%S), lpBuffer=%p, nSize=%u)\n",

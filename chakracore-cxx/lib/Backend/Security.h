@@ -53,5 +53,5 @@ private:
     int             GetNextNOPInsertPoint();
 
     // Insert 1-4 bytes of NOPs
-    static void     InsertSmallNOP(IR::Instr * instrBeforeInstr, DWORD nopSize);
+    static void     InsertSmallNOP(IR::Instr * instrBeforeInstr, uint32_t nopSize);
 };

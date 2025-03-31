@@ -4005,7 +4005,7 @@ namespace Js
         CheckEmpty();
 
 #ifdef PERF_COUNTERS
-        DWORD byteCodeSize = byteCodeBlock->GetLength()
+        uint32_t byteCodeSize = byteCodeBlock->GetLength()
             + (auxBlock? auxBlock->GetLength() : 0)
             + (auxContextBlock? auxContextBlock->GetLength() : 0);
         PERF_COUNTER_ADD(Code, DynamicByteCodeSize, byteCodeSize);
@@ -7697,7 +7697,7 @@ namespace Js
     void FunctionBody::CleanupPerfCounter()
     {
         // We might not have the byte code block yet if we defer parsed.
-        DWORD byteCodeSize = (this->byteCodeBlock? this->byteCodeBlock->GetLength() : 0)
+        uint32_t byteCodeSize = (this->byteCodeBlock? this->byteCodeBlock->GetLength() : 0)
             + (this->GetAuxiliaryData() ? this->GetAuxiliaryData()->GetLength() : 0)
             + (this->GetAuxiliaryContextData() ? this->GetAuxiliaryContextData()->GetLength() : 0);
         PERF_COUNTER_SUB(Code, DynamicByteCodeSize, byteCodeSize);
@@ -7906,7 +7906,7 @@ namespace Js
     }
 
 #if DYNAMIC_INTERPRETER_THUNK
-    DWORD FunctionBody::GetDynamicInterpreterThunkSize() const
+    uint32_t FunctionBody::GetDynamicInterpreterThunkSize() const
     {
         return InterpreterThunkEmitter::ThunkSize;
     }

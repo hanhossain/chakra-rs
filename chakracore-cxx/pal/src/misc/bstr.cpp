@@ -85,7 +85,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, UINT len)
 {
 
     BSTR bstr;
-    DWORD cbTotal = 0;
+    uint32_t cbTotal = 0;
 
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return NULL;
@@ -98,13 +98,13 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, UINT len)
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
-        // looking one DWORD before the BSTR pointer.
+        // looking one uint32_t before the BSTR pointer.
         *(DWORD_PTR *)bstr = (DWORD_PTR) 0;
-        bstr = (BSTR) ((char *) bstr + sizeof (DWORD));
+        bstr = (BSTR) ((char *) bstr + sizeof (uint32_t));
 #endif
-        *(DWORD *)bstr = (DWORD)len * sizeof(OLECHAR);
+        *(uint32_t *)bstr = (uint32_t)len * sizeof(OLECHAR);
 
-        bstr = (BSTR) ((char*) bstr + sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr + sizeof(uint32_t));
 
         if(psz != NULL){
             memcpy(bstr, psz, len * sizeof(OLECHAR));
@@ -132,9 +132,9 @@ extern "C" void SysFreeString(BSTR bstr)
 {
     if (bstr != NULL)
     {
-        bstr = (BSTR) ((char*) bstr - sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
 #if defined(_WIN64)
-        bstr = (BSTR) ((char*) bstr - sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
 #endif
         HeapFree(GetProcessHeap(), 0, (void *) bstr);
     }
@@ -159,7 +159,7 @@ extern "C" UINT SysStringLen(BSTR bstr)
         return 0;
     }
 
-    return (UINT)((((DWORD *)bstr)[-1]) / sizeof(OLECHAR));
+    return (UINT)((((uint32_t *)bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***
@@ -181,5 +181,5 @@ extern "C" BSTR SysAllocString(const OLECHAR* psz)
         return NULL;
     }
 
-    return SysAllocStringLen(psz, (DWORD)PAL_wcslen(psz));
+    return SysAllocStringLen(psz, (uint32_t)PAL_wcslen(psz));
 }

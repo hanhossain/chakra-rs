@@ -23,7 +23,7 @@ typedef struct tagEXCEPINFO {
     BSTR bstrSource;
     BSTR bstrDescription;
     BSTR bstrHelpFile;
-    DWORD dwHelpContext;
+    uint32_t dwHelpContext;
     void * pvReserved;
     HRESULT (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
@@ -51,7 +51,7 @@ EXTERN_C const IID IID_IErrorInfo;
             /* [out] */ BSTR *pBstrHelpFile) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetHelpContext( 
-            /* [out] */ DWORD *pdwHelpContext) = 0;
+            /* [out] */ uint32_t *pdwHelpContext) = 0;
         
     };
     
@@ -78,7 +78,7 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
             /* [in] */ LPOLESTR szHelpFile) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetHelpContext( 
-            /* [in] */ DWORD dwHelpContext) = 0;
+            /* [in] */ uint32_t dwHelpContext) = 0;
         
     };
     

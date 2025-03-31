@@ -396,7 +396,7 @@ STDAPI StringCchCopyEx(TCHAR pszDest,
                        LPCTSTR pszSrc,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -542,7 +542,7 @@ STDAPI StringCbCopyEx(TCHAR pszDest,
                       LPCTSTR pszSrc,
                       LPTSTR* ppszDestEnd,
                       size_t* pcbRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -941,7 +941,7 @@ STDAPI StringCchCopyNEx(TCHAR pszDest,
                         size_t cchSrc,
                         LPTSTR* ppszDestEnd,
                         size_t* pcchRemaining,
-                        DWORD dwFlags);
+                        uint32_t dwFlags);
 
 Routine Description:
 
@@ -1098,7 +1098,7 @@ STDAPI StringCbCopyNEx(TCHAR pszDest,
                        size_t cbSrc,
                        LPTSTR* ppszDestEnd,
                        size_t* pcbRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -1485,7 +1485,7 @@ STDAPI StringCchCatEx(LPTSTR pszDest,
                       LPCTSTR pszSrc,
                       LPTSTR* ppszDestEnd,
                       size_t* pcchRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -1634,7 +1634,7 @@ STDAPI StringCbCatEx(LPTSTR pszDest,
                      LPCTSTR pszSrc,
                      LPTSTR* ppszDestEnd,
                      size_t* pcbRemaining,
-                     DWORD dwFlags);
+                     uint32_t dwFlags);
 
 Routine Description:
 
@@ -2032,7 +2032,7 @@ STDAPI StringCchCatNEx(LPTSTR pszDest,
                        size_t cchMaxAppend,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -2184,7 +2184,7 @@ STDAPI StringCbCatNEx(LPTSTR pszDest,
                       size_t cbMaxAppend
                       LPTSTR* ppszDestEnd,
                       size_t* pcchRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -2824,7 +2824,7 @@ STDAPI StringCchPrintfEx(LPTSTR pszDest,
                          size_t cchDest,
                          LPTSTR* ppszDestEnd,
                          size_t* pcchRemaining,
-                         DWORD dwFlags,
+                         uint32_t dwFlags,
                          LPCTSTR pszFormat,
                          ...);
 
@@ -2982,7 +2982,7 @@ STDAPI StringCbPrintfEx(LPTSTR pszDest,
                         size_t cbDest,
                         LPTSTR* ppszDestEnd,
                         size_t* pcbRemaining,
-                        DWORD dwFlags,
+                        uint32_t dwFlags,
                         LPCTSTR pszFormat,
                         ...);
 
@@ -3160,7 +3160,7 @@ STDAPI StringCchVPrintfEx(LPTSTR pszDest,
                           size_t cchDest,
                           LPTSTR* ppszDestEnd,
                           size_t* pcchRemaining,
-                          DWORD dwFlags,
+                          uint32_t dwFlags,
                           LPCTSTR pszFormat,
                           va_list argList);
 
@@ -3310,7 +3310,7 @@ STDAPI StringCbVPrintfEx(LPTSTR pszDest,
                          size_t cbDest,
                          LPTSTR* ppszDestEnd,
                          size_t* pcbRemaining,
-                         DWORD dwFlags,
+                         uint32_t dwFlags,
                          LPCTSTR pszFormat,
                          va_list argList);
 
@@ -3696,7 +3696,7 @@ STDAPI StringCchGetsEx(LPTSTR pszDest,
                        size_t cchDest,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -3834,7 +3834,7 @@ STDAPI StringCbGetsEx(LPTSTR pszDest,
                       size_t cbDest,
                       LPTSTR* ppszDestEnd,
                       size_t* pcbRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 

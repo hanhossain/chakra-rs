@@ -512,13 +512,13 @@ HeapInfoManager::LeaveIdleDecommit(bool allowTimer)
 }
 
 #ifdef IDLE_DECOMMIT_ENABLED
-DWORD
+uint32_t
 HeapInfoManager::IdleDecommit()
 {
-    DWORD waitTime = INFINITE;
+    uint32_t waitTime = INFINITE;
     ForEachHeapInfo([&](HeapInfo& heapInfo)
     {
-        DWORD heapInfoWaitTime = heapInfo.IdleDecommit();
+        uint32_t heapInfoWaitTime = heapInfo.IdleDecommit();
         waitTime = min(waitTime, heapInfoWaitTime);
     });
     return waitTime;

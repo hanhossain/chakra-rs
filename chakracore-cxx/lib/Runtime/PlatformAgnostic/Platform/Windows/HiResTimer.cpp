@@ -175,8 +175,8 @@ namespace DateTime
     // bring it inline with a time server.
     static double GetAdjustFactor()
     {
-        DWORD dwTimeAdjustment = 0;
-        DWORD dwTimeIncrement = 0;
+        uint32_t dwTimeAdjustment = 0;
+        uint32_t dwTimeIncrement = 0;
         BOOL fAdjustmentDisabled = FALSE;
         BOOL fSuccess = GetSystemTimeAdjustment(&dwTimeAdjustment, &dwTimeIncrement, &fAdjustmentDisabled);
         if (!fSuccess || fAdjustmentDisabled)

@@ -39,17 +39,17 @@ Abstract:
     
 namespace CorUnix
 {   
-    DWORD InternalWaitForMultipleObjectsEx(
+    uint32_t InternalWaitForMultipleObjectsEx(
         CPalThread * pthrCurrent,
-        DWORD nCount,
+        uint32_t nCount,
         const HANDLE *lpHandles,
         BOOL bWaitAll,
-        DWORD dwMilliseconds,
+        uint32_t dwMilliseconds,
         BOOL bAlertable);
     
     PAL_ERROR InternalSleepEx(
         CPalThread * pthrCurrent,
-        DWORD dwMilliseconds,
+        uint32_t dwMilliseconds,
         BOOL bAlertable);
         
     enum THREAD_STATE
@@ -95,7 +95,7 @@ namespace CorUnix
         int                 iPipeWr;
 #endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
-        DWORD               dwObjectIndex;
+        uint32_t               dwObjectIndex;
         ThreadWakeupReason  twrWakeupReason;
         bool                fInitialized;
 
@@ -149,7 +149,7 @@ namespace CorUnix
         virtual PAL_ERROR InitializePostCreate(
             CPalThread *pthrCurrent,
             SIZE_T threadId,
-            DWORD dwLwpId
+            uint32_t dwLwpId
             );
 
         THREAD_STATE GetThreadState(void)

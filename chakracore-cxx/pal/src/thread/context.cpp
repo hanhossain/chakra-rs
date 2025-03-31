@@ -332,7 +332,7 @@ Parameter
 Return
  returns TRUE if it succeeds, FALSE otherwise
 --*/
-BOOL CONTEXT_GetRegisters(DWORD processId, LPCONTEXT lpContext)
+BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 {
 #if HAVE_BSD_REGS_T
     int regFd = -1;
@@ -391,7 +391,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_GetThreadContext(
-         DWORD dwProcessId,
+         uint32_t dwProcessId,
          pthread_t self,
          LPCONTEXT lpContext)
 {
@@ -414,7 +414,7 @@ CONTEXT_GetThreadContext(
     {
         if (self != pthread_self())
         {
-            DWORD flags;
+            uint32_t flags;
             // There aren't any APIs for this. We can potentially get the
             // context of another thread by using per-thread signals, but
             // on FreeBSD signal handlers that are called as a result
@@ -458,7 +458,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_SetThreadContext(
-           DWORD dwProcessId,
+           uint32_t dwProcessId,
            pthread_t self,
            const CONTEXT *lpContext)
 {
@@ -747,7 +747,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         lpContext->FltSave.ControlWord = FPREG_ControlWord(native);
         lpContext->FltSave.StatusWord = FPREG_StatusWord(native);
 #if HAVE_FPREGS_WITH_CW
-        lpContext->FltSave.TagWord = ((DWORD)FPREG_TagWord1(native) << 8) | FPREG_TagWord2(native);
+        lpContext->FltSave.TagWord = ((uint32_t)FPREG_TagWord1(native) << 8) | FPREG_TagWord2(native);
 #else
         lpContext->FltSave.TagWord = FPREG_TagWord(native);
 #endif
@@ -919,7 +919,7 @@ Return value :
 --*/
 #ifdef ILL_ILLOPC
 // If si_code values are available for all signals, use those.
-DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
@@ -1013,7 +1013,7 @@ DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
     return EXCEPTION_ILLEGAL_INSTRUCTION;
 }
 #else   // ILL_ILLOPC
-DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
@@ -1282,8 +1282,8 @@ CONTEXT_GetThreadContextFromThreadState(
             {
                 x86_float_state64_t *pState = (x86_float_state64_t *)threadState;
 
-                lpContext->FltSave.ControlWord = *(DWORD*)&pState->__fpu_fcw;
-                lpContext->FltSave.StatusWord = *(DWORD*)&pState->__fpu_fsw;
+                lpContext->FltSave.ControlWord = *(uint32_t*)&pState->__fpu_fcw;
+                lpContext->FltSave.StatusWord = *(uint32_t*)&pState->__fpu_fsw;
                 lpContext->FltSave.TagWord = pState->__fpu_ftw;
                 lpContext->FltSave.ErrorOffset = pState->__fpu_ip;
                 lpContext->FltSave.ErrorSelector = pState->__fpu_cs;
@@ -1356,7 +1356,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_GetThreadContext(
-         DWORD dwProcessId,
+         uint32_t dwProcessId,
          pthread_t self,
          LPCONTEXT lpContext)
 {
@@ -1450,8 +1450,8 @@ CONTEXT_SetThreadContextOnPort(
         if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
         {
 #ifdef _AMD64_
-            *(DWORD*)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
-            *(DWORD*)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
+            *(uint32_t*)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
+            *(uint32_t*)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
             State.__fpu_ftw = lpContext->FltSave.TagWord;
             State.__fpu_ip = lpContext->FltSave.ErrorOffset;
             State.__fpu_cs = lpContext->FltSave.ErrorSelector;
@@ -1571,7 +1571,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_SetThreadContext(
-           DWORD dwProcessId,
+           uint32_t dwProcessId,
            pthread_t self,
            const CONTEXT *lpContext)
 {

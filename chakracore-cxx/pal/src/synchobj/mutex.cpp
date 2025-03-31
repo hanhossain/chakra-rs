@@ -412,7 +412,7 @@ See MSDN doc.
 
 HANDLE
 OpenMutexA (
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCSTR lpName)
 {
@@ -461,7 +461,7 @@ See MSDN doc.
 
 HANDLE
 OpenMutexW(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName)
 {
@@ -516,7 +516,7 @@ Parameters:
 PAL_ERROR
 CorUnix::InternalOpenMutex(
     CPalThread *pthr,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phMutex

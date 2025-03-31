@@ -44,11 +44,11 @@ namespace Js
         Field(bool) isBound;
         Field(bool) isSymbol;
         // Have the length before the buffer so that the buffer would have a BSTR format
-        Field(DWORD) byteCount;
+        Field(uint32_t) byteCount;
 
-        PropertyRecord(DWORD bytelength, bool isNumeric, uint hash, bool isSymbol);
-        PropertyRecord(PropertyId pid, uint hash, bool isNumeric, DWORD byteCount, bool isSymbol);
-        PropertyRecord(const WCHAR* buffer, const int length, DWORD bytelength, bool isSymbol);
+        PropertyRecord(uint32_t bytelength, bool isNumeric, uint hash, bool isSymbol);
+        PropertyRecord(PropertyId pid, uint hash, bool isNumeric, uint32_t byteCount, bool isSymbol);
+        PropertyRecord(const WCHAR* buffer, const int length, uint32_t bytelength, bool isSymbol);
         PropertyRecord() { Assert(false); } // never used, needed by compiler for BuiltInPropertyRecord
 
         static bool IsPropertyNameNumeric(const char16* str, int length, uint32* intVal);

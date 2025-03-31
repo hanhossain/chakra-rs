@@ -135,14 +135,14 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
+uint32_t
 ResumeThread(
           HANDLE hThread
          )
 {
     PAL_ERROR palError;
     CPalThread *pthrResumer;
-    DWORD dwSuspendCount = (DWORD)-1;
+    uint32_t dwSuspendCount = (uint32_t)-1;
 
     PERF_ENTRY(ResumeThread);
     ENTRY("ResumeThread(hThread=%p)\n", hThread);
@@ -157,11 +157,11 @@ ResumeThread(
     if (NO_ERROR != palError)
     {
         pthrResumer->SetLastError(palError);
-        dwSuspendCount = (DWORD) -1;
+        dwSuspendCount = (uint32_t) -1;
     }
     else
     {
-        _ASSERT_MSG(dwSuspendCount != static_cast<DWORD>(-1), "InternalResumeThread returned success but dwSuspendCount did not change.\n");
+        _ASSERT_MSG(dwSuspendCount != static_cast<uint32_t>(-1), "InternalResumeThread returned success but dwSuspendCount did not change.\n");
     }
 
     LOGEXIT("ResumeThread returns DWORD %u\n", dwSuspendCount);
@@ -182,7 +182,7 @@ PAL_ERROR
 CorUnix::InternalResumeThread(
     CPalThread *pthrResumer,
     HANDLE hTargetThread,
-    DWORD *pdwSuspendCount
+    uint32_t *pdwSuspendCount
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -234,7 +234,7 @@ PAL_ERROR
 CThreadSuspensionInfo::InternalResumeThreadFromData(
     CPalThread *pthrResumer,
     CPalThread *pthrTarget,
-    DWORD *pdwSuspendCount
+    uint32_t *pdwSuspendCount
     )
 {
     PAL_ERROR palError = NO_ERROR;

@@ -219,7 +219,7 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags)
+BOOL InitializeCriticalSectionEx(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount, uint32_t Flags)
 {
     PERF_ENTRY(InitializeCriticalSection);
     ENTRY("InitializeCriticalSectionEx(lpCriticalSection=%p, dwSpinCount=%d, Flags=%d)\n",
@@ -239,7 +239,7 @@ Function:
 See MSDN doc.
 --*/
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection,
-                                           DWORD dwSpinCount)
+                                           uint32_t dwSpinCount)
 {
     BOOL bRet = TRUE;
     PERF_ENTRY(InitializeCriticalSectionAndSpinCount);
@@ -599,7 +599,7 @@ namespace CorUnix
     --*/
     void InternalInitializeCriticalSectionAndSpinCount(
         PCRITICAL_SECTION pCriticalSection,
-        DWORD dwSpinCount,
+        uint32_t dwSpinCount,
         bool fInternal)
     {
         PAL_CRITICAL_SECTION * pPalCriticalSection =
@@ -1150,7 +1150,7 @@ namespace CorUnix
     PalCsWaiterReturnState PALCS_WaitOnCS(PAL_CRITICAL_SECTION * pPalCriticalSection,
                                           int32_t lInc)
     {
-        DWORD lVal, lNewVal;
+        uint32_t lVal, lNewVal;
         PAL_ERROR palErr = NO_ERROR;
 
         if (PalCsFullyInitialized != pPalCriticalSection->cisInitState)

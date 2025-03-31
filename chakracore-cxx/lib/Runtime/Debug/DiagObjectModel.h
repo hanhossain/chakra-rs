@@ -119,8 +119,8 @@ namespace Js
     {
         PropertyId  propId;
         Var         aVar;
-        DWORD       flags; // DebuggerPropertyDisplayInfoFlags.
-        DebuggerPropertyDisplayInfo(PropertyId _propId, Var _aVar, DWORD _flags) : propId(_propId), aVar(_aVar), flags(_flags)
+        uint32_t       flags; // DebuggerPropertyDisplayInfoFlags.
+        DebuggerPropertyDisplayInfo(PropertyId _propId, Var _aVar, uint32_t _flags) : propId(_propId), aVar(_aVar), flags(_flags)
         {}
 
         bool IsUnscoped() const { return (flags & DebuggerPropertyDisplayInfoFlags_Unscope) != 0; }
@@ -313,13 +313,13 @@ namespace Js
 
         JsUtil::List<VariableWalkerBase *, ArenaAllocator> * pVarWalkers; // This includes, current frame, all scopes and globals for a current frame
         uint totalLocalsCount;
-        DWORD frameWalkerFlags;
+        uint32_t frameWalkerFlags;
 
         // true, if user has not defined the 'arguments' in the script, this is used for displaying a fake arguments object and display in the locals window.
         bool hasUserNotDefinedArguments;
 
     public:
-        LocalsWalker(DiagStackFrame* _frame, DWORD _frameWalkerFlags);
+        LocalsWalker(DiagStackFrame* _frame, uint32_t _frameWalkerFlags);
         virtual BOOL Get(int i, ResolvedObject* pResolvedObject) override;
 
         virtual uint32 GetChildrenCount() override;
@@ -331,7 +331,7 @@ namespace Js
 
         virtual BOOL GetGroupObject(ResolvedObject* pResolvedObject) {return FALSE; }
 
-        static DWORD GetCurrentFramesLocalsType(DiagStackFrame* frame);
+        static uint32_t GetCurrentFramesLocalsType(DiagStackFrame* frame);
         static DebuggerScope * GetScopeWhenHaltAtFormals(DiagStackFrame* frame);
         static int GetAdjustedByteCodeOffset(DiagStackFrame* frame);
 

@@ -92,7 +92,7 @@ RecyclerHeuristic::MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable& flags)
     return DefaultMaxBackgroundFinishMarkCount;
 }
 
-DWORD
+uint32_t
 RecyclerHeuristic::BackgroundFinishMarkWaitTime(bool backgroundFinishMarkWaitTime, Js::ConfigFlagsTable& flags)
 {
     if (RECYCLER_HEURISTIC_VERSION == 10)
@@ -132,7 +132,7 @@ RecyclerHeuristic::MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable& flag
     return DefaultMinBackgroundRepeatMarkRescanBytes;
 }
 
-DWORD
+uint32_t
 RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
@@ -145,7 +145,7 @@ RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 }
 
 
-DWORD
+uint32_t
 RecyclerHeuristic::PriorityBoostTimeout(Js::ConfigFlagsTable& flags)
 {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS

@@ -67,7 +67,7 @@ namespace CorUnix
         SHMPTR shmObjSharedData;
 
         int32_t lProcessRefCount;
-        DWORD dwNameLength;
+        uint32_t dwNameLength;
 
         PalObjectTypeId eTypeId;
 
