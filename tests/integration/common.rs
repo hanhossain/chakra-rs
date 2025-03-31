@@ -52,6 +52,14 @@ impl Test {
             .collect::<Vec<_>>();
         assert_eq!(empty_vec, invalid_tags, "no commas allowed in tags");
 
+        // debug should only run exclude_test
+        if !cfg!(feature = "optimized-tests") {
+            assert!(
+                self.tags.contains("exclude_test"),
+                "Debug must contain exclude_test"
+            );
+        }
+
         if self
             .tags
             .iter()
@@ -130,14 +138,6 @@ pub fn run_test_variant<const N: usize>(
         variant_config.excluded_tags.insert("require_simd");
     } else if cfg!(windows) {
         variant_config.excluded_tags.insert("exclude_windows");
-    }
-
-    // debug should only run exclude_test
-    if !cfg!(feature = "optimized-tests") {
-        assert!(
-            variant_config.excluded_tags.contains("exclude_test"),
-            "Debug must contain exclude_test"
-        );
     }
 
     let both: HashSet<_> = variant_config
