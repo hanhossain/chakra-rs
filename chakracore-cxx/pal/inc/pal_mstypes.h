@@ -113,7 +113,6 @@ extern "C" {
 #define __int16     short int
 #define __int8      char        // assumes char is signed
 
-typedef unsigned long *PULONG64;
 typedef unsigned long *PULONGLONG;
 
 typedef int BOOL, *PBOOL, *LPBOOL;

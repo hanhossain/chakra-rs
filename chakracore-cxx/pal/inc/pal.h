@@ -4489,7 +4489,7 @@ QueryPerformanceFrequency(
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
-     PULONG64 CycleTime);
+     unsigned long * CycleTime);
 
 #ifndef FEATURE_PAL_SXS
 

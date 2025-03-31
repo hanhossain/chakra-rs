@@ -284,7 +284,7 @@ failure.
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
-     PULONG64 CycleTime
+     unsigned long * CycleTime
     )
 {
 

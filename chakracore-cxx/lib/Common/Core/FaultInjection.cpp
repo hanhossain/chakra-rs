@@ -143,7 +143,7 @@ namespace Js
 
             if (!RuntimeFunction)
             {
-                Context.Rip = (ULONG64)(*(PULONG64)Context.Rsp);
+                Context.Rip = (ULONG64)(*(unsigned long *)Context.Rsp);
                 Context.Rsp += 8;
             }
             else

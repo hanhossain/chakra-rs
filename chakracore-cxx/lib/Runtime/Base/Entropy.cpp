@@ -71,7 +71,7 @@ void Entropy::AddIoCounters()
 void Entropy::AddThreadCycleTime()
 {
     LARGE_INTEGER threadCycleTime = {0};
-    QueryThreadCycleTime(GetCurrentThread(), (PULONG64)&threadCycleTime);
+    QueryThreadCycleTime(GetCurrentThread(), (unsigned long *)&threadCycleTime);
     Add((char *)&threadCycleTime.LowPart, sizeof(threadCycleTime.LowPart));
 
     AddCurrentTime();
