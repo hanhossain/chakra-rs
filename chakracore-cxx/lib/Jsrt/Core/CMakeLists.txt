@@ -23,3 +23,7 @@ target_include_directories (Chakra.Jsrt.Core PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Debug
 )
+
+target_compile_definitions(Chakra.Jsrt.Core PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)

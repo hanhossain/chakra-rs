@@ -46,4 +46,8 @@ target_include_directories (Chakra.Runtime.Types PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
 
+target_compile_definitions(Chakra.Runtime.Types PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.Runtime.Types PUBLIC RuntimeTypePch.h)
