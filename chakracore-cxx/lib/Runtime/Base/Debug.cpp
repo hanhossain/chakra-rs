@@ -5,9 +5,6 @@
 #include "RuntimeBasePch.h"
 
 #if DBG_DUMP
-#ifndef USING_PAL_STDLIB
-#include <strsafe.h>
-#endif
 #include "Language/JavascriptStackWalker.h"
 
 WCHAR* DumpCallStack(uint frameCount) { return DumpCallStackFull(frameCount, /*print*/ true); }

@@ -4,13 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCorePch.h"
 
-#ifndef USING_PAL_STDLIB
-#include <io.h>
-#include <share.h>
-#include <fcntl.h>
-#include <strsafe.h>
-#endif
-
 #include "Memory/MemoryLogger.h"
 #include "Memory/ForcedMemoryConstraints.h"
 #include "Core/ICustomConfigFlags.h"
