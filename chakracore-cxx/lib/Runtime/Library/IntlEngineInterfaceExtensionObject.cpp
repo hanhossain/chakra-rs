@@ -2148,7 +2148,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         AutoCOMPtr<NumberFormatting::INumberFormatterOptions> numberFormatterOptions;
         IfFailThrowHr(currencyFormatter->QueryInterface(__uuidof(NumberFormatting::INumberFormatterOptions), reinterpret_cast<void**>(&numberFormatterOptions)));
         Assert(numberFormatterOptions);
-        INT32 fractionDigits;
+        int32_t fractionDigits;
         IfFailThrowHr(numberFormatterOptions->get_FractionDigits(&fractionDigits));
         return JavascriptNumber::ToVar(fractionDigits, scriptContext);
 #endif

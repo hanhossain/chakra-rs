@@ -142,7 +142,6 @@ typedef ULONGLONG DWORDLONG;
 typedef int BOOL, *PBOOL, *LPBOOL;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
-typedef signed __int32 INT32, *PINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
 
 typedef signed __int32 LONG32, *PLONG32;

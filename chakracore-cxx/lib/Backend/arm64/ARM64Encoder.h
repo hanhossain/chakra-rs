@@ -585,7 +585,7 @@ public:
     
     void
     SetTarget(
-        INT32 OffsetFromEmitterBase
+        int32_t OffsetFromEmitterBase
         )
     {
         Assert(OffsetFromEmitterBase % 4 == 0);
@@ -608,8 +608,8 @@ public:
         )
     {
         size_t Delta = size_t(Target) - size_t(Emitter.GetEmitAreaBase());
-        Assert(INT32(Delta) == Delta);
-        SetTarget(INT32(Delta));
+        Assert(int32_t(Delta) == Delta);
+        SetTarget(int32_t(Delta));
         Resolve(Emitter);
     }
 
@@ -675,7 +675,7 @@ public:
         Arm64CodeEmitter Emitter(ExistingInstruction, 4);
         ArmBranchLinker Linker;
         Linker.SetInstructionAddressAndClass(Emitter, Class);
-        Linker.SetTarget(INT32(4 * (TargetInstruction - ExistingInstruction)));
+        Linker.SetTarget(int32_t(4 * (TargetInstruction - ExistingInstruction)));
         Linker.Resolve(Emitter);
     }
     
@@ -685,25 +685,25 @@ private:
         uint32_t Instruction
         )
     {
-        INT32 Delta = INT32(m_TargetOffset - m_InstructionOffset);
+        int32_t Delta = int32_t(m_TargetOffset - m_InstructionOffset);
         switch (m_BranchClass) {
         
         case CLASS_IMM26:
-            Assert(((INT32(Delta << (32-26))) >> (32-26)) == Delta);
+            Assert(((int32_t(Delta << (32-26))) >> (32-26)) == Delta);
             Assert((Instruction & 0x03ffffff) == 0);
             Assert((Instruction & 0x7c000000) == 0x14000000);
             Instruction = (Instruction & 0xfc000000) | (Delta & 0x03ffffff);
             break;
         
         case CLASS_IMM19:
-            Assert(((INT32(Delta << (32-19))) >> (32-19)) == Delta);
+            Assert(((int32_t(Delta << (32-19))) >> (32-19)) == Delta);
             Assert((Instruction & 0x00ffffe0) == 0);
             Assert((Instruction & 0xff000000) == 0x54000000 || (Instruction & 0x7e000000) == 0x34000000);
             Instruction = (Instruction & 0xff00001f) | ((Delta << 5) & 0x00ffffe0);
             break;
         
         case CLASS_IMM14:
-            Assert(((INT32(Delta << (32-14))) >> (32-14)) == Delta);
+            Assert(((int32_t(Delta << (32-14))) >> (32-14)) == Delta);
             Assert((Instruction & 0x0007ffe0) == 0);
             Assert((Instruction & 0x7e000000) == 0x36000000);
             Instruction = (Instruction & 0xfff8001f) | ((Delta << 5) & 0x0007ffe0);
@@ -713,7 +713,7 @@ private:
     }
 
     uint32_t m_InstructionOffset;
-    INT32 m_TargetOffset;
+    int32_t m_TargetOffset;
     BRANCH_CLASS m_BranchClass;
     bool m_Resolved;
 };
