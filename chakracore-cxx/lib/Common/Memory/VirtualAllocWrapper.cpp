@@ -12,7 +12,7 @@
 
 VirtualAllocWrapper VirtualAllocWrapper::Instance;  // single instance
 
-LPVOID VirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageCount, DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation)
+void * VirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation)
 {
     if (pageCount > AutoSystemInfo::MaxPageCount)
     {
@@ -20,7 +20,7 @@ LPVOID VirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageCount, DWORD
     }
     size_t dwSize = pageCount * AutoSystemInfo::PageSize;
 
-    LPVOID address = nullptr;
+    void * address = nullptr;
 
 #if defined(ENABLE_JIT_CLAMP)
     bool makeExecutable;
@@ -49,7 +49,7 @@ LPVOID VirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageCount, DWORD
     return address;
 }
 
-BOOL VirtualAllocWrapper::Free(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType)
+BOOL VirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     AnalysisAssert(dwFreeType == MEM_RELEASE || dwFreeType == MEM_DECOMMIT);
     size_t bytes = (dwFreeType == MEM_RELEASE)? 0 : dwSize;
@@ -131,13 +131,13 @@ PreReservedVirtualAllocWrapper::IsInRange(void * regionStart, void * address)
 
 }
 
-LPVOID
+void *
 PreReservedVirtualAllocWrapper::GetPreReservedStartAddress()
 {
     return preReservedStartAddress;
 }
 
-LPVOID
+void *
 PreReservedVirtualAllocWrapper::GetPreReservedEndAddress()
 {
     Assert(IsPreReservedRegionPresent());
@@ -145,16 +145,16 @@ PreReservedVirtualAllocWrapper::GetPreReservedEndAddress()
 }
 
 /* static */
-LPVOID
+void *
 PreReservedVirtualAllocWrapper::GetPreReservedEndAddress(void * regionStart)
 {
     return (char*)regionStart + (PreReservedAllocationSegmentCount * AutoSystemInfo::Data.GetAllocationGranularityPageCount() * AutoSystemInfo::PageSize);
 }
 
 
-LPVOID PreReservedVirtualAllocWrapper::EnsurePreReservedRegion()
+void * PreReservedVirtualAllocWrapper::EnsurePreReservedRegion()
 {
-    LPVOID startAddress = preReservedStartAddress;
+    void * startAddress = preReservedStartAddress;
     if (startAddress != nullptr)
     {
         return startAddress;
@@ -166,9 +166,9 @@ LPVOID PreReservedVirtualAllocWrapper::EnsurePreReservedRegion()
     }
 }
 
-LPVOID PreReservedVirtualAllocWrapper::EnsurePreReservedRegionInternal()
+void * PreReservedVirtualAllocWrapper::EnsurePreReservedRegionInternal()
 {
-    LPVOID startAddress = preReservedStartAddress;
+    void * startAddress = preReservedStartAddress;
     if (startAddress != nullptr)
     {
         return startAddress;
@@ -189,12 +189,12 @@ LPVOID PreReservedVirtualAllocWrapper::EnsurePreReservedRegionInternal()
 }
 
 /*
-*   LPVOID PreReservedVirtualAllocWrapper::Alloc
+*   void * PreReservedVirtualAllocWrapper::Alloc
 *   -   Reserves only one big memory region.
 *   -   Returns an Allocated memory region within this preReserved region with the specified protectFlags.
 *   -   Tracks the committed pages
 */
-LPVOID PreReservedVirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageCount,  DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation)
+void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageCount,  uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation)
 {
     if (pageCount > AutoSystemInfo::MaxPageCount)
     {
@@ -252,7 +252,7 @@ LPVOID PreReservedVirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageC
                 || memBasicInfo.RegionSize < requestedNumOfSegments * AutoSystemInfo::Data.GetAllocationGranularityPageSize()
                 || memBasicInfo.State == MEM_COMMIT)
             {
-                CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+                CustomHeap_BadPageState_unrecoverable_error((size_t)this);
             }
         }
         else
@@ -321,7 +321,7 @@ LPVOID PreReservedVirtualAllocWrapper::AllocPages(LPVOID lpAddress, size_t pageC
 */
 
 BOOL
-PreReservedVirtualAllocWrapper::Free(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType)
+PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType)
 {
     {
         AutoCriticalSection autocs(&this->cs);
@@ -379,7 +379,7 @@ BOOL
 (WINAPI *PGET_PROCESS_MITIGATION_POLICY_PROC)(
     _In_  HANDLE                    hProcess,
     _In_  PROCESS_MITIGATION_POLICY MitigationPolicy,
-    _Out_ PVOID                     lpBuffer,
+    _Out_ void *                     lpBuffer,
     _In_  SIZE_T                    dwLength
 );
 
@@ -452,9 +452,9 @@ AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
     // If dynamic code is already allowed for this thread, then don't attempt to allow it again.
     //
 
-    DWORD threadPolicy;
+    uint32_t threadPolicy;
 
-    if ((GetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD))) &&
+    if ((GetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t))) &&
         (threadPolicy == THREAD_DYNAMIC_CODE_ALLOW))
     {
         return;
@@ -462,7 +462,7 @@ AutoEnableDynamicCodeGen::AutoEnableDynamicCodeGen(bool enable) : enabled(false)
 
     threadPolicy = THREAD_DYNAMIC_CODE_ALLOW;
 
-    BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD));
+    BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
     Assert(result);
 
     enabled = true;
@@ -472,9 +472,9 @@ AutoEnableDynamicCodeGen::~AutoEnableDynamicCodeGen()
 {
     if (enabled)
     {
-        DWORD threadPolicy = 0;
+        uint32_t threadPolicy = 0;
 
-        BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(DWORD));
+        BOOL result = SetThreadInformationProc(GetCurrentThread(), ThreadDynamicCodePolicy, &threadPolicy, sizeof(uint32_t));
         Assert(result);
 
         enabled = false;

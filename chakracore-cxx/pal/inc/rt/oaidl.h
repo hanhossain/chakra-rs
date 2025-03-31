@@ -18,14 +18,14 @@
 #include "unknwn.h"
 
 typedef struct tagEXCEPINFO {
-    WORD wCode;
-    WORD wReserved;
+    uint16_t wCode;
+    uint16_t wReserved;
     BSTR bstrSource;
     BSTR bstrDescription;
     BSTR bstrHelpFile;
-    DWORD dwHelpContext;
-    PVOID pvReserved;
-    HRESULT (__stdcall *pfnDeferredFillIn)(struct tagEXCEPINFO *);
+    uint32_t dwHelpContext;
+    void * pvReserved;
+    HRESULT (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
 } EXCEPINFO, * LPEXCEPINFO;
 
@@ -51,7 +51,7 @@ EXTERN_C const IID IID_IErrorInfo;
             /* [out] */ BSTR *pBstrHelpFile) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetHelpContext( 
-            /* [out] */ DWORD *pdwHelpContext) = 0;
+            /* [out] */ uint32_t *pdwHelpContext) = 0;
         
     };
     
@@ -78,18 +78,18 @@ typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
             /* [in] */ LPOLESTR szHelpFile) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetHelpContext( 
-            /* [in] */ DWORD dwHelpContext) = 0;
+            /* [in] */ uint32_t dwHelpContext) = 0;
         
     };
     
 STDAPI
-SetErrorInfo(ULONG dwReserved, IErrorInfo FAR* perrinfo);
+SetErrorInfo(uint32_t dwReserved, IErrorInfo * perrinfo);
 
 STDAPI
-GetErrorInfo(ULONG dwReserved, IErrorInfo FAR* FAR* pperrinfo);
+GetErrorInfo(uint32_t dwReserved, IErrorInfo * * pperrinfo);
 
 STDAPI
-CreateErrorInfo(ICreateErrorInfo FAR* FAR* pperrinfo);
+CreateErrorInfo(ICreateErrorInfo * * pperrinfo);
 
 
 typedef interface ISupportErrorInfo ISupportErrorInfo;

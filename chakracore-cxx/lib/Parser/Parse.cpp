@@ -393,7 +393,7 @@ HRESULT Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isG
         m_originalLength = encodedCharCount;
 
         // make sure deferred parsing is turned off
-        ULONG grfscr = fscrNil;
+        uint32_t grfscr = fscrNil;
 
         // Give the scanner the source and get the first token
         this->GetScanner()->SetText(pszSrc, 0, encodedCharCount, 0, false, grfscr);
@@ -457,7 +457,7 @@ HRESULT Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isG
 
 HRESULT Parser::ParseSourceInternal(
     __out ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes, size_t encodedCharCount, charcount_t offsetInChars,
-    bool isUtf8, ULONG grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, ULONG lineNumber, SourceContextInfo * sourceContextInfo)
+    bool isUtf8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo)
 {
     Assert(parseTree);
     Assert(pszSrc);
@@ -1109,7 +1109,7 @@ ParseNodeSuperReference * Parser::CreateSuperReferenceNode(OpCode nop, ParseNode
     return pnode;
 }
 
-ParseNodeProg * Parser::CreateProgNode(bool isModuleSource, ULONG lineNumber)
+ParseNodeProg * Parser::CreateProgNode(bool isModuleSource, uint32_t lineNumber)
 {
     ParseNodeProg * pnodeProg;
 
@@ -5556,7 +5556,7 @@ uint Parser::CalculateFunctionColumnNumber()
     {
         // For the first line after defer parse, compute the column relative to the column number
         // of the lexically parent function.
-        ULONG offsetFromCurrentFunction = ichMinTok - m_currentNodeFunc->ichMin;
+        uint32_t offsetFromCurrentFunction = ichMinTok - m_currentNodeFunc->ichMin;
         columnNumber = m_currentNodeFunc->columnNumber + offsetFromCurrentFunction;
     }
     else
@@ -6208,7 +6208,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
     this->m_deferringAST = TRUE;
 
     // Put the scanner into "no hashing" mode.
-    BYTE deferFlags = this->GetScanner()->SetDeferredParse(TRUE);
+    uint8_t deferFlags = this->GetScanner()->SetDeferredParse(TRUE);
 
     if (!fLambda)
     {
@@ -7220,7 +7220,7 @@ ParseNodeFnc * Parser::GenerateEmptyConstructor(bool extends)
     {
         // For the first line after defer parse, compute the column relative to the column number
         // of the lexically parent function.
-        ULONG offsetFromCurrentFunction = this->GetScanner()->IchMinTok() - m_currentNodeFunc->ichMin;
+        uint32_t offsetFromCurrentFunction = this->GetScanner()->IchMinTok() - m_currentNodeFunc->ichMin;
         pnodeFnc->columnNumber = m_currentNodeFunc->columnNumber + offsetFromCurrentFunction;
     }
     else
@@ -7316,7 +7316,7 @@ void Parser::ParseExpressionLambdaBody(ParseNodeFnc * pnodeLambda, bool fAllowIn
     // We need to disable deferred parse mode in the scanner because the lambda body doesn't end with a right paren.
     // The scanner needs to create a pid in the case of a string constant token immediately following the lambda body expression.
     // Otherwise, we'll save null for the string constant pid which will AV during ByteCode generation.
-    BYTE fScanDeferredFlagsSave = this->GetScanner()->SetDeferredParse(FALSE);
+    uint8_t fScanDeferredFlagsSave = this->GetScanner()->SetDeferredParse(FALSE);
     ParseNodePtr result = ParseExpr<buildAST>(koplAsg, nullptr, fAllowIn, FALSE, nullptr, nullptr, nullptr, &token, false, nullptr, &lastRParen);
     this->GetScanner()->SetDeferredParseFlags(fScanDeferredFlagsSave);
 
@@ -8575,10 +8575,10 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR r
     return finalName;
 }
 
-WCHAR * Parser::AllocateStringOfLength(ULONG length)
+WCHAR * Parser::AllocateStringOfLength(uint32_t length)
 {
     Assert(length > 0);
-    ULONG totalBytes;
+    uint32_t totalBytes;
     if (ULongMult(length, sizeof(OLECHAR), &totalBytes) != S_OK)
     {
         Error(ERRnoMemory);
@@ -11589,7 +11589,7 @@ void Parser::FinishFunctionsInScope(ParseNodePtr pnodeScopeList, Fn fn)
 
 // Scripts above this size (minus string literals and comments) will have parsing of
 // function bodies deferred.
-ULONG Parser::GetDeferralThreshold(bool isProfileLoaded)
+uint32_t Parser::GetDeferralThreshold(bool isProfileLoaded)
 {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (CONFIG_FLAG(ForceDeferParse) ||
@@ -11883,7 +11883,7 @@ void Parser::FinishScopeInfo(Js::ScopeInfo * scopeInfo)
 /***************************************************************************
 Parse the code.
 ***************************************************************************/
-ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, ULONG grfscr, ULONG lineNumber, Js::LocalFunctionId * nextFunctionId, CompileScriptException *pse)
+ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, charcount_t charOffset, bool isUtf8, uint32_t grfscr, uint32_t lineNumber, Js::LocalFunctionId * nextFunctionId, CompileScriptException *pse)
 {
     ParseNodeProg * pnodeProg;
     ParseNodePtr *lastNodeRef = nullptr;
@@ -12345,7 +12345,7 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
 #endif
 }
 
-HRESULT Parser::ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, ULONG grfsrc, CompileScriptException *pse,
+HRESULT Parser::ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12353,7 +12353,7 @@ HRESULT Parser::ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, 
     return ParseSourceInternal(parseTree, pSrc, 0, length, 0, true, grfsrc, pse, nextFunctionId, 0, sourceContextInfo);
 }
 
-HRESULT Parser::ParseCesu8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, ULONG grfsrc, CompileScriptException *pse,
+HRESULT Parser::ParseCesu8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12454,7 +12454,7 @@ HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext 
         m_ppnodeVar = &pnodeFnc->pnodeVars;
 
         // Put the scanner into "no hashing" mode.
-        BYTE deferFlags = this->GetScanner()->SetDeferredParse(topLevelDeferred);
+        uint8_t deferFlags = this->GetScanner()->SetDeferredParse(topLevelDeferred);
 
         // Process a sequence of statements/declarations
         if (topLevelDeferred)
@@ -12513,7 +12513,7 @@ HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext 
 #endif
 
 HRESULT Parser::ParseSourceWithOffset(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
-    bool isCesu8, ULONG grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, ULONG lineNumber, SourceContextInfo * sourceContextInfo,
+    bool isCesu8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo,
     Js::ParseableFunctionInfo* functionInfo)
 {
     m_functionBody = functionInfo;

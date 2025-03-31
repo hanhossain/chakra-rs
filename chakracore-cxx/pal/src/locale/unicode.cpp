@@ -79,7 +79,7 @@ static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
 // - On OSX, HFS+ file names are encoded as UTF-8.
 // - On OSX, When writing strings to the console, the Terminal.app will interpret them as UTF-8.
 // - We want Ansi marshalling to mean marshal to UTF-8 on Mac and Linux
-static const UINT PAL_ACP = 65001;
+static const uint32_t PAL_ACP = 65001;
 
 #if !HAVE_COREFOUNDATION
 /*++
@@ -102,15 +102,15 @@ Return value:
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
     WCHAR uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
-    WORD  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
+    uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
 
-    if (*((INT*)pnKey) < uValue)
+    if (*((int32_t*)pnKey) < uValue)
     {
         return -1;
     }
     else
     {
-        if (*((INT*)pnKey) > (uValue + rangeValue))
+        if (*((int32_t*)pnKey) > (uValue + rangeValue))
         {
             return 1;
         }
@@ -136,7 +136,7 @@ Return value:
 TRUE if the Unicode character was found.
 
 --*/
-BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
+BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
 {
     BOOL bRet;
     if (nUnicodeValue <= UNICODE_DATA_DIRECT_ACCESS)
@@ -147,7 +147,7 @@ BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
     else
     {
         UnicodeDataRec *dataRec;
-        INT nNumOfChars = UNICODE_DATA_SIZE;
+        int32_t nNumOfChars = UNICODE_DATA_SIZE;
         dataRec = (UnicodeDataRec *) bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
                        sizeof(UnicodeDataRec), UnicodeDataComp);
         if (dataRec == NULL)
@@ -168,16 +168,16 @@ BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
 Function:
 CODEPAGEGetData
 
-    IN UINT CodePage - The code page the caller
+    IN uint32_t CodePage - The code page the caller
     is attempting to retrieve data on.
 
     Returns a pointer to structure, NULL otherwise.
 --*/
 const CP_MAPPING *
-CODEPAGEGetData( IN UINT CodePage )
+CODEPAGEGetData(  uint32_t CodePage )
 {
-    UINT nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
-    UINT nIndex = 0;
+    uint32_t nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
+    uint32_t nIndex = 0;
 
     if ( CP_ACP == CodePage )
     {
@@ -205,7 +205,7 @@ the given codepage.
 
 Returns the CFStringEncoding for the given codepage.
 --*/
-CFStringEncoding CODEPAGECPToCFStringEncoding(UINT codepage)
+CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 {
     const CP_MAPPING *cp_mapping = CODEPAGEGetData(codepage);
     if (cp_mapping == NULL)
@@ -237,9 +237,8 @@ If lpsz points to the terminating null character, the return value is equal to l
 See MSDN doc.
 --*/
 LPSTR
-PALAPI
 CharNextA(
-  IN LPCSTR lpsz)
+   LPCSTR lpsz)
 {
     LPSTR pRet;
     PERF_ENTRY(CharNextA);
@@ -260,11 +259,10 @@ CharNextExA
 See MSDN doc.
 --*/
 LPSTR
-PALAPI
 CharNextExA(
-    IN WORD CodePage,
-    IN LPCSTR lpCurrentChar,
-    IN DWORD dwFlags)
+     uint16_t CodePage,
+     LPCSTR lpCurrentChar,
+     uint32_t dwFlags)
 {
     LPSTR pRet = (LPSTR) lpCurrentChar;
 
@@ -304,9 +302,8 @@ of OEM code pages.
 
 --*/
 BOOL
-PALAPI
 AreFileApisANSI(
-    VOID)
+    void)
 {
     PERF_ENTRY(AreFileApisANSI);
     ENTRY("AreFileApisANSI ()\n");
@@ -323,12 +320,11 @@ GetConsoleCP
 
 See MSDN doc.
 --*/
-UINT
-PALAPI
+uint32_t
 GetConsoleCP(
-     VOID)
+     void)
 {
-    UINT nRet = 0;
+    uint32_t nRet = 0;
     PERF_ENTRY(GetConsoleCP);
     ENTRY("GetConsoleCP()\n");
 
@@ -345,12 +341,11 @@ GetConsoleOutputCP
 
 See MSDN doc.
 --*/
-UINT
-PALAPI
+uint32_t
 GetConsoleOutputCP(
-       VOID)
+       void)
 {
-    UINT nRet = 0;
+    uint32_t nRet = 0;
     PERF_ENTRY(GetConsoleOutputCP);
     ENTRY("GetConsoleOutputCP()\n");
     nRet = GetACP();
@@ -373,9 +368,8 @@ MSDN fails to mention them in the IsValidCodePage entry.
 Note : CP_UTF7 support isn't required for Rotor
 --*/
 BOOL
-PALAPI
 IsValidCodePage(
-    IN UINT CodePage)
+     uint32_t CodePage)
 {
     BOOL retval = FALSE;
 
@@ -417,13 +411,12 @@ GetStringTypeEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetStringTypeExW(
-     IN LCID Locale,
-     IN DWORD dwInfoType,
-     IN LPCWSTR lpSrcStr,
-     IN int cchSrc,
-     OUT LPWORD lpCharType)
+      LCID Locale,
+      uint32_t dwInfoType,
+      LPCWSTR lpSrcStr,
+      int cchSrc,
+      uint16_t * lpCharType)
 {
 
 
@@ -526,10 +519,9 @@ GetCPInfo
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetCPInfo(
-  IN UINT CodePage,
-  OUT LPCPINFO lpCPInfo)
+   uint32_t CodePage,
+   LPCPINFO lpCPInfo)
 {
     const CP_MAPPING * lpStruct = NULL;
     BOOL bRet = FALSE;
@@ -579,9 +571,8 @@ GetACP
 
 See MSDN doc.
 --*/
-UINT
-PALAPI
-GetACP(VOID)
+uint32_t
+GetACP(void)
 {
     PERF_ENTRY(GetACP);
     ENTRY("GetACP(VOID)\n");
@@ -600,10 +591,9 @@ IsDBCSLeadByteEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 IsDBCSLeadByteEx(
-     IN UINT CodePage,
-     IN BYTE TestChar)
+      uint32_t CodePage,
+      uint8_t TestChar)
 {
     CPINFO cpinfo;
     SIZE_T i;
@@ -647,9 +637,8 @@ IsDBCSLeadByte
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 IsDBCSLeadByte(
-        IN BYTE TestChar)
+         uint8_t TestChar)
 {
     // UNIXTODO: Implement this!
     ERROR("Needs Implementation!!!");
@@ -664,16 +653,15 @@ See MSDN doc.
 
 --*/
 int
-PALAPI
 MultiByteToWideChar(
-        IN UINT CodePage,
-        IN DWORD dwFlags,
-        IN LPCSTR lpMultiByteStr,
-        IN int cbMultiByte,
-        OUT LPWSTR lpWideCharStr,
-        IN int cchWideChar)
+         uint32_t CodePage,
+         uint32_t dwFlags,
+         LPCSTR lpMultiByteStr,
+         int cbMultiByte,
+         LPWSTR lpWideCharStr,
+         int cchWideChar)
 {
-    INT retval =0;
+    int32_t retval =0;
 #if HAVE_COREFOUNDATION
     CFStringRef cfString = NULL;
     CFStringEncoding cfEncoding;
@@ -791,18 +779,17 @@ See MSDN doc.
 
 --*/
 int
-PALAPI
 WideCharToMultiByte(
-        IN UINT CodePage,
-        IN DWORD dwFlags,
-        IN LPCWSTR lpWideCharStr,
-        IN int cchWideChar,
-        OUT LPSTR lpMultiByteStr,
-        IN int cbMultiByte,
-        IN LPCSTR lpDefaultChar,
-        OUT LPBOOL lpUsedDefaultChar)
+         uint32_t CodePage,
+         uint32_t dwFlags,
+         LPCWSTR lpWideCharStr,
+         int cchWideChar,
+         LPSTR lpMultiByteStr,
+         int cbMultiByte,
+         LPCSTR lpDefaultChar,
+         LPBOOL lpUsedDefaultChar)
 {
-    INT retval =0;
+    int32_t retval =0;
     char defaultChar = '?';
     BOOL usedDefaultChar = FALSE;
 #if HAVE_COREFOUNDATION
@@ -964,12 +951,11 @@ will be returned if an appropriately localized version is not found.
 Returns number of characters retrieved, 0 if it failed.
 --*/
 int
-PALAPI
 PAL_GetResourceString(
-        IN LPCSTR lpDomain,
-        IN LPCSTR lpResourceStr,
-        OUT LPWSTR lpWideCharStr,
-        IN int cchWideChar
+         LPCSTR lpDomain,
+         LPCSTR lpResourceStr,
+         LPWSTR lpWideCharStr,
+         int cchWideChar
       )
 {
 #if !defined(__APPLE__) && !defined(__ANDROID__)

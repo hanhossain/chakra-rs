@@ -7,9 +7,9 @@
 #include "Language/JavascriptFunctionArgIndex.h"
 #include "Language/InterpreterStackFrame.h"
 
-#define FAligned(VALUE, TYPE) ((((LONG_PTR)VALUE) & (sizeof(TYPE)-1)) == 0)
+#define FAligned(VALUE, TYPE) ((((ptrdiff_t)VALUE) & (sizeof(TYPE)-1)) == 0)
 
-#define AlignIt(VALUE, TYPE) (~(~((LONG_PTR)(VALUE) + (sizeof(TYPE)-1)) | (sizeof(TYPE)-1)))
+#define AlignIt(VALUE, TYPE) (~(~((ptrdiff_t)(VALUE) + (sizeof(TYPE)-1)) | (sizeof(TYPE)-1)))
 
 namespace Js
 {
@@ -501,7 +501,7 @@ namespace Js
     }
 #endif
 
-    bool JavascriptStackWalker::GetSourcePosition(const WCHAR** sourceFileName, ULONG* line, LONG* column)
+    bool JavascriptStackWalker::GetSourcePosition(const WCHAR** sourceFileName, uint32_t* line, int32_t* column)
     {
         uint byteCodeoffset = this->GetByteCodeOffset();
         if(byteCodeoffset)
@@ -660,7 +660,7 @@ namespace Js
 #endif
     // Note: noinline is to make sure that when we unwind to the unwindToAddress, there is at least one frame to unwind.
     _NOINLINE
-    JavascriptStackWalker::JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext, PVOID returnAddress, bool _forceFullWalk /*=false*/) :
+    JavascriptStackWalker::JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext, void * returnAddress, bool _forceFullWalk /*=false*/) :
         inlinedFrameCallInfo(CallFlags_None, 0), shouldDetectPartiallyInitializedInterpreterFrame(true), forceFullWalk(_forceFullWalk),
         previousInterpreterFrameIsFromBailout(false), previousInterpreterFrameIsForLoopBody(false), hasInlinedFramesOnStack(false)
     {

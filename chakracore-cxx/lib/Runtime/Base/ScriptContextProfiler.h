@@ -24,8 +24,8 @@ namespace Js
         bool IsInitialized() const { return profilerArena != nullptr; }
         void Initialize(PageAllocator * pageAllocator, Recycler * recycler);
 
-        ULONG AddRef();
-        ULONG Release();
+        uint32_t AddRef();
+        uint32_t Release();
 
         Profiler * GetProfiler() { return profiler; }
         Profiler * GetBackgroundRecyclerProfiler() { return backgroundRecyclerProfiler; }

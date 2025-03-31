@@ -61,7 +61,7 @@ CSimpleHandleManager::Initialize(
         goto InitializeExit;
     }
 
-    for (DWORD i = 0; i < m_dwTableSize; i++)
+    for (uint32_t i = 0; i < m_dwTableSize; i++)
     {
         m_rghteHandleTable[i].u.hiNextIndex = i + 1;
         m_rghteHandleTable[i].fEntryAllocated = FALSE;
@@ -83,13 +83,13 @@ PAL_ERROR
 CSimpleHandleManager::AllocateHandle(
     CPalThread *pThread,
     IPalObject *pObject,
-    DWORD dwAccessRights,
+    uint32_t dwAccessRights,
     bool fInheritable,
     HANDLE *ph
     )
 {
     PAL_ERROR palError = NO_ERROR;
-    DWORD dwIndex;
+    uint32_t dwIndex;
 
     Lock(pThread);
 
@@ -125,7 +125,7 @@ CSimpleHandleManager::AllocateHandle(
         m_rghteHandleTable = rghteTempTable;
 
         /* update handle table and handle pool */
-        for (DWORD dw = m_dwTableSize; dw < m_dwTableSize + m_dwTableGrowthRate; dw += 1)
+        for (uint32_t dw = m_dwTableSize; dw < m_dwTableSize + m_dwTableGrowthRate; dw += 1)
         {
             /* new handles are initially invalid */
             /* the last "old" handle was m_dwTableSize-1, so the new
@@ -174,7 +174,7 @@ PAL_ERROR
 CSimpleHandleManager::GetObjectFromHandle(
     CPalThread *pThread,
     HANDLE h,
-    DWORD *pdwRightsGranted,
+    uint32_t *pdwRightsGranted,
     IPalObject **ppObject
     )
 {
@@ -271,7 +271,7 @@ Return Value :
 --*/
 bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
 {
-    DWORD dwIndex;
+    uint32_t dwIndex;
     
     if (NULL == m_rghteHandleTable)
     {

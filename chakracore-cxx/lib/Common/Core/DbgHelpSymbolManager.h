@@ -15,10 +15,10 @@ class DbgHelpSymbolManager
 {
 public:
     static void EnsureInitialized() { Instance.Initialize(); }
-    static BOOL SymFromAddr(PVOID address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol);
-    static BOOL SymGetLineFromAddr64(_In_ PVOID address, _Out_ PDWORD pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine);
+    static BOOL SymFromAddr(void * address, DWORD64 * dwDisplacement, PSYMBOL_INFO pSymbol);
+    static BOOL SymGetLineFromAddr64(_In_ void * address, _Out_ uint32_t * pdwDisplacement, _Out_ PIMAGEHLP_LINEW64 pLine);
 
-    static size_t PrintSymbol(PVOID address);
+    static size_t PrintSymbol(void * address);
 private:
     DbgHelpSymbolManager() : isInitialized(false), hDbgHelpModule(nullptr), pfnSymFromAddrW(nullptr) {}
     ~DbgHelpSymbolManager();
@@ -31,10 +31,10 @@ private:
     HANDLE hProcess;
     HMODULE hDbgHelpModule;
 
-    typedef BOOL(__stdcall *PfnSymFromAddrW)(HANDLE, DWORD64, PDWORD64, PSYMBOL_INFOW);
+    typedef BOOL(*PfnSymFromAddrW)(HANDLE, DWORD64, PDWORD64, PSYMBOL_INFOW);
     PfnSymFromAddrW pfnSymFromAddrW;
 
-    typedef BOOL(__stdcall *PfnSymGetLineFromAddr64W)(HANDLE, DWORD64, PDWORD, PIMAGEHLP_LINEW64);
+    typedef BOOL(*PfnSymGetLineFromAddr64W)(HANDLE, DWORD64, uint32_t *, PIMAGEHLP_LINEW64);
     PfnSymGetLineFromAddr64W pfnSymGetLineFromAddr64W;
 };
 #endif

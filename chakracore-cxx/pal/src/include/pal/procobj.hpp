@@ -41,8 +41,8 @@ namespace CorUnix
     struct ProcessModules
     {
         ProcessModules *Next;
-        PVOID BaseAddress;
-        CHAR Name[0];
+        void * BaseAddress;
+        char Name[0];
     };
 
     //
@@ -79,17 +79,17 @@ namespace CorUnix
 
         ~CProcProcessLocalData();
         
-        DWORD dwProcessId;
+        uint32_t dwProcessId;
         PROCESS_STATE ps;
-        DWORD dwExitCode;
-        LONG lAttachCount;
+        uint32_t dwExitCode;
+        int32_t lAttachCount;
         ProcessModules *pProcessModules;
     };
 
     class CProcSharedData
     {
     public:
-        DWORD dwProcessId;
+        uint32_t dwProcessId;
     };
 
     PAL_ERROR
@@ -100,8 +100,8 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES lpProcessAttributes,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
         BOOL bInheritHandles,
-        DWORD dwCreationFlags,
-        LPVOID lpEnvironment,
+        uint32_t dwCreationFlags,
+        void * lpEnvironment,
         LPCWSTR lpCurrentDirectory,
         LPSTARTUPINFOW lpStartupInfo,
         LPPROCESS_INFORMATION lpProcessInformation

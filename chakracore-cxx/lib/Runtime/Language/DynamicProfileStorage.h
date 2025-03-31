@@ -16,13 +16,13 @@ public:
 
     template <typename Fn>
     static Js::SourceDynamicProfileManager * Load(__in_z char16 const * filename, Fn loadFn);
-    static void SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(DWORD) + *record) char const * record);
+    static void SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record);
 
-    static char * AllocRecord(DECLSPEC_GUARD_OVERFLOW DWORD bufferSize);
-    static void DeleteRecord(__in_ecount(sizeof(DWORD) + *record) char const * record);
-    static char const * GetRecordBuffer(__in_ecount(sizeof(DWORD) + *record) char const * record);
-    static char * GetRecordBuffer(__in_ecount(sizeof(DWORD) + *record) char * record);
-    static DWORD GetRecordSize(__in_ecount(sizeof(DWORD) + *record) char const * record);
+    static char * AllocRecord(DECLSPEC_GUARD_OVERFLOW uint32_t bufferSize);
+    static void DeleteRecord(__in_ecount(sizeof(uint32_t) + *record) char const * record);
+    static char const * GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *record) char const * record);
+    static char * GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *record) char * record);
+    static uint32_t GetRecordSize(__in_ecount(sizeof(uint32_t) + *record) char const * record);
 private:
     static char16 const * GetMessageType();
     static void ClearInfoMap(bool deleteFileStorage);
@@ -48,15 +48,15 @@ private:
     static char16 cacheDrive[_MAX_DRIVE];
     static char16 cacheDir[_MAX_DIR];
     static char16 catalogFilename[_MAX_PATH];
-    static DWORD const MagicNumber;
-    static DWORD const FileFormatVersion;
+    static uint32_t const MagicNumber;
+    static uint32_t const FileFormatVersion;
     typedef time_t TimeType;
     static inline TimeType GetCreationTime() { return time(NULL); }
     static TimeType creationTime;
     static int32 lastOffset;
     static HANDLE mutex;
     static CriticalSection cs;
-    static DWORD nextFileId;
+    static uint32_t nextFileId;
     static bool locked;
 #if DBG_DUMP
     static bool DoTrace();
@@ -66,11 +66,11 @@ private:
     public:
         void GetFilename(_Out_writes_z_(_MAX_PATH) char16 filename[_MAX_PATH]) const;
         char const * ReadRecord() const;
-        bool WriteRecord(__in_ecount(sizeof(DWORD) + *record) char const * record) const;
+        bool WriteRecord(__in_ecount(sizeof(uint32_t) + *record) char const * record) const;
         bool isFileStorage;
         union
         {
-            DWORD fileId;
+            uint32_t fileId;
             char const * record;
         };
     };
@@ -128,7 +128,7 @@ DynamicProfileStorage::Load(char16 const * filename, Fn loadFn)
     {
         record = info->record;
     }
-    DWORD recordSize = GetRecordSize(record);
+    uint32_t recordSize = GetRecordSize(record);
     if (recordSize == 0) 
     {
         return nullptr;

@@ -53,7 +53,6 @@ Value Meaning
 
 --*/
 int
-__cdecl
 _strnicmp( const char *s1, const char *s2, size_t count )
 {
     int ret;
@@ -89,7 +88,6 @@ Value Meaning
 
 --*/
 int
-__cdecl
 _stricmp(
          const char *s1,
          const char *s2)
@@ -132,7 +130,6 @@ information on LC_CTYPE, see setlocale.
 
 --*/
 char *
-__cdecl
 _strlwr(
         char *str)
 {
@@ -167,7 +164,7 @@ set to ERANGE if overflow or underflow occurs.
 
 Parameters
 
-szNumber  Null-terminated string to convert to a ULONG
+szNumber  Null-terminated string to convert to a uint32_t
 pszEnd          Pointer to character that stops scan
 nBase           Number base to use
 
@@ -198,12 +195,11 @@ Notes :
     Windows behavior, we must return long's in the 32 bit range.
     --*/
 
-/* The use of ULONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "unsigned long" is used instead of ULONG,
+/* The use of uint32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "unsigned long" is used instead of uint32_t,
 then a 64 bit value could be returned on 64 bit platforms like HP-UX, thus
 breaking Windows behavior. */
-ULONG
-__cdecl
+uint32_t
 PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
 {
     unsigned long ulResult;
@@ -217,7 +213,6 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
 
     ulResult = strtoul(szNumber, pszEnd, nBase);
 
-#ifdef BIT64
     if (ulResult > _UI32_MAX)
     {
         char ch = *szNumber;
@@ -234,20 +229,19 @@ PAL_strtoul(const char *szNumber, char **pszEnd, int nBase)
             errno = ERANGE;
         }
     }
-#endif
 
     LOGEXIT("strtoul returning unsigned long %lu\n", ulResult);
     PERF_EXIT(wcstoul);
 
     /* When returning unsigned long res from this function, it will be
-        implicitly cast to ULONG. This handles situations where a string that
+        implicitly cast to uint32_t. This handles situations where a string that
         represents a negative number is passed in to strtoul. The Windows
         behavior is analogous to taking the binary equivalent of the negative
-        value and treating it as a positive number. Returning a ULONG from
+        value and treating it as a positive number. Returning a uint32_t from
         this function, as opposed to native unsigned long, allows us to match
-        this behavior. The explicit cast to ULONG below is used to silence any
+        this behavior. The explicit cast to uint32_t below is used to silence any
         potential warnings due to the implicit casting.  */
-    return (ULONG)ulResult;
+    return (uint32_t)ulResult;
 
 }
 
@@ -265,15 +259,14 @@ the return value is undefined.
 
 Parameters
 
-szNumber  Null-terminated string to convert to a LONG
+szNumber  Null-terminated string to convert to a int32_t
 --*/
 
-/* The use of LONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "long" is used instead of LONG, then a 64 bit
+/* The use of int32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "long" is used instead of int32_t, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
-LONG
-__cdecl
+int32_t
 PAL_atol(const char *szNumber)
 {
     long lResult;
@@ -285,10 +278,10 @@ PAL_atol(const char *szNumber)
 
     lResult = atol(szNumber);
 
-    LOGEXIT("atol returning long %ld\n", (LONG)lResult);
+    LOGEXIT("atol returning long %ld\n", (int32_t)lResult);
     PERF_EXIT(atol);
-    /* This explicit cast to LONG is used to silence any potential warnings
-        due to implicitly casting the native long lResult to LONG when returning. */
-    return (LONG)lResult;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+        due to implicitly casting the native long lResult to int32_t when returning. */
+    return (int32_t)lResult;
 
 }

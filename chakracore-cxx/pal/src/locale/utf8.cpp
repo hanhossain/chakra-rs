@@ -62,16 +62,16 @@ int UTF8ToUnicode(
     int cchSrc,
     LPWSTR lpDestStr,
     int cchDest,
-    DWORD dwFlags
+    uint32_t dwFlags
     )
 {
     int nTB = 0;                   // # trail bytes to follow
     int cchWC = 0;                 // # of Unicode code points generated
-    CONST BYTE* pUTF8 = (CONST BYTE*)lpSrcStr;
-    DWORD dwUnicodeChar = 0;       // Our character with room for full surrogate char
+    const uint8_t* pUTF8 = (const uint8_t*)lpSrcStr;
+    uint32_t dwUnicodeChar = 0;       // Our character with room for full surrogate char
     BOOL bSurrogatePair = FALSE;   // Indicate we're collecting a surrogate pair
     BOOL bCheckInvalidBytes = (dwFlags & MB_ERR_INVALID_CHARS);
-    BYTE UTF8;
+    uint8_t UTF8;
 
     // Note that we can't test destination buffer length here because we may have to
     // iterate through thousands of broken characters which won't be output, even though
@@ -251,7 +251,7 @@ int UTF8ToUnicode(
                         //
                         if (cchSrc >= 3)
                         {
-                            WORD word = (((WORD)*pUTF8) << 8) | *(pUTF8 + 1);
+                            uint16_t word = (((uint16_t)*pUTF8) << 8) | *(pUTF8 + 1);
                             // Look ahead to check for non-shortest form.
                             // 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx                        
                             // Check if the 5 X bits are all zero.
@@ -342,7 +342,7 @@ int UnicodeToUTF8(
 {
     LPCWSTR lpWC = lpSrcStr;
     int     cchU8 = 0;                // # of UTF8 chars generated
-    DWORD   dwSurrogateChar;
+    uint32_t   dwSurrogateChar;
     WCHAR   wchHighSurrogate = 0;
     BOOL    bHandled;
 

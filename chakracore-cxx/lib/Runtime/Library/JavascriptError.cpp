@@ -14,10 +14,10 @@
 
 namespace Js
 {
-    DWORD JavascriptError::GetAdjustedResourceStringHr(DWORD hr, bool isFormatString)
+    uint32_t JavascriptError::GetAdjustedResourceStringHr(uint32_t hr, bool isFormatString)
     {
         AssertMsg(FACILITY_CONTROL == HRESULT_FACILITY(hr) || FACILITY_JSCRIPT == HRESULT_FACILITY(hr), "Chakra hr are either FACILITY_CONTROL (for private HRs) or FACILITY_JSCRIPT (for public HRs)");
-        WORD scodeIncr = isFormatString ? RTERROR_STRINGFORMAT_OFFSET : 0; // default for FACILITY_CONTROL == HRESULT_FACILITY(hr)
+        uint16_t scodeIncr = isFormatString ? RTERROR_STRINGFORMAT_OFFSET : 0; // default for FACILITY_CONTROL == HRESULT_FACILITY(hr)
         if (FACILITY_JSCRIPT == HRESULT_FACILITY(hr))
         {
             scodeIncr += RTERROR_PUBLIC_RESOURCEOFFSET;
@@ -610,7 +610,7 @@ namespace Js
         JavascriptExceptionOperators::ThrowOutOfMemory(scriptContext);
     }
 
-    void __declspec(noreturn) JavascriptError::ThrowStackOverflowError(ScriptContext *scriptContext, PVOID returnAddress)
+    void __declspec(noreturn) JavascriptError::ThrowStackOverflowError(ScriptContext *scriptContext, void * returnAddress)
     {
         JavascriptExceptionOperators::ThrowStackOverflow(scriptContext, returnAddress);
     }

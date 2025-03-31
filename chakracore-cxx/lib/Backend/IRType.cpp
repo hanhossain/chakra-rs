@@ -11,7 +11,7 @@ int const TySize[] = {
 #undef IRTYPE
 };
 
-enum IRBaseTypes : BYTE {
+enum IRBaseTypes : uint8_t {
     IRBaseType_Illegal,
     IRBaseType_Int,
     IRBaseType_Uint,

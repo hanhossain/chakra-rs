@@ -119,7 +119,7 @@ public:
 
     IR::Instr *         LoadCheckedFloat(IR::RegOpnd *opndOrig, IR::RegOpnd *opndFloat, IR::LabelInstr *labelInline, IR::LabelInstr *labelHelper, IR::Instr *instrInsert, const bool checkForNullInLoopBody = false);
 
-    static BYTE         GetDefaultIndirScale();
+    static uint8_t         GetDefaultIndirScale();
     static RegNum       GetRegShiftCount();
     static RegNum       GetRegReturn(IRType type);
     static RegNum       GetRegReturnAsmJs(IRType type);

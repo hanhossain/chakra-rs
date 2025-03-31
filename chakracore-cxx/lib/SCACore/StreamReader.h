@@ -25,7 +25,7 @@ namespace Js
             return m_length - m_current;
         }
 
-        // ULONG RealRead(void* pv, ULONG cb);
+        // uint32_t RealRead(void* pv, uint32_t cb);
 
     public:
         StreamReader(ScriptContext* scriptContext, byte* buffer, size_t length, HostReadStream *stream)

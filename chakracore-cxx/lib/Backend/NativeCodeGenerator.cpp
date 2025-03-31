@@ -265,7 +265,7 @@ NativeCodeGenerator::GenerateAllFunctions(Js::FunctionBody * fn)
 #endif
 
 #if _M_ARM
-USHORT ArmExtractThumbImmediate16(PUSHORT address)
+unsigned short ArmExtractThumbImmediate16(unsigned short * address)
 {
     return ((address[0] << 12) & 0xf000) |  // bits[15:12] in OP0[3:0]
            ((address[0] <<  1) & 0x0800) |  // bits[11]    in OP0[10]
@@ -273,10 +273,10 @@ USHORT ArmExtractThumbImmediate16(PUSHORT address)
            ((address[1] >>  0) & 0x00ff);   // bits[7:0]   in OP1[7:0]
 }
 
-void ArmInsertThumbImmediate16(PUSHORT address, USHORT immediate)
+void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediate)
 {
-    USHORT opcode0;
-    USHORT opcode1;
+    unsigned short opcode0;
+    unsigned short opcode1;
 
     opcode0 = address[0];
     opcode1 = address[1];
@@ -291,12 +291,12 @@ void ArmInsertThumbImmediate16(PUSHORT address, USHORT immediate)
 }
 #endif
 
-void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionSize, BYTE *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
+void DoFunctionRelocations(uint8_t *function, uint32_t functionOffset, uint32_t functionSize, uint8_t *module, size_t imageBase, IMAGE_SECTION_HEADER *textHeader, IMAGE_SECTION_HEADER *relocHeader)
 {
     PIMAGE_BASE_RELOCATION relocationBlock = (PIMAGE_BASE_RELOCATION)(module + relocHeader->PointerToRawData);
-    for (; relocationBlock->VirtualAddress > 0 && ((BYTE *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
+    for (; relocationBlock->VirtualAddress > 0 && ((uint8_t *)relocationBlock < (module + relocHeader->PointerToRawData + relocHeader->SizeOfRawData)); )
     {
-        DWORD blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
+        uint32_t blockOffset = relocationBlock->VirtualAddress - textHeader->VirtualAddress;
 
         // Skip relocation blocks that are before the function
         if ((blockOffset + 0x1000) > functionOffset)
@@ -326,10 +326,10 @@ void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionS
 #if _M_IX86
                 case IMAGE_REL_BASED_HIGHLOW:
                     {
-                        DWORD *patchAddrHL = (DWORD *) (function + blockOffset + offset - functionOffset);
-                        DWORD patchAddrHLOffset = *patchAddrHL - imageBase - textHeader->VirtualAddress;
+                        uint32_t *patchAddrHL = (uint32_t *) (function + blockOffset + offset - functionOffset);
+                        uint32_t patchAddrHLOffset = *patchAddrHL - imageBase - textHeader->VirtualAddress;
                         Assert((patchAddrHLOffset > functionOffset) && (patchAddrHLOffset < (functionOffset + functionSize)));
-                        *patchAddrHL = patchAddrHLOffset - functionOffset + (DWORD)function;
+                        *patchAddrHL = patchAddrHLOffset - functionOffset + (uint32_t)function;
                     }
                     break;
 
@@ -345,11 +345,11 @@ void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionS
 #else
                 case IMAGE_REL_BASED_THUMB_MOV32:
                     {
-                        USHORT *patchAddr = (USHORT *) (function + blockOffset + offset - functionOffset);
-                        DWORD address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
-                        address = address - imageBase - textHeader->VirtualAddress - functionOffset + (DWORD)function;
-                        ArmInsertThumbImmediate16(patchAddr, (USHORT)(address & 0xFFFF));
-                        ArmInsertThumbImmediate16(patchAddr + 2, (USHORT)(address >> 16));
+                        unsigned short *patchAddr = (unsigned short *) (function + blockOffset + offset - functionOffset);
+                        uint32_t address = ArmExtractThumbImmediate16(patchAddr) | (ArmExtractThumbImmediate16(patchAddr + 2) << 16);
+                        address = address - imageBase - textHeader->VirtualAddress - functionOffset + (uint32_t)function;
+                        ArmInsertThumbImmediate16(patchAddr, (unsigned short)(address & 0xFFFF));
+                        ArmInsertThumbImmediate16(patchAddr + 2, (unsigned short)(address >> 16));
                     }
                     break;
 #endif
@@ -361,7 +361,7 @@ void DoFunctionRelocations(BYTE *function, DWORD functionOffset, DWORD functionS
             }
         }
 
-        relocationBlock = (PIMAGE_BASE_RELOCATION) (((BYTE *) relocationBlock) + relocationBlock->SizeOfBlock);
+        relocationBlock = (PIMAGE_BASE_RELOCATION) (((uint8_t *) relocationBlock) + relocationBlock->SizeOfBlock);
     }
 }
 
@@ -969,7 +969,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsOOPJITEnabled())
     {
-        workItem->GetJITData()->nativeDataAddr = (__int3264)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
+        workItem->GetJITData()->nativeDataAddr = (__int64)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
     }
 #endif
 
@@ -1155,8 +1155,8 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
                 if (function->Flag == 0)
                 {
                     // UnwindData was set on server as the offset from the beginning of xdata buffer
-                    function->UnwindData = (DWORD)(xdataInfo->address + function->UnwindData);
-                    Assert(((DWORD)function->UnwindData & 0x3) == 0); // 4 byte aligned
+                    function->UnwindData = (uint32_t)(xdataInfo->address + function->UnwindData);
+                    Assert(((uint32_t)function->UnwindData & 0x3) == 0); // 4 byte aligned
                 }
             }
         }
@@ -1174,11 +1174,11 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     {
         if (jitWriteData.thunkAddress)
         {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((PVOID)jitWriteData.thunkAddress);
+            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.thunkAddress);
         }
         else
         {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((PVOID)jitWriteData.codeAddress);
+            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.codeAddress);
         }
     }
     if (workItem->Type() == JsLoopBodyWorkItemType)

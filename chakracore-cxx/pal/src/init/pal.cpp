@@ -86,9 +86,9 @@ extern "C" BOOL CRTInitStdStreams( void );
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
-Volatile<INT> init_count PAL_GLOBAL = 0;
+Volatile<int32_t> init_count PAL_GLOBAL = 0;
 Volatile<BOOL> shutdown_intent PAL_GLOBAL = 0;
-Volatile<LONG> g_chakraCoreInitialized PAL_GLOBAL = 0;
+Volatile<int32_t> g_chakraCoreInitialized PAL_GLOBAL = 0;
 static BOOL g_fThreadDataAvailable = FALSE;
 static pthread_mutex_t init_critsec_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -454,7 +454,6 @@ bool PAL_InitializeChakraCoreCalled = false;
 #endif
 
 int
-PALAPI
 PAL_InitializeChakraCore()
 {
     // this is not thread safe but PAL_InitializeChakraCore is per process
@@ -492,9 +491,7 @@ PAL_IsDebuggerPresent
 Abstract:
 This function should be used to determine if a debugger is attached to the process.
 --*/
-PALIMPORT
 BOOL
-PALAPI
 PAL_IsDebuggerPresent()
 {
 #if defined(__LINUX__)
@@ -547,7 +544,6 @@ Abstract:
   This function shuts down the PAL WITHOUT exiting the current process.
 --*/
 void
-PALAPI
 PAL_Shutdown(
     void)
 {
@@ -563,7 +559,6 @@ Abstract:
   library. It shuts down PAL and exits the current process.
 --*/
 void
-PALAPI
 PAL_Terminate(
     void)
 {
@@ -580,7 +575,6 @@ library. It shuts down PAL and exits the current process with
 the specified exit code.
 --*/
 void
-PALAPI
 PAL_TerminateEx(
     int exitCode)
 {
@@ -758,7 +752,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
     LPWSTR retval;
     LPSTR command_line=NULL, command_ptr;
     LPCSTR arg_ptr;
-    INT length, i,j;
+    int32_t length, i,j;
     BOOL bQuoted = FALSE;
 
     /* list of characters that need no be escaped with \ when building the
@@ -874,14 +868,14 @@ Notes 2:
 static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
 {
 #ifndef __APPLE__
-    CHAR real_path[PATH_MAX+1];
+    char real_path[PATH_MAX+1];
     LPSTR env_path;
     LPSTR path_ptr;
     LPSTR cur_dir;
-    INT exe_name_length;
+    int32_t exe_name_length;
     BOOL need_slash;
     LPWSTR return_value;
-    INT return_size;
+    int32_t return_size;
     struct stat theStats;
 
     /* if a path is specified, only search there */
@@ -1136,9 +1130,9 @@ last_resort:
 #else // !__APPLE__
     // On the Mac we can just directly ask the OS for the executable path.
 
-    CHAR exec_path[PATH_MAX+1];
+    char exec_path[PATH_MAX+1];
     LPWSTR return_value;
-    INT return_size;
+    int32_t return_size;
 
     uint32_t bufsize = sizeof(exec_path);
     if (_NSGetExecutablePath(exec_path, &bufsize))

@@ -8,9 +8,9 @@
 #ifdef ENABLE_JS_ETW
 extern "C" {
     ETW_INLINE
-        VOID EtwCallback(
-        ULONG controlCode,
-        PVOID callbackContext)
+        void EtwCallback(
+        uint32_t controlCode,
+        void * callbackContext)
     {
         EtwCallbackApi::OnSessionChange(controlCode, callbackContext);
     }

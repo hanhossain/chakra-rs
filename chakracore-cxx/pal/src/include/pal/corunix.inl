@@ -30,11 +30,11 @@ namespace CorUnix
 
     CAllowedObjectTypes::CAllowedObjectTypes(
         PalObjectTypeId rgAllowedTypes[],
-        DWORD dwAllowedTypeCount
+        uint32_t dwAllowedTypeCount
     )
     {
         ZeroMemory(m_rgfAllowedTypes, sizeof(m_rgfAllowedTypes));
-        for (DWORD dw = 0; dw < dwAllowedTypeCount; dw += 1)
+        for (uint32_t dw = 0; dw < dwAllowedTypeCount; dw += 1)
         {
             _ASSERTE(rgAllowedTypes[dw] != ObjectTypeIdCount);
             m_rgfAllowedTypes[rgAllowedTypes[dw]] = TRUE;

@@ -108,8 +108,8 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
-                     DWORD  nBufferLength,
+uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+                     uint32_t  nBufferLength,
                      LPSTR  lpBuffer );
 
 /*++
@@ -126,7 +126,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno( void );
 
 /*++
 Function:
@@ -134,7 +134,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD DIRGetLastErrorFromErrno( void );
+uint32_t DIRGetLastErrorFromErrno( void );
 
 /*++
 FILEInitStdHandles
@@ -166,9 +166,9 @@ Returns the proper error code, based on the
 Windows behavoir.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode );
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode );
 
 /*++
 PAL__getcwd
@@ -184,7 +184,7 @@ size_t nSize = size, in bytes, of the array referenced by szBuf.
 Return value:
     A pointer to the pathname if successful, otherwise NULL is returned.
 --*/
-char * __cdecl PAL__getcwd(char *szBuf, size_t nSize);
+char * PAL__getcwd(char *szBuf, size_t nSize);
 
 /*++
 PAL_fflush
@@ -198,7 +198,7 @@ PAL_FILE *stream = stream to be flushed.
 Return value:
     0 is returned on success, otherwise EOF is returned.
 --*/
-int _cdecl PAL_fflush( PAL_FILE *stream );
+int PAL_fflush( PAL_FILE *stream );
 
 /*++
 PAL_mkstemp
@@ -212,7 +212,7 @@ char *szNameTemplate = the pattern to follow when creating a new file.
 Return value:
     file descriptor of opened file on success, -1 on failure.
 --*/
-int __cdecl PAL_mkstemp(char *szNameTemplate);
+int PAL_mkstemp(char *szNameTemplate);
 
 /*++
 PAL_unlink
@@ -226,7 +226,7 @@ szPath = a symbolic link or a hard link to a file
 Return value:
     Returns 0 on success and -1 on failure
 --*/
-int __cdecl PAL_unlink(const char *szPath);
+int PAL_unlink(const char *szPath);
 
 /*++
 PAL_rename
@@ -241,7 +241,7 @@ szNewName = pointer to the new pathname of the file
 Return value:
     Returns 0 on success and -1 on failure
 --*/
-int __cdecl PAL_rename(const char *szOldName, const char *szNewName);
+int PAL_rename(const char *szOldName, const char *szNewName);
 
 /*++
 PAL_fgets
@@ -258,7 +258,7 @@ Return value:
     Returns a pointer to the string storing the characters on success
     and NULL on failure.
 --*/
-char * __cdecl PAL_fgets(char *sz, int nSize, PAL_FILE *pf);
+char * PAL_fgets(char *sz, int nSize, PAL_FILE *pf);
 
 /*++
 PAL_fwrite
@@ -275,7 +275,7 @@ pf = stream to write characters to
 Return value:
     Returns the number of objects written.
 --*/
-size_t __cdecl PAL_fwrite(const void *pvBuffer, size_t nSize, size_t nCount, PAL_FILE *pf);
+size_t PAL_fwrite(const void *pvBuffer, size_t nSize, size_t nCount, PAL_FILE *pf);
 
 /*++
 PAL__open
@@ -291,7 +291,7 @@ mode = file permission settings that are used only when a file is created
 Return value:
     File descriptor on success, -1 on failure
 --*/
-int __cdecl PAL__open(const char *szPath, int nFlags, ...);
+int PAL__open(const char *szPath, int nFlags, ...);
 
 /*++
 PAL_fseek
@@ -307,7 +307,7 @@ nWhence = method used to determine the file_position indicator location relative
 Return value:
     0 on success, -1 on failure.
 --*/
-int _cdecl PAL_fseek(PAL_FILE *pf, LONG lOffset, int nWhence);
+int PAL_fseek(PAL_FILE *pf, int32_t lOffset, int nWhence);
 
 #ifdef __cplusplus
 }

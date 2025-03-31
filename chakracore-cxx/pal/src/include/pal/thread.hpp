@@ -53,10 +53,10 @@ namespace CorUnix
     InternalCreateThread(
         CPalThread *pThread,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        DWORD dwStackSize,
+        uint32_t dwStackSize,
         LPTHREAD_START_ROUTINE lpStartAddress,
-        LPVOID lpParameter,
-        DWORD dwCreationFlags,
+        void * lpParameter,
+        uint32_t dwCreationFlags,
         PalThreadType eThreadType,
         SIZE_T* pThreadId,
         HANDLE *phThread
@@ -80,12 +80,12 @@ namespace CorUnix
     InternalGetThreadDataFromHandle(
         CPalThread *pThread,
         HANDLE hThread,
-        DWORD dwRightsRequired,
+        uint32_t dwRightsRequired,
         CPalThread **ppTargetThread,
         IPalObject **ppobjThread
         );
 
-    VOID
+    void
     InternalEndCurrentThread(
         CPalThread *pThread
         );
@@ -112,9 +112,9 @@ namespace CorUnix
 
     BOOL
     GetThreadTimesInternal(
-        IN HANDLE hThread,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime);
+         HANDLE hThread,
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime);
 
 #ifdef FEATURE_PAL_SXS
 #if HAVE_MACH_EXCEPTIONS
@@ -205,11 +205,11 @@ namespace CorUnix
     class CThreadCRTInfo : public CThreadInfoInitializer
     {
     public:
-        CHAR *       strtokContext; // Context for strtok function
+        char *       strtokContext; // Context for strtok function
         WCHAR *      wcstokContext; // Context for wcstok function
         struct PAL_tm localtimeBuffer; // Buffer for localtime function
-        CHAR         ctimeBuffer[ STR_TIME_SIZE ]; // Buffer for ctime function
-        CHAR         ECVTBuffer[ ECVT_MAX_BUFFER_SIZE ]; // Buffer for _ecvt function.
+        char         ctimeBuffer[ STR_TIME_SIZE ]; // Buffer for ctime function
+        char         ECVTBuffer[ ECVT_MAX_BUFFER_SIZE ]; // Buffer for _ecvt function.
 
         CThreadCRTInfo() :
             strtokContext(NULL),
@@ -228,10 +228,10 @@ namespace CorUnix
             CorUnix::InternalCreateThread(
                 CPalThread *,
                 LPSECURITY_ATTRIBUTES,
-                DWORD,
+                uint32_t,
                 LPTHREAD_START_ROUTINE,
-                LPVOID,
-                DWORD,
+                void *,
+                uint32_t,
                 PalThreadType,
                 SIZE_T*,
                 HANDLE*
@@ -271,7 +271,7 @@ namespace CorUnix
     private:
 
         CPalThread *m_pNext;
-        DWORD m_dwExitCode;
+        uint32_t m_dwExitCode;
         BOOL m_fExitCodeSet;
         CRITICAL_SECTION m_csLock;
         bool m_fLockInitialized;
@@ -289,7 +289,7 @@ namespace CorUnix
         // the freeing of the enclosing thread object has completed.
         //
 
-        LONG m_lRefCount;
+        int32_t m_lRefCount;
 
         //
         // The IPalObject for this thread. The thread will release its reference
@@ -303,7 +303,7 @@ namespace CorUnix
         //
 
         SIZE_T m_threadId;
-        DWORD m_dwLwpId;
+        uint32_t m_dwLwpId;
         pthread_t m_pthreadSelf;
 
 #if HAVE_MACH_THREADS
@@ -319,7 +319,7 @@ namespace CorUnix
         //
 
         LPTHREAD_START_ROUTINE m_lpStartAddress;
-        LPVOID m_lpStartParameter;
+        void * m_lpStartParameter;
         BOOL m_bCreateSuspended;
 
         int m_iThreadPriority;
@@ -348,7 +348,7 @@ namespace CorUnix
         // is zero. This value can be set by setting the
         // environment variable PAL_THREAD_DEFAULT_STACK_SIZE
         // (the value should be in bytes and in hex).
-        static DWORD s_dwDefaultThreadStackSize;
+        static uint32_t s_dwDefaultThreadStackSize;
 
         //
         // The thread entry routine (called from InternalCreateThread)
@@ -500,14 +500,14 @@ namespace CorUnix
 
         static void
         SetLastError(
-            DWORD dwLastError
+            uint32_t dwLastError
             )
         {
             // Reuse errno to store last error
             errno = dwLastError;
         };
 
-        static DWORD
+        static uint32_t
         GetLastError(
             void
             )
@@ -518,7 +518,7 @@ namespace CorUnix
 
         void
         SetExitCode(
-            DWORD dwExitCode
+            uint32_t dwExitCode
             )
         {
             m_dwExitCode = dwExitCode;
@@ -527,7 +527,7 @@ namespace CorUnix
 
         BOOL
         GetExitCode(
-            DWORD *pdwExitCode
+            uint32_t *pdwExitCode
             )
         {
             *pdwExitCode = m_dwExitCode;
@@ -542,7 +542,7 @@ namespace CorUnix
             return m_threadId;
         };
 
-        DWORD
+        uint32_t
         GetLwpId(
             void
             )
@@ -582,7 +582,7 @@ namespace CorUnix
             return m_lpStartAddress;
         };
 
-        LPVOID
+        void *
         GetStartParameter(
             void
             )
@@ -742,14 +742,14 @@ namespace CorUnix
     class CThreadImmutableData
     {
     public:
-        DWORD dwProcessId;
+        uint32_t dwProcessId;
     };
 
     class CThreadSharedData
     {
     public:
-        DWORD dwThreadId;
-        DWORD dwExitCode;
+        uint32_t dwThreadId;
+        uint32_t dwExitCode;
     };
 ***/
 
@@ -772,7 +772,7 @@ TLSInitialize(
     void
     );
 
-VOID
+void
 WaitForEndingThreads(
     void
     );

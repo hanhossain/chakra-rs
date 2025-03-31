@@ -60,7 +60,7 @@ namespace PlatformAgnostic
 {
     namespace ICUHelpers
     {
-        template<typename TObject, void(__cdecl * CloseFunction)(TObject)>
+        template<typename TObject, void(* CloseFunction)(TObject)>
         class ScopedICUObject
         {
         private:

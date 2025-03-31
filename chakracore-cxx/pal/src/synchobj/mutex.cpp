@@ -70,11 +70,10 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateMutexA(
-    IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
-    IN BOOL bInitialOwner,
-    IN LPCSTR lpName)
+     LPSECURITY_ATTRIBUTES lpMutexAttributes,
+     BOOL bInitialOwner,
+     LPCSTR lpName)
 {
     HANDLE hMutex = NULL;
     CPalThread *pthr = NULL;
@@ -131,11 +130,10 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateMutexW(
-    IN LPSECURITY_ATTRIBUTES lpMutexAttributes,
-    IN BOOL bInitialOwner,
-    IN LPCWSTR lpName)
+     LPSECURITY_ATTRIBUTES lpMutexAttributes,
+     BOOL bInitialOwner,
+     LPCWSTR lpName)
 {
     HANDLE hMutex = NULL;
     PAL_ERROR palError;
@@ -302,8 +300,7 @@ Parameters:
 --*/
 
 BOOL
-PALAPI
-ReleaseMutex( IN HANDLE hMutex )
+ReleaseMutex(  HANDLE hMutex )
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -414,11 +411,10 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 OpenMutexA (
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCSTR lpName)
+        uint32_t dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCSTR lpName)
 {
     HANDLE hMutex = NULL;
     CPalThread *pthr = NULL;
@@ -464,11 +460,10 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 OpenMutexW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        uint32_t dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hMutex = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -521,7 +516,7 @@ Parameters:
 PAL_ERROR
 CorUnix::InternalOpenMutex(
     CPalThread *pthr,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phMutex

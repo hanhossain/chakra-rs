@@ -571,7 +571,7 @@ namespace JsUtil
                 break;
             }
 
-            if (ResumeThread(this->parallelThreadData[i]->threadHandle) == static_cast<DWORD>(-1))
+            if (ResumeThread(this->parallelThreadData[i]->threadHandle) == static_cast<uint32_t>(-1))
             {
                 CloseHandle(this->parallelThreadData[i]->threadHandle);
                 HeapDelete(parallelThreadData[i]);
@@ -736,7 +736,7 @@ namespace JsUtil
         const HANDLE handles[] = { e.Handle(), parallelThreadData->threadHandle };
 
         // If we have a thread service, then only wait on the event, not the actual thread handle.
-        DWORD handleCount = 2;
+        uint32_t handleCount = 2;
         if (threadService->HasCallback())
         {
             handleCount = 1;

@@ -29,11 +29,11 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
 static
 int
-AllocFlagsToHeapAllocFlags (IN  UINT  AllocFlags,
-                       OUT PUINT pHeapallocFlags)
+AllocFlagsToHeapAllocFlags (  uint32_t  AllocFlags,
+                        uint32_t * pHeapallocFlags)
 {
     int success = 1;
-    UINT newFlags = 0, flags = AllocFlags;
+    uint32_t newFlags = 0, flags = AllocFlags;
     if (flags & LMEM_ZEROINIT) {
         newFlags |= HEAP_ZERO_MEMORY;
         flags &= ~LMEM_ZEROINIT;
@@ -58,12 +58,11 @@ Function:
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalAlloc(
-	   IN UINT uFlags,
-	   IN SIZE_T uBytes)
+	    uint32_t uFlags,
+	    SIZE_T uBytes)
 {
-    LPVOID lpRetVal = NULL;
+    void * lpRetVal = NULL;
     PERF_ENTRY(LocalAlloc);
     ENTRY("LocalAlloc (uFlags=%#x, uBytes=%u)\n", uFlags, uBytes);
 
@@ -86,13 +85,12 @@ LocalReAlloc
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalReAlloc(
-       IN HLOCAL hMem,
-       IN SIZE_T uBytes,
-       IN UINT   uFlags)
+        HLOCAL hMem,
+        SIZE_T uBytes,
+        uint32_t   uFlags)
 {
-    LPVOID lpRetVal = NULL;
+    void * lpRetVal = NULL;
     PERF_ENTRY(LocalReAlloc);
     ENTRY("LocalReAlloc (hMem=%p, uBytes=%u, uFlags=%#x)\n", hMem, uBytes, uFlags);
 
@@ -119,9 +117,8 @@ Function:
 See MSDN doc.
 --*/
 HLOCAL
-PALAPI
 LocalFree(
-	  IN HLOCAL hMem)
+	   HLOCAL hMem)
 {
     BOOL bRetVal = FALSE;
     PERF_ENTRY(LocalFree);
@@ -141,26 +138,17 @@ LocalFree(
     return bRetVal == TRUE ? (HLOCAL)NULL : hMem;
 }
 
-#define STDAPI_(type) extern "C" type __stdcall
-
-STDAPI_(LPVOID)
-CoTaskMemAlloc(
-    IN SIZE_T cb)
+extern "C" void * CoTaskMemAlloc( SIZE_T cb)
 {
     return HeapAlloc(GetProcessHeap(), 0, cb);
 }
 
-STDAPI_(LPVOID)
-CoTaskMemRealloc(
-    IN LPVOID pv,
-    IN SIZE_T cb)
+extern "C" void * CoTaskMemRealloc( void * pv,  SIZE_T cb)
 {
     return HeapReAlloc(GetProcessHeap(), 0, pv, cb);
 }
 
-STDAPI_(void)
-CoTaskMemFree(
-    IN LPVOID pv)
+extern "C" void CoTaskMemFree( void * pv)
 {
     HeapFree(GetProcessHeap(), 0, pv);
 }

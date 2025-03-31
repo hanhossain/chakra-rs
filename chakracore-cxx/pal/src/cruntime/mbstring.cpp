@@ -56,7 +56,6 @@ string pointed to by this parameter.
 
 --*/
 size_t 
-__cdecl
 _mbslen(
         const unsigned char *string)
 {
@@ -109,7 +108,6 @@ multibyte character that immediately follows string.
 
 --*/
 unsigned char *
-__cdecl
 _mbsinc(
         const unsigned char *string)
 {
@@ -162,7 +160,6 @@ according to the multibyte code page currently in use.
 
 --*/
 unsigned char *
-__cdecl
 _mbsninc(
          const unsigned char *string, size_t count)
 {
@@ -219,7 +216,6 @@ current  Pointer to first byte of any multibyte character in the source
 
 --*/
 unsigned char * 
-__cdecl
 _mbsdec(
         const unsigned char *start, 
         const unsigned char *current)

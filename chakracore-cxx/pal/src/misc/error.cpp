@@ -53,10 +53,9 @@ Return Values
 The return value is the previous state of the error-mode bit flags. 
 
 --*/
-UINT
-PALAPI
+uint32_t
 SetErrorMode(
-         IN UINT uMode)
+          uint32_t uMode)
 {
   PERF_ENTRY(SetErrorMode);
   ENTRY("SetErrorMode (uMode=%#x)\n", uMode);
@@ -89,10 +88,9 @@ function. The Return Value section of each reference page notes the
 conditions under which the function sets the last-error code.
 
 --*/
-DWORD
-PALAPI
+uint32_t
 GetLastError(
-         VOID)
+         void)
 {
     return CPalThread::GetLastError();
 }
@@ -117,10 +115,9 @@ Return Values
 This function does not return a value.
 
 --*/
-VOID
-PALAPI
+void
 SetLastError(
-         IN DWORD dwErrCode)
+          uint32_t dwErrCode)
 {
     CPalThread::SetLastError(dwErrCode);
 }

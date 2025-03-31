@@ -1817,7 +1817,7 @@ namespace Js
     // We subtract the lnMinHost because it is the number of lines we have added to augment scriptlets passed through
     // ParseProcedureText to have a function name.
     //
-    ULONG FunctionProxy::GetHostStartLine() const
+    uint32_t FunctionProxy::GetHostStartLine() const
     {
         return this->GetHostSrcInfo()->dlnHost - this->GetHostSrcInfo()->lnMinHost;
     }
@@ -1825,7 +1825,7 @@ namespace Js
     //
     // Returns the start column of the first line for the script buffer of this current function.
     //
-    ULONG FunctionProxy::GetHostStartColumn() const
+    uint32_t FunctionProxy::GetHostStartColumn() const
     {
         return this->GetHostSrcInfo()->ulColumnHost;
     }
@@ -1834,9 +1834,9 @@ namespace Js
     // Returns line number in unmodified host buffer (i.e. without extra scriptlet code added by ParseProcedureText --
     // when e.g. we add extra code for event handlers, such as "function onclick(event)\n{\n").
     //
-    ULONG FunctionProxy::GetLineNumberInHostBuffer(ULONG relativeLineNumber) const
+    uint32_t FunctionProxy::GetLineNumberInHostBuffer(uint32_t relativeLineNumber) const
     {
-        ULONG lineNumber = relativeLineNumber;
+        uint32_t lineNumber = relativeLineNumber;
         if (lineNumber >= this->GetHostSrcInfo()->lnMinHost)
         {
             lineNumber -= this->GetHostSrcInfo()->lnMinHost;
@@ -1846,13 +1846,13 @@ namespace Js
         return lineNumber;
     }
 
-    ULONG FunctionProxy::ComputeAbsoluteLineNumber(ULONG relativeLineNumber) const
+    uint32_t FunctionProxy::ComputeAbsoluteLineNumber(uint32_t relativeLineNumber) const
     {
         // We add 1 because the line numbers start from 0.
         return this->GetHostSrcInfo()->dlnHost + GetLineNumberInHostBuffer(relativeLineNumber) + 1;
     }
 
-    ULONG FunctionProxy::ComputeAbsoluteColumnNumber(ULONG relativeLineNumber, ULONG relativeColumnNumber) const
+    uint32_t FunctionProxy::ComputeAbsoluteColumnNumber(uint32_t relativeLineNumber, uint32_t relativeColumnNumber) const
     {
         if (this->GetLineNumberInHostBuffer(relativeLineNumber) == 0)
         {
@@ -1867,7 +1867,7 @@ namespace Js
     //
     // Returns the line number of the function declaration in the source file.
     //
-    ULONG
+    uint32_t
     ParseableFunctionInfo::GetLineNumber() const
     {
         return this->ComputeAbsoluteLineNumber(this->m_lineNumber);
@@ -1877,7 +1877,7 @@ namespace Js
     //
     // Returns the column number of the function declaration in the source file.
     //
-    ULONG
+    uint32_t
     ParseableFunctionInfo::GetColumnNumber() const
     {
         return ComputeAbsoluteColumnNumber(this->m_lineNumber, m_columnNumber);
@@ -3158,7 +3158,7 @@ namespace Js
     //
     // The function determine the line and column for a bytecode offset within the current script buffer.
     //
-    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffset(int byteCodeOffset, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode());
 
@@ -3189,14 +3189,14 @@ namespace Js
         return this->GetLineCharOffsetFromStartChar(startCharOfStatement, _line, _charOffset, canAllocateLineCache);
     }
 
-    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache /*= true*/)
+    bool FunctionBody::GetLineCharOffsetFromStartChar(int startCharOfStatement, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache /*= true*/)
     {
         Assert(!this->GetUtf8SourceInfo()->GetIsLibraryCode() || this->IsJsBuiltInCode());
 
         // The following adjusts for where the script is within the document
-        ULONG line = this->GetHostStartLine();
+        uint32_t line = this->GetHostStartLine();
         charcount_t column = 0;
-        ULONG lineCharOffset = 0;
+        uint32_t lineCharOffset = 0;
         charcount_t lineByteOffset = 0;
 
         if (startCharOfStatement > 0)
@@ -3249,7 +3249,7 @@ namespace Js
             // If we are at the beginning of the host code, adjust the offset based on the host provided offset
             if (this->GetHostSrcInfo()->dlnHost == line)
             {
-                *_charOffset += (LONG)this->GetHostStartColumn();
+                *_charOffset += (int32_t)this->GetHostStartColumn();
             }
         }
 
@@ -3279,7 +3279,7 @@ namespace Js
         // Offset from the beginning of the document minus any host-supplied source characters.
         // Host supplied characters are inserted (for example) around onload:
         //      onload="foo('somestring', 0)" -> function onload(event).{.foo('somestring', 0).}
-        ULONG offsetFromDocumentBegin = srcInfo ? srcInfo->ulCharOffset - srcInfo->ichMinHost : 0;
+        uint32_t offsetFromDocumentBegin = srcInfo ? srcInfo->ulCharOffset - srcInfo->ichMinHost : 0;
 
         *statementIndex = statement->sourceSpan.Begin() + offsetFromDocumentBegin;
         *statementLength = statement->sourceSpan.End() - statement->sourceSpan.Begin();
@@ -4005,7 +4005,7 @@ namespace Js
         CheckEmpty();
 
 #ifdef PERF_COUNTERS
-        DWORD byteCodeSize = byteCodeBlock->GetLength()
+        uint32_t byteCodeSize = byteCodeBlock->GetLength()
             + (auxBlock? auxBlock->GetLength() : 0)
             + (auxContextBlock? auxContextBlock->GetLength() : 0);
         PERF_COUNTER_ADD(Code, DynamicByteCodeSize, byteCodeSize);
@@ -4572,8 +4572,8 @@ namespace Js
 
     void FunctionBody::PrintStatementSourceLineFromStartOffset(uint cchStartOffset)
     {
-        ULONG line;
-        LONG col;
+        uint32_t line;
+        int32_t col;
 
         LPCUTF8 source = GetStartOfDocument(_u("FunctionBody::PrintStatementSourceLineFromStartOffset"));
         Utf8SourceInfo* sourceInfo = this->GetUtf8SourceInfo();
@@ -4597,7 +4597,7 @@ namespace Js
 
         if (sourceInfo->GetSourceHolder() != ISourceHolder::GetEmptySourceHolder())
         {
-            WORD color = 0;
+            uint16_t color = 0;
             if (Js::Configuration::Global.flags.DumpLineNoInColor)
             {
                 color = Output::SetConsoleForeground(12);
@@ -4676,7 +4676,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-                                                    ULONG * line, LONG * col)
+                                                    uint32_t * line, int32_t * col)
     {
         //
         // get source info
@@ -4734,7 +4734,7 @@ namespace Js
      * @param col (output) The column number where the statement appeared in the source.
      */
     void FunctionBody::GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-        ULONG * line, LONG * col)
+        uint32_t * line, int32_t * col)
     {
         const size_t startOffset = GetStatementStartOffset(statementIndex);
 
@@ -4757,7 +4757,7 @@ namespace Js
 #endif /* IR_VIEWER */
 
 #if ENABLE_TTD
-    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, LONG* col)
+    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col)
     {
         GetLineCharOffsetFromStartChar(startOffset, line, col);
     }
@@ -4787,7 +4787,7 @@ namespace Js
     {
         auto& nativeOffsetMaps = this->GetNativeEntryPointData()->GetNativeOffsetMaps();
         LineNumberInfo* pLineInfo = (LineNumberInfo*)pInfo;
-        ULONG functionLineNumber = body->GetLineNumber();
+        uint32_t functionLineNumber = body->GetLineNumber();
         pLineInfo[0].Offset = 0;
         pLineInfo[0].LineNumber = functionLineNumber;
 
@@ -4818,9 +4818,9 @@ namespace Js
         return j;
     }
 
-    ULONG FunctionBody::GetSourceLineNumber(uint statementIndex)
+    uint32_t FunctionBody::GetSourceLineNumber(uint statementIndex)
     {
-        ULONG line = 0;
+        uint32_t line = 0;
         if (statementIndex != Js::Constants::NoStatementIndex)
         {
             uint startOffset = GetStartOffset(statementIndex);
@@ -5245,7 +5245,7 @@ namespace Js
 #if DYNAMIC_INTERPRETER_THUNK
         if (m_isAsmJsFunction && m_dynamicInterpreterThunk)
         {
-            m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, true);
+            m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, true);
             this->m_dynamicInterpreterThunk = nullptr;
         }
 #endif
@@ -7679,11 +7679,11 @@ namespace Js
             {
                 if (m_isAsmJsFunction)
                 {
-                    m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
+                    m_scriptContext->ReleaseDynamicAsmJsInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
                 }
                 else
                 {
-                    m_scriptContext->ReleaseDynamicInterpreterThunk((BYTE*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
+                    m_scriptContext->ReleaseDynamicInterpreterThunk((uint8_t*)this->m_dynamicInterpreterThunk, /*addtoFreeList*/ true);
                 }
             }
         }
@@ -7697,7 +7697,7 @@ namespace Js
     void FunctionBody::CleanupPerfCounter()
     {
         // We might not have the byte code block yet if we defer parsed.
-        DWORD byteCodeSize = (this->byteCodeBlock? this->byteCodeBlock->GetLength() : 0)
+        uint32_t byteCodeSize = (this->byteCodeBlock? this->byteCodeBlock->GetLength() : 0)
             + (this->GetAuxiliaryData() ? this->GetAuxiliaryData()->GetLength() : 0)
             + (this->GetAuxiliaryContextData() ? this->GetAuxiliaryContextData()->GetLength() : 0);
         PERF_COUNTER_SUB(Code, DynamicByteCodeSize, byteCodeSize);
@@ -7723,7 +7723,7 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    BYTE FunctionBody::GetSavedInlinerVersion() const
+    uint8_t FunctionBody::GetSavedInlinerVersion() const
     {
         Assert(this->dynamicProfileInfo != nullptr);
         return this->savedInlinerVersion;
@@ -7906,7 +7906,7 @@ namespace Js
     }
 
 #if DYNAMIC_INTERPRETER_THUNK
-    DWORD FunctionBody::GetDynamicInterpreterThunkSize() const
+    uint32_t FunctionBody::GetDynamicInterpreterThunkSize() const
     {
         return InterpreterThunkEmitter::ThunkSize;
     }
@@ -8664,7 +8664,7 @@ namespace Js
             OOPNativeEntryPointData * oopNativeEntryPointData = this->GetOOPNativeEntryPointData();
             char * nativeDataBuffer = oopNativeEntryPointData->GetNativeDataBuffer();
             NativeOffsetInlineeFrameRecordOffset* offsets = (NativeOffsetInlineeFrameRecordOffset*)(nativeDataBuffer + oopNativeEntryPointData->GetInlineeFrameOffsetArrayOffset());
-            size_t offset = (size_t)((BYTE*)returnAddress - (BYTE*)this->GetNativeAddress());
+            size_t offset = (size_t)((uint8_t*)returnAddress - (uint8_t*)this->GetNativeAddress());
 
             uint inlineeFrameOffsetArrayCount = oopNativeEntryPointData->GetInlineeFrameOffsetArrayCount();
             if (inlineeFrameOffsetArrayCount == 0)
@@ -8714,7 +8714,7 @@ namespace Js
                 return nullptr;
             }
 
-            size_t offset = (size_t)((BYTE*)returnAddress - (BYTE*)this->GetNativeAddress());
+            size_t offset = (size_t)((uint8_t*)returnAddress - (uint8_t*)this->GetNativeAddress());
             int index = inlineeFrameMap->BinarySearch([=](const NativeOffsetInlineeFramePair& pair, int index) {
                 if (pair.offset >= offset)
                 {
@@ -8740,20 +8740,20 @@ namespace Js
     }
 
     void EntryPointInfo::DoLazyBailout(
-        BYTE **addressOfInstructionPointer,
-        BYTE *framePointer
+        uint8_t **addressOfInstructionPointer,
+        uint8_t *framePointer
 #if DBG
         , Js::FunctionBody *functionBody
         , const PropertyRecord *propertyRecord
 #endif
     )
     {
-        BYTE* instructionPointer = *addressOfInstructionPointer;
+        uint8_t* instructionPointer = *addressOfInstructionPointer;
         NativeEntryPointData * nativeEntryPointData = this->GetNativeEntryPointData();
         Js::JavascriptMethod nativeAddress = nativeEntryPointData->GetNativeAddress();
         ptrdiff_t codeSize = nativeEntryPointData->GetCodeSize();
-        Assert(instructionPointer > (BYTE*)nativeAddress && instructionPointer < ((BYTE*)nativeAddress + codeSize));
-        size_t offset = instructionPointer - (BYTE*)nativeAddress;
+        Assert(instructionPointer > (uint8_t*)nativeAddress && instructionPointer < ((uint8_t*)nativeAddress + codeSize));
+        size_t offset = instructionPointer - (uint8_t*)nativeAddress;
         NativeLazyBailOutRecordList * bailOutRecordList = this->GetInProcNativeEntryPointData()->GetSortedLazyBailOutRecordList();
 
         AssertMsg(bailOutRecordList != nullptr, "Lazy Bailout: bailOutRecordList is missing");
@@ -8779,14 +8779,14 @@ namespace Js
             auto inProcNativeEntryPointData = this->GetInProcNativeEntryPointData();
             const LazyBailOutRecord& record = bailOutRecordList->Item(found);
             const uint32 lazyBailOutThunkOffset = inProcNativeEntryPointData->GetLazyBailOutThunkOffset();
-            BYTE * const lazyBailOutThunkAddress = (BYTE *) nativeAddress + lazyBailOutThunkOffset;
+            uint8_t * const lazyBailOutThunkAddress = (uint8_t *) nativeAddress + lazyBailOutThunkOffset;
 
             // Change the instruction pointer of the frame to our thunk so that
             // when execution returns back to this frame, we will execute the thunk instead
             *addressOfInstructionPointer = lazyBailOutThunkAddress;
 
             // Put the BailOutRecord corresponding to our LazyBailOut point on the pre-allocated slot on the stack
-            BYTE *addressOfLazyBailOutRecordSlot = framePointer + inProcNativeEntryPointData->GetLazyBailOutRecordSlotOffset();
+            uint8_t *addressOfLazyBailOutRecordSlot = framePointer + inProcNativeEntryPointData->GetLazyBailOutRecordSlotOffset();
             *(reinterpret_cast<intptr_t *>(addressOfLazyBailOutRecordSlot)) = reinterpret_cast<intptr_t>(record.bailOutRecord);
             
             if (PHASE_TRACE1(Js::LazyBailoutPhase))

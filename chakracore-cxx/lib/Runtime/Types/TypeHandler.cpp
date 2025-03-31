@@ -61,7 +61,7 @@ using namespace Js;
         return min(maxSlotCapacity, inlineSlotCapacity + auxSlotCapacity);
     }
 
-    DynamicTypeHandler::DynamicTypeHandler(int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, BYTE flags) :
+    DynamicTypeHandler::DynamicTypeHandler(int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, uint8_t flags) :
         flags(flags),
         propertyTypes(PropertyTypesWritableDataOnly | PropertyTypesReserved),
         offsetOfInlineSlots(offsetOfInlineSlots),

@@ -4700,7 +4700,7 @@ namespace UnifiedRegex
                 else if (root->IsBOILiteral2(compiler))
                 {
                     program->tag = Program::ProgramTag::BOILiteral2Tag;
-                    program->rep.boiLiteral2.literal = *(DWORD *)litbuf;
+                    program->rep.boiLiteral2.literal = *(uint32_t *)litbuf;
                 }
                 else
                 {

@@ -27,8 +27,8 @@
 // C-style callback
 extern "C" {
     void EtwCallback(
-        ULONG controlCode,
-        PVOID callbackContext);
+        uint32_t controlCode,
+        void * callbackContext);
 }
 
 #include "TestEtwEventSink.h"

@@ -12,12 +12,12 @@
 #endif
 
 #if defined(__getReg) || defined(_WIN64)
-#define arm64_GET_CURRENT_FRAME() ((LPVOID)__getReg(29))
+#define arm64_GET_CURRENT_FRAME() ((void *)__getReg(29))
 #else
-extern "C" LPVOID arm64_GET_CURRENT_FRAME(void);
+extern "C" void * arm64_GET_CURRENT_FRAME(void);
 #endif
 
-extern "C" VOID arm64_SAVE_REGISTERS(void*);
+extern "C" void arm64_SAVE_REGISTERS(void*);
 
 /*
  * The relevant part of the frame looks like this (high addresses at the top, low ones at the bottom):
@@ -32,5 +32,5 @@ extern "C" VOID arm64_SAVE_REGISTERS(void*);
  * ...
  */
 
-const DWORD ReturnAddrOffsetFromFramePtr = 1;
-const DWORD ArgOffsetFromFramePtr = 2;
+const uint32_t ReturnAddrOffsetFromFramePtr = 1;
+const uint32_t ArgOffsetFromFramePtr = 2;

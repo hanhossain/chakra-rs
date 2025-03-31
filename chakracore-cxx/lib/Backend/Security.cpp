@@ -132,7 +132,7 @@ Security::InsertRandomFunctionPad(IR::Instr * instrBeforeInstr)
     {
         return;
     }
-    DWORD randomPad = Math::Rand() & ((0 - INSTR_ALIGNMENT) & 0xF);
+    uint32_t randomPad = Math::Rand() & ((0 - INSTR_ALIGNMENT) & 0xF);
 #ifndef _M_ARM
     if (randomPad == 1)
     {
@@ -192,7 +192,7 @@ Security::InsertNOPBefore(IR::Instr *instr)
 }
 
 void
-Security::InsertSmallNOP(IR::Instr * instr, DWORD nopSize)
+Security::InsertSmallNOP(IR::Instr * instr, uint32_t nopSize)
 {
 #if defined(_M_IX86) || defined(_M_X64)
 #ifdef _M_IX86

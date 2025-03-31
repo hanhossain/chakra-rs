@@ -63,12 +63,12 @@ Parameters:
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
 __attribute__((no_instrument_function))
-BOOL Internal_AddPaddingA(LPSTR *Out, INT Count, LPSTR In,
-                                 INT Padding, INT Flags)
+BOOL Internal_AddPaddingA(LPSTR *Out, int32_t Count, LPSTR In,
+                                 int32_t Padding, int32_t Flags)
 {
     LPSTR OutOriginal = *Out;
-    INT PaddingOriginal = Padding;
-    INT LengthInStr;
+    int32_t PaddingOriginal = Padding;
+    int32_t LengthInStr;
     LengthInStr = strlen(In);
 
 
@@ -141,7 +141,7 @@ Parameters:
     - the prefix for the current format option
 *******************************************************************************/
 __attribute__((no_instrument_function))
-void PAL_printf_arg_remover(va_list *ap, INT Width, INT Precision, INT Type, INT Prefix)
+void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32_t Type, int32_t Prefix)
 {
     /* remove arg and precision if needed */
     if (PRECISION_STAR == Precision ||
@@ -180,12 +180,11 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_printf(
       const char *format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(printf);
@@ -208,10 +207,9 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_fprintf(PAL_FILE *stream,const char *format,...)
 {
-    LONG Length = 0;
+    int32_t Length = 0;
     va_list ap;
 
     PERF_ENTRY(fprintf);
@@ -234,12 +232,11 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_wprintf(
       const char16_t *format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wprintf);
@@ -264,12 +261,11 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vprintf(
       const char *format,
       va_list ap)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vprintf);
     ENTRY("PAL_vprintf (format=%p (%s))\n", format, format);
@@ -290,13 +286,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-PALAPIV
 wsprintfA(
-      OUT LPSTR buffer,
-      IN LPCSTR format,
+       LPSTR buffer,
+       LPCSTR format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wsprintfA);
@@ -319,13 +314,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-PALAPIV
 wsprintfW(
-      OUT LPWSTR buffer,
-      IN LPCWSTR format,
+       LPWSTR buffer,
+       LPCWSTR format,
       ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(wsprintfW);
@@ -349,14 +343,13 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _snprintf(
      char *buffer,
      size_t count,
      const char *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(_snprintf);
@@ -381,14 +374,13 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _snwprintf(
      char16_t *buffer,
      size_t count,
      const char16_t *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(_snwprintf);
@@ -412,13 +404,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_fwprintf(
      PAL_FILE *stream,
      const char16_t *format,
      ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(fwprintf);
@@ -471,7 +462,7 @@ Notes:
 
 __attribute__((no_instrument_function))
 static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
-                                         LPINT Width, LPINT Prefix, LPINT Type)
+                                         int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;
@@ -531,12 +522,10 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = SCANF_PREFIX_LONGLONG;
     }
-#endif
     /* grab prefix of 'I64' for __int64 */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
@@ -554,10 +543,8 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
-#ifdef BIT64
         // Only want to change the prefix on 64 bit when inputing characters.
         if (**Fmt == 'c' || **Fmt == 's')
-#endif
         {
             *Prefix = SCANF_PREFIX_LONG; /* give it a wide prefix */
         }
@@ -793,7 +780,7 @@ Function:
 *******************************************************************************/
 __attribute__((no_instrument_function))
 static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
-                                         LPINT Width, LPINT Prefix, LPINT Type)
+                                         int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;
@@ -848,12 +835,10 @@ static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, 
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = SCANF_PREFIX_LONGLONG;
     }
-#endif
     /* grab prefix of 'I64' for __int64 */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
@@ -871,10 +856,8 @@ static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, 
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
-#ifdef BIT64
         // Only want to change the prefix on 64 bit when inputing characters.
         if (**Fmt == 'C' || **Fmt == 'S')
-#endif
         {
             *Prefix = SCANF_PREFIX_LONG; /* give it a wide prefix */
         }
@@ -1092,14 +1075,14 @@ Parameters:
 __attribute__((no_instrument_function))
 int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
 {
-    INT Length = 0;
+    int32_t Length = 0;
     LPCSTR Buff = Buffer;
     LPCSTR Fmt = Format;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
-    INT Width;
-    INT Prefix;
-    INT Type = -1;
+    int32_t Width;
+    int32_t Prefix;
+    int32_t Type = -1;
 
     while (*Fmt)
     {
@@ -1174,7 +1157,7 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = Buff - Buffer;
+                    *(va_arg(ap, int32_t *)) = Buff - Buffer;
                 }
             }
             /* types that sscanf can handle */
@@ -1182,13 +1165,13 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
             {
                 int ret;
                 int n;
-                LPVOID voidPtr = NULL;
+                void * voidPtr = NULL;
 
                 if (Store)
                 {
                     // sscanf_s requires that if we are trying to read "%s" or "%c" or "%[", then
                     // the size of the buffer must follow the buffer we are trying to read into.
-                    voidPtr = va_arg(ap, LPVOID);
+                    voidPtr = va_arg(ap, void *);
                     unsigned typeLen = 0;
                     if ((Type == SCANF_TYPE_STRING) || (Type == SCANF_TYPE_BRACKETS))
                     {
@@ -1267,14 +1250,14 @@ Function:
 __attribute__((no_instrument_function))
 int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
 {
-    INT Length = 0;
+    int32_t Length = 0;
     LPCWSTR Buff = Buffer;
     LPCWSTR Fmt = Format;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
-    INT Width;
-    INT Prefix;
-    INT Type = -1;
+    int32_t Width;
+    int32_t Prefix;
+    int32_t Type = -1;
 
     while (*Fmt)
     {
@@ -1345,7 +1328,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = Buff - Buffer;
+                    *(va_arg(ap, int32_t *)) = Buff - Buffer;
                 }
             }
             /* types that sscanf can handle */
@@ -1355,7 +1338,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 int n;
                 int size;
                 LPSTR newBuff = 0;
-                LPVOID voidPtr = NULL;
+                void * voidPtr = NULL;
 
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0, 0);
                 if (!size)
@@ -1425,7 +1408,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                     }
                     else
                     {
-                        voidPtr = va_arg(ap, LPVOID);
+                        voidPtr = va_arg(ap, void *);
                         // sscanf_s requires that if we are trying to read "%s" or "%c", then
                         // the size of the buffer must follow the buffer we are trying to read into.
                         unsigned typeLen = 0;
@@ -1505,7 +1488,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_sscanf(
            const char *buffer,
            const char *format,
@@ -1534,13 +1516,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_sprintf(
           char *buffer,
           const char *format,
           ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(sprintf);
@@ -1564,13 +1545,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_swprintf(
           char16_t *buffer,
           const char16_t *format,
           ...)
 {
-    LONG Length;
+    int32_t Length;
     va_list ap;
 
     PERF_ENTRY(swprintf);
@@ -1593,7 +1573,6 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_swscanf(
           const char16_t *buffer,
           const char16_t *format,
@@ -1623,12 +1602,11 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vsprintf(char *buffer,
          const char *format,
          va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vsprintf);
     ENTRY("PAL_vsprintf (buffer=%p, format=%p (%s), argptr=%p)\n",
@@ -1651,13 +1629,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _vsnprintf(char *buffer,
            size_t count,
            const char *format,
            va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(_vsnprintf);
     ENTRY("_vsnprintf (buffer=%p, count=%d, format=%p (%s), argptr=%p)\n",
@@ -1681,12 +1658,11 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 PAL_vswprintf(char16_t *buffer,
               const char16_t *format,
               va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(vswprintf);
     ENTRY("PAL_vswprintf (buffer=%p, format=%p (%S), argptr=%p)\n",
@@ -1709,13 +1685,12 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-__cdecl
 _vsnwprintf(char16_t *buffer,
             size_t count,
             const char16_t *format,
             va_list argptr)
 {
-    LONG Length;
+    int32_t Length;
 
     PERF_ENTRY(_vsnwprintf);
     ENTRY("_vsnwprintf (buffer=%p, count=%lu, format=%p (%S), argptr=%p)\n",
@@ -1795,10 +1770,10 @@ static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
              )
         )
     {
-        CHAR * pLocBuf = (CHAR *)PAL_malloc((pos-buff+1)*sizeof(CHAR));
+        char * pLocBuf = (char *)PAL_malloc((pos-buff+1)*sizeof(char));
         if (pLocBuf)
         {
-            memcpy(pLocBuf, buff, (pos-buff)*sizeof(CHAR));
+            memcpy(pLocBuf, buff, (pos-buff)*sizeof(char));
             pLocBuf[pos-buff] = 0;
             if (voidPtr)
                 ret = sscanf_s(pLocBuf, floatFmt, voidPtr, pn);

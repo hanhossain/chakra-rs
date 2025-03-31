@@ -116,7 +116,7 @@ Function:
 
 CObjectType *
 CPalObjectBase::GetObjectType(
-    VOID
+    void
     )
 {
     ENTRY("CPalObjectBase::GetObjectType(this = %p)\n", this);
@@ -134,7 +134,7 @@ Function:
 
 CObjectAttributes *
 CPalObjectBase::GetObjectAttributes(
-    VOID
+    void
     )
 {
     ENTRY("CPalObjectBase::GetObjectAttributes(this = %p)\n", this);
@@ -232,12 +232,12 @@ Function:
   for diagnostic purposes only
 --*/
 
-DWORD
+uint32_t
 CPalObjectBase::AddReference(
     void
     )
 {
-    LONG lRefCount;
+    int32_t lRefCount;
 
     ENTRY("CPalObjectBase::AddReference(this = %p)\n", this);
 
@@ -260,12 +260,12 @@ Parameters:
   pthr -- thread data for calling thread
 --*/
 
-DWORD
+uint32_t
 CPalObjectBase::ReleaseReference(
     CPalThread *pthr
     )
 {
-    LONG lRefCount;
+    int32_t lRefCount;
 
     _ASSERTE(NULL != pthr);
 

@@ -37,16 +37,16 @@ typedef struct _CMI {
     UINT_PTR   startBoundary;   /* Starting location of the region. */
     SIZE_T   memSize;         /* Size of the entire region.. */
 
-    DWORD  accessProtection;    /* Initial allocation access protection. */
-    DWORD  allocationType;      /* Initial allocation type. */
+    uint32_t  accessProtection;    /* Initial allocation access protection. */
+    uint32_t  allocationType;      /* Initial allocation type. */
 
-    BYTE * pAllocState;         /* Individual allocation type tracking for each */
+    uint8_t * pAllocState;         /* Individual allocation type tracking for each */
                                 /* page in the region. */
 
-    BYTE * pProtectionState;    /* Individual allocation type tracking for each */
+    uint8_t * pProtectionState;    /* Individual allocation type tracking for each */
                                 /* page in the region. */
 #if MMAP_DOESNOT_ALLOW_REMAP
-    BYTE * pDirtyPages;         /* Pages that need to be cleared if re-committed */
+    uint8_t * pDirtyPages;         /* Pages that need to be cleared if re-committed */
 #endif // MMAP_DOESNOT_ALLOW_REMAP
 
 }CMI, * PCMI;
@@ -105,7 +105,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion( IN UINT_PTR address );
+BOOL VIRTUALOwnedRegion(  UINT_PTR address );
 
 
 #ifdef __cplusplus

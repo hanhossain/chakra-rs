@@ -66,7 +66,7 @@ struct TestHooks
     NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
 
-typedef HRESULT(__stdcall *OnChakraCoreLoadedPtr)(TestHooks &testHooks);
+typedef HRESULT(*OnChakraCoreLoadedPtr)(TestHooks &testHooks);
 HRESULT OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded = NULL);
 
 #endif

@@ -232,7 +232,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     }
     else
     {
-        DWORD oldProtect;
+        uint32_t oldProtect;
         if (VirtualProtect(guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_NOACCESS, &oldProtect))
         {
             pageHeapData->isGuardPageDecommitted = false;

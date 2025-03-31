@@ -70,7 +70,7 @@ extern "C"
         Returns TRUE if this function finds information about the specified address
     --*/
 
-    BOOL MAPGetRegionInfo(LPVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
+    BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 
     /*++
         MAPMapPEFile -
@@ -94,7 +94,7 @@ extern "C"
 
         returns TRUE if successful, FALSE otherwise
     --*/
-    BOOL MAPUnmapPEFile(LPCVOID lpAddress);
+    BOOL MAPUnmapPEFile(const void * lpAddress);
 }
 
 namespace CorUnix
@@ -104,8 +104,8 @@ namespace CorUnix
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
     typedef struct _NativeMapHolder
     {
-        Volatile<LONG> ref_count;
-        LPVOID address;
+        Volatile<int32_t> ref_count;
+        void * address;
         SIZE_T size;
         SIZE_T offset; /* for future use */
     } NativeMapHolder;
@@ -133,10 +133,10 @@ namespace CorUnix
                                                more than one shared mmapping per region of 
                                                physical file, per process */
 #endif
-        LPVOID lpAddress;           /* The pointer to the mapped memory. */
+        void * lpAddress;           /* The pointer to the mapped memory. */
         SIZE_T NumberOfBytesToMap;  /* Number of bytes to map. */
-        DWORD dwDesiredAccess;      /* Desired access. */
-        LPVOID lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
+        uint32_t dwDesiredAccess;      /* Desired access. */
+        void * lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
                                        base address pointer of the PE file (used to find all
                                        parts of the PE file mapping to allow PE file unload).
                                        Otherwise, it is NULL. */
@@ -145,17 +145,17 @@ namespace CorUnix
     class CFileMappingImmutableData
     {
     public:
-        CHAR szFileName[MAXPATHLEN];
-        UINT MaxSize;               // The max size of the file mapping object
-        DWORD flProtect;            // Protection desired for the file view
+        char szFileName[MAXPATHLEN];
+        uint32_t MaxSize;               // The max size of the file mapping object
+        uint32_t flProtect;            // Protection desired for the file view
         BOOL bPALCreatedTempFile;   // TRUE if it's a PAL created file
-        DWORD dwDesiredAccessWhenOpened;  // FILE_MAP_WRITE etc
+        uint32_t dwDesiredAccessWhenOpened;  // FILE_MAP_WRITE etc
     };
 
     class CFileMappingProcessLocalData 
     {
     public:
-        INT     UnixFd;                     /* File descriptor. */
+        int32_t     UnixFd;                     /* File descriptor. */
         
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
         dev_t   MappedFileDevNum;           /* ID of device containing the file to be mapped */
@@ -172,9 +172,9 @@ namespace CorUnix
         CPalThread *pThread,
         HANDLE hFile,
         LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-        DWORD flProtect,
-        DWORD dwMaximumSizeHigh,
-        DWORD dwMaximumSizeLow,
+        uint32_t flProtect,
+        uint32_t dwMaximumSizeHigh,
+        uint32_t dwMaximumSizeLow,
         LPCWSTR lpName,
         HANDLE *phMapping
         );
@@ -182,7 +182,7 @@ namespace CorUnix
     PAL_ERROR
     InternalOpenFileMapping(
         CPalThread *pThread,
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
         LPCWSTR lpName,
         HANDLE *phMapping
@@ -192,17 +192,17 @@ namespace CorUnix
     InternalMapViewOfFile(
         CPalThread *pThread,
         HANDLE hFileMappingObject,
-        DWORD dwDesiredAccess,
-        DWORD dwFileOffsetHigh,
-        DWORD dwFileOffsetLow,
+        uint32_t dwDesiredAccess,
+        uint32_t dwFileOffsetHigh,
+        uint32_t dwFileOffsetLow,
         SIZE_T dwNumberOfBytesToMap,
-        LPVOID *ppvBaseAddress
+        void * *ppvBaseAddress
         );
 
     PAL_ERROR
     InternalUnmapViewOfFile(
         CPalThread *pThread,
-        LPCVOID lpBaseAddress
+        const void * lpBaseAddress
         );
 
 }

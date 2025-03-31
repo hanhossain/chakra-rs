@@ -9,16 +9,16 @@
 
 namespace Js
 {
-    ULONG
+    uint32_t
     ScriptContextProfiler::AddRef()
     {
         return refcount++;
     }
 
-    ULONG
+    uint32_t
     ScriptContextProfiler::Release()
     {
-        ULONG count = --refcount;
+        uint32_t count = --refcount;
         if (count == 0)
         {
             if (recycler != nullptr && this->profiler == recycler->GetProfiler())

@@ -32,7 +32,7 @@ namespace Js
 #endif
 
         BreakpointProbe* FindBreakpoint(StatementLocation statement);
-        bool FindBPStatementLocation(UINT bpId, StatementLocation * statement);
+        bool FindBPStatementLocation(uint32_t bpId, StatementLocation * statement);
 
         BOOL GetStatementSpan(int32 ibos, StatementSpan* pBos);
         BOOL GetStatementLocation(int32 ibos, StatementLocation* plocation);

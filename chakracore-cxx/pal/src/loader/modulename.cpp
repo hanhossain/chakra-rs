@@ -46,7 +46,7 @@ SET_DEFAULT_DEBUG_CHANNEL(LOADER);
     Retrieve the full path of the librotor_pal.so using loadquery()
 
 Parameters:
-    pszBuf - CHAR array of MAX_PATH_FNAME length
+    pszBuf - char array of MAX_PATH_FNAME length
 
 Return value:
     0 on success
@@ -54,11 +54,11 @@ Return value:
 --*/
 int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
 {
-    CHAR*               pLoadQueryBuf = NULL;
-    UINT                cbBuf = 1024;
+    char*               pLoadQueryBuf = NULL;
+    uint32_t                cbBuf = 1024;
     struct ld_info *    pInfo = NULL;
-    INT                 iLQRetVal = -1;
-    INT                 iRetVal = -1;
+    int32_t                 iLQRetVal = -1;
+    int32_t                 iRetVal = -1;
     CPalThread *pThread = NULL;
 
     if (!pszBuf)
@@ -74,7 +74,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
     // an error other than ENOMEM
     while (iLQRetVal != 0)
     {
-        pLoadQueryBuf = (CHAR*) InternalMalloc (pThread, cbBuf * sizeof(char));
+        pLoadQueryBuf = (char*) InternalMalloc (pThread, cbBuf * sizeof(char));
         if (!pLoadQueryBuf)
         {
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -85,7 +85,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
         {
             InternalFree(pThread, pLoadQueryBuf);
             pLoadQueryBuf = NULL;
-            DWORD dwLastError = GetLastError();
+            uint32_t dwLastError = GetLastError();
             if (dwLastError == ERROR_NOT_ENOUGH_MEMORY)
             {
                 // The buffer's too small.  Try twice as large as a guess...
@@ -108,7 +108,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
         {  
             if (strstr(pInfo->ldinfo_filename, "librotor_pal.a"))
             {
-                UINT cchFileName = strlen(pInfo->ldinfo_filename);
+                uint32_t cchFileName = strlen(pInfo->ldinfo_filename);
                 if (cchFileName + 1  > MAX_PATH_FNAME)
                 {
                     ASSERT("Filename returned by loadquery was longer than MAX_PATH_FNAME!\n");
@@ -164,7 +164,7 @@ Notes:
     the system running)  It is only safe to use it immediately after calling
     this function.
 --*/
-const char *PAL_dladdr(LPVOID ProcAddress)
+const char *PAL_dladdr(void * ProcAddress)
 {
 #if defined(_AIX) || defined(__hppa__)
     /* dladdr is not supported on AIX or 32-bit HPUX-PARISC */

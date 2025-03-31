@@ -133,7 +133,7 @@ static LPSTR MapFileOpenModes(LPSTR str , BOOL * bTextMode)
         *bTextMode = FALSE;
     }
 
-    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( CHAR ) );
+    retval = (LPSTR)PAL_malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -175,7 +175,7 @@ Function :
 --*/
 static BOOL WriteOnlyMode(FILE* pFile)
 {
-    INT fd, flags;
+    int32_t fd, flags;
 
     if (pFile != NULL)
     {
@@ -201,7 +201,6 @@ see MSDN
 
 --*/
 PAL_FILE *
-__cdecl
 _fdopen(
     int handle,
     const char *mode)
@@ -259,7 +258,6 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 PAL_fopen(const char * fileName, const char * mode)
 {
     PAL_FILE *f = NULL;
@@ -349,13 +347,12 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 _wfopen(
     const char16_t *fileName,
     const char16_t *mode)
 {
-    CHAR mbFileName[ _MAX_PATH ];
-    CHAR mbMode[ 10 ];
+    char mbFileName[ _MAX_PATH ];
+    char mbMode[ 10 ];
     PAL_FILE * filePtr = NULL;
 
     PERF_ENTRY(_wfopen);
@@ -396,7 +393,6 @@ see MSDN doc.
 
 --*/
 PAL_FILE *
-__cdecl
 _wfsopen(
     const char16_t *fileName,
     const char16_t *mode,
@@ -413,7 +409,7 @@ Function
 
     Returns the stdout stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stdout(int caller)
+PAL_FILE * PAL_get_stdout(int caller)
 {
     PERF_ENTRY(get_stdout);
     ENTRY("PAL_get_stdout\n");
@@ -428,7 +424,7 @@ Function
 
     Returns the stdin stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stdin(int caller)
+PAL_FILE * PAL_get_stdin(int caller)
 {
     PERF_ENTRY(get_stdin);
     ENTRY("PAL_get_stdin\n");
@@ -443,7 +439,7 @@ Function
 
     Returns the stderr stream.
 --*/
-PAL_FILE * __cdecl PAL_get_stderr(int caller)
+PAL_FILE * PAL_get_stderr(int caller)
 {
     PERF_ENTRY(get_stderr);
     ENTRY("PAL_get_stderr\n");
@@ -461,9 +457,9 @@ Function:
 
 See msdn for more details.
 --*/
-int __cdecl PAL__close(int handle)
+int PAL__close(int handle)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(_close);
     ENTRY( "_close( handle=%d )\n", handle );
@@ -475,13 +471,12 @@ int __cdecl PAL__close(int handle)
     return nRetVal;
 }
 
- int __cdecl PAL__flushall()
+ int PAL__flushall()
  {
     return fflush(NULL);
  }
 
 char16_t *
-__cdecl
 PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
 {
     ASSERT (0);
@@ -498,7 +493,6 @@ Function :
 --*/
 
 size_t
-__cdecl
 PAL_fread(void * buffer, size_t size, size_t count, PAL_FILE * f)
 {
     size_t nReadBytes = 0;
@@ -559,10 +553,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_ferror(PAL_FILE * f)
 {
-    INT nErrorCode = PAL_FILE_NOERROR;
+    int32_t nErrorCode = PAL_FILE_NOERROR;
 
     PERF_ENTRY(ferror);
     ENTRY( "ferror( f=%p )\n", f );
@@ -590,10 +583,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fclose(PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fclose);
     ENTRY( "fclose( f=%p )\n", f );
@@ -618,7 +610,6 @@ Function :
     See MSDN for more details.
 --*/
 void
-_cdecl
 PAL_setbuf(PAL_FILE * f, char * buffer)
 {
     PERF_ENTRY(setbuf);
@@ -640,10 +631,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fputs(const char * str,  PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fputs);
     ENTRY( "fputs( %p (%s), %p )\n", str, str, f);
@@ -668,10 +658,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fputc(int c,  PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(fputc);
     ENTRY( "fputc( 0x%x (%c), %p )\n", c, c, f);
@@ -695,10 +684,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_putchar( int c )
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(putchar);
     ENTRY( "putchar( 0x%x (%c) )\n", c, c);
@@ -717,8 +705,7 @@ Function :
 
     See MSDN for more details.
 --*/
-LONG
-_cdecl
+int32_t
 PAL_ftell(PAL_FILE * f)
 {
     long lRetVal = 0;
@@ -729,20 +716,18 @@ PAL_ftell(PAL_FILE * f)
     _ASSERTE(f != NULL);
     lRetVal = ftell( f->bsdFilePtr );
 
-#ifdef BIT64
     /* Windows does not set an error if the file pointer's position
     is greater than _I32_MAX. It just returns -1. */
     if (lRetVal > _I32_MAX)
     {
         lRetVal = -1;
     }
-#endif
 
     LOGEXIT( "ftell returning %ld\n", lRetVal );
     PERF_EXIT(ftell);
-    /* This explicit cast to LONG is used to silence any potential warnings
-    due to implicitly casting the native long lRetVal to LONG when returning. */
-    return (LONG)lRetVal;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+    due to implicitly casting the native long lRetVal to int32_t when returning. */
+    return (int32_t)lRetVal;
 }
 
 /*++
@@ -755,7 +740,6 @@ See msdn for more details.
 --*/
 
 int
-__cdecl
 PAL_fgetpos (
     PAL_FILE   *f,
     PAL_fpos_t *pos
@@ -801,7 +785,6 @@ See msdn for more details.
 --*/
 
 int
-__cdecl
 PAL_fsetpos (
     PAL_FILE         *f,
     const PAL_fpos_t *pos
@@ -845,10 +828,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_feof(PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(feof);
     ENTRY( "feof( %p )\n", f );
@@ -869,11 +851,10 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_getc(PAL_FILE * f)
 {
-    INT nRetVal = 0;
-    INT temp =0;
+    int32_t nRetVal = 0;
+    int32_t temp =0;
 
     PERF_ENTRY(getc);
     ENTRY( "getc( %p )\n", f );
@@ -909,10 +890,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_ungetc(int c, PAL_FILE * f)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(ungetc);
     ENTRY( "ungetc( %c, %p )\n", c, f );
@@ -949,10 +929,9 @@ Function :
     See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
 {
-    INT nRetVal = 0;
+    int32_t nRetVal = 0;
 
     PERF_ENTRY(setvbuf);
     ENTRY( "setvbuf( %p, %p, %d, %ul )\n", f, buf, type, size);

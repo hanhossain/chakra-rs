@@ -52,14 +52,14 @@ SET_DEFAULT_DEBUG_CHANNEL(SYNC);
     
 namespace CorUnix
 {          
-    const DWORD WTLN_FLAG_OWNER_OBJECT_IS_SHARED                 = 1<<0;
-    const DWORD WTLN_FLAG_WAIT_ALL                               = 1<<1;
-    const DWORD WTLN_FLAG_DELEGATED_OBJECT_SIGNALING_IN_PROGRESS = 1<<2;
+    const uint32_t WTLN_FLAG_OWNER_OBJECT_IS_SHARED                 = 1<<0;
+    const uint32_t WTLN_FLAG_WAIT_ALL                               = 1<<1;
+    const uint32_t WTLN_FLAG_DELEGATED_OBJECT_SIGNALING_IN_PROGRESS = 1<<2;
     
 #ifdef SYNCH_OBJECT_VALIDATION
-    const DWORD HeadSignature  = 0x48454144;
-    const DWORD TailSignature  = 0x5441494C;
-    const DWORD EmptySignature = 0xBAADF00D;    
+    const uint32_t HeadSignature  = 0x48454144;
+    const uint32_t TailSignature  = 0x5441494C;
+    const uint32_t EmptySignature = 0xBAADF00D;
 #endif
 
     enum THREAD_WAIT_STATE
@@ -92,17 +92,17 @@ namespace CorUnix
     typedef struct _WaitingThreadsListNode
     {
 #ifdef SYNCH_OBJECT_VALIDATION
-        DWORD dwDebugHeadSignature;
+        uint32_t dwDebugHeadSignature;
 #endif
         WTLNodeGenrPtr ptrNext;
         WTLNodeGenrPtr ptrPrev;
         SharedID shridSHRThis;        
         
         // Data
-        DWORD dwThreadId;
-        DWORD dwProcessId;
-        DWORD dwObjIndex;
-        DWORD dwFlags;
+        uint32_t dwThreadId;
+        uint32_t dwProcessId;
+        uint32_t dwObjIndex;
+        uint32_t dwFlags;
 
         // Pointers to related objects
         SharedID shridWaitingState; 
@@ -116,7 +116,7 @@ namespace CorUnix
         void ValidateEmptyObject(void);
         void InvalidateObject(void);
 
-        DWORD dwDebugTailSignature;
+        uint32_t dwDebugTailSignature;
 #endif
     } WaitingThreadsListNode;
 
@@ -136,7 +136,7 @@ namespace CorUnix
     {
         struct _ThreadApcInfoNode * pNext;
         PAPCFUNC pfnAPC;
-        ULONG_PTR pAPCData;        
+        size_t pAPCData;
     } ThreadApcInfoNode;
 
     class CPalSynchronizationManager; // fwd declaration
@@ -145,32 +145,32 @@ namespace CorUnix
     class CSynchData
     {        
 #ifdef SYNCH_OBJECT_VALIDATION
-        DWORD m_dwDebugHeadSignature;
+        uint32_t m_dwDebugHeadSignature;
 #endif
         // NB: For perforformance purposes this class is supposed
         //     to have no virtual methods, and no destructor.
 
         WTLNodeGenrPtr  m_ptrWTLHead;
         WTLNodeGenrPtr  m_ptrWTLTail;
-        ULONG m_ulcWaitingThreads;
+        uint32_t m_ulcWaitingThreads;
         SharedID m_shridThis;
         ObjectDomain m_odObjectDomain; 
         PalObjectTypeId m_otiObjectTypeId;
-        LONG  m_lRefCount;
-        LONG  m_lSignalCount;
+        int32_t  m_lRefCount;
+        int32_t  m_lSignalCount;
 
         // Ownership data
-        LONG  m_lOwnershipCount;
-        DWORD m_dwOwnerPid;
-        DWORD m_dwOwnerTid; // used only by remote processes
+        int32_t  m_lOwnershipCount;
+        uint32_t m_dwOwnerPid;
+        uint32_t m_dwOwnerTid; // used only by remote processes
                             // (thread ids may be recycled)
         CPalThread * m_pOwnerThread; // valid only on the target process
         OwnedObjectsListNode * m_poolnOwnedObjectListNode;
         bool m_fAbandoned;
 
 #ifdef SYNCH_STATISTICS
-        ULONG m_lStatWaitCount;
-        ULONG m_lStatContentionCount;
+        uint32_t m_lStatWaitCount;
+        uint32_t m_lStatContentionCount;
 #endif
 
     public:
@@ -195,12 +195,12 @@ namespace CorUnix
 #endif
         }
 
-        LONG AddRef() 
+        int32_t AddRef()
         { 
             return InterlockedIncrement(&m_lRefCount); 
         }
                  
-        LONG Release(CPalThread * pthrCurrent);
+        int32_t Release(CPalThread * pthrCurrent);
         
         bool CanWaiterWaitWithoutBlocking(
             CPalThread * pWaiterThread,
@@ -253,7 +253,7 @@ namespace CorUnix
 
         void Signal(
             CPalThread * pthrCurrent, 
-            LONG lSignalCount, 
+            int32_t lSignalCount,
             bool fWorkerThread);
 
         bool ReleaseFirstWaiter(
@@ -261,25 +261,25 @@ namespace CorUnix
             bool * pfDelegated,
             bool fWorkerThread);
 
-        LONG ReleaseAllLocalWaiters(
+        int32_t ReleaseAllLocalWaiters(
             CPalThread * pthrCurrent);
 
         WaitCompletionState IsRestOfWaitAllSatisfied(
             WaitingThreadsListNode * pwtlnNode);
 
         // Object signal count accessor methods
-        LONG GetSignalCount(void) 
+        int32_t GetSignalCount(void)
         {
             _ASSERTE(m_lSignalCount >= 0);
             return m_lSignalCount; 
         }
-        void SetSignalCount(LONG lSignalCount) 
+        void SetSignalCount(int32_t lSignalCount)
         { 
             _ASSERTE(m_lSignalCount >= 0);
             _ASSERTE(lSignalCount >= 0);
             m_lSignalCount = lSignalCount; 
         }
-        LONG DecrementSignalCount(void) 
+        int32_t DecrementSignalCount(void)
         {
             _ASSERTE(m_lSignalCount > 0);
             return --m_lSignalCount; 
@@ -291,11 +291,11 @@ namespace CorUnix
         PAL_ERROR AssignOwnershipToThread(
             CPalThread * pthrCurrent,
             CPalThread * pthrTarget);
-        DWORD GetOwnerProcessID(void) 
+        uint32_t GetOwnerProcessID(void)
         { 
             return m_dwOwnerPid; 
         }
-        DWORD GetOwnerThreadID(void) 
+        uint32_t GetOwnerThreadID(void)
         { 
             return m_dwOwnerTid; 
         }
@@ -313,11 +313,11 @@ namespace CorUnix
         }
 
         // Object ownership count accessor methods
-        LONG GetOwnershipCount(void) 
+        int32_t GetOwnershipCount(void)
         { 
             return m_lOwnershipCount; 
         }
-        void SetOwnershipCount(LONG lOwnershipCount) 
+        void SetOwnershipCount(int32_t lOwnershipCount)
         { 
             m_lOwnershipCount = lOwnershipCount;
         }
@@ -335,7 +335,7 @@ namespace CorUnix
         {
             m_ulcWaitingThreads -= 1;
         }
-        ULONG GetWaitingThreadCount(void)
+        uint32_t GetWaitingThreadCount(void)
         {
             return m_ulcWaitingThreads;
         }
@@ -346,7 +346,7 @@ namespace CorUnix
         {
             m_lStatWaitCount++;
         }
-        LONG GetStatWaitCount(void)
+        int32_t GetStatWaitCount(void)
         {
             return m_lStatWaitCount;
         }
@@ -354,7 +354,7 @@ namespace CorUnix
         {
             m_lStatContentionCount++;
         }
-        LONG GetStatContentionCount(void)
+        int32_t GetStatContentionCount(void)
         {
             return m_lStatContentionCount;
         }
@@ -400,7 +400,7 @@ namespace CorUnix
         void ValidateEmptyObject(void);
         void InvalidateObject(void);
 
-        DWORD m_dwDebugTailSignature;
+        uint32_t m_dwDebugTailSignature;
 #endif
     };
 
@@ -465,7 +465,7 @@ namespace CorUnix
         
         virtual PAL_ERROR RegisterWaitingThread(
             WaitType wtWaitType,
-            DWORD dwIndex,
+            uint32_t dwIndex,
             bool fAlertable);
 
         virtual void ReleaseController(void);
@@ -485,10 +485,10 @@ namespace CorUnix
         //
         // ISynchStateController methods
         //
-        virtual PAL_ERROR GetSignalCount(LONG *plSignalCount);
-        virtual PAL_ERROR SetSignalCount(LONG lNewCount);
-        virtual PAL_ERROR IncrementSignalCount(LONG lAmountToIncrement);
-        virtual PAL_ERROR DecrementSignalCount(LONG lAmountToDecrement);
+        virtual PAL_ERROR GetSignalCount(int32_t *plSignalCount);
+        virtual PAL_ERROR SetSignalCount(int32_t lNewCount);
+        virtual PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement);
+        virtual PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement);
         virtual PAL_ERROR SetOwner(CPalThread *pNewOwningThread);
         virtual PAL_ERROR DecrementOwnershipCount(void);
         virtual void ReleaseController(void);
@@ -533,10 +533,10 @@ namespace CorUnix
         typedef struct _MonitoredProcessesListNode
         {
             struct _MonitoredProcessesListNode * pNext;
-            LONG lRefCount;
+            int32_t lRefCount;
             CSynchData * psdSynchData;
-            DWORD dwPid;
-            DWORD dwExitCode;
+            uint32_t dwPid;
+            uint32_t dwExitCode;
             bool fIsActualExitCode;
             CProcProcessLocalData * pProcLocalData;
         } MonitoredProcessesListNode;
@@ -552,17 +552,17 @@ namespace CorUnix
         static const int WorkerThreadProcMonitoringTimeout = 250;  // ms
         static const int WorkerThreadShuttingDownTimeout   = 1000; // ms
         static const int WorkerCmdCompletionTimeout        = 250;  // ms
-        static const DWORD SecondNativeWaitTimeout         = INFINITE;
-        static const DWORD WorkerThreadTerminationTimeout  = 2000; // ms
+        static const uint32_t SecondNativeWaitTimeout         = INFINITE;
+        static const uint32_t WorkerThreadTerminationTimeout  = 2000; // ms
 
         // static members
         static CPalSynchronizationManager * s_pObjSynchMgr;        
-        static Volatile<LONG>               s_lInitStatus;
+        static Volatile<int32_t>               s_lInitStatus;
         static CRITICAL_SECTION             s_csSynchProcessLock;
         static CRITICAL_SECTION             s_csMonitoredProcessesLock;
         
         // members        
-        DWORD                           m_dwWorkerThreadTid;
+        uint32_t                           m_dwWorkerThreadTid;
         IPalObject *                    m_pipoThread;
         CPalThread *                    m_pthrWorker;
         int                             m_iProcessPipeRead;
@@ -573,7 +573,7 @@ namespace CorUnix
 #endif // HAVE_KQUEUE
 
         MonitoredProcessesListNode *    m_pmplnMonitoredProcesses;
-        LONG                            m_lMonitoredProcessesCount;
+        int32_t                            m_lMonitoredProcessesCount;
         MonitoredProcessesListNode *    m_pmplnExitedNodes;
 
         // caches
@@ -595,7 +595,7 @@ namespace CorUnix
         PAL_ERROR GetSynchControllersForObjects(
             CPalThread *pthrCurrent,
             IPalObject *rgObjects[],
-            DWORD dwObjectCount,
+            uint32_t dwObjectCount,
             void ** ppvControllers,
             CSynchControllerBase::ControllerType ctCtrlrType);
 
@@ -638,9 +638,9 @@ namespace CorUnix
 #endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING && !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
             }
         }
-        static LONG ResetLocalSynchLock(CPalThread * pthrCurrent) 
+        static int32_t ResetLocalSynchLock(CPalThread * pthrCurrent)
         {
-            LONG lRet = pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
+            int32_t lRet = pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
 
             _ASSERTE(0 <= lRet);
             if (0 < lRet)
@@ -654,7 +654,7 @@ namespace CorUnix
             }            
             return lRet;
         }
-        static LONG GetLocalSynchLockCount(CPalThread * pthrCurrent) 
+        static int32_t GetLocalSynchLockCount(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             return pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
@@ -683,9 +683,9 @@ namespace CorUnix
                 SHMRelease();
             }                
         }
-        static LONG ResetSharedSynchLock(CPalThread * pthrCurrent) 
+        static int32_t ResetSharedSynchLock(CPalThread * pthrCurrent)
         {   
-            LONG lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
+            int32_t lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
 
             _ASSERTE(0 <= lRet);
             _ASSERTE(0 == lRet || 
@@ -697,7 +697,7 @@ namespace CorUnix
             }
             return lRet;
         }
-        static LONG GetSharedSynchLockCount(CPalThread * pthrCurrent) 
+        static int32_t GetSharedSynchLockCount(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             _ASSERTE(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount || 
@@ -812,11 +812,11 @@ namespace CorUnix
         //
         virtual PAL_ERROR BlockThread(
             CPalThread *pthrCurrent,
-            DWORD dwTimeout,
+            uint32_t dwTimeout,
             bool fAlertable,
             bool fIsSleep,
             ThreadWakeupReason *ptwrWakeupReason,
-            DWORD *pdwSignaledObject);
+            uint32_t *pdwSignaledObject);
 
         virtual PAL_ERROR AbandonObjectsOwnedByThread(
             CPalThread *pthrCurrent,
@@ -825,41 +825,41 @@ namespace CorUnix
         virtual PAL_ERROR GetSynchWaitControllersForObjects(
             CPalThread *pthrCurrent,
             IPalObject *rgObjects[],
-            DWORD dwObjectCount,
+            uint32_t dwObjectCount,
             ISynchWaitController *rgControllers[]);
 
         virtual PAL_ERROR GetSynchStateControllersForObjects(
             CPalThread *pthrCurrent,
             IPalObject *rgObjects[],
-            DWORD dwObjectCount,
+            uint32_t dwObjectCount,
             ISynchStateController *rgControllers[]);
 
         virtual PAL_ERROR AllocateObjectSynchData(
             CObjectType *potObjectType,
             ObjectDomain odObjectDomain,
-            VOID **ppvSynchData);
+            void **ppvSynchData);
 
         virtual void FreeObjectSynchData(
             CObjectType *potObjectType,
             ObjectDomain odObjectDomain,
-            VOID *pvSynchData);
+            void *pvSynchData);
 
         virtual PAL_ERROR PromoteObjectSynchData(
             CPalThread *pthrCurrent,
-            VOID *pvLocalSynchData,
-            VOID **ppvSharedSynchData);
+            void *pvLocalSynchData,
+            void **ppvSharedSynchData);
 
         virtual PAL_ERROR CreateSynchStateController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain odObjectDomain,
             ISynchStateController **ppStateController);
 
         virtual PAL_ERROR CreateSynchWaitController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain odObjectDomain,
             ISynchWaitController **ppWaitController);
 
@@ -867,7 +867,7 @@ namespace CorUnix
             CPalThread * pthrCurrent,
             CPalThread *pthrTarget,
             PAPCFUNC pfnAPC,
-            ULONG_PTR uptrData);
+            size_t uptrData);
 
         virtual bool AreAPCsPending(CPalThread * pthrTarget);
 
@@ -885,7 +885,7 @@ namespace CorUnix
             CPalThread * pthrCurrent,
             CPalThread * pthrTarget,
             ThreadWakeupReason twrWakeupReason,
-            DWORD dwObjectIndex);
+            uint32_t dwObjectIndex);
 
 #if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         static PAL_ERROR SignalThreadCondition(
@@ -901,12 +901,12 @@ namespace CorUnix
 
         static PAL_ERROR DelegateSignalingToRemoteProcess(
             CPalThread * pthrCurrent,
-            DWORD dwTargetProcessId,
+            uint32_t dwTargetProcessId,
             SharedID shridSynchData);
 
         static PAL_ERROR SendMsgToRemoteWorker(
-            DWORD dwProcessId,
-            BYTE * pMsg,
+            uint32_t dwProcessId,
+            uint8_t * pMsg,
             int iMsgSize);
 
         static ThreadWaitInfo * GetThreadWaitInfo(
@@ -931,9 +931,9 @@ namespace CorUnix
 
         static PAL_ERROR ThreadNativeWait(
             ThreadNativeWaitData * ptnwdNativeWaitData,
-            DWORD dwTimeout,
+            uint32_t dwTimeout,
             ThreadWakeupReason * ptwrWakeupReason,
-            DWORD * pdwSignaledObject);
+            uint32_t * pdwSignaledObject);
 
         static void ThreadPrepareForShutdown(void);
 
@@ -941,14 +941,14 @@ namespace CorUnix
         static bool GetProcessPipeName(
             LPSTR pDest, 
             int iDestSize,
-            DWORD dwPid);
+            uint32_t dwPid);
 #endif // !CORECLR
         
         //
         // Non-static helper methods
         //
     private:
-        LONG DoMonitorProcesses(CPalThread * pthrCurrent);
+        int32_t DoMonitorProcesses(CPalThread * pthrCurrent);
 
         void DiscardMonitoredProcesses(CPalThread * pthrCurrent);
 
@@ -956,7 +956,7 @@ namespace CorUnix
             int iPollTimeout,
             SynchWorkerCmd * pswcWorkerCmd,            
             SharedID * pshridMarshaledData,
-            DWORD * pdwData);
+            uint32_t * pdwData);
 
         PAL_ERROR WakeUpLocalWorkerThread(
             SynchWorkerCmd swcWorkerCmd);
@@ -967,8 +967,8 @@ namespace CorUnix
 
         int ReadBytesFromProcessPipe(
             int iTimeout,
-            BYTE * pRecvBuf,
-            LONG lBytes);
+            uint8_t * pRecvBuf,
+            int32_t lBytes);
 
         bool CreateProcessPipe();
 
@@ -992,28 +992,28 @@ namespace CorUnix
         PAL_ERROR UnRegisterProcessForMonitoring(
             CPalThread * pthrCurrent,
             CSynchData *psdSynchData,
-            DWORD dwPid);
+            uint32_t dwPid);
 
         //
         // Utility static methods, no lock required
         //
         static bool HasProcessExited(
-            DWORD dwPid, 
-            DWORD * pdwExitCode,
+            uint32_t dwPid,
+            uint32_t * pdwExitCode,
             bool * pfIsActualExitCode);
 
         static bool InterlockedAwaken(
-            DWORD *pWaitState,
+            uint32_t *pWaitState,
             bool fAlertOnly);
 
         static PAL_ERROR GetAbsoluteTimeout(
-            DWORD dwTimeout, 
+            uint32_t dwTimeout,
             struct timespec * ptsAbsTmo);
 
 #if SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         static void UpdateTimeout(
-            DWORD * pdwOldTime, 
-            DWORD * pdwTimeout);
+            uint32_t * pdwOldTime,
+            uint32_t * pdwTimeout);
 #endif
 
     };

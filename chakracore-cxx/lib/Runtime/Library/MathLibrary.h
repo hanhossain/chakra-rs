@@ -8,7 +8,7 @@
 class UCrtC99MathApis : protected DelayLoadLibrary
 {
 private:
-    typedef double (__cdecl FNMathFn)(double);
+    typedef double (FNMathFn)(double);
     typedef FNMathFn* PFNMathFn;
     PFNMathFn m_pfnlog2;
     PFNMathFn m_pfnlog1p;

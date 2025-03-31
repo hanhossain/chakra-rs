@@ -208,7 +208,7 @@ void ChakraRTInterface::UnloadChakraDll(HINSTANCE library)
     }
     // PAL thread shutdown needs more time after execution completion.
     // Do not FreeLibrary. Invoke DllMain(DLL_PROCESS_DETACH) directly.
-    typedef BOOL (__stdcall *PDLLMAIN)(HINSTANCE, DWORD, LPVOID);
+    typedef BOOL (*PDLLMAIN)(HINSTANCE, uint32_t, void *);
     PDLLMAIN pDllMain = (PDLLMAIN) GetChakraCoreSymbol(library, "DllMain");
     if (pDllMain)
     {

@@ -107,7 +107,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 // is zero. This value can be set by setting the
 // environment variable PAL_THREAD_DEFAULT_STACK_SIZE
 // (the value should be in bytes and in hex).
-DWORD CPalThread::s_dwDefaultThreadStackSize = 256*1024;
+uint32_t CPalThread::s_dwDefaultThreadStackSize = 256*1024;
 
 /* list of free CPalThread objects */
 static Volatile<CPalThread*> free_threads_list PAL_GLOBAL = NULL;
@@ -317,14 +317,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetThreadId(
     HANDLE hThread
     // UNIXTODO Should take pThread parameter here (modify callers)
     )
 {
-    DWORD dwThreadId = 0;
+    uint32_t dwThreadId = 0;
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjThread = 0;
@@ -345,7 +344,7 @@ GetThreadId(
 
     if (NO_ERROR != palError)
     {
-        dwThreadId = (DWORD)pThread->GetThreadId();
+        dwThreadId = (uint32_t)pThread->GetThreadId();
     }
 
     if (NULL != pobjThread)
@@ -365,17 +364,16 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetCurrentThreadId(
-            VOID)
+            void)
 {
-    DWORD dwThreadId;
+    uint32_t dwThreadId;
 
     PERF_ENTRY(GetCurrentThreadId);
     ENTRY("GetCurrentThreadId()\n");
 
-    dwThreadId = (DWORD)THREADSilentGetCurrentThreadId();
+    dwThreadId = (uint32_t)THREADSilentGetCurrentThreadId();
 
     LOGEXIT("GetCurrentThreadId returns DWORD %#x\n", dwThreadId);
     PERF_EXIT(GetCurrentThreadId);
@@ -390,9 +388,8 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 PAL_GetCurrentThread(
-          VOID)
+          void)
 {
     PERF_ENTRY(GetCurrentThread);
     ENTRY("GetCurrentThread()\n");
@@ -411,9 +408,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SwitchToThread(
-    VOID)
+    void)
 {
     BOOL ret;
 
@@ -441,14 +437,13 @@ See MSDN doc.
 
 --*/
 HANDLE
-PALAPI
 CreateThread(
-    IN LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    IN DWORD dwStackSize,
-    IN LPTHREAD_START_ROUTINE lpStartAddress,
-    IN LPVOID lpParameter,
-    IN DWORD dwCreationFlags,
-    OUT LPDWORD lpThreadId)
+     LPSECURITY_ATTRIBUTES lpThreadAttributes,
+     uint32_t dwStackSize,
+     LPTHREAD_START_ROUTINE lpStartAddress,
+     void * lpParameter,
+     uint32_t dwCreationFlags,
+     uint32_t * lpThreadId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -493,10 +488,10 @@ PAL_ERROR
 CorUnix::InternalCreateThread(
     CPalThread *pThread,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    DWORD dwStackSize,
+    uint32_t dwStackSize,
     LPTHREAD_START_ROUTINE lpStartAddress,
-    LPVOID lpParameter,
-    DWORD dwCreationFlags,
+    void * lpParameter,
+    uint32_t dwCreationFlags,
     PalThreadType eThreadType,
     SIZE_T* pThreadId,
     HANDLE *phThread
@@ -772,11 +767,10 @@ Function:
 
 See MSDN doc.
 --*/
-PAL_NORETURN
-VOID
-PALAPI
+__attribute__((noreturn))
+void
 ExitThread(
-       IN DWORD dwExitCode)
+        uint32_t dwExitCode)
 {
     CPalThread *pThread;
 
@@ -809,7 +803,7 @@ Does any necessary memory clean up, signals waiting threads, and then forces
 the current thread to exit.
 --*/
 
-VOID
+void
 CorUnix::InternalEndCurrentThread(
     CPalThread *pThread
     )
@@ -903,9 +897,8 @@ Function:
 See MSDN doc.
 --*/
 int
-PALAPI
 GetThreadPriority(
-          IN HANDLE hThread)
+           HANDLE hThread)
 {
     CPalThread *pThread;
     PAL_ERROR palError;
@@ -981,10 +974,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetThreadPriority(
-          IN HANDLE hThread,
-          IN int nPriority)
+           HANDLE hThread,
+           int nPriority)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -1198,9 +1190,9 @@ InternalSetThreadPriorityExit:
 
 BOOL
 CorUnix::GetThreadTimesInternal(
-    IN HANDLE hThread,
-    OUT LPFILETIME lpKernelTime,
-    OUT LPFILETIME lpUserTime)
+     HANDLE hThread,
+     LPFILETIME lpKernelTime,
+     LPFILETIME lpUserTime)
 {
     __int64 calcTime;
     BOOL retval = FALSE;
@@ -1256,15 +1248,15 @@ CorUnix::GetThreadTimesInternal(
     calcTime = (__int64)resUsage.user_time.seconds * SECS_TO_NS;
     calcTime += (__int64)resUsage.user_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpUserTime */
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* Get the time of kernel mode execution, in nanoseconds */
     calcTime = (__int64)resUsage.system_time.seconds * SECS_TO_NS;
     calcTime += (__int64)resUsage.system_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpKernelTime */
-    lpKernelTime->dwLowDateTime = (DWORD)calcTime;
-    lpKernelTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
+    lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     retval = TRUE;
 
@@ -1343,8 +1335,8 @@ CorUnix::GetThreadTimesInternal(
 
     calcTime = (__int64) klwp[i].l_rtime_sec * SECS_TO_NS;
     calcTime += (__int64) klwp[i].l_rtime_usec * USECS_TO_NS;
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* NetBSD as of (7.0) doesn't differentiate used time in user/kernel for lwp */
     lpKernelTime->dwLowDateTime = 0;
@@ -1434,8 +1426,8 @@ CorUnix::GetThreadTimesInternal(
     /* Calculate time in nanoseconds and assign to user time */
     calcTime = (__int64) ts.tv_sec * SECS_TO_NS;
     calcTime += (__int64) ts.tv_nsec;
-    lpUserTime->dwLowDateTime = (DWORD)calcTime;
-    lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* Set kernel time to zero, for now */
     lpKernelTime->dwLowDateTime = 0;
@@ -1466,8 +1458,8 @@ CPalThread::ThreadEntry(
     PAL_ERROR palError;
     CPalThread *pThread;
     PTHREAD_START_ROUTINE pfnStartRoutine;
-    LPVOID pvPar;
-    DWORD retValue;
+    void * pvPar;
+    uint32_t retValue;
 
     pThread = reinterpret_cast<CPalThread*>(pvParam);
 
@@ -1491,9 +1483,9 @@ CPalThread::ThreadEntry(
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
 #if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (DWORD) thread_self();
+    pThread->m_dwLwpId = (uint32_t) thread_self();
 #elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (DWORD) _lwp_self();
+    pThread->m_dwLwpId = (uint32_t) _lwp_self();
 #else
     pThread->m_dwLwpId = 0;
 #endif
@@ -1626,9 +1618,9 @@ CorUnix::CreateThreadData(
     pThread->m_machPortSelf = pthread_mach_thread_np(pThread->m_pthreadSelf);
 #endif
 #if HAVE_THREAD_SELF
-    pThread->m_dwLwpId = (DWORD) thread_self();
+    pThread->m_dwLwpId = (uint32_t) thread_self();
 #elif HAVE__LWP_SELF
-    pThread->m_dwLwpId = (DWORD) _lwp_self();
+    pThread->m_dwLwpId = (uint32_t) _lwp_self();
 #else
     pThread->m_dwLwpId = 0;
 #endif
@@ -1912,7 +1904,7 @@ PAL_ERROR
 CorUnix::InternalGetThreadDataFromHandle(
     CPalThread *pThread,
     HANDLE hThread,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     CPalThread **ppTargetThread,
     IPalObject **ppobjThread
     )
@@ -2073,7 +2065,7 @@ CPalThread::ReleaseThreadReference(
     void
     )
 {
-    LONG lRefCount = InterlockedDecrement(&m_lRefCount);
+    int32_t lRefCount = InterlockedDecrement(&m_lRefCount);
     _ASSERT_MSG(lRefCount >= 0, "Released a thread and ended with a negative refcount (%ld)\n", lRefCount);
     if (0 == lRefCount)
     {
@@ -2319,7 +2311,7 @@ CPalThread::GetStackLimit()
     void* stackLimit;
 #ifdef __APPLE__
     // This is a Mac specific method
-    stackLimit = ((BYTE *)pthread_get_stackaddr_np(pthread_self()) -
+    stackLimit = ((uint8_t *)pthread_get_stackaddr_np(pthread_self()) -
                    pthread_get_stacksize_np(pthread_self()));
 #else
     pthread_attr_t attr;
@@ -2350,16 +2342,14 @@ CPalThread::GetStackLimit()
     return stackLimit;
 }
 
-PVOID
-PALAPI
+void *
 PAL_GetStackBase()
 {
     CPalThread* thread = InternalGetCurrentThread();
     return thread->GetStackBase();
 }
 
-PVOID
-PALAPI
+void *
 PAL_GetStackLimit()
 {
     CPalThread* thread = InternalGetCurrentThread();
@@ -2380,12 +2370,10 @@ Parameters:
 Return value:
     None
 --*/
-PALIMPORT
-VOID
-PALAPI
+void
 PAL_SetActivationFunction(
-    IN PAL_ActivationFunction pActivationFunction,
-    IN PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)
+     PAL_ActivationFunction pActivationFunction,
+     PAL_SafeActivationCheckFunction pSafeActivationCheckFunction)
 {
     g_activationFunction = pActivationFunction;
     g_safeActivationCheckFunction = pSafeActivationCheckFunction;
@@ -2445,7 +2433,7 @@ int CorUnix::CThreadMachExceptionHandlers::GetIndexOfHandler(exception_mask_t bm
 
 #ifdef __APPLE__
 #define EXPECTED_ALIGNMENT 16 * 1024
-static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_PTR *lowLimit)
+static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *lowLimit)
 {
     size_t stack = pthread_get_stacksize_np(thread);
 
@@ -2464,7 +2452,7 @@ static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_
 #endif
     }
 
-    *highLimit = (ULONG_PTR)pthread_get_stackaddr_np(thread);
+    *highLimit = (size_t)pthread_get_stackaddr_np(thread);
     stack = *highLimit - stack;
 
     *lowLimit = ((stack + (EXPECTED_ALIGNMENT - 1)) & ~(EXPECTED_ALIGNMENT - 1));
@@ -2473,11 +2461,11 @@ static void GetInternalStackLimit(pthread_t thread, ULONG_PTR *highLimit, ULONG_
 #endif
 
 #ifndef __IOS__
-static THREAD_LOCAL ULONG_PTR s_cachedHighLimit = 0;
-static THREAD_LOCAL ULONG_PTR s_cachedLowLimit = 0;
+static THREAD_LOCAL size_t s_cachedHighLimit = 0;
+static THREAD_LOCAL size_t s_cachedLowLimit = 0;
 #endif
 
-void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
+void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
 {
 #ifndef __IOS__
     if (s_cachedLowLimit)
@@ -2514,8 +2502,8 @@ void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
 
     pthread_attr_destroy(&attr);
 
-    *lowLimit = (ULONG_PTR) stackend;
-    *highLimit = (ULONG_PTR) stackbase;
+    *lowLimit = (size_t) stackend;
+    *highLimit = (size_t) stackbase;
 #endif
 
 #ifndef __IOS__
@@ -2526,17 +2514,17 @@ void GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit)
 
 #ifndef _ARM64_
 
-bool IsAddressOnStack(ULONG_PTR address)
+bool IsAddressOnStack(size_t address)
 {
     // Assumption: Stack always grows, never shrinks and the high limit is stable
     // Assumption: pthread_getattr_np is slow, so we need to cache the current stack
     // bounds to speed up checking if a given address is on the stack
     // The semantics of IsAddressOnStack is that we care if a given address is
     // in the range of the current stack pointer
-    ULONG_PTR lowLimit, highLimit;
+    size_t lowLimit, highLimit;
     GetCurrentThreadStackLimits(&lowLimit, &highLimit);
 
-    ULONG_PTR currentStackPtr = GetCurrentSP();
+    size_t currentStackPtr = GetCurrentSP();
 
     if (currentStackPtr <= address && address < highLimit)
     {

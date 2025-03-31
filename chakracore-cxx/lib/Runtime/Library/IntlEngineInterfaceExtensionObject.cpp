@@ -289,7 +289,7 @@ namespace Js
 
 #elif defined(INTL_ICU)
 
-    template<typename TResource, void(__cdecl * CloseFunction)(TResource)>
+    template<typename TResource, void(* CloseFunction)(TResource)>
     class FinalizableICUObject : public FinalizableObject
     {
     private:
@@ -960,7 +960,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
     }
 
 #ifdef INTL_ICU
-    template <const char *(__cdecl *GetAvailableLocalesFunc)(int), int(__cdecl *CountAvailableLocalesFunc)(void)>
+    template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
     static bool BinarySearchForLocale(const char *localeID)
     {
         const int count = CountAvailableLocalesFunc();
@@ -1002,7 +1002,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         }
     }
 
-    template <const char *(__cdecl *GetAvailableLocalesFunc)(int), int(__cdecl *CountAvailableLocalesFunc)(void)>
+    template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
     static bool IsLocaleAvailable(JavascriptString *langtag)
     {
         char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };
@@ -1968,9 +1968,9 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     }
 
 #ifdef INTL_WINGLOB
-    static DWORD GetCompareStringComparisonFlags(CollatorSensitivity sensitivity, bool ignorePunctuation, bool numeric)
+    static uint32_t GetCompareStringComparisonFlags(CollatorSensitivity sensitivity, bool ignorePunctuation, bool numeric)
     {
-        DWORD flags = 0;
+        uint32_t flags = 0;
 
         if (sensitivity == CollatorSensitivity::Base)
         {
@@ -2107,7 +2107,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // Default to the strings being equal, because sorting with == causes no change in the order but converges, whereas < would cause an infinite loop.
         int compareResult = 2;
         HRESULT error = S_OK;
-        DWORD comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
+        uint32_t comparisonFlags = GetCompareStringComparisonFlags(sensitivity, ignorePunctuation, numeric);
         compareResult = CompareStringEx(locale, comparisonFlags, left, leftLen, right, rightLen, NULL, NULL, 0);
         error = HRESULT_FROM_WIN32(GetLastError());
 
@@ -2148,7 +2148,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         AutoCOMPtr<NumberFormatting::INumberFormatterOptions> numberFormatterOptions;
         IfFailThrowHr(currencyFormatter->QueryInterface(__uuidof(NumberFormatting::INumberFormatterOptions), reinterpret_cast<void**>(&numberFormatterOptions)));
         Assert(numberFormatterOptions);
-        INT32 fractionDigits;
+        int32_t fractionDigits;
         IfFailThrowHr(numberFormatterOptions->get_FractionDigits(&fractionDigits));
         return JavascriptNumber::ToVar(fractionDigits, scriptContext);
 #endif

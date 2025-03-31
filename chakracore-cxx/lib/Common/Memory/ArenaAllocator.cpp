@@ -1160,7 +1160,7 @@ void InlineCacheAllocator::CheckIsAllZero(bool lockdown)
         if (lockdown)
         {
             // make it read only, so we verify all zero once and it won't change afterwards
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READONLY, &oldProtect);
         }
         bigBlock = bigBlock->nextBigBlock;
@@ -1184,7 +1184,7 @@ void InlineCacheAllocator::CheckIsAllZero(bool lockdown)
         }
         if (lockdown)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READONLY, &oldProtect);
         }
         bigBlock = bigBlock->nextBigBlock;
@@ -1204,7 +1204,7 @@ void InlineCacheAllocator::Unlock()
         BigBlock *bigBlock = this->bigBlocks;
         while (bigBlock != NULL)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READWRITE, &oldProtect);
             bigBlock = bigBlock->nextBigBlock;
         }
@@ -1212,7 +1212,7 @@ void InlineCacheAllocator::Unlock()
         bigBlock = this->fullBlocks;
         while (bigBlock != NULL)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READWRITE, &oldProtect);
 
             bigBlock = bigBlock->nextBigBlock;
@@ -1528,7 +1528,7 @@ void CacheAllocator::CheckIsAllZero(bool lockdown)
         Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
         if (lockdown)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(blockp->allocation->GetAddress(), blockp->allocation->GetSize(), PAGE_READONLY, &oldProtect);
         }
         blockp = blockp->nextBigBlock;
@@ -1540,7 +1540,7 @@ void CacheAllocator::CheckIsAllZero(bool lockdown)
         Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
         if (lockdown)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(blockp->allocation->GetAddress(), blockp->allocation->GetSize(), PAGE_READONLY, &oldProtect);
         }
         blockp = blockp->nextBigBlock;
@@ -1560,7 +1560,7 @@ void CacheAllocator::Unlock()
         BigBlock *bigBlock = this->bigBlocks;
         while (bigBlock != NULL)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READWRITE, &oldProtect);
             bigBlock = bigBlock->nextBigBlock;
         }
@@ -1568,7 +1568,7 @@ void CacheAllocator::Unlock()
         bigBlock = this->fullBlocks;
         while (bigBlock != NULL)
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             VirtualProtect(bigBlock->allocation->GetAddress(), bigBlock->allocation->GetSize(), PAGE_READWRITE, &oldProtect);
             bigBlock = bigBlock->nextBigBlock;
         }

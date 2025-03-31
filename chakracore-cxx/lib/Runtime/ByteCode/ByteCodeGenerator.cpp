@@ -2170,7 +2170,7 @@ void ByteCodeGenerator::CheckDeferParseHasMaybeEscapedNestedFunc()
             }
             catch (Js::OutOfMemoryException)
             {
-                FailedToBox_OOM_unrecoverable_error((ULONG_PTR)functionBody);
+                FailedToBox_OOM_unrecoverable_error((size_t)functionBody);
             }
 
             return;

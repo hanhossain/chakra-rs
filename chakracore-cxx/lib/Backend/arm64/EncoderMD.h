@@ -135,12 +135,12 @@ enum InstructionType {
 class EncodeReloc
 {
 public:
-    static void     New(EncodeReloc **pHead, RelocType relocType, BYTE *offset, IR::Instr *relocInstr, ArenaAllocator *alloc);
+    static void     New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::Instr *relocInstr, ArenaAllocator *alloc);
 
 public:
     EncodeReloc *   m_next;
     RelocType       m_relocType;
-    BYTE *          m_consumerOffset;  // offset in instruction stream
+    uint8_t *          m_consumerOffset;  // offset in instruction stream
     IR::Instr *     m_relocInstr;
 };
 
@@ -156,14 +156,14 @@ class EncoderMD
 {
 public:
     EncoderMD(Func * func) : m_func(func) { }
-    ptrdiff_t       Encode(IR::Instr * instr, BYTE *pc, BYTE* beginCodeAddress = nullptr);
+    ptrdiff_t       Encode(IR::Instr * instr, uint8_t *pc, uint8_t* beginCodeAddress = nullptr);
     void            Init(Encoder *encoder);
     void            ApplyRelocs(size_t codeBufferAddress, size_t codeSize, uint* bufferCRC, BOOL isBrShorteningSucceeded, bool isFinalBufferValidation = false);
     static bool     TryConstFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
     static bool     TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
-    BYTE            GetRegEncode(IR::RegOpnd *regOpnd);
-    BYTE            GetFloatRegEncode(IR::RegOpnd *regOpnd);
-    static BYTE     GetRegEncode(RegNum reg);
+    uint8_t            GetRegEncode(IR::RegOpnd *regOpnd);
+    uint8_t            GetFloatRegEncode(IR::RegOpnd *regOpnd);
+    static uint8_t     GetRegEncode(RegNum reg);
     static uint32   GetOpdope(IR::Instr *instr);
     static uint32   GetOpdope(Js::OpCode op);
 
@@ -197,9 +197,9 @@ public:
         return SETS_SBIT(instr->m_opcode);
     }
 
-    static DWORD BranchOffset_26(int64 x);
+    static uint32_t BranchOffset_26(int64 x);
     
-    void            AddLabelReloc(BYTE* relocAddress);
+    void            AddLabelReloc(uint8_t* relocAddress);
 
     static bool     CanEncodeLogicalConst(IntConstType constant, int size);
     // ToDo (SaAgarwa) Copied from ARM32 to compile. Validate is this correct
@@ -209,14 +209,14 @@ public:
 private:
     Func *          m_func;
     Encoder *       m_encoder;
-    BYTE *          m_pc;
+    uint8_t *          m_pc;
     EncodeReloc *   m_relocList;
 private:
-    ULONG           GenerateEncoding(IR::Instr* instr, BYTE *pc);
+    uint32_t           GenerateEncoding(IR::Instr* instr, uint8_t *pc);
     bool            CanonicalizeInstr(IR::Instr *instr);
     void            CanonicalizeLea(IR::Instr * instr);
-    bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, BYTE &indexScale, int32 &offset);
-    static bool     EncodeLogicalConst(IntConstType constant, DWORD * result, int size);
+    bool            DecodeMemoryOpnd(IR::Opnd* opnd, ARM64_REGISTER &baseRegResult, ARM64_REGISTER &indexRegResult, uint8_t &indexScale, int32 &offset);
+    static bool     EncodeLogicalConst(IntConstType constant, uint32_t * result, int size);
 
     // General 1-operand instructions (BR, RET)
     template<typename _RegFunc64> int EmitOp1Register64(Arm64CodeEmitter &Emitter, IR::Instr* instr, _RegFunc64 reg64);

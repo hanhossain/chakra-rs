@@ -9,7 +9,7 @@
 
 #define MAX_BASELINE_SIZE       (1024*1024*200)
 
-void CHAKRA_CALLBACK Debugger::DebugEventHandler(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState)
+void Debugger::DebugEventHandler(_In_ JsDiagDebugEvent debugEvent, _In_ JsValueRef eventData, _In_opt_ void* callbackState)
 {
     Debugger* debugger = (Debugger*)callbackState;
     debugger->HandleDebugEvent(debugEvent, eventData);
@@ -310,7 +310,7 @@ bool Debugger::SetBaseline()
     char* fileName = nullptr;
     JsValueRef scriptRef = JS_INVALID_REFERENCE;
     HRESULT hr = E_FAIL;
-    UINT lengthBytes = 0;
+    uint32_t lengthBytes = 0;
 
     if (SUCCEEDED(WideStringToNarrowDynamic(HostConfigFlags::flags.dbgbaseline, &fileName)))
     {

@@ -98,7 +98,7 @@ namespace CorUnix
             CPalThread *pthr,
             IPalObject *pobjToRegister,
             CAllowedObjectTypes *paot,
-            DWORD dwRightsRequested,
+            uint32_t dwRightsRequested,
             HANDLE *pHandle,
             IPalObject **ppobjRegistered
             );
@@ -117,7 +117,7 @@ namespace CorUnix
         ObtainHandleForObject(
             CPalThread *pthr,
             IPalObject *pobj,
-            DWORD dwRightsRequested,
+            uint32_t dwRightsRequested,
             bool fInheritHandle,
             IPalProcess *pProcessForHandle,     // IN, OPTIONAL
             HANDLE *pNewHandle
@@ -136,7 +136,7 @@ namespace CorUnix
             CPalThread *pthr,
             HANDLE hHandleToReference,
             CAllowedObjectTypes *paot,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject **ppobj
             );
 
@@ -145,9 +145,9 @@ namespace CorUnix
         ReferenceMultipleObjectsByHandleArray(
             CPalThread *pthr,
             HANDLE rghHandlesToReference[],
-            DWORD dwHandleCount,
+            uint32_t dwHandleCount,
             CAllowedObjectTypes *paot,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject *rgpobjs[]
             );
 
@@ -158,7 +158,7 @@ namespace CorUnix
             HANDLE hForeignHandle,
             IPalProcess *pForeignProcess,
             CAllowedObjectTypes *paot,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject **ppobj
             );
     };

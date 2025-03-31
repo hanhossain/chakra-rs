@@ -18,9 +18,9 @@ public:
     static void IdleCleanup();
 private:
 
-    static VOID CALLBACK IdleCleanupRoutine(
+    static void CALLBACK IdleCleanupRoutine(
         _Inout_     PTP_CALLBACK_INSTANCE Instance,
-        _Inout_opt_ PVOID Context,
+        _Inout_opt_ void * Context,
         _Inout_     PTP_TIMER Timer);
 
     PageAllocator* GetPageAllocator();

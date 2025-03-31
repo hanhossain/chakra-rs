@@ -76,37 +76,6 @@
 #endif /* UNICODE || _UNICODE */
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
-#ifndef ITTAPI_CDECL
-#  if ITT_PLATFORM==ITT_PLATFORM_WIN
-#    define ITTAPI_CDECL __cdecl
-#  else /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#    if defined _M_IX86 || defined __i386__
-#      define ITTAPI_CDECL __attribute__ ((cdecl))
-#    else  /* _M_IX86 || __i386__ */
-#      define ITTAPI_CDECL /* actual only on x86 platform */
-#    endif /* _M_IX86 || __i386__ */
-#  endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#endif /* ITTAPI_CDECL */
-
-#ifndef STDCALL
-#  if ITT_PLATFORM==ITT_PLATFORM_WIN
-#    define STDCALL __stdcall
-#  else /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#    if defined _M_IX86 || defined __i386__
-#      define STDCALL __attribute__ ((stdcall))
-#    else  /* _M_IX86 || __i386__ */
-#      define STDCALL /* supported only on x86 platform */
-#    endif /* _M_IX86 || __i386__ */
-#  endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
-#endif /* STDCALL */
-
-#define ITTAPI    ITTAPI_CDECL
-#define LIBITTAPI ITTAPI_CDECL
-
-/* TODO: Temporary for compatibility! */
-#define ITTAPI_CALL    ITTAPI_CDECL
-#define LIBITTAPI_CALL ITTAPI_CDECL
-
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
 /* use __forceinline (VC++ specific) */
 #define ITT_INLINE           __forceinline
@@ -193,7 +162,7 @@
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
 #include <windows.h>
 typedef HMODULE           lib_t;
-typedef DWORD             TIDT;
+typedef uint32_t             TIDT;
 typedef CRITICAL_SECTION  mutex_t;
 #define MUTEX_INITIALIZER { 0 }
 #define strong_alias(name, aliasname) /* empty for Windows */

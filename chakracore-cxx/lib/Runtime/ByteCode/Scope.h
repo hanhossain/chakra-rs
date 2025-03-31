@@ -31,20 +31,20 @@ private:
     uint scopeSlotCount; // count of slots in the local scope
     uint innerScopeIndex;
     ScopeType const scopeType;
-    BYTE isDynamic : 1;
-    BYTE isObject : 1;
-    BYTE canMerge : 1;
-    BYTE capturesAll : 1;
-    BYTE mustInstantiate : 1;
-    BYTE hasCrossScopeFuncAssignment : 1;
-    BYTE hasDuplicateFormals : 1;
-    BYTE canMergeWithBodyScope : 1;
-    BYTE hasLocalInClosure : 1;
-    BYTE isBlockInLoop : 1;
-    BYTE hasNestedParamFunc : 1;
+    uint8_t isDynamic : 1;
+    uint8_t isObject : 1;
+    uint8_t canMerge : 1;
+    uint8_t capturesAll : 1;
+    uint8_t mustInstantiate : 1;
+    uint8_t hasCrossScopeFuncAssignment : 1;
+    uint8_t hasDuplicateFormals : 1;
+    uint8_t canMergeWithBodyScope : 1;
+    uint8_t hasLocalInClosure : 1;
+    uint8_t isBlockInLoop : 1;
+    uint8_t hasNestedParamFunc : 1;
 public:
 #if DBG
-    BYTE isRestored : 1;
+    uint8_t isRestored : 1;
 #endif
     Scope(ArenaAllocator *alloc, ScopeType scopeType, int capacity = 0) :
         alloc(alloc),

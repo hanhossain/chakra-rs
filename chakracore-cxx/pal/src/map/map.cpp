@@ -56,21 +56,21 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 CRITICAL_SECTION mapping_critsec PAL_GLOBAL;
 LIST_ENTRY MappedViewList PAL_GLOBAL;
 
-static PAL_ERROR MAPGrowLocalFile(INT, UINT);
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( LPCVOID );
-static PAL_ERROR MAPDesiredAccessAllowed( DWORD, DWORD, DWORD );
+static PAL_ERROR MAPGrowLocalFile(int32_t, uint32_t);
+static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
+static PAL_ERROR MAPDesiredAccessAllowed( uint32_t, uint32_t, uint32_t );
 
-static INT MAPProtectionToFileOpenFlags( DWORD );
-static BOOL MAPIsRequestPermissible( DWORD, CFileProcessLocalData * );
-static BOOL MAPContainsInvalidFlags( DWORD );
-static DWORD MAPConvertProtectToAccess( DWORD );
-static INT MAPFileMapToMmapFlags( DWORD );
-static DWORD MAPMmapProtToAccessFlags( int prot );
+static int32_t MAPProtectionToFileOpenFlags( uint32_t );
+static BOOL MAPIsRequestPermissible( uint32_t, CFileProcessLocalData * );
+static BOOL MAPContainsInvalidFlags( uint32_t );
+static uint32_t MAPConvertProtectToAccess( uint32_t );
+static int32_t MAPFileMapToMmapFlags( uint32_t );
+static uint32_t MAPMmapProtToAccessFlags( int prot );
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address, SIZE_T size, 
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
                                      SIZE_T offset, long init_ref_count);
-static LONG NativeMapHolderAddRef(NativeMapHolder * thisPMH);
-static LONG NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
+static int32_t NativeMapHolderAddRef(NativeMapHolder * thisPMH);
+static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisPMH);
 static PMAPPED_VIEW_LIST FindSharedMappingReplacement(CPalThread *pThread, dev_t deviceNum, ino_t inodeNum,
                                                       SIZE_T size, SIZE_T offset);
 #endif
@@ -94,7 +94,7 @@ MAPmmapAndRecord(
     int flags,
     int fd,
     off_t offset,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     );
 
 #if !HAVE_MMAP_DEV_ZERO
@@ -274,14 +274,13 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileMappingA(
-                   IN HANDLE hFile,
-                   IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                   IN DWORD flProtect,
-                   IN DWORD dwMaximumSizeHigh,
-                   IN DWORD dwMaximumSizeLow,
-                   IN LPCSTR lpName)
+                    HANDLE hFile,
+                    LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+                    uint32_t flProtect,
+                    uint32_t dwMaximumSizeHigh,
+                    uint32_t dwMaximumSizeLow,
+                    LPCSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -341,14 +340,13 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileMappingW(
-               IN HANDLE hFile,
-               IN LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-               IN DWORD flProtect,
-               IN DWORD dwMaximumSizeHigh,
-               IN DWORD dwMaximumSizeLow,
-               IN LPCWSTR lpName)
+                HANDLE hFile,
+                LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+                uint32_t flProtect,
+                uint32_t dwMaximumSizeHigh,
+                uint32_t dwMaximumSizeLow,
+                LPCWSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -392,9 +390,9 @@ CorUnix::InternalCreateFileMapping(
     CPalThread *pThread,
     HANDLE hFile,
     LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-    DWORD flProtect,
-    DWORD dwMaximumSizeHigh,
-    DWORD dwMaximumSizeLow,
+    uint32_t flProtect,
+    uint32_t dwMaximumSizeHigh,
+    uint32_t dwMaximumSizeLow,
     LPCWSTR lpName,
     HANDLE *phMapping
     )
@@ -411,9 +409,9 @@ CorUnix::InternalCreateFileMapping(
     IDataLock *pFileLocalDataLock = NULL;
     
     struct stat UnixFileInformation;
-    INT UnixFd = -1;
+    int32_t UnixFd = -1;
     BOOL bPALCreatedTempFile = FALSE;
-    UINT nFileSize = 0;
+    uint32_t nFileSize = 0;
 
     //
     // Validate parameters
@@ -624,7 +622,7 @@ CorUnix::InternalCreateFileMapping(
         }
 
         if ( INVALID_HANDLE_VALUE != hFile && 
-             dwMaximumSizeLow > (DWORD) UnixFileInformation.st_size && 
+             dwMaximumSizeLow > (uint32_t) UnixFileInformation.st_size &&
              ( PAGE_READONLY == flProtect || PAGE_WRITECOPY == flProtect ) )
         {
             /* In this situation, Windows returns an error, because the
@@ -634,7 +632,7 @@ CorUnix::InternalCreateFileMapping(
             goto ExitInternalCreateFileMapping;
         }
       
-        if ( (DWORD) UnixFileInformation.st_size < dwMaximumSizeLow )
+        if ( (uint32_t) UnixFileInformation.st_size < dwMaximumSizeLow )
         {
             TRACE( "Growing the size of file on disk to match requested size.\n" );
 
@@ -771,11 +769,10 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 OpenFileMappingA(
-         IN DWORD dwDesiredAccess,
-         IN BOOL bInheritHandle,
-         IN LPCSTR lpName)
+          uint32_t dwDesiredAccess,
+          BOOL bInheritHandle,
+          LPCSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -815,11 +812,10 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 OpenFileMappingW(
-         IN DWORD dwDesiredAccess,
-         IN BOOL bInheritHandle,
-         IN LPCWSTR lpName)
+          uint32_t dwDesiredAccess,
+          BOOL bInheritHandle,
+          LPCWSTR lpName)
 {
     HANDLE hFileMapping = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -855,7 +851,7 @@ OpenFileMappingW(
 PAL_ERROR
 CorUnix::InternalOpenFileMapping(
     CPalThread *pThread,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phMapping
@@ -938,18 +934,17 @@ Function:
 
 See MSDN doc.
 --*/
-LPVOID
-PALAPI
+void *
 MapViewOfFile(
-          IN HANDLE hFileMappingObject,
-          IN DWORD dwDesiredAccess,
-          IN DWORD dwFileOffsetHigh,
-          IN DWORD dwFileOffsetLow,
-          IN SIZE_T dwNumberOfBytesToMap)
+           HANDLE hFileMappingObject,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
+           SIZE_T dwNumberOfBytesToMap)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
-    LPVOID pvMappedBaseAddress = NULL;
+    void * pvMappedBaseAddress = NULL;
 
     PERF_ENTRY(MapViewOfFile);
     ENTRY("MapViewOfFile(hFileMapping=%p, dwDesiredAccess=%u, "
@@ -979,19 +974,18 @@ MapViewOfFile(
     return pvMappedBaseAddress;
 }
 
-LPVOID
-PALAPI
+void *
 MapViewOfFileEx(
-          IN HANDLE hFileMappingObject,
-          IN DWORD dwDesiredAccess,
-          IN DWORD dwFileOffsetHigh,
-          IN DWORD dwFileOffsetLow,
-          IN SIZE_T dwNumberOfBytesToMap,
-          IN LPVOID lpBaseAddress)
+           HANDLE hFileMappingObject,
+           uint32_t dwDesiredAccess,
+           uint32_t dwFileOffsetHigh,
+           uint32_t dwFileOffsetLow,
+           SIZE_T dwNumberOfBytesToMap,
+           void * lpBaseAddress)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
-    LPVOID pvMappedBaseAddress = NULL;
+    void * pvMappedBaseAddress = NULL;
 
     PERF_ENTRY(MapViewOfFileEx);
     ENTRY("MapViewOfFileEx(hFileMapping=%p, dwDesiredAccess=%u, "
@@ -1036,10 +1030,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FlushViewOfFile(
-    IN LPVOID lpBaseAddress,
-    IN SIZE_T dwNumberOfBytesToFlush)
+     void * lpBaseAddress,
+     SIZE_T dwNumberOfBytesToFlush)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread = NULL;
@@ -1110,9 +1103,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 UnmapViewOfFile(
-        IN LPCVOID lpBaseAddress)
+         const void * lpBaseAddress)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1138,11 +1130,11 @@ PAL_ERROR
 CorUnix::InternalMapViewOfFile(
     CPalThread *pThread,
     HANDLE hFileMappingObject,
-    DWORD dwDesiredAccess,
-    DWORD dwFileOffsetHigh,
-    DWORD dwFileOffsetLow,
+    uint32_t dwDesiredAccess,
+    uint32_t dwFileOffsetHigh,
+    uint32_t dwFileOffsetLow,
     SIZE_T dwNumberOfBytesToMap,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1153,7 +1145,7 @@ CorUnix::InternalMapViewOfFile(
 #if ONE_SHARED_MAPPING_PER_FILEREGION_PER_PROCESS
     PMAPPED_VIEW_LIST pReusedMapping = NULL;
 #endif
-    LPVOID pvBaseAddress = NULL;
+    void * pvBaseAddress = NULL;
 
     /* Sanity checks */
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) )
@@ -1250,7 +1242,7 @@ CorUnix::InternalMapViewOfFile(
     }
     else
     {
-        INT prot = MAPFileMapToMmapFlags(dwDesiredAccess);
+        int32_t prot = MAPFileMapToMmapFlags(dwDesiredAccess);
         if (prot != -1)
         {
             int flags = MAP_SHARED;
@@ -1446,7 +1438,7 @@ InternalMapViewOfFileExit:
 PAL_ERROR
 CorUnix::InternalUnmapViewOfFile(
     CPalThread *pThread,
-    LPCVOID lpBaseAddress
+    const void * lpBaseAddress
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -1467,7 +1459,7 @@ CorUnix::InternalUnmapViewOfFile(
     NativeMapHolderRelease(pThread, pView->pNMHolder);
     pView->pNMHolder = NULL;
 #else
-    if (-1 == munmap((LPVOID)lpBaseAddress, pView->NumberOfBytesToMap))
+    if (-1 == munmap((void *)lpBaseAddress, pView->NumberOfBytesToMap))
     {
         ASSERT( "Unable to unmap the memory. Error=%s.\n",
                 strerror( errno ) );
@@ -1551,7 +1543,7 @@ Function :
 
     Callers to this function must hold mapping_critsec
 --*/
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( LPCVOID lpAddress )
+static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * lpAddress )
 {       
     if ( NULL == lpAddress )
     {
@@ -1587,9 +1579,9 @@ Function :
     ERROR_INVALID_PARAMETER, if the dwDesiredAccess conflicts with
     dwDesiredAccessWhenOpened, then the error code is ERROR_ACCESS_DENIED
 --*/
-static PAL_ERROR MAPDesiredAccessAllowed( DWORD flProtect,
-                                     DWORD dwUserDesiredAccess,
-                                     DWORD dwDesiredAccessWhenOpened )
+static PAL_ERROR MAPDesiredAccessAllowed( uint32_t flProtect,
+                                     uint32_t dwUserDesiredAccess,
+                                     uint32_t dwDesiredAccessWhenOpened )
 {
     TRACE( "flProtect=%d, dwUserDesiredAccess=%d, dwDesiredAccessWhenOpened=%d\n",
            flProtect, dwUserDesiredAccess, dwDesiredAccessWhenOpened );
@@ -1651,7 +1643,7 @@ Function :
     Converts the PAGE_READONLY type flags to FILE_MAP_READ flags.
 
 --*/
-static DWORD MAPConvertProtectToAccess( DWORD flProtect )
+static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
 {
     if ( PAGE_READONLY == flProtect )
     {
@@ -1668,7 +1660,7 @@ static DWORD MAPConvertProtectToAccess( DWORD flProtect )
 
     ASSERT( "Unknown flag for flProtect. This line "
             "should not have been executed.\n " );
-    return (DWORD) -1;
+    return (uint32_t) -1;
 }
 
 /*++
@@ -1680,7 +1672,7 @@ Function :
     by MAPContainsInvalidFlags().
 
 --*/
-static DWORD MAPConvertAccessToProtect(DWORD flAccess)
+static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
 {
     if (flAccess == FILE_MAP_ALL_ACCESS)
     {
@@ -1700,7 +1692,7 @@ static DWORD MAPConvertAccessToProtect(DWORD flAccess)
     }
 
     ASSERT("Unknown flag for flAccess.\n");
-    return (DWORD) -1;
+    return (uint32_t) -1;
 }
 
 /*++
@@ -1709,7 +1701,7 @@ Function :
 
     Converts the mapping flags to unix protection flags.
 --*/
-static INT MAPFileMapToMmapFlags( DWORD flags )
+static int32_t MAPFileMapToMmapFlags( uint32_t flags )
 {
     if ( FILE_MAP_READ == flags )
     {
@@ -1747,9 +1739,9 @@ Function :
     Converts unix protection flags to file access flags.
     We ignore PROT_EXEC.
 --*/
-static DWORD MAPMmapProtToAccessFlags( int prot )
+static uint32_t MAPMmapProtToAccessFlags( int prot )
 {
-    DWORD flAccess = 0; // default: no access
+    uint32_t flAccess = 0; // default: no access
 
     if (PROT_NONE == prot)
     {
@@ -1783,10 +1775,10 @@ Function :
     Grows the file on disk to match the specified size.
     
 --*/
-static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
+static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
 {
     PAL_ERROR palError = NO_ERROR;
-    INT  TruncateRetVal = -1;
+    int32_t  TruncateRetVal = -1;
     struct stat FileInfo;
     TRACE( "Entered MapGrowLocalFile (UnixFD=%d,NewSize%d)\n", UnixFD, NewSize );
 
@@ -1804,11 +1796,11 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
 
     if ( TruncateRetVal != 0 || FileInfo.st_size != (int) NewSize )
     {
-        INT OrigSize;
-        CONST UINT  BUFFER_SIZE = 128;
-        BYTE buf[BUFFER_SIZE];
-        UINT x = 0;
-        UINT CurrentPosition = 0;
+        int32_t OrigSize;
+        const uint32_t  BUFFER_SIZE = 128;
+        uint8_t buf[BUFFER_SIZE];
+        uint32_t x = 0;
+        uint32_t CurrentPosition = 0;
 
         TRACE( "Trying the less efficent way.\n" );
 
@@ -1822,7 +1814,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
             goto done;
         }
 
-        if (NewSize <= (UINT) OrigSize)
+        if (NewSize <= (uint32_t) OrigSize)
         {
             return TRUE;
         }
@@ -1831,7 +1823,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
 
         for ( x = 0; x < NewSize - OrigSize - BUFFER_SIZE; x += BUFFER_SIZE )
         {
-            if ( write( UnixFD, (LPVOID)buf, BUFFER_SIZE ) == -1 )
+            if ( write( UnixFD, (void *)buf, BUFFER_SIZE ) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1848,7 +1840,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
         /* Catch any left overs. */
         if ( x != NewSize )
         {
-            if ( write( UnixFD, (LPVOID)buf, NewSize - OrigSize - x) == -1 )
+            if ( write( UnixFD, (void *)buf, NewSize - OrigSize - x) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1878,7 +1870,7 @@ Function :
     Checks that only valid flags are in the parameter.
     
 --*/
-static BOOL MAPContainsInvalidFlags( DWORD flags )
+static BOOL MAPContainsInvalidFlags( uint32_t flags )
 {
 
     if ( (flags == FILE_MAP_READ) ||
@@ -1902,9 +1894,9 @@ Function :
  
     Returns the file open flags.
 --*/
-static INT MAPProtectionToFileOpenFlags( DWORD flProtect )
+static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )
 {
-    INT retVal = 0;
+    int32_t retVal = 0;
     switch(flProtect)
     {
     case PAGE_READONLY:
@@ -1929,11 +1921,11 @@ Function :
     
     MAPIsRequestPermissible
     
-        DWORD flProtect     - The requested file mapping protection .
+        uint32_t flProtect     - The requested file mapping protection .
         file * pFileStruct  - The file structure containing all the information.
 
 --*/
-static BOOL MAPIsRequestPermissible( DWORD flProtect, CFileProcessLocalData * pFileLocalData )
+static BOOL MAPIsRequestPermissible( uint32_t flProtect, CFileProcessLocalData * pFileLocalData )
 {
     if ( ( (flProtect == PAGE_READONLY || flProtect == PAGE_WRITECOPY) && 
            (pFileLocalData->open_flags_deviceaccessonly == TRUE || 
@@ -1962,7 +1954,7 @@ static BOOL MAPIsRequestPermissible( DWORD flProtect, CFileProcessLocalData * pF
 }
 
 // returns TRUE if we have information about the specified address
-BOOL MAPGetRegionInfo(LPVOID lpAddress,
+BOOL MAPGetRegionInfo(void * lpAddress,
                       PMEMORY_BASIC_INFORMATION lpBuffer)
 {
     BOOL fFound = FALSE;
@@ -1974,8 +1966,8 @@ BOOL MAPGetRegionInfo(LPVOID lpAddress,
         pLink != &MappedViewList;
         pLink = pLink->Flink)
     {
-        UINT MappedSize;
-        VOID * real_map_addr;
+        uint32_t MappedSize;
+        void * real_map_addr;
         SIZE_T real_map_sz;
         PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
 
@@ -1989,7 +1981,7 @@ BOOL MAPGetRegionInfo(LPVOID lpAddress,
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
-             (VOID *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
+             (void *)((UINT_PTR)real_map_addr+MappedSize) > lpAddress )
         {
             if (lpBuffer)
             {
@@ -2079,7 +2071,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
                 {
                     memcpy(pNewView, pView, sizeof(*pNewView));
                     NativeMapHolderAddRef(pNewView->pNMHolder);
-                    pNewView->lpAddress = (VOID*)((CHAR*)pNewView->pNMHolder->address + 
+                    pNewView->lpAddress = (void*)((char*)pNewView->pNMHolder->address +
                         offset - pNewView->pNMHolder->offset);
                     pNewView->NumberOfBytesToMap = size; 
                 }
@@ -2097,7 +2089,7 @@ static PMAPPED_VIEW_LIST FindSharedMappingReplacement(
     return pNewView;
 }
 
-static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address, SIZE_T size, 
+static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, void * address, SIZE_T size,
                                      SIZE_T offset, long init_ref_count)
 {
     NativeMapHolder * pThisMapHolder;
@@ -2122,15 +2114,15 @@ static NativeMapHolder * NewNativeMapHolder(CPalThread *pThread, LPVOID address,
     return pThisMapHolder;
 }
 
-static LONG NativeMapHolderAddRef(NativeMapHolder * thisNMH)
+static int32_t NativeMapHolderAddRef(NativeMapHolder * thisNMH)
 {
-    LONG ret = InterlockedIncrement(&thisNMH->ref_count);
+    int32_t ret = InterlockedIncrement(&thisNMH->ref_count);
     return ret;
 }
 
-static LONG NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisNMH)
+static int32_t NativeMapHolderRelease(CPalThread *pThread, NativeMapHolder * thisNMH)
 {
-    LONG ret = InterlockedDecrement(&thisNMH->ref_count);
+    int32_t ret = InterlockedDecrement(&thisNMH->ref_count);
     if (ret == 0)
     {
         if (-1 == munmap(thisNMH->address, thisNMH->size))
@@ -2208,13 +2200,13 @@ MAPmmapAndRecord(
     int flags,
     int fd,
     off_t offset,
-    LPVOID *ppvBaseAddress
+    void * *ppvBaseAddress
     )
 {
     _ASSERTE(pPEBaseAddress != NULL);
 
     PAL_ERROR palError = NO_ERROR;
-    LPVOID pvBaseAddress = NULL;
+    void * pvBaseAddress = NULL;
 
     pvBaseAddress = mmap(addr, len, prot, flags, fd, offset);
     if (MAP_FAILED == pvBaseAddress)
@@ -2629,7 +2621,7 @@ Function :
 
     returns TRUE if successful, FALSE otherwise
 --*/
-BOOL MAPUnmapPEFile(LPCVOID lpAddress)
+BOOL MAPUnmapPEFile(const void * lpAddress)
 {
     TRACE_(LOADER)("MAPUnmapPEFile(lpAddress=%p)\n", lpAddress);
 

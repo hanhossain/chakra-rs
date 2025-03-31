@@ -108,7 +108,7 @@ public:
     void EnterIdleDecommit();
     IdleDecommitSignal LeaveIdleDecommit(bool allowTimer);
 #ifdef IDLE_DECOMMIT_ENABLED
-    DWORD IdleDecommit();
+    uint32_t IdleDecommit();
 #endif
 #if DBG
     void ShutdownIdleDecommit();

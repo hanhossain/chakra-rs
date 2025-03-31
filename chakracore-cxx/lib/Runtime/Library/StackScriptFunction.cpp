@@ -45,7 +45,7 @@ namespace Js
         }
         catch (Js::OutOfMemoryException)
         {
-           FailedToBox_OOM_unrecoverable_error((ULONG_PTR)stackScriptFunction);
+           FailedToBox_OOM_unrecoverable_error((size_t)stackScriptFunction);
         }
         return boxedFunction;
     }

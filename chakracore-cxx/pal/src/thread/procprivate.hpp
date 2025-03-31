@@ -56,7 +56,7 @@ namespace CorUnix
     Abstract
       Return the number of threads in the thread list.
     --*/
-    INT PROCGetNumberOfThreads(void);
+    int32_t PROCGetNumberOfThreads(void);
 
 
     /*++

@@ -290,7 +290,7 @@ namespace TTD
             SnapFunctionBodyScopeChain ScopeChainInfo;
 
             //The number of bytes (or -1 if not set) and the buffer for the serialized bytecode
-            mutable DWORD DbgSerializedBytecodeSize;
+            mutable uint32_t DbgSerializedBytecodeSize;
             mutable byte* DbgSerializedBytecodeBuffer;
         };
 

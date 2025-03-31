@@ -48,7 +48,6 @@ Function:
 See MSDN doc.
 --*/
 int
-__cdecl
 _open_osfhandle( INT_PTR osfhandle, int flags )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -56,8 +55,8 @@ _open_osfhandle( INT_PTR osfhandle, int flags )
     IPalObject *pobjFile = NULL;
     CFileProcessLocalData *pLocalData = NULL;
     IDataLock *pDataLock = NULL;
-    INT nRetVal = -1;
-    INT openFlags = 0;
+    int32_t nRetVal = -1;
+    int32_t openFlags = 0;
 
     PERF_ENTRY(_open_osfhandle);
     ENTRY( "_open_osfhandle (osfhandle=%#x, flags=%#x)\n", osfhandle, flags );
@@ -146,7 +145,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-_cdecl
 PAL_fflush( PAL_FILE *stream )
 {
     int nRetVal = 0;
@@ -177,7 +175,6 @@ Return value:
     A pointer to the pathname if successful, otherwise NULL is returned
 --*/
 char *
-__cdecl
 PAL__getcwd(
     char *szBuf,
     size_t nSize
@@ -200,7 +197,6 @@ Return value:
     Open file descriptor on success, -1 if file could not be created
 --*/
 int
-__cdecl
 PAL_mkstemp(char *szNameTemplate)
 {
     return InternalMkstemp(szNameTemplate);
@@ -248,7 +244,6 @@ Return value:
     File descriptor on success, -1 on failure
 --*/
 int
-__cdecl
 PAL__open(
     const char *szPath,
     int nFlags,
@@ -326,7 +321,6 @@ Return value:
     Returns 0 on success and -1 on failure
 --*/
 int
-__cdecl
 PAL_unlink(const char *szPath)
 {
     return unlink(szPath);
@@ -347,7 +341,6 @@ Return value:
     Returns 0 on success and -1 on failure
 --*/
 int
-__cdecl
 PAL_rename(
     const char *szOldName,
     const char *szNewName
@@ -373,7 +366,6 @@ Return value:
     and NULL on failure.
 --*/
 char *
-__cdecl
 PAL_fgets(
     char *sz,
     int nSize,
@@ -491,7 +483,6 @@ Return value:
     Returns the number of objects written.
 --*/
 size_t
-__cdecl
 PAL_fwrite(
     const void *pvBuffer,
     size_t nSize,
@@ -535,7 +526,7 @@ CorUnix::InternalFwrite(
     size_t nSize,
     size_t nCount,
     FILE *f,
-    INT *pnErrorCode
+    int32_t *pnErrorCode
     )
 {
     size_t nWrittenBytes = 0;
@@ -573,10 +564,9 @@ Return value:
     0 on success, -1 on failure.
 --*/
 int
-_cdecl
 PAL_fseek(
     PAL_FILE * pf,
-    LONG lOffset,
+    int32_t lOffset,
     int nWhence
     )
 {

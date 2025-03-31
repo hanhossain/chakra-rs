@@ -75,8 +75,8 @@ JITManager::CreateBinding(
     Assert(IsOOPJITEnabled());
 
     RPC_STATUS status;
-    DWORD attemptCount = 0;
-    DWORD sleepInterval = 100; // in milliseconds
+    uint32_t attemptCount = 0;
+    uint32_t sleepInterval = 100; // in milliseconds
     RPC_BINDING_HANDLE localBindingHandle;
     RPC_BINDING_HANDLE_TEMPLATE_V1 bindingTemplate;
     RPC_BINDING_HANDLE_SECURITY_V1_W bindingSecurity;
@@ -112,7 +112,7 @@ JITManager::CreateBinding(
     // This will wait close to 5 minutes before it finally gives up.
     do
     {
-        DWORD waitStatus;
+        uint32_t waitStatus;
 
         status = RpcBindingBind(NULL, localBindingHandle, ClientIChakraJIT_v0_0_c_ifspec);
         if (status == RPC_S_OK)
@@ -152,7 +152,7 @@ JITManager::CreateBinding(
             Assert(waitStatus == WAIT_FAILED);
 #ifdef DBG
             LPWSTR messageBuffer = nullptr;
-            DWORD errorNumber = GetLastError();
+            uint32_t errorNumber = GetLastError();
             FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                            NULL, errorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&messageBuffer, 0, NULL);
             Output::Print(_u("Last error was 0x%x (%s)"), errorNumber, messageBuffer);

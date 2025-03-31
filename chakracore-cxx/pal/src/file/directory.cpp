@@ -48,13 +48,12 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateDirectoryW(
-         IN LPCWSTR lpPathName,
-         IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+          LPCWSTR lpPathName,
+          LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     int   mb_size;
     char  *mb_dir = NULL;
 
@@ -129,7 +128,7 @@ static
 BOOL
 RemoveDirectoryHelper (
     LPSTR lpPathName,
-    LPDWORD dwLastError
+    uint32_t * dwLastError
 )
 {
     BOOL  bRet = FALSE;
@@ -184,11 +183,10 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 RemoveDirectoryA(
-         IN LPCSTR lpPathName)
+          LPCSTR lpPathName)
 {
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
     PathCharString mb_dirPathString;
     size_t length;
@@ -242,13 +240,12 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 RemoveDirectoryW(
-         IN LPCWSTR lpPathName)
+          LPCWSTR lpPathName)
 {
     PathCharString mb_dirPathString;
     int   mb_size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
     size_t length;
     char * mb_dir;
@@ -315,14 +312,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetCurrentDirectoryA(
-             IN DWORD nBufferLength,
-             OUT LPSTR lpBuffer)
+              uint32_t nBufferLength,
+              LPSTR lpBuffer)
 {
-    DWORD dwDirLen = 0;
-    DWORD dwLastError = 0;
+    uint32_t dwDirLen = 0;
+    uint32_t dwLastError = 0;
 
     char  *current_dir;
 
@@ -373,14 +369,13 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetCurrentDirectoryW(
-             IN DWORD nBufferLength,
-             OUT LPWSTR lpBuffer)
+              uint32_t nBufferLength,
+              LPWSTR lpBuffer)
 {
-    DWORD dwWideLen = 0;
-    DWORD dwLastError = 0;
+    uint32_t dwWideLen = 0;
+    uint32_t dwLastError = 0;
 
     char  *current_dir;
     int   dir_len;
@@ -441,12 +436,11 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetCurrentDirectoryW(
-            IN LPCWSTR lpPathName)
+             LPCWSTR lpPathName)
 {
     BOOL bRet;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     PathCharString dirPathString;
     int  size;
     size_t length;
@@ -519,13 +513,12 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateDirectoryA(
-         IN LPCSTR lpPathName,
-         IN LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+          LPCSTR lpPathName,
+          LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
     BOOL  bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     char *realPath;
     LPSTR UnixPathName = NULL;
     int pathLength;
@@ -656,12 +649,11 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetCurrentDirectoryA(
-            IN LPCSTR lpPathName)
+             LPCSTR lpPathName)
 {
     BOOL bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     int result;
     LPSTR UnixPathName = NULL;
 

@@ -8,7 +8,7 @@
 #ifdef ENABLE_TRACE
 namespace Js
 {
-    MemoryLogger::MemoryLogger(TAllocator* alloc, ULONG count) : m_alloc(alloc), m_capacity(count), m_current(0)
+    MemoryLogger::MemoryLogger(TAllocator* alloc, uint32_t count) : m_alloc(alloc), m_capacity(count), m_current(0)
     {
         m_log = AnewArrayZ(m_alloc, char16*, m_capacity);
     }
@@ -40,7 +40,7 @@ namespace Js
         m_current = (m_current + 1) % m_capacity;
     }
 
-    MemoryLogger* MemoryLogger::Create(TAllocator* alloc, ULONG count)
+    MemoryLogger* MemoryLogger::Create(TAllocator* alloc, uint32_t count)
     {
 #ifdef EXCEPTION_CHECK
         AutoNestedHandledExceptionType autoNestedHandledExceptionType(ExceptionType_DisableCheck);
@@ -58,15 +58,15 @@ namespace Js
     }
 
     // Capture and fill buffer.
-    ULONG StackTraceHelper::GetStackTrace(ULONG framesToSkip, ULONG framesToCapture, void** stackFrames)
+    uint32_t StackTraceHelper::GetStackTrace(uint32_t framesToSkip, uint32_t framesToCapture, void** stackFrames)
     {
 #ifdef EXCEPTION_CHECK
         AutoNestedHandledExceptionType autoNestedHandledExceptionType(ExceptionType_DisableCheck);
 #endif
         StackBackTrace* stackTrace = this->GetStackBackTrace(framesToCapture);
-        ULONG capturedCount = stackTrace->Capture(framesToSkip);
+        uint32_t capturedCount = stackTrace->Capture(framesToSkip);
         Assert(capturedCount <= framesToCapture);
-        ULONG i = 0;
+        uint32_t i = 0;
         stackTrace->Map([&i, framesToCapture, stackFrames](void* funcAddr){
             Assert(i <= framesToCapture);
             stackFrames[i++] = funcAddr;
@@ -75,7 +75,7 @@ namespace Js
     }
 
     // Capture and print.
-    size_t StackTraceHelper::PrintStackTrace(ULONG framesToSkip, ULONG framesToCapture)
+    size_t StackTraceHelper::PrintStackTrace(uint32_t framesToSkip, uint32_t framesToCapture)
     {
 #ifdef EXCEPTION_CHECK
         AutoNestedHandledExceptionType autoNestedHandledExceptionType(ExceptionType_DisableCheck);
@@ -85,7 +85,7 @@ namespace Js
         return stackTrace->Print();
     }
 
-    StackBackTrace* StackTraceHelper::GetStackBackTrace(ULONG frameCount)
+    StackBackTrace* StackTraceHelper::GetStackBackTrace(uint32_t frameCount)
     {
         // Create, if we haven't already for calling thread.
         if (!s_stackBackTrace)

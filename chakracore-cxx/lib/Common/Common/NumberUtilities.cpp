@@ -64,23 +64,23 @@ using namespace Js;
     const double NumberConstants::DOUBLE_TWO_TO_31 = (double) 0x80000000;
 
     // These are used in 128-bit operations in the JIT and inline asm
-    __declspec(align(16)) const BYTE NumberConstants::AbsDoubleCst[] =
+    __declspec(align(16)) const uint8_t NumberConstants::AbsDoubleCst[] =
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F };
 
-    __declspec(align(16)) const BYTE NumberConstants::AbsFloatCst[] =
+    __declspec(align(16)) const uint8_t NumberConstants::AbsFloatCst[] =
     { 0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F,
       0xFF, 0xFF, 0xFF, 0x7F };
 
-    __declspec(align(16)) const BYTE NumberConstants::SgnFloatBitCst[] =
+    __declspec(align(16)) const uint8_t NumberConstants::SgnFloatBitCst[] =
     { 0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x80 };
 
-    __declspec(align(16)) const BYTE NumberConstants::SgnDoubleBitCst[] =
+    __declspec(align(16)) const uint8_t NumberConstants::SgnDoubleBitCst[] =
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 };
 
@@ -123,7 +123,7 @@ using namespace Js;
             mov eax, lu1
             mul lu2
             mov ebx, pluHi
-            mov DWORD PTR[ebx], edx
+            mov uint32_t PTR[ebx], edx
         }
 #else //!I386_ASM
         DWORDLONG llu = UInt32x32To64(lu1, lu2);
@@ -189,7 +189,7 @@ using namespace Js;
     charcount_t NumberUtilities::UInt16ToString(uint16 integer, __out __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
     {
         // inlined here
-        WORD digit;
+        uint16_t digit;
         charcount_t cchWritten = 0;
 
         Assert(cchWritten < outBufferSize);

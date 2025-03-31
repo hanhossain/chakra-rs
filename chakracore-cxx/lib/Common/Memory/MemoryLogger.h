@@ -15,15 +15,15 @@ namespace Js
     {
         typedef ArenaAllocator TAllocator;
     private:
-        ULONG m_current;
-        ULONG m_capacity;   // The number of elements in circular buffer.
+        uint32_t m_current;
+        uint32_t m_capacity;   // The number of elements in circular buffer.
         char16** m_log;    // Points to a circular buffer of char16*.
         TAllocator* m_alloc;
         CriticalSection m_criticalSection;
 
     public:
-        static MemoryLogger* Create(TAllocator* alloc, ULONG elementCount);
-        MemoryLogger(TAllocator* alloc, ULONG elementCount);
+        static MemoryLogger* Create(TAllocator* alloc, uint32_t elementCount);
+        MemoryLogger(TAllocator* alloc, uint32_t elementCount);
         ~MemoryLogger();
         void Write(const char16* msg) override;
     };
@@ -37,11 +37,11 @@ namespace Js
     private:
         TAllocator* m_alloc;
         THREAD_LOCAL static StackBackTrace* s_stackBackTrace;
-        StackBackTrace* GetStackBackTrace(ULONG frameCount);
+        StackBackTrace* GetStackBackTrace(uint32_t frameCount);
     public:
         static StackTraceHelper* Create(TAllocator* alloc);
-        virtual size_t PrintStackTrace(ULONG framesToSkip, ULONG framesToCapture) override;
-        virtual ULONG GetStackTrace(ULONG framesToSkip, ULONG framesToCapture, void** stackFrames) override;
+        virtual size_t PrintStackTrace(uint32_t framesToSkip, uint32_t framesToCapture) override;
+        virtual uint32_t GetStackTrace(uint32_t framesToSkip, uint32_t framesToCapture, void** stackFrames) override;
     private:
         StackTraceHelper(TAllocator* alloc) : m_alloc(alloc) {}
         void Print();

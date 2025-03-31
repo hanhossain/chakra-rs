@@ -83,7 +83,7 @@ public:
     static const Js::OpCode MDSpecBlockNEOpcode;
     static const Js::OpCode MDSpecBlockFNEOpcode;
 
-    UINT FloatPrefThreshold;
+    uint32_t FloatPrefThreshold;
 
             void            Init(Lowerer *lowerer);
             IR::Opnd *      GenerateMemRef(intptr_t addr, IRType type, IR::Instr *instr, bool dontEncode = false);
@@ -285,7 +285,7 @@ public:
             IR::Instr *         LoadDynamicArgument(IR::Instr * instr, uint argNumber = 1) { return this->lowererMDArch.LoadDynamicArgument(instr, argNumber);}
             IR::Opnd*           GenerateArgOutForStackArgs(IR::Instr* callInstr, IR::Instr* stackArgsInstr) { return lowererMDArch.GenerateArgOutForStackArgs(callInstr, stackArgsInstr);}
      static RegNum              GetRegFramePointer() { return LowererMDArch::GetRegFramePointer(); }
-     static BYTE                GetDefaultIndirScale() { return LowererMDArch::GetDefaultIndirScale(); }
+     static uint8_t                GetDefaultIndirScale() { return LowererMDArch::GetDefaultIndirScale(); }
             IR::Instr *         LoadDynamicArgumentUsingLength(IR::Instr *instr) { return this->lowererMDArch.LoadDynamicArgumentUsingLength(instr); }
             void                GenerateFunctionObjectTest(IR::Instr * callInstr, IR::RegOpnd  *functionObjOpnd, bool isHelper, IR::LabelInstr* afterCallLabel = nullptr) { this->lowererMDArch.GenerateFunctionObjectTest(callInstr, functionObjOpnd, isHelper, afterCallLabel); }
             int32               LowerCallArgs(IR::Instr *callInstr, ushort callFlags, ushort extraArgsCount = 1 /* for function object */) { return this->lowererMDArch.LowerCallArgs(callInstr, callFlags, extraArgsCount); }
@@ -352,7 +352,7 @@ public:
     IR::Instr*          Simd128LowerAnyTrue(IR::Instr* instr);
     IR::Instr*          Simd128LowerAllTrue(IR::Instr* instr);
     IR::Opnd*           Simd128CanonicalizeToBoolsBeforeReduction(IR::Instr* instr);
-    BYTE                Simd128GetTypedArrBytesPerElem(ValueType arrType);
+    uint8_t                Simd128GetTypedArrBytesPerElem(ValueType arrType);
     IR::Instr*          Simd128CanonicalizeToBools(IR::Instr* instr, const Js::OpCode& cmpOpcode, IR::Opnd& dstOpnd);
     IR::Opnd*           EnregisterIntConst(IR::Instr* instr, IR::Opnd *constOpnd, IRType type = TyInt32);
     IR::Opnd*           EnregisterBoolConst(IR::Instr* instr, IR::Opnd *opnd, IRType type);

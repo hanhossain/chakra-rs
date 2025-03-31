@@ -758,7 +758,7 @@ namespace Js
         FuncInfo*       mFuncInfo;
         FunctionBody*   mFuncBody;
         int             mMaxArgOutDepth;
-        ULONG           mOrigParseFlags;
+        uint32_t           mOrigParseFlags;
         ProfileId       mCurrentProfileId;
         bool            mDeferred;
         bool            mDefined : 1; // true when compiled completely without any errors
@@ -776,8 +776,8 @@ namespace Js
         inline void       SetFuncInfo(FuncInfo* fncInfo) { mFuncInfo = fncInfo; }
         inline FunctionBody*GetFuncBody() const{ return mFuncBody; }
         inline void       SetFuncBody(FunctionBody* fncBody) { mFuncBody = fncBody; }
-        inline ULONG      GetOrigParseFlags() const{ return mOrigParseFlags; }
-        inline void       SetOrigParseFlags(ULONG parseFlags) { mOrigParseFlags = parseFlags; }
+        inline uint32_t      GetOrigParseFlags() const{ return mOrigParseFlags; }
+        inline void       SetOrigParseFlags(uint32_t parseFlags) { mOrigParseFlags = parseFlags; }
 
         inline ParseNode* GetBodyNode() const{return mBodyNode;}
         inline void SetBodyNode( ParseNode* val ){mBodyNode = val;}
@@ -913,7 +913,7 @@ namespace Js
         // the key is the bytecode address
         typedef JsUtil::BaseDictionary<int, ptrdiff_t, Recycler> ByteCodeToTJMap;
         Field(ByteCodeToTJMap*) mbyteCodeTJMap;
-        Field(BYTE*) mTJBeginAddress;
+        Field(uint8_t*) mTJBeginAddress;
         WAsmJs::TypedSlotInfo* GetTypedSlotInfo(WAsmJs::Types type);
 
 #define TYPED_SLOT_INFO_GETTER(name, type) \

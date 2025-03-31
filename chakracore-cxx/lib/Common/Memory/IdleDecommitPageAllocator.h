@@ -33,7 +33,7 @@ public:
     void Prime(uint primePageCount);
 
 #ifdef IDLE_DECOMMIT_ENABLED
-    DWORD IdleDecommit();
+    uint32_t IdleDecommit();
     void DecommitNow(bool all = true);
 #endif
 
@@ -73,7 +73,7 @@ private:
 #ifdef IDLE_DECOMMIT_ENABLED
     bool hasDecommitTimer;
     bool hadDecommitTimer;
-    DWORD decommitTime;
+    uint32_t decommitTime;
     uint idleDecommitTryEnterWaitFactor;
     CriticalSection cs;
     static const uint IdleDecommitTimeout = 1000;

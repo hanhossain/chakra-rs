@@ -179,7 +179,7 @@ namespace Js
         friend Js::ScriptContext;
 
     public:
-        JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext = TRUE /* use leafinterpreterframe of entryexit record */, PVOID returnAddress = NULL, bool _forceFullWalk = false);
+        JavascriptStackWalker(ScriptContext * scriptContext, bool useEERContext = TRUE /* use leafinterpreterframe of entryexit record */, void * returnAddress = NULL, bool _forceFullWalk = false);
 #if ENABLE_NATIVE_CODEGEN
         ~JavascriptStackWalker() { inlinedFrameWalker.Close(); }
 #endif
@@ -225,7 +225,7 @@ namespace Js
             return interpreterFrame;
         }
 
-        bool GetSourcePosition(const WCHAR** sourceFileName, ULONG* line, LONG* column);
+        bool GetSourcePosition(const WCHAR** sourceFileName, uint32_t* line, int32_t* column);
 
         static bool TryIsTopJavaScriptFrameNative(ScriptContext* scriptContext, bool* istopFrameNative, bool ignoreLibraryCode = false);
         static bool AlignAndCheckAddressOfReturnAddressMatch(void* addressOfReturnAddress, void* nativeLibraryEntryAddress);
@@ -287,14 +287,14 @@ namespace Js
         {
             return WalkUntil(USHORT_MAX, walkFrame, onlyOnDebugMode, filterDiagnosticsOM);
         }
-        BYTE** GetCurrentAddresOfReturnAddress() const
+        uint8_t** GetCurrentAddresOfReturnAddress() const
         {
-            return (BYTE**)this->currentFrame.GetAddressOfReturnAddress();
+            return (uint8_t**)this->currentFrame.GetAddressOfReturnAddress();
         }
 
-        BYTE** GetCurrentAddressOfInstructionPointer() const
+        uint8_t** GetCurrentAddressOfInstructionPointer() const
         {
-            return (BYTE**)this->currentFrame.GetAddressOfInstructionPointer();
+            return (uint8_t**)this->currentFrame.GetAddressOfInstructionPointer();
         }
 
         void* GetInstructionPointer() const

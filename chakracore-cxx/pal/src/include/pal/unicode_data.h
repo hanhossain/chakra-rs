@@ -34,15 +34,15 @@ extern "C"
 typedef struct
 {
   WCHAR nUnicodeValue;
-  WORD  C1_TYPE_FLAGS;
+  uint16_t  C1_TYPE_FLAGS;
   WCHAR nOpposingCase;             /* 0 if no opposing case. */
-  WORD  rangeValue;
+  uint16_t  rangeValue;
 } UnicodeDataRec;
 
 /* Global variables. */
-extern CONST UnicodeDataRec UnicodeData[];
-extern CONST UINT UNICODE_DATA_SIZE;
-extern CONST UINT UNICODE_DATA_DIRECT_ACCESS;
+extern const UnicodeDataRec UnicodeData[];
+extern const uint32_t UNICODE_DATA_SIZE;
+extern const uint32_t UNICODE_DATA_DIRECT_ACCESS;
 
 /*++
 Function:
@@ -59,7 +59,7 @@ Return value:
   TRUE if the Unicode character was found.
 
 --*/
-BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec);
+BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec);
 
 #endif  /* !HAVE_COREFOUNDATION */
 

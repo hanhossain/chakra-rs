@@ -33,7 +33,7 @@ C_ASSERT(JSPUBLICERR_CantExecute == _HRESULT_TYPEDEF_(0x89020001L));
 
 struct _ResourceStr
 {
-    UINT id;
+    uint32_t id;
     const char16* str;
 };
 
@@ -74,14 +74,14 @@ static _ResourceStr s_resourceStrs[] =
 
 static int compare_ResourceStr(const void* a, const void* b)
 {
-    UINT id1 = reinterpret_cast<const _ResourceStr*>(a)->id;
-    UINT id2 = reinterpret_cast<const _ResourceStr*>(b)->id;
+    uint32_t id1 = reinterpret_cast<const _ResourceStr*>(a)->id;
+    uint32_t id2 = reinterpret_cast<const _ResourceStr*>(b)->id;
     return id1 - id2;
 }
 
 static bool s_resourceStrsSorted = false;
 
-const char16* LoadResourceStr(UINT id)
+const char16* LoadResourceStr(uint32_t id)
 {
     if (!s_resourceStrsSorted)
     {

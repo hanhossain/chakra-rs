@@ -51,7 +51,6 @@ See MSDN for more details.
 --*/
 
 struct PAL_tm *
-__cdecl
 PAL_localtime(const PAL_time_t *clock)
 {
     CPalThread *pThread = NULL;
@@ -97,7 +96,6 @@ Function:
 See MSDN for more details.
 --*/
 char *
-__cdecl
 PAL_ctime( const PAL_time_t *clock )
 {
     CPalThread *pThread = NULL;
@@ -148,20 +146,19 @@ NOTES:
     The difference is due to the difference between BSD and Win32 sprintf.
 
 --*/
-char * __cdecl
-_ecvt( double value, int count, int * dec, int * sign )
+char * _ecvt( double value, int count, int * dec, int * sign )
 {
-    CONST CHAR * FORMAT_STRING = "%.348e";
-    CHAR TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
+    const char * FORMAT_STRING = "%.348e";
+    char TempBuffer[ ECVT_MAX_BUFFER_SIZE ];
     CPalThread *pThread = NULL;
     LPSTR lpReturnBuffer = NULL;
     LPSTR lpStartOfReturnBuffer = NULL;
     LPSTR lpTempBuffer = NULL;
     LPSTR lpEndOfTempBuffer = NULL;
-    INT nTempBufferLength = 0;
-    CHAR ExponentBuffer[ 6 ];
-    INT nExponentValue = 0;
-    INT LoopIndex = 0;
+    int32_t nTempBufferLength = 0;
+    char ExponentBuffer[ 6 ];
+    int32_t nExponentValue = 0;
+    int32_t LoopIndex = 0;
 
     PERF_ENTRY(_ecvt);
     ENTRY( "_ecvt( value=%.30g, count=%d, dec=%p, sign=%p )\n",
@@ -305,7 +302,7 @@ _ecvt( double value, int count, int * dec, int * sign )
         /* Determine whether I need to round up. */
         if ( *(lpReturnBuffer + count) >= '5' )
         {
-            CHAR cNumberToBeRounded;
+            char cNumberToBeRounded;
             if ( count != 0 )
             {
                 cNumberToBeRounded = *(lpReturnBuffer + count - 1);

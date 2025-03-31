@@ -126,9 +126,9 @@ class IndirOpnd;
 class SymOpnd;
 class MemRefOpnd;
 class PropertySymOpnd;
-enum  AddrOpndKind : BYTE;
+enum  AddrOpndKind : uint8_t;
 
-enum IRKind : BYTE {
+enum IRKind : uint8_t {
     InstrKindInvalid,
     InstrKindInstr,
     InstrKindBranch,
@@ -562,7 +562,7 @@ public:
     // we keep these here to avoid increase in number of opcodes and to not use ExtendedArgs
     uint8           dataWidth;
 #if DBG
-    WORD            highlight;
+    uint16_t            highlight;
 #endif
 
 
@@ -763,17 +763,17 @@ public:
     SListCounted<BranchInstr *>  labelRefs;
     Lifetime **             m_regContent;
 
-    BYTE                    m_isLoopTop : 1;
-    BYTE                    isOpHelper : 1;
-    BYTE                    m_hasNonBranchRef : 1;
-    BYTE                    m_isDataLabel : 1;
+    uint8_t                    m_isLoopTop : 1;
+    uint8_t                    isOpHelper : 1;
+    uint8_t                    m_hasNonBranchRef : 1;
+    uint8_t                    m_isDataLabel : 1;
 
     // Indicate whether the label is the target of a for in loop exit (BrOnEmpty or BrOnNotEmpty)
     // It is used by Inliner to track inlinee for in loop level to assign stack allocated for in 
     // This bit has unknown validity outside of inliner
-    BYTE                    m_isForInExit : 1;
+    uint8_t                    m_isForInExit : 1;
 #if DBG
-    BYTE                    m_noHelperAssert : 1;
+    uint8_t                    m_noHelperAssert : 1;
 #endif
     unsigned int            m_id;
     LoweredBasicBlock*      m_loweredBasicBlock;
@@ -783,7 +783,7 @@ public:
 private:
     union labelLocation
     {
-        BYTE *                  pc;     // Used by encoder and is the real pc offset
+        uint8_t *                  pc;     // Used by encoder and is the real pc offset
         uintptr_t               offset; // Used by preEncoder and is an estimation pc offset, not accurate
     } m_pc;
 
@@ -792,8 +792,8 @@ private:
     Region *                m_region;
 public:
 
-    inline void             SetPC(BYTE * pc);
-    inline BYTE *           GetPC(void) const;
+    inline void             SetPC(uint8_t * pc);
+    inline uint8_t *           GetPC(void) const;
     inline void             SetOffset(uintptr_t offset);
     inline void             ResetOffset(uintptr_t offset);
     inline uintptr_t        GetOffset(void) const;

@@ -25,5 +25,5 @@ const IRType TyMachSimd128B16 = TySimd128B16;
 const IRType TyMachSimd128D2 = TySimd128D2;
 const IRType TyMachSimd128I2 = TySimd128I2;
 
-const DWORD EMIT_BUFFER_ALIGNMENT = 16;
-const DWORD INSTR_ALIGNMENT = 1;
+const uint32_t EMIT_BUFFER_ALIGNMENT = 16;
+const uint32_t INSTR_ALIGNMENT = 1;

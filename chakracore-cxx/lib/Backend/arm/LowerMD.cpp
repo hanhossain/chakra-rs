@@ -1015,7 +1015,7 @@ LowererMD::GenerateStackDeallocation(IR::Instr *instr, uint32 allocSize)
 //     MOV r12,0
 // $PrologStart:
 //     <save params and regs, set up frame chain as above>
-//     MOV r4, stack/4   -- input param to chkstk is a DWORD count
+//     MOV r4, stack/4   -- input param to chkstk is a uint32_t count
 //     LDIMM r12, &chkstk
 //     BLX r12
 //     SUB sp, r4        -- byte count returned by chkstk in r4
@@ -1048,7 +1048,7 @@ IR::Instr *
 LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
 {
     IR::Instr *insertInstr = entryInstr->m_next;
-    BYTE regEncode;
+    uint8_t regEncode;
     BOOL hasTry = this->m_func->HasTry();
 
     // Begin recording info for later pdata/xdata emission.
@@ -1148,8 +1148,8 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     {
         homedParamRegCount = NUM_INT_ARG_REGS;
     }
-    Assert((BYTE)homedParamRegCount == homedParamRegCount);
-    unwindInfo->SetHomedParamCount((BYTE)homedParamRegCount);
+    Assert((uint8_t)homedParamRegCount == homedParamRegCount);
+    unwindInfo->SetHomedParamCount((uint8_t)homedParamRegCount);
 
     for (int i = 0; i < homedParamRegCount; i++)
     {
@@ -1193,8 +1193,8 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
 
         if (doubleRegCount)
         {
-            BYTE lastDoubleReg = UnwindInfoManager::GetLastSavedReg(usedDoubleRegs.GetWord());
-            BYTE firstDoubleReg = UnwindInfoManager::GetFirstSavedReg(usedDoubleRegs.GetWord());
+            uint8_t lastDoubleReg = UnwindInfoManager::GetLastSavedReg(usedDoubleRegs.GetWord());
+            uint8_t firstDoubleReg = UnwindInfoManager::GetFirstSavedReg(usedDoubleRegs.GetWord());
 
             // We do want to push all the double registers in a single VPUSH instructions
             // This might cause us to VPUSH some registers which are not used
@@ -1260,7 +1260,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // into account below. Otherwise, the stack will become unbalanced or corrupted.
     //
     // NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE
-    DWORD stackProbeStackHeight = this->m_func->m_localStackHeight;
+    uint32_t stackProbeStackHeight = this->m_func->m_localStackHeight;
 
     // If we've already got calls and we don't have a try, we need to take adjustments
     // below into account to determine whether our not our final stack height is going to be
@@ -5179,7 +5179,7 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
         Assert(regOpnd->m_sym->m_isSingleDef);
 
         Js::Var value = regOpnd->m_sym->GetFloatConstValueAsVar_PostGlobOpt();
-        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((BYTE*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
+        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((uint8_t*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
         instr = IR::Instr::New(Js::OpCode::VLDR, regFloatOpnd, memRef, this->m_func);
         insertInstr->InsertBefore(instr);
@@ -7627,7 +7627,7 @@ LowererMD::FinalLower()
                     }
                     else
                     {
-                        EncodeReloc::New(&pRelocList, RelocTypeBranch20, (BYTE*)instrOffset, branchInstr, &tempAlloc);
+                        EncodeReloc::New(&pRelocList, RelocTypeBranch20, (uint8_t*)instrOffset, branchInstr, &tempAlloc);
                         //Assume this is a forward long branch, we shall fix up after complete pass, be conservative here
                         instrOffset = instrOffset + MachMaxInstrSize;
                     }
@@ -7797,7 +7797,7 @@ LowererMD::LowerTypeof(IR::Instr* typeOfInstr)
 
     // MOV typeDisplayStringsArray, &javascriptLibrary->typeDisplayStrings
     IR::RegOpnd * typeDisplayStringsArrayOpnd = IR::RegOpnd::New(TyMachPtr, func);
-    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
+    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
 
     GenerateObjectTest(src1, typeOfInstr, taggedIntLabel);
 

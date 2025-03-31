@@ -6,12 +6,11 @@
 #include "pal/thread.hpp"
 #include "pal/handleapi.hpp"
 
-VOID
-PALAPI
-RaiseException(IN DWORD dwExceptionCode,
-               IN DWORD dwExceptionFlags,
-               IN DWORD nNumberOfArguments,
-               IN CONST ULONG_PTR *lpArguments)
+void
+RaiseException( uint32_t dwExceptionCode,
+                uint32_t dwExceptionFlags,
+                uint32_t nNumberOfArguments,
+                const size_t *lpArguments)
 {
     if (dwExceptionCode == DBG_TERMINATE_PROCESS || dwExceptionFlags & EXCEPTION_NONCONTINUABLE)
     {

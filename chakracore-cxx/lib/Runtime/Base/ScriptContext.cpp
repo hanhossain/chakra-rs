@@ -40,7 +40,6 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
-#include "Common/CompressionUtilities.h"
 
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
@@ -1976,10 +1975,10 @@ namespace Js
         }
     }
 
-    ULONG ScriptContext::GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo)
+    uint32_t ScriptContext::GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo)
     {
         // TODO: yongqu handle non-global code.
-        ULONG grfscr = fscrGlobalCode | ((loadScriptFlag & LoadScriptFlag_Expression) == LoadScriptFlag_Expression ? fscrReturnExpression : 0);
+        uint32_t grfscr = fscrGlobalCode | ((loadScriptFlag & LoadScriptFlag_Expression) == LoadScriptFlag_Expression ? fscrReturnExpression : 0);
 
         if ((loadScriptFlag & LoadScriptFlag_CreateParserState) == LoadScriptFlag_CreateParserState)
         {
@@ -2056,7 +2055,7 @@ namespace Js
 
         // Invoke the parser, passing in the global function name, which we will then run to execute
         // the script.
-        ULONG grfscr = GetParseFlags(loadScriptFlag, *ppSourceInfo, sourceContextInfo);
+        uint32_t grfscr = GetParseFlags(loadScriptFlag, *ppSourceInfo, sourceContextInfo);
 
         ParseNodeProg * parseTree;
         if((loadScriptFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source)
@@ -2093,7 +2092,7 @@ namespace Js
     }
 
     HRESULT ScriptContext::TryDeserializeParserState(
-        _In_ ULONG grfscr,
+        _In_ uint32_t grfscr,
         _In_ uint sourceCRC,
         _In_ charcount_t cchLength,
         _In_ SRCINFO *srcInfo,
@@ -2103,7 +2102,7 @@ namespace Js
         _In_opt_ NativeModule* nativeModule,
         _Outptr_ Js::ParseableFunctionInfo ** func,
         _Outptr_result_buffer_(*parserStateCacheByteCount) byte** parserStateCacheBuffer,
-        _Out_ DWORD* parserStateCacheByteCount,
+        _Out_ uint32_t* parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
         HRESULT hr = E_FAIL;
@@ -2119,7 +2118,7 @@ namespace Js
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         // Find the parser state block in the read stream and get the size of the block in bytes.
-        ULONG blockByteCount = 0;
+        uint32_t blockByteCount = 0;
         DebugOnly(auto url = !srcInfo->sourceContextInfo->isHostDynamicDocument ? srcInfo->sourceContextInfo->url : this->GetUrl());
 
         OUTPUT_TRACE_DEBUGONLY(Js::DataCachePhase, _u(" Trying to read parser state cache for '%s'\n"), url);
@@ -2148,7 +2147,7 @@ namespace Js
         }
 
         // The block includes a 4-byte CRC before the parser state cache.
-        ULONG compressedBufferByteCount = blockByteCount - sizeof(uint);
+        uint32_t compressedBufferByteCount = blockByteCount - sizeof(uint);
 
         // The contract for this bytecode buffer is that it is available as long as we have this ScriptContext.
         // We will use this buffer as the string table needed to back the deferred stubs as well as bytecode
@@ -2243,7 +2242,7 @@ ExitTempAllocator:
 
         *func = functionBody->GetParseableFunctionInfo();
         *parserStateCacheBuffer = decompressedBuffer;
-        *parserStateCacheByteCount = (DWORD)decompressedBufferByteCount;
+        *parserStateCacheByteCount = (uint32_t)decompressedBufferByteCount;
 Error:
         if (FAILED(hr) && decompressedBuffer != nullptr)
         {
@@ -2261,7 +2260,7 @@ Error:
         _In_ SRCINFO *srcInfo,
         _In_ Js::ParseableFunctionInfo* func,
         _In_reads_bytes_(parserStateCacheByteCount) byte* parserStateCacheBuffer,
-        _In_ DWORD parserStateCacheByteCount,
+        _In_ uint32_t parserStateCacheByteCount,
         _In_ Js::SimpleDataCacheWrapper* pDataCache)
     {
         HRESULT hr = E_FAIL;
@@ -2271,8 +2270,8 @@ Error:
 
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         byte* serializeParserStateCacheBuffer = parserStateCacheBuffer;
-        DWORD serializeParserStateCacheSize = parserStateCacheByteCount;
-        DWORD dwFlags = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
+        uint32_t serializeParserStateCacheSize = parserStateCacheByteCount;
+        uint32_t dwFlags = GENERATE_BYTE_CODE_PARSER_STATE | GENERATE_BYTE_CODE_ALLOC_ANEW;
         DebugOnly(auto url = !srcInfo->sourceContextInfo->isHostDynamicDocument ? srcInfo->sourceContextInfo->url : this->GetUrl());
 
         // If we already have a parser state cache serialized into a buffer, we should skip creating it again
@@ -2284,7 +2283,7 @@ Error:
 
             BEGIN_TEMP_ALLOCATOR(tempAllocator, this, _u("ByteCodeSerializer"));
             hr = Js::ByteCodeSerializer::SerializeToBuffer(this,
-                tempAllocator, (DWORD)cbLength, pszSrc, func->GetFunctionBody(),
+                tempAllocator, (uint32_t)cbLength, pszSrc, func->GetFunctionBody(),
                 func->GetHostSrcInfo(), &serializeParserStateCacheBuffer,
                 &serializeParserStateCacheSize, dwFlags);
             END_TEMP_ALLOCATOR(tempAllocator, this);
@@ -2330,7 +2329,7 @@ Error:
                 compressedSize = serializeParserStateCacheSize;
             }
 
-            hr = pDataCache->StartBlock(Js::SimpleDataCacheWrapper::BlockType_ParserState, (ULONG)compressedSize + sizeof(uint));
+            hr = pDataCache->StartBlock(Js::SimpleDataCacheWrapper::BlockType_ParserState, (uint32_t)compressedSize + sizeof(uint));
 
             if (FAILED(hr))
             {
@@ -2348,7 +2347,7 @@ Error:
                 goto ExitTempAllocator;
             }
 
-            hr = pDataCache->WriteArray(compressedBuffer, (ULONG)compressedSize);
+            hr = pDataCache->WriteArray(compressedBuffer, (uint32_t)compressedSize);
 
             if (FAILED(hr))
             {
@@ -2377,7 +2376,7 @@ ExitTempAllocator:
         __in BOOL fOriginalUTF8Code,
         _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
         __in size_t cbLength,
-        __in ULONG grfscr,
+        __in uint32_t grfscr,
         __in CompileScriptException *pse,
         __inout charcount_t& cchLength,
         __out size_t& srcLength,
@@ -2398,7 +2397,7 @@ ExitTempAllocator:
             && pDataCache != nullptr
             && !this->IsScriptContextInDebugMode();
         byte* parserStateCacheBuffer = nullptr;
-        DWORD parserStateCacheByteCount = 0;
+        uint32_t parserStateCacheByteCount = 0;
         uint computedSourceCRC = 0;
 
         if (fUseParserStateCache)
@@ -2470,7 +2469,7 @@ ExitTempAllocator:
     HRESULT ScriptContext::SerializeParserState(const byte* script, size_t cb,
         SRCINFO const * pSrcInfo, CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
         const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag, byte** buffer,
-        DWORD* bufferSize, ArenaAllocator* alloc, JavascriptFunction** function, Js::Var scriptSource)
+        uint32_t* bufferSize, ArenaAllocator* alloc, JavascriptFunction** function, Js::Var scriptSource)
     {
         Assert(!this->threadContext->IsScriptActive());
         Assert(pse != nullptr);
@@ -2493,10 +2492,10 @@ ExitTempAllocator:
                 const Js::Utf8SourceInfo *sourceInfo = functionBody->GetUtf8SourceInfo();
                 size_t cSourceCodeLength = sourceInfo->GetCbLength(_u("JsSerializeParserState"));
                 LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeParserState"));
-                DWORD dwFlags = GENERATE_BYTE_CODE_PARSER_STATE;
+                uint32_t dwFlags = GENERATE_BYTE_CODE_PARSER_STATE;
 
                 return Js::ByteCodeSerializer::SerializeToBuffer(this,
-                    alloc, static_cast<DWORD>(cSourceCodeLength), utf8Code,
+                    alloc, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
                     functionBody, functionBody->GetHostSrcInfo(), buffer,
                     bufferSize, dwFlags);
             }
@@ -3266,7 +3265,7 @@ ExitTempAllocator:
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    inline void ScriptContext::CoreSetProfileEventMask(DWORD dwEventMask)
+    inline void ScriptContext::CoreSetProfileEventMask(uint32_t dwEventMask)
     {
         AssertMsg(m_pProfileCallback != NULL, "Assigning the event mask when there is no callback");
         m_dwEventMask = dwEventMask;
@@ -3276,7 +3275,7 @@ ExitTempAllocator:
         m_fTraceDomCall = (dwEventMask & PROFILER_EVENT_MASK_TRACE_DOM_FUNCTION_CALL);
     }
 
-    HRESULT ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, DWORD dwEventMask, DWORD dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
+    HRESULT ScriptContext::RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke)
     {
         if (m_pProfileCallback != NULL)
         {
@@ -3352,7 +3351,7 @@ ExitTempAllocator:
         return hr;
     }
 
-    HRESULT ScriptContext::SetProfileEventMask(DWORD dwEventMask)
+    HRESULT ScriptContext::SetProfileEventMask(uint32_t dwEventMask)
     {
         if (m_pProfileCallback == NULL)
         {
@@ -5656,7 +5655,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
 #if DYNAMIC_INTERPRETER_THUNK
-    JavascriptMethod ScriptContext::GetNextDynamicAsmJsInterpreterThunk(PVOID* ppDynamicInterpreterThunk)
+    JavascriptMethod ScriptContext::GetNextDynamicAsmJsInterpreterThunk(void ** ppDynamicInterpreterThunk)
     {
 #ifdef ASMJS_PLAT
         return (JavascriptMethod)this->asmJsInterpreterThunkEmitter->GetNextThunk(ppDynamicInterpreterThunk);
@@ -5666,7 +5665,7 @@ ScriptContext::GetJitFuncRangeCache()
 #endif
     }
 
-    JavascriptMethod ScriptContext::GetNextDynamicInterpreterThunk(PVOID* ppDynamicInterpreterThunk)
+    JavascriptMethod ScriptContext::GetNextDynamicInterpreterThunk(void ** ppDynamicInterpreterThunk)
     {
         return (JavascriptMethod)this->interpreterThunkEmitter->GetNextThunk(ppDynamicInterpreterThunk);
     }
@@ -5678,12 +5677,12 @@ ScriptContext::GetJitFuncRangeCache()
     }
 #endif
 
-    void ScriptContext::ReleaseDynamicInterpreterThunk(BYTE* address, bool addtoFreeList)
+    void ScriptContext::ReleaseDynamicInterpreterThunk(uint8_t* address, bool addtoFreeList)
     {
         this->interpreterThunkEmitter->Release(address, addtoFreeList);
     }
 
-    void ScriptContext::ReleaseDynamicAsmJsInterpreterThunk(BYTE* address, bool addtoFreeList)
+    void ScriptContext::ReleaseDynamicAsmJsInterpreterThunk(uint8_t* address, bool addtoFreeList)
     {
 #ifdef ASMJS_PLAT
         this->asmJsInterpreterThunkEmitter->Release(address, addtoFreeList);
@@ -6292,14 +6291,14 @@ ScriptContext::GetJitFuncRangeCache()
     {
         if (this->rejitReasonCounts != nullptr)
         {
-            for (UINT16 i = 0; i < NumRejitReasons; i++)
+            for (uint16_t i = 0; i < NumRejitReasons; i++)
             {
                 this->rejitReasonCounts[i] = 0;
             }
         }
         if (this->rejitReasonCountsCap != nullptr)
         {
-            for (UINT16 i = 0; i < NumRejitReasons; i++)
+            for (uint16_t i = 0; i < NumRejitReasons; i++)
             {
                 this->rejitReasonCountsCap[i] = 0;
             }
@@ -6539,7 +6538,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
 #ifdef ENABLE_JS_ETW
-    void ScriptContext::EmitStackTraceEvent(__in UINT64 operationID, __in USHORT maxFrameCount, bool emitV2AsyncStackEvent)
+    void ScriptContext::EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent)
     {
         // If call root level is zero, there is no EntryExitRecord and the stack walk will fail.
         if (GetThreadContext()->GetCallRootLevel() == 0)
@@ -6560,10 +6559,10 @@ ScriptContext::GetJitFuncRangeCache()
 
             ushort frameCount = walker.WalkUntil((ushort)maxFrameCount, [&](Js::JavascriptFunction* function, ushort frameIndex) -> bool
             {
-                ULONG lineNumber = 0;
-                LONG columnNumber = 0;
+                uint32_t lineNumber = 0;
+                int32_t columnNumber = 0;
                 uint32_t methodIdOrNameId = 0;
-                UINT8 isFrameIndex = 0; // FALSE
+                uint8_t isFrameIndex = 0; // FALSE
                 const WCHAR* name = nullptr;
                 if (function->IsScriptFunction() && !function->IsLibraryCode())
                 {

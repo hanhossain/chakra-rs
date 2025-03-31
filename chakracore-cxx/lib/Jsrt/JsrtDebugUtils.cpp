@@ -45,8 +45,8 @@ void JsrtDebugUtils::AddLineColumnToObject(Js::DynamicObject* object, Js::Functi
 {
     if (functionBody != nullptr)
     {
-        ULONG line = 0;
-        LONG col = 0;
+        uint32_t line = 0;
+        int32_t col = 0;
         if (functionBody->GetLineCharOffset(byteCodeOffset, &line, &col, false))
         {
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::line, (uint32) line, functionBody->GetScriptContext());
@@ -359,7 +359,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
         propertyAttributes |= JsrtDebugPropertyAttribute::IN_TDZ;
     }
 
-    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::propertyAttributes, (UINT)propertyAttributes, scriptContext);
+    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::propertyAttributes, (uint32_t)propertyAttributes, scriptContext);
 }
 
 void JsrtDebugUtils::AddVarPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, Js::Var value, Js::ScriptContext * scriptContext)

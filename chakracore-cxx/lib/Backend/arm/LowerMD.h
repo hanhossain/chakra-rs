@@ -226,7 +226,7 @@ public:
             static Js::OpCode   GetStoreOp(IRType type) { return type == TyFloat64? Js::OpCode::VSTR : ((type == TyFloat32)? Js::OpCode::VSTR32 : Js::OpCode::STR); }
             static Js::OpCode   GetMoveOp(IRType type) { return IRType_IsFloat(type) ? Js::OpCode::VMOV : Js::OpCode::MOV; }
 
-            static BYTE         GetDefaultIndirScale()
+            static uint8_t         GetDefaultIndirScale()
             {
                 return IndirScale4;
             }

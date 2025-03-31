@@ -2128,12 +2128,12 @@ HeapInfo::LeaveIdleDecommit(bool allowTimer)
 }
 
 #ifdef IDLE_DECOMMIT_ENABLED
-DWORD HeapInfo::IdleDecommit()
+uint32_t HeapInfo::IdleDecommit()
 {
-    DWORD waitTime = INFINITE;
+    uint32_t waitTime = INFINITE;
     ForEachPageAllocator([&](IdleDecommitPageAllocator * pageAlloc)
     {
-        DWORD pageAllocatorWaitTime = pageAlloc->IdleDecommit();
+        uint32_t pageAllocatorWaitTime = pageAlloc->IdleDecommit();
         waitTime = min(waitTime, pageAllocatorWaitTime);
     });
     return waitTime;

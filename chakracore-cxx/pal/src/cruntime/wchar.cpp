@@ -104,7 +104,7 @@ LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
     }
     if (FALSE == isI64)
     {
-        uval = (ULONG) uval;
+        uval = (uint32_t) uval;
     }
     if (10 == radix && value < 0)
     {
@@ -159,7 +159,6 @@ Function:
 
   --*/
 char16_t *
-__cdecl
 _itow(
     int value,
     char16_t *string,
@@ -187,7 +186,6 @@ Function:
 
   --*/
 char16_t *
-__cdecl
 _ltow(
     long value,
     char16_t *string,
@@ -214,8 +212,7 @@ Function:
 See MSDN doc
 --*/
 char16_t *
- __cdecl
-_i64tow(
+ _i64tow(
     __int64 value,
     char16_t *string,
     int radix)
@@ -242,7 +239,6 @@ Function:
 See MSDN doc
 --*/
 int
-__cdecl
 _wtoi(
     const char16_t *string)
 {
@@ -291,7 +287,6 @@ Function:
 See MSDN doc
 --*/
 int
-__cdecl
 PAL_iswspace(char16_t c)
 {
     int ret;
@@ -342,7 +337,6 @@ is lesser.
 
 --*/
 int
-__cdecl
 _wcsnicmp(
           const char16_t *string1,
           const char16_t *string2,
@@ -394,7 +388,6 @@ string1, string2        Null-terminated strings to compare
 
 --*/
 int
-__cdecl
 _wcsicmp(
           const char16_t *string1,
           const char16_t *string2)
@@ -435,7 +428,6 @@ Remarks
 
 --*/
 char16_t *
-__cdecl
 _wcslwr(
         char16_t *string)
 {
@@ -495,12 +487,11 @@ Notes :
     Windows behavior, we must return long's in the 32 bit range.
 --*/
 
-/* The use of LONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "long" is used instead of LONG, then a 64 bit
+/* The use of int32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "long" is used instead of int32_t, then a 64 bit
 value could be returned on 64 bit platforms like HP-UX, thus breaking
 Windows behavior. */
-LONG
-__cdecl
+int32_t
 PAL_wcstol(
         const char16_t *nptr,
         char16_t **endptr,
@@ -510,7 +501,7 @@ PAL_wcstol(
     char *s_endptr = 0;
     long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstol);
     ENTRY("wcstol (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -545,7 +536,6 @@ PAL_wcstol(
 
     res = strtol(s_nptr, &s_endptr, base);
 
-#ifdef BIT64
     if (res > _I32_MAX)
     {
         res = _I32_MAX;
@@ -556,7 +546,6 @@ PAL_wcstol(
         res = _I32_MIN;
         errno = ERANGE;
     }
-#endif
 
     /* only ASCII characters will be accepted by strtol, and those always get
        mapped to single-byte characters, so the first rejected character will
@@ -571,9 +560,9 @@ PAL_wcstolExit:
     PAL_free(s_nptr);
     LOGEXIT("wcstol returning long %ld\n", res);
     PERF_EXIT(wcstol);
-    /* This explicit cast to LONG is used to silence any potential warnings
-    due to implicitly casting the native long res to LONG when returning. */
-    return (LONG)res;
+    /* This explicit cast to int32_t is used to silence any potential warnings
+    due to implicitly casting the native long res to int32_t when returning. */
+    return (int32_t)res;
 }
 
 /*++
@@ -609,7 +598,6 @@ Notes :
 --*/
 
 LONGLONG
-__cdecl
 PAL_wcstoll(
         const char16_t *nptr,
         char16_t **endptr,
@@ -619,7 +607,7 @@ PAL_wcstoll(
     char *s_endptr = 0;
     long long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoll);
     ENTRY("wcstoll (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -717,12 +705,11 @@ Notes :
     Windows behavior, we must return long's in the 32 bit range.
 --*/
 
-/* The use of ULONG is by design, to ensure that a 32 bit value is always
-returned from this function. If "unsigned long" is used instead of ULONG,
+/* The use of uint32_t is by design, to ensure that a 32 bit value is always
+returned from this function. If "unsigned long" is used instead of uint32_t,
 then a 64 bit value could be returned on 64 bit platforms like HP-UX, thus
 breaking Windows behavior .*/
-ULONG
-__cdecl
+uint32_t
 PAL_wcstoul(
         const char16_t *nptr,
         char16_t **endptr,
@@ -732,7 +719,7 @@ PAL_wcstoul(
     char *s_endptr = 0;
     unsigned long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
     ENTRY("wcstoul (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -767,7 +754,6 @@ PAL_wcstoul(
 
     res = strtoul(s_nptr, &s_endptr, base);
 
-#ifdef BIT64
     if (res > _UI32_MAX)
     {
         char16_t wc = *nptr;
@@ -784,7 +770,6 @@ PAL_wcstoul(
             errno = ERANGE;
         }
     }
-#endif
 
     /* only ASCII characters will be accepted by strtol, and those always get
        mapped to single-byte characters, so the first rejected character will
@@ -801,18 +786,17 @@ PAL_wcstoulExit:
     PERF_EXIT(wcstoul);
 
     /* When returning unsigned long res from this function, it will be
-    implicitly cast to ULONG. This handles situations where a string that
+    implicitly cast to uint32_t. This handles situations where a string that
     represents a negative number is passed in to wcstoul. The Windows
     behavior is analogous to taking the binary equivalent of the negative
-    value and treating it as a positive number. Returning a ULONG from
+    value and treating it as a positive number. Returning a uint32_t from
     this function, as opposed to native unsigned long, allows us to match
-    this behavior. The explicit case to ULONG below is used to silence any
+    this behavior. The explicit case to uint32_t below is used to silence any
     potential warnings due to the implicit casting.  */
-    return (ULONG)res;
+    return (uint32_t)res;
 }
 
 ULONGLONG
-__cdecl
 PAL__wcstoui64(
         const char16_t *nptr,
         char16_t **endptr,
@@ -822,7 +806,7 @@ PAL__wcstoui64(
     char *s_endptr = 0;
     unsigned long long res;
     int size;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(wcstoul);
     ENTRY("_wcstoui64 (nptr=%p (%S), endptr=%p, base=%d)\n", nptr?nptr:W16_NULLSTRING, nptr?nptr:W16_NULLSTRING,
@@ -882,7 +866,6 @@ See MSDN
 
 --*/
 char16_t
-__cdecl
 PAL_towlower( char16_t c )
 {
     PERF_ENTRY(towlower);
@@ -957,7 +940,6 @@ See MSDN
 
 --*/
 char16_t
-__cdecl
 PAL_towupper( char16_t c )
 {
 #if HAVE_COREFOUNDATION
@@ -1015,7 +997,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswupper( char16_t c )
 {
     BOOL bRetVal = FALSE;
@@ -1061,7 +1042,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswlower( char16_t c )
 {
     BOOL bRetVal = FALSE;
@@ -1107,7 +1087,6 @@ See MSDN
 
 --*/
 int
-__cdecl
 PAL_iswalpha( char16_t c )
 {
     PERF_ENTRY(iswalpha);
@@ -1134,7 +1113,6 @@ See MSDN or the man page for mcscat.
 
 --*/
 char16_t *
-__cdecl
 PAL_wcscat(
         char16_t *strDestination,
         const char16_t *strSource)
@@ -1161,7 +1139,6 @@ See MSDN or the man page for mcscpy.
 
 --*/
 char16_t *
-__cdecl
 PAL_wcscpy(
         char16_t *strDestination,
         const char16_t *strSource)
@@ -1212,7 +1189,6 @@ See MSDN or the man page for wcslen.
 --*/
 __attribute__((no_instrument_function))
 size_t
-__cdecl
 PAL_wcslen(
         const char16_t *string)
 {
@@ -1240,7 +1216,6 @@ Function:
 See MSDN or the man page for wmemcmp.
 --*/
 int
-__cdecl
 PAL_wmemcmp(
         const char16_t *string1,
         const char16_t *string2,
@@ -1284,7 +1259,6 @@ Function:
 See MSDN or the man page for wcsncmp.
 --*/
 int
-__cdecl
 PAL_wcsncmp(
         const char16_t *string1,
         const char16_t *string2,
@@ -1327,7 +1301,6 @@ Function:
 See MSDN or the man page for wcscmp.
 --*/
 int
-__cdecl
 PAL_wcscmp(
         const char16_t *string1,
         const char16_t *string2)
@@ -1354,7 +1327,6 @@ See MSDN or man page for wcschr.
 
 --*/
 char16_t _WConst_return *
-__cdecl
 PAL_wcschr(
         const char16_t * string,
         char16_t c)
@@ -1391,7 +1363,6 @@ See MSDN or man page for wcsrchr.
 
 --*/
 char16_t _WConst_return *
-__cdecl
 PAL_wcsrchr(
         const char16_t * string,
         char16_t c)
@@ -1423,7 +1394,6 @@ Function:
 See MSDN or man page for wcspbrk.
 --*/
 size_t
-__cdecl
 PAL_wcsspn (const char16_t *string, const char16_t *stringCharSet)
 {
     ASSERT(0);
@@ -1438,7 +1408,6 @@ Function:
 See MSDN or man page for wcspbrk.
 --*/
 const char16_t *
-__cdecl
 PAL_wcspbrk(
         const char16_t *string,
         const char16_t *strCharSet)
@@ -1473,7 +1442,6 @@ Function:
 See MSDN or man page for wcsstr.
 --*/
 const char16_t *
-__cdecl
 PAL_wcsstr(
         const char16_t *string,
         const char16_t *strCharSet)
@@ -1543,10 +1511,9 @@ Function :
 see msdn doc.
 --*/
 char16_t *
-__cdecl
 PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
 {
-    UINT length = sizeof( char16_t ) * count;
+    uint32_t length = sizeof( char16_t ) * count;
     PERF_ENTRY(wcsncpy);
     ENTRY("wcsncpy( strDest:%p, strSource:%p (%S), count:%lu)\n",
           strDest, strSource, strSource, (unsigned long) count);
@@ -1568,12 +1535,11 @@ Function :
 see msdn doc.
 --*/
 char16_t *
-__cdecl
 PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
 {
     char16_t *start = strDest;
-    UINT LoopCount = 0;
-    UINT StrSourceLength = 0;
+    uint32_t LoopCount = 0;
+    uint32_t StrSourceLength = 0;
 
     PERF_ENTRY(wcsncat);
     ENTRY( "wcsncat (strDestination=%p (%S), strSource=%p (%S), count=%lu )\n",
@@ -1649,14 +1615,13 @@ Function :
 see msdn doc.
 --*/
 double
-__cdecl
 PAL_wcstod( const char16_t * nptr, char16_t **endptr )
 {
     double RetVal = 0.0;
     LPSTR  lpStringRep = NULL;
     LPWSTR lpStartOfExpression = (LPWSTR)nptr;
     LPWSTR lpEndOfExpression = NULL;
-    UINT Length = 0;
+    uint32_t Length = 0;
 
     PERF_ENTRY(wcstod);
     ENTRY( "wcstod( %p (%S), %p (%S) )\n", nptr, nptr, endptr , endptr );
@@ -1746,13 +1711,12 @@ Function :
 See MSDN for more details.
 --*/
 char16_t *
-__cdecl
 _ui64tow( unsigned __int64 value , char16_t * string , int radix )
 {
-    UINT ReversedIndex = 0;
+    uint32_t ReversedIndex = 0;
     WCHAR ReversedString[ 65 ];
     LPWSTR lpString = string;
-    UINT Index = 0;
+    uint32_t Index = 0;
 
     PERF_ENTRY(_ui64tow);
     ENTRY( "_ui64tow( value=%I64d, string=%p (%S), radix=%d )\n",
@@ -1817,10 +1781,9 @@ Function:
 See MSDN for more details.
 --*/
 int
-__cdecl
 PAL_iswdigit( char16_t c )
 {
-    UINT nRetVal = 0;
+    uint32_t nRetVal = 0;
 #if HAVE_COREFOUNDATION
     static CFCharacterSetRef sDigitSet;
 
@@ -1873,10 +1836,9 @@ numbers and letters are considered as "hex"; other "numbers"
 (nGeneralCategory==8) aren't.
 --*/
 int
-__cdecl
 PAL_iswxdigit( char16_t c )
 {
-    UINT nRetVal = 0;
+    uint32_t nRetVal = 0;
 
     PERF_ENTRY(iswxdigit);
     ENTRY("PAL_iswxdigit( c=%d )\n", c);
@@ -1914,7 +1876,6 @@ Function:
 See MSDN for more details.
 --*/
 int
-__cdecl
 PAL_iswprint( char16_t c )
 {
     int ret;
@@ -1949,7 +1910,6 @@ strCharSet      Set of delimiter characters
 
 --*/
 size_t
-__cdecl
 PAL_wcscspn(const char16_t *string, const char16_t *strCharSet)
 {
     const char16_t *temp;
@@ -1982,7 +1942,6 @@ Function:
 Returns TRUE if c is a Win32 "blank" character.
 --*/
 int
-__cdecl
 PAL_iswblank(char16_t c)
 {
     int ret;
@@ -2023,7 +1982,6 @@ Function:
 Returns TRUE if c is a control character.
 --*/
 int
-__cdecl
 PAL_iswcntrl(char16_t c)
 {
     int ret;
@@ -2044,7 +2002,6 @@ Function:
 Returns TRUE if c is a punctuation character.
 --*/
 int
-__cdecl
 PAL_iswpunct(char16_t c)
 {
     int ret;

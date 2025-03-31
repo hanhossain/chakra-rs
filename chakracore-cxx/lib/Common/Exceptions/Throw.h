@@ -19,7 +19,7 @@ namespace Js {
     {
     public:
         static void __declspec(noreturn) OutOfMemory();
-        static void __declspec(noreturn) StackOverflow(ScriptContext *scriptContext, PVOID returnAddress);
+        static void __declspec(noreturn) StackOverflow(ScriptContext *scriptContext, void * returnAddress);
         static void __declspec(noreturn) NotImplemented();
         static void __declspec(noreturn) InternalError();
         static void __declspec(noreturn) FatalInternalError(HRESULT hr = E_FAIL);

@@ -30,7 +30,7 @@ SET_DEFAULT_DEBUG_CHANNEL(FILE);
 PAL_ERROR
 FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock, 
@@ -40,7 +40,7 @@ FILEAddNewLockedRgn(
 PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock,
     LOCK_TYPE lockAction
@@ -49,7 +49,7 @@ FILELockFileRegion(
 PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     UINT64 unlockRgnStart, 
     UINT64 nbBytesToUnlock,
     LOCK_TYPE unlockType
@@ -58,8 +58,8 @@ FILEUnlockFileRegion(
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
-    DWORD dwAccessRights,
-    PVOID pvControllerInstance
+    uint32_t dwAccessRights,
+    void * pvControllerInstance
     );
 
 PAL_ERROR
@@ -97,8 +97,8 @@ PAL_ERROR
 CSharedMemoryFileLockMgr::GetLockControllerForFile(
     CPalThread *pThread,                // IN, OPTIONAL
     LPCSTR szFileName,
-    DWORD dwAccessRights,
-    DWORD dwShareMode,
+    uint32_t dwAccessRights,
+    uint32_t dwShareMode,
     IFileLockController **ppLockController  // OUT
     )
 {
@@ -266,7 +266,7 @@ GetLockControllerForFileExit:
 PAL_ERROR
 CSharedMemoryFileLockMgr::GetFileShareModeForFile(
    LPCSTR szFileName,
-   DWORD* pdwShareMode)
+   uint32_t* pdwShareMode)
 {
     PAL_ERROR palError = NO_ERROR;
     *pdwShareMode = SHARE_MODE_NOT_INITALIZED;
@@ -310,10 +310,10 @@ PAL_ERROR
 CSharedMemoryFileLockController::GetTransactionLock(
     CPalThread *pThread,                // IN, OPTIONAL
     FileTransactionLockType eLockType,
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToLockLow,
-    DWORD nNumberOfBytesToLockHigh,
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToLockLow,
+    uint32_t nNumberOfBytesToLockHigh,
     IFileTransactionLock **ppTransactionLock    // OUT
     )
 {
@@ -327,7 +327,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
 
     palError = FILELockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         lockRgnStart, 
         nbBytesToLock,
         RDWR_LOCK_RGN
@@ -336,7 +336,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
     if (NO_ERROR == palError)
     {
         *ppTransactionLock = InternalNew<CSharedMemoryFileTransactionLock>(m_shmFileLocks,
-                                                                           reinterpret_cast<PVOID>(this),
+                                                                           reinterpret_cast<void *>(this),
                                                                            lockRgnStart, 
                                                                            nbBytesToLock);
         if (NULL == *ppTransactionLock)
@@ -344,7 +344,7 @@ CSharedMemoryFileLockController::GetTransactionLock(
             palError = ERROR_OUTOFMEMORY;
             FILEUnlockFileRegion(
                 m_shmFileLocks,
-                reinterpret_cast<PVOID>(this),
+                reinterpret_cast<void *>(this),
                 lockRgnStart, 
                 nbBytesToLock,
                 RDWR_LOCK_RGN
@@ -358,10 +358,10 @@ CSharedMemoryFileLockController::GetTransactionLock(
 PAL_ERROR
 CSharedMemoryFileLockController::CreateFileLock(
     CPalThread *pThread,                // IN, OPTIONAL
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToLockLow,
-    DWORD nNumberOfBytesToLockHigh,
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToLockLow,
+    uint32_t nNumberOfBytesToLockHigh,
     FileLockExclusivity eFileLockExclusivity,
     FileLockWaitMode eFileLockWaitMode
     )
@@ -384,7 +384,7 @@ CSharedMemoryFileLockController::CreateFileLock(
 
     palError = FILELockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         lockRgnStart, 
         nbBytesToLock,
         USER_LOCK_RGN
@@ -398,10 +398,10 @@ CreateFileLockExit:
 PAL_ERROR
 CSharedMemoryFileLockController::ReleaseFileLock(
     CPalThread *pThread,                // IN, OPTIONAL
-    DWORD dwOffsetLow,
-    DWORD dwOffsetHigh,
-    DWORD nNumberOfBytesToUnlockLow,
-    DWORD nNumberOfBytesToUnlockHigh
+    uint32_t dwOffsetLow,
+    uint32_t dwOffsetHigh,
+    uint32_t nNumberOfBytesToUnlockLow,
+    uint32_t nNumberOfBytesToUnlockHigh
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -414,7 +414,7 @@ CSharedMemoryFileLockController::ReleaseFileLock(
 
     palError = FILEUnlockFileRegion(
         m_shmFileLocks,
-        reinterpret_cast<PVOID>(this),
+        reinterpret_cast<void *>(this),
         unlockRgnStart, 
         nbBytesToUnlock,
         USER_LOCK_RGN
@@ -431,7 +431,7 @@ CSharedMemoryFileLockController::ReleaseController()
         FILECleanUpLockedRgn(
             m_shmFileLocks,
             m_dwAccessRights,
-            reinterpret_cast<PVOID>(this)
+            reinterpret_cast<void *>(this)
             );
     }
 
@@ -455,7 +455,7 @@ CSharedMemoryFileTransactionLock::ReleaseLock()
 PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock,
     LOCK_TYPE lockAction
@@ -604,7 +604,7 @@ EXIT:
 PAL_ERROR
 FILEUnlockFileRegion(
     SHMPTR shmFileLocks,
-    PVOID pvControllerInstance,
+    void * pvControllerInstance,
     UINT64 unlockRgnStart, 
     UINT64 nbBytesToUnlock,
     LOCK_TYPE unlockType
@@ -800,7 +800,7 @@ EXIT:
 PAL_ERROR
 FILEAddNewLockedRgn(
     SHMFILELOCKS* fileLocks,
-    PVOID pvControllerInstance, 
+    void * pvControllerInstance,
     SHMFILELOCKRGNS *insertAfter,
     UINT64 lockRgnStart, 
     UINT64 nbBytesToLock, 
@@ -911,8 +911,8 @@ EXIT:
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
-    DWORD dwAccessRights,
-    PVOID pvControllerInstance
+    uint32_t dwAccessRights,
+    void * pvControllerInstance
     )
 {
     SHMFILELOCKRGNS *curLockRgn = NULL, *prevLock = NULL;

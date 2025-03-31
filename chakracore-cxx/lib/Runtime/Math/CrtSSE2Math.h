@@ -14,16 +14,16 @@
 #else
 #define _DLLIMPORT __declspec(dllimport)
 #endif
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_acos(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_asin(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_atan(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_atan2(double,double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_cos(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_exp(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_pow(double,double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_log(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_log10(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_sin(double);
-extern "C" double _DLLIMPORT __cdecl __libm_sse2_tan(double);
+extern "C" double _DLLIMPORT __libm_sse2_acos(double);
+extern "C" double _DLLIMPORT __libm_sse2_asin(double);
+extern "C" double _DLLIMPORT __libm_sse2_atan(double);
+extern "C" double _DLLIMPORT __libm_sse2_atan2(double,double);
+extern "C" double _DLLIMPORT __libm_sse2_cos(double);
+extern "C" double _DLLIMPORT __libm_sse2_exp(double);
+extern "C" double _DLLIMPORT __libm_sse2_pow(double,double);
+extern "C" double _DLLIMPORT __libm_sse2_log(double);
+extern "C" double _DLLIMPORT __libm_sse2_log10(double);
+extern "C" double _DLLIMPORT __libm_sse2_sin(double);
+extern "C" double _DLLIMPORT __libm_sse2_tan(double);
 #undef _DLLIMPORT
 #endif

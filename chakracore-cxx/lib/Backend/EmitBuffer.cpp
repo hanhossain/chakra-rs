@@ -207,7 +207,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::SetValidCallTarget(TEm
             ? allocation->allocation->largeObjectAllocation.segment
             : allocation->allocation->page->segment;
         HANDLE fileHandle = nullptr;
-        PVOID baseAddress = nullptr;
+        void * baseAddress = nullptr;
         bool found = false;
         if (this->allocationHeap.IsPreReservedSegment(segment))
         {
@@ -273,14 +273,14 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* a
 //      Fill the rest of the buffer (length given by allocation->BytesFree()) with debugger breakpoints.
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
-bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocation(TEmitBufferAllocation *allocation, BYTE * dstBuffer)
+bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocation(TEmitBufferAllocation *allocation, uint8_t * dstBuffer)
 {
     Assert(this->criticalSection.IsLocked());
 
-    DWORD bytes = allocation->BytesFree();
+    uint32_t bytes = allocation->BytesFree();
     if(bytes > 0)
     {
-        BYTE* buffer = nullptr;
+        uint8_t* buffer = nullptr;
         this->GetBuffer(allocation, bytes, &buffer);
         if (!this->CommitBuffer(allocation, allocation->bytesCommitted, dstBuffer, 0, /*sourceBuffer=*/ nullptr, /*alignPad=*/ bytes))
         {
@@ -297,7 +297,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocatio
 
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferAllocation *allocation, __in size_t bytes, __deref_bcount(bytes) BYTE** ppBuffer)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferAllocation *allocation, __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer)
 {
     Assert(this->criticalSection.IsLocked());
 
@@ -323,7 +323,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferA
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(__in size_t bytes, __deref_bcount(bytes) BYTE** ppBuffer, ushort pdataCount /*=0*/, ushort xdataSize  /*=0*/, bool canAllocInPreReservedHeapPageSegment /*=false*/,
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(__in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount /*=0*/, ushort xdataSize  /*=0*/, bool canAllocInPreReservedHeapPageSegment /*=false*/,
     bool isAnyJittedCode /* = false*/)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
@@ -390,7 +390,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::ProtectBufferWith
 // Returns true if we successfully commit the buffer
 // Returns false if we OOM
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
-bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) BYTE* pBuffer, _In_ size_t bufferSize)
+bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) uint8_t* pBuffer, _In_ size_t bufferSize)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
 
@@ -434,7 +434,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) BYTE* destBuffer, __in size_t bytes, __in_bcount(bytes) const BYTE* sourceBuffer, __in DWORD alignPad)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in uint32_t alignPad)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
 
@@ -448,7 +448,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
     // Must have at least enough room in destBuffer for the initial skipped bytes plus the bytes we're going to write.
     AnalysisAssert(allocation->bytesUsed + bytes + alignPad <= destBufferBytes);
 
-    BYTE *currentDestBuffer = destBuffer + allocation->GetBytesUsed();
+    uint8_t *currentDestBuffer = destBuffer + allocation->GetBytesUsed();
     char *bufferToFlush = allocation->allocation->address + allocation->GetBytesUsed();
     Assert(allocation->BytesFree() >= bytes + alignPad);
 
@@ -462,12 +462,12 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         AnalysisAssert(destBuffer <= currentDestBuffer);
         AnalysisAssert(currentDestBuffer < destBuffer + destBufferBytes);
 
-        DWORD spaceInCurrentPage = AutoSystemInfo::PageSize - ((size_t)currentDestBuffer & (AutoSystemInfo::PageSize - 1));
+        uint32_t spaceInCurrentPage = AutoSystemInfo::PageSize - ((size_t)currentDestBuffer & (AutoSystemInfo::PageSize - 1));
         size_t bytesToChange = bytesLeft > spaceInCurrentPage ? spaceInCurrentPage : bytesLeft;
 
 
         // Buffer and the bytes that are marked RWX - these will eventually be marked as 'EXCEUTE' only.
-        BYTE* readWriteBuffer = currentDestBuffer;
+        uint8_t* readWriteBuffer = currentDestBuffer;
         size_t readWriteBytes = bytesToChange;
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
@@ -484,7 +484,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         // Pad with debug-breakpoint instructions up to alignBytes or the end of the current page, whichever is less.
         if (alignPad != 0)
         {
-            DWORD alignBytes = alignPad < spaceInCurrentPage ? alignPad : spaceInCurrentPage;
+            uint32_t alignBytes = alignPad < spaceInCurrentPage ? alignPad : spaceInCurrentPage;
             CustomHeap::FillDebugBreak(currentDestBuffer, alignBytes);
 
             alignPad -= alignBytes;
@@ -503,7 +503,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         {
             AssertMsg(alignPad == 0, "If we are copying right now - we should be done with setting alignment.");
 
-            const DWORD bufferBytesFree(allocation->BytesFree());
+            const uint32_t bufferBytesFree(allocation->BytesFree());
             // Use <= here instead of < to allow this memcopy to fill up the rest of destBuffer.  If we do, then FinalizeAllocation,
             // called below, determines that no additional padding is necessary based on the values in `allocation'.
             AnalysisAssert(currentDestBuffer + bufferBytesFree <= destBuffer + destBufferBytes);
@@ -559,7 +559,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions
 
     MEMORY_BASIC_INFORMATION memInfo;
 
-    BYTE *buffer = (BYTE*) allocation->allocation->address;
+    uint8_t *buffer = (uint8_t*) allocation->allocation->address;
     SIZE_T size = allocation->bytesCommitted;
 
     while(1)

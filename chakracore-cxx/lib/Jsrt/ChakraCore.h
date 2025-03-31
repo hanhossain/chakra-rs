@@ -151,7 +151,7 @@ typedef enum _JsPromiseState
 /// <returns>
 ///     Returns a <c>JsNoError</c> if the operation succeeded an error code otherwise.
 /// </returns>
-typedef JsErrorCode(CHAKRA_CALLBACK * FetchImportedModuleCallBack)(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+typedef JsErrorCode(* FetchImportedModuleCallBack)(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
 
 /// <summary>
 ///     User implemented callback to fetch imported modules dynamically in scripts.
@@ -174,7 +174,7 @@ typedef JsErrorCode(CHAKRA_CALLBACK * FetchImportedModuleCallBack)(_In_ JsModule
 /// <returns>
 ///     Returns <c>JsNoError</c> if the operation succeeded or an error code otherwise.
 /// </returns>
-typedef JsErrorCode(CHAKRA_CALLBACK * FetchImportedModuleFromScriptCallBack)(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+typedef JsErrorCode(* FetchImportedModuleFromScriptCallBack)(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
 
 /// <summary>
 ///     User implemented callback to get notification when the module is ready.
@@ -189,7 +189,7 @@ typedef JsErrorCode(CHAKRA_CALLBACK * FetchImportedModuleFromScriptCallBack)(_In
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-typedef JsErrorCode(CHAKRA_CALLBACK * NotifyModuleReadyCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
+typedef JsErrorCode(* NotifyModuleReadyCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
 
 /// <summary>
 ///     User implemented callback to fill in module properties for the import.meta object.
@@ -205,7 +205,7 @@ typedef JsErrorCode(CHAKRA_CALLBACK * NotifyModuleReadyCallback)(_In_opt_ JsModu
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-typedef JsErrorCode(CHAKRA_CALLBACK * InitializeImportMetaCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
+typedef JsErrorCode(* InitializeImportMetaCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
 
 /// <summary>
 ///     User implemented callback to report completion of module execution.
@@ -226,7 +226,7 @@ typedef JsErrorCode(CHAKRA_CALLBACK * InitializeImportMetaCallback)(_In_opt_ JsM
 /// <returns>
 ///     Returns a JsErrorCode: JsNoError if successful.
 /// </returns>
-typedef JsErrorCode(CHAKRA_CALLBACK * ReportModuleCompletionCallback)(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception);
+typedef JsErrorCode(* ReportModuleCompletionCallback)(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception);
 
 /// <summary>
 ///     A structure containing information about a native function callback.
@@ -251,7 +251,7 @@ typedef struct JsNativeFunctionInfo
 ///     The state passed to <c>JsCreateFunction</c>.
 /// </param>
 /// <returns>The result of the call, if any.</returns>
-typedef _Ret_maybenull_ JsValueRef(CHAKRA_CALLBACK * JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
+typedef _Ret_maybenull_ JsValueRef(* JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
 
 /// <summary>
 ///     A Promise Rejection Tracker callback.
@@ -272,7 +272,7 @@ typedef _Ret_maybenull_ JsValueRef(CHAKRA_CALLBACK * JsEnhancedNativeFunction)(_
 /// <param name="handled">Boolean - false for promiseRejected: i.e. if the promise has just been rejected with no handler, 
 ///                         true for promiseHandled: i.e. if it was rejected before without a handler and is now being handled.</param>
 /// <param name="callbackState">The state passed to <c>JsSetHostPromiseRejectionTracker</c>.</param>
-typedef void (CHAKRA_CALLBACK *JsHostPromiseRejectionTrackerCallback)(_In_ JsValueRef promise, _In_ JsValueRef reason, _In_ bool handled, _In_opt_ void *callbackState);
+typedef void (*JsHostPromiseRejectionTrackerCallback)(_In_ JsValueRef promise, _In_ JsValueRef reason, _In_ bool handled, _In_opt_ void *callbackState);
 
 /// <summary>
 ///     A structure containing information about interceptors.
@@ -292,17 +292,17 @@ typedef struct _JsGetterSetterInterceptor {
 /// <summary>
 ///     A callback for tracing references back from Chakra to DOM wrappers.
 /// </summary>
-typedef void (CHAKRA_CALLBACK *JsDOMWrapperTracingCallback)(_In_opt_ void *data);
+typedef void (*JsDOMWrapperTracingCallback)(_In_opt_ void *data);
 
 /// <summary>
 ///     A callback for checking whether tracing from Chakra to DOM wrappers has completed.
 /// </summary>
-typedef bool (CHAKRA_CALLBACK *JsDOMWrapperTracingDoneCallback)(_In_opt_ void *data);
+typedef bool (*JsDOMWrapperTracingDoneCallback)(_In_opt_ void *data);
 
 /// <summary>
 ///     A callback for entering final pause for tracing DOM wrappers.
 /// </summary>
-typedef void(CHAKRA_CALLBACK *JsDOMWrapperTracingEnterFinalPauseCallback)(_In_opt_ void *data);
+typedef void(*JsDOMWrapperTracingEnterFinalPauseCallback)(_In_opt_ void *data);
 
 /// <summary>
 ///     A trace callback.
@@ -310,7 +310,7 @@ typedef void(CHAKRA_CALLBACK *JsDOMWrapperTracingEnterFinalPauseCallback)(_In_op
 /// <param name="data">
 ///     The external data that was passed in when creating the object being traced.
 /// </param>
-typedef void (CHAKRA_CALLBACK *JsTraceCallback)(_In_opt_ void *data);
+typedef void (*JsTraceCallback)(_In_opt_ void *data);
 
 /// <summary>
 ///     Creates a new enhanced JavaScript function.
@@ -374,7 +374,7 @@ CHAKRA_API
 JsParseModuleSource(
     _In_ JsModuleRecord requestModule,
     _In_ JsSourceContext sourceContext,
-    _In_ BYTE* script,
+    _In_ uint8_t* script,
     _In_ unsigned int scriptLength,
     _In_ JsParseModuleSourceFlags sourceFlag,
     _Outptr_result_maybenull_ JsValueRef* exceptionValueRef);
@@ -487,7 +487,7 @@ JsGetAndClearExceptionWithMetadata(
 /// <returns>
 ///     true if the operation succeeded, false otherwise.
 /// </returns>
-typedef bool (CHAKRA_CALLBACK * JsSerializedLoadScriptCallback)
+typedef bool (* JsSerializedLoadScriptCallback)
     (JsSourceContext sourceContext, _Out_ JsValueRef *value,
     _Out_ JsParseScriptAttributes *parseAttributes);
 
@@ -1697,7 +1697,7 @@ CHAKRA_API
         _In_ JsValueRef parserState,
         _Out_ JsValueRef* result);
 
-typedef void (CHAKRA_CALLBACK *JsBeforeSweepCallback)(_In_opt_ void *callbackState);
+typedef void (*JsBeforeSweepCallback)(_In_opt_ void *callbackState);
 
 CHAKRA_API
     JsSetRuntimeBeforeSweepCallback(
@@ -1737,7 +1737,7 @@ JsAllocRawData(
 /// <returns>
 ///     New buffer will be returned upon success, null otherwise.
 /// </returns>
-typedef byte * (CHAKRA_CALLBACK *ReallocateBufferMemoryFunc)(void* state, byte *oldBuffer, size_t newSize, size_t *allocatedSize);
+typedef byte * (*ReallocateBufferMemoryFunc)(void* state, byte *oldBuffer, size_t newSize, size_t *allocatedSize);
 
 /// <summary>
 ///     A callback to ask host write current Host object to the serialization buffer.
@@ -1745,7 +1745,7 @@ typedef byte * (CHAKRA_CALLBACK *ReallocateBufferMemoryFunc)(void* state, byte *
 /// <returns>
 ///     A Boolean true is returned upon success, false otherwise.
 /// </returns>
-typedef bool (CHAKRA_CALLBACK *WriteHostObjectFunc)(void* state, void* hostObject);
+typedef bool (*WriteHostObjectFunc)(void* state, void* hostObject);
 
 /// <summary>
 ///     Initialize Serialization of the object.
@@ -1962,7 +1962,7 @@ CHAKRA_API
 JsDetachArrayBuffer(
     _In_ JsValueRef arrayBuffer);
 
-typedef void(__cdecl *ArrayBufferFreeFn)(void*);
+typedef void(*ArrayBufferFreeFn)(void*);
 
 /// <summary>
 ///     Returns the function which free the underlying buffer of ArrayBuffer

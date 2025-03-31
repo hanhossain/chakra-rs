@@ -12,13 +12,13 @@ namespace PerfCounter
     Counter& Counter::operator+=(size_t value)
     {
         Assert(count);
-        ::InterlockedExchangeAdd(count, (DWORD)value);
+        ::InterlockedExchangeAdd(count, (uint32_t)value);
         return *this;
     }
     Counter& Counter::operator-=(size_t value)
     {
         Assert(count);
-        ::InterlockedExchangeSubtract(count, (DWORD)value);
+        ::InterlockedExchangeSubtract(count, (uint32_t)value);
         return *this;
     }
     Counter& Counter::operator++()

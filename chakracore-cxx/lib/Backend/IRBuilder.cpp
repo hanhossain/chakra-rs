@@ -37,8 +37,8 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
         {
             if (Js::Configuration::Global.flags.IsEnabled(Js::BailOutFlag) && !this->m_func->GetJITFunctionBody()->IsLibraryCode())
             {
-                ULONG line;
-                LONG col;
+                uint32_t line;
+                int32_t col;
 
                 // Since we're on a separate thread, don't allow the line cache to be allocated in the Recycler.
                 if (((Js::FunctionBody*)m_func->GetJITFunctionBody()->GetAddr())->GetLineCharOffset(this->m_jnReader.GetCurrentOffset(), &line, &col, false /*canAllocateLineCache*/))

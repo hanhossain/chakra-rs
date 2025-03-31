@@ -1394,7 +1394,7 @@ T WasmBinaryReader::ReadConst()
 
 bool WasmBinaryReader::ReadMutableValue()
 {
-    uint8 mutableValue = ReadConst<UINT8>();
+    uint8_t mutableValue = ReadConst<uint8_t>();
     switch (mutableValue)
     {
     case 0: return false;

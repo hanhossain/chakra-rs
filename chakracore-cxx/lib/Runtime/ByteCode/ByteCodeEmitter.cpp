@@ -1834,7 +1834,7 @@ void ByteCodeGenerator::InitScopeSlotArray(FuncInfo * funcInfo)
         AssertMsg(!byteCodeFunction->IsReparsed() || byteCodeFunction->WasEverAsmJsMode() || byteCodeFunction->scopeSlotArraySize == scopeSlotCount,
             "The slot array size is different between debug and non-debug mode");
 #if DEBUG
-        for (UINT i = 0; i < scopeSlotCount; i++)
+        for (uint32_t i = 0; i < scopeSlotCount; i++)
         {
             propertyIdsForScopeSlotArray[i] = Js::Constants::NoProperty;
         }
@@ -1863,7 +1863,7 @@ void ByteCodeGenerator::InitScopeSlotArray(FuncInfo * funcInfo)
         funcInfo->GetBodyScope()->ForEachSymbol(setPropIdsForScopeSlotArray);
 
 #if DEBUG
-        for (UINT i = 0; i < scopeSlotCount; i++)
+        for (uint32_t i = 0; i < scopeSlotCount; i++)
         {
             Assert(propertyIdsForScopeSlotArray[i] != Js::Constants::NoProperty
                 || funcInfo->frameObjRegister != Js::Constants::NoRegister); // ScopeObject may have unassigned entries, e.g. for same-named parameters

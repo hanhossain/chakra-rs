@@ -123,7 +123,7 @@ public:
         return m_size * sizeof(T);
     }
 
-    CONST T * GetString() const
+    const T * GetString() const
     {
         return (const T *)m_buffer;
     }
@@ -150,10 +150,10 @@ public:
 };
 
 #if _DEBUG
-typedef StackString<32, CHAR> PathCharString;
+typedef StackString<32, char> PathCharString;
 typedef StackString<32, WCHAR> PathWCharString; 
 #else
-typedef StackString<260, CHAR> PathCharString;
+typedef StackString<260, char> PathCharString;
 typedef StackString<260, WCHAR> PathWCharString; 
 #endif
 #endif

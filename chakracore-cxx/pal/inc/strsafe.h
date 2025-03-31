@@ -22,13 +22,13 @@
 #ifndef _STRSAFE_H_INCLUDED_
 #define _STRSAFE_H_INCLUDED_
 
-#if defined(PLATFORM_UNIX) && !defined (FEATURE_PAL)
+#if !defined (FEATURE_PAL)
 #define _NATIVE_WCHAR_T_DEFINED
-#endif // defined(PLATFORM_UNIX) && !defined (FEATURE_PAL)
+#endif // !defined (FEATURE_PAL)
 
-#if defined(PLATFORM_UNIX) && !defined (FEATURE_PAL)
+#if !defined (FEATURE_PAL)
 #define _vsnprintf vsnprintf
-#endif // defined(PLATFORM_UNIX) && !defined (FEATURE_PAL)
+#endif // !defined (FEATURE_PAL)
 
 #include <stdio.h>      // for _vsnprintf, _vsnwprintf, getc, getwc
 #include <string.h>     // for memset
@@ -52,7 +52,7 @@ typedef char16_t WCHAR;
 #ifndef FEATURE_PAL
 #ifndef _HRESULT_DEFINED
 #define _HRESULT_DEFINED
-typedef LONG HRESULT;
+typedef int32_t HRESULT;
 #endif // !_HRESULT_DEFINED
 #endif // !FEATURE_PAL
 
@@ -77,18 +77,18 @@ typedef LONG HRESULT;
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.
 #if defined(STRSAFE_LIB)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #pragma comment(lib, "strsafe.lib")
 #elif defined(STRSAFE_LIB_IMPL)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
-#define STRSAFEAPI  __inline HRESULT __stdcall
+#define STRSAFEAPI  __inline HRESULT
 #define STRSAFE_INLINE
 #endif
 
 // Some functions always run inline because they use stdin and we want to avoid building multiple
 // versions of strsafe lib depending on if you use msvcrt, libcmt, etc.
-#define STRSAFE_INLINE_API  __inline HRESULT __stdcall
+#define STRSAFE_INLINE_API  __inline HRESULT
 
 // The user can request no "Cb" or no "Cch" fuctions, but not both!
 #if defined(STRSAFE_NO_CB_FUNCTIONS) && defined(STRSAFE_NO_CCH_FUNCTIONS)
@@ -249,7 +249,7 @@ STRSAFEAPI StringCchCopyA(char* pszDest, size_t cchDest, const char* pszSrc)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCopyW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 {
     HRESULT hr;
@@ -265,7 +265,7 @@ STRSAFEAPI StringCchCopyW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -363,7 +363,7 @@ STRSAFEAPI StringCbCopyA(char* pszDest, size_t cbDest, const char* pszSrc)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCopyW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc)
 {
     HRESULT hr;
@@ -383,7 +383,7 @@ STRSAFEAPI StringCbCopyW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -396,7 +396,7 @@ STDAPI StringCchCopyEx(TCHAR pszDest,
                        LPCTSTR pszSrc,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -508,7 +508,7 @@ STRSAFEAPI StringCchCopyExA(char* pszDest, size_t cchDest, const char* pszSrc, c
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCopyExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -529,7 +529,7 @@ STRSAFEAPI StringCchCopyExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc,
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -542,7 +542,7 @@ STDAPI StringCbCopyEx(TCHAR pszDest,
                       LPCTSTR pszSrc,
                       LPTSTR* ppszDestEnd,
                       size_t* pcbRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -662,7 +662,7 @@ STRSAFEAPI StringCbCopyExA(char* pszDest, size_t cbDest, const char* pszSrc, cha
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCopyExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -691,7 +691,7 @@ STRSAFEAPI StringCbCopyExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, W
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -786,7 +786,7 @@ STRSAFEAPI StringCchCopyNA(char* pszDest, size_t cchDest, const char* pszSrc, si
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCopyNW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchSrc)
 {
     HRESULT hr;
@@ -803,7 +803,7 @@ STRSAFEAPI StringCchCopyNW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, 
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -904,7 +904,7 @@ STRSAFEAPI StringCbCopyNA(char* pszDest, size_t cbDest, const char* pszSrc, size
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCopyNW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, size_t cbSrc)
 {
     HRESULT hr;
@@ -927,7 +927,7 @@ STRSAFEAPI StringCbCopyNW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, si
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -941,7 +941,7 @@ STDAPI StringCchCopyNEx(TCHAR pszDest,
                         size_t cchSrc,
                         LPTSTR* ppszDestEnd,
                         size_t* pcchRemaining,
-                        DWORD dwFlags);
+                        uint32_t dwFlags);
 
 Routine Description:
 
@@ -1062,7 +1062,7 @@ STRSAFEAPI StringCchCopyNExA(char* pszDest, size_t cchDest, const char* pszSrc, 
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCopyNExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -1084,7 +1084,7 @@ STRSAFEAPI StringCchCopyNExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -1098,7 +1098,7 @@ STDAPI StringCbCopyNEx(TCHAR pszDest,
                        size_t cbSrc,
                        LPTSTR* ppszDestEnd,
                        size_t* pcbRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -1228,7 +1228,7 @@ STRSAFEAPI StringCbCopyNExA(char* pszDest, size_t cbDest, const char* pszSrc, si
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCopyNExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, size_t cbSrc, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -1260,7 +1260,7 @@ STRSAFEAPI StringCbCopyNExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, 
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -1347,7 +1347,7 @@ STRSAFEAPI StringCchCatA(char* pszDest, size_t cchDest, const char* pszSrc)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCatW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 {
     HRESULT hr;
@@ -1363,7 +1363,7 @@ STRSAFEAPI StringCchCatW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -1453,7 +1453,7 @@ STRSAFEAPI StringCbCatA(char* pszDest, size_t cbDest, const char* pszSrc)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCatW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc)
 {
     HRESULT hr;
@@ -1472,7 +1472,7 @@ STRSAFEAPI StringCbCatW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -1485,7 +1485,7 @@ STDAPI StringCchCatEx(LPTSTR pszDest,
                       LPCTSTR pszSrc,
                       LPTSTR* ppszDestEnd,
                       size_t* pcchRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -1600,7 +1600,7 @@ STRSAFEAPI StringCchCatExA(char* pszDest, size_t cchDest, const char* pszSrc, ch
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCatExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -1621,7 +1621,7 @@ STRSAFEAPI StringCchCatExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, 
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -1634,7 +1634,7 @@ STDAPI StringCbCatEx(LPTSTR pszDest,
                      LPCTSTR pszSrc,
                      LPTSTR* ppszDestEnd,
                      size_t* pcbRemaining,
-                     DWORD dwFlags);
+                     uint32_t dwFlags);
 
 Routine Description:
 
@@ -1757,7 +1757,7 @@ STRSAFEAPI StringCbCatExA(char* pszDest, size_t cbDest, const char* pszSrc, char
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCatExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -1786,7 +1786,7 @@ STRSAFEAPI StringCbCatExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, WC
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -1879,7 +1879,7 @@ STRSAFEAPI StringCchCatNA(char* pszDest, size_t cchDest, const char* pszSrc, siz
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCatNW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchMaxAppend)
 {
     HRESULT hr;
@@ -1895,7 +1895,7 @@ STRSAFEAPI StringCchCatNW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, s
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -1995,7 +1995,7 @@ STRSAFEAPI StringCbCatNA(char* pszDest, size_t cbDest, const char* pszSrc, size_
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCatNW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, size_t cbMaxAppend)
 {
     HRESULT hr;
@@ -2018,7 +2018,7 @@ STRSAFEAPI StringCbCatNW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, siz
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -2032,7 +2032,7 @@ STDAPI StringCchCatNEx(LPTSTR pszDest,
                        size_t cchMaxAppend,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -2149,7 +2149,7 @@ STRSAFEAPI StringCchCatNExA(char* pszDest, size_t cchDest, const char* pszSrc, s
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchCatNExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchMaxAppend, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -2170,7 +2170,7 @@ STRSAFEAPI StringCchCatNExW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc,
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -2184,7 +2184,7 @@ STDAPI StringCbCatNEx(LPTSTR pszDest,
                       size_t cbMaxAppend
                       LPTSTR* ppszDestEnd,
                       size_t* pcchRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -2313,7 +2313,7 @@ STRSAFEAPI StringCbCatNExA(char* pszDest, size_t cbDest, const char* pszSrc, siz
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbCatNExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, size_t cbMaxAppend, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -2346,7 +2346,7 @@ STRSAFEAPI StringCbCatNExW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszSrc, s
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -2437,7 +2437,7 @@ STRSAFEAPI StringCchVPrintfA(char* pszDest, size_t cchDest, const char* pszForma
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchVPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr;
@@ -2453,7 +2453,7 @@ STRSAFEAPI StringCchVPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFor
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -2548,7 +2548,7 @@ STRSAFEAPI StringCbVPrintfA(char* pszDest, size_t cbDest, const char* pszFormat,
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbVPrintfW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr;
@@ -2567,7 +2567,7 @@ STRSAFEAPI StringCbVPrintfW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszForma
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -2664,7 +2664,7 @@ STRSAFEAPI StringCchPrintfA(char* pszDest, size_t cchDest, const char* pszFormat
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, ...)
 {
     HRESULT hr;
@@ -2686,7 +2686,7 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -2787,7 +2787,7 @@ STRSAFEAPI StringCbPrintfA(char* pszDest, size_t cbDest, const char* pszFormat, 
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbPrintfW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszFormat, ...)
 {
     HRESULT hr;
@@ -2812,7 +2812,7 @@ STRSAFEAPI StringCbPrintfW(WCHAR* pszDest, size_t cbDest, const WCHAR* pszFormat
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -2824,7 +2824,7 @@ STDAPI StringCchPrintfEx(LPTSTR pszDest,
                          size_t cchDest,
                          LPTSTR* ppszDestEnd,
                          size_t* pcchRemaining,
-                         DWORD dwFlags,
+                         uint32_t dwFlags,
                          LPCTSTR pszFormat,
                          ...);
 
@@ -2945,7 +2945,7 @@ STRSAFEAPI StringCchPrintfExA(char* pszDest, size_t cchDest, char** ppszDestEnd,
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchPrintfExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags, const WCHAR* pszFormat, ...)
 {
     HRESULT hr;
@@ -2970,7 +2970,7 @@ STRSAFEAPI StringCchPrintfExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppszDestEn
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -2982,7 +2982,7 @@ STDAPI StringCbPrintfEx(LPTSTR pszDest,
                         size_t cbDest,
                         LPTSTR* ppszDestEnd,
                         size_t* pcbRemaining,
-                        DWORD dwFlags,
+                        uint32_t dwFlags,
                         LPCTSTR pszFormat,
                         ...);
 
@@ -3113,7 +3113,7 @@ STRSAFEAPI StringCbPrintfExA(char* pszDest, size_t cbDest, char** ppszDestEnd, s
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbPrintfExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags, const WCHAR* pszFormat, ...)
 {
     HRESULT hr;
@@ -3148,7 +3148,7 @@ STRSAFEAPI StringCbPrintfExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDestEnd,
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -3160,7 +3160,7 @@ STDAPI StringCchVPrintfEx(LPTSTR pszDest,
                           size_t cchDest,
                           LPTSTR* ppszDestEnd,
                           size_t* pcchRemaining,
-                          DWORD dwFlags,
+                          uint32_t dwFlags,
                           LPCTSTR pszFormat,
                           va_list argList);
 
@@ -3277,7 +3277,7 @@ STRSAFEAPI StringCchVPrintfExA(char* pszDest, size_t cchDest, char** ppszDestEnd
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchVPrintfExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr;
@@ -3298,7 +3298,7 @@ STRSAFEAPI StringCchVPrintfExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppszDestE
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -3310,7 +3310,7 @@ STDAPI StringCbVPrintfEx(LPTSTR pszDest,
                          size_t cbDest,
                          LPTSTR* ppszDestEnd,
                          size_t* pcbRemaining,
-                         DWORD dwFlags,
+                         uint32_t dwFlags,
                          LPCTSTR pszFormat,
                          va_list argList);
 
@@ -3435,7 +3435,7 @@ STRSAFEAPI StringCbVPrintfExA(char* pszDest, size_t cbDest, char** ppszDestEnd, 
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbVPrintfExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr;
@@ -3464,7 +3464,7 @@ STRSAFEAPI StringCbVPrintfExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDestEnd
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -3554,7 +3554,7 @@ STRSAFE_INLINE_API StringCchGetsA(char* pszDest, size_t cchDest)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFE_INLINE_API StringCchGetsW(WCHAR* pszDest, size_t cchDest)
 {
     HRESULT hr;
@@ -3575,7 +3575,7 @@ STRSAFE_INLINE_API StringCchGetsW(WCHAR* pszDest, size_t cchDest)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 #endif  // !STRSAFE_LIB_IMPL
 #endif  // !FEATURE_PAL
@@ -3664,7 +3664,7 @@ STRSAFE_INLINE_API StringCbGetsA(char* pszDest, size_t cbDest)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFE_INLINE_API StringCbGetsW(WCHAR* pszDest, size_t cbDest)
 {
     HRESULT hr;
@@ -3684,7 +3684,7 @@ STRSAFE_INLINE_API StringCbGetsW(WCHAR* pszDest, size_t cbDest)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 #endif  // !STRSAFE_LIB_IMPL
 #endif  // !FEATURE_PAL
@@ -3696,7 +3696,7 @@ STDAPI StringCchGetsEx(LPTSTR pszDest,
                        size_t cchDest,
                        LPTSTR* ppszDestEnd,
                        size_t* pcchRemaining,
-                       DWORD dwFlags);
+                       uint32_t dwFlags);
 
 Routine Description:
 
@@ -3801,7 +3801,7 @@ STRSAFE_INLINE_API StringCchGetsExA(char* pszDest, size_t cchDest, char** ppszDe
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFE_INLINE_API StringCchGetsExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -3822,7 +3822,7 @@ STRSAFE_INLINE_API StringCchGetsExW(WCHAR* pszDest, size_t cchDest, WCHAR** ppsz
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 #endif  // !STRSAFE_LIB_IMPL
 #endif  // !FEATURE_PAL
@@ -3834,7 +3834,7 @@ STDAPI StringCbGetsEx(LPTSTR pszDest,
                       size_t cbDest,
                       LPTSTR* ppszDestEnd,
                       size_t* pcbRemaining,
-                      DWORD dwFlags);
+                      uint32_t dwFlags);
 
 Routine Description:
 
@@ -3949,7 +3949,7 @@ STRSAFE_INLINE_API StringCbGetsExA(char* pszDest, size_t cbDest, char** ppszDest
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFE_INLINE_API StringCbGetsExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDestEnd, size_t* pcbRemaining, unsigned long dwFlags)
 {
     HRESULT hr;
@@ -3980,7 +3980,7 @@ STRSAFE_INLINE_API StringCbGetsExW(WCHAR* pszDest, size_t cbDest, WCHAR** ppszDe
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 #endif  // !STRSAFE_LIB_IMPL
 #endif  // !FEATURE_PAL
@@ -4057,7 +4057,7 @@ STRSAFEAPI StringCchLengthA(const char* psz, size_t cchMax, size_t* pcch)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCchLengthW(const WCHAR* psz, size_t cchMax, size_t* pcch)
 {
     HRESULT hr;
@@ -4073,7 +4073,7 @@ STRSAFEAPI StringCchLengthW(const WCHAR* psz, size_t cchMax, size_t* pcch)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CCH_FUNCTIONS
 
@@ -4160,7 +4160,7 @@ STRSAFEAPI StringCbLengthA(const char* psz, size_t cbMax, size_t* pcb)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCbLengthW(const WCHAR* psz, size_t cbMax, size_t* pcb)
 {
     HRESULT hr;
@@ -4186,7 +4186,7 @@ STRSAFEAPI StringCbLengthW(const WCHAR* psz, size_t cbMax, size_t* pcb)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 #endif  // !STRSAFE_NO_CB_FUNCTIONS
 
@@ -4223,7 +4223,7 @@ STRSAFEAPI StringCopyWorkerA(char* pszDest, size_t cchDest, const char* pszSrc)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCopyWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 {
     HRESULT hr = S_OK;
@@ -4253,7 +4253,7 @@ STRSAFEAPI StringCopyWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCopyExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, const char* pszSrc, char** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
@@ -4393,7 +4393,7 @@ STRSAFEAPI StringCopyExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, con
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCopyExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr = S_OK;
@@ -4531,7 +4531,7 @@ STRSAFEAPI StringCopyExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, co
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCopyNWorkerA(char* pszDest, size_t cchDest, const char* pszSrc, size_t cchSrc)
 {
@@ -4564,7 +4564,7 @@ STRSAFEAPI StringCopyNWorkerA(char* pszDest, size_t cchDest, const char* pszSrc,
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCopyNWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchSrc)
 {
     HRESULT hr = S_OK;
@@ -4595,7 +4595,7 @@ STRSAFEAPI StringCopyNWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSr
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCopyNExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, const char* pszSrc, size_t cchSrc, char** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
@@ -4736,7 +4736,7 @@ STRSAFEAPI StringCopyNExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, co
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCopyNExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, const WCHAR* pszSrc, size_t cchSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr = S_OK;
@@ -4875,7 +4875,7 @@ STRSAFEAPI StringCopyNExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, c
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCatWorkerA(char* pszDest, size_t cchDest, const char* pszSrc)
 {
@@ -4894,7 +4894,7 @@ STRSAFEAPI StringCatWorkerA(char* pszDest, size_t cchDest, const char* pszSrc)
    return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCatWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 {
    HRESULT hr;
@@ -4911,7 +4911,7 @@ STRSAFEAPI StringCatWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc)
 
    return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCatExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, const char* pszSrc, char** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
@@ -5060,7 +5060,7 @@ STRSAFEAPI StringCatExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, cons
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCatExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, const WCHAR* pszSrc, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr = S_OK;
@@ -5206,7 +5206,7 @@ STRSAFEAPI StringCatExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, con
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCatNWorkerA(char* pszDest, size_t cchDest, const char* pszSrc, size_t cchMaxAppend)
 {
@@ -5226,7 +5226,7 @@ STRSAFEAPI StringCatNWorkerA(char* pszDest, size_t cchDest, const char* pszSrc, 
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCatNWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc, size_t cchMaxAppend)
 {
     HRESULT hr;
@@ -5244,7 +5244,7 @@ STRSAFEAPI StringCatNWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszSrc
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringCatNExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, const char* pszSrc, size_t cchMaxAppend, char** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
@@ -5392,7 +5392,7 @@ STRSAFEAPI StringCatNExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, con
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringCatNExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, const WCHAR* pszSrc, size_t cchMaxAppend, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr = S_OK;
@@ -5539,7 +5539,7 @@ STRSAFEAPI StringCatNExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, co
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringVPrintfWorkerA(char* pszDest, size_t cchDest, const char* pszFormat, va_list argList)
 {
@@ -5581,7 +5581,7 @@ STRSAFEAPI StringVPrintfWorkerA(char* pszDest, size_t cchDest, const char* pszFo
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr = S_OK;
@@ -5621,7 +5621,7 @@ STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* psz
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringVPrintfExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, char** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags, const char* pszFormat, va_list argList)
 {
@@ -5775,7 +5775,7 @@ STRSAFEAPI StringVPrintfExWorkerA(char* pszDest, size_t cchDest, size_t cbDest, 
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringVPrintfExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags, const WCHAR* pszFormat, va_list argList)
 {
     HRESULT hr = S_OK;
@@ -5927,7 +5927,7 @@ STRSAFEAPI StringVPrintfExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest,
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 
 STRSAFEAPI StringLengthWorkerA(const char* psz, size_t cchMax, size_t* pcch)
 {
@@ -5954,7 +5954,7 @@ STRSAFEAPI StringLengthWorkerA(const char* psz, size_t cchMax, size_t* pcch)
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFEAPI StringLengthWorkerW(const WCHAR* psz, size_t cchMax, size_t* pcch)
 {
     HRESULT hr = S_OK;
@@ -5979,7 +5979,7 @@ STRSAFEAPI StringLengthWorkerW(const WCHAR* psz, size_t cchMax, size_t* pcch)
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // STRSAFE_INLINE
 
 #ifndef STRSAFE_LIB_IMPL
@@ -6120,7 +6120,7 @@ STRSAFE_INLINE_API StringGetsExWorkerA(char* pszDest, size_t cchDest, size_t cbD
     return hr;
 }
 
-#if defined(FEATURE_PAL) || !defined(PLATFORM_UNIX)
+#if defined(FEATURE_PAL)
 STRSAFE_INLINE_API StringGetsExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cbDest, WCHAR** ppszDestEnd, size_t* pcchRemaining, unsigned long dwFlags)
 {
     HRESULT hr = S_OK;
@@ -6256,7 +6256,7 @@ STRSAFE_INLINE_API StringGetsExWorkerW(WCHAR* pszDest, size_t cchDest, size_t cb
 
     return hr;
 }
-#endif // FEATURE_PAL || !PLATFORM_UNIX
+#endif // FEATURE_PAL
 #endif  // !FEATURE_PAL
 #endif  // !STRSAFE_LIB_IMPL
 

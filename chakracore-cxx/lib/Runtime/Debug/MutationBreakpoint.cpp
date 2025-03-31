@@ -480,14 +480,14 @@ Js::MutationBreakpointDelegate * Js::MutationBreakpointDelegate::New(Js::Mutatio
     IMutationBreakpoint interface definition
 */
 
-STDMETHODIMP_(ULONG) Js::MutationBreakpointDelegate::AddRef()
+STDMETHODIMP_(uint32_t) Js::MutationBreakpointDelegate::AddRef()
 {
-    return (ULONG)InterlockedIncrement(&m_refCount);
+    return (uint32_t)InterlockedIncrement(&m_refCount);
 }
 
-STDMETHODIMP_(ULONG) Js::MutationBreakpointDelegate::Release()
+STDMETHODIMP_(uint32_t) Js::MutationBreakpointDelegate::Release()
 {
-    ULONG refCount = (ULONG)InterlockedDecrement(&m_refCount);
+    uint32_t refCount = (uint32_t)InterlockedDecrement(&m_refCount);
 
     if (0 == refCount)
     {

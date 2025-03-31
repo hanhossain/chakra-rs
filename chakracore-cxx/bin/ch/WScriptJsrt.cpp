@@ -144,7 +144,7 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
     return true;
 }
 
-JsValueRef __stdcall WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     for (unsigned int i = 1; i < argumentCount; i++)
     {
@@ -196,7 +196,7 @@ JsValueRef __stdcall WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstru
     }
 }
 
-JsValueRef __stdcall WScriptJsrt::QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::QuitCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     int exitCode = 0;
 
@@ -210,13 +210,12 @@ JsValueRef __stdcall WScriptJsrt::QuitCallback(JsValueRef callee, bool isConstru
     ExitProcess(exitCode);
 }
 
-JsValueRef __stdcall WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     return LoadScriptFileHelper(callee, arguments, argumentCount, false);
 }
 
-// needed because of calling convention differences between _stdcall and _cdecl
-void CHAKRA_CALLBACK WScriptJsrt::FinalizeFree(void* addr)
+void WScriptJsrt::FinalizeFree(void* addr)
 {
     free(addr);
 }
@@ -289,7 +288,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, LPCWSTR errorMessage)
     }
 }
 
-byte * CHAKRA_CALLBACK ReallocateBufferMemory(void * state, byte *oldBuffer, size_t newSize, size_t *allocatedSize)
+byte * ReallocateBufferMemory(void * state, byte *oldBuffer, size_t newSize, size_t *allocatedSize)
 {
     void* data = realloc((void*)oldBuffer, newSize);
     if (allocatedSize)
@@ -299,13 +298,13 @@ byte * CHAKRA_CALLBACK ReallocateBufferMemory(void * state, byte *oldBuffer, siz
     return (byte*)data;
 }
 
-bool CHAKRA_CALLBACK WriteHostObject(void * state, JsValueRef data)
+bool WriteHostObject(void * state, JsValueRef data)
 {
     // Not implemented
     return true;
 }
 
-JsValueRef __stdcall WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
     LPCWSTR errorMessage = _u("");
@@ -404,18 +403,18 @@ Error:
     return returnValue;
 }
 
-JsValueRef CHAKRA_CALLBACK ReadHostObject(void * state)
+JsValueRef ReadHostObject(void * state)
 {
     Assert(false); // TBD
     return nullptr;
 }
 
-JsValueRef CHAKRA_CALLBACK GetSharedArrayBufferFromId(void * state, uint32_t id)
+JsValueRef GetSharedArrayBufferFromId(void * state, uint32_t id)
 {
     Assert(false); // TBD
     return nullptr;
 }
-JsValueRef CHAKRA_CALLBACK GetWasmModuleFromId(void * state, uint32_t transfer_id)
+JsValueRef GetWasmModuleFromId(void * state, uint32_t transfer_id)
 {
     Assert(false); // TBD
     return nullptr;
@@ -426,7 +425,7 @@ struct BufferFreeFunctionState {
     void* buffer;
 };
 
-void CHAKRA_CALLBACK BufferFreeFunction(void * state)
+void BufferFreeFunction(void * state)
 {
     BufferFreeFunctionState* bufferState = (BufferFreeFunctionState*)state;
     if (!bufferState)
@@ -440,7 +439,7 @@ void CHAKRA_CALLBACK BufferFreeFunction(void * state)
     delete bufferState;
 }
 
-JsValueRef __stdcall WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
     LPCWSTR errorMessage = _u("");
@@ -456,7 +455,7 @@ JsValueRef __stdcall WScriptJsrt::Deserialize(JsValueRef callee, bool isConstruc
     {
         JsValueRef dataObject = arguments[1];
         uint32 dataLength = 0;
-        BYTE *data = nullptr;
+        uint8_t *data = nullptr;
         IfJsrtErrorSetGo(ChakraRTInterface::JsGetArrayBufferStorage(dataObject, &data, &dataLength));
         SerializerBlob *blob = (SerializerBlob*)data;
         JsVarDeserializerHandle deserializerHandle = nullptr;
@@ -496,7 +495,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -543,12 +542,12 @@ JsValueRef __stdcall WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isC
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::LoadScriptCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::LoadScriptCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     return LoadScriptHelper(callee, isConstructCall, arguments, argumentCount, callbackState, false);
 }
 
-JsValueRef __stdcall WScriptJsrt::LoadModuleCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::LoadModuleCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     return LoadScriptHelper(callee, isConstructCall, arguments, argumentCount, callbackState, true);
 }
@@ -677,7 +676,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(LPCSTR fileName, LPCSTR fileConten
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     unsigned int fileContentLength = (fileContent == nullptr) ? 0 : (unsigned int)strlen(fileContent);
  
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (LPBYTE)fileContent,
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)fileContent,
         fileContentLength, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent != nullptr && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
     {
@@ -819,7 +818,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, LPCSTR fileName,
         // child initial script completion
         ResetEvent(threadData->hevntInitialScriptCompleted);
 
-        child->hThread = ::CreateThread(NULL, NULL, [](void* param) -> DWORD
+        child->hThread = ::CreateThread(NULL, NULL, [](void* param) -> uint32_t
         {
             return ((RuntimeThreadData*)param)->ThreadProc();
         }, (void*)child, NULL, NULL);
@@ -1265,7 +1264,7 @@ bool WScriptJsrt::Uninitialize()
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
     {
-        LONG count = (LONG)threadData->children.size();
+        int32_t count = (int32_t)threadData->children.size();
         std::vector<HANDLE> childrenHandles;
 
         //Clang does not support "for each" yet
@@ -1276,7 +1275,7 @@ bool WScriptJsrt::Uninitialize()
             SetEvent(child->hevntShutdown);
         }
 
-        DWORD waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
+        uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
         Assert(waitRet == WAIT_OBJECT_0);
 
         for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
@@ -1298,7 +1297,7 @@ void CALLBACK WScriptJsrt::JsContextBeforeCollectCallback(JsRef contextRef, void
 #endif
 
 FileNode * SourceMap::root = nullptr;
-JsValueRef __stdcall WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isConstructCall,
+JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isConstructCall,
     JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
@@ -1323,7 +1322,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1342,7 +1341,7 @@ JsValueRef __stdcall WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool i
 
         if (errorCode == JsNoError)
         {
-            UINT lengthBytes = 0;
+            uint32_t lengthBytes = 0;
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent, &lengthBytes);
 
             if (FAILED(hr))
@@ -1391,7 +1390,7 @@ int JsFgets(char* buf, int size, FILE* file)
     return i;
 }
 
-JsValueRef __stdcall WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1483,7 +1482,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
+JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
     bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
@@ -1504,7 +1503,7 @@ JsValueRef __stdcall WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
         if (errorCode == JsNoError)
         {
-            UINT lengthBytes = 0;
+            uint32_t lengthBytes = 0;
 
             hr = Helpers::LoadBinaryFile(*fileName, fileContent, lengthBytes);
 
@@ -1517,7 +1516,7 @@ JsValueRef __stdcall WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             JsValueRef arrayBuffer;
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsCreateArrayBuffer(lengthBytes, &arrayBuffer), ErrorStillFree);
-            BYTE* buffer;
+            uint8_t* buffer;
             unsigned int bufferLength;
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
@@ -1526,7 +1525,7 @@ JsValueRef __stdcall WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             }
             else
             {
-                if (memcpy_s(buffer, bufferLength, (BYTE*)fileContent, lengthBytes) == 0)
+                if (memcpy_s(buffer, bufferLength, (uint8_t*)fileContent, lengthBytes) == 0)
                 {
                     returnValue = arrayBuffer;
                 }
@@ -1543,7 +1542,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1565,7 +1564,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1580,7 +1579,7 @@ JsValueRef __stdcall WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isCo
         {
             ChakraRTInterface::JsGetSharedArrayBufferContent(arguments[1], &threadData->sharedContent);
 
-            LONG count = (LONG)threadData->children.size();
+            int32_t count = (int32_t)threadData->children.size();
             threadData->hSemaphore = CreateSemaphore(NULL, 0, count, NULL);
             if (threadData->hSemaphore)
             {
@@ -1609,7 +1608,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::ReceiveBroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::ReceiveBroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1635,7 +1634,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::ReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::ReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1668,7 +1667,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::GetReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::GetReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1697,7 +1696,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::LeavingCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::LeavingCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1718,7 +1717,7 @@ Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::SleepCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::SleepCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1730,14 +1729,14 @@ JsValueRef __stdcall WScriptJsrt::SleepCallback(JsValueRef callee, bool isConstr
     {
         double timeout = 0.0;
         ChakraRTInterface::JsNumberToDouble(arguments[1], &timeout);
-        Sleep((DWORD)timeout);
+        Sleep((uint32_t)timeout);
     }
 
 Error:
     return returnValue;
 }
 
-JsValueRef __stdcall WScriptJsrt::GetProxyPropertiesCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::GetProxyPropertiesCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     HRESULT hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -1837,8 +1836,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
 
                 if (jsErrorCode != JsErrorCode::JsErrorScriptCompile)
                 {
-                    CHAR shortFileName[_MAX_PATH];
-                    CHAR ext[_MAX_EXT];
+                    char shortFileName[_MAX_PATH];
+                    char ext[_MAX_EXT];
                     _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     if (metaData != JS_INVALID_REFERENCE)
@@ -1889,8 +1888,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
-                CHAR shortFileName[_MAX_PATH];
-                CHAR ext[_MAX_EXT];
+                char shortFileName[_MAX_PATH];
+                char ext[_MAX_EXT];
                 _splitpath_s(fileName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
                 fwprintf(stderr, _u("%ls\n\tat code (%S%S:%d:%d)\n"),
                     errorMessage.GetWideString(), shortFileName, ext, (int)line + 1,
@@ -1918,8 +1917,8 @@ bool WScriptJsrt::PrintException(LPCSTR fileName, JsErrorCode jsErrorCode, JsVal
                 {
                     const char *fName = fileName != nullptr ? fileName : "(unknown)";
 
-                    CHAR shortFileName[_MAX_PATH];
-                    CHAR ext[_MAX_EXT];
+                    char shortFileName[_MAX_PATH];
+                    char ext[_MAX_EXT];
                     _splitpath_s(fName, nullptr, 0, nullptr, 0, shortFileName, _countof(shortFileName), ext, _countof(ext));
 
                     // do not mix char/wchar. print them separately
@@ -2201,7 +2200,7 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
     return JsNoError;
 }
 
-JsErrorCode __stdcall WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)
+JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)
 {
     if (importMetaVar != nullptr)
     {

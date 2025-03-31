@@ -8,7 +8,7 @@
 
 #if DBG
 VirtualTableRegistry::TableEntry VirtualTableRegistry::m_knownVtables[MAX_KNOWN_VTABLES];
-UINT VirtualTableRegistry::m_knownVtableCount = 0;
+uint32_t VirtualTableRegistry::m_knownVtableCount = 0;
 
 void VirtualTableRegistry::Add(INT_PTR vtable, LPCSTR className)
 {
@@ -31,7 +31,7 @@ VirtualTableRegistry::CreateVtableHashMap(ArenaAllocator * alloc)
     // the vtables are merged and thus not all of our types will be registered. So, we can only use this method
     // in a debug build. If we wanted use in a release build, we'll have to explicitly add the vtables to the hash and
     // then validate that we have got all the vtables by comparing in chk build against VirtualTableRegistry.
-    for (UINT i=0; i < VirtualTableRegistry::m_knownVtableCount; i++)
+    for (uint32_t i=0; i < VirtualTableRegistry::m_knownVtableCount; i++)
     {
         INT_PTR vtable = VirtualTableRegistry::m_knownVtables[i].vtable;
         LPCSTR className = VirtualTableRegistry::m_knownVtables[i].className;

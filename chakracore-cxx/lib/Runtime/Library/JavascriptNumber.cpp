@@ -230,7 +230,7 @@ namespace Js
 
 #if _M_IX86
 
-    extern "C" double __cdecl __libm_sse2_pow(double, double);
+    extern "C" double __libm_sse2_pow(double, double);
 
     static const double d1_0 = 1.0;
 
@@ -301,7 +301,7 @@ namespace Js
             __asm {
                 movsd xmm0, savedX
                 movsd xmm1, savedY
-                call dword ptr[__libm_sse2_pow]
+                call uint32_t ptr[__libm_sse2_pow]
             }
         }
 

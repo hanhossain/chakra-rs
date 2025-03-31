@@ -412,10 +412,10 @@ public:
 
     uint count;
     uint spreadCount;
-    BYTE arrayOfTaggedInts:1;     // indicates that array initializer nodes are all tagged ints
-    BYTE arrayOfInts:1;           // indicates that array initializer nodes are all ints
-    BYTE arrayOfNumbers:1;        // indicates that array initializer nodes are all numbers
-    BYTE hasMissingValues:1;
+    uint8_t arrayOfTaggedInts:1;     // indicates that array initializer nodes are all tagged ints
+    uint8_t arrayOfInts:1;           // indicates that array initializer nodes are all ints
+    uint8_t arrayOfNumbers:1;        // indicates that array initializer nodes are all numbers
+    uint8_t hasMissingValues:1;
 
     DISABLE_SELF_CAST(ParseNodeArrLit);
 };
@@ -521,8 +521,8 @@ public:
     size_t cbStringMin;
     size_t cbStringLim;
     size_t cbLim;
-    ULONG lineNumber;   // Line number relative to the current source buffer of the function declaration.
-    ULONG columnNumber; // Column number of the declaration.
+    uint32_t lineNumber;   // Line number relative to the current source buffer of the function declaration.
+    uint32_t columnNumber; // Column number of the declaration.
     Js::LocalFunctionId functionId;
 #if DBG
     Js::LocalFunctionId deferredParseNextFunctionId;
@@ -744,7 +744,7 @@ public:
     ParseNodePtr pnodeStringRawLiterals;
     ParseNodePtr pnodeSubstitutionExpressions;
     uint16 countStringLiterals;
-    BYTE isTaggedTemplate:1;
+    uint8_t isTaggedTemplate:1;
 
     DISABLE_SELF_CAST(ParseNodeStrTemplate);
 };
@@ -786,11 +786,11 @@ public:
     ParseNodePtr pnodeArgs;
     uint16 argCount;
     uint16 spreadArgCount;
-    BYTE callOfConstants : 1;
-    BYTE isApplyCall : 1;
-    BYTE isEvalCall : 1;
-    BYTE isSuperCall : 1;
-    BYTE hasDestructuring : 1;
+    uint8_t callOfConstants : 1;
+    uint8_t isApplyCall : 1;
+    uint8_t isEvalCall : 1;
+    uint8_t isSuperCall : 1;
+    uint8_t hasDestructuring : 1;
 
     DISABLE_SELF_CAST(ParseNodeCall);
 };
@@ -829,8 +829,8 @@ public:
     ParseNodeBlock * enclosingBlock;
     int blockId;
     PnodeBlockType blockType:2;
-    BYTE         callsEval:1;
-    BYTE         childCallsEval:1;
+    uint8_t         callsEval:1;
+    uint8_t         childCallsEval:1;
 
     void SetCallsEval(bool does) { callsEval = does; }
     bool GetCallsEval() const { return callsEval; }

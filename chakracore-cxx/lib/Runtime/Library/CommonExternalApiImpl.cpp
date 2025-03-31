@@ -21,7 +21,7 @@ bool JsUtil::ExternalApi::RaiseOutOfMemoryIfScriptActive()
     return Js::Exception::RaiseIfScriptActive(nullptr, Js::Exception::ExceptionKind_OutOfMemory);
 }
 
-bool JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, PVOID returnAddress)
+bool JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, void * returnAddress)
 {
     return Js::Exception::RaiseIfScriptActive(scriptContext, Js::Exception::ExceptionKind_StackOverflow, returnAddress);
 }

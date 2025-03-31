@@ -34,23 +34,23 @@ EncoderMD::Init(Encoder *encoder)
 ///
 ///----------------------------------------------------------------------------
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(IR::RegOpnd *regOpnd)
 {
     return GetRegEncode(regOpnd->GetReg());
 }
 
-BYTE
+uint8_t
 EncoderMD::GetRegEncode(RegNum reg)
 {
     return RegEncode[reg];
 }
 
-BYTE
+uint8_t
 EncoderMD::GetFloatRegEncode(IR::RegOpnd *regOpnd)
 {
     //Each double register holds two single precision registers.
-    BYTE regEncode = GetRegEncode(regOpnd->GetReg()) * 2;
+    uint8_t regEncode = GetRegEncode(regOpnd->GetReg()) * 2;
     AssertMsg(regEncode <= LAST_FLOAT_REG_NUM, "Impossible to allocate higher registers on VFP");
     return regEncode;
 }
@@ -580,7 +580,7 @@ InstructionType EncoderMD::PushPopEncodeType(IR::IndirOpnd *target, IR::RegBVOpn
     // but in practice we never push LR without R11, so it would never help. If that changes, we
     // should make this function smarter.
 
-    BYTE lastRegEncode = (BYTE)opnd->m_value.GetPrevBit();
+    uint8_t lastRegEncode = (uint8_t)opnd->m_value.GetPrevBit();
     Assert(lastRegEncode != BVInvalidIndex);
     return lastRegEncode > RegEncode[RegR7] ? InstructionType::Thumb2 : InstructionType::Thumb;
 }
@@ -895,14 +895,14 @@ EncoderMD::GetForm(IR::Instr *instr, int32 size)
     return (form);
 }
 
-bool EncoderMD::EncodeImmediate16(int32 constant, DWORD * result)
+bool EncoderMD::EncodeImmediate16(int32 constant, uint32_t * result)
 {
     if (constant > 0xFFFF)
     {
         return FALSE;
     }
 
-    DWORD encode = ((constant & 0xFF) << 16) |
+    uint32_t encode = ((constant & 0xFF) << 16) |
         ((constant & 0x0700) << 20) |
         ((constant & 0x0800) >> 1) |
         ((constant & 0xF000) >> 12);
@@ -968,10 +968,10 @@ EncoderMD::EncodeT2Offset(ENCODE_32 encode, IR::Instr *instr, int offset, int bi
 //
 //---------------------------------------------------------------------------
 ENCODE_32
-EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size, InstructionType instrType)
+EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 size, InstructionType instrType)
 {
     ENCODE_32 encode = 0 ;
-    DWORD encoded = 0;
+    uint32_t encoded = 0;
 
     IR::Opnd* opn = 0;
     IR::Opnd* dst = 0;
@@ -1633,7 +1633,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size,
                 case STEP_DREG:
                 {
                     int bbit = 0;
-                    DWORD tmp = 0;
+                    uint32_t tmp = 0;
 
                     Assert(opn != nullptr && opn->IsRegOpnd());
 
@@ -1655,7 +1655,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size,
                 case STEP_SREG:
                 {
                     int bbit = 0;
-                    DWORD tmp = 0;
+                    uint32_t tmp = 0;
 
                     Assert(opn != nullptr && opn->IsRegOpnd());
 
@@ -1754,9 +1754,9 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size,
                         }
 
                         BVUnit32 registers = opndRD->AsRegBVOpnd()->GetValue();
-                        DWORD first = registers.GetNextBit();
-                        DWORD last = (DWORD)-1;
-                        _BitScanReverse((DWORD*)&last, (DWORD)registers.GetWord());
+                        uint32_t first = registers.GetNextBit();
+                        uint32_t last = (uint32_t)-1;
+                        _BitScanReverse((uint32_t*)&last, (uint32_t)registers.GetWord());
                         Assert(last >= first && last <= LAST_DOUBLE_CALLEE_SAVED_REG_NUM);
 
                         encode |= (CO_UIMMED8((last - first + 1) * 2)) << 16;
@@ -1808,7 +1808,7 @@ EncoderMD::GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size,
 }
 
 #ifdef INSERT_NOPS
-ptrdiff_t insertNops(BYTE *pc, ENCODE_32 outInstr, uint count, uint size)
+ptrdiff_t insertNops(uint8_t *pc, ENCODE_32 outInstr, uint count, uint size)
 {
         //Insert count nops in the beginning
         for(int i = 0; i < count;i++)
@@ -1904,7 +1904,7 @@ EncoderMD::CheckBranchInstrCriteria(IR::Instr* instr)
 ///----------------------------------------------------------------------------
 
 ptrdiff_t
-EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
+EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
 {
     m_pc = pc;
 
@@ -2049,14 +2049,14 @@ EncoderMD::Encode(IR::Instr *instr, BYTE *pc, BYTE* beginCodeAddress)
 }
 
 bool
-EncoderMD::CanEncodeModConst12(DWORD constant)
+EncoderMD::CanEncodeModConst12(uint32_t constant)
 {
-    DWORD encode;
+    uint32_t encode;
     return EncodeModConst12(constant, &encode);
 }
 
 bool
-EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
+EncoderMD::EncodeModConst12(uint32_t constant, uint32_t * result)
 {
     unsigned int a, b, c, d, rotation, firstbit, lastbit, temp=0;
 
@@ -2071,8 +2071,8 @@ EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
     c = (constant >> 16) & 0xff;
     d = (constant >> 24) & 0xff;
 
-    _BitScanReverse((DWORD*)&firstbit, constant);
-    _BitScanForward((DWORD*)&lastbit, constant);
+    _BitScanReverse((uint32_t*)&firstbit, constant);
+    _BitScanForward((uint32_t*)&lastbit, constant);
 
     if (! ((a == 0 && c == 0 && b == d)
         || (b == 0 && d == 0 && a == c)
@@ -2136,7 +2136,7 @@ EncoderMD::EncodeModConst12(DWORD constant, DWORD * result)
 ///----------------------------------------------------------------------------
 
 void
-EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, BYTE *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
+EncodeReloc::New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::Instr *relocInstr, ArenaAllocator *alloc)
 {
     EncodeReloc *newReloc      = AnewStruct(alloc, EncodeReloc);
     newReloc->m_relocType      = relocType;
@@ -2275,7 +2275,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
 {
     for (EncodeReloc *reloc = m_relocList; reloc; reloc = reloc->m_next)
     {
-        BYTE * relocAddress = reloc->m_consumerOffset;
+        uint8_t * relocAddress = reloc->m_consumerOffset;
         int32 pcrel;
         ENCODE_32 encode = *(ENCODE_32*)relocAddress;
         switch (reloc->m_relocType)
@@ -2311,7 +2311,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
 
                 pcrel = ((labelInstr->GetPC() - m_encoder->m_encodeBuffer + codeBufferAddress) & 0xFFFF);
 
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }
@@ -2334,7 +2334,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
                     //This is a encoded low 16 bits.
                     pcrel = labelInstr->GetOffset() & 0xFFFF;
                 }
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }
@@ -2357,7 +2357,7 @@ EncoderMD::ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCR
                     //This is a encoded high 16 bits.
                     pcrel = labelInstr->GetOffset() >> 16;
                 }
-                if (!EncodeImmediate16(pcrel, (DWORD*) &encode))
+                if (!EncodeImmediate16(pcrel, (uint32_t*) &encode))
                 {
                     Assert(UNREACHED);
                 }
@@ -2433,7 +2433,7 @@ bool EncoderMD::TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd)
     }
 }
 
-void EncoderMD::AddLabelReloc(BYTE* relocAddress)
+void EncoderMD::AddLabelReloc(uint8_t* relocAddress)
 {
     Assert(relocAddress != nullptr);
     EncodeReloc::New(&m_relocList, RelocTypeLabel, relocAddress, *(IR::Instr**)relocAddress, m_encoder->m_tempAlloc);

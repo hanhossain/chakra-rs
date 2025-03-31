@@ -3302,7 +3302,7 @@ void LowererMD::InsertShufps(uint8 lanes[], IR::Opnd *dst, IR::Opnd *src1, IR::O
     }
 }
 
-BYTE LowererMD::Simd128GetTypedArrBytesPerElem(ValueType arrType)
+uint8_t LowererMD::Simd128GetTypedArrBytesPerElem(ValueType arrType)
 {
     return  (1 << Lowerer::GetArrayIndirScale(arrType));
 }

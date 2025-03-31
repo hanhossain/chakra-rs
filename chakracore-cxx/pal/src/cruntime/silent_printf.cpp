@@ -33,10 +33,10 @@ Revision History:
 
 static int Silent_WideCharToMultiByte(LPCWSTR lpWideCharStr, int cchWideChar, 
                                       LPSTR lpMultiByteStr, int cbMultiByte);
-static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width,
-                                  LPINT Precision, LPINT Prefix, LPINT Type);
-static INT Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, INT Padding, 
-                                     INT Flags);
+static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width,
+                                  int32_t * Precision, int32_t * Prefix, int32_t * Type);
+static int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding,
+                                     int32_t Flags);
 
 static size_t Silent_PAL_wcslen(const char16_t *string);
 
@@ -45,22 +45,22 @@ Function:
   PAL_vsnprintf (silent version)
   for more details, see PAL_vsnprintf in printf.c
 *******************************************************************************/
-INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
+int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPSTR BufferPtr = Buffer;
     LPCSTR Fmt = Format;
     LPWSTR TempWStr;
-    CHAR TempStr[MAX_STR_LEN+1];
+    char TempStr[MAX_STR_LEN+1];
     WCHAR TempWChar;
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT Length;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t Length;
+    int32_t TempInt;
     int wctombResult;
     va_list ap;
     
@@ -82,22 +82,22 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWStr = va_arg(ap, LPWSTR);
@@ -155,19 +155,19 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[4];
+                char TempBuffer[4];
 
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar = va_arg(ap, int);
@@ -193,11 +193,11 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 if (Prefix == PFF_PREFIX_SHORT)
                 {
@@ -205,7 +205,7 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = BufferPtr - Buffer;
+                    *(va_arg(ap, int32_t *)) = BufferPtr - Buffer;
                 }
             }
             else if (Type == PFF_TYPE_CHAR && (Flags & PFF_ZERO) != 0)
@@ -251,7 +251,7 @@ INT Silent_PAL_vsnprintf(LPSTR Buffer, INT Count, LPCSTR Format, va_list aparg)
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
 
                     TempInt = snprintf(BufferPtr, TempCount, TempBuff, trunc2);
@@ -328,18 +328,18 @@ Function:
 --*/
 int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
 {
-    CHAR TempBuff[1024]; /* used to hold a single %<foo> format string */
+    char TempBuff[1024]; /* used to hold a single %<foo> format string */
     LPCSTR Fmt = format;
     LPWSTR TempWStr;
     LPSTR TempStr;
     WCHAR TempWChar;
-    INT Flags;
-    INT Width;
-    INT Precision;
-    INT Prefix;
-    INT Type;
-    INT Length;
-    INT TempInt;
+    int32_t Flags;
+    int32_t Width;
+    int32_t Precision;
+    int32_t Prefix;
+    int32_t Type;
+    int32_t Length;
+    int32_t TempInt;
     int wctombResult;
     int written = 0;
     int paddingReturnValue;
@@ -357,22 +357,22 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 else if (WIDTH_INVALID == Width)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
                 else if (PRECISION_INVALID == Precision)
                 {
                     /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWStr = va_arg(ap, LPWSTR);
@@ -436,18 +436,18 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
             }
             else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
             {
-                CHAR TempBuffer[4];
+                char TempBuffer[4];
                 if (WIDTH_STAR == Width ||
                     WIDTH_INVALID == Width)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
                 if (PRECISION_STAR == Precision ||
                     PRECISION_INVALID == Precision)
                 {
                     /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, INT); /* value not used */
+                    TempInt = va_arg(ap, int32_t); /* value not used */
                 }
 
                 TempWChar = va_arg(ap, int);
@@ -477,11 +477,11 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
             {
                 if (WIDTH_STAR == Width)
                 {
-                    Width = va_arg(ap, INT);
+                    Width = va_arg(ap, int32_t);
                 }
                 if (PRECISION_STAR == Precision)
                 {
-                    Precision = va_arg(ap, INT);
+                    Precision = va_arg(ap, int32_t);
                 }
 
                 if (Prefix == PFF_PREFIX_SHORT)
@@ -490,7 +490,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                 }
                 else
                 {
-                    *(va_arg(ap, LPLONG)) = written;
+                    *(va_arg(ap, int32_t *)) = written;
                 }
             }
             /* types that sprintf can handle */
@@ -506,7 +506,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
                     long trunc1;
                     short trunc2;
 
-                    trunc1 = va_arg(ap, LONG);
+                    trunc1 = va_arg(ap, int32_t);
                     trunc2 = (short)trunc1;
 
                     TempInt = fprintf((FILE*)stream, TempBuff, trunc2);
@@ -567,7 +567,7 @@ See MSDN doc.
 int Silent_WideCharToMultiByte(LPCWSTR lpWideCharStr, int cchWideChar,
                                LPSTR lpMultiByteStr, int cbMultiByte)
 {
-    INT retval =0;
+    int32_t retval =0;
 
     if ((lpWideCharStr == NULL)||
         (lpWideCharStr == (LPCWSTR) lpMultiByteStr))
@@ -617,7 +617,7 @@ Function:
   
   see Internal_ExtractFormatA function in printf.c
 *******************************************************************************/
-BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPINT Precision, LPINT Prefix, LPINT Type)
+BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;
@@ -746,12 +746,10 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPI
         }
     }
 
-#ifdef BIT64
     if (**Fmt == 'p')
     {
         *Prefix = PFF_PREFIX_LONGLONG;
     }
-#endif
     /* grab prefix of 'I64' for __int64 */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
@@ -769,10 +767,8 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPI
     else if (**Fmt == 'l' || **Fmt == 'w')
     {
         ++(*Fmt);
-#ifdef BIT64
         // Only want to change the prefix on 64 bit when printing characters.
         if (**Fmt == 'c' || **Fmt == 's')
-#endif       
         {
             *Prefix = PFF_PREFIX_LONG;
         }
@@ -886,13 +882,13 @@ Function:
   AddPaddingVfprintf (silent version)
     see Internal_AddPaddingVfprintf in printf.c
 *******************************************************************************/
-INT Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, INT Padding, INT Flags)
+int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding, int32_t Flags)
 {
     LPSTR Out;
-    INT LengthInStr;
-    INT Length;
+    int32_t LengthInStr;
+    int32_t Length;
     LPSTR OutOriginal;
-    INT Written;
+    int32_t Written;
 
     LengthInStr = strlen(In);
     Length = LengthInStr;

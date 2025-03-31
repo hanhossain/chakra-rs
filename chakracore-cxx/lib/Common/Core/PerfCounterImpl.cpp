@@ -19,7 +19,7 @@
 #pragma init_seg(".CRT$XCAD")
 
 #pragma warning(push)
-#pragma warning(disable:4838) // conversion from 'unsigned long' to 'LONG' requires a narrowing conversion
+#pragma warning(disable:4838) // conversion from 'unsigned long' to 'int32_t' requires a narrowing conversion
 #include "Microsoft-Scripting-Jscript9.InternalCounters.h"
 #pragma warning(pop)
 
@@ -42,7 +42,7 @@ private:
 
 #ifdef ENABLE_COUNTER_NOTIFICATION_CALLBACK
     PERFLIBREQUEST pfnNotificationCallBack;
-    static ULONG WINAPI NotificationCallBack(ULONG RequestCode, PVOID Buffer, ULONG BufferSize);
+    static uint32_t WINAPI NotificationCallBack(uint32_t RequestCode, void * Buffer, uint32_t BufferSize);
 #endif
     HANDLE& handle;
     bool isInitialized;
@@ -53,8 +53,8 @@ private:
 Provider Provider::InternalCounter(JS9InternalCounterProvider);
 
 #ifdef ENABLE_COUNTER_NOTIFICATION_CALLBACK
-ULONG WINAPI
-Provider::NotificationCallBack(ULONG RequestCode, PVOID Buffer, ULONG BufferSize)
+uint32_t WINAPI
+Provider::NotificationCallBack(uint32_t RequestCode, void * Buffer, uint32_t BufferSize)
 {
     if (Provider::InternalCounter.pfnNotificationCallBack != NULL)
     {
@@ -113,7 +113,7 @@ static const char16 s_wszObjectNamePrefix[] = _u("jscript9_perf_counter_");
 static const size_t OBJECT_NAME_LEN = GUID_LEN + _countof(s_wszObjectNamePrefix) + 11;
 
 static
-void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16 wszObjectName[OBJECT_NAME_LEN], DWORD pid, GUID const& guid)
+void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16 wszObjectName[OBJECT_NAME_LEN], uint32_t pid, GUID const& guid)
 {
     swprintf_s(wszObjectName, OBJECT_NAME_LEN, _u("%s%d_%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"),
         s_wszObjectNamePrefix, pid,
@@ -125,7 +125,7 @@ void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16 wszObjectN
 }
 
 bool
-InstanceBase::Initialize(char16 const * wszInstanceName, DWORD processId)
+InstanceBase::Initialize(char16 const * wszInstanceName, uint32_t processId)
 {
     if (provider.IsInitialized())
     {
@@ -136,12 +136,12 @@ InstanceBase::Initialize(char16 const * wszInstanceName, DWORD processId)
     return false;
 }
 
-DWORD *
-InstanceBase::InitializeSharedMemory(DWORD numCounter, HANDLE& handle)
+uint32_t *
+InstanceBase::InitializeSharedMemory(uint32_t numCounter, HANDLE& handle)
 {
     Assert(!IsEnabled());
 
-    DWORD size = numCounter * sizeof(DWORD);
+    uint32_t size = numCounter * sizeof(uint32_t);
     char16 wszObjectName[OBJECT_NAME_LEN];
     GetSharedMemoryObjectName(wszObjectName, GetCurrentProcessId(), guid);
     handle = ::CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, size, wszObjectName);
@@ -149,7 +149,7 @@ InstanceBase::InitializeSharedMemory(DWORD numCounter, HANDLE& handle)
     {
         return NULL;
     }
-    DWORD * data = (DWORD *)MapViewOfFile(handle, FILE_MAP_WRITE, 0, 0, size);
+    uint32_t * data = (uint32_t *)MapViewOfFile(handle, FILE_MAP_WRITE, 0, 0, size);
     if (data == NULL)
     {
         CloseHandle(handle);
@@ -158,11 +158,11 @@ InstanceBase::InitializeSharedMemory(DWORD numCounter, HANDLE& handle)
     return data;
 }
 
-DWORD *
+uint32_t *
 InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const wszObjectNamePrefix[MAX_OBJECT_NAME_PREFIX],
-    DWORD pid, DWORD numCounter, HANDLE& handle)
+    uint32_t pid, uint32_t numCounter, HANDLE& handle)
 {
-    DWORD size = numCounter * sizeof(DWORD);
+    uint32_t size = numCounter * sizeof(uint32_t);
     char16 wszObjectName[OBJECT_NAME_LEN];
     GetSharedMemoryObjectName(wszObjectName, pid, guid);
     char16 wszObjectNameFull[MAX_OBJECT_NAME_PREFIX + OBJECT_NAME_LEN];
@@ -172,7 +172,7 @@ InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const 
     {
         return NULL;
     }
-    DWORD * data = (DWORD *)MapViewOfFile(handle, FILE_MAP_READ, 0, 0, size);
+    uint32_t * data = (uint32_t *)MapViewOfFile(handle, FILE_MAP_READ, 0, 0, size);
     if (data == NULL)
     {
         CloseHandle(handle);
@@ -182,14 +182,14 @@ InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const 
 }
 
 void
-InstanceBase::UninitializeSharedMemory(DWORD * data, HANDLE handle)
+InstanceBase::UninitializeSharedMemory(uint32_t * data, HANDLE handle)
 {
     UnmapViewOfFile(data);
     CloseHandle(handle);
 }
 
 void
-Counter::Initialize(InstanceBase& instance, DWORD id, DWORD * count)
+Counter::Initialize(InstanceBase& instance, uint32_t id, uint32_t * count)
 {
     this->count = count;
     if (instance.IsEnabled())
@@ -199,7 +199,7 @@ Counter::Initialize(InstanceBase& instance, DWORD id, DWORD * count)
 }
 
 void
-Counter::Uninitialize(InstanceBase& instance, DWORD id)
+Counter::Uninitialize(InstanceBase& instance, uint32_t id)
 {
     if (instance.IsEnabled())
     {

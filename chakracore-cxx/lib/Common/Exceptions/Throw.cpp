@@ -88,7 +88,7 @@ namespace Js {
 
     void Throw::FatalProjectionError()
     {
-        RaiseException((DWORD)DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE, 0, NULL);
+        RaiseException((uint32_t)DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE, 0, NULL);
     }
 
 #ifdef ENABLE_JS_BUILTINS
@@ -128,7 +128,7 @@ namespace Js {
         throw OutOfMemoryException();
     }
 
-    void Throw::StackOverflow(ScriptContext *scriptContext, PVOID returnAddress)
+    void Throw::StackOverflow(ScriptContext *scriptContext, void * returnAddress)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (CONFIG_FLAG(PrintSystemException))
@@ -159,7 +159,7 @@ namespace Js {
         {
             if (terminate)
             {
-                RaiseException((DWORD)DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE, 0, NULL);
+                RaiseException((uint32_t)DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE, 0, NULL);
             }
             else
             {
@@ -190,7 +190,7 @@ namespace Js {
         WCHAR tempFilePath[MAX_PATH];
         WCHAR tempFileName[MAX_PATH];
         HANDLE hTempFile;
-        DWORD retVal;
+        uint32_t retVal;
 
         if (filePath == NULL)
         {

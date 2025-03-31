@@ -91,10 +91,10 @@ namespace CorUnix
         
     protected:
 
-        LONG m_lRefCount;
+        int32_t m_lRefCount;
 
-        VOID *m_pvImmutableData;
-        VOID *m_pvLocalData;
+        void *m_pvImmutableData;
+        void *m_pvLocalData;
 
         CObjectType *m_pot;
         CObjectAttributes m_oa;
@@ -150,13 +150,13 @@ namespace CorUnix
         virtual
         CObjectType *
         GetObjectType(
-            VOID
+            void
             );
 
         virtual
         CObjectAttributes *
         GetObjectAttributes(
-            VOID
+            void
             );
 
         virtual
@@ -175,13 +175,13 @@ namespace CorUnix
             );
 
         virtual
-        DWORD
+        uint32_t
         AddReference(
             void
             );
 
         virtual
-        DWORD
+        uint32_t
         ReleaseReference(
             CPalThread *pthr
             );

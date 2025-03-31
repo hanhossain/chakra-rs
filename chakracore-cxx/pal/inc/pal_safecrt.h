@@ -40,7 +40,7 @@ Wrapper for including SafeCRT for Mac build of CoreCLR
 
 #if defined (SAFECRT_IN_PAL)
 
-#define DUMMY_memset void * __cdecl memset(void *, int, size_t);
+#define DUMMY_memset void * memset(void *, int, size_t);
 
 #endif
 

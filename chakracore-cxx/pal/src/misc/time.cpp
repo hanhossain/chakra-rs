@@ -86,10 +86,9 @@ Return Values
 This function does not return a value.
 
 --*/
-VOID
-PALAPI
+void
 GetSystemTime(
-          OUT LPSYSTEMTIME lpSystemTime)
+           LPSYSTEMTIME lpSystemTime)
 {
     time_t tt;
 #if HAVE_GMTIME_R
@@ -178,17 +177,16 @@ In the ROTOR implementation the return value is the elapsed time since
 the start of the epoch.
 
 --*/
-DWORD
-PALAPI
+uint32_t
 GetTickCount(
-         VOID)
+         void)
 {
-    DWORD retval = 0;
+    uint32_t retval = 0;
     PERF_ENTRY(GetTickCount);
     ENTRY("GetTickCount ()\n");
 
     // Get the 64-bit count from GetTickCount64 and truncate the results.
-    retval = (DWORD) GetTickCount64();
+    retval = (uint32_t) GetTickCount64();
 
     LOGEXIT("GetTickCount returns DWORD %u\n", retval);
     PERF_EXIT(GetTickCount);
@@ -196,9 +194,8 @@ GetTickCount(
 }
 
 BOOL
-PALAPI
 QueryPerformanceCounter(
-    OUT LARGE_INTEGER *lpPerformanceCount
+     LARGE_INTEGER *lpPerformanceCount
     )
 {
     BOOL retval = TRUE;
@@ -260,9 +257,8 @@ QueryPerformanceCounter(
 }
 
 BOOL
-PALAPI
 QueryPerformanceFrequency(
-    OUT LARGE_INTEGER *lpFrequency
+     LARGE_INTEGER *lpFrequency
     )
 {
     BOOL retval = TRUE;
@@ -286,10 +282,9 @@ failure.
 --*/
 
 BOOL
-PALAPI
 QueryThreadCycleTime(
-    IN HANDLE ThreadHandle,
-    OUT PULONG64 CycleTime
+     HANDLE ThreadHandle,
+     PULONG64 CycleTime
     )
 {
 
@@ -431,7 +426,6 @@ to return monotonically increasing counts and avoid being affected by changes
 to the system clock (either due to drift or due to explicit changes to system
 time).
 --*/
-PALAPI
 ULONGLONG
 GetTickCount64()
 {

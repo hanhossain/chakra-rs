@@ -13,17 +13,17 @@ namespace Js
         struct EncoderRelocLabel;
         struct EncoderReloc
         {
-            static void New( EncoderRelocLabel* label, BYTE* _patchAddr, BYTE* _pc, ArenaAllocator* allocator );
-            BYTE* patchAddr;
-            BYTE* pc;
+            static void New( EncoderRelocLabel* label, uint8_t* _patchAddr, uint8_t* _pc, ArenaAllocator* allocator );
+            uint8_t* patchAddr;
+            uint8_t* pc;
             EncoderReloc* next;
         };
         struct EncoderRelocLabel
         {
             EncoderRelocLabel() :labelSeen( false ), relocList( nullptr ){}
-            EncoderRelocLabel(BYTE* _pc) :labelSeen( true ), pc(_pc), relocList( nullptr ){}
+            EncoderRelocLabel(uint8_t* _pc) :labelSeen( true ), pc(_pc), relocList( nullptr ){}
             bool labelSeen : 1;
-            BYTE* pc;
+            uint8_t* pc;
             EncoderReloc* relocList;
         };
         // the key is the bytecode address
@@ -31,8 +31,8 @@ namespace Js
         const byte* ip;
         ByteCodeReader mReader;
         uint32 mEncodeBufferSize;
-        BYTE* mEncodeBuffer;
-        BYTE* mPc;
+        uint8_t* mEncodeBuffer;
+        uint8_t* mPc;
         PageAllocator* mPageAllocator;
         InProcCodeGenAllocators* mForegroundAllocators;
         FunctionBody* mFunctionBody;
@@ -56,7 +56,7 @@ namespace Js
 
     private:
         void ApplyRelocs();
-        void AddReloc( const int labelOffset, BYTE* patchAddr );
+        void AddReloc( const int labelOffset, uint8_t* patchAddr );
         uint32 GetEncodeBufferSize(FunctionBody* functionBody);
         AsmJsFunctionInfo* GetAsmJsFunctionInfo(){ return mFunctionBody->GetAsmJsFunctionInfo(); }
         AsmJsFunctionInfo* GetAsmJsFunctionInfoWithLock() { return mFunctionBody->GetAsmJsFunctionInfoWithLock(); }

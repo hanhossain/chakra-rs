@@ -19,7 +19,7 @@ public:
     void SetFrameHeight(uint val);
     void RecordThrowMap(Js::ThrowMapEntry * throwMap, uint mapCount);
 #ifdef _M_ARM
-    void RecordXData(BYTE * xdata);
+    void RecordXData(uint8_t * xdata);
 #endif
     bool IsTrackCompoundedIntOverflowDisabled() const;
     bool IsMemOpDisabled() const;
@@ -40,13 +40,13 @@ public:
 #if ENABLE_OOP_NATIVE_CODEGEN
     EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * RecordOOPNativeCodeSize(Func *func, uint32 bytes, ushort pdataCount, ushort xdataSize);
 #endif
-    void RecordNativeCode(const BYTE* sourceBuffer, BYTE* localCodeAddress);
+    void RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress);
     void RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount);
 
 #if TARGET_64
-    void RecordUnwindInfo(BYTE *unwindInfo, size_t size, BYTE * xdataAddr, BYTE* localXdataAddr);
+    void RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr, uint8_t* localXdataAddr);
 #elif _M_ARM
-    size_t RecordUnwindInfo(size_t offset, const BYTE *unwindInfo, size_t size, BYTE * xdataAddr);
+    size_t RecordUnwindInfo(size_t offset, const uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr);
 #endif
 
     void FinalizeNativeCode();
@@ -54,7 +54,7 @@ public:
     JITOutputIDL * GetOutputData();
 private:
     template <typename TEmitBufferAllocation, typename TCodeGenAllocators>
-    void RecordNativeCode(const BYTE* sourceBuffer, BYTE* localCodeAddress, TEmitBufferAllocation allocation, TCodeGenAllocators codeGenAllocators);
+    void RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress, TEmitBufferAllocation allocation, TCodeGenAllocators codeGenAllocators);
     CustomHeap::Allocation * GetAllocation() const;
     union
     {

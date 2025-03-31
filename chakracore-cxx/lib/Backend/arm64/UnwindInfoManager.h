@@ -22,20 +22,20 @@ public:
     UnwindInfoManager();
 
     void Init(Func * func);
-    DWORD GetPDataCount(DWORD length);
-    DWORD SizeOfUnwindInfo() const { return m_xdata.GetXdataBytes(); }
-    BYTE *GetUnwindInfo() { return reinterpret_cast<BYTE *>(const_cast<void *>(m_xdata.GetXdata())); }
-    void FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize);
+    uint32_t GetPDataCount(uint32_t length);
+    uint32_t SizeOfUnwindInfo() const { return m_xdata.GetXdataBytes(); }
+    uint8_t *GetUnwindInfo() { return reinterpret_cast<uint8_t *>(const_cast<void *>(m_xdata.GetXdata())); }
+    void FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize);
 
     // label management
     void SetFunctionOffsetLabel(UnwindFunctionOffsets which, IR::LabelInstr *label);
-    void SetLabelOffset(DWORD id, DWORD offset);
+    void SetLabelOffset(uint32_t id, uint32_t offset);
 
 private:
-    DWORD GetFunctionOffset(UnwindFunctionOffsets which);
+    uint32_t GetFunctionOffset(UnwindFunctionOffsets which);
 
-    DWORD m_functionOffsetLabelId[UnwindFunctionOffsetCount];
-    DWORD m_functionOffset[UnwindFunctionOffsetCount];
+    uint32_t m_functionOffsetLabelId[UnwindFunctionOffsetCount];
+    uint32_t m_functionOffset[UnwindFunctionOffsetCount];
 
     Arm64XdataGenerator m_xdata;
 };

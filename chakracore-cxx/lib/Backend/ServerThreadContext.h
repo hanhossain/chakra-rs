@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "Memory/SectionAllocWrapper.h"
-
 #if ENABLE_OOP_NATIVE_CODEGEN
 class ProcessContext
 {
@@ -66,7 +64,7 @@ public:
     void Release();
     void Close();
     PageAllocator * GetForegroundPageAllocator();
-    DWORD GetRuntimePid() { return m_pid; }
+    uint32_t GetRuntimePid() { return m_pid; }
 
     intptr_t GetRuntimeChakraBaseAddress() const;
     intptr_t GetRuntimeCRTBaseAddress() const;
@@ -87,7 +85,7 @@ private:
     PageAllocator m_pageAlloc;
     ThreadContextDataIDL m_threadContextData;
 
-    DWORD m_pid; //save client process id for easier diagnose
+    uint32_t m_pid; //save client process id for easier diagnose
 
     CriticalSection m_cs;
     uint m_refCount;

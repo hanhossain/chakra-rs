@@ -24,11 +24,11 @@ class PreReservedSectionAllocWrapper;
 class VirtualAllocWrapper
 {
 public:
-    LPVOID  AllocPages(LPVOID lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation);
-    BOOL    Free(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType);
-    LPVOID  AllocLocal(LPVOID lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
-    BOOL    FreeLocal(LPVOID lpAddress) { return true; }
-    bool    GetFileInfo(LPVOID address, HANDLE* fileHandle, PVOID* baseAddress) { return true; }
+    void *  AllocPages(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
+    BOOL    Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType);
+    void *  AllocLocal(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
+    BOOL    FreeLocal(void * lpAddress) { return true; }
+    bool    GetFileInfo(void * address, HANDLE* fileHandle, void ** baseAddress) { return true; }
 
     static VirtualAllocWrapper Instance;  // single instance
 private:
@@ -55,32 +55,32 @@ public:
 public:
     PreReservedVirtualAllocWrapper();
     ~PreReservedVirtualAllocWrapper();
-    LPVOID      AllocPages(LPVOID lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, DWORD allocationType, DWORD protectFlags, bool isCustomHeapAllocation);
-    BOOL        Free(LPVOID lpAddress,  size_t dwSize, DWORD dwFreeType);
-    LPVOID  AllocLocal(LPVOID lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
-    BOOL    FreeLocal(LPVOID lpAddress) { return true; }
-    bool    GetFileInfo(LPVOID address, HANDLE* fileHandle, PVOID* baseAddress) { return true; }
+    void *      AllocPages(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
+    BOOL        Free(void * lpAddress,  size_t dwSize, uint32_t dwFreeType);
+    void *  AllocLocal(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
+    BOOL    FreeLocal(void * lpAddress) { return true; }
+    bool    GetFileInfo(void * address, HANDLE* fileHandle, void ** baseAddress) { return true; }
 
     bool        IsInRange(void * address);
     static bool IsInRange(void * regionStart, void * address);
-    LPVOID      EnsurePreReservedRegion();
+    void *      EnsurePreReservedRegion();
 
-    LPVOID      GetPreReservedEndAddress();
-    static LPVOID GetPreReservedEndAddress(void * regionStart);
+    void *      GetPreReservedEndAddress();
+    static void * GetPreReservedEndAddress(void * regionStart);
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-    bool        IsPreReservedEndAddress(LPVOID address)
+    bool        IsPreReservedEndAddress(void * address)
     {
         return IsPreReservedRegionPresent() && address == GetPreReservedEndAddress();
     }
 #endif
 private:
-    LPVOID      EnsurePreReservedRegionInternal();
+    void *      EnsurePreReservedRegionInternal();
     bool        IsPreReservedRegionPresent();
-    LPVOID      GetPreReservedStartAddress();
+    void *      GetPreReservedStartAddress();
 
     BVStatic<PreReservedAllocationSegmentCount>     freeSegments;
-    LPVOID                                          preReservedStartAddress;
+    void *                                          preReservedStartAddress;
     CriticalSection                                 cs;
 };
 
@@ -102,8 +102,8 @@ private:
     (WINAPI *PSET_THREAD_INFORMATION_PROC)(
         _In_ HANDLE                   hThread,
         _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
-        _In_reads_bytes_(ThreadInformationSize) PVOID ThreadInformation,
-        _In_ DWORD                    ThreadInformationSize
+        _In_reads_bytes_(ThreadInformationSize) void * ThreadInformation,
+        _In_ uint32_t                    ThreadInformationSize
     );
 
     typedef
@@ -111,8 +111,8 @@ private:
     (WINAPI *PGET_THREAD_INFORMATION_PROC)(
         _In_ HANDLE                   hThread,
         _In_ THREAD_INFORMATION_CLASS ThreadInformationClass,
-        _Out_writes_bytes_(ThreadInformationSize) PVOID ThreadInformation,
-        _In_ DWORD                    ThreadInformationSize
+        _Out_writes_bytes_(ThreadInformationSize) void * ThreadInformation,
+        _In_ uint32_t                    ThreadInformationSize
     );
 
     static PSET_THREAD_INFORMATION_PROC SetThreadInformationProc;

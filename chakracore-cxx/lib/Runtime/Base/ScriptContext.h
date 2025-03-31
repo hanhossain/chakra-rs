@@ -45,14 +45,14 @@ class SRCINFO
     // we can move variables m_isGlobalFunc and m_isEval from FunctionBody.cpp here.
 public:
     Field(SourceContextInfo *) sourceContextInfo;
-    Field(ULONG) dlnHost;             // Line number passed to ParseScriptText
-    Field(ULONG) ulColumnHost;        // Column number on the line where the parse script text started
-    Field(ULONG) lnMinHost;           // Line offset of first host-supplied line
-    Field(ULONG) ichMinHost;          // Range of host supplied characters
-    Field(ULONG) ichLimHost;
-    Field(ULONG) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
+    Field(uint32_t) dlnHost;             // Line number passed to ParseScriptText
+    Field(uint32_t) ulColumnHost;        // Column number on the line where the parse script text started
+    Field(uint32_t) lnMinHost;           // Line offset of first host-supplied line
+    Field(uint32_t) ichMinHost;          // Range of host supplied characters
+    Field(uint32_t) ichLimHost;
+    Field(uint32_t) ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
     Field(Js::ModuleID) moduleID;
-    Field(ULONG) grfsi;
+    Field(uint32_t) grfsi;
 
     static SRCINFO* Copy(Recycler* recycler, const SRCINFO* srcInfo)
     {
@@ -77,14 +77,14 @@ public:
     }
     SRCINFO(
         SourceContextInfo*sourceContextInfo,
-        ULONG dlnHost,
-        ULONG ulColumnHost,
-        ULONG lnMinHost,
-        ULONG ichMinHost,
-        ULONG ichLimHost,
-        ULONG ulCharOffset,
+        uint32_t dlnHost,
+        uint32_t ulColumnHost,
+        uint32_t lnMinHost,
+        uint32_t ichMinHost,
+        uint32_t ichLimHost,
+        uint32_t ulCharOffset,
         Js::ModuleID moduleID,
-        ULONG grfsi
+        uint32_t grfsi
     ):sourceContextInfo(sourceContextInfo),
         dlnHost(dlnHost),
         ulColumnHost(ulColumnHost),
@@ -101,8 +101,8 @@ public:
 struct CustomExternalObjectOperations
 {
     size_t offsetOfOperationsUsage;
-    DWORD operationFlagEquals;
-    DWORD operationFlagStrictEquals;
+    uint32_t operationFlagEquals;
+    uint32_t operationFlagStrictEquals;
 };
 
 enum ExternalJitData
@@ -254,7 +254,7 @@ namespace Js
             , uint32_t _sourceLocationLineNumber
             , uint32_t _sourceLocationColumnNumber
             , uint32_t _methodIDOrNameIndex
-            , UINT8 _isFrameIndex)
+            , uint8_t _isFrameIndex)
             : scriptContextID(_scriptContextID)
             , sourceLocationLineNumber(_sourceLocationLineNumber)
             , sourceLocationColumnNumber(_sourceLocationColumnNumber)
@@ -266,7 +266,7 @@ namespace Js
         uint32_t sourceLocationLineNumber;
         uint32_t sourceLocationColumnNumber;
         uint32_t methodIDOrNameIndex;
-        UINT8  isFrameIndex;
+        uint8_t  isFrameIndex;
     };
 #pragma pack(pop)
 
@@ -390,10 +390,10 @@ namespace Js
 
 #if ENABLE_NATIVE_CODEGEN
     public:
-        static DWORD GetThreadContextOffset() { return offsetof(ScriptContext, threadContext); }
-        static DWORD GetOptimizationOverridesOffset() { return offsetof(ScriptContext, optimizationOverrides); }
-        static DWORD GetRecyclerOffset() { return offsetof(ScriptContext, recycler); }
-        static DWORD GetNumberAllocatorOffset() { return offsetof(ScriptContext, numberAllocator); }
+        static uint32_t GetThreadContextOffset() { return offsetof(ScriptContext, threadContext); }
+        static uint32_t GetOptimizationOverridesOffset() { return offsetof(ScriptContext, optimizationOverrides); }
+        static uint32_t GetRecyclerOffset() { return offsetof(ScriptContext, recycler); }
+        static uint32_t GetNumberAllocatorOffset() { return offsetof(ScriptContext, numberAllocator); }
 
         JITPageAddrToFuncRangeCache * GetJitFuncRangeCache();
     private:
@@ -451,7 +451,7 @@ namespace Js
 #endif
 
 #ifdef ENABLE_JS_ETW
-        void EmitStackTraceEvent(__in UINT64 operationID, __in USHORT maxFrameCount, bool emitV2AsyncStackEvent);
+        void EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
         static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
 #endif
 
@@ -864,7 +864,7 @@ private:
         IActiveScriptProfilerCallback *m_pProfileCallback;
         BOOL m_fTraceFunctionCall;
         BOOL m_fTraceNativeFunctionCall;
-        DWORD m_dwEventMask;
+        uint32_t m_dwEventMask;
 
         IActiveScriptProfilerCallback2 *m_pProfileCallback2;
         BOOL m_fTraceDomCall;
@@ -982,7 +982,7 @@ private:
         uint callCount;
 
         // if the current context is for webworker
-        DWORD webWorkerId;
+        uint32_t webWorkerId;
 
         static ScriptContext * New(ThreadContext * threadContext);
 
@@ -1245,7 +1245,7 @@ private:
             Js::Var scriptSource = nullptr);
 
         HRESULT TryDeserializeParserState(
-            _In_ ULONG grfscr,
+            _In_ uint32_t grfscr,
             _In_ uint sourceCRC,
             _In_ charcount_t cchLength,
             _In_ SRCINFO *srcInfo,
@@ -1255,7 +1255,7 @@ private:
             _In_opt_ NativeModule* nativeModule,
             _Outptr_ Js::ParseableFunctionInfo ** func,
             _Outptr_result_buffer_(*parserStateCacheByteCount) byte** parserStateCacheBuffer,
-            _Out_ DWORD* parserStateCacheByteCount,
+            _Out_ uint32_t* parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
         HRESULT TrySerializeParserState(
@@ -1265,7 +1265,7 @@ private:
             _In_ SRCINFO *srcInfo,
             _In_ Js::ParseableFunctionInfo* func,
             _In_reads_bytes_(parserStateCacheByteCount) byte* parserStateCacheBuffer,
-            _In_ DWORD parserStateCacheByteCount,
+            _In_ uint32_t parserStateCacheByteCount,
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
         HRESULT CompileUTF8Core(
@@ -1275,7 +1275,7 @@ private:
             __in BOOL fOriginalUTF8Code,
             _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
             __in size_t cbLength,
-            __in ULONG grfscr,
+            __in uint32_t grfscr,
             __in CompileScriptException *pse,
             __inout charcount_t& cchLength,
             __out size_t& srcLength,
@@ -1287,7 +1287,7 @@ private:
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
             const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
-            byte** buffer, DWORD* bufferSize, ArenaAllocator* alloc,
+            byte** buffer, uint32_t* bufferSize, ArenaAllocator* alloc,
             JavascriptFunction** function = nullptr,
             Js::Var scriptSource = nullptr);
 
@@ -1298,7 +1298,7 @@ private:
             LoadScriptFlag loadScriptFlag,
             Js::Var scriptSource);
 
-        ULONG GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo);
+        uint32_t GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo);
 
         ArenaAllocator* GeneralAllocator() { return &generalAllocator; }
 
@@ -1561,13 +1561,13 @@ private:
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING
-        void CoreSetProfileEventMask(DWORD dwEventMask);
+        void CoreSetProfileEventMask(uint32_t dwEventMask);
         typedef HRESULT(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
-        HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, DWORD dwEventMask, DWORD dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
+        HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
         HRESULT DeRegisterProfileProbe(HRESULT hrReason, JavascriptMethod dispatchInvoke);
         HRESULT RegisterLibraryFunction(const char16 *pwszObjectName, const char16 *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
         HRESULT RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
-        HRESULT SetProfileEventMask(DWORD dwEventMask);
+        HRESULT SetProfileEventMask(uint32_t dwEventMask);
 
         HRESULT RegisterScript(Js::FunctionProxy *pFunctionBody, BOOL fRegisterScript = TRUE);
 
@@ -1668,13 +1668,13 @@ private:
 
     public:
 #if DYNAMIC_INTERPRETER_THUNK
-        JavascriptMethod GetNextDynamicAsmJsInterpreterThunk(PVOID* ppDynamicInterpreterThunk);
-        JavascriptMethod GetNextDynamicInterpreterThunk(PVOID* ppDynamicInterpreterThunk);
+        JavascriptMethod GetNextDynamicAsmJsInterpreterThunk(void ** ppDynamicInterpreterThunk);
+        JavascriptMethod GetNextDynamicInterpreterThunk(void ** ppDynamicInterpreterThunk);
 #if DBG
         BOOL IsDynamicInterpreterThunk(JavascriptMethod address);
 #endif
-        void ReleaseDynamicInterpreterThunk(BYTE* address, bool addtoFreeList);
-        void ReleaseDynamicAsmJsInterpreterThunk(BYTE* address, bool addtoFreeList);
+        void ReleaseDynamicInterpreterThunk(uint8_t* address, bool addtoFreeList);
+        void ReleaseDynamicAsmJsInterpreterThunk(uint8_t* address, bool addtoFreeList);
 #endif
 
         static Var DebugProfileProbeThunk(RecyclableObject* function, CallInfo callInfo, ...);

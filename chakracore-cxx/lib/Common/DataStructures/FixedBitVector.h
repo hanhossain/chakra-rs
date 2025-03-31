@@ -440,19 +440,19 @@ public:
     BOOLEAN TestAndSet(BVIndex i)
     {
         AssertRange(i);
-        return PlatformAgnostic::_BitTestAndSet((LONG *)this->data, (LONG) i);
+        return PlatformAgnostic::_BitTestAndSet((int32_t *)this->data, (int32_t) i);
     }
 
     BOOLEAN TestIntrinsic(BVIndex i) const
     {
         AssertRange(i);
-        return PlatformAgnostic::_BitTest((LONG *)this->data, (LONG) i);
+        return PlatformAgnostic::_BitTest((int32_t *)this->data, (int32_t) i);
     }
 
     BOOLEAN TestAndSetInterlocked(BVIndex i)
     {
         AssertRange(i);
-        return PlatformAgnostic::_InterlockedBitTestAndSet((LONG *)this->data, (LONG) i);
+        return PlatformAgnostic::_InterlockedBitTestAndSet((int32_t *)this->data, (int32_t) i);
     }
 
     BOOLEAN TestAndClear(BVIndex i)
@@ -468,7 +468,7 @@ public:
     BOOLEAN TestAndClearInterlocked(BVIndex i)
     {
         AssertRange(i);
-        return PlatformAgnostic::_InterlockedBitTestAndReset((LONG *)this->data, (LONG)i);
+        return PlatformAgnostic::_InterlockedBitTestAndReset((int32_t *)this->data, (int32_t)i);
     }
 
     void OrComplimented(const BVStatic * bv) { this->for_each(bv, &BVUnit::OrComplimented); ClearEnd(); }

@@ -272,7 +272,7 @@ Function:
 
     Maps a Mach kern_return_t to a Win32 error code.
 --*/
-DWORD UTIL_MachErrorToPalError(kern_return_t MachReturn)
+uint32_t UTIL_MachErrorToPalError(kern_return_t MachReturn)
 {
     switch (MachReturn)
     {
@@ -311,7 +311,7 @@ Function:
 --*/
 void UTIL_SetLastErrorFromMach(kern_return_t MachReturn)
 {
-    DWORD palError = UTIL_MachErrorToPalError(MachReturn);
+    uint32_t palError = UTIL_MachErrorToPalError(MachReturn);
     if (palError != ERROR_SUCCESS)
     {
         SetLastError(palError);

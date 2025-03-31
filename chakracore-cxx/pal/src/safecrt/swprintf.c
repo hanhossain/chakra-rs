@@ -81,7 +81,7 @@
 *
 *******************************************************************************/
 
-int __cdecl swprintf_s (
+int swprintf_s (
         char16_t *string,
         size_t sizeInWords,
         const char16_t *format,
@@ -100,7 +100,7 @@ int __cdecl swprintf_s (
     return ret;
 }
 
-int __cdecl _snwprintf_s (
+int _snwprintf_s (
         char16_t *string,
         size_t sizeInWords,
         size_t count,

@@ -22,8 +22,8 @@
 #pragma prefast(disable:__WARNING_CALLER_FAILING_TO_HOLD, "Not annotating this file for lock semantics due to poor accuracy and complicated conditions for some locks")
 
 CriticalSection LeakReport::s_cs;
-DWORD LeakReport::nestedSectionCount = 0;
-DWORD LeakReport::nestedRedirectOutputCount = 0;
+uint32_t LeakReport::nestedSectionCount = 0;
+uint32_t LeakReport::nestedRedirectOutputCount = 0;
 AutoFILE LeakReport::file;
 FILE * oldFile = nullptr;
 bool LeakReport::openReportFileFailed = false;
@@ -187,7 +187,7 @@ LeakReport::LogUrl(char16 const * url, void * globalObject)
 }
 
 void
-LeakReport::DumpUrl(DWORD tid)
+LeakReport::DumpUrl(uint32_t tid)
 {
     AutoCriticalSection autocs(&s_cs);
     if (!EnsureLeakReportFile())

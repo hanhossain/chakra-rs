@@ -150,9 +150,9 @@ typedef enum tagEFaultRepRetVal
 
 #endif // DEBUG
 
-#define NTAPI       __stdcall
-#define WINAPI      __stdcall
-#define CALLBACK    __stdcall
+#define NTAPI
+#define WINAPI
+#define CALLBACK
 #define NTSYSAPI
 
 #define _WINNT_
@@ -175,7 +175,7 @@ typedef enum tagEFaultRepRetVal
 #endif
 #define PAL_safe_offsetof(type, field) __builtin_offsetof(type, field)
 #else
-#define FIELD_OFFSET(type, field) (((LONG)(LONG_PTR)&(((type *)64)->field)) - 64)
+#define FIELD_OFFSET(type, field) (((int32_t)(ptrdiff_t)&(((type *)64)->field)) - 64)
 #ifndef offsetof
 #define offsetof(s,m)          ((size_t)((ptrdiff_t)&(((s *)64)->m)) - 64)
 #endif
@@ -183,15 +183,15 @@ typedef enum tagEFaultRepRetVal
 #endif
 
 #define CONTAINING_RECORD(address, type, field) \
-    ((type *)((LONG_PTR)(address) - FIELD_OFFSET(type, field)))
+    ((type *)((ptrdiff_t)(address) - FIELD_OFFSET(type, field)))
 
 #define ARGUMENT_PRESENT(ArgumentPointer)    (\
-    (CHAR *)(ArgumentPointer) != (CHAR *)(NULL) )
+    (char *)(ArgumentPointer) != (char *)(NULL) )
 
 #if defined(_WIN64) || defined(_M_ALPHA)
 #define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
 #else
-#define MAX_NATURAL_ALIGNMENT sizeof(ULONG)
+#define MAX_NATURAL_ALIGNMENT sizeof(uint32_t)
 #endif
 
 #define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
@@ -202,29 +202,25 @@ typedef enum tagEFaultRepRetVal
 
 #define interface struct
 
-#define STDMETHODCALLTYPE    __stdcall
-#define STDMETHODVCALLTYPE   __cdecl
-
-#define STDAPICALLTYPE       __stdcall
-#define STDAPIVCALLTYPE      __cdecl
+#define STDMETHODCALLTYPE
 
 #define STDMETHODIMP         HRESULT STDMETHODCALLTYPE
 #define STDMETHODIMP_(type)  type STDMETHODCALLTYPE
 
-#define STDMETHODIMPV        HRESULT STDMETHODVCALLTYPE
-#define STDMETHODIMPV_(type) type STDMETHODVCALLTYPE
+#define STDMETHODIMPV        HRESULT
+#define STDMETHODIMPV_(type) type
 
 #define STDMETHOD(method)       virtual HRESULT STDMETHODCALLTYPE method
 #define STDMETHOD_(type,method) virtual type STDMETHODCALLTYPE method
 
-#define STDMETHODV(method)       virtual HRESULT STDMETHODVCALLTYPE method
-#define STDMETHODV_(type,method) virtual type STDMETHODVCALLTYPE method
+#define STDMETHODV(method)       virtual HRESULT method
+#define STDMETHODV_(type,method) virtual type method
 
-#define STDAPI               EXTERN_C HRESULT STDAPICALLTYPE
-#define STDAPI_(type)        EXTERN_C type STDAPICALLTYPE
+#define STDAPI               EXTERN_C HRESULT
+#define STDAPI_(type)        EXTERN_C type
 
-#define STDAPIV              EXTERN_C HRESULT STDAPIVCALLTYPE
-#define STDAPIV_(type)       EXTERN_C type STDAPIVCALLTYPE
+#define STDAPIV              EXTERN_C HRESULT
+#define STDAPIV_(type)       EXTERN_C type
 
 #define PURE                    = 0
 #define THIS_
@@ -257,7 +253,7 @@ typedef enum tagEFaultRepRetVal
 EXTERN_C const GUID GUID_NULL;
 
 typedef GUID *LPGUID;
-typedef const GUID FAR *LPCGUID;
+typedef const GUID  *LPCGUID;
 
 #ifdef __cplusplus
 extern "C++" {
@@ -274,7 +270,7 @@ inline int operator!=(REFGUID guidOne, REFGUID guidOther)
 #endif // __cplusplus
 
 #define DEFINE_GUID(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
-    EXTERN_C const GUID FAR name
+    EXTERN_C const GUID  name
 
 typedef GUID IID;
 #ifdef __cplusplus
@@ -299,19 +295,19 @@ typedef GUID CLSID;
 typedef CLSID *LPCLSID;
 
 typedef UINT_PTR WPARAM;
-typedef LONG_PTR LRESULT;
+typedef ptrdiff_t LRESULT;
 
-typedef LONG SCODE;
+typedef int32_t SCODE;
 
 
 typedef union _ULARGE_INTEGER {
     struct {
 #if BIGENDIAN
-        DWORD HighPart;
-        DWORD LowPart;
+        uint32_t HighPart;
+        uint32_t LowPart;
 #else
-        DWORD LowPart;
-        DWORD HighPart;
+        uint32_t LowPart;
+        uint32_t HighPart;
 #endif
     }
 #ifndef PAL_STDCPP_COMPAT
@@ -338,7 +334,7 @@ typedef union _ULARGE_INTEGER {
 
 #define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
 #define FAILED(Status) ((HRESULT)(Status)<0)
-#define IS_ERROR(Status) ((ULONG)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
+#define IS_ERROR(Status) ((uint32_t)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
 #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
 #define SCODE_CODE(sc)      ((sc) & 0xFFFF)
 #define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
@@ -348,9 +344,9 @@ typedef union _ULARGE_INTEGER {
 
 // both macros diff from Win32
 #define MAKE_HRESULT(sev,fac,code) \
-    ((HRESULT) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((ULONG)(code))) )
+    ((HRESULT) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((uint32_t)(code))) )
 #define MAKE_SCODE(sev,fac,code) \
-    ((SCODE) (((ULONG)(sev)<<31) | ((ULONG)(fac)<<16) | ((LONG)(code))) )
+    ((SCODE) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((int32_t)(code))) )
 
 #define FACILITY_NT_BIT                 0x10000000
 #define HRESULT_FROM_WIN32(x) ((HRESULT)(x) <= 0 ? ((HRESULT)(x)) : ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
@@ -360,11 +356,11 @@ typedef union _ULARGE_INTEGER {
 
 /******************* OLE, BSTR, VARIANT *************************/
 
-STDAPI_(LPVOID) CoTaskMemAlloc(SIZE_T cb);
-STDAPI_(LPVOID) CoTaskMemRealloc(LPVOID pv, SIZE_T cb);
-STDAPI_(void) CoTaskMemFree(LPVOID pv);
+STDAPI_(void *) CoTaskMemAlloc(SIZE_T cb);
+STDAPI_(void *) CoTaskMemRealloc(void * pv, SIZE_T cb);
+STDAPI_(void) CoTaskMemFree(void * pv);
 
-typedef SHORT VARIANT_BOOL;
+typedef short VARIANT_BOOL;
 #define VARIANT_TRUE ((VARIANT_BOOL)-1)
 #define VARIANT_FALSE ((VARIANT_BOOL)0)
 
@@ -375,22 +371,22 @@ typedef const OLECHAR* LPCOLESTR;
 typedef WCHAR *BSTR;
 
 STDAPI_(BSTR) SysAllocString(const OLECHAR*);
-STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, UINT);
-STDAPI_(BSTR) SysAllocStringByteLen(const char *, UINT);
+STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, uint32_t);
+STDAPI_(BSTR) SysAllocStringByteLen(const char *, uint32_t);
 STDAPI_(void) SysFreeString(BSTR);
-STDAPI_(UINT) SysStringLen(BSTR);
-STDAPI_(UINT) SysStringByteLen(BSTR);
+STDAPI_(uint32_t) SysStringLen(BSTR);
+STDAPI_(uint32_t) SysStringByteLen(BSTR);
 
 typedef double DATE;
 
 typedef union tagCY {
     struct {
 #if BIGENDIAN
-        LONG    Hi;
-        ULONG   Lo;
+        int32_t    Hi;
+        uint32_t   Lo;
 #else
-        ULONG   Lo;
-        LONG    Hi;
+        uint32_t   Lo;
+        int32_t    Hi;
 #endif
     } u;
     LONGLONG int64;
@@ -406,35 +402,35 @@ typedef struct tagDEC {
 #if BIGENDIAN
     union {
         struct {
-            BYTE sign;
-            BYTE scale;
+            uint8_t sign;
+            uint8_t scale;
         };
-        USHORT signscale;
+        unsigned short signscale;
     };
-    USHORT wReserved;
+    unsigned short wReserved;
 #else
-    USHORT wReserved;
+    unsigned short wReserved;
     union {
         struct {
-            BYTE scale;
-            BYTE sign;
+            uint8_t scale;
+            uint8_t sign;
         };
-        USHORT signscale;
+        unsigned short signscale;
     };
 #endif
-    ULONG Hi32;
+    uint32_t Hi32;
     union {
         struct {
-            ULONG Lo32;
-            ULONG Mid32;
+            uint32_t Lo32;
+            uint32_t Mid32;
         };
         ULONGLONG Lo64;
     };
 } DECIMAL, *LPDECIMAL;
 
 typedef struct tagBLOB {
-    ULONG cbSize;
-    BYTE *pBlobData;
+    uint32_t cbSize;
+    uint8_t *pBlobData;
 } BLOB, *LPBLOB;
 
 interface IStream;
@@ -506,22 +502,22 @@ struct tagVARIANT
 #if BIGENDIAN
             // We need to make sure vt overlaps with DECIMAL's wReserved.
             // See the DECIMAL type for details.
-            WORD wReserved1;
+            uint16_t wReserved1;
             VARTYPE vt;
 #else
             VARTYPE vt;
-            WORD wReserved1;
+            uint16_t wReserved1;
 #endif
-            WORD wReserved2;
-            WORD wReserved3;
+            uint16_t wReserved2;
+            uint16_t wReserved3;
             union
                 {
                 LONGLONG llVal;
-                LONG lVal;
-                BYTE bVal;
-                SHORT iVal;
-                FLOAT fltVal;
-                DOUBLE dblVal;
+                int32_t lVal;
+                uint8_t bVal;
+                short iVal;
+                float fltVal;
+                double dblVal;
                 VARIANT_BOOL boolVal;
                 SCODE scode;
                 CY cyVal;
@@ -530,12 +526,12 @@ struct tagVARIANT
                 interface IUnknown *punkVal;
                 interface IDispatch *pdispVal;
                 SAFEARRAY *parray;
-                BYTE *pbVal;
-                SHORT *piVal;
-                LONG *plVal;
+                uint8_t *pbVal;
+                short *piVal;
+                int32_t *plVal;
                 LONGLONG *pllVal;
-                FLOAT *pfltVal;
-                DOUBLE *pdblVal;
+                float *pfltVal;
+                double *pdblVal;
                 VARIANT_BOOL *pboolVal;
                 SCODE *pscode;
                 CY *pcyVal;
@@ -543,23 +539,23 @@ struct tagVARIANT
                 BSTR *pbstrVal;
                 interface IUnknown **ppunkVal;
                 VARIANT *pvarVal;
-                PVOID byref;
-                CHAR cVal;
-                USHORT uiVal;
-                ULONG ulVal;
+                void * byref;
+                char cVal;
+                unsigned short uiVal;
+                uint32_t ulVal;
                 ULONGLONG ullVal;
-                INT intVal;
-                UINT uintVal;
+                int32_t intVal;
+                uint32_t uintVal;
                 DECIMAL *pdecVal;
-                CHAR *pcVal;
-                USHORT *puiVal;
-                ULONG *pulVal;
+                char *pcVal;
+                unsigned short *puiVal;
+                uint32_t *pulVal;
                 ULONGLONG *pullVal;
-                INT *pintVal;
-                UINT *puintVal;
+                int32_t *pintVal;
+                uint32_t *puintVal;
                 struct __tagBRECORD
                     {
-                    PVOID pvRecord;
+                    void * pvRecord;
                     interface IRecordInfo *pRecInfo;
                     } brecVal;
                 } n3;
@@ -637,7 +633,7 @@ STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
 
 #define V_ISBYREF(X)     (V_VT(X)&VT_BYREF)
 
-STDAPI CreateStreamOnHGlobal(PVOID hGlobal, BOOL fDeleteOnRelease, interface IStream** ppstm);
+STDAPI CreateStreamOnHGlobal(void * hGlobal, BOOL fDeleteOnRelease, interface IStream** ppstm);
 
 STDAPI IIDFromString(LPOLESTR lpsz, IID* lpiid);
 STDAPI_(int) StringFromGUID2(REFGUID rguid, LPOLESTR lpsz, int cchMax);
@@ -812,7 +808,7 @@ extern "C++" {
 
 #include <safemath.h>
 
-inline errno_t __cdecl _wcslwr_unsafe(WCHAR *str, size_t sz)
+inline errno_t _wcslwr_unsafe(WCHAR *str, size_t sz)
 {
     if (sz >= INT_MAX / sizeof(WCHAR))
         return 1;
@@ -834,7 +830,7 @@ inline errno_t __cdecl _wcslwr_unsafe(WCHAR *str, size_t sz)
 
     return 0;
 }
-inline errno_t __cdecl _strlwr_unsafe(char *str, size_t sz)
+inline errno_t _strlwr_unsafe(char *str, size_t sz)
 {
     char *copy = (char *)malloc(sz);
     if(copy == nullptr)
@@ -853,7 +849,7 @@ inline errno_t __cdecl _strlwr_unsafe(char *str, size_t sz)
     return 0;
 }
 
-inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
+inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 {
     int guess = 10;
 
@@ -873,7 +869,7 @@ inline int __cdecl _vscprintf_unsafe(const char *_Format, va_list _ArgList)
     }
 }
 
-inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
+inline int _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
 {
     int guess = 256;
 
@@ -896,7 +892,7 @@ inline int __cdecl _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
     }
 }
 
-inline int __cdecl _scwprintf_unsafe(const WCHAR *_Format, ...)
+inline int _scwprintf_unsafe(const WCHAR *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -906,7 +902,7 @@ inline int __cdecl _scwprintf_unsafe(const WCHAR *_Format, ...)
     return ret;
 }
 
-inline int __cdecl _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
+inline int _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
     int ret = _vsnwprintf(_Dst, _Count, _Format, _ArgList);
@@ -918,7 +914,7 @@ inline int __cdecl _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _
     return ret;
 }
 
-inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, ...)
+inline int _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -928,7 +924,7 @@ inline int __cdecl _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _C
     return ret;
 }
 
-inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
+inline int _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
     int ret = _vsnprintf(_Dst, _Count, _Format, _ArgList);
@@ -940,7 +936,7 @@ inline int __cdecl _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Co
     return ret;
 }
 
-inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, ...)
+inline int _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -950,7 +946,7 @@ inline int __cdecl _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Cou
     return ret;
 }
 
-inline errno_t __cdecl _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
+inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
 {
     PAL_FILE *result = _wfopen(fileName, mode);
     if(result == 0) {
@@ -961,7 +957,7 @@ inline errno_t __cdecl _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, con
     }
 }
 
-inline errno_t __cdecl _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *mode)
+inline errno_t _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *mode)
 {
   PAL_FILE *result = PAL_fopen(fileName, mode);
   if(result == 0) {
@@ -974,12 +970,12 @@ inline errno_t __cdecl _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const
 
 /* _itow_s */
 _SAFECRT__EXTERN_C
-errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _itow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -988,7 +984,7 @@ errno_t __cdecl _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1001,12 +997,12 @@ errno_t __cdecl _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix
 #endif
 
 _SAFECRT__EXTERN_C
-errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _ltow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1015,7 +1011,7 @@ errno_t __cdecl _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1029,12 +1025,12 @@ errno_t __cdecl _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radi
 
 /* _i64tow_s */
 _SAFECRT__EXTERN_C
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 {
     return _i64tow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1043,7 +1039,7 @@ errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radi
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1060,12 +1056,12 @@ errno_t __cdecl _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int 
  * _ReturnValue indicates if the variable has been found and size needed
  */
 _SAFECRT__EXTERN_C
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name);
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SzInWords>
 inline
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     return getenv_s(_ReturnValue, _Dst, _SizeInWords, _Name);
 }
@@ -1074,7 +1070,7 @@ errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, 
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     char *szFound;
 
@@ -1099,7 +1095,7 @@ errno_t __cdecl getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, 
 
 STDAPI_(BOOL) PathAppendW(LPWSTR pszPath, LPCWSTR pszMore);
 STDAPI_(int) PathCommonPrefixW(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR  pszPath);
-PALIMPORT LPWSTR PALAPI PathFindFileNameW(LPCWSTR pPath);
+LPWSTR PathFindFileNameW(LPCWSTR pPath);
 STDAPI_(int) PathGetDriveNumberW(LPCWSTR lpsz);
 STDAPI_(BOOL) PathIsRelativeW(LPCWSTR lpszPath);
 STDAPI_(BOOL) PathIsUNCW(LPCWSTR pszPath);
@@ -1108,12 +1104,12 @@ STDAPI_(LPWSTR) PathRemoveBackslashW(LPWSTR lpszPath);
 STDAPI_(void) PathRemoveExtensionW(LPWSTR pszPath);
 STDAPI_(LPWSTR) PathCombineW(LPWSTR lpszDest, LPCWSTR lpszDir, LPCWSTR lpszFile);
 STDAPI_(BOOL) PathCanonicalizeW(LPWSTR lpszDst, LPCWSTR lpszSrc);
-STDAPI_(BOOL) PathRelativePathToW(LPWSTR pszPath, LPCWSTR pszFrom, DWORD dwAttrFrom, LPCWSTR pszTo, DWORD dwAttrTo);
+STDAPI_(BOOL) PathRelativePathToW(LPWSTR pszPath, LPCWSTR pszFrom, uint32_t dwAttrFrom, LPCWSTR pszTo, uint32_t dwAttrTo);
 STDAPI_(BOOL) PathRenameExtensionW(LPWSTR pszPath, LPCWSTR pszExt);
 STDAPI_(BOOL) PathRemoveFileSpecW(LPWSTR pFile);
 STDAPI_(void) PathStripPathW (LPWSTR pszPath);
 
-STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, LPDWORD pcchPath, DWORD dwFlags);
+STDAPI PathCreateFromUrlW(LPCWSTR pszUrl, LPWSTR pszPath, uint32_t * pcchPath, uint32_t dwFlags);
 STDAPI_(BOOL) PathIsURLW(LPCWSTR pszPath);
 
 
@@ -1129,12 +1125,12 @@ typedef enum {
     URL_PART_HOSTNAME   = 2,
 } URL_PART;
 
-STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, LPDWORD pcchCanonicalized, DWORD dwFlags);
-STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, LPDWORD pcchCombined, DWORD dwFlags);
-STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, LPDWORD pcchEscaped, DWORD dwFlags);
-STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, LPDWORD pcchUnescaped, DWORD dwFlags);
+STDAPI UrlCanonicalizeW(LPCWSTR pszUrl, LPWSTR pszCanonicalized, uint32_t * pcchCanonicalized, uint32_t dwFlags);
+STDAPI UrlCombineW(LPCWSTR pszBase, LPCWSTR pszRelative, LPWSTR pszCombined, uint32_t * pcchCombined, uint32_t dwFlags);
+STDAPI UrlEscapeW(LPCWSTR pszUrl, LPWSTR pszEscaped, uint32_t * pcchEscaped, uint32_t dwFlags);
+STDAPI UrlUnescapeW(LPWSTR pszURL, LPWSTR pszUnescaped, uint32_t * pcchUnescaped, uint32_t dwFlags);
 STDAPI_(BOOL) UrlIsW(LPCWSTR pszUrl, URLIS dwUrlIs);
-STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, DWORD dwPart, DWORD dwFlags);
+STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
 #ifdef UNICODE
 #define PathAppend          PathAppendW
@@ -1180,25 +1176,25 @@ STDAPI UrlGetPartW(LPCWSTR pszIn, LPWSTR pszOut, LPDWORD pcchOut, DWORD dwPart, 
 #define __RPC__inout
 #define __RPC__deref_out_ecount_full_opt(x)
 
-typedef DWORD OLE_COLOR;
+typedef uint32_t OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
 
-typedef VOID (NTAPI * WAITORTIMERCALLBACKFUNC) (PVOID, BOOLEAN );
+typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
 
 typedef HANDLE HWND;
 
 #define IS_TEXT_UNICODE_SIGNATURE             0x0008
 #define IS_TEXT_UNICODE_UNICODE_MASK          0x000F
 
-BOOL IsTextUnicode(CONST VOID* lpv, int iSize, LPINT lpiResult);
+BOOL IsTextUnicode(const void* lpv, int iSize, int32_t * lpiResult);
 
 typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Flink;
    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
-typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
+typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 
 // PORTABILITY_ASSERT and PORTABILITY_WARNING macros are meant to be used to
 // mark places in the code that needs attention for portability. The usual
@@ -1246,19 +1242,11 @@ typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)
 
-#ifdef BIT64
 #define VALPTR(x) VAL64(x)
 #define GET_UNALIGNED_PTR(x) GET_UNALIGNED_64(x)
 #define GET_UNALIGNED_VALPTR(x) GET_UNALIGNED_VAL64(x)
 #define SET_UNALIGNED_PTR(p,x) SET_UNALIGNED_64(p,x)
 #define SET_UNALIGNED_VALPTR(p,x) SET_UNALIGNED_VAL64(p,x)
-#else
-#define VALPTR(x) VAL32(x)
-#define GET_UNALIGNED_PTR(x) GET_UNALIGNED_32(x)
-#define GET_UNALIGNED_VALPTR(x) GET_UNALIGNED_VAL32(x)
-#define SET_UNALIGNED_PTR(p,x) SET_UNALIGNED_32(p,x)
-#define SET_UNALIGNED_VALPTR(p,x) SET_UNALIGNED_VAL32(p,x)
-#endif
 
 #ifdef _TARGET_AMD64_
 #define RUNTIME_FUNCTION_INDIRECT 0x1
@@ -1266,21 +1254,12 @@ typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 
 #define _ReturnAddress() __builtin_return_address(0)
 
-#ifdef PLATFORM_UNIX
 #define DIRECTORY_SEPARATOR_CHAR_A '/'
 #define DIRECTORY_SEPARATOR_CHAR_W W('/')
 #define DIRECTORY_SEPARATOR_STR_W W("/")
 #define PATH_SEPARATOR_CHAR_W W(':')
 #define PATH_SEPARATOR_STR_W W(":")
 #define VOLUME_SEPARATOR_CHAR_W W('/')
-#else // PLATFORM_UNIX
-#define DIRECTORY_SEPARATOR_CHAR_A '\\'
-#define DIRECTORY_SEPARATOR_CHAR_W W('\\')
-#define DIRECTORY_SEPARATOR_STR_W W("\\")
-#define PATH_SEPARATOR_CHAR_W W(';')
-#define PATH_SEPARATOR_STR_W W(";")
-#define VOLUME_SEPARATOR_CHAR_W W(':')
-#endif // PLATFORM_UNIX
 
 #ifndef IMAGE_IMPORT_DESC_FIELD
 #define IMAGE_IMPORT_DESC_FIELD(img, f)     ((img).u.f)
@@ -1296,10 +1275,10 @@ typedef VOID (__stdcall *WAITORTIMERCALLBACK)(PVOID, BOOLEAN);
 //
 
 typedef struct _JIT_DEBUG_INFO {
-    DWORD dwSize;
-    DWORD dwProcessorArchitecture;
-    DWORD dwThreadID;
-    DWORD dwReserved0;
+    uint32_t dwSize;
+    uint32_t dwProcessorArchitecture;
+    uint32_t dwThreadID;
+    uint32_t dwReserved0;
     ULONG64 lpExceptionAddress;
     ULONG64 lpExceptionRecord;
     ULONG64 lpContextRecord;
@@ -1310,7 +1289,7 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 
 /******************* resources ***************************************/
 
-#define MAKEINTRESOURCEW(i) ((LPWSTR)((ULONG_PTR)((WORD)(i))))
+#define MAKEINTRESOURCEW(i) ((LPWSTR)((size_t)((uint16_t)(i))))
 #define RT_RCDATA           MAKEINTRESOURCE(10)
 #define RT_VERSION          MAKEINTRESOURCE(16)
 
@@ -1320,46 +1299,46 @@ typedef JIT_DEBUG_INFO JIT_DEBUG_INFO64, *LPJIT_DEBUG_INFO64;
 
 typedef struct tagSAFEARRAYBOUND
     {
-    ULONG cElements;
-    LONG lLbound;
+    uint32_t cElements;
+    int32_t lLbound;
     } 	SAFEARRAYBOUND;
 
 typedef struct tagSAFEARRAYBOUND *LPSAFEARRAYBOUND;
 
 typedef struct tagSAFEARRAY
     {
-    USHORT cDims;
-    USHORT fFeatures;
-    ULONG cbElements;
-    ULONG cLocks;
-    PVOID pvData;
+    unsigned short cDims;
+    unsigned short fFeatures;
+    uint32_t cbElements;
+    uint32_t cLocks;
+    void * pvData;
     SAFEARRAYBOUND rgsabound[ 1 ];
     } 	SAFEARRAY;
 
 typedef SAFEARRAY *LPSAFEARRAY;
 
 
-STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, LONG lLbound, ULONG cElements);
-STDAPI_(UINT) SafeArrayGetDim(SAFEARRAY * psa);
-STDAPI SafeArrayGetElement(SAFEARRAY * psa, LONG * rgIndices, void * pv);
-STDAPI SafeArrayGetLBound(SAFEARRAY * psa, UINT nDim, LONG * plLbound);
-STDAPI SafeArrayGetUBound(SAFEARRAY * psa, UINT nDim, LONG * plUbound);
+STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, int32_t lLbound, uint32_t cElements);
+STDAPI_(uint32_t) SafeArrayGetDim(SAFEARRAY * psa);
+STDAPI SafeArrayGetElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
+STDAPI SafeArrayGetLBound(SAFEARRAY * psa, uint32_t nDim, int32_t * plLbound);
+STDAPI SafeArrayGetUBound(SAFEARRAY * psa, uint32_t nDim, int32_t * plUbound);
 STDAPI SafeArrayGetVartype(SAFEARRAY * psa, VARTYPE * pvt);
-STDAPI SafeArrayPutElement(SAFEARRAY * psa, LONG * rgIndices, void * pv);
+STDAPI SafeArrayPutElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
 STDAPI SafeArrayDestroy(SAFEARRAY * psa);
 
 EXTERN_C void * _stdcall _lfind(const void *, const void *, unsigned int *, unsigned int,
-        int (__cdecl *)(const void *, const void *));
+        int (*)(const void *, const void *));
 
 interface IDispatch;
 interface ITypeInfo;
 interface ITypeLib;
 interface IMoniker;
 
-typedef VOID (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
-    DWORD dwErrorCode,
-    DWORD dwNumberOfBytesTransfered,
-    LPVOID lpOverlapped);
+typedef void (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
+    uint32_t dwErrorCode,
+    uint32_t dwNumberOfBytesTransfered,
+    void * lpOverlapped);
 
 //
 // Debug APIs
@@ -1367,12 +1346,12 @@ typedef VOID (WINAPI *LPOVERLAPPED_COMPLETION_ROUTINE)(
 
 typedef struct _EXCEPTION_DEBUG_INFO {
     EXCEPTION_RECORD ExceptionRecord;
-    DWORD dwFirstChance;
+    uint32_t dwFirstChance;
 } EXCEPTION_DEBUG_INFO, *LPEXCEPTION_DEBUG_INFO;
 
 typedef struct _CREATE_THREAD_DEBUG_INFO {
     HANDLE hThread;
-    LPVOID lpThreadLocalBase;
+    void * lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
 } CREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
 
@@ -1380,51 +1359,51 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
     HANDLE hFile;
     HANDLE hProcess;
     HANDLE hThread;
-    LPVOID lpBaseOfImage;
-    DWORD dwDebugInfoFileOffset;
-    DWORD nDebugInfoSize;
-    LPVOID lpThreadLocalBase;
+    void * lpBaseOfImage;
+    uint32_t dwDebugInfoFileOffset;
+    uint32_t nDebugInfoSize;
+    void * lpThreadLocalBase;
     LPTHREAD_START_ROUTINE lpStartAddress;
-    LPVOID lpImageName;
-    WORD fUnicode;
+    void * lpImageName;
+    uint16_t fUnicode;
 } CREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
 
 typedef struct _EXIT_THREAD_DEBUG_INFO {
-    DWORD dwExitCode;
+    uint32_t dwExitCode;
 } EXIT_THREAD_DEBUG_INFO, *LPEXIT_THREAD_DEBUG_INFO;
 
 typedef struct _EXIT_PROCESS_DEBUG_INFO {
-    DWORD dwExitCode;
+    uint32_t dwExitCode;
 } EXIT_PROCESS_DEBUG_INFO, *LPEXIT_PROCESS_DEBUG_INFO;
 
 typedef struct _LOAD_DLL_DEBUG_INFO {
     HANDLE hFile;
-    LPVOID lpBaseOfDll;
-    DWORD dwDebugInfoFileOffset;
-    DWORD nDebugInfoSize;
-    LPVOID lpImageName;
-    WORD fUnicode;
+    void * lpBaseOfDll;
+    uint32_t dwDebugInfoFileOffset;
+    uint32_t nDebugInfoSize;
+    void * lpImageName;
+    uint16_t fUnicode;
 } LOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
 
 typedef struct _UNLOAD_DLL_DEBUG_INFO {
-    LPVOID lpBaseOfDll;
+    void * lpBaseOfDll;
 } UNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
 
 typedef struct _OUTPUT_DEBUG_STRING_INFO {
     LPSTR lpDebugStringData;
-    WORD fUnicode;
-    WORD nDebugStringLength;
+    uint16_t fUnicode;
+    uint16_t nDebugStringLength;
 } OUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
 
 typedef struct _RIP_INFO {
-    DWORD dwError;
-    DWORD dwType;
+    uint32_t dwError;
+    uint32_t dwType;
 } RIP_INFO, *LPRIP_INFO;
 
 typedef struct _DEBUG_EVENT {
-    DWORD dwDebugEventCode;
-    DWORD dwProcessId;
-    DWORD dwThreadId;
+    uint32_t dwDebugEventCode;
+    uint32_t dwProcessId;
+    uint32_t dwThreadId;
     union {
         EXCEPTION_DEBUG_INFO Exception;
         CREATE_THREAD_DEBUG_INFO CreateThread;
@@ -1446,16 +1425,16 @@ typedef
 PRUNTIME_FUNCTION
 GET_RUNTIME_FUNCTION_CALLBACK (
     DWORD64 ControlPc,
-    PVOID Context
+    void * Context
     );
 typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
 
 typedef
-DWORD
+uint32_t
 OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK (
     HANDLE Process,
-    PVOID TableAddress,
-    PDWORD Entries,
+    void * TableAddress,
+    uint32_t * Entries,
     PRUNTIME_FUNCTION* Functions
     );
 typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK;
@@ -1466,11 +1445,11 @@ typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_C
 #if defined(FEATURE_PAL_SXS)
 
 // #if !defined(__APPLE__)
-// typedef LONG (*PEXCEPTION_ROUTINE)(
+// typedef int32_t (*PEXCEPTION_ROUTINE)(
     // IN PEXCEPTION_POINTERS pExceptionPointers,
-    // IN LPVOID lpvParam);
+    // IN void * lpvParam);
 
-// #define DISPATCHER_CONTEXT    LPVOID
+// #define DISPATCHER_CONTEXT    void *
 
 // #else // defined(__APPLE__)
 
@@ -1486,11 +1465,11 @@ typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
 } UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
 
 typedef struct _UNWIND_HISTORY_TABLE {
-    DWORD Count;
-    BYTE  LocalHint;
-    BYTE  GlobalHint;
-    BYTE  Search;
-    BYTE  Once;
+    uint32_t Count;
+    uint8_t  LocalHint;
+    uint8_t  GlobalHint;
+    uint8_t  Search;
+    uint8_t  Once;
     DWORD64 LowAddress;
     DWORD64 HighAddress;
     UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
@@ -1502,25 +1481,25 @@ EXCEPTION_DISPOSITION
     PEXCEPTION_RECORD ExceptionRecord,
     ULONG64 EstablisherFrame,
     PCONTEXT ContextRecord,
-    PVOID DispatcherContext
+    void * DispatcherContext
     );
 
 #if defined(_ARM_)
 
 typedef struct _DISPATCHER_CONTEXT {
-    DWORD ControlPc;
-    DWORD ImageBase;
+    uint32_t ControlPc;
+    uint32_t ImageBase;
     PRUNTIME_FUNCTION FunctionEntry;
-    DWORD EstablisherFrame;
-    DWORD TargetPc;
+    uint32_t EstablisherFrame;
+    uint32_t TargetPc;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
-    DWORD ScopeIndex;
+    uint32_t ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
-    PBYTE  NonVolatileRegisters;
-    DWORD Reserved;
+    uint8_t *  NonVolatileRegisters;
+    uint32_t Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
 #elif defined(_ARM64_)
@@ -1533,11 +1512,11 @@ typedef struct _DISPATCHER_CONTEXT {
     ULONG64 TargetPc;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
     ULONG64 ScopeIndex;
     BOOLEAN ControlPcIsUnwound;
-    PBYTE  NonVolatileRegisters;
+    uint8_t *  NonVolatileRegisters;
     ULONG64 Reserved;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
@@ -1551,7 +1530,7 @@ typedef struct _DISPATCHER_CONTEXT {
     ULONG64 TargetIp;
     PCONTEXT ContextRecord;
     PEXCEPTION_ROUTINE LanguageHandler;
-    PVOID HandlerData;
+    void * HandlerData;
     PUNWIND_HISTORY_TABLE HistoryTable;
 } DISPATCHER_CONTEXT, *PDISPATCHER_CONTEXT;
 
@@ -1570,23 +1549,23 @@ typedef DISPATCHER_CONTEXT *PDISPATCHER_CONTEXT;
 typedef struct _EXCEPTION_REGISTRATION_RECORD EXCEPTION_REGISTRATION_RECORD;
 typedef EXCEPTION_REGISTRATION_RECORD *PEXCEPTION_REGISTRATION_RECORD;
 
-typedef LPVOID HKEY;
-typedef LPVOID PACL;
-typedef LPVOID LPBC;
-typedef LPVOID PSECURITY_DESCRIPTOR;
+typedef void * HKEY;
+typedef void * PACL;
+typedef void * LPBC;
+typedef void * PSECURITY_DESCRIPTOR;
 
 typedef struct _EXCEPTION_RECORD64 {
-    DWORD ExceptionCode;
-    ULONG ExceptionFlags;
+    uint32_t ExceptionCode;
+    uint32_t ExceptionFlags;
     ULONG64 ExceptionRecord;
     ULONG64 ExceptionAddress;
-    ULONG NumberParameters;
-    ULONG __unusedAlignment;
+    uint32_t NumberParameters;
+    uint32_t __unusedAlignment;
     ULONG64 ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
 
-typedef LONG (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
-    IN struct _EXCEPTION_POINTERS *ExceptionInfo
+typedef int32_t (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
+     struct _EXCEPTION_POINTERS *ExceptionInfo
     );
 typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 
@@ -1599,8 +1578,8 @@ typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
 /******************* winnt ************************************/
 
 typedef struct LIST_ENTRY32 {
-    ULONG Flink;
-    ULONG Blink;
+    uint32_t Flink;
+    uint32_t Blink;
 } LIST_ENTRY32;
 typedef LIST_ENTRY32 *PLIST_ENTRY32;
 
@@ -1614,19 +1593,19 @@ typedef LIST_ENTRY64 *PLIST_ENTRY64;
 
 typedef struct _HSATELLITE *HSATELLITE;
 
-EXTERN_C HSATELLITE PALAPI PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
-EXTERN_C HSATELLITE PALAPI PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
-EXTERN_C BOOL PALAPI PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
-EXTERN_C UINT PALAPI PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
-             UINT uID,
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
+EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
+EXTERN_C BOOL PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
+EXTERN_C uint32_t PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
+             uint32_t uID,
              LPWSTR lpBuffer,
-             UINT nBufferMax);
-EXTERN_C UINT PALAPI PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
-             UINT uID,
+             uint32_t nBufferMax);
+EXTERN_C uint32_t PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
+             uint32_t uID,
              LPSTR lpBuffer,
-             UINT nBufferMax);
+             uint32_t nBufferMax);
 
-EXTERN_C HRESULT PALAPI PAL_CoCreateInstance(REFCLSID   rclsid,
+EXTERN_C HRESULT PAL_CoCreateInstance(REFCLSID   rclsid,
                              REFIID     riid,
                              void     **ppv);
 
@@ -1647,19 +1626,19 @@ EXTERN_C HRESULT PALAPI PAL_CoCreateInstance(REFCLSID   rclsid,
 /* ----- Types and structures ----- */
 typedef struct tagVS_FIXEDFILEINFO
 {
-    DWORD   dwSignature;            /* e.g. 0xfeef04bd */
-    DWORD   dwStrucVersion;         /* e.g. 0x00000042 = "0.42" */
-    DWORD   dwFileVersionMS;        /* e.g. 0x00030075 = "3.75" */
-    DWORD   dwFileVersionLS;        /* e.g. 0x00000031 = "0.31" */
-    DWORD   dwProductVersionMS;     /* e.g. 0x00030010 = "3.10" */
-    DWORD   dwProductVersionLS;     /* e.g. 0x00000031 = "0.31" */
-    DWORD   dwFileFlagsMask;        /* = 0x3F for version "0.42" */
-    DWORD   dwFileFlags;            /* e.g. VFF_DEBUG | VFF_PRERELEASE */
-    DWORD   dwFileOS;               /* e.g. VOS_DOS_WINDOWS16 */
-    DWORD   dwFileType;             /* e.g. VFT_DRIVER */
-    DWORD   dwFileSubtype;          /* e.g. VFT2_DRV_KEYBOARD */
-    DWORD   dwFileDateMS;           /* e.g. 0 */
-    DWORD   dwFileDateLS;           /* e.g. 0 */
+    uint32_t   dwSignature;            /* e.g. 0xfeef04bd */
+    uint32_t   dwStrucVersion;         /* e.g. 0x00000042 = "0.42" */
+    uint32_t   dwFileVersionMS;        /* e.g. 0x00030075 = "3.75" */
+    uint32_t   dwFileVersionLS;        /* e.g. 0x00000031 = "0.31" */
+    uint32_t   dwProductVersionMS;     /* e.g. 0x00030010 = "3.10" */
+    uint32_t   dwProductVersionLS;     /* e.g. 0x00000031 = "0.31" */
+    uint32_t   dwFileFlagsMask;        /* = 0x3F for version "0.42" */
+    uint32_t   dwFileFlags;            /* e.g. VFF_DEBUG | VFF_PRERELEASE */
+    uint32_t   dwFileOS;               /* e.g. VOS_DOS_WINDOWS16 */
+    uint32_t   dwFileType;             /* e.g. VFT_DRIVER */
+    uint32_t   dwFileSubtype;          /* e.g. VFT2_DRV_KEYBOARD */
+    uint32_t   dwFileDateMS;           /* e.g. 0 */
+    uint32_t   dwFileDateLS;           /* e.g. 0 */
 } VS_FIXEDFILEINFO;
 
 /************** Byte swapping & unaligned access ******************/

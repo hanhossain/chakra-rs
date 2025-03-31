@@ -226,22 +226,22 @@ namespace Js
         return args[0];
     }
 
-    BYTE* SharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
+    uint8_t* SharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
     {
         Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
         if (this->IsValidVirtualBufferLength(length))
         {
-            return (BYTE*)AsmJsVirtualAllocator(length);
+            return (uint8_t*)AsmJsVirtualAllocator(length);
         }
         else
 #endif
         {
-            return HeapNewNoThrowArray(BYTE, length);
+            return HeapNewNoThrowArray(uint8_t, length);
         }
     }
 
-    void SharedArrayBuffer::FreeBuffer(BYTE* buffer, uint32 length, uint32 maxLength)
+    void SharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength)
     {
         Unused(maxLength); // WebAssembly only
 #if ENABLE_FAST_ARRAYBUFFER
@@ -260,7 +260,7 @@ namespace Js
     void SharedArrayBuffer::Init(uint32 length, uint32 maxLength)
     {
         AssertOrFailFast(!sharedContents && length <= maxLength);
-        BYTE * buffer = nullptr;
+        uint8_t * buffer = nullptr;
         if (length > MaxSharedArrayBufferLength)
         {
             // http://tc39.github.io/ecmascript_sharedmem/shmem.html#DataTypesValues.SpecTypes.DataBlocks.CreateSharedByteDataBlock
@@ -387,7 +387,7 @@ namespace Js
         return sharedContents != nullptr ? sharedContents->bufferLength : 0;
     }
 
-    BYTE* SharedArrayBuffer::GetBuffer() const
+    uint8_t* SharedArrayBuffer::GetBuffer() const
     {
         return sharedContents != nullptr ? sharedContents->buffer : nullptr;
     }
@@ -525,7 +525,7 @@ namespace Js
     _Must_inspect_result_ bool WebAssemblySharedArrayBuffer::GrowMemory(uint32 newBufferLength)
     {
         uint32 bufferLength = sharedContents->bufferLength;
-        BYTE* buffer = sharedContents->buffer;
+        uint8_t* buffer = sharedContents->buffer;
         if (newBufferLength < bufferLength || newBufferLength > sharedContents->maxBufferLength)
         {
             AssertMsg(newBufferLength <= sharedContents->maxBufferLength, "This shouldn't happen");
@@ -565,12 +565,12 @@ namespace Js
         return true;
     }
 
-    BYTE* WebAssemblySharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
+    uint8_t* WebAssemblySharedArrayBuffer::AllocBuffer(uint32 length, uint32 maxLength)
     {
 #if ENABLE_FAST_ARRAYBUFFER
         if (CONFIG_FLAG(WasmFastArray))
         {
-            return (BYTE*)WasmVirtualAllocator(length);
+            return (uint8_t*)WasmVirtualAllocator(length);
         }
 #endif
         AssertOrFailFast(maxLength >= length);
@@ -585,10 +585,10 @@ namespace Js
             }
         }
         // Allocate the full size of the buffer if we can't do VirtualAlloc
-        return HeapNewNoThrowArray(BYTE, maxLength);
+        return HeapNewNoThrowArray(uint8_t, maxLength);
     }
 
-    void WebAssemblySharedArrayBuffer::FreeBuffer(BYTE* buffer, uint32 length, uint32 maxLength)
+    void WebAssemblySharedArrayBuffer::FreeBuffer(uint8_t* buffer, uint32 length, uint32 maxLength)
     {
         if (IsValidVirtualBufferLength(length))
         {

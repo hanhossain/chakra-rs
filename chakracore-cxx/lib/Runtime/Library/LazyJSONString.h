@@ -91,7 +91,7 @@ private:
 
     static const WCHAR escapeMap[128];
 public:
-    static const BYTE escapeMapCount[128];
+    static const uint8_t escapeMapCount[128];
 
 protected:
     DEFINE_VTABLE_CTOR(LazyJSONString, JavascriptString);

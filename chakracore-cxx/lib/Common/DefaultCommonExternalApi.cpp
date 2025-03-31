@@ -25,7 +25,7 @@ LPCWSTR JsUtil::ExternalApi::GetFeatureKeyName()
     return _u("");
 }
 
-bool JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, PVOID returnAddress)
+bool JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, void * returnAddress)
 {
     return false;
 }

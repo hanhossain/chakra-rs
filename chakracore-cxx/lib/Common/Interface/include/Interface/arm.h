@@ -10,8 +10,8 @@
 #error Include arm.h in builds of ARM targets only.
 #endif
 
-extern "C" LPVOID arm_GET_CURRENT_FRAME(void);
-extern "C" VOID arm_SAVE_REGISTERS(void*);
+extern "C" void * arm_GET_CURRENT_FRAME(void);
+extern "C" void arm_SAVE_REGISTERS(void*);
 
 /*
  * The relevant part of the frame looks like this (high addresses at the top, low ones at the bottom):
@@ -26,5 +26,5 @@ extern "C" VOID arm_SAVE_REGISTERS(void*);
  * ...
  */
 
-const DWORD ReturnAddrOffsetFromFramePtr = 1;
-const DWORD ArgOffsetFromFramePtr = 2;
+const uint32_t ReturnAddrOffsetFromFramePtr = 1;
+const uint32_t ArgOffsetFromFramePtr = 2;

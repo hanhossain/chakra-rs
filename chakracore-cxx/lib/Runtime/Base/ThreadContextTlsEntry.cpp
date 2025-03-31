@@ -46,7 +46,7 @@ bool ThreadContextTLSEntry::TrySetThreadContext(ThreadContext * threadContext)
     Assert(threadContext != NULL);
     ASSERT_ENTRY_INITIALIZED();
 
-    DWORD threadContextThreadId = threadContext->GetCurrentThreadId();
+    uint32_t threadContextThreadId = threadContext->GetCurrentThreadId();
 
     // If a thread context is current on another thread, then you cannot set it to current on this one.
     if (threadContextThreadId != ThreadContext::NoThread && threadContextThreadId != ::GetCurrentThreadId())

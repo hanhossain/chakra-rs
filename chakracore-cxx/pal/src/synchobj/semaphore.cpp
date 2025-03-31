@@ -72,14 +72,13 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreExA(
-        IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-        IN LONG lInitialCount,
-        IN LONG lMaximumCount,
-        IN LPCSTR lpName,
-        IN /*_Reserved_*/  DWORD dwFlags,
-        IN DWORD dwDesiredAccess)
+         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+         int32_t lInitialCount,
+         int32_t lMaximumCount,
+         LPCSTR lpName,
+         /*_Reserved_*/  uint32_t dwFlags,
+         uint32_t dwDesiredAccess)
 {
     // dwFlags is reserved and unused, and dwDesiredAccess is currently
     // only ever used as SEMAPHORE_ALL_ACCESS.  The other parameters
@@ -107,12 +106,11 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreA(
-         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         IN LONG lInitialCount,
-         IN LONG lMaximumCount,
-         IN LPCSTR lpName)
+          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
+          LPCSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     CPalThread *pthr = NULL;
@@ -170,14 +168,13 @@ See MSDN doc.
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreExW(
-        IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-        IN LONG lInitialCount,
-        IN LONG lMaximumCount,
-        IN LPCWSTR lpName,
-        IN /*_Reserved_*/  DWORD dwFlags,
-        IN DWORD dwDesiredAccess)
+         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+         int32_t lInitialCount,
+         int32_t lMaximumCount,
+         LPCWSTR lpName,
+         /*_Reserved_*/  uint32_t dwFlags,
+         uint32_t dwDesiredAccess)
 {
     // dwFlags is reserved and unused
 
@@ -202,12 +199,11 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateSemaphoreW(
-         IN LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-         IN LONG lInitialCount,
-         IN LONG lMaximumCount,
-         IN LPCWSTR lpName)
+          LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+          int32_t lInitialCount,
+          int32_t lMaximumCount,
+          LPCWSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError;
@@ -264,8 +260,8 @@ PAL_ERROR
 CorUnix::InternalCreateSemaphore(
     CPalThread *pthr,
     LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-    LONG lInitialCount,
-    LONG lMaximumCount,
+    int32_t lInitialCount,
+    int32_t lMaximumCount,
     LPCWSTR lpName,
     HANDLE *phSemaphore
     )
@@ -398,11 +394,10 @@ Parameters:
 --*/
 
 BOOL
-PALAPI
 ReleaseSemaphore(
-         IN HANDLE hSemaphore,
-         IN LONG lReleaseCount,
-         OUT LPLONG lpPreviousCount)
+          HANDLE hSemaphore,
+          int32_t lReleaseCount,
+          int32_t * lpPreviousCount)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -445,15 +440,15 @@ PAL_ERROR
 CorUnix::InternalReleaseSemaphore(
     CPalThread *pthr,
     HANDLE hSemaphore,
-    LONG lReleaseCount,
-    LPLONG lpPreviousCount
+    int32_t lReleaseCount,
+    int32_t * lpPreviousCount
     )
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjSemaphore = NULL;
     ISynchStateController *pssc = NULL;
     SemaphoreImmutableData *pSemaphoreData;
-    LONG lOldCount;
+    int32_t lOldCount;
 
     _ASSERTE(NULL != pthr);
 
@@ -564,11 +559,10 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 OpenSemaphoreW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        uint32_t dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hSemaphore = NULL;
     PAL_ERROR palError = NO_ERROR;

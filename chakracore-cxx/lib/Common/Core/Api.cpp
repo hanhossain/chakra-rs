@@ -14,7 +14,7 @@ int AssertsToConsole = false;
 int IsInAssert = false;
 #endif
 
-void __stdcall js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count)
+void js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count)
 {
     Assert((count) <= (sizeInBytes));
     if ((count) <= (sizeInBytes))
@@ -23,7 +23,7 @@ void __stdcall js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, 
         Js::Throw::FatalInternalError();
 }
 
-void __stdcall js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWords, __in_ecount(count) const char16 *src, size_t count)
+void js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWords, __in_ecount(count) const char16 *src, size_t count)
 {
     //Multiplication Overflow check
     Assert(count <= sizeInWords && count <= SIZE_MAX/sizeof(char16));
@@ -36,7 +36,7 @@ void __stdcall js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWord
 
 #if defined(_M_IX86) || defined(_M_X64)
 
-void __stdcall js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes)
+void js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes)
 {
     if ((sizeInBytes % sizeof(__m128i)) == 0)
     {

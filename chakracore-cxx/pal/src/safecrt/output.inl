@@ -84,9 +84,9 @@ Buffer size required to be passed to _gcvt, fcvt and other fp conversion routine
  * _output_s calls _invalid_parameter (and returns -1, possibly) if the format string is malformed.
  */
 #ifndef _UNICODE
-int __cdecl _soutput_s(char *_Dst, size_t _Size, const char *_Format, va_list _ArgList)
+int _soutput_s(char *_Dst, size_t _Size, const char *_Format, va_list _ArgList)
 #else  /* _UNICODE */
-int __cdecl _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _ArgList)
+int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _ArgList)
 #endif  /* _UNICODE */
 {
     miniFILE stream;
@@ -171,10 +171,6 @@ int __cdecl _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, v
 #undef  _MBCS
 #endif  /* _MBCS */
 //#include <tchar.h>
-
-/* this macro defines a function which is private and as fast as possible: */
-/* for example, in C 6.0, it might be static _fastcall <type> near. */
-#define LOCAL(x) static x __cdecl
 
 /* int/long/short/pointer sizes */
 
@@ -538,9 +534,9 @@ static const unsigned char __lookuptable_s[] = {
 #define WRITE_MULTI_CHAR(ch, num, pnw)  write_multi_char(ch, num, pnw)
 #define WRITE_STRING(s, len, pnw)   write_string(s, len, pnw)
 
-LOCAL(void) write_char(_TCHAR ch, int *pnumwritten);
-LOCAL(void) write_multi_char(_TCHAR ch, int num, int *pnumwritten);
-LOCAL(void) write_string(const _TCHAR *string, int len, int *numwritten);
+static void write_char(_TCHAR ch, int *pnumwritten);
+static void write_multi_char(_TCHAR ch, int num, int *pnumwritten);
+static void write_string(const _TCHAR *string, int len, int *numwritten);
 
 #else  /* CPRFLAG */
 
@@ -548,9 +544,9 @@ LOCAL(void) write_string(const _TCHAR *string, int len, int *numwritten);
 #define WRITE_MULTI_CHAR(ch, num, pnw)  write_multi_char(ch, num, stream, pnw)
 #define WRITE_STRING(s, len, pnw)   write_string(s, len, stream, pnw)
 
-LOCAL(void) write_char(_TCHAR ch, miniFILE *f, int *pnumwritten);
-LOCAL(void) write_multi_char(_TCHAR ch, int num, miniFILE *f, int *pnumwritten);
-LOCAL(void) write_string(const _TCHAR *string, int len, miniFILE *f, int *numwritten);
+static void write_char(_TCHAR ch, miniFILE *f, int *pnumwritten);
+static void write_multi_char(_TCHAR ch, int num, miniFILE *f, int *pnumwritten);
+static void write_string(const _TCHAR *string, int len, miniFILE *f, int *numwritten);
 
 #endif  /* CPRFLAG */
 
@@ -565,27 +561,27 @@ LOCAL(void) write_string(const _TCHAR *string, int len, miniFILE *f, int *numwri
 
 #else   // __GNUC_VA_LIST
 
-__inline int __cdecl get_int_arg(va_list *pargptr);
+__inline int get_int_arg(va_list *pargptr);
 
 #if !LONG_IS_INT
-__inline long __cdecl get_long_arg(va_list *pargptr);
+__inline long get_long_arg(va_list *pargptr);
 #endif  /* !LONG_IS_INT */
 
 #if !LONGLONG_IS_INT64
-__inline long long __cdecl get_long_long_arg(va_list *pargptr);
+__inline long long get_long_long_arg(va_list *pargptr);
 #endif  /* !LONGLONG_IS_INT64 */
 
 #if _INTEGRAL_MAX_BITS >= 64
-__inline __int64 __cdecl get_int64_arg(va_list *pargptr);
+__inline __int64 get_int64_arg(va_list *pargptr);
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
 
 #endif // __GNUC_VA_LIST
 
 #ifdef CPRFLAG
-LOCAL(int) output(const _TCHAR *, _locale_t , va_list);
-_CRTIMP int __cdecl _vtcprintf_l (const _TCHAR *, _locale_t, va_list);
-_CRTIMP int __cdecl _vtcprintf_s_l (const _TCHAR *, _locale_t, va_list);
-_CRTIMP int __cdecl _vtcprintf_p_l (const _TCHAR *, _locale_t, va_list);
+static int output(const _TCHAR *, _locale_t , va_list);
+_CRTIMP int _vtcprintf_l (const _TCHAR *, _locale_t, va_list);
+_CRTIMP int _vtcprintf_s_l (const _TCHAR *, _locale_t, va_list);
+_CRTIMP int _vtcprintf_p_l (const _TCHAR *, _locale_t, va_list);
 
 
 /***
@@ -605,13 +601,13 @@ _CRTIMP int __cdecl _vtcprintf_p_l (const _TCHAR *, _locale_t, va_list);
 *
 *******************************************************************************/
 #ifndef FORMAT_VALIDATIONS
-_CRTIMP int __cdecl _tcprintf_l (
+_CRTIMP int _tcprintf_l (
         const _TCHAR * format,
         _locale_t plocinfo,
         ...
         )
 #else  /* FORMAT_VALIDATIONS */
-_CRTIMP int __cdecl _tcprintf_s_l (
+_CRTIMP int _tcprintf_s_l (
         const _TCHAR * format,
         _locale_t plocinfo,
         ...
@@ -636,12 +632,12 @@ _CRTIMP int __cdecl _tcprintf_s_l (
 }
 
 #ifndef FORMAT_VALIDATIONS
-_CRTIMP int __cdecl _tcprintf (
+_CRTIMP int _tcprintf (
         const _TCHAR * format,
         ...
         )
 #else  /* FORMAT_VALIDATIONS */
-_CRTIMP int __cdecl _tcprintf_s (
+_CRTIMP int _tcprintf_s (
         const _TCHAR * format,
         ...
         )
@@ -701,7 +697,7 @@ _CRTIMP int __cdecl _tcprintf_s (
 *******************************************************************************/
 #ifdef CPRFLAG
 #ifndef FORMAT_VALIDATIONS
-_CRTIMP int __cdecl _vtcprintf (
+_CRTIMP int _vtcprintf (
     const _TCHAR *format,
     va_list argptr
     )
@@ -710,7 +706,7 @@ _CRTIMP int __cdecl _vtcprintf (
 }
 
 #else  /* FORMAT_VALIDATIONS */
-_CRTIMP int __cdecl _vtcprintf_s (
+_CRTIMP int _vtcprintf_s (
     const _TCHAR *format,
     va_list argptr
     )
@@ -723,26 +719,26 @@ _CRTIMP int __cdecl _vtcprintf_s (
 
 #ifdef CPRFLAG
 #ifndef FORMAT_VALIDATIONS
-_CRTIMP int __cdecl _vtcprintf_l (
+_CRTIMP int _vtcprintf_l (
 #else  /* FORMAT_VALIDATIONS */
-_CRTIMP int __cdecl _vtcprintf_s_l (
+_CRTIMP int _vtcprintf_s_l (
 #endif  /* FORMAT_VALIDATIONS */
 #else  /* CPRFLAG */
 
 #ifdef _UNICODE
 #ifndef FORMAT_VALIDATIONS
-int __cdecl _woutput (
+int _woutput (
     miniFILE *stream,
 #else  /* FORMAT_VALIDATIONS */
-int __cdecl _woutput_s (
+int _woutput_s (
     miniFILE *stream,
 #endif  /* FORMAT_VALIDATIONS */
 #else  /* _UNICODE */
 #ifndef FORMAT_VALIDATIONS
-int __cdecl _output (
+int _output (
     miniFILE *stream,
 #else  /* FORMAT_VALIDATIONS */
-    int __cdecl _output_s (
+    int _output_s (
     miniFILE *stream,
 
 #endif  /* FORMAT_VALIDATIONS */
@@ -1503,7 +1499,7 @@ int __cdecl _output (
 
 #ifdef CPRFLAG
 
-LOCAL(void) write_char (
+static void write_char (
     _TCHAR ch,
     int *pnumwritten
     )
@@ -1520,7 +1516,7 @@ LOCAL(void) write_char (
 
 #else  /* CPRFLAG */
 
-LOCAL(void) write_char (
+static void write_char (
     _TCHAR ch,
     miniFILE *f,
     int *pnumwritten
@@ -1569,7 +1565,7 @@ LOCAL(void) write_char (
 *******************************************************************************/
 
 #ifdef CPRFLAG
-LOCAL(void) write_multi_char (
+static void write_multi_char (
     _TCHAR ch,
     int num,
     int *pnumwritten
@@ -1584,7 +1580,7 @@ LOCAL(void) write_multi_char (
 
 #else  /* CPRFLAG */
 
-LOCAL(void) write_multi_char (
+static void write_multi_char (
     _TCHAR ch,
     int num,
     miniFILE *f,
@@ -1627,7 +1623,7 @@ LOCAL(void) write_multi_char (
 
 #ifdef CPRFLAG
 
-LOCAL(void) write_string (
+static void write_string (
     const _TCHAR *string,
     int len,
     int *pnumwritten
@@ -1647,7 +1643,7 @@ LOCAL(void) write_string (
 
 #else  /* CPRFLAG */
 
-LOCAL(void) write_string (
+static void write_string (
     const _TCHAR *string,
     int len,
     miniFILE *f,
@@ -1691,7 +1687,7 @@ LOCAL(void) write_string (
 *
 *******************************************************************************/
 
-__inline int __cdecl get_int_arg (
+__inline int get_int_arg (
     va_list *pargptr
     )
 {
@@ -1715,7 +1711,7 @@ __inline int __cdecl get_int_arg (
 *******************************************************************************/
 
 #if !LONG_IS_INT
-__inline long __cdecl get_long_arg (
+__inline long get_long_arg (
     va_list *pargptr
     )
 {
@@ -1724,7 +1720,7 @@ __inline long __cdecl get_long_arg (
 #endif  /* !LONG_IS_INT */
 
 #if !LONGLONG_IS_INT64
-__inline long long __cdecl get_long_long_arg (
+__inline long long get_long_long_arg (
     va_list *pargptr
     )
 {
@@ -1733,7 +1729,7 @@ __inline long long __cdecl get_long_long_arg (
 #endif  /* !LONGLONG_IS_INT64 */
 
 #if _INTEGRAL_MAX_BITS >= 64
-__inline __int64 __cdecl get_int64_arg (
+__inline __int64 get_int64_arg (
     va_list *pargptr
     )
 {

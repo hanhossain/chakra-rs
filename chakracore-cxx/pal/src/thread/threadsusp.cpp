@@ -53,7 +53,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 
 /* This code is written to the blocking pipe of a thread that was created
    in suspended state in order to resume it. */
-CONST BYTE WAKEUPCODE=0x2A;
+const uint8_t WAKEUPCODE=0x2A;
 
 // #define USE_GLOBAL_LOCK_FOR_SUSPENSION // Uncomment this define to use the global suspension lock.
 /* The global suspension lock can be used in place of each thread having its own
@@ -94,7 +94,7 @@ CThreadSuspensionInfo::InternalSuspendNewThreadFromData(
     pThread->suspensionInfo.SetBlockingPipe(pipe_descs[1]);
     pThread->SetStartStatus(TRUE);
 
-    BYTE resume_code = 0;
+    uint8_t resume_code = 0;
     ssize_t read_ret;
 
     // Block until ResumeThread writes something to the pipe
@@ -135,15 +135,14 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 ResumeThread(
-         IN HANDLE hThread
+          HANDLE hThread
          )
 {
     PAL_ERROR palError;
     CPalThread *pthrResumer;
-    DWORD dwSuspendCount = (DWORD)-1;
+    uint32_t dwSuspendCount = (uint32_t)-1;
 
     PERF_ENTRY(ResumeThread);
     ENTRY("ResumeThread(hThread=%p)\n", hThread);
@@ -158,11 +157,11 @@ ResumeThread(
     if (NO_ERROR != palError)
     {
         pthrResumer->SetLastError(palError);
-        dwSuspendCount = (DWORD) -1;
+        dwSuspendCount = (uint32_t) -1;
     }
     else
     {
-        _ASSERT_MSG(dwSuspendCount != static_cast<DWORD>(-1), "InternalResumeThread returned success but dwSuspendCount did not change.\n");
+        _ASSERT_MSG(dwSuspendCount != static_cast<uint32_t>(-1), "InternalResumeThread returned success but dwSuspendCount did not change.\n");
     }
 
     LOGEXIT("ResumeThread returns DWORD %u\n", dwSuspendCount);
@@ -183,7 +182,7 @@ PAL_ERROR
 CorUnix::InternalResumeThread(
     CPalThread *pthrResumer,
     HANDLE hTargetThread,
-    DWORD *pdwSuspendCount
+    uint32_t *pdwSuspendCount
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -235,7 +234,7 @@ PAL_ERROR
 CThreadSuspensionInfo::InternalResumeThreadFromData(
     CPalThread *pthrResumer,
     CPalThread *pthrTarget,
-    DWORD *pdwSuspendCount
+    uint32_t *pdwSuspendCount
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -465,7 +464,7 @@ approach is the safest and avoids nasty race conditions.
 If USE_GLOBAL_LOCK_FOR_SUSPENSION is defined, the calling thread
 will acquire the global lock when possible.
 --*/
-VOID
+void
 CThreadSuspensionInfo::AcquireSuspensionLocks(
     CPalThread *pthrSuspender,
     CPalThread *pthrTarget
@@ -526,7 +525,7 @@ This prevents a suspending or resuming thread from being suspended
 while holding the target's lock.
 If USE_GLOBAL_LOCK_FOR_SUSPENSION is defined, it simply releases the global lock.
 --*/
-VOID
+void
 CThreadSuspensionInfo::ReleaseSuspensionLocks(
     CPalThread *pthrSuspender,
     CPalThread *pthrTarget
@@ -771,7 +770,7 @@ InitializeSuspensionLock initializes a thread's suspension spinlock
 or suspension mutex. It is called from the CThreadSuspensionInfo
 constructor.
 --*/
-VOID
+void
 CThreadSuspensionInfo::InitializeSuspensionLock()
 {
 #if !DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX

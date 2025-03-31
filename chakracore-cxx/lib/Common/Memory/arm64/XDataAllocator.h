@@ -50,29 +50,29 @@ namespace Memory
         {
             XDataAllocationEntry* next;
         };
-        BYTE* start;
-        BYTE* current;
+        uint8_t* start;
+        uint8_t* current;
         uint  size;
 
         XDataAllocationEntry* freeList;
 
         // --------- Public functions ---------/
     public:
-        XDataAllocator(BYTE* address, uint size);
+        XDataAllocator(uint8_t* address, uint size);
         virtual ~XDataAllocator();
 
         bool Initialize(void* segmentStart, void* segmentEnd);
         void Delete();
-        bool Alloc(ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
+        bool Alloc(size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
         void Release(const SecondaryAllocation& address);
         bool CanAllocate();
 
-        static void Register(XDataAllocation * xdataInfo, ULONG_PTR functionStart, DWORD functionSize);
+        static void Register(XDataAllocation * xdataInfo, size_t functionStart, uint32_t functionSize);
         static void Unregister(XDataAllocation * xdataInfo);
 
         // -------- Private helpers ---------/
     private:
-        BYTE* End() { return start + size; }
+        uint8_t* End() { return start + size; }
 
         // Read .eh_frame data head (length record). 0 means empty.
         static uint32 ReadHead(const void* p)

@@ -34,15 +34,15 @@ namespace CorUnix
 
     typedef struct
     {
-        LONG lMaximumCount;
+        int32_t lMaximumCount;
     } SemaphoreImmutableData;
 
     PAL_ERROR
     InternalCreateSemaphore(
         CPalThread *pThread,
         LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-        LONG lInitialCount,
-        LONG lMaximumCount,
+        int32_t lInitialCount,
+        int32_t lMaximumCount,
         LPCWSTR lpName,
         HANDLE *phSemaphore
         );
@@ -51,8 +51,8 @@ namespace CorUnix
     InternalReleaseSemaphore(
         CPalThread *pThread,
         HANDLE hSemaphore,
-        LONG lReleaseCount,
-        LPLONG lpPreviousCount
+        int32_t lReleaseCount,
+        int32_t * lpPreviousCount
         );
 
 }

@@ -52,11 +52,11 @@ ubyte GetDwarfRegNum(ubyte regNum)
 }
 
 // Encode into ULEB128 (Unsigned Little Endian Base 128)
-BYTE* EmitLEB128(BYTE* pc, unsigned value)
+uint8_t* EmitLEB128(uint8_t* pc, unsigned value)
 {
     do
     {
-        BYTE b = value & 0x7F; // low order 7 bits
+        uint8_t b = value & 0x7F; // low order 7 bits
         value >>= 7;
 
         if (value)  // more bytes to come
@@ -72,7 +72,7 @@ BYTE* EmitLEB128(BYTE* pc, unsigned value)
 }
 
 // Encode into signed LEB128 (Signed Little Endian Base 128)
-BYTE* EmitLEB128(BYTE* pc, int value)
+uint8_t* EmitLEB128(uint8_t* pc, int value)
 {
     static const int size = sizeof(value) * 8;
     static const bool isLogicShift = (-1 >> 1) != -1;
@@ -82,7 +82,7 @@ BYTE* EmitLEB128(BYTE* pc, int value)
     bool more = true;
     while (more)
     {
-        BYTE b = value & 0x7F; // low order 7 bits
+        uint8_t b = value & 0x7F; // low order 7 bits
         value >>= 7;
 
         if (signExtend)
@@ -201,7 +201,7 @@ void EhFrame::FDE::UpdateAddressRange(const void* pcBegin, size_t pcRange)
 }
 
 
-EhFrame::EhFrame(BYTE* buffer, size_t size)
+EhFrame::EhFrame(uint8_t* buffer, size_t size)
         : writer(buffer, size), fde(&writer)
 {
     CIE cie(&writer);

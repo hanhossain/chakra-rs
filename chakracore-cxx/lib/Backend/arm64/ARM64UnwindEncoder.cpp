@@ -46,7 +46,7 @@ Arm64XdataGenerator::Arm64XdataGenerator()
 {
 }
 
-void Arm64XdataGenerator::SafeAppendDword(DWORD value)
+void Arm64XdataGenerator::SafeAppendDword(uint32_t value)
 {
     Assert(m_xdataBytes < sizeof(this->m_xdata));
     if (m_xdataBytes < sizeof(this->m_xdata))
@@ -56,7 +56,7 @@ void Arm64XdataGenerator::SafeAppendDword(DWORD value)
     this->m_xdataBytes += 4;
 }
 
-void Arm64XdataGenerator::Generate(PULONG prologStart, PULONG prologEnd, PULONG epilogStart, PULONG epilogEnd, PULONG functionEnd, ULONG exceptionHandlerRva, ULONG exceptionData)
+void Arm64XdataGenerator::Generate(uint32_t * prologStart, uint32_t * prologEnd, uint32_t * epilogStart, uint32_t * epilogEnd, uint32_t * functionEnd, uint32_t exceptionHandlerRva, uint32_t exceptionData)
 {
     Assert(prologStart != NULL);
     Assert(prologEnd != NULL);
@@ -83,12 +83,12 @@ void Arm64XdataGenerator::Generate(PULONG prologStart, PULONG prologEnd, PULONG 
 
     // first generate the codes for prolog
     Arm64UnwindCodeGenerator generator;
-    BYTE unwindCodes[maxOpcodeBytes * 2];
-    ULONG prologCodeBytes = generator.GeneratePrologCodes(&unwindCodes[0], sizeof(unwindCodes), prologStart, prologEnd);
+    uint8_t unwindCodes[maxOpcodeBytes * 2];
+    uint32_t prologCodeBytes = generator.GeneratePrologCodes(&unwindCodes[0], sizeof(unwindCodes), prologStart, prologEnd);
 
     // then for the epilog
-    PBYTE epilogCodes = &unwindCodes[prologCodeBytes];
-    ULONG epilogCodeBytes = 0;
+    uint8_t * epilogCodes = &unwindCodes[prologCodeBytes];
+    uint32_t epilogCodeBytes = 0;
     if (epilogStart != NULL)
     {
         epilogCodeBytes = generator.GenerateEpilogCodes(epilogCodes, sizeof(unwindCodes) - prologCodeBytes, epilogStart, epilogEnd);
@@ -96,13 +96,13 @@ void Arm64XdataGenerator::Generate(PULONG prologStart, PULONG prologEnd, PULONG 
 
     // see if the epilog codes can point into the prolog codes, then compute the total size
     bool epilogSubstring = (epilogCodeBytes > 0 && epilogCodeBytes <= prologCodeBytes && memcmp(epilogCodes, &unwindCodes[prologCodeBytes - epilogCodeBytes], epilogCodeBytes) == 0);
-    ULONG epilogCodesStart = epilogSubstring ? (prologCodeBytes - epilogCodeBytes) : prologCodeBytes;
-    ULONG totalCodeSize = epilogCodesStart + epilogCodeBytes;
-    ULONG codeWords = (totalCodeSize + 3) / 4;
+    uint32_t epilogCodesStart = epilogSubstring ? (prologCodeBytes - epilogCodeBytes) : prologCodeBytes;
+    uint32_t totalCodeSize = epilogCodesStart + epilogCodeBytes;
+    uint32_t codeWords = (totalCodeSize + 3) / 4;
 
     // determine if the epilog is at the very end or not
     bool epilogAtEnd = (epilogEnd == functionEnd) && (epilogCodesStart < 32);
-    ULONG epilogCount = epilogAtEnd ? epilogCodesStart : 1;
+    uint32_t epilogCount = epilogAtEnd ? epilogCodesStart : 1;
 
     // determine if there is an exception handler
     bool hasExceptionHandler = (exceptionHandlerRva != 0);
@@ -111,24 +111,24 @@ void Arm64XdataGenerator::Generate(PULONG prologStart, PULONG prologEnd, PULONG 
     this->m_xdataBytes = 0;
     if (codeWords < 32)
     {
-        this->SafeAppendDword((codeWords << 27) | (epilogCount << 22) | (epilogAtEnd << 21) | (hasExceptionHandler << 20) | (0 << 18) | ULONG(functionLength));
+        this->SafeAppendDword((codeWords << 27) | (epilogCount << 22) | (epilogAtEnd << 21) | (hasExceptionHandler << 20) | (0 << 18) | uint32_t(functionLength));
     }
     else
     {
-        this->SafeAppendDword((0 << 27) | (0 << 22) | (epilogAtEnd << 21) | (hasExceptionHandler << 20) | (0 << 18) | ULONG(functionLength));
+        this->SafeAppendDword((0 << 27) | (0 << 22) | (epilogAtEnd << 21) | (hasExceptionHandler << 20) | (0 << 18) | uint32_t(functionLength));
         this->SafeAppendDword((codeWords << 16) | epilogCount);
     }
 
     // if the epilog is not at the end, append the single epilog scope
     if (!epilogAtEnd)
     {
-        this->SafeAppendDword((epilogCodesStart << 22) | ULONG(epilogStart - prologStart));
+        this->SafeAppendDword((epilogCodesStart << 22) | uint32_t(epilogStart - prologStart));
     }
 
     // next append the prolog codes
-    for (ULONG curWord = 0; curWord < codeWords; curWord++)
+    for (uint32_t curWord = 0; curWord < codeWords; curWord++)
     {
-        this->SafeAppendDword(PULONG(&unwindCodes[0])[curWord]);
+        this->SafeAppendDword(((uint32_t *)&unwindCodes[0])[curWord]);
     }
 
     // finally append the exception handler & data
@@ -183,7 +183,7 @@ int Arm64UnwindCodeGenerator::RebaseOffset(int offset, int maxOffset)
     return offset;
 }
 
-ULONG Arm64UnwindCodeGenerator::SafeEncode(ULONG opcode, ULONG params)
+uint32_t Arm64UnwindCodeGenerator::SafeEncode(uint32_t opcode, uint32_t params)
 {
     // reset tracking for save_next opcode
     m_lastPair = 0;
@@ -191,7 +191,7 @@ ULONG Arm64UnwindCodeGenerator::SafeEncode(ULONG opcode, ULONG params)
     return opcode | params;
 }
 
-ULONG Arm64UnwindCodeGenerator::SafeEncodeRegPair(ULONG opcode, ULONG params, int regBase, int rebasedOffset)
+uint32_t Arm64UnwindCodeGenerator::SafeEncodeRegPair(uint32_t opcode, uint32_t params, int regBase, int rebasedOffset)
 {
     // only valid for those specific opcodes which can precede a save_next opcode
     Assert(opcode == op_save_r19r20_x || opcode == op_save_regp || opcode == op_save_regp_x || opcode == op_save_fregp || opcode == op_save_fregp_x);
@@ -209,10 +209,10 @@ ULONG Arm64UnwindCodeGenerator::SafeEncodeRegPair(ULONG opcode, ULONG params, in
     return opcode | params;
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeAlloc(ULONG bytes)
+uint32_t Arm64UnwindCodeGenerator::EncodeAlloc(uint32_t bytes)
 {
     Assert(bytes % 16 == 0);
-    ULONG immed = bytes / 16;
+    uint32_t immed = bytes / 16;
 
     if (immed < 0x20)
     {
@@ -231,7 +231,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeAlloc(ULONG bytes)
     }
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreReg(int reg, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreReg(int reg, int offset)
 {
     Assert(offset >= 0);
     int immed = this->RebaseOffset(offset, 0x40);
@@ -241,7 +241,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreReg(int reg, int offset)
     return this->SafeEncode(op_save_reg, ((regBase << 6) & 0x3c0) | (immed & 0x3f));
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreRegPredec(int reg, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreRegPredec(int reg, int offset)
 {
     Assert(offset < 0);
     int immed = this->RebaseOffset(-offset, 0x20);
@@ -251,7 +251,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreRegPredec(int reg, int offset)
     return this->SafeEncode(op_save_reg_x, ((regBase << 5) & 0x1e0) | (immed & 0x1f));
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStorePair(int reg1, int reg2, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStorePair(int reg1, int reg2, int offset)
 {
     Assert(offset >= 0);
     int immed = this->RebaseOffset(offset, 0x40);
@@ -281,7 +281,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStorePair(int reg1, int reg2, int offset)
     }
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStorePairPredec(int reg1, int reg2, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStorePairPredec(int reg1, int reg2, int offset)
 {
     Assert(offset < 0);
     int immed = this->RebaseOffset(-offset, 0x40);
@@ -305,7 +305,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStorePairPredec(int reg1, int reg2, int of
     }
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreFpReg(int reg, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreFpReg(int reg, int offset)
 {
     Assert(offset >= 0);
     int immed = this->RebaseOffset(offset, 0x40);
@@ -315,7 +315,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreFpReg(int reg, int offset)
     return this->SafeEncode(op_save_freg, ((regBase << 6) & 0x1c0) | (immed & 0x3f));
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreFpRegPredec(int reg, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreFpRegPredec(int reg, int offset)
 {
     Assert(offset < 0);
     int immed = this->RebaseOffset(-offset, 0x20);
@@ -325,7 +325,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreFpRegPredec(int reg, int offset)
     return this->SafeEncode(op_save_freg_x, ((regBase << 5) & 0xe0) | (immed & 0x1f));
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreFpPair(int reg1, int reg2, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreFpPair(int reg1, int reg2, int offset)
 {
     Assert(offset >= 0);
     int immed = this->RebaseOffset(offset, 0x40);
@@ -335,7 +335,7 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreFpPair(int reg1, int reg2, int offset
     return this->SafeEncodeRegPair(op_save_fregp, ((regBase << 6) & 0x1c0) | (immed & 0x3f), 32 + regBase, immed);
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeStoreFpPairPredec(int reg1, int reg2, int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeStoreFpPairPredec(int reg1, int reg2, int offset)
 {
     Assert(offset < 0);
     int immed = this->RebaseOffset(offset, 0x40);
@@ -345,22 +345,22 @@ ULONG Arm64UnwindCodeGenerator::EncodeStoreFpPairPredec(int reg1, int reg2, int 
     return this->SafeEncodeRegPair(op_save_fregp_x, ((regBase << 6) & 0x1c0) | (immed & 0x3f), 32 + regBase, 0);
 }
 
-ULONG Arm64UnwindCodeGenerator::EncodeAddFp(int offset)
+uint32_t Arm64UnwindCodeGenerator::EncodeAddFp(int offset)
 {
     Assert(offset > 0);
     int immed = this->RebaseOffset(offset, 0x100);
     return this->SafeEncode(op_add_fp, immed & 0xff);
 }
 
-ULONG Arm64UnwindCodeGenerator::GenerateSingleOpcode(PULONG opcodePtr, PULONG regionStart, const OpcodeList &opcodeList)
+uint32_t Arm64UnwindCodeGenerator::GenerateSingleOpcode(uint32_t * opcodePtr, uint32_t * regionStart, const OpcodeList &opcodeList)
 {
-    ULONG opcode = *opcodePtr;
+    uint32_t opcode = *opcodePtr;
 
     // SUB SP, SP, #imm / ADD SP, SP, #imm
     if (opcodeList.subSpSpImm.Matches(opcode))
     {
         int shift = (opcode >> 22) & 1;
-        ULONG bytes = ((opcode >> 10) & 0xfff) << (12 * shift);
+        uint32_t bytes = ((opcode >> 10) & 0xfff) << (12 * shift);
         return this->EncodeAlloc(bytes);
     }
 
@@ -370,14 +370,14 @@ ULONG Arm64UnwindCodeGenerator::GenerateSingleOpcode(PULONG opcodePtr, PULONG re
         int regNum = (opcode >> 16) & 31;
         ULONG64 immediate = this->FindRegisterImmediate(regNum, regionStart, opcodePtr);
         Assert(immediate < 0xffffff);
-        return this->EncodeAlloc(ULONG(immediate));
+        return this->EncodeAlloc(uint32_t(immediate));
     }
 
     // ADD FP, SP, #imm
     else if (opcodeList.addFpSpImm.Matches(opcode))
     {
         int shift = (opcode >> 22) & 1;
-        ULONG bytes = ((opcode >> 10) & 0xfff) << (12 * shift);
+        uint32_t bytes = ((opcode >> 10) & 0xfff) << (12 * shift);
         if (bytes != 0)
         {
             return this->EncodeAddFp(bytes);
@@ -470,7 +470,7 @@ ULONG Arm64UnwindCodeGenerator::GenerateSingleOpcode(PULONG opcodePtr, PULONG re
     {
         ULONG64 immediate = this->FindRegisterImmediate(15, regionStart, opcodePtr);
         Assert(immediate < 0xffffff / 16);
-        return this->EncodeAlloc(ULONG(immediate) * 16);
+        return this->EncodeAlloc(uint32_t(immediate) * 16);
     }
 
     // BLR <chkstk> / RET / MOVK/MOVN/MOVZ
@@ -489,9 +489,9 @@ ULONG Arm64UnwindCodeGenerator::GenerateSingleOpcode(PULONG opcodePtr, PULONG re
     return this->EncodeNop();
 }
 
-ULONG Arm64UnwindCodeGenerator::TrimNops(PULONG opcodeList, ULONG numOpcodes)
+uint32_t Arm64UnwindCodeGenerator::TrimNops(uint32_t * opcodeList, uint32_t numOpcodes)
 {
-    ULONG count;
+    uint32_t count;
     for (count = 0; count < numOpcodes; count++)
     {
         if (opcodeList[numOpcodes - 1 - count] != op_nop)
@@ -502,23 +502,23 @@ ULONG Arm64UnwindCodeGenerator::TrimNops(PULONG opcodeList, ULONG numOpcodes)
     return count;
 }
 
-void Arm64UnwindCodeGenerator::ReverseCodes(PULONG opcodeList, ULONG numOpcodes)
+void Arm64UnwindCodeGenerator::ReverseCodes(uint32_t * opcodeList, uint32_t numOpcodes)
 {
     // simple swap-reversal
     for (int index = numOpcodes / 2 - 1; index >= 0; index--)
     {
-        ULONG temp = opcodeList[numOpcodes - 1 - index];
+        uint32_t temp = opcodeList[numOpcodes - 1 - index];
         opcodeList[numOpcodes - 1 - index] = opcodeList[index];
         opcodeList[index] = temp;
     }
 }
 
-ULONG Arm64UnwindCodeGenerator::EmitFinalCodes(PBYTE buffer, ULONG bufferSize, PULONG opcodes, ULONG count)
+uint32_t Arm64UnwindCodeGenerator::EmitFinalCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * opcodes, uint32_t count)
 {
-    ULONG outputIndex = 0;
-    for (ULONG opIndex = 0; opIndex < count; opIndex++)
+    uint32_t outputIndex = 0;
+    for (uint32_t opIndex = 0; opIndex < count; opIndex++)
     {
-        ULONG opcode = opcodes[opIndex];
+        uint32_t opcode = opcodes[opIndex];
 
         // trim unneeded bytes from the top
         int numBytes = 4;
@@ -542,15 +542,15 @@ ULONG Arm64UnwindCodeGenerator::EmitFinalCodes(PBYTE buffer, ULONG bufferSize, P
     return outputIndex;
 }
 
-ULONG64 Arm64UnwindCodeGenerator::FindRegisterImmediate(int regNum, PULONG regionStart, PULONG regionEnd)
+ULONG64 Arm64UnwindCodeGenerator::FindRegisterImmediate(int regNum, uint32_t * regionStart, uint32_t * regionEnd)
 {
     // scan forward, looking for opcodes that assemble immediate values
     ULONG64 pendingImmediate = 0;
     int pendingImmediateReg = -1;
     bool foundImmediate = false;
-    for (PULONG opcodePtr = regionStart; opcodePtr < regionEnd; opcodePtr++)
+    for (uint32_t * opcodePtr = regionStart; opcodePtr < regionEnd; opcodePtr++)
     {
-        ULONG opcode = *opcodePtr;
+        uint32_t opcode = *opcodePtr;
 
         // MOVZ/MOVK/MOVN reg
         if (MovkOpcode.Matches(opcode))
@@ -605,14 +605,14 @@ ULONG64 Arm64UnwindCodeGenerator::FindRegisterImmediate(int regNum, PULONG regio
     return pendingImmediate;
 }
 
-ULONG Arm64UnwindCodeGenerator::GeneratePrologCodes(PBYTE buffer, ULONG bufferSize, PULONG &prologStart, PULONG &prologEnd)
+uint32_t Arm64UnwindCodeGenerator::GeneratePrologCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &prologStart, uint32_t * &prologEnd)
 {
     Assert(prologStart != NULL);
     Assert(prologEnd != NULL);
     Assert(prologStart <= prologEnd);
 
     // verify against internal buffer size; truncate if out of bounds
-    ULONG numOpcodes = ULONG(prologEnd - prologStart);
+    uint32_t numOpcodes = uint32_t(prologEnd - prologStart);
     Assert(numOpcodes <= MAX_INSTRUCTIONS);
     if (numOpcodes > MAX_INSTRUCTIONS)
     {
@@ -621,8 +621,8 @@ ULONG Arm64UnwindCodeGenerator::GeneratePrologCodes(PBYTE buffer, ULONG bufferSi
     }
 
     // iterate over all prolog opcodes in forward order to produce the list of unwind opcodes
-    ULONG opcodeList[MAX_INSTRUCTIONS + 1];
-    for (ULONG opIndex = 0; opIndex < numOpcodes; opIndex++)
+    uint32_t opcodeList[MAX_INSTRUCTIONS + 1];
+    for (uint32_t opIndex = 0; opIndex < numOpcodes; opIndex++)
     {
         opcodeList[opIndex] = this->GenerateSingleOpcode(&prologStart[opIndex], prologStart, PrologOpcodes);
     }
@@ -642,14 +642,14 @@ ULONG Arm64UnwindCodeGenerator::GeneratePrologCodes(PBYTE buffer, ULONG bufferSi
     return this->EmitFinalCodes(buffer, bufferSize, opcodeList, numOpcodes);
 }
 
-ULONG Arm64UnwindCodeGenerator::GenerateEpilogCodes(PBYTE buffer, ULONG bufferSize, PULONG &epilogStart, PULONG &epilogEnd)
+uint32_t Arm64UnwindCodeGenerator::GenerateEpilogCodes(uint8_t * buffer, uint32_t bufferSize, uint32_t * &epilogStart, uint32_t * &epilogEnd)
 {
     Assert(epilogStart != NULL);
     Assert(epilogEnd != NULL);
     Assert(epilogStart <= epilogEnd);
 
     // verify against internal buffer size; truncate if out of bounds
-    ULONG numOpcodes = ULONG(epilogEnd - epilogStart);
+    uint32_t numOpcodes = uint32_t(epilogEnd - epilogStart);
     Assert(numOpcodes <= MAX_INSTRUCTIONS);
     if (numOpcodes > MAX_INSTRUCTIONS)
     {
@@ -658,8 +658,8 @@ ULONG Arm64UnwindCodeGenerator::GenerateEpilogCodes(PBYTE buffer, ULONG bufferSi
     }
 
     // iterate over all epilog opcodes in reverse order to produce the list of unwind opcodes
-    ULONG opcodeList[MAX_INSTRUCTIONS + 1];
-    for (ULONG opIndex = 0; opIndex < numOpcodes; opIndex++)
+    uint32_t opcodeList[MAX_INSTRUCTIONS + 1];
+    for (uint32_t opIndex = 0; opIndex < numOpcodes; opIndex++)
     {
         opcodeList[opIndex] = this->GenerateSingleOpcode(&epilogStart[numOpcodes - 1 - opIndex], epilogStart, EpilogOpcodes);
     }

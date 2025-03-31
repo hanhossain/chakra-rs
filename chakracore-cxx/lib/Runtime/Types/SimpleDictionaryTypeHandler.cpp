@@ -2230,7 +2230,7 @@ namespace Js
             return false;
         }
 
-        BYTE flags = this->GetFlags();
+        uint8_t flags = this->GetFlags();
         if (flags & IsSealedOnceFlag)
         {
             // Once sealed, there is no way to undo seal.
@@ -2278,7 +2278,7 @@ namespace Js
             return false;
         }
 
-        BYTE flags = this->GetFlags();
+        uint8_t flags = this->GetFlags();
         if (flags & IsFrozenOnceFlag)
         {
             // Once frozen, there is no way to undo freeze.

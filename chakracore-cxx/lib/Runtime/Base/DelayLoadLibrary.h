@@ -32,7 +32,7 @@ namespace Js
         typedef FNCWindowsDeleteString* PFNCWindowsDeleteString;
         PFNCWindowsDeleteString m_pfnWindowsDeleteString;
 
-        typedef HRESULT FNCWindowsCompareStringOrdinal(HSTRING,HSTRING,INT32*);
+        typedef HRESULT FNCWindowsCompareStringOrdinal(HSTRING,HSTRING,int32_t*);
         typedef FNCWindowsCompareStringOrdinal* PFNCWindowsCompareStringOrdinal;
         PFNCWindowsCompareStringOrdinal m_pfnWindowsCompareStringOrdinal;
 
@@ -57,7 +57,7 @@ namespace Js
         virtual HRESULT WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
         virtual HRESULT WindowsDeleteString(_In_opt_ HSTRING string);
         virtual PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length);
-        virtual HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ INT32 * result);
+        virtual HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result);
         virtual HRESULT WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
     };
 
@@ -100,7 +100,7 @@ namespace Js
         HRESULT WindowsCreateStringReference(_In_reads_opt_(length+1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string) override;
         HRESULT WindowsDeleteString(_In_opt_ HSTRING string) override;
         PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length) override;
-        HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ INT32 * result) override;
+        HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result) override;
         HRESULT WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *newString) override;
     };
 #endif
@@ -134,7 +134,7 @@ namespace Js
     private:
         // LoadWinCoreMemory specific functions
 
-        typedef BOOL FNCGetProcessInformation(HANDLE, PROCESS_INFORMATION_CLASS, PVOID, SIZE_T);
+        typedef BOOL FNCGetProcessInformation(HANDLE, PROCESS_INFORMATION_CLASS, void *, SIZE_T);
         typedef FNCGetProcessInformation* PFNCGetProcessInformation;
         PFNCGetProcessInformation m_pfnGetProcessInformation;
 
@@ -150,7 +150,7 @@ namespace Js
         BOOL GetProcessInformation(
             __in HANDLE hProcess,
             __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
-            __out_bcount(nLength) PVOID lpBuffer,
+            __out_bcount(nLength) void * lpBuffer,
             __in SIZE_T nLength
         );
     };

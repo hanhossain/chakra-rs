@@ -33,7 +33,7 @@ struct IActiveScriptProfilerHeapEnum;
 class DynamicProfileMutator;
 class StackProber;
 
-enum DisableImplicitFlags : BYTE
+enum DisableImplicitFlags : uint8_t
 {
     DisableImplicitNoFlag               = 0x00,
     DisableImplicitCallFlag             = 0x01,
@@ -65,7 +65,7 @@ public:
     virtual ~InterruptPoller() { }
 
     void CheckInterruptPoll();
-    void GetStatementCount(ULONG *pluHi, ULONG *pluLo);
+    void GetStatementCount(uint32_t *pluHi, uint32_t *pluLo);
     void ResetStatementCount() { lastResetTick = lastPollTick; }
     void StartScript() { lastResetTick = lastPollTick = ::GetTickCount(); }
     void EndScript() { lastResetTick = lastPollTick = 0;}
@@ -75,12 +75,12 @@ public:
     virtual void TryInterruptPoll(Js::ScriptContext *scriptContext) = 0;
 
     // Default: throw up QC dialog after 5M statements == 2 minutes
-    static const DWORD TicksToStatements = (5000000 / 120000);
+    static const uint32_t TicksToStatements = (5000000 / 120000);
 
 protected:
     ThreadContext *threadContext;
-    DWORD lastPollTick;
-    DWORD lastResetTick;
+    uint32_t lastPollTick;
+    uint32_t lastResetTick;
     bool isDisabled;
 };
 
@@ -189,7 +189,7 @@ enum RecyclerCollectCallBackFlags
     Collect_Wait                     = 0x04,     // callback can be from another thread
     Collect_Begin_Sweep              = 0x08
 };
-typedef void (__cdecl *RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
+typedef void (*RecyclerCollectCallBackFunction)(void * context, RecyclerCollectCallBackFlags flags);
 
 class NativeLibraryEntryRecord
 {
@@ -199,7 +199,7 @@ public:
         Js::RecyclableObject* function;
         Js::CallInfo callInfo;
         PCWSTR name;
-        PVOID addr;
+        void * addr;
         Entry* next;
     };
 
@@ -305,7 +305,7 @@ class ThreadContext sealed :
 {
 public:
     static void GlobalInitialize();
-    static const DWORD NoThread = 0xFFFFFFFF;
+    static const uint32_t NoThread = 0xFFFFFFFF;
 
     struct CollectCallBack
     {
@@ -339,8 +339,8 @@ public:
         }
     };
 
-    void SetCurrentThreadId(DWORD threadId) { this->currentThreadId = threadId; }
-    DWORD GetCurrentThreadId() const { return this->currentThreadId; }
+    void SetCurrentThreadId(uint32_t threadId) { this->currentThreadId = threadId; }
+    uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
     void SetIsThreadBound()
     {
         if (this->recycler)
@@ -352,7 +352,7 @@ public:
     bool IsJSRT() const { return !this->isThreadBound; }
     virtual bool IsThreadBound() const override { return this->isThreadBound; }
     void SetStackProber(StackProber * stackProber);
-    static DWORD GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
+    static uint32_t GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
 
     template <class Fn>
     Js::ImplicitCallFlags TryWithDisabledImplicitCall(Fn fn)
@@ -441,8 +441,8 @@ private:
     {
     public:
         typedef JsUtil::BaseHashSet<RecyclerWeakReference<Js::PropertyGuard>*, Recycler, PowerOf2SizePolicy> PropertyGuardHashSet;
-        // we do not have WeaklyReferencedKeyHashSet - hence use BYTE as a dummy value.
-        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, BYTE> EntryPointDictionary;
+        // we do not have WeaklyReferencedKeyHashSet - hence use uint8_t as a dummy value.
+        typedef JsUtil::WeaklyReferencedKeyDictionary<Js::EntryPointInfo, uint8_t> EntryPointDictionary;
         // The sharedGuard is strongly referenced and will be kept alive by ThreadContext::propertyGuards until it's invalidated or
         // the property record itself is collected.  If the code using the guard needs access to it after it's been invalidated, it
         // (the code) is responsible for keeping it alive.
@@ -606,7 +606,7 @@ private:
     static ThreadContext * globalListLast;
 
     ThreadContextFlags threadContextFlags;
-    DWORD currentThreadId;
+    uint32_t currentThreadId;
     mutable size_t stackLimitForCurrentThread;
     StackProber * stackProber;
     bool isThreadBound;
@@ -779,7 +779,7 @@ private:
     // Number of script context attached with probe manager.
     // This counter will be used as addref when the script context is created, this way we maintain the life of diagnostic object.
     // Once no script context available , diagnostic will go away.
-    LONG crefSContextForDiag;
+    int32_t crefSContextForDiag;
 
     Entropy entropy;
 
@@ -842,7 +842,7 @@ public:
     // high number may indicate that context leaks have occured.
     uint closedScriptContextCount;
 
-    enum VisibilityState : BYTE
+    enum VisibilityState : uint8_t
     {
         Undefined = 0,
         Visible = 1,
@@ -1434,13 +1434,13 @@ public:
     _NOINLINE bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
     _NOINLINE bool IsStackAvailableNoThrow(size_t size = Js::Constants::MinStackDefault);
     static bool IsCurrentStackAvailable(size_t size);
-    void ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress = nullptr);
-    void ProbeStack(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress = nullptr);
+    void ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);
+    void ProbeStack(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);
     void ProbeStack(size_t size, Js::RecyclableObject * obj, Js::ScriptContext *scriptContext);
     void ProbeStack(size_t size);
-    static void __stdcall ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
-    static void __stdcall ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
-    static void __stdcall ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32 u1, uint32 u2)
+    static void ProbeCurrentStackNoDispose(size_t size, Js::ScriptContext *scriptContext);
+    static void ProbeCurrentStack(size_t size, Js::ScriptContext *scriptContext);
+    static void ProbeCurrentStack2(size_t size, Js::ScriptContext *scriptContext, uint32 u1, uint32 u2)
     {
         ProbeCurrentStack(size, scriptContext);
     }
@@ -1848,7 +1848,7 @@ public:
 private:
     Js::ScriptContext * rootTrackerScriptContext;
 
-    DWORD threadId;
+    uint32_t threadId;
 #endif
 
 private:
@@ -1865,7 +1865,7 @@ private:
         virtual bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg);
         virtual bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio);
         virtual bool ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const;
-        virtual DWORD ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const;
+        virtual uint32_t ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const;
         virtual bool IsTelemetryProviderEnabled() const;
         virtual uint GetClosedContextCount() const;
 

@@ -19,29 +19,29 @@ void UnwindInfoManager::Init(Func * func)
     // necessary? Maybe not, but keeping around for now
 }
 
-DWORD UnwindInfoManager::GetPDataCount(DWORD length)
+uint32_t UnwindInfoManager::GetPDataCount(uint32_t length)
 {
     // TODO: Support splitting huge functions if needed?
     return 1;
 }
 
-DWORD UnwindInfoManager::GetFunctionOffset(UnwindFunctionOffsets which)
+uint32_t UnwindInfoManager::GetFunctionOffset(UnwindFunctionOffsets which)
 {
     Assert(which < UnwindFunctionOffsetCount);
-    DWORD result = this->m_functionOffset[which];
+    uint32_t result = this->m_functionOffset[which];
     Assert(result != 0xffffffff);
     Assert(result % 4 == 0);
     return result;
 }
 
-void UnwindInfoManager::FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize)
+void UnwindInfoManager::FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize)
 {
     // fetch the appropriate offsets and hand off to the generic code
-    m_xdata.Generate(PULONG(functionStart + this->GetFunctionOffset(UnwindPrologStart)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindPrologEnd)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindEpilogStart)), 
-                     PULONG(functionStart + this->GetFunctionOffset(UnwindEpilogEnd)),
-                     PULONG(functionStart + codeSize));
+    m_xdata.Generate((uint32_t *)(functionStart + this->GetFunctionOffset(UnwindPrologStart)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindPrologEnd)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindEpilogStart)),
+                     (uint32_t *)(functionStart + this->GetFunctionOffset(UnwindEpilogEnd)),
+                     (uint32_t *)(functionStart + codeSize));
 }
 
 void UnwindInfoManager::SetFunctionOffsetLabel(UnwindFunctionOffsets which, IR::LabelInstr *label)
@@ -51,7 +51,7 @@ void UnwindInfoManager::SetFunctionOffsetLabel(UnwindFunctionOffsets which, IR::
     this->m_functionOffsetLabelId[which] = label->m_id;
 }
 
-void UnwindInfoManager::SetLabelOffset(DWORD id, DWORD offset)
+void UnwindInfoManager::SetLabelOffset(uint32_t id, uint32_t offset)
 {
     Assert(offset % 4 == 0);
     for (int which = UnwindInvalid + 1; which < UnwindFunctionOffsetCount; which++)

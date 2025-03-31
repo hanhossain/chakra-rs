@@ -5,11 +5,11 @@
 #pragma once
 
 #pragma intrinsic(memcpy)
-extern void __stdcall js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count);
-extern void __stdcall js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWords, __in_ecount(count) const char16 *src, size_t count);
+extern void js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count);
+extern void js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWords, __in_ecount(count) const char16 *src, size_t count);
 
 #if defined(_M_IX86) || defined(_M_X64)
-extern void __stdcall js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes);
+extern void js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes);
 #endif
 
 // A virtualized thread id. The physical thread on which an instance of the runtime is executed can change but a
@@ -35,7 +35,7 @@ namespace JsUtil
         static ThreadContextId GetCurrentThreadContextId();
 
         static bool RaiseOutOfMemoryIfScriptActive();
-        static bool RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, PVOID returnAddress);
+        static bool RaiseStackOverflowIfScriptActive(Js::ScriptContext * scriptContext, void * returnAddress);
         static bool RaiseOnIntOverflow();
         static void RecoverUnusedMemory();
 #if DBG || defined(EXCEPTION_CHECK)

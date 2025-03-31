@@ -222,7 +222,7 @@ IdleDecommitPageAllocator::DecommitNow(bool all)
     ResumeIdleDecommit();
 }
 
-DWORD
+uint32_t
 IdleDecommitPageAllocator::IdleDecommit()
 {
     // We can check hasDecommitTimer outside of the lock because when it change to true
@@ -243,18 +243,18 @@ IdleDecommitPageAllocator::IdleDecommit()
         {
             idleDecommitTryEnterWaitFactor = 1;
         }
-        DWORD waitTime = 11 * idleDecommitTryEnterWaitFactor;
+        uint32_t waitTime = 11 * idleDecommitTryEnterWaitFactor;
         return waitTime;      // Retry time
     }
     idleDecommitTryEnterWaitFactor = 0;
-    DWORD waitTime = INFINITE;
+    uint32_t waitTime = INFINITE;
     if (hasDecommitTimer)
     {
         Assert(this->maxFreePageCount == maxIdleDecommitFreePageCount);
         int timediff = (int)(decommitTime - ::GetTickCount());
         if (timediff >= 20)   // Ignore time diff is it is < 20 since the system timer doesn't have that high of precision anyways
         {
-            waitTime = (DWORD)timediff;
+            waitTime = (uint32_t)timediff;
         }
         else
         {

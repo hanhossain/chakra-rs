@@ -39,10 +39,10 @@ extern "C"
    calls to CreateThread from succeeding once shutdown has started 
    [defined in process.c]
 */
-extern Volatile<LONG> terminator;
+extern Volatile<int32_t> terminator;
 
 // The process ID of this process, so we can avoid excessive calls to getpid().
-extern DWORD gPID;
+extern uint32_t gPID;
 extern LPWSTR pAppDir;
 
 /*++
@@ -52,7 +52,7 @@ Function:
 Abstract
   Return the process ID from a process handle
 --*/
-DWORD PROCGetProcessIDFromHandle(HANDLE hProcess);
+uint32_t PROCGetProcessIDFromHandle(HANDLE hProcess);
 
 /*++
 Function:
@@ -82,25 +82,25 @@ Abstract
   Cleanup all the structures for the initial process.
 
 Parameter
-  VOID
+  void
 
 Return
-  VOID
+  void
 
 --*/
-VOID PROCCleanupInitialProcess(VOID);
+void PROCCleanupInitialProcess(void);
 
 #if USE_SYSV_SEMAPHORES
 /*++
 Function:
-  PROCCleanupThreadSemIds(VOID);
+  PROCCleanupThreadSemIds(void);
 
 Abstract
   Cleanup SysV semaphore ids for all threads.
 
 (no parameters, no return value)
 --*/
-VOID PROCCleanupThreadSemIds(VOID);
+void PROCCleanupThreadSemIds(void);
 #endif
 
 /*++
@@ -110,7 +110,7 @@ Function:
 Abstract
   Enter the critical section associated to the current process
 --*/
-VOID PROCProcessLock(VOID);
+void PROCProcessLock(void);
 
 
 /*++
@@ -120,7 +120,7 @@ Function:
 Abstract
   Leave the critical section associated to the current process
 --*/
-VOID PROCProcessUnlock(VOID);
+void PROCProcessUnlock(void);
 
 /*++
 Function:

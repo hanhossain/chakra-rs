@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-enum IRType : BYTE
+enum IRType : uint8_t
 {
 #define IRTYPE(Name, BaseType, Bytes, Bits, EnRegOk, DumpName)  Ty ## Name,
 #include "IRTypeList.h"
@@ -12,7 +12,7 @@ enum IRType : BYTE
 
 };
 
-enum IRBaseType : BYTE
+enum IRBaseType : uint8_t
 {
 #define IRBASETYPE(Name, BaseType, Bytes, Align, Bits, EnRegOk, DumpName)  TyBase ## Name,
 #include "IRBaseTypeList.h"

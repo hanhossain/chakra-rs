@@ -659,7 +659,7 @@ bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsThreadBound()
 }
 
 
-DWORD ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const
+uint32_t ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const
 {
     return this->tc->GetCurrentThreadId();
 }
@@ -1515,7 +1515,7 @@ ThreadContext::IsOnStack(void const *ptr)
     }
 
 #if defined(_M_ARM)
-    ULONG lowLimit, highLimit;
+    uint32_t lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
@@ -1525,7 +1525,7 @@ ThreadContext::IsOnStack(void const *ptr)
     bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
     return isOnStack;
 #else
-    return ::IsAddressOnStack((ULONG_PTR) ptr);
+    return ::IsAddressOnStack((size_t) ptr);
 #endif
 }
 
@@ -1618,7 +1618,7 @@ ThreadContext::IsCurrentStackAvailable(size_t size)
     but not in a->b->a recursion).
 */
 void
-ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress)
+ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, void * returnAddress)
 {
     AssertCanHandleStackOverflow();
     if (!this->IsStackAvailable(size))
@@ -1648,7 +1648,7 @@ ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext
 }
 
 void
-ThreadContext::ProbeStack(size_t size, Js::ScriptContext *scriptContext, PVOID returnAddress)
+ThreadContext::ProbeStack(size_t size, Js::ScriptContext *scriptContext, void * returnAddress)
 {
     this->ProbeStackNoDispose(size, scriptContext, returnAddress);
 
@@ -2228,7 +2228,7 @@ void ThreadContext::ReleaseDebugManager()
     Assert(crefSContextForDiag > 0);
     Assert(this->debugManager != nullptr);
 
-    LONG lref = InterlockedDecrement(&crefSContextForDiag);
+    int32_t lref = InterlockedDecrement(&crefSContextForDiag);
 
     if (lref == 0)
     {
@@ -3616,7 +3616,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
             // If the current frame is already from a bailout - we do not need to do on stack invalidation
             if (caller != nullptr && Js::ScriptFunction::Test(caller) && !stackWalker.GetCurrentFrameFromBailout())
             {
-                BYTE dummy;
+                uint8_t dummy;
                 Js::FunctionEntryPointInfo* functionEntryPoint = caller->GetFunctionBody()->GetDefaultFunctionEntryPointInfo();
                 if (functionEntryPoint->IsInNativeAddressRange((DWORD_PTR)stackWalker.GetInstructionPointer()))
                 {
@@ -3624,7 +3624,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
                     {
                         functionEntryPoint->DoLazyBailout(
                             stackWalker.GetCurrentAddressOfInstructionPointer(),
-                            static_cast<BYTE*>(stackWalker.GetFramePointer())
+                            static_cast<uint8_t*>(stackWalker.GetFramePointer())
 #if DBG
                             , caller->GetFunctionBody()
                             , propertyRecord
@@ -3634,7 +3634,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
                 }
             }
         }
-        entry->entryPoints->Map([=](Js::EntryPointInfo* info, BYTE& dummy, const RecyclerWeakReference<Js::EntryPointInfo>* infoWeakRef)
+        entry->entryPoints->Map([=](Js::EntryPointInfo* info, uint8_t& dummy, const RecyclerWeakReference<Js::EntryPointInfo>* infoWeakRef)
         {
             OUTPUT_TRACE2(Js::LazyBailoutPhase, info->GetFunctionBody(), _u("Lazy bailout - Invalidation due to property: %s \n"), propertyRecord->GetBuffer());
             info->Invalidate(true);
@@ -4463,17 +4463,17 @@ void InterruptPoller::CheckInterruptPoll()
 }
 
 
-void InterruptPoller::GetStatementCount(ULONG *pluHi, ULONG *pluLo)
+void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
 {
-    DWORD resetTick = this->lastResetTick;
-    DWORD pollTick = this->lastPollTick;
-    DWORD elapsed;
+    uint32_t resetTick = this->lastResetTick;
+    uint32_t pollTick = this->lastPollTick;
+    uint32_t elapsed;
 
     elapsed = pollTick - resetTick;
 
     ULONGLONG statements = (ULONGLONG)elapsed * InterruptPoller::TicksToStatements;
-    *pluLo = (ULONG)statements;
-    *pluHi = (ULONG)(statements >> 32);
+    *pluLo = (uint32_t)statements;
+    *pluHi = (uint32_t)(statements >> 32);
 }
 
 void ThreadContext::DisableExecution()

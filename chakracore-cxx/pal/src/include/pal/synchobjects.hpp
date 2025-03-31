@@ -29,27 +29,27 @@ Abstract:
 #include <pthread.h>
 
 #define SharedID SHMPTR
-#define SharedPoolId ULONG_PTR
-#define DefaultSharedPool ((ULONG_PTR)0)
+#define SharedPoolId size_t
+#define DefaultSharedPool ((size_t)0)
 #define NULLSharedID ((SHMPTR)NULL)
-#define SharedIDToPointer(shID) SHMPTR_TO_TYPED_PTR(PVOID, shID)
+#define SharedIDToPointer(shID) SHMPTR_TO_TYPED_PTR(void *, shID)
 #define SharedIDToTypePointer(TYPE,shID) SHMPTR_TO_TYPED_PTR(TYPE, shID)
 #define RawSharedObjectAlloc(szSize, shPoolId) SHMalloc(szSize)
 #define RawSharedObjectFree(shID) SHMfree(shID)
     
 namespace CorUnix
 {   
-    DWORD InternalWaitForMultipleObjectsEx(
+    uint32_t InternalWaitForMultipleObjectsEx(
         CPalThread * pthrCurrent,
-        DWORD nCount,
-        CONST HANDLE *lpHandles,
+        uint32_t nCount,
+        const HANDLE *lpHandles,
         BOOL bWaitAll,
-        DWORD dwMilliseconds,
+        uint32_t dwMilliseconds,
         BOOL bAlertable);
     
     PAL_ERROR InternalSleepEx(
         CPalThread * pthrCurrent,
-        DWORD dwMilliseconds,
+        uint32_t dwMilliseconds,
         BOOL bAlertable);
         
     enum THREAD_STATE
@@ -74,8 +74,8 @@ namespace CorUnix
     {   
         WaitType wtWaitType;
         WaitDomain wdWaitDomain;
-        LONG lObjCount;
-        LONG lSharedObjCount;
+        int32_t lObjCount;
+        int32_t lSharedObjCount;
         CPalThread * pthrOwner;        
         PWaitingThreadsListNode rgpWTLNodes[MAXIMUM_WAIT_OBJECTS];
         
@@ -95,7 +95,7 @@ namespace CorUnix
         int                 iPipeWr;
 #endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
-        DWORD               dwObjectIndex;
+        uint32_t               dwObjectIndex;
         ThreadWakeupReason  twrWakeupReason;
         bool                fInitialized;
 
@@ -122,8 +122,8 @@ namespace CorUnix
 
         THREAD_STATE          m_tsThreadState; 
         SharedID              m_shridWaitAwakened;
-        Volatile<LONG>        m_lLocalSynchLockCount;
-        Volatile<LONG>        m_lSharedSynchLockCount;
+        Volatile<int32_t>        m_lLocalSynchLockCount;
+        Volatile<int32_t>        m_lSharedSynchLockCount;
         LIST_ENTRY            m_leOwnedObjsList;
 
         ThreadNativeWaitData  m_tnwdNativeData;
@@ -131,7 +131,7 @@ namespace CorUnix
 
 #ifdef SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
         static const int      PendingSignalingsArraySize = 10;
-        LONG                  m_lPendingSignalingCount;
+        int32_t                  m_lPendingSignalingCount;
         CPalThread *          m_rgpthrPendingSignalings[PendingSignalingsArraySize];
         LIST_ENTRY            m_lePendingSignalingsOverflowList;
 #endif // SYNCHMGR_SUSPENSION_SAFE_CONDITION_SIGNALING
@@ -149,7 +149,7 @@ namespace CorUnix
         virtual PAL_ERROR InitializePostCreate(
             CPalThread *pthrCurrent,
             SIZE_T threadId,
-            DWORD dwLwpId
+            uint32_t dwLwpId
             );
 
         THREAD_STATE GetThreadState(void)

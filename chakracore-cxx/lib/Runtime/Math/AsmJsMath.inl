@@ -164,7 +164,7 @@ namespace Js
 
     inline int AsmJsMath::Clz32( int value)
     {
-        DWORD index;
+        uint32_t index;
         if (_BitScanReverse(&index, value))
         {
             return 31 - index;

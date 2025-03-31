@@ -40,7 +40,7 @@ PAL_exit(int status)
 }
 
 int
-PAL_atexit(void (__cdecl *function)(void))
+PAL_atexit(void (*function)(void))
 {
     int ret;
     

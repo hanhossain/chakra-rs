@@ -70,7 +70,7 @@ PrimePolicy::IsPrime(uint candidate)
 {
     if ((candidate & 1) != 0)
     {
-        int limit = (uint)sqrt((FLOAT)candidate);
+        int limit = (uint)sqrt((float)candidate);
         for (int divisor = 3; divisor <= limit; divisor += 2)
         {
             if ((candidate % divisor) == 0)

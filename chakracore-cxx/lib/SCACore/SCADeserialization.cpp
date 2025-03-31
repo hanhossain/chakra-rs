@@ -167,7 +167,7 @@ namespace Js
                 charcount_t len;
                 const char16* buf = ReadString(&len);
 
-                DWORD flags;
+                uint32_t flags;
                 m_reader->Read(&flags);
                 *dst = JavascriptRegExp::CreateRegEx(buf, len,
                     static_cast<UnifiedRegex::RegexFlags>(flags), scriptContext);
@@ -502,7 +502,7 @@ namespace Js
     // Read bytes data: [bytes] [padding]
     //
     template <class Reader>
-    void DeserializationCloner<Reader>::Read(BYTE* buf, uint32 len) const
+    void DeserializationCloner<Reader>::Read(uint8_t* buf, uint32 len) const
     {
         m_reader->Read(buf, len);
 

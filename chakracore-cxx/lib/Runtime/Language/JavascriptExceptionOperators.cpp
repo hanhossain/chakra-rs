@@ -1037,7 +1037,7 @@ namespace Js
     }
 #if ENABLE_NATIVE_CODEGEN
     // TODO: Add code address of throwing function on exception context, and use that for returnAddress instead of passing nullptr which starts stackwalk from the top
-    void JavascriptExceptionOperators::WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, PVOID returnAddress, PVOID tryHandlerAddrOfReturnAddr)
+    void JavascriptExceptionOperators::WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, void * returnAddress, void * tryHandlerAddrOfReturnAddr)
     {
         Assert(tryHandlerAddrOfReturnAddr != nullptr);
         JavascriptStackWalker walker(scriptContext, /*useEERContext*/ true, returnAddress);
@@ -1048,7 +1048,7 @@ namespace Js
     }
 #endif
     void
-        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException, bool resetSatck)
+        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetSatck)
     {
         uint32 callerBytecodeOffset;
         JavascriptFunction * jsFunc = WalkStackForExceptionContextInternal(scriptContext, exceptionContext, thrownObject, callerBytecodeOffset, stackCrawlLimit, returnAddress, isThrownException, resetSatck);
@@ -1064,7 +1064,7 @@ namespace Js
 
     JavascriptFunction *
     JavascriptExceptionOperators::WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject,
-        uint32& callerByteCodeOffset, uint64 stackCrawlLimit, PVOID returnAddress, bool isThrownException, bool resetStack)
+        uint32& callerByteCodeOffset, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
     {
         JavascriptStackWalker walker(&scriptContext, true, returnAddress);
         JavascriptFunction* jsFunc = nullptr;
@@ -1172,8 +1172,8 @@ namespace Js
         for (int i=0; i < stackTrace->Count(); i++)
         {
             Js::JavascriptExceptionContext::StackFrame& currFrame = stackTrace->Item(i);
-            ULONG lineNumber = 0;
-            LONG characterPosition = 0;
+            uint32_t lineNumber = 0;
+            int32_t characterPosition = 0;
             if (currFrame.IsScriptFunction() && !currFrame.GetFunctionBody()->GetUtf8SourceInfo()->GetIsLibraryCode())
             {
                 currFrame.GetFunctionBody()->GetLineCharOffset(currFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
@@ -1234,7 +1234,7 @@ namespace Js
         }
     }
 
-    void JavascriptExceptionOperators::ThrowStackOverflow(ScriptContext *scriptContext, PVOID returnAddress)
+    void JavascriptExceptionOperators::ThrowStackOverflow(ScriptContext *scriptContext, void * returnAddress)
     {
         Assert(scriptContext);
         DebugOnly(++scriptContext->soExceptionCount);
@@ -1256,7 +1256,7 @@ namespace Js
         JavascriptExceptionOperators::ThrowExceptionObject(so, scriptContext, false, returnAddress);
     }
 
-    void JavascriptExceptionOperators::ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, PVOID returnAddress, bool resetStack)
+    void JavascriptExceptionOperators::ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)
     {
         if (scriptContext)
         {
@@ -1332,7 +1332,7 @@ namespace Js
 #endif
     }
 
-    void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, PVOID returnAddress, bool resetStack)
+    void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)
     {
         ThrowExceptionObjectInternal(exceptionObject, scriptContext, true, considerPassingToDebugger, returnAddress, resetStack);
     }
@@ -1576,8 +1576,8 @@ namespace Js
                 else
                 {
                     LPCWSTR pUrl = NULL;
-                    ULONG lineNumber = 0;
-                    LONG characterPosition = 0;
+                    uint32_t lineNumber = 0;
+                    int32_t characterPosition = 0;
 
                     functionBody->GetLineCharOffset(currentFrame.GetByteCodeOffset(), &lineNumber, &characterPosition);
                     pUrl = functionBody->GetSourceName();
@@ -1656,12 +1656,12 @@ namespace Js
         return limit;
     }
 
-    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, ULONG lineNumber, LONG characterPosition)
+    void JavascriptExceptionOperators::AppendExternalFrameToStackTrace(CompoundString* bs, LPCWSTR functionName, LPCWSTR fileName, uint32_t lineNumber, int32_t characterPosition)
     {
         // format is equivalent to wprintf("\n   at %s (%s:%d:%d)", functionName, filename, lineNumber, characterPosition);
 
         const CharCount maxULongStringLength = 10; // excluding null terminator
-        const auto ConvertULongToString = [](const ULONG value, char16 *const buffer, const CharCount charCapacity)
+        const auto ConvertULongToString = [](const uint32_t value, char16 *const buffer, const CharCount charCapacity)
         {
             const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);

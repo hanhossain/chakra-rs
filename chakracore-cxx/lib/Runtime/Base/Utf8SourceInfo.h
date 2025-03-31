@@ -22,22 +22,22 @@ namespace Js
         LPCUTF8 GetSource(const char16 * reason = nullptr) const;
         size_t GetCbLength(const char16 * reason = nullptr) const;
 
-        ULONG GetParseFlags()
+        uint32_t GetParseFlags()
         {
             return this->parseFlags;
         }
 
-        void SetParseFlags(ULONG parseFlags)
+        void SetParseFlags(uint32_t parseFlags)
         {
             this->parseFlags = parseFlags;
         }
 
-        ULONG GetByteCodeGenerationFlags()
+        uint32_t GetByteCodeGenerationFlags()
         {
             return this->byteCodeGenerationFlags;
         }
 
-        void SetByteCodeGenerationFlags(ULONG byteCodeGenerationFlags)
+        void SetByteCodeGenerationFlags(uint32_t byteCodeGenerationFlags)
         {
             this->byteCodeGenerationFlags = byteCodeGenerationFlags;
         }
@@ -401,8 +401,8 @@ namespace Js
         Field(uint) m_sourceInfoId;
 
         // Various flags preserved for Edit-and-Continue re-compile purpose
-        Field(ULONG) parseFlags;
-        Field(ULONG) byteCodeGenerationFlags;
+        Field(uint32_t) parseFlags;
+        Field(uint32_t) byteCodeGenerationFlags;
 
         Utf8SourceInfo(ISourceHolder *sourceHolder, int32 cchLength, SRCINFO const* srcInfo,
             DWORD_PTR secondaryHostSourceContext, ScriptContext* scriptContext,

@@ -45,7 +45,6 @@ Abstract:
   NOTE: This function must not modify LastError.
 --*/
 PAL_ERROR
-PALAPI
 PAL_Enter(PAL_Boundary boundary)
 {
     ENTRY_EXTERNAL("PAL_Enter(boundary=%u)\n", boundary);
@@ -136,9 +135,7 @@ exit:
     return palError;
 }
 
-PALIMPORT
-DWORD
-PALAPI
+uint32_t
 PAL_EnterTop()
 {
     return PAL_Enter(PAL_BoundaryTop);
@@ -157,8 +154,7 @@ Abstract:
 
   NOTE: This function must not modify LastError.
 --*/
-VOID
-PALAPI
+void
 PAL_Reenter(PAL_Boundary boundary)
 {
     ENTRY_EXTERNAL("PAL_Reenter(boundary=%u)\n", boundary);
@@ -185,7 +181,6 @@ Abstract:
   PAL through PAL_Enter or related calls.
 --*/
 BOOL
-PALAPI
 PAL_HasEntered()
 {
     ENTRY_EXTERNAL("PAL_HasEntered()\n");
@@ -226,8 +221,7 @@ Abstract:
 
   NOTE: This function must not modify LastError.
 --*/
-VOID
-PALAPI
+void
 PAL_Leave(PAL_Boundary boundary)
 {
     ENTRY("PAL_Leave(boundary=%u)\n", boundary);
@@ -240,17 +234,13 @@ PAL_Leave(PAL_Boundary boundary)
     LOGEXIT("PAL_Leave returns\n");
 }
 
-PALIMPORT
-VOID
-PALAPI
+void
 PAL_LeaveBottom()
 {
     PAL_Leave(PAL_BoundaryBottom);
 }
 
-PALIMPORT
-VOID
-PALAPI
+void
 PAL_LeaveTop()
 {
     PAL_Leave(PAL_BoundaryTop);

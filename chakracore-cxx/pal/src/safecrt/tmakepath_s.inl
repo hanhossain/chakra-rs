@@ -14,7 +14,7 @@
 *******************************************************************************/
 
 _FUNC_PROLOGUE
-errno_t __cdecl _FUNC_NAME(__out_ecount_z(_SIZE) _CHAR *_DEST, __in_opt size_t _SIZE, __in_z_opt const _CHAR *_Drive, __in_z_opt const _CHAR *_Dir, __in_z_opt const _CHAR *_Filename, __in_z_opt const _CHAR *_Ext)
+errno_t _FUNC_NAME(__out_ecount_z(_SIZE) _CHAR *_DEST, __in_opt size_t _SIZE, __in_z_opt const _CHAR *_Drive, __in_z_opt const _CHAR *_Dir, __in_z_opt const _CHAR *_Filename, __in_z_opt const _CHAR *_Ext)
 {
     size_t written;
     const _CHAR *p;

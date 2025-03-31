@@ -19,8 +19,8 @@ namespace UnifiedRegex
 
     public:
         DebugWriter();
-        void __cdecl Print(const Char *form, ...);
-        void __cdecl PrintEOL(const Char *form, ...);
+        void Print(const Char *form, ...);
+        void PrintEOL(const Char *form, ...);
         void PrintEscapedString(const Char *str, CharCount len);
         void PrintQuotedString(const Char *str, CharCount len);
         void PrintEscapedChar(Char c);

@@ -353,12 +353,12 @@ namespace Js
 
     void AsyncBreakController::Activate(HaltCallback* haltCallback)
     {
-        InterlockedExchangePointer((PVOID*)&this->haltCallback, haltCallback);
+        InterlockedExchangePointer((void **)&this->haltCallback, haltCallback);
     }
 
     void AsyncBreakController::Deactivate()
     {
-        InterlockedExchangePointer((PVOID*)&this->haltCallback, NULL);
+        InterlockedExchangePointer((void **)&this->haltCallback, NULL);
     }
 
     bool AsyncBreakController::IsBreak()

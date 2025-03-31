@@ -67,7 +67,7 @@ static const char FOPEN_FLAGS[] = "wt";
 
 LPCWSTR W16_NULLSTRING = (LPCWSTR) "N\0U\0L\0L\0\0";
 
-DWORD dbg_channel_flags[DCI_LAST];
+uint32_t dbg_channel_flags[DCI_LAST];
 BOOL g_Dbg_asserts_enabled;
 
 /* we must use stdio functions directly rather that rely on PAL functions for
@@ -149,14 +149,14 @@ Function :
 --*/
 BOOL DBG_init_channels(void)
 {
-    INT i;
+    int32_t i;
     LPCSTR env_string;
     LPSTR env_workstring;
     LPSTR env_pcache;
     LPSTR entry_ptr;
     LPSTR level_ptr;
-    CHAR plus_or_minus;
-    DWORD flag_mask = 0;
+    char plus_or_minus;
+    uint32_t flag_mask = 0;
     int ret;
 
     InternalInitializeCriticalSection(&fprintf_crit_section);
@@ -473,12 +473,12 @@ Notes :
 
 --*/
 int DBG_printf_gcc(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPCSTR function, LPCSTR file, INT line, LPCSTR format, ...)
+                   LPCSTR function, LPCSTR file, int32_t line, LPCSTR format, ...)
 {
-    CHAR *buffer = (CHAR*)alloca(DBG_BUFFER_SIZE);
-    CHAR indent[MAX_NESTING+1];
+    char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
+    char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
-    INT output_size;
+    int32_t output_size;
     va_list args;
     void *thread_id;
     int old_errno = 0;
@@ -587,14 +587,14 @@ Notes :
 
 --*/
 int DBG_printf_c99(DBG_CHANNEL_ID channel, DBG_LEVEL_ID level, BOOL bHeader,
-                   LPSTR file, INT line, LPSTR format, ...)
+                   LPSTR file, int32_t line, LPSTR format, ...)
 {
-    CHAR *buffer = (CHAR*)alloca(DBG_BUFFER_SIZE);
-    CHAR indent[MAX_NESTING+1];
+    char *buffer = (char*)alloca(DBG_BUFFER_SIZE);
+    char indent[MAX_NESTING+1];
     LPSTR buffer_ptr;
-    INT output_size;
+    int32_t output_size;
     va_list args;
-    static INT call_count=0;
+    static int32_t call_count=0;
     void *thread_id;
     int old_errno = 0;
     CPalThread *pthrCurrent = InternalGetCurrentThread();
@@ -709,7 +709,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
                 {
                     nesting--;
                     if ((ret = pthread_setspecific(entry_level_key,
-                                                     (LPVOID)nesting)) != 0)
+                                                     (void *)nesting)) != 0)
                     {
                         fprintf(stderr, "ERROR : pthread_setspecific() failed "
                                 "error:%d (%s)\n", ret, strerror(ret));
@@ -721,7 +721,7 @@ static BOOL DBG_get_indent(DBG_LEVEL_ID level, const char *format,
                 nesting = (INT_PTR) pthread_getspecific(entry_level_key);
 
                 if ((ret = pthread_setspecific(entry_level_key,
-                                                 (LPVOID)(nesting+1))) != 0)
+                                                 (void *)(nesting+1))) != 0)
                 {
                     fprintf(stderr, "ERROR : pthread_setspecific() failed "
                             "error:%d (%s)\n", ret, strerror(ret));
@@ -781,7 +781,7 @@ int DBG_change_entrylevel(int new_level)
     old_level = PtrToInt(pthread_getspecific(entry_level_key));
     if(-1 != new_level)
     {
-        if ((ret = pthread_setspecific(entry_level_key,(LPVOID)(IntToPtr(new_level)))) != 0)
+        if ((ret = pthread_setspecific(entry_level_key,(void *)(IntToPtr(new_level)))) != 0)
         {
             fprintf(stderr, "ERROR : pthread_setspecific() failed "
                     "error:%d (%s)\n", ret, strerror(ret));

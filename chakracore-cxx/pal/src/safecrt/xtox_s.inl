@@ -71,7 +71,7 @@
 
 /* helper routine that does the main job. */
 #ifdef _SECURE_ITOA
-errno_t __stdcall xtox_s
+errno_t xtox_s
         (
         unsigned long val,
         TCHAR *buf,
@@ -80,7 +80,7 @@ errno_t __stdcall xtox_s
         int is_neg
         )
 #else  /* _SECURE_ITOA */
-void __stdcall xtox
+void xtox
         (
         unsigned long val,
         TCHAR *buf,
@@ -161,7 +161,7 @@ void __stdcall xtox
    and return pointer to buffer. */
 
 #ifdef _SECURE_ITOA
-errno_t __cdecl _itox_s (
+errno_t _itox_s (
         int val,
         TCHAR *buf,
         size_t sizeInTChars,
@@ -178,7 +178,7 @@ errno_t __cdecl _itox_s (
         return e;
 }
 
-errno_t __cdecl _ltox_s (
+errno_t _ltox_s (
         long val,
         TCHAR *buf,
         size_t sizeInTChars,
@@ -188,7 +188,7 @@ errno_t __cdecl _ltox_s (
         return xtox_s((unsigned long)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
 }
 
-errno_t __cdecl _ultox_s (
+errno_t _ultox_s (
         unsigned long val,
         TCHAR *buf,
         size_t sizeInTChars,
@@ -225,7 +225,7 @@ errno_t __cdecl _ultox_s (
 /* Actual functions just call conversion helper with neg flag set correctly,
    and return pointer to buffer. */
 
-TCHAR * __cdecl _itox (
+TCHAR * _itox (
         int val,
         TCHAR *buf,
         int radix
@@ -238,7 +238,7 @@ TCHAR * __cdecl _itox (
         return buf;
 }
 
-TCHAR * __cdecl _ltox (
+TCHAR * _ltox (
         long val,
         TCHAR *buf,
         int radix
@@ -248,7 +248,7 @@ TCHAR * __cdecl _ltox (
         return buf;
 }
 
-TCHAR * __cdecl _ultox (
+TCHAR * _ultox (
         unsigned long val,
         TCHAR *buf,
         int radix
@@ -287,7 +287,7 @@ TCHAR * __cdecl _ultox (
 *******************************************************************************/
 
 #ifdef _SECURE_ITOA
-errno_t __fastcall x64tox_s
+errno_t x64tox_s
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
         unsigned __int64 val,
         TCHAR *buf,
@@ -296,7 +296,7 @@ errno_t __fastcall x64tox_s
         int is_neg
         )
 #else  /* _SECURE_ITOA */
-void __fastcall x64tox
+void x64tox
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
         unsigned __int64 val,
         TCHAR *buf,
@@ -379,7 +379,7 @@ void __fastcall x64tox
 /* Actual functions just call conversion helper with neg flag set correctly,
    and return pointer to buffer. */
 
-errno_t __cdecl _i64tox_s (
+errno_t _i64tox_s (
         long long val,
         TCHAR *buf,
         size_t sizeInTChars,
@@ -389,7 +389,7 @@ errno_t __cdecl _i64tox_s (
         return x64tox_s((unsigned __int64)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
 }
 
-errno_t __cdecl _ui64tox_s (
+errno_t _ui64tox_s (
         unsigned long long val,
         TCHAR *buf,
         size_t sizeInTChars,
@@ -426,7 +426,7 @@ errno_t __cdecl _ui64tox_s (
 /* Actual functions just call conversion helper with neg flag set correctly,
    and return pointer to buffer. */
 
-TCHAR * __cdecl _i64tox (
+TCHAR * _i64tox (
         __int64 val,
         TCHAR *buf,
         int radix
@@ -436,7 +436,7 @@ TCHAR * __cdecl _i64tox (
         return buf;
 }
 
-TCHAR * __cdecl _ui64tox (
+TCHAR * _ui64tox (
         unsigned __int64 val,
         TCHAR *buf,
         int radix

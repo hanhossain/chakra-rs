@@ -50,7 +50,7 @@ void VTuneChakraProfile::LogMethodNativeLoadEvent(Js::FunctionBody* body, Js::Fu
         const char16* methodName = body->GetExternalDisplayName();
         // Append function line number info to method name so that VTune can distinguish between polymorphic methods
         char16 methodNameBuffer[_MAX_PATH];
-        ULONG lineNumber = body->GetLineNumber();
+        uint32_t lineNumber = body->GetLineNumber();
         char16 numberBuffer[20];
         _ltow_s(lineNumber, numberBuffer, 10);
         wcscpy_s(methodNameBuffer, methodName);

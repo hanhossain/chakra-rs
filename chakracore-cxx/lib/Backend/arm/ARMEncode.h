@@ -93,7 +93,7 @@ static const uint32 Opdope[] =
 #undef MACRO
 };
 
-static const BYTE RegEncode[] =
+static const uint8_t RegEncode[] =
 {
 #define REGDAT(Name, Listing, Encoding, ...) Encoding,
 #include "RegList.h"

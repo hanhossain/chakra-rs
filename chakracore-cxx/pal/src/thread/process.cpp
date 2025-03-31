@@ -177,7 +177,7 @@ CRITICAL_SECTION g_csProcess PAL_GLOBAL;
 // List and count of active threads
 //
 CPalThread* CorUnix::pGThreadList;
-DWORD g_dwThreadCount;
+uint32_t g_dwThreadCount;
 
 //
 // The command line and app name for the process
@@ -186,11 +186,11 @@ LPWSTR g_lpwstrCmdLine = NULL;
 LPWSTR g_lpwstrAppDir = NULL;
 
 // Thread ID of thread that has started the ExitProcess process
-Volatile<LONG> terminator PAL_GLOBAL = 0;
+Volatile<int32_t> terminator PAL_GLOBAL = 0;
 
 // Process and session ID of this process.
-DWORD gPID = (DWORD) -1;
-DWORD gSID = (DWORD) -1;
+uint32_t gPID = (uint32_t) -1;
+uint32_t gSID = (uint32_t) -1;
 
 // Application group ID for this process
 #ifdef __APPLE__
@@ -241,38 +241,38 @@ struct UnambiguousProcessDescriptor
     {
     }
 
-    UnambiguousProcessDescriptor(DWORD processId, UINT64 disambiguationKey)
+    UnambiguousProcessDescriptor(uint32_t processId, UINT64 disambiguationKey)
     {
         Init(processId, disambiguationKey);
     }
 
-    void Init(DWORD processId, UINT64 disambiguationKey)
+    void Init(uint32_t processId, UINT64 disambiguationKey)
     {
         m_processId = processId;
         m_disambiguationKey = disambiguationKey;
     }
     UINT64 m_disambiguationKey;
-    DWORD m_processId;
+    uint32_t m_processId;
 };
 #pragma pack(pop)
 
 static
-DWORD
+uint32_t
 StartupHelperThread(
-    LPVOID p);
+    void * p);
 
 PAL_ERROR
 PROCGetProcessStatus(
     CPalThread *pThread,
     HANDLE hProcess,
     PROCESS_STATE *pps,
-    DWORD *pdwExitCode);
+    uint32_t *pdwExitCode);
 
 static BOOL getFileName(LPCWSTR lpApplicationName, LPWSTR lpCommandLine, char *lpPathFileName);
-static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, UINT *pnArg);
-static BOOL getPath(LPCSTR lpFileName, UINT iLen, LPSTR  lpPathFileName);
+static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
+static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
 static int checkFileType(LPCSTR lpFileName);
-static BOOL PROCEndProcess(HANDLE hProcess, UINT uExitCode, BOOL bTerminateUnconditionally);
+static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
 /*++
 Function:
@@ -280,10 +280,9 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetCurrentProcessId(
-            VOID)
+            void)
 {
     PERF_ENTRY(GetCurrentProcessId);
     ENTRY("GetCurrentProcessId()\n" );
@@ -300,10 +299,9 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetCurrentSessionId(
-            VOID)
+            void)
 {
     PERF_ENTRY(GetCurrentSessionId);
     ENTRY("GetCurrentSessionId()\n" );
@@ -321,9 +319,8 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetCurrentProcess(
-          VOID)
+          void)
 {
     PERF_ENTRY(GetCurrentProcess);
     ENTRY("GetCurrentProcess()\n" );
@@ -346,18 +343,17 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 CreateProcessW(
-           IN LPCWSTR lpApplicationName,
-           IN LPWSTR lpCommandLine,
-           IN LPSECURITY_ATTRIBUTES lpProcessAttributes,
-           IN LPSECURITY_ATTRIBUTES lpThreadAttributes,
-           IN BOOL bInheritHandles,
-           IN DWORD dwCreationFlags,
-           IN LPVOID lpEnvironment,
-           IN LPCWSTR lpCurrentDirectory,
-           IN LPSTARTUPINFOW lpStartupInfo,
-           OUT LPPROCESS_INFORMATION lpProcessInformation)
+            LPCWSTR lpApplicationName,
+            LPWSTR lpCommandLine,
+            LPSECURITY_ATTRIBUTES lpProcessAttributes,
+            LPSECURITY_ATTRIBUTES lpThreadAttributes,
+            BOOL bInheritHandles,
+            uint32_t dwCreationFlags,
+            void * lpEnvironment,
+            LPCWSTR lpCurrentDirectory,
+            LPSTARTUPINFOW lpStartupInfo,
+            LPPROCESS_INFORMATION lpProcessInformation)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -496,8 +492,8 @@ CorUnix::InternalCreateProcess(
     LPSECURITY_ATTRIBUTES lpProcessAttributes,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles,
-    DWORD dwCreationFlags,
-    LPVOID lpEnvironment,
+    uint32_t dwCreationFlags,
+    void * lpEnvironment,
     LPCWSTR lpCurrentDirectory,
     LPSTARTUPINFOW lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation
@@ -525,7 +521,7 @@ CorUnix::InternalCreateProcess(
     char * lpFileName;
     PathCharString lpFileNamePS;
     char **lppArgv = NULL;
-    UINT nArg;
+    uint32_t nArg;
     int  iRet;
     char **EnvironmentArray=NULL;
     int child_blocking_pipe = -1;
@@ -847,7 +843,7 @@ CorUnix::InternalCreateProcess(
 
         if (dwCreationFlags & CREATE_SUSPENDED)
         {
-            BYTE resume_code = 0;
+            uint8_t resume_code = 0;
             ssize_t read_ret;
 
             /* close the write end of the pipe, the child doesn't need it */
@@ -1058,14 +1054,13 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetExitCodeProcess(
-    IN HANDLE hProcess,
-    IN LPDWORD lpExitCode)
+     HANDLE hProcess,
+     uint32_t * lpExitCode)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
-    DWORD dwExitCode;
+    uint32_t dwExitCode;
     PROCESS_STATE ps;
 
     PERF_ENTRY(GetExitCodeProcess);
@@ -1122,13 +1117,12 @@ Function:
 
 See MSDN doc.
 --*/
-PAL_NORETURN
-VOID
-PALAPI
+__attribute__((noreturn))
+void
 ExitProcess(
-    IN UINT uExitCode)
+     uint32_t uExitCode)
 {
-    DWORD old_terminator;
+    uint32_t old_terminator;
 
     PERF_ENTRY_ONLY(ExitProcess);
     ENTRY("ExitProcess(uExitCode=0x%x)\n", uExitCode );
@@ -1200,10 +1194,9 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 TerminateProcess(
-    IN HANDLE hProcess,
-    IN UINT uExitCode)
+     HANDLE hProcess,
+     uint32_t uExitCode)
 {
     BOOL ret;
 
@@ -1228,9 +1221,9 @@ Function:
   down any DLLs that are loaded.
 
 --*/
-static BOOL PROCEndProcess(HANDLE hProcess, UINT uExitCode, BOOL bTerminateUnconditionally)
+static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally)
 {
-    DWORD dwProcessId;
+    uint32_t dwProcessId;
     BOOL ret = FALSE;
 
     dwProcessId = PROCGetProcessIDFromHandle(hProcess);
@@ -1340,13 +1333,12 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetProcessTimes(
-        IN HANDLE hProcess,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpExitTime,
-        OUT LPFILETIME lpKernelTime,
-        OUT LPFILETIME lpUserTime)
+         HANDLE hProcess,
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpExitTime,
+         LPFILETIME lpKernelTime,
+         LPFILETIME lpUserTime)
 {
     BOOL retval = FALSE;
     struct rusage resUsage;
@@ -1392,8 +1384,8 @@ GetProcessTimes(
         calcTime += (__int64)resUsage.ru_utime.tv_usec * USECS_TO_NS;
         calcTime /= 100; /* Produce the time in 100s of ns */
         /* Assign the time into lpUserTime */
-        lpUserTime->dwLowDateTime = (DWORD)calcTime;
-        lpUserTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+        lpUserTime->dwLowDateTime = (uint32_t)calcTime;
+        lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
     }
 
     if (lpKernelTime)
@@ -1403,8 +1395,8 @@ GetProcessTimes(
         calcTime += (__int64)resUsage.ru_stime.tv_usec * USECS_TO_NS;
         calcTime /= 100; /* Produce the time in 100s of ns */
         /* Assign the time into lpUserTime */
-        lpKernelTime->dwLowDateTime = (DWORD)calcTime;
-        lpKernelTime->dwHighDateTime = (DWORD)(calcTime >> 32);
+        lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
+        lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
     }
 
     retval = TRUE;
@@ -1423,9 +1415,8 @@ Function:
 See MSDN doc.
 --*/
 LPWSTR
-PALAPI
 GetCommandLineW(
-    VOID)
+    void)
 {
     PERF_ENTRY(GetCommandLineW);
     ENTRY("GetCommandLineW()\n");
@@ -1451,11 +1442,10 @@ dwDesiredAccess is ignored (all supported operations will be allowed)
 bInheritHandle is ignored (no inheritance)
 --*/
 HANDLE
-PALAPI
 OpenProcess(
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        DWORD dwProcessId)
+        uint32_t dwProcessId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -1572,7 +1562,7 @@ Parameter
 Return
   Return the process ID, or 0 if it's not a valid handle
 --*/
-DWORD
+uint32_t
 PROCGetProcessIDFromHandle(
         HANDLE hProcess)
 {
@@ -1580,7 +1570,7 @@ PROCGetProcessIDFromHandle(
     IPalObject *pobjProcess = NULL;
     CPalThread *pThread = InternalGetCurrentThread();
 
-    DWORD dwProcessId = 0;
+    uint32_t dwProcessId = 0;
 
     if (hPseudoCurrentProcess == hProcess)
     {
@@ -1842,14 +1832,14 @@ Abstract
   Cleanup all the structures for the initial process.
 
 Parameter
-  VOID
+  void
 
 Return
-  VOID
+  void
 
 --*/
-VOID
-PROCCleanupInitialProcess(VOID)
+void
+PROCCleanupInitialProcess(void)
 {
     CPalThread *pThread = InternalGetCurrentThread();
 
@@ -1881,7 +1871,7 @@ Parameter
   pThread:   Thread object
 
 --*/
-VOID
+void
 CorUnix::PROCAddThread(
     CPalThread *pCurrentThread,
     CPalThread *pTargetThread
@@ -1914,7 +1904,7 @@ Parameter
 
 (no return value)
 --*/
-VOID
+void
 CorUnix::PROCRemoveThread(
     CPalThread *pCurrentThread,
     CPalThread *pTargetThread
@@ -1982,9 +1972,9 @@ Parameter
 Return
   the number of threads.
 --*/
-INT
+int32_t
 CorUnix::PROCGetNumberOfThreads(
-    VOID)
+    void)
 {
     return g_dwThreadCount;
 }
@@ -2003,9 +1993,9 @@ Parameter
 Return
   void
 --*/
-VOID
+void
 PROCProcessLock(
-    VOID)
+    void)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
@@ -2027,9 +2017,9 @@ Parameter
 Return
   void
 --*/
-VOID
+void
 PROCProcessUnlock(
-    VOID)
+    void)
 {
     CPalThread * pThread =
         (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
@@ -2047,7 +2037,7 @@ Abstract
 
 (no parameters, no return value)
 --*/
-VOID
+void
 PROCCleanupThreadSemIds(void)
 {
     //
@@ -2087,11 +2077,11 @@ Note:
   This function is used in ExitThread and TerminateProcess
 
 --*/
-VOID
+void
 CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
 {
     BOOL locked;
-    DWORD old_terminator;
+    uint32_t old_terminator;
 
     old_terminator = InterlockedCompareExchange(&terminator, GetCurrentThreadId(), 0);
 
@@ -2137,9 +2127,9 @@ Abstract:
     Retrieve process state information (state & exit code).
 
 Parameters:
-    DWORD process_id : PID of process to retrieve state for
+    uint32_t process_id : PID of process to retrieve state for
     PROCESS_STATE *state : state of process (starting, running, done)
-    DWORD *exit_code : exit code of process (from ExitProcess, etc.)
+    uint32_t *exit_code : exit code of process (from ExitProcess, etc.)
 
 Return value :
     TRUE on success
@@ -2149,7 +2139,7 @@ PROCGetProcessStatus(
     CPalThread *pThread,
     HANDLE hProcess,
     PROCESS_STATE *pps,
-    DWORD *pdwExitCode
+    uint32_t *pdwExitCode
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -2567,15 +2557,15 @@ char **
 buildArgv(
       LPCWSTR lpCommandLine,
       LPSTR lpAppPath,
-      UINT *pnArg)
+      uint32_t *pnArg)
 {
     CPalThread *pThread = NULL;
-    UINT iWlen;
+    uint32_t iWlen;
     char *lpAsciiCmdLine;
     char *pChar;
     char **lppArgv;
     char **lppTemp;
-    UINT i,j;
+    uint32_t i,j;
 
     *pnArg = 0;
 
@@ -2841,16 +2831,16 @@ static
 BOOL
 getPath(
       LPCSTR lpFileName,
-      UINT iLen,
+      uint32_t iLen,
       LPSTR  lpPathFileName)
 {
     LPSTR lpPath;
     LPSTR lpNext;
     LPSTR lpCurrent;
     LPWSTR lpwstr;
-    INT n;
-    INT nextLen;
-    INT slashLen;
+    int32_t n;
+    int32_t nextLen;
+    int32_t slashLen;
     CPalThread *pThread = NULL;
 
     /* if a path is specified, only look there */
@@ -2889,7 +2879,7 @@ getPath(
         }
 
         n += strlen(lpFileName) + 2;
-        if (n > (INT)iLen)
+        if (n > (int32_t)iLen)
         {
             ERROR("Buffer too small for full path!\n");
             return FALSE;

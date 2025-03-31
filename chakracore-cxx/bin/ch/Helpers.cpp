@@ -107,16 +107,16 @@ uint ConcatPath(LPCSTR filenameLeft, uint posPathSep, LPCSTR filenameRight, char
     return totalLength;
 }
 
-HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UINT* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
+HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uint32_t* lengthBytesOut /*= nullptr*/, std::string* fullPath /*= nullptr*/, bool shouldMute /*=false */)
 {
     static char sHostApplicationPathBuffer[MAX_URI_LENGTH];
     static uint sHostApplicationPathBufferLength = (uint) -1;
     char combinedPathBuffer[MAX_URI_LENGTH];
 
     HRESULT hr = S_OK;
-    BYTE * pRawBytes = nullptr;
-    BYTE * pRawBytesFromMap = nullptr;
-    UINT lengthBytes = 0;
+    uint8_t * pRawBytes = nullptr;
+    uint8_t * pRawBytesFromMap = nullptr;
+    uint32_t lengthBytes = 0;
     contents = nullptr;
     FILE * file = NULL;
     size_t bufferLength = 0;
@@ -159,8 +159,8 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
     if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
         SourceMap::Find(filename, strlen(filename), &data))
     {
-        pRawBytesFromMap = (BYTE*) data->GetString();
-        lengthBytes = (UINT) data->GetLength();
+        pRawBytesFromMap = (uint8_t*) data->GetString();
+        lengthBytes = (uint32_t) data->GetLength();
     }
     else
     {
@@ -191,13 +191,13 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
 
     if (lengthBytes != 0)
     {
-        bufferLength = lengthBytes + sizeof(BYTE);
-        pRawBytes = (LPBYTE)malloc(bufferLength);
+        bufferLength = lengthBytes + sizeof(uint8_t);
+        pRawBytes = (uint8_t *)malloc(bufferLength);
     }
     else
     {
         bufferLength = 1;
-        pRawBytes = (LPBYTE)malloc(bufferLength);
+        pRawBytes = (uint8_t *)malloc(bufferLength);
     }
 
     if (nullptr == pRawBytes)
@@ -213,8 +213,8 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, UIN
             //
             // Read the entire content as a binary block.
             //
-            size_t readBytes = fread(pRawBytes, sizeof(BYTE), lengthBytes, file);
-            if (readBytes < lengthBytes * sizeof(BYTE))
+            size_t readBytes = fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            if (readBytes < lengthBytes * sizeof(uint8_t))
             {
                 IfFailGo(E_FAIL);
             }
@@ -371,7 +371,7 @@ void Helpers::LogError(__in __nullterminated const char16 *msg, ...)
     va_end(args);
 }
 
-HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, UINT& lengthBytes, bool printFileOpenError)
+HRESULT Helpers::LoadBinaryFile(LPCSTR filename, LPCSTR& contents, uint32_t& lengthBytes, bool printFileOpenError)
 {
     HRESULT hr = S_OK;
     contents = nullptr;

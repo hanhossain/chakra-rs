@@ -186,7 +186,7 @@ namespace Js
         uint bytesWritten = 0;
 #ifdef ENABLE_WININET_PROFILE_DATA_CACHE
         //TODO: Add some diffing logic to not write unless necessary
-        ULONG byteCount = startupFunctions->WordCount() * sizeof(BVUnit) + sizeof(BVIndex);
+        uint32_t byteCount = startupFunctions->WordCount() * sizeof(BVUnit) + sizeof(BVIndex);
         if (FAILED(dataCacheWrapper->StartBlock(SimpleDataCacheWrapper::BlockType::BlockType_ProfileData, byteCount)))
         {
             return 0;
@@ -436,7 +436,7 @@ namespace Js
             return;
         }
 
-        char * record = DynamicProfileStorage::AllocRecord(static_cast<DWORD>(counter.GetByteCount()));
+        char * record = DynamicProfileStorage::AllocRecord(static_cast<uint32_t>(counter.GetByteCount()));
 #if DBG_DUMP
         if (PHASE_STATS1(DynamicProfilePhase))
         {

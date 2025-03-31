@@ -22,10 +22,10 @@ class JsrtDebugDocumentManager
 public:
     JsrtDebugDocumentManager(JsrtDebugManager* jsrtDebugManager);
     ~JsrtDebugDocumentManager();
-    void AddDocument(UINT bpId, Js::DebugDocument* debugDocument);
+    void AddDocument(uint32_t bpId, Js::DebugDocument* debugDocument);
     void ClearDebugDocument(Js::ScriptContext * scriptContext);
     void ClearBreakpointDebugDocumentDictionary();
-    bool RemoveBreakpoint(UINT breakpointId);
+    bool RemoveBreakpoint(uint32_t breakpointId);
 private:
     JsrtDebugManager* jsrtDebugManager;
 

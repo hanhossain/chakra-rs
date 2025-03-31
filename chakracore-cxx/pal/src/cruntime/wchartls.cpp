@@ -47,7 +47,6 @@ strDelimit      Set of delimiter characters
 
 --*/
 WCHAR *
-__cdecl
 PAL_wcstok(WCHAR *strToken, const WCHAR *strDelimit)
 {
     CPalThread *pThread = NULL;

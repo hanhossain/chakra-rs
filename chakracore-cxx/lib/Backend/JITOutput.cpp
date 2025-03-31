@@ -142,7 +142,7 @@ JITOutput::RecordInProcNativeCodeSize(Func *func, uint32 bytes, ushort pdataCoun
     bool canAllocInPreReservedHeapPageSegment = m_func->CanAllocInPreReservedHeapPageSegment();
 #endif
 
-    BYTE *buffer = nullptr;
+    uint8_t *buffer = nullptr;
     m_inProcAlloc = m_func->GetInProcCodeGenAllocators()->emitBufferManager.AllocateBuffer(bytes, &buffer, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, true);
 
     if (buffer == nullptr)
@@ -169,7 +169,7 @@ JITOutput::RecordOOPNativeCodeSize(Func *func, uint32 bytes, ushort pdataCount, 
     bool canAllocInPreReservedHeapPageSegment = m_func->CanAllocInPreReservedHeapPageSegment();
 #endif
 
-    BYTE *buffer = nullptr;
+    uint8_t *buffer = nullptr;
     m_oopAlloc = m_func->GetOOPCodeGenAllocators()->emitBufferManager.AllocateBuffer(bytes, &buffer, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, true);
 
     if (buffer == nullptr)
@@ -187,7 +187,7 @@ JITOutput::RecordOOPNativeCodeSize(Func *func, uint32 bytes, ushort pdataCount, 
 #endif
 
 void
-JITOutput::RecordNativeCode(const BYTE* sourceBuffer, BYTE* localCodeAddress)
+JITOutput::RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress)
 {
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsJITServer())
@@ -203,7 +203,7 @@ JITOutput::RecordNativeCode(const BYTE* sourceBuffer, BYTE* localCodeAddress)
 
 template <typename TEmitBufferAllocation, typename TCodeGenAllocators>
 void
-JITOutput::RecordNativeCode(const BYTE* sourceBuffer, BYTE* localCodeAddress, TEmitBufferAllocation allocation, TCodeGenAllocators codeGenAllocators)
+JITOutput::RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress, TEmitBufferAllocation allocation, TCodeGenAllocators codeGenAllocators)
 {
     Assert(m_outputData->codeAddress == (intptr_t)allocation->allocation->address);
     if (!codeGenAllocators->emitBufferManager.CommitBuffer(allocation, allocation->bytesCommitted, localCodeAddress, m_outputData->codeSize, sourceBuffer))
@@ -228,7 +228,7 @@ JITOutput::RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsign
 
 #if TARGET_64
 void
-JITOutput::RecordUnwindInfo(BYTE *unwindInfo, size_t size, BYTE * xdataAddr, BYTE* localXdataAddr)
+JITOutput::RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr, uint8_t* localXdataAddr)
 {
     Assert(XDATA_SIZE >= size);
     memcpy_s(localXdataAddr, XDATA_SIZE, unwindInfo, size);
@@ -237,19 +237,19 @@ JITOutput::RecordUnwindInfo(BYTE *unwindInfo, size_t size, BYTE * xdataAddr, BYT
 
 #elif _M_ARM
 size_t
-JITOutput::RecordUnwindInfo(size_t offset, const BYTE *unwindInfo, size_t size, BYTE * xdataAddr)
+JITOutput::RecordUnwindInfo(size_t offset, const uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr)
 {
-    BYTE *xdataFinal = xdataAddr + offset;
+    uint8_t *xdataFinal = xdataAddr + offset;
 
     Assert(xdataFinal);
-    Assert(((ULONG_PTR)xdataFinal & 0x3) == 0); // 4 byte aligned
+    Assert(((size_t)xdataFinal & 0x3) == 0); // 4 byte aligned
     memcpy_s(xdataFinal, size, unwindInfo, size);
 
     return (size_t)xdataFinal;
 }
 
 void
-JITOutput::RecordXData(BYTE * xdata)
+JITOutput::RecordXData(uint8_t * xdata)
 {
     m_outputData->xdataOffset = NativeCodeData::GetDataTotalOffset(xdata);
 }
@@ -280,7 +280,7 @@ JITOutput::FinalizeNativeCode()
     m_outputData->thunkAddress = allocation->thunkAddress;
     if (!allocation->thunkAddress && CONFIG_FLAG(OOPCFGRegistration))
     {
-        PVOID callTarget = (PVOID)m_outputData->codeAddress;
+        void * callTarget = (void *)m_outputData->codeAddress;
 #if ENABLE_OOP_NATIVE_CODEGEN
         if (JITManager::GetJITManager()->IsJITServer())
         {

@@ -37,23 +37,23 @@ namespace Js
     // - all these wrappers expect that arguments are not float/double
     //   (double takes 8 bytes != stack alignment on x86 and ARM, double and float use different registers (VFP) rather than Var on ARM).
 
-    typedef Var (__stdcall *OrigHelperMethod0)();
-    typedef Var (__stdcall *OrigHelperMethod1)(Var arg1);
-    typedef Var (__stdcall *OrigHelperMethod2)(Var arg1, Var arg2);
-    typedef Var (__stdcall *OrigHelperMethod3)(Var arg1, Var arg2, Var arg3);
-    typedef Var (__stdcall *OrigHelperMethod4)(Var arg1, Var arg2, Var arg3, Var arg4);
-    typedef Var (__stdcall *OrigHelperMethod5)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5);
-    typedef Var (__stdcall *OrigHelperMethod6)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6);
-    typedef Var (__stdcall *OrigHelperMethod7)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7);
-    typedef Var (__stdcall *OrigHelperMethod8)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8);
-    typedef Var (__stdcall *OrigHelperMethod9)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9);
-    typedef Var (__stdcall *OrigHelperMethod10)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10);
-    typedef Var (__stdcall *OrigHelperMethod11)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11);
-    typedef Var (__stdcall *OrigHelperMethod12)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12);
-    typedef Var (__stdcall *OrigHelperMethod13)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13);
-    typedef Var (__stdcall *OrigHelperMethod14)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14);
-    typedef Var (__stdcall *OrigHelperMethod15)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14, Var arg15);
-    typedef Var (__stdcall *OrigHelperMethod16)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14, Var arg15, Var arg16);
+    typedef Var (*OrigHelperMethod0)();
+    typedef Var (*OrigHelperMethod1)(Var arg1);
+    typedef Var (*OrigHelperMethod2)(Var arg1, Var arg2);
+    typedef Var (*OrigHelperMethod3)(Var arg1, Var arg2, Var arg3);
+    typedef Var (*OrigHelperMethod4)(Var arg1, Var arg2, Var arg3, Var arg4);
+    typedef Var (*OrigHelperMethod5)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5);
+    typedef Var (*OrigHelperMethod6)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6);
+    typedef Var (*OrigHelperMethod7)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7);
+    typedef Var (*OrigHelperMethod8)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8);
+    typedef Var (*OrigHelperMethod9)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9);
+    typedef Var (*OrigHelperMethod10)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10);
+    typedef Var (*OrigHelperMethod11)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11);
+    typedef Var (*OrigHelperMethod12)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12);
+    typedef Var (*OrigHelperMethod13)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13);
+    typedef Var (*OrigHelperMethod14)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14);
+    typedef Var (*OrigHelperMethod15)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14, Var arg15);
+    typedef Var (*OrigHelperMethod16)(Var arg1, Var arg2, Var arg3, Var arg4, Var arg5, Var arg6, Var arg7, Var arg8, Var arg9, Var arg10, Var arg11, Var arg12, Var arg13, Var arg14, Var arg15, Var arg16);
 
     template<typename Fn>
     Var HelperMethodWrapper(ScriptContext* scriptContext, Fn fn)

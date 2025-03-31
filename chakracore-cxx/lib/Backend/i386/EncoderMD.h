@@ -32,7 +32,7 @@ private:
     {
         IR::LabelInstr *    m_shortBrLabel;     // NULL if not a short branch
         uint32              m_InlineeOffset;
-        BYTE                m_nopCount;         // for AlignedLabel, how many nops do we need to be 16-byte aligned
+        uint8_t                m_nopCount;         // for AlignedLabel, how many nops do we need to be 16-byte aligned
     };
 
     union
@@ -102,9 +102,9 @@ public:
     bool                isLongBr()          const { return m_type == RelocTypeBranch && m_shortBrLabel == NULL; }
     bool                isShortBr()         const { return m_type == RelocTypeBranch && m_shortBrLabel != NULL; }
 
-    BYTE*               getBrOpCodeByte()   const {
+    uint8_t*               getBrOpCodeByte()   const {
         Assert(m_type == RelocTypeBranch);
-        return (BYTE*)m_origPtr - 1;
+        return (uint8_t*)m_origPtr - 1;
     }
 
     IR::LabelInstr *    getBrTargetLabel()  const
@@ -132,32 +132,32 @@ public:
     }
 
     // get label original PC without shortening/alignment
-    BYTE *  getLabelOrigPC()  const
+    uint8_t *  getLabelOrigPC()  const
     {
         Assert(isLabel());
-        return ((BYTE*) m_origPtr);
+        return ((uint8_t*) m_origPtr);
     }
 
     // get label PC after shortening/alignment
-    BYTE *  getLabelCurrPC()  const
+    uint8_t *  getLabelCurrPC()  const
     {
         Assert(isLabel());
         return getLabel()->GetPC();
     }
 
-    BYTE    getLabelNopCount() const
+    uint8_t    getLabelNopCount() const
     {
         Assert(isAlignedLabel());
         return m_nopCount;
     }
 
-    void    setLabelCurrPC(BYTE* pc)
+    void    setLabelCurrPC(uint8_t* pc)
     {
         Assert(isLabel());
         getLabel()->SetPC(pc);
     }
 
-    void    setLabelNopCount(BYTE nopCount)
+    void    setLabelNopCount(uint8_t nopCount)
     {
         Assert(isAlignedLabel());
         Assert (nopCount >= 0 && nopCount < 16);
@@ -174,8 +174,8 @@ public:
     bool    validateShortBrTarget() const
     {
         return isShortBr() &&
-            m_shortBrLabel->GetPC() - ((BYTE*)m_ptr + 1) >= -128 &&
-            m_shortBrLabel->GetPC() - ((BYTE*)m_ptr + 1) <= 127;
+            m_shortBrLabel->GetPC() - ((uint8_t*)m_ptr + 1) >= -128 &&
+            m_shortBrLabel->GetPC() - ((uint8_t*)m_ptr + 1) <= 127;
     }
 
     uint32 GetInlineOffset()
@@ -196,7 +196,7 @@ public:
 ///
 ///---------------------------------------------------------------------------
 
-enum Forms : BYTE;
+enum Forms : uint8_t;
 
 typedef JsUtil::List<InlineeFrameRecord*, ArenaAllocator> InlineeFrameRecords;
 typedef JsUtil::List<EncodeRelocAndLabels, ArenaAllocator> RelocList;
@@ -208,7 +208,7 @@ class EncoderMD
 public:
     EncoderMD(Func * func) : m_func(func) { }
 
-    ptrdiff_t       Encode(IR::Instr * instr, BYTE *pc, BYTE* beginCodeAddress = nullptr);
+    ptrdiff_t       Encode(IR::Instr * instr, uint8_t *pc, uint8_t* beginCodeAddress = nullptr);
     void            Init(Encoder *encoder);
     void            ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint * bufferCRC, BOOL isBrShorteningSucceeded, bool isFinalBufferValidation = false);
     uint            GetRelocDataSize(EncodeRelocAndLabels *reloc);
@@ -221,36 +221,36 @@ public:
     static bool     IsSHIFT(IR::Instr *instr);
     RelocList*      GetRelocList() const { return m_relocList; }
     int             AppendRelocEntry(RelocType type, void *ptr, IR::LabelInstr * labelInstr = nullptr, const void * fnAddress = nullptr);
-    int             FixRelocListEntry(uint32 index, int32 totalBytesSaved, BYTE *buffStart, BYTE* buffEnd);
+    int             FixRelocListEntry(uint32 index, int32 totalBytesSaved, uint8_t *buffStart, uint8_t* buffEnd);
     void            FixMaps(uint32 brOffset, int32 bytesSaved, FixUpMapIndex *mapIndices);
-    void            UpdateRelocListWithNewBuffer(RelocList * relocList, BYTE * newBuffer, BYTE * oldBufferStart, BYTE * oldBufferEnd);
+    void            UpdateRelocListWithNewBuffer(RelocList * relocList, uint8_t * newBuffer, uint8_t * oldBufferStart, uint8_t * oldBufferEnd);
 #ifdef DBG
-    void            VerifyRelocList(BYTE *buffStart, BYTE *buffEnd);
+    void            VerifyRelocList(uint8_t *buffStart, uint8_t *buffEnd);
 #endif
-    void            AddLabelReloc(BYTE* relocAddress);
-    BYTE *          GetRelocBufferAddress(EncodeRelocAndLabels * reloc);
+    void            AddLabelReloc(uint8_t* relocAddress);
+    uint8_t *          GetRelocBufferAddress(EncodeRelocAndLabels * reloc);
 
 private:
-    BYTE            GetOpcodeByte2(IR::Instr *instr);
-    const BYTE *    GetFormTemplate(IR::Instr *instr);
+    uint8_t            GetOpcodeByte2(IR::Instr *instr);
+    const uint8_t *    GetFormTemplate(IR::Instr *instr);
     static Forms    GetInstrForm(IR::Instr *instr);
-    const BYTE *    GetOpbyte(IR::Instr *instr);
-    BYTE            GetRegEncode(IR::RegOpnd *regOpnd);
+    const uint8_t *    GetOpbyte(IR::Instr *instr);
+    uint8_t            GetRegEncode(IR::RegOpnd *regOpnd);
     uint32          GetLeadIn(IR::Instr * instr);
     static uint32   GetOpdope(IR::Instr *instr);
-    void            EmitModRM(IR::Instr * instr, IR::Opnd *opnd, BYTE reg1);
+    void            EmitModRM(IR::Instr * instr, IR::Opnd *opnd, uint8_t reg1);
     void            EmitConst(size_t val, int size);
     int             EmitImmed(IR::Opnd * opnd, int opSize, int sbit);
     void            EmitCondBranch(IR::BranchInstr * branchInstr);
     bool            FitsInByte(size_t value);
-    BYTE            GetMod(size_t offset,  bool baseRegIsEBP, int * pDispSize);
-    BYTE            GetMod(IR::SymOpnd * opnd, int * pDispSize, RegNum& rmReg);
-    BYTE            GetMod(IR::IndirOpnd * opnd, int * pDispSize);
+    uint8_t            GetMod(size_t offset,  bool baseRegIsEBP, int * pDispSize);
+    uint8_t            GetMod(IR::SymOpnd * opnd, int * pDispSize, RegNum& rmReg);
+    uint8_t            GetMod(IR::IndirOpnd * opnd, int * pDispSize);
 
 private:
     Func *          m_func;
     Encoder *       m_encoder;
-    BYTE *          m_pc;
+    uint8_t *          m_pc;
     RelocList*      m_relocList;
     int32           m_lastLoopLabelPosition;
 

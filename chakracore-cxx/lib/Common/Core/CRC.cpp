@@ -49,7 +49,7 @@ uint CalculateCRC(uint bufferCRC, size_t count, _In_reads_bytes_(count) void * b
 {
     for (uint index = 0; index < count; index++)
     {
-        bufferCRC = CalculateCRC(bufferCRC, *((BYTE*)buffer + index));
+        bufferCRC = CalculateCRC(bufferCRC, *((uint8_t*)buffer + index));
     }
     return bufferCRC;
 }

@@ -52,19 +52,19 @@ void LocaleCleanup( void );
 typedef
 struct _CP_MAPPING
 {
-    UINT                nCodePage;      /* Code page identifier. */
+    uint32_t                nCodePage;      /* Code page identifier. */
     CFStringEncoding    nCFEncoding;    /* The equivalent CFString encoding. */
-    UINT                nMaxByteSize;   /* The max byte size of any character. */
-    BYTE                LeadByte[ MAX_LEADBYTES ];  /* The lead byte array. */
+    uint32_t                nMaxByteSize;   /* The max byte size of any character. */
+    uint8_t                LeadByte[ MAX_LEADBYTES ];  /* The lead byte array. */
 } CP_MAPPING;
 #elif HAVE_PTHREAD_RWLOCK_T
 typedef 
 struct _CP_MAPPING
 {
-    UINT    nCodePage;                  // Code page identifier.
+    uint32_t    nCodePage;                  // Code page identifier.
     LPCSTR  lpBSDEquivalent;            // The equivalent BSD locale identifier.
-    UINT    nMaxByteSize;               // The max byte size of any character.
-    BYTE    LeadByte[ MAX_LEADBYTES ];  // The lead byte array.
+    uint32_t    nMaxByteSize;               // The max byte size of any character.
+    uint8_t    LeadByte[ MAX_LEADBYTES ];  // The lead byte array.
 } CP_MAPPING;
 #else
 #error Insufficient platform support for text encodings

@@ -120,7 +120,7 @@ namespace CorUnix
     IPalSynchronizationManager * g_pSynchronizationManager = NULL;
 
     CPalSynchronizationManager * CPalSynchronizationManager::s_pObjSynchMgr = NULL;
-    Volatile<LONG> CPalSynchronizationManager::s_lInitStatus PAL_GLOBAL = SynchMgrStatusIdle;
+    Volatile<int32_t> CPalSynchronizationManager::s_lInitStatus PAL_GLOBAL = SynchMgrStatusIdle;
     CRITICAL_SECTION CPalSynchronizationManager::s_csSynchProcessLock PAL_GLOBAL;
     CRITICAL_SECTION CPalSynchronizationManager::s_csMonitoredProcessesLock PAL_GLOBAL;
 
@@ -164,26 +164,26 @@ namespace CorUnix
     --*/
     PAL_ERROR CPalSynchronizationManager::BlockThread(
         CPalThread *pthrCurrent,
-        DWORD dwTimeout,
+        uint32_t dwTimeout,
         bool fAlertable,
         bool fIsSleep,
         ThreadWakeupReason *ptwrWakeupReason,
-        DWORD * pdwSignaledObject)
+        uint32_t * pdwSignaledObject)
     {
         PAL_ERROR palErr = NO_ERROR;
         ThreadWakeupReason twrWakeupReason = WaitFailed;
-        DWORD * pdwWaitState;
-        DWORD dwWaitState = 0;
-        DWORD dwSigObjIdx = 0;
+        uint32_t * pdwWaitState;
+        uint32_t dwWaitState = 0;
+        uint32_t dwSigObjIdx = 0;
         bool fRaceAlerted = false;
         bool fEarlyDeath = false;
 
-        pdwWaitState = SharedIDToTypePointer(DWORD,
+        pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Got NULL pdwWaitState from m_shridWaitAwakened=%p\n",
-                    (VOID *)pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
+                    (void *)pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
 
         if (fIsSleep)
         {
@@ -216,17 +216,17 @@ namespace CorUnix
             if (!fRaceAlerted)
             {
                 // Setting the thread in wait state
-                dwWaitState = (DWORD)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
+                dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
 
                 TRACE("Switching my wait state [%p] from TWS_ACTIVE to %u "
                       "[current *pdwWaitState=%u]\n",
                       pdwWaitState, dwWaitState, *pdwWaitState);
 
-                dwWaitState = InterlockedCompareExchange((LONG *)pdwWaitState,
+                dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
                                                          dwWaitState,
                                                          TWS_ACTIVE);
 
-                if((DWORD)TWS_ACTIVE != dwWaitState)
+                if((uint32_t)TWS_ACTIVE != dwWaitState)
                 {
                     if (fAlertable)
                     {
@@ -234,7 +234,7 @@ namespace CorUnix
                         ReleaseSharedSynchLock(pthrCurrent);
                         ReleaseLocalSynchLock(pthrCurrent);
                     }
-                    if((DWORD)TWS_EARLYDEATH == dwWaitState)
+                    if((uint32_t)TWS_EARLYDEATH == dwWaitState)
                     {
                         // Process is terminating, this thread will soon be
                         // suspended (by SuspendOtherThreads).
@@ -290,15 +290,15 @@ namespace CorUnix
         if (WaitTimeout == twrWakeupReason)
         {
             // timeout reached. set wait state back to 'active'
-            dwWaitState = (DWORD)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
+            dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
 
             TRACE("Current thread awakened for timeout: switching wait "
                   "state [%p] from %u to TWS_ACTIVE [current *pdwWaitState=%u]\n",
                    pdwWaitState, dwWaitState, *pdwWaitState);
 
-            DWORD dwOldWaitState = InterlockedCompareExchange(
-                                        (LONG *)pdwWaitState,
-                                        TWS_ACTIVE, (LONG)dwWaitState);
+            uint32_t dwOldWaitState = InterlockedCompareExchange(
+                                        (int32_t *)pdwWaitState,
+                                        TWS_ACTIVE, (int32_t)dwWaitState);
 
             switch (dwOldWaitState)
             {
@@ -414,9 +414,9 @@ namespace CorUnix
 
     PAL_ERROR CPalSynchronizationManager::ThreadNativeWait(
         ThreadNativeWaitData * ptnwdNativeWaitData,
-        DWORD dwTimeout,
+        uint32_t dwTimeout,
         ThreadWakeupReason * ptwrWakeupReason,
-        DWORD * pdwSignaledObject)
+        uint32_t * pdwSignaledObject)
     {
         PAL_ERROR palErr = NO_ERROR;
         int iRet, iWaitRet = 0;
@@ -530,13 +530,13 @@ namespace CorUnix
 
     PAL_ERROR CPalSynchronizationManager::ThreadNativeWait(
         ThreadNativeWaitData * ptnwdNativeWaitData,
-        DWORD dwTimeout,
+        uint32_t dwTimeout,
         ThreadWakeupReason * ptwrWakeupReason,
-        DWORD * pdwSignaledObject)
+        uint32_t * pdwSignaledObject)
     {
         PAL_ERROR palErr = NO_ERROR;
-        DWORD dwTmo = dwTimeout;
-        DWORD dwOldTime = GetTickCount();
+        uint32_t dwTmo = dwTimeout;
+        uint32_t dwOldTime = GetTickCount();
         int iRet;
         int iPollTmo;
         int iWaitRet = 0;
@@ -713,17 +713,17 @@ namespace CorUnix
             // The TWS_EARLYDEATH wait-state will also prevent the thread from
             // successfully registering for a possible new wait in the same
             // time window.
-            LONG lTWState;
-            DWORD * pdwWaitState;
+            int32_t lTWState;
+            uint32_t * pdwWaitState;
 
-            pdwWaitState = SharedIDToTypePointer(DWORD,
+            pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pthrTarget->synchronizationInfo.m_shridWaitAwakened);
 
-            lTWState = InterlockedExchange((LONG *)pdwWaitState,
+            lTWState = InterlockedExchange((int32_t *)pdwWaitState,
                                            TWS_EARLYDEATH);
 
-            if ( (((LONG)TWS_WAITING == lTWState) ||
-                  ((LONG)TWS_ALERTABLE == lTWState)) &&
+            if ( (((int32_t)TWS_WAITING == lTWState) ||
+                  ((int32_t)TWS_ALERTABLE == lTWState)) &&
                  (0 < pSynchInfo->m_twiWaitInfo.lObjCount) )
             {
                 // Unregister the wait
@@ -757,7 +757,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::GetSynchWaitControllersForObjects(
         CPalThread *pthrCurrent,
         IPalObject *rgObjects[],
-        DWORD dwObjectCount,
+        uint32_t dwObjectCount,
         ISynchWaitController * rgControllers[])
     {
         return GetSynchControllersForObjects(pthrCurrent,
@@ -777,7 +777,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::GetSynchStateControllersForObjects(
         CPalThread *pthrCurrent,
         IPalObject *rgObjects[],
-        DWORD dwObjectCount,
+        uint32_t dwObjectCount,
         ISynchStateController *rgControllers[])
     {
         return GetSynchControllersForObjects(pthrCurrent,
@@ -797,7 +797,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::GetSynchControllersForObjects(
         CPalThread *pthrCurrent,
         IPalObject *rgObjects[],
-        DWORD dwObjectCount,
+        uint32_t dwObjectCount,
         void ** ppvControllers,
         CSynchControllerBase::ControllerType ctCtrlrType)
     {
@@ -1024,7 +1024,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::AllocateObjectSynchData(
         CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
-        VOID **ppvSynchData)
+        void **ppvSynchData)
     {
         PAL_ERROR palErr = NO_ERROR;
         CSynchData * psdSynchData = NULL;
@@ -1095,7 +1095,7 @@ namespace CorUnix
     void CPalSynchronizationManager::FreeObjectSynchData(
         CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
-        VOID *pvSynchData)
+        void *pvSynchData)
     {
         CSynchData * psdSynchData;
         CPalThread * pthrCurrent = InternalGetCurrentThread();
@@ -1130,7 +1130,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::CreateSynchStateController(
         CPalThread *pthrCurrent,
         CObjectType *potObjectType,
-        VOID *pvSynchData,
+        void *pvSynchData,
         ObjectDomain odObjectDomain,
         ISynchStateController **ppStateController)
     {
@@ -1179,7 +1179,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::CreateSynchWaitController(
         CPalThread *pthrCurrent,
         CObjectType *potObjectType,
-        VOID *pvSynchData,
+        void *pvSynchData,
         ObjectDomain odObjectDomain,
         ISynchWaitController **ppWaitController)
     {
@@ -1228,12 +1228,12 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::QueueUserAPC(CPalThread * pthrCurrent,
         CPalThread * pthrTarget,
         PAPCFUNC pfnAPC,
-        ULONG_PTR uptrData)
+        size_t uptrData)
     {
         PAL_ERROR palErr = NO_ERROR;
         ThreadApcInfoNode * ptainNode = NULL;
-        DWORD dwWaitState;
-        DWORD * pdwWaitState;
+        uint32_t dwWaitState;
+        uint32_t * pdwWaitState;
         ThreadWaitInfo * pTargetTWInfo = GetThreadWaitInfo(pthrTarget);
         bool fLocalSynchLock = false;
         bool fSharedSynchLock = false;
@@ -1270,7 +1270,7 @@ namespace CorUnix
             palErr = ERROR_INVALID_PARAMETER;
             goto QUAPC_exit;
         }
-        pdwWaitState = SharedIDToTypePointer(DWORD,
+        pdwWaitState = SharedIDToTypePointer(uint32_t,
             pthrTarget->synchronizationInfo.m_shridWaitAwakened);
         if(TWS_EARLYDEATH == VolatileLoad(pdwWaitState))
         {
@@ -1300,9 +1300,9 @@ namespace CorUnix
         TRACE("APC %p with parameter %p added to APC queue\n",
              pfnAPC, uptrData);
 
-        dwWaitState = InterlockedCompareExchange((LONG *)pdwWaitState,
-                                                 (LONG)TWS_ACTIVE,
-                                                 (LONG)TWS_ALERTABLE);
+        dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
+                                                 (int32_t)TWS_ACTIVE,
+                                                 (int32_t)TWS_ALERTABLE);
 
         // Release thread lock
         pthrTarget->Unlock(pthrCurrent);
@@ -1486,13 +1486,13 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::Initialize()
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lInit;
+        int32_t lInit;
         CPalSynchronizationManager * pSynchManager = NULL;
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-                                           (LONG)SynchMgrStatusInitializing,
-                                           (LONG)SynchMgrStatusIdle);
-        if ((LONG)SynchMgrStatusIdle != lInit)
+                                           (int32_t)SynchMgrStatusInitializing,
+                                           (int32_t)SynchMgrStatusIdle);
+        if ((int32_t)SynchMgrStatusIdle != lInit)
         {
             ASSERT("Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
@@ -1522,12 +1522,12 @@ namespace CorUnix
         // Initialization was successful
         g_pSynchronizationManager =
             static_cast<IPalSynchronizationManager *>(pSynchManager);
-        s_lInitStatus = (LONG)SynchMgrStatusRunning;
+        s_lInitStatus = (int32_t)SynchMgrStatusRunning;
 
     I_exit:
         if (NO_ERROR != palErr)
         {
-            s_lInitStatus = (LONG)SynchMgrStatusError;
+            s_lInitStatus = (int32_t)SynchMgrStatusError;
             if (NULL != pSynchManager)
             {
                 pSynchManager->ShutdownProcessPipe();
@@ -1551,7 +1551,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::PrepareForShutdown()
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lInit;
+        int32_t lInit;
         CPalSynchronizationManager * pSynchManager = GetInstance();
         CPalThread * pthrCurrent = InternalGetCurrentThread();
         int iRet;
@@ -1559,8 +1559,8 @@ namespace CorUnix
 #if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         struct timespec tsAbsTmo = { 0, 0 };
 #else // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-        DWORD dwOldTime = GetTickCount();
-        DWORD dwTmo;
+        uint32_t dwOldTime = GetTickCount();
+        uint32_t dwTmo;
         int iPollTmo;
         int iEagains= 0;
         bool fAgain;
@@ -1568,9 +1568,9 @@ namespace CorUnix
 #endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-            (LONG)SynchMgrStatusShuttingDown, (LONG)SynchMgrStatusRunning);
+            (int32_t)SynchMgrStatusShuttingDown, (int32_t)SynchMgrStatusRunning);
 
-        if ((LONG)SynchMgrStatusRunning != lInit)
+        if ((int32_t)SynchMgrStatusRunning != lInit)
         {
             ASSERT("Unexpected initialization status found "
                    "in PrepareForShutdown [expected=%d current=%d]\n",
@@ -1753,18 +1753,18 @@ namespace CorUnix
         int iPollTimeout,
         SynchWorkerCmd * pswcWorkerCmd,
         SharedID * pshridMarshaledData,
-        DWORD * pdwData)
+        uint32_t * pdwData)
     {
         PAL_ERROR palErr = NO_ERROR;
         int iRet;
-        BYTE byVal;
+        uint8_t byVal;
         SynchWorkerCmd swcWorkerCmd = SynchWorkerCmdNop;
 
         _ASSERTE(NULL != pswcWorkerCmd);
         _ASSERTE(NULL != pshridMarshaledData);
         _ASSERTE(NULL != pdwData);
 
-        iRet = ReadBytesFromProcessPipe(iPollTimeout, &byVal, sizeof(BYTE));
+        iRet = ReadBytesFromProcessPipe(iPollTimeout, &byVal, sizeof(uint8_t));
 
         if (0 > iRet)
         {
@@ -1776,9 +1776,9 @@ namespace CorUnix
 
         if (iRet != 0)
         {
-            _ASSERT_MSG(sizeof(BYTE) == iRet,
+            _ASSERT_MSG(sizeof(uint8_t) == iRet,
                         "Got %d bytes from process pipe while expecting for %d\n",
-                        iRet, sizeof(BYTE));
+                        iRet, sizeof(uint8_t));
 
             swcWorkerCmd = (SynchWorkerCmd)byVal;
 
@@ -1809,7 +1809,7 @@ namespace CorUnix
                   "REMOTE SIGNAL" : "DELEGATED OBJECT SIGNALING" );
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (BYTE *)&shridMarshaledId,
+                                            (uint8_t *)&shridMarshaledId,
                                             sizeof(shridMarshaledId));
             if (sizeof(shridMarshaledId) != iRet)
             {
@@ -1820,17 +1820,17 @@ namespace CorUnix
                 goto RCFPP_exit;
             }
 
-            TRACE("Received marshaled shrid=%p\n", (VOID *)shridMarshaledId);
+            TRACE("Received marshaled shrid=%p\n", (void *)shridMarshaledId);
 
             *pshridMarshaledData = shridMarshaledId;
         }
 
         if (SynchWorkerCmdDelegatedObjectSignaling == swcWorkerCmd)
         {
-            DWORD dwData;
+            uint32_t dwData;
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (BYTE *)&dwData,
+                                            (uint8_t *)&dwData,
                                             sizeof(dwData));
             if (sizeof(dwData) != iRet)
             {
@@ -1864,16 +1864,16 @@ namespace CorUnix
     --*/
     int CPalSynchronizationManager::ReadBytesFromProcessPipe(
         int iTimeout,
-        BYTE * pRecvBuf,
-        LONG iBytes)
+        uint8_t * pRecvBuf,
+        int32_t iBytes)
     {
 #if !HAVE_KQUEUE
         struct pollfd Poll;
 #endif // !HAVE_KQUEUE
         int iRet = -1;
         int iConsecutiveEintrs = 0;
-        LONG iBytesRead = 0;
-        BYTE * pPos = pRecvBuf;
+        int32_t iBytesRead = 0;
+        uint8_t * pPos = pRecvBuf;
 #if HAVE_KQUEUE && !HAVE_BROKEN_FIFO_KEVENT
         struct kevent keChanges;
         struct timespec ts, *pts;
@@ -2123,7 +2123,7 @@ namespace CorUnix
         CPalThread * pthrCurrent,
         CPalThread * pthrTarget,
         ThreadWakeupReason twrWakeupReason,
-        DWORD dwObjectIndex)
+        uint32_t dwObjectIndex)
     {
         PAL_ERROR palErr = NO_ERROR;
         ThreadNativeWaitData * ptnwdNativeWaitData =
@@ -2172,7 +2172,7 @@ namespace CorUnix
         CPalThread * pthrTarget)
     {
         PAL_ERROR palErr = NO_ERROR;
-        LONG lCount = pthrCurrent->synchronizationInfo.m_lPendingSignalingCount;
+        int32_t lCount = pthrCurrent->synchronizationInfo.m_lPendingSignalingCount;
 
         _ASSERTE(pthrTarget != pthrCurrent);
 
@@ -2284,7 +2284,7 @@ namespace CorUnix
         CPalThread * pthrCurrent,
         CPalThread * pthrTarget,
         ThreadWakeupReason twrWakeupReason,
-        DWORD dwObjectIndex)
+        uint32_t dwObjectIndex)
     {
         PAL_ERROR palErr = NO_ERROR;
         int iRet = 0;
@@ -2369,11 +2369,11 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::WakeUpRemoteThread(
         SharedID shridWLNode)
     {
-        const int MsgSize = sizeof(BYTE) + sizeof(SharedID);
+        const int MsgSize = sizeof(uint8_t) + sizeof(SharedID);
         int i;
         PAL_ERROR palErr = NO_ERROR;
-        BYTE rgSendBuf[MsgSize];
-        BYTE * pbySrc, * pbyDst = rgSendBuf;
+        uint8_t rgSendBuf[MsgSize];
+        uint8_t * pbySrc, * pbyDst = rgSendBuf;
         WaitingThreadsListNode * pWLNode =
             SharedIDToTypePointer(WaitingThreadsListNode, shridWLNode);
 
@@ -2382,7 +2382,7 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridWLNode, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != pWLNode,
                     "Bad shared wait list node identifier (%p)\n",
-                    (VOID*)shridWLNode);
+                    (void*)shridWLNode);
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
                     MsgSize, (int)PIPE_BUF);
@@ -2390,13 +2390,13 @@ namespace CorUnix
         TRACE("Waking up remote thread {pid=%x, tid=%x} by sending "
               "cmd=%u and shridWLNode=%p over process pipe\n",
               pWLNode->dwProcessId, pWLNode->dwThreadId,
-              SynchWorkerCmdRemoteSignal, (VOID *)shridWLNode);
+              SynchWorkerCmdRemoteSignal, (void *)shridWLNode);
 
         // Prepare the message
         // Cmd
-        *pbyDst++ = (BYTE)(SynchWorkerCmdRemoteSignal & 0xFF);
+        *pbyDst++ = (uint8_t)(SynchWorkerCmdRemoteSignal & 0xFF);
         // WaitingThreadsListNode (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&shridWLNode;
+        pbySrc = (uint8_t *)&shridWLNode;
         for (i=0; i<(int)sizeof(SharedID); i++)
         {
             *pbyDst++ = *pbySrc++;
@@ -2431,15 +2431,15 @@ namespace CorUnix
     --*/
     PAL_ERROR CPalSynchronizationManager::DelegateSignalingToRemoteProcess(
         CPalThread * pthrCurrent,
-        DWORD dwTargetProcessId,
+        uint32_t dwTargetProcessId,
         SharedID shridSynchData)
     {
-        const int MsgSize = sizeof(BYTE) + sizeof(SharedID) + sizeof(DWORD);
+        const int MsgSize = sizeof(uint8_t) + sizeof(SharedID) + sizeof(uint32_t);
         int i;
         PAL_ERROR palErr = NO_ERROR;
-        BYTE rgSendBuf[MsgSize];
-        BYTE * pbySrc, * pbyDst = rgSendBuf;
-        DWORD dwSigCount;
+        uint8_t rgSendBuf[MsgSize];
+        uint8_t * pbySrc, * pbyDst = rgSendBuf;
+        uint32_t dwSigCount;
         CSynchData * psdSynchData =
             SharedIDToTypePointer(CSynchData, shridSynchData);
 
@@ -2448,7 +2448,7 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridSynchData, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != psdSynchData,
                     "Bad shared SynchData identifier (%p)\n",
-                    (VOID*)shridSynchData);
+                    (void*)shridSynchData);
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
                     MsgSize, (int)PIPE_BUF);
@@ -2456,7 +2456,7 @@ namespace CorUnix
         TRACE("Transfering wait all signaling to remote process pid=%x "
               "by sending cmd=%u and shridSynchData=%p over process pipe\n",
               dwTargetProcessId, SynchWorkerCmdDelegatedObjectSignaling,
-              (VOID *)shridSynchData);
+              (void *)shridSynchData);
 
         dwSigCount = psdSynchData->GetSignalCount();
 
@@ -2468,18 +2468,18 @@ namespace CorUnix
         //
 
         // Cmd
-        *pbyDst++ = (BYTE)(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
+        *pbyDst++ = (uint8_t)(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
 
         // CSynchData (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&shridSynchData;
+        pbySrc = (uint8_t *)&shridSynchData;
         for (i=0; i<(int)sizeof(SharedID); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
 
         // Signal Count (not aligned, copy byte by byte)
-        pbySrc = (BYTE *)&dwSigCount;
-        for (i=0; i<(int)sizeof(DWORD); i++)
+        pbySrc = (uint8_t *)&dwSigCount;
+        for (i=0; i<(int)sizeof(uint32_t); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
@@ -2509,8 +2509,8 @@ namespace CorUnix
     Sends a message (command + data) to a remote process' worker thread.
     --*/
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
-        DWORD dwProcessId,
-        BYTE * pMsg,
+        uint32_t dwProcessId,
+        uint8_t * pMsg,
         int iMsgSize)
     {
         ASSERT("There should never be a reason to send a message to a remote worker\n");
@@ -2529,7 +2529,7 @@ namespace CorUnix
     {
         PAL_ERROR palErr = NO_ERROR;
         ssize_t sszWritten;
-        BYTE byCmd;
+        uint8_t byCmd;
         int iRetryCount;
 
         _ASSERT_MSG((swcWorkerCmd & 0xFF) == swcWorkerCmd,
@@ -2540,7 +2540,7 @@ namespace CorUnix
                     "SynchWorkerCmdNop and SynchWorkerCmdShutdown  "
                     "[received cmd=%d]\n", swcWorkerCmd);
 
-        byCmd = (BYTE)(swcWorkerCmd & 0xFF);
+        byCmd = (uint8_t)(swcWorkerCmd & 0xFF);
 
         TRACE("Waking up Synch Worker Thread for %u [byCmd=%u]\n",
                     swcWorkerCmd, (unsigned int)byCmd);
@@ -2549,18 +2549,18 @@ namespace CorUnix
         // within PIPE_BUF, there's no need to lock here, since the
         // write is guaranteed not to be interleaved with/into other
         // writes of PIPE_BUF bytes or less.
-        _ASSERT_MSG(sizeof(BYTE) <= PIPE_BUF, "Message too long\n");
+        _ASSERT_MSG(sizeof(uint8_t) <= PIPE_BUF, "Message too long\n");
 
         iRetryCount = 0;
         do
         {
-            sszWritten = write(m_iProcessPipeWrite, &byCmd, sizeof(BYTE));
+            sszWritten = write(m_iProcessPipeWrite, &byCmd, sizeof(uint8_t));
         } while (-1 == sszWritten &&
                  EAGAIN == errno &&
                  ++iRetryCount < MaxConsecutiveEagains &&
                  0 == sched_yield());
 
-        if (sszWritten != sizeof(BYTE))
+        if (sszWritten != sizeof(uint8_t))
         {
             ERROR("Unable to write the the process pipe to wakeup the "
                    "worker thread [errno=%d (%s)]\n", errno, strerror(errno));
@@ -3003,7 +3003,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::UnRegisterProcessForMonitoring(
         CPalThread * pthrCurrent,
         CSynchData *psdSynchData,
-        DWORD dwPid)
+        uint32_t dwPid)
     {
         PAL_ERROR palErr = NO_ERROR;
         MonitoredProcessesListNode * pmpln, * pmplnPrev = NULL;
@@ -3082,12 +3082,12 @@ namespace CorUnix
     This method is called by the worker thread to execute one step of
     monitoring for all the process currently registered for monitoring
     --*/
-    LONG CPalSynchronizationManager::DoMonitorProcesses(
+    int32_t CPalSynchronizationManager::DoMonitorProcesses(
         CPalThread * pthrCurrent)
     {
         MonitoredProcessesListNode * pNode, * pPrev = NULL, * pNext;
-        LONG lInitialNodeCount;
-        LONG lRemovingCount = 0;
+        int32_t lInitialNodeCount;
+        int32_t lRemovingCount = 0;
         bool fLocalSynchLock = false;
         bool fSharedSynchLock = false;
         bool fMonitoredProcessesLock = false;
@@ -3438,8 +3438,8 @@ namespace CorUnix
     --*/
     PAL_ERROR CPalSynchronizationManager::PromoteObjectSynchData(
         CPalThread *pthrCurrent,
-        VOID *pvLocalSynchData,
-        VOID **ppvSharedSynchData)
+        void *pvLocalSynchData,
+        void **ppvSharedSynchData)
     {
         PAL_ERROR palError = NO_ERROR;
         CSynchData *psdLocal = reinterpret_cast<CSynchData *>(pvLocalSynchData);
@@ -3447,7 +3447,7 @@ namespace CorUnix
         SharedID shridSynchData = NULLSharedID;
         SharedID *rgshridWTLNodes = NULL;
         CObjectType *pot = NULL;
-        ULONG ulcWaitingThreads;
+        uint32_t ulcWaitingThreads;
 
         _ASSERTE(NULL != pthrCurrent);
         _ASSERTE(NULL != pvLocalSynchData);
@@ -3499,7 +3499,7 @@ namespace CorUnix
                     rgshridWTLNodes
                     );
 
-            if (static_cast<ULONG>(i) != ulcWaitingThreads)
+            if (static_cast<uint32_t>(i) != ulcWaitingThreads)
             {
                 for (i -= 1; i >= 0; i -= 1)
                 {
@@ -3668,7 +3668,7 @@ namespace CorUnix
             InternalLeaveCriticalSection(pthrCurrent, &s_csMonitoredProcessesLock);
         }
 
-        *ppvSharedSynchData = reinterpret_cast<VOID*>(shridSynchData);
+        *ppvSharedSynchData = reinterpret_cast<void*>(shridSynchData);
 
         //
         // Free the local memory items to caches
@@ -3796,7 +3796,7 @@ namespace CorUnix
     PAL_ERROR CThreadSynchronizationInfo::InitializePreCreate(void)
     {
         PAL_ERROR palErr = NO_ERROR;
-        DWORD * pdwWaitState = NULL;
+        uint32_t * pdwWaitState = NULL;
         int iRet;
 #if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
         const int MaxUnavailableResourceRetries = 10;
@@ -3805,7 +3805,7 @@ namespace CorUnix
         int iPipes[2] = { -1, -1};
 #endif // SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
 
-        m_shridWaitAwakened = RawSharedObjectAlloc(sizeof(DWORD),
+        m_shridWaitAwakened = RawSharedObjectAlloc(sizeof(uint32_t),
                                                    DefaultSharedPool);
         if (NULLSharedID == m_shridWaitAwakened)
         {
@@ -3814,14 +3814,14 @@ namespace CorUnix
             goto IPrC_exit;
         }
 
-        pdwWaitState = SharedIDToTypePointer(DWORD,
+        pdwWaitState = SharedIDToTypePointer(uint32_t,
             m_shridWaitAwakened);
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Unable to map shared wait state: bad shrared id"
-                    "[shrid=%p]\n", (VOID*)m_shridWaitAwakened);
+                    "[shrid=%p]\n", (void*)m_shridWaitAwakened);
 
-        VolatileStore<DWORD>(pdwWaitState, TWS_ACTIVE);
+        VolatileStore<uint32_t>(pdwWaitState, TWS_ACTIVE);
         m_tsThreadState = TS_STARTING;
 
 #if !SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
@@ -3933,7 +3933,7 @@ namespace CorUnix
     PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(
         CPalThread *pthrCurrent,
         SIZE_T threadId,
-        DWORD dwLwpId)
+        uint32_t dwLwpId)
     {
         PAL_ERROR palErr = NO_ERROR;
 
@@ -4011,9 +4011,9 @@ namespace CorUnix
 
         if (0 < m_lPendingSignalingCount)
         {
-            LONG lArrayPendingSignalingCount =
+            int32_t lArrayPendingSignalingCount =
                 min(PendingSignalingsArraySize, m_lPendingSignalingCount);
-            LONG lIdx = 0;
+            int32_t lIdx = 0;
             PAL_ERROR palTempErr;
 
             // Signal all the pending signalings from the array
@@ -4083,8 +4083,8 @@ namespace CorUnix
     Tests whether or not a process has exited
     --*/
     bool CPalSynchronizationManager::HasProcessExited(
-        DWORD dwPid,
-        DWORD * pdwExitCode,
+        uint32_t dwPid,
+        uint32_t * pdwExitCode,
         bool * pfIsActualExitCode)
     {
         pid_t pidWaitRetval;
@@ -4098,7 +4098,7 @@ namespace CorUnix
             /* try to get state of process, using non-blocking call */
             pidWaitRetval = waitpid(dwPid, &iStatus, WNOHANG);
 
-            if ((DWORD)pidWaitRetval == dwPid)
+            if ((uint32_t)pidWaitRetval == dwPid)
             {
                 /* success; get the exit code */
                 if (WIFEXITED(iStatus))
@@ -4181,12 +4181,12 @@ namespace CorUnix
     Tries to change the target wait status to 'active' in an interlocked fashion
     --*/
     bool CPalSynchronizationManager::InterlockedAwaken(
-        DWORD *pWaitState,
+        uint32_t *pWaitState,
         bool fAlertOnly)
     {
-        DWORD dwPrevState;
+        uint32_t dwPrevState;
 
-        dwPrevState = InterlockedCompareExchange((LONG *)pWaitState,
+        dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
                                                  TWS_ACTIVE, TWS_ALERTABLE);
         if(TWS_ALERTABLE != dwPrevState)
         {
@@ -4195,7 +4195,7 @@ namespace CorUnix
                 return false;
             }
 
-            dwPrevState = InterlockedCompareExchange((LONG *)pWaitState,
+            dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
                                                      TWS_ACTIVE, TWS_WAITING);
             if(TWS_WAITING == dwPrevState)
             {
@@ -4216,7 +4216,7 @@ namespace CorUnix
     Converts a relative timeout to an absolute one, reelatively to the
     current time.
     --*/
-    PAL_ERROR CPalSynchronizationManager::GetAbsoluteTimeout(DWORD dwTimeout,
+    PAL_ERROR CPalSynchronizationManager::GetAbsoluteTimeout(uint32_t dwTimeout,
                                                  struct timespec * ptsAbsTmo)
     {
         PAL_ERROR palErr = NO_ERROR;
@@ -4257,10 +4257,10 @@ namespace CorUnix
     }
 
 #if SYNCHMGR_PIPE_BASED_THREAD_BLOCKING
-    void CPalSynchronizationManager::UpdateTimeout(DWORD * pdwOldTime, DWORD * pdwTimeout)
+    void CPalSynchronizationManager::UpdateTimeout(uint32_t * pdwOldTime, uint32_t * pdwTimeout)
     {
-        DWORD dwNewTime;
-        DWORD dwDeltaTime;
+        uint32_t dwNewTime;
+        uint32_t dwDeltaTime;
         dwNewTime = GetTickCount();
 
         // check for wrap around

@@ -66,12 +66,12 @@ namespace CorUnix
         SHMPTR shmObjImmutableData;
         SHMPTR shmObjSharedData;
 
-        LONG lProcessRefCount;
-        DWORD dwNameLength;
+        int32_t lProcessRefCount;
+        uint32_t dwNameLength;
 
         PalObjectTypeId eTypeId;
 
-        PVOID pvSynchData;
+        void * pvSynchData;
     } SHMObjData;
 
     class CSharedMemoryObject : public CPalObjectBase
@@ -107,7 +107,7 @@ namespace CorUnix
         // SharedObject, and m_sdlSharedData when it is ProcessLocalObject.
         //
 
-        VOID *m_pvSharedData;
+        void *m_pvSharedData;
         
         CSimpleSharedMemoryLock m_ssmlSharedData;
         CSimpleDataLock m_sdlSharedData;
@@ -120,15 +120,15 @@ namespace CorUnix
 
         //
         // m_fSharedDataDereferenced will be TRUE if DereferenceSharedData
-        // has already been called. (N.B. -- this is a LONG instead of a bool
+        // has already been called. (N.B. -- this is a int32_t instead of a bool
         // because it is passed to InterlockedExchange). If the shared data blob
         // should be freed in the object's destructor (i.e., SHMfree should be
         // called on the appropriate SHMPTRs) DereferenceSharedData will
         // set m_fDeleteSharedData to TRUE.
         //
 
-        LONG m_fSharedDataDereferenced;
-        LONG m_fDeleteSharedData;
+        int32_t m_fSharedDataDereferenced;
+        int32_t m_fDeleteSharedData;
 
         PAL_ERROR
         AllocateSharedDataItems(
@@ -303,7 +303,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData
+            void **ppvSynchData
             );
 
     };
@@ -314,7 +314,7 @@ namespace CorUnix
         
     protected:
 
-        VOID *m_pvSynchData;
+        void *m_pvSynchData;
 
         virtual ~CSharedMemoryWaitableObject();
         
@@ -382,7 +382,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData
+            void **ppvSynchData
             );
     };
 

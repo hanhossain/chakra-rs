@@ -72,7 +72,7 @@ public:
 
     ~X64WriteBarrierCardTableManager();
 
-    BYTE * Initialize();
+    uint8_t * Initialize();
 
     // Called when a script thread is initialized
     bool OnThreadInit();
@@ -84,7 +84,7 @@ public:
     bool OnSegmentFree(_In_ char* segmentAddress, size_t numPages);
 
     // Get the card table for the 64 bit address space
-    BYTE * GetAddressOfCardTable() { return _cardTable; }
+    uint8_t * GetAddressOfCardTable() { return _cardTable; }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
     void AssertWriteToAddress(_In_ void* address)
@@ -111,7 +111,7 @@ private:
     // we term as a section. A bit set in this bit vector tracks whether a page corresponding
     // to said 16MB is committed in the card table.
     typedef BVSparse<HeapAllocator> CommittedSectionBitVector;
-    BYTE* _cardTable;
+    uint8_t* _cardTable;
     size_t _cardTableNumEntries;
     CriticalSection _cardTableInitCriticalSection;
 
@@ -129,8 +129,8 @@ private:
     };
 
     char*  _lastSegmentAddress;
-    BYTE*  _lastSectionStart;
-    BYTE*  _lastSectionEnd;
+    uint8_t*  _lastSectionStart;
+    uint8_t*  _lastSectionEnd;
     size_t _lastSegmentNumPages;
     size_t _lastSectionIndexStart;
     size_t _lastSectionIndexLast;
@@ -190,12 +190,12 @@ public:
     static uintptr_t GetCardTableIndex(void * address);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
 #ifdef TARGET_64
-    static BYTE * GetAddressOfCardTable() { return x64CardTableManager.GetAddressOfCardTable(); }
+    static uint8_t * GetAddressOfCardTable() { return x64CardTableManager.GetAddressOfCardTable(); }
 #else
-    static BYTE * GetAddressOfCardTable() { return cardTable; }
+    static uint8_t * GetAddressOfCardTable() { return cardTable; }
 #endif
 #else
-    static DWORD * GetAddressOfCardTable() { return cardTable; }
+    static uint32_t * GetAddressOfCardTable() { return cardTable; }
 #endif
 
     // For GC
@@ -207,9 +207,9 @@ public:
 
     static void ResetWriteBarrier(void * address, size_t pageCount);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-    static BYTE  GetWriteBarrier(void * address);
+    static uint8_t  GetWriteBarrier(void * address);
 #else
-    static DWORD GetWriteBarrier(void * address);
+    static uint32_t GetWriteBarrier(void * address);
 #endif
 
 #if defined(__APPLE__) && defined(_M_ARM64)
@@ -237,13 +237,13 @@ private:
     // needed. Since the card table is dynamically allocated at runtime, we need one additional
     // indirection to look up the card.
     static X64WriteBarrierCardTableManager x64CardTableManager;
-    static BYTE* cardTable;                         // 1 byte per 4096
+    static uint8_t* cardTable;                         // 1 byte per 4096
 #else
-    static BYTE cardTable[1 * 1024 * 1024];         // 1 byte per 4096
+    static uint8_t cardTable[1 * 1024 * 1024];         // 1 byte per 4096
 #endif
 
 #else
-    static DWORD cardTable[1 * 1024 * 1024];        // 128 bytes per bit, 4096 per DWORD
+    static uint32_t cardTable[1 * 1024 * 1024];        // 128 bytes per bit, 4096 per uint32_t
 #endif
 };
 

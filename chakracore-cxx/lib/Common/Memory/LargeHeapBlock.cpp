@@ -93,7 +93,7 @@ LargeObjectHeader::GetNext(uint cookie)
     unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((ULONG_PTR)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
     }
     // If checksum matches return the up-to-date next (in case other thread changed it from last time
     // we read it in this method.
@@ -133,7 +133,7 @@ LargeObjectHeader::GetAttributes(uint cookie)
     unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((ULONG_PTR)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
     }
 
     // If checksum matches return the up-to-date attributes (in case other thread changed it from last time
@@ -378,7 +378,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
         }
         else
         {
-            DWORD oldProtect;
+            uint32_t oldProtect;
             BOOL ret = ::VirtualProtect(pageHeapData->guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_READWRITE, &oldProtect);
             Assert(ret && oldProtect == PAGE_NOACCESS);
         }
@@ -1204,11 +1204,11 @@ bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarr
 #ifdef RECYCLER_WRITE_WATCH
     if (!CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
-        ULONG_PTR count = 1;
-        DWORD pageSize = AutoSystemInfo::PageSize;
-        DWORD const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
+        size_t count = 1;
+        uint32_t pageSize = AutoSystemInfo::PageSize;
+        uint32_t const writeWatchFlags = (flags & RescanFlags_ResetWriteWatch ? WRITE_WATCH_FLAG_RESET : 0);
         void * written = nullptr;
-        UINT ret = GetWriteWatch(writeWatchFlags, page, AutoSystemInfo::PageSize, &written, &count, &pageSize);
+        uint32_t ret = GetWriteWatch(writeWatchFlags, page, AutoSystemInfo::PageSize, &written, &count, &pageSize);
         bool isDirty = (ret != 0) || (count == 1);
         return isDirty;
     }
@@ -2264,7 +2264,7 @@ LargeHeapBlock::Verify(Recycler * recycler)
                 // Verify the free listed object
                 if (current->headerIndex == i)
                 {
-                    BYTE* objectAddress = (BYTE *)current + sizeof(LargeObjectHeader);
+                    uint8_t* objectAddress = (uint8_t *)current + sizeof(LargeObjectHeader);
                     Recycler::VerifyCheck(current->heapBlock == this, _u("Invalid heap block"), this, current->heapBlock);
                     Recycler::VerifyCheck((char *)current >= lastAddress, _u("LargeHeapBlock invalid object header order"), this->address, current);
                     Recycler::VerifyCheckFill(lastAddress, (char *)current - lastAddress);
@@ -2282,7 +2282,7 @@ LargeHeapBlock::Verify(Recycler * recycler)
         Recycler::VerifyCheck((char *)header >= lastAddress, _u("LargeHeapBlock invalid object header order"), this->address, header);
         Recycler::VerifyCheckFill(lastAddress, (char *)header - lastAddress);
         Recycler::VerifyCheck(header->objectIndex == i, _u("LargeHeapBlock object index mismatch"), this->address, &header->objectIndex);
-        recycler->VerifyCheckPad((BYTE *)header->GetAddress(), header->objectSize);
+        recycler->VerifyCheckPad((uint8_t *)header->GetAddress(), header->objectSize);
 
         verifyFinalizeCount += ((header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit) != 0);
         lastAddress = (char *)header->GetAddress() + header->objectSize;
@@ -2383,7 +2383,7 @@ LargeHeapBlock::PageHeapLockPages()
             VerifyPageHeapPattern();
         }
 
-        DWORD oldProtect;
+        uint32_t oldProtect;
         GetHeaderFromAddress(pageHeapData->objectAddress)->isObjectPageLocked = true;
         if (VirtualProtect(pageHeapData->objectPageAddr, this->pageCount * AutoSystemInfo::PageSize, PAGE_READONLY, &oldProtect))
         {
@@ -2401,7 +2401,7 @@ LargeHeapBlock::PageHeapUnLockPages()
 {
     if (pageHeapData->isLockedWithPageHeap)
     {
-        DWORD oldProtect;
+        uint32_t oldProtect;
         if (VirtualProtect(pageHeapData->objectPageAddr, this->pageCount * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect))
         {
             pageHeapData->isLockedWithPageHeap = false;

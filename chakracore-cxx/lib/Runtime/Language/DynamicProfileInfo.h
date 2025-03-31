@@ -68,7 +68,7 @@ namespace Js
         Field(uint) fldInfoCount;
     };
 
-    enum ThisType : BYTE
+    enum ThisType : uint8_t
     {
         ThisType_Unknown = 0,
         ThisType_Simple,
@@ -160,7 +160,7 @@ namespace Js
         }
     };
 
-    enum FldInfoFlags : BYTE
+    enum FldInfoFlags : uint8_t
     {
         FldInfo_NoInfo                      = 0x00,
         FldInfo_FromLocal                   = 0x01,
@@ -605,7 +605,7 @@ namespace Js
         Field(uint32) polymorphicCacheState;
         Field(uint32) bailOutOffsetForLastRejit;
         Field(bool) hasFunctionBody;  // this is likely 1, try avoid 4-byte GC force reference
-        Field(BYTE) currentInlinerVersion; // Used to detect when inlining profile changes
+        Field(uint8_t) currentInlinerVersion; // Used to detect when inlining profile changes
         Field(uint16) rejitCount;
 #if DBG
         Field(bool) persistsAcrossScriptContexts;
@@ -876,7 +876,7 @@ namespace Js
             }
         }
 
-        BYTE GetInlinerVersion() { return this->currentInlinerVersion; }
+        uint8_t GetInlinerVersion() { return this->currentInlinerVersion; }
         uint32 GetPolymorphicCacheState() const { return this->polymorphicCacheState; }
         uint32 GetRecursiveInlineInfo() const { return this->m_recursiveInlineInfo; }
         void SetHasNewPolyFieldAccess(FunctionBody *functionBody);

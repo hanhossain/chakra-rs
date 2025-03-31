@@ -26,9 +26,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-typedef BOOL (__stdcall *PDLLMAIN)(HINSTANCE, DWORD, LPVOID);   /* entry point of module */
-typedef HINSTANCE (PALAPI *PREGISTER_MODULE)(LPCSTR);           /* used to create the HINSTANCE for above DLLMain entry point */
-typedef VOID (PALAPI *PUNREGISTER_MODULE)(HINSTANCE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
+typedef BOOL (*PDLLMAIN)(HINSTANCE, uint32_t, void *);   /* entry point of module */
+typedef HINSTANCE (*PREGISTER_MODULE)(LPCSTR);           /* used to create the HINSTANCE for above DLLMain entry point */
+typedef void (*PUNREGISTER_MODULE)(HINSTANCE);           /* used to cleanup the HINSTANCE for above DLLMain entry point */
 
 typedef struct _MODSTRUCT
 {
@@ -36,7 +36,7 @@ typedef struct _MODSTRUCT
     void *dl_handle;        /* handle returned by dlopen() */
     HINSTANCE hinstance;    /* handle returned by PAL_RegisterLibrary */
     LPWSTR lib_name;        /* full path of module */
-    INT refcount;           /* reference count */
+    int32_t refcount;           /* reference count */
                             /* -1 means infinite reference count - module is never released */
     BOOL threadLibCalls;    /* TRUE for DLL_THREAD_ATTACH/DETACH notifications enabled, FALSE if they are disabled */
 
@@ -91,10 +91,10 @@ Function :
     Call DllMain for all modules (that have one) with the given "fwReason"
 
 Parameters :
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH, 
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpReserved : parameter to pass down to DllMain
+    void * lpReserved : parameter to pass down to DllMain
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary 
             and non-NULL if DllMain has been called during process termination. 
@@ -104,7 +104,7 @@ Parameters :
 Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
-void LOADCallDllMain(DWORD dwReason, LPVOID lpReserved);
+void LOADCallDllMain(uint32_t dwReason, void * lpReserved);
 
 /*++
 Function:

@@ -158,7 +158,7 @@ namespace Js
             uint Count() const;
 
         private:
-            static int __cdecl CompareDescending( const void* lhs, const void* rhs );
+            static int CompareDescending( const void* lhs, const void* rhs );
         };
 
         static void BuildIndex( unsigned int len, StringMetrics metrics, HistogramIndex* histogram, uint* total );

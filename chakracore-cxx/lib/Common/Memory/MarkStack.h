@@ -12,10 +12,10 @@
 
 namespace Helpers
 {
-    void* CommitMemory(void* address, DWORD size, DWORD flags) throw();
-    BOOL DecommitMemory(void* address, DWORD size) throw();
-    void* ReserveMemory(DWORD size, DWORD flags) throw();
-    BOOL ReleaseMemory(void* address, DWORD size) throw();
+    void* CommitMemory(void* address, uint32_t size, uint32_t flags) throw();
+    BOOL DecommitMemory(void* address, uint32_t size) throw();
+    void* ReserveMemory(uint32_t size, uint32_t flags) throw();
+    BOOL ReleaseMemory(void* address, uint32_t size) throw();
 };
 
 //
@@ -78,7 +78,7 @@ namespace MarkStack
                     {
                         char* page = (((char*)chunk) + ChunkSize - PageSize);
                         // Don't write to the old page when a new chunk is pushed.
-                        ::VirtualProtect((LPVOID)page, PageSize, PAGE_NOACCESS, NULL);
+                        ::VirtualProtect((void *)page, PageSize, PAGE_NOACCESS, NULL);
                     }
                 }
             }
@@ -159,10 +159,10 @@ namespace MarkStack
         char* CommitNextPage() throw();
 
         // Memory wrappers
-        void* CommitMemory(void* address, DWORD size, DWORD flags) throw();
-        BOOL DecommitMemory(void* address, DWORD size) throw();
-        void* ReserveMemory(DWORD size, DWORD flags) throw();
-        BOOL ReleaseMemory(void* address, DWORD size) throw();
+        void* CommitMemory(void* address, uint32_t size, uint32_t flags) throw();
+        BOOL DecommitMemory(void* address, uint32_t size) throw();
+        void* ReserveMemory(uint32_t size, uint32_t flags) throw();
+        BOOL ReleaseMemory(void* address, uint32_t size) throw();
 
 #if MARKSTACK_DIAG
         //
@@ -171,7 +171,7 @@ namespace MarkStack
         struct VirtualAllocationEntry
         {
             void* address;
-            DWORD size;
+            uint32_t size;
         };
 
         typedef SList<VirtualAllocationEntry, HeapAllocator> VAEList;

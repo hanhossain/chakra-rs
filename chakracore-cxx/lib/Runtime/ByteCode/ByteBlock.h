@@ -34,7 +34,7 @@ namespace Js
             m_content = AnewArray(alloc, byte, size);
         }
 
-        static DWORD GetBufferOffset() { return offsetof(ByteBlock, m_content); }
+        static uint32_t GetBufferOffset() { return offsetof(ByteBlock, m_content); }
 
         static ByteBlock* New(Recycler* alloc, const byte * initialContent, int initialContentSize);
 

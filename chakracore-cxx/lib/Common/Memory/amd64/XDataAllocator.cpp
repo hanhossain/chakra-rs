@@ -14,7 +14,7 @@ CompileAssert(false)
 
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
 
-XDataAllocator::XDataAllocator(BYTE* address, uint size) :
+XDataAllocator::XDataAllocator(uint8_t* address, uint size) :
     freeList(nullptr),
     start(address),
     current(address),
@@ -41,7 +41,7 @@ void XDataAllocator::Delete()
     HeapDelete(this);
 }
 
-bool XDataAllocator::Alloc(ULONG_PTR functionStart, DWORD functionSize,
+bool XDataAllocator::Alloc(size_t functionStart, uint32_t functionSize,
     ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
 {
     XDataAllocation* xdata = static_cast<XDataAllocation*>(allocation);
@@ -112,7 +112,7 @@ void XDataAllocator::ClearFreeList()
 }
 
 /* static */
-void XDataAllocator::Register(XDataAllocation * xdataInfo, ULONG_PTR functionStart, DWORD functionSize)
+void XDataAllocator::Register(XDataAllocation * xdataInfo, size_t functionStart, uint32_t functionSize)
 {
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __REGISTER_FRAME(xdataInfo->address);

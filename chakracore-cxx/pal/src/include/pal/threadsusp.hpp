@@ -86,7 +86,7 @@ namespace CorUnix
     InternalResumeThread(
         CPalThread *pthrResumer,
         HANDLE hTarget,
-        DWORD *pdwSuspendCount
+        uint32_t *pdwSuspendCount
     );
 
     class CThreadSuspensionInfo : public CThreadInfoInitializer
@@ -97,7 +97,7 @@ namespace CorUnix
             BOOL m_fSuspendedForShutdown; // TRUE once the thread is suspended during PAL cleanup
             int m_nBlockingPipe; // blocking pipe used for a process that was created suspended
 #ifdef _DEBUG
-            Volatile<LONG> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
+            Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
 #endif
 #if DEADLOCK_WHEN_THREAD_IS_SUSPENDED_WHILE_BLOCKED_ON_MUTEX
             CCLock m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
@@ -144,14 +144,14 @@ namespace CorUnix
             thread and therefore does not require synchronization. */
 
 #ifdef _DEBUG
-            VOID
+            void
             IncrNumThreadsSuspendedByThisThread(
                 )
             {
                 InterlockedIncrement(&m_lNumThreadsSuspendedByThisThread);
             };
 
-            VOID
+            void
             DecrNumThreadsSuspendedByThisThread(
                 )
             {
@@ -159,13 +159,13 @@ namespace CorUnix
             };
 #endif
 
-            VOID
+            void
             AcquireSuspensionLocks(
                 CPalThread *pthrSuspender,
                 CPalThread *pthrTarget
             );
 
-            VOID
+            void
             ReleaseSuspensionLocks(
                 CPalThread *pthrSuspender,
                 CPalThread *pthrTarget
@@ -304,7 +304,7 @@ namespace CorUnix
             virtual ~CThreadSuspensionInfo();
 
 #ifdef _DEBUG
-            LONG
+            int32_t
             GetNumThreadsSuspendedByThisThread(
                 void
                 )
@@ -354,10 +354,10 @@ namespace CorUnix
             InternalResumeThreadFromData(
                 CPalThread *pthrResumer,
                 CPalThread *pthrTarget,
-                DWORD *pdwSuspendCount
+                uint32_t *pdwSuspendCount
             );
 
-            VOID InitializeSuspensionLock();
+            void InitializeSuspensionLock();
 
             void SetBlockingPipe(
                 int nBlockingPipe
@@ -368,7 +368,7 @@ namespace CorUnix
     };
 } //end CorUnix
 
-extern const BYTE WAKEUPCODE; // use for pipe reads during self suspend.
+extern const uint8_t WAKEUPCODE; // use for pipe reads during self suspend.
 #endif // __cplusplus
 
 #endif // _PAL_THREADSUSP_HPP

@@ -49,7 +49,7 @@
 *
 *******************************************************************************/
 
-errno_t __cdecl memcpy_s(
+errno_t memcpy_s(
     void * dst,
     size_t sizeInBytes,
     const void * src,

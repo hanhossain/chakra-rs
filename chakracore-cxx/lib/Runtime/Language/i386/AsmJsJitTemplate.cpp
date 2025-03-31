@@ -10,7 +10,7 @@
 
 #include "Reg.h"
 
-static const BYTE RegEncode[] =
+static const uint8_t RegEncode[] =
 {
 #define REGDAT(Name, Listing, Encoding, ...) Encoding,
 #include "RegList.h"
@@ -477,7 +477,7 @@ namespace Js
             ptrdiff_t value = NULL;
             fn->GetAsmJsFunctionInfo()->mbyteCodeTJMap->TryGetValue(newOffset, &value);
             Assert(value != NULL); // value cannot be null
-            BYTE* newAddress = fn->GetAsmJsFunctionInfo()->mTJBeginAddress + value;
+            uint8_t* newAddress = fn->GetAsmJsFunctionInfo()->mTJBeginAddress + value;
             Assert(newAddress);
             return (uint)newAddress;
         }
@@ -550,7 +550,7 @@ namespace Js
         Var moduleEnv = asmJsFunc->GetModuleEnvironment();
         JavascriptArrayBuffer* arrayBuffer = asmJsFunc->GetAsmJsArrayBuffer();
         int arraySize = 0;
-        BYTE* arrayPtr = nullptr;
+        uint8_t* arrayPtr = nullptr;
 
         if (VarIsCorrectType<ArrayBuffer>(arrayBuffer))
         {
@@ -754,7 +754,7 @@ namespace Js
         {
             // buffer : where the instruction will be encoded
             // size : address of a variable tracking the instructions size encoded after the jump
-            JumpRelocation( BYTE* buffer, int* size )
+            JumpRelocation( uint8_t* buffer, int* size )
             {
 #if DBG
                 mRelocDone = false;
@@ -780,7 +780,7 @@ namespace Js
             }
 #endif
 
-            void Init( BYTE* buffer, int* size )
+            void Init( uint8_t* buffer, int* size )
             {
 #if DBG
                 // this cannot be called twice
@@ -826,7 +826,7 @@ namespace Js
             bool mRelocDone;
             int mEncodingImmSize;
 #endif
-            BYTE* mBuffer;
+            uint8_t* mBuffer;
             int* mSize;
             int mInitialSize;
         };
@@ -855,7 +855,7 @@ namespace Js
         {
             // put the value on the stack into a register
             template<typename RegisterSize>
-            RegNum GetStackReg( BYTE*& buffer, X86TemplateData* templateData, int varOffset, int &size, const int registerRestriction = 0 )
+            RegNum GetStackReg( uint8_t*& buffer, X86TemplateData* templateData, int varOffset, int &size, const int registerRestriction = 0 )
             {
                 RegNum reg;
                 if( !templateData->FindRegWithStackOffset<RegisterSize>( reg, varOffset, registerRestriction ) )
@@ -869,7 +869,7 @@ namespace Js
 
             // put the value of a register on the stack
             template<typename RegisterSize>
-            int SetStackReg( BYTE*& buffer, X86TemplateData* templateData, int targetOffset, RegNum reg )
+            int SetStackReg( uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, RegNum reg )
             {
                 CompileAssert(sizeof(RegisterSize) == 4 || sizeof(RegisterSize) == 8);
                 templateData->OverwriteStack( targetOffset );
@@ -877,7 +877,7 @@ namespace Js
                 return InstructionBySize<RegisterSize>::MoveInstruction::EncodeInstruction<RegisterSize>( buffer, InstrParamsAddrReg( RegEBP, targetOffset, reg ) );
             }
             template<typename LaneType=int>
-            int SIMDSetStackReg(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, RegNum reg)
+            int SIMDSetStackReg(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, RegNum reg)
             {
                 CompileAssert(sizeof(LaneType) == 4 || sizeof(LaneType) == 8);
                 AssertMsg(((1<<reg) & GetRegMask<AsmJsSIMDValue>()), "Expecting XMM reg.");
@@ -897,7 +897,7 @@ namespace Js
                 TODO: Optimize to initialize in XMM reg and then store to mem.
             */
             template<typename LaneType>
-            int SIMDInitFromPrimitives(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2, int srcOffset3 = 0, int srcOffset4 = 0)
+            int SIMDInitFromPrimitives(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2, int srcOffset3 = 0, int srcOffset4 = 0)
             {
                 CompileAssert(sizeof(LaneType) == 4 || sizeof(LaneType) == 8);
 
@@ -938,7 +938,7 @@ namespace Js
 
             // Since SIMD data is unaligned, we cannot support "OP reg, [mem]" operations.
             template <typename Operation, typename LaneType=int>
-            int SIMDUnaryOperation(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int registerRestriction = 0)
+            int SIMDUnaryOperation(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int registerRestriction = 0)
             {
                 int size = 0;
                 RegNum dstReg, srcReg;
@@ -958,7 +958,7 @@ namespace Js
             }
 
             template <typename Operation, typename LaneType = int>
-            int SIMDBinaryOperation(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2)
+            int SIMDBinaryOperation(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2)
             {
                 int size = 0;
                 RegNum srcReg1, srcReg2, dstReg;
@@ -984,7 +984,7 @@ namespace Js
 
             // for CMP and Shuffle operations
             template <typename Operation, typename LaneType = int>
-            int SIMDBinaryOperation(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2, byte imm8)
+            int SIMDBinaryOperation(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset1, int srcOffset2, byte imm8)
             {
                 int size = 0;
                 RegNum srcReg1, srcReg2, dstReg;
@@ -1009,7 +1009,7 @@ namespace Js
             }
 
             template <typename Operation, typename LaneType>
-            RegNum SIMDRcpOperation(BYTE*& buffer, X86TemplateData* templateData, RegNum srcReg, void *ones, int &size)
+            RegNum SIMDRcpOperation(uint8_t*& buffer, X86TemplateData* templateData, RegNum srcReg, void *ones, int &size)
             {
                 RegNum reg;
                 // MOVAPS reg, [mask]
@@ -1021,7 +1021,7 @@ namespace Js
             }
 
             template <typename Operation, typename LaneType>
-            int SIMDLdLaneOperation(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, const int index, const bool reUseResult = true)
+            int SIMDLdLaneOperation(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, const int index, const bool reUseResult = true)
             {
                 CompileAssert(sizeof(LaneType) == 4 || sizeof(LaneType) == 8);
 
@@ -1051,7 +1051,7 @@ namespace Js
             }
 
             template <typename LaneType, typename ShufOperation = SHUFPS>
-            int SIMDSetLaneOperation(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int valOffset, const int laneIndex)
+            int SIMDSetLaneOperation(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int valOffset, const int laneIndex)
             {
                 CompileAssert(sizeof(LaneType) == 4);
 
@@ -1111,7 +1111,7 @@ namespace Js
             }
 
             template <>
-            int SIMDSetLaneOperation<double>(BYTE*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int valOffset, const int laneIndex)
+            int SIMDSetLaneOperation<double>(uint8_t*& buffer, X86TemplateData* templateData, int targetOffset, int srcOffset, int valOffset, const int laneIndex)
             {
                 targetOffset -= templateData->GetBaseOffSet();
                 srcOffset -= templateData->GetBaseOffSet();
@@ -1146,26 +1146,26 @@ namespace Js
             }
 
             // Retrieve the value of the array buffer and put it in a register to use
-            RegNum GetArrayBufferRegister( BYTE*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
+            RegNum GetArrayBufferRegister( uint8_t*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
             {
                 return ArrayBufferReg;
             }
 
             // Retrieve the value of the module environment and put it in a register to use
-            RegNum GetModuleEnvironmentRegister( BYTE*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
+            RegNum GetModuleEnvironmentRegister( uint8_t*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
             {
                 return ModuleEnvReg;
             }
 
             // Retrieve the value of the script context and put it in a register to use
-            RegNum GetScriptContextRegister( BYTE*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
+            RegNum GetScriptContextRegister( uint8_t*& buffer, TemplateContext context, int &size, const int registerRestriction = 0 )
             {
                 X86TemplateData* templateData = GetTemplateData(context);
                 return GetStackReg<int>(buffer, GetTemplateData(context), templateData->GetScriptContextOffset(), size, registerRestriction);
             }
 
             // Encode a Compare instruction between a register and the array length : format   cmp length, reg
-            int CompareRegisterToArrayLength( BYTE*& buffer, TemplateContext context, RegNum reg, const int registerRestriction = 0 )
+            int CompareRegisterToArrayLength( uint8_t*& buffer, TemplateContext context, RegNum reg, const int registerRestriction = 0 )
             {
                 X86TemplateData* templateData = GetTemplateData(context);
                 return CMP::EncodeInstruction<int>(buffer, InstrParamsAddrReg(RegEBP, templateData->GetArraySizeOffset(), reg));
@@ -1173,7 +1173,7 @@ namespace Js
 
             // Encode a Compare instruction between an immutable value and the array length : format   cmp length, imm
             template<typename T>
-            int CompareImmutableToArrayLength( BYTE*& buffer, TemplateContext context, T imm, const int registerRestriction = 0 )
+            int CompareImmutableToArrayLength( uint8_t*& buffer, TemplateContext context, T imm, const int registerRestriction = 0 )
             {
                 X86TemplateData* templateData = GetTemplateData(context);
                 return CMP::EncodeInstruction<int>(buffer, InstrParamsAddrImm<T>(RegEBP, templateData->GetArraySizeOffset(), imm));
@@ -1181,7 +1181,7 @@ namespace Js
 
             // Encodes a short(1 Byte offset) jump instruction
             template<typename JCC>
-            void EncodeShortJump( BYTE*& buffer, JumpRelocation& reloc, int* size )
+            void EncodeShortJump( uint8_t*& buffer, JumpRelocation& reloc, int* size )
             {
                 Assert( size != nullptr );
                 reloc.Init( buffer, size );
@@ -1191,7 +1191,7 @@ namespace Js
             }
 
             template<typename Operation, typename OperationSize>
-            int CommutativeOperation( TemplateContext context, BYTE*& buffer, int leftOffset, int rightOffset, int* targetOffset = nullptr, RegNum* outReg = nullptr, int registerRestriction = 0 )
+            int CommutativeOperation( TemplateContext context, uint8_t*& buffer, int leftOffset, int rightOffset, int* targetOffset = nullptr, RegNum* outReg = nullptr, int registerRestriction = 0 )
             {
 
                 X86TemplateData* templateData = GetTemplateData( context );
@@ -1257,7 +1257,7 @@ namespace Js
             }
 
             template<typename Operation, typename OperationSize>
-            int NonCommutativeOperation( TemplateContext context, BYTE*& buffer, int leftOffset, int rightOffset, int* targetOffset = nullptr, RegNum* outReg = nullptr, int registerRestriction = 0 )
+            int NonCommutativeOperation( TemplateContext context, uint8_t*& buffer, int leftOffset, int rightOffset, int* targetOffset = nullptr, RegNum* outReg = nullptr, int registerRestriction = 0 )
             {
                 X86TemplateData* templateData = GetTemplateData( context );
                 leftOffset -= templateData->GetBaseOffSet();
@@ -1300,13 +1300,13 @@ namespace Js
                 return size;
             }
 
-            int ReloadArrayBuffer(TemplateContext context, BYTE*& buffer)
+            int ReloadArrayBuffer(TemplateContext context, uint8_t*& buffer)
             {
                 int size = 0;
                 return size;
             }
 
-            int CheckForArrayBufferDetached(TemplateContext context, BYTE*& buffer)
+            int CheckForArrayBufferDetached(TemplateContext context, uint8_t*& buffer)
             {
                 int size = 0;
                 if (context->GetFunctionBody()->GetAsmJsFunctionInfo()->UsesHeapBuffer())
@@ -1334,7 +1334,7 @@ namespace Js
             }
         }
 
-        int Br::ApplyTemplate(TemplateContext context, BYTE*& buffer, BYTE** relocAddr, bool isBackEdge)
+        int Br::ApplyTemplate(TemplateContext context, uint8_t*& buffer, uint8_t** relocAddr, bool isBackEdge)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1353,7 +1353,7 @@ namespace Js
             return size;
         }
 
-        int BrEq::ApplyTemplate(TemplateContext context, BYTE*& buffer, int leftOffset, int rightOffset, BYTE** relocAddr, bool isBackEdge, bool isSrc2Const /*= false*/)
+        int BrEq::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int leftOffset, int rightOffset, uint8_t** relocAddr, bool isBackEdge, bool isSrc2Const /*= false*/)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1423,7 +1423,7 @@ namespace Js
             return size;
         }
 
-        int BrTrue::ApplyTemplate( TemplateContext context, BYTE*& buffer, int offset, BYTE** relocAddr, bool isBackEdge)
+        int BrTrue::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int offset, uint8_t** relocAddr, bool isBackEdge)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1454,14 +1454,14 @@ namespace Js
             return size;
         }
 
-        int Label::ApplyTemplate( TemplateContext context, BYTE*& buffer )
+        int Label::ApplyTemplate( TemplateContext context, uint8_t*& buffer )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             templateData->InvalidateAllReg();
             return 0;
         }
 
-        int FunctionEntry::ApplyTemplate( TemplateContext context, BYTE*& buffer )
+        int FunctionEntry::ApplyTemplate( TemplateContext context, uint8_t*& buffer )
         {
             int size = 0;
             X86TemplateData* templateData = GetTemplateData(context);
@@ -1578,7 +1578,7 @@ namespace Js
             return size;
         }
 
-        int FunctionExit::ApplyTemplate( TemplateContext context, BYTE*& buffer )
+        int FunctionExit::ApplyTemplate( TemplateContext context, uint8_t*& buffer )
         {
             int size = 0;
 #if DBG_DUMP
@@ -1605,7 +1605,7 @@ namespace Js
             return size;
         }
 
-        int LdSlot_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex )
+        int LdSlot_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1619,7 +1619,7 @@ namespace Js
             return size;
         }
 
-        int LdSlot_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex)
+        int LdSlot_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -1633,7 +1633,7 @@ namespace Js
             return size;
         }
 
-        int StSlot_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex )
+        int StSlot_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1652,7 +1652,7 @@ namespace Js
             return size;
         }
 
-        int StSlot_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex)
+        int StSlot_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -1670,7 +1670,7 @@ namespace Js
 
             return size;
         }
-        int Ld_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Ld_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -1691,7 +1691,7 @@ namespace Js
             return size;
         }
 
-        int LdConst_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int offset, int value )
+        int LdConst_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int offset, int value )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             offset -= templateData->GetBaseOffSet();
@@ -1701,7 +1701,7 @@ namespace Js
             return size;
         }
 
-        int SetReturn_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int offset )
+        int SetReturn_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int offset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             offset -= templateData->GetBaseOffSet();
@@ -1720,7 +1720,7 @@ namespace Js
             return 0;
         }
 
-        int Neg_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Neg_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             rightOffset -= templateData->GetBaseOffSet();
@@ -1747,7 +1747,7 @@ namespace Js
             return size;
         }
 
-        int Not_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Not_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             targetOffset -= templateData->GetBaseOffSet();
@@ -1774,7 +1774,7 @@ namespace Js
             return size;
         }
 
-        int Int_To_Bool::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int Int_To_Bool::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1789,7 +1789,7 @@ namespace Js
             return size;
         }
 
-        int LogNot_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int LogNot_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1805,27 +1805,27 @@ namespace Js
             return size;
         }
 
-        int Or_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Or_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<OR,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
-        int And_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int And_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<AND,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
 
-        int Xor_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Xor_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<XOR,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
 
-        int Shr_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Shr_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1866,7 +1866,7 @@ namespace Js
             return size;
         }
 
-        int Shl_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Shl_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1908,7 +1908,7 @@ namespace Js
             return size;
         }
 
-        int Shr_UInt::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Shr_UInt::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -1950,28 +1950,28 @@ namespace Js
             return size;
         }
 
-        int Add_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset  )
+        int Add_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset  )
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<ADD,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
 
-        int Sub_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset  )
+        int Sub_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset  )
         {
             int size = 0;
             size += EncodingHelpers::NonCommutativeOperation<SUB,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
 
-        int Mul_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset  )
+        int Mul_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset  )
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<IMUL,int32>( context, buffer, leftOffset, rightOffset, &targetOffset );
             return size;
         }
 
-        int Div_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset  )
+        int Div_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset  )
         {
             X86TemplateData* templateData = GetTemplateData( context );
 
@@ -2038,7 +2038,7 @@ namespace Js
             return size;
         }
 
-        int Rem_Int::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Rem_Int::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2115,7 +2115,7 @@ namespace Js
         }
 
 #define IntCmp(name, jmp) \
-        int name::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )\
+        int name::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )\
         {\
             X86TemplateData* templateData = GetTemplateData( context );\
             int size = 0;\
@@ -2141,7 +2141,7 @@ namespace Js
         IntCmp(Ge_UInt,JB)
 #undef IntCmp
 
-        int Min_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Min_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2165,7 +2165,7 @@ namespace Js
             return size;
         }
 
-        int Max_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Max_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2189,7 +2189,7 @@ namespace Js
             return size;
         }
 
-        int Abs_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Abs_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2218,7 +2218,7 @@ namespace Js
             return size;
         }
 
-        int Clz32_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Clz32_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             // BSR tmp, src
             // JE  $label32
@@ -2264,7 +2264,7 @@ namespace Js
             return size;
         }
 
-        int Div_UInt::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Div_UInt::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2297,7 +2297,7 @@ namespace Js
             return size;
         }
 
-        int Rem_UInt::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Rem_UInt::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2308,12 +2308,12 @@ namespace Js
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( RegEDX, RegEDX ) );
             size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int>( RegEBP, rightOffset, 0 ) );
             size += JE::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>( 0 ) );
-            BYTE* reloc = &buffer[-1];
+            uint8_t* reloc = &buffer[-1];
             int relocSize = 0;
             relocSize += MOV::EncodeInstruction<int>( buffer, InstrParamsRegAddr( RegEAX, RegEBP, leftOffset ) );
             relocSize += DIV::EncodeInstruction<int>( buffer, InstrParamsAddr( RegEBP, rightOffset ) );
             Assert( FitsInByte( relocSize ) );
-            *reloc = (BYTE)relocSize;
+            *reloc = (uint8_t)relocSize;
 
             size += relocSize;
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , RegEDX);
@@ -2322,7 +2322,7 @@ namespace Js
             return size;
         }
 
-        int SetReturn_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int offset )
+        int SetReturn_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int offset )
         {
             X86TemplateData* templateData = GetTemplateData(context);
             offset -= templateData->GetBaseOffSet();
@@ -2339,7 +2339,7 @@ namespace Js
             return 0;
         }
 
-        int SetReturn_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int offset)
+        int SetReturn_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int offset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             offset -= templateData->GetBaseOffSet();
@@ -2356,7 +2356,7 @@ namespace Js
             return 0;
         }
 
-        int SetFround_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset,int rightOffset)
+        int SetFround_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset,int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2379,7 +2379,7 @@ namespace Js
             return size;
         }
 
-        int SetFround_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int SetFround_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2398,7 +2398,7 @@ namespace Js
             return size;
         }
 
-        int SetFround_Int::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int SetFround_Int::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2424,7 +2424,7 @@ namespace Js
             return size;
         }
 
-        int StSlot_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex )
+        int StSlot_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2442,7 +2442,7 @@ namespace Js
             return size;
         }
 
-        int LdSlot_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex )
+        int LdSlot_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2456,7 +2456,7 @@ namespace Js
             return size;
         }
 
-        int LdAddr_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, const double* dbAddr )
+        int LdAddr_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, const double* dbAddr )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2468,7 +2468,7 @@ namespace Js
             return size;
         }
 
-        int Ld_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Ld_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2492,7 +2492,7 @@ namespace Js
 
             return size;
         }
-        int Ld_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int Ld_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2516,7 +2516,7 @@ namespace Js
             return size;
         }
 
-        int Add_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Add_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
 
@@ -2524,7 +2524,7 @@ namespace Js
             return size;
         }
 
-        int Add_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Add_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             int size = 0;
 
@@ -2532,7 +2532,7 @@ namespace Js
             return size;
         }
 
-        int Sub_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Sub_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
 
@@ -2540,7 +2540,7 @@ namespace Js
             return size;
         }
 
-        int Mul_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Mul_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
 
@@ -2548,28 +2548,28 @@ namespace Js
             return size;
         }
 
-        int Div_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Div_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<DIVSD, double>(context, buffer, leftOffset, rightOffset, &targetOffset);
             return size;
         }
 
-        int Sub_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Sub_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
             size += EncodingHelpers::NonCommutativeOperation<SUBSS, float>(context, buffer, leftOffset, rightOffset, &targetOffset);
             return size;
         }
 
-        int Mul_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Mul_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
             size += EncodingHelpers::CommutativeOperation<MULSS, float>(context, buffer, leftOffset, rightOffset, &targetOffset);
             return size;
         }
 
-        int Div_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int Div_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             int size = 0;
 
@@ -2579,7 +2579,7 @@ namespace Js
 
 
 
-        int Rem_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int Rem_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2607,7 +2607,7 @@ namespace Js
         }
 
         template<typename JCC, typename OperationSignature, typename Size>
-        int CompareEq(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CompareEq(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -2625,28 +2625,28 @@ namespace Js
             return size;
         }
 
-        int CmpEq_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpEq_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareEq<JP, UCOMISS, float>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
-        int CmpNe_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpNe_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareEq<JNP, UCOMISS, float>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
-        int CmpEq_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpEq_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareEq<JP, UCOMISD, double>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
-        int CmpNe_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpNe_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareEq<JNP, UCOMISD, double>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
         template<typename JCC, typename OperationSignature, typename Size>
-        int CompareDbOrFlt( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int CompareDbOrFlt( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2661,43 +2661,43 @@ namespace Js
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , resultReg);
             return size;
         }
-        int CmpLt_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpLt_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareDbOrFlt<JBE, COMISS, float>(context, buffer, targetOffset, rightOffset, leftOffset);
         }
-        int CmpLe_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpLe_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareDbOrFlt<JB, COMISS, float>(context, buffer, targetOffset, rightOffset, leftOffset);
         }
-        int CmpGt_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpGt_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareDbOrFlt<JBE, COMISS, float>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
-        int CmpGe_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset)
+        int CmpGe_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset)
         {
             return CompareDbOrFlt<JB, COMISS, float>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
-        int CmpLt_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int CmpLt_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             return CompareDbOrFlt<JBE, COMISD, double>(context, buffer, targetOffset, rightOffset, leftOffset);
         }
-        int CmpLe_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int CmpLe_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             return CompareDbOrFlt<JB, COMISD, double>(context, buffer, targetOffset, rightOffset, leftOffset);
         }
-        int CmpGt_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int CmpGt_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             return CompareDbOrFlt<JBE, COMISD, double>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
-        int CmpGe_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int leftOffset, int rightOffset )
+        int CmpGe_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int leftOffset, int rightOffset )
         {
             return CompareDbOrFlt<JB, COMISD, double>(context, buffer, targetOffset, leftOffset, rightOffset);
         }
 
         __declspec(align(8)) const double MaskConvUintDouble[] = { 0.0, 4294967296.0 };
 
-        int UInt_To_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int UInt_To_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2724,7 +2724,7 @@ namespace Js
         }
 
 
-        int Int_To_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Int_To_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2745,7 +2745,7 @@ namespace Js
             return size;
         }
 
-        int Float_To_Db::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int Float_To_Db::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -2767,7 +2767,7 @@ namespace Js
             return size;
         }
 
-        int Float_To_Int::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int Float_To_Int::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -2789,7 +2789,7 @@ namespace Js
             return size;
         }
 
-        int Db_To_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Db_To_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2815,15 +2815,15 @@ namespace Js
         }
 
         __declspec(align(16)) const double MaskNegDouble[] = { -0.0, -0.0 };
-        const BYTE maskNegDoubleTemp[] = {
+        const uint8_t maskNegDoubleTemp[] = {
             0x66, 0x0F, 0x57, 0x05,
-            (BYTE)(((int)(MaskNegDouble)) & 0xFF),
-            (BYTE)((((int)(MaskNegDouble)) >> 8) & 0xFF),
-            (BYTE)((((int)(MaskNegDouble)) >> 16) & 0xFF),
-            (BYTE)((((int)(MaskNegDouble)) >> 24) & 0xFF),
+            (uint8_t)(((int)(MaskNegDouble)) & 0xFF),
+            (uint8_t)((((int)(MaskNegDouble)) >> 8) & 0xFF),
+            (uint8_t)((((int)(MaskNegDouble)) >> 16) & 0xFF),
+            (uint8_t)((((int)(MaskNegDouble)) >> 24) & 0xFF),
         };
 
-        int Neg_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset )
+        int Neg_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2846,15 +2846,15 @@ namespace Js
             return size;
         }
 
-        static const BYTE negFltTemp[] = {
+        static const uint8_t negFltTemp[] = {
             0x0F, 0x57, 0x05,
-            (BYTE)(((int)(JavascriptNumber::MaskNegFloat)) & 0xFF),
-            (BYTE)((((int)(JavascriptNumber::MaskNegFloat)) >> 8) & 0xFF),
-            (BYTE)((((int)(JavascriptNumber::MaskNegFloat)) >> 16) & 0xFF),
-            (BYTE)((((int)(JavascriptNumber::MaskNegFloat)) >> 24) & 0xFF),
+            (uint8_t)(((int)(JavascriptNumber::MaskNegFloat)) & 0xFF),
+            (uint8_t)((((int)(JavascriptNumber::MaskNegFloat)) >> 8) & 0xFF),
+            (uint8_t)((((int)(JavascriptNumber::MaskNegFloat)) >> 16) & 0xFF),
+            (uint8_t)((((int)(JavascriptNumber::MaskNegFloat)) >> 24) & 0xFF),
         };
 
-        int Neg_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int rightOffset)
+        int Neg_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int rightOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -2878,7 +2878,7 @@ namespace Js
             return size;
         }
 
-        int Call_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer, int nbOffsets, int* offsets, void* addr, bool addEsp )
+        int Call_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int nbOffsets, int* offsets, void* addr, bool addEsp )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -2938,7 +2938,7 @@ namespace Js
             return size;
         }
 
-        int Call_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int nbOffsets, int* offsets, void* addr, bool addEsp)
+        int Call_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int nbOffsets, int* offsets, void* addr, bool addEsp)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -2998,7 +2998,7 @@ namespace Js
 
             return size;
         }
-        int StartCall::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argBytesSize )
+        int StartCall::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argBytesSize )
         {
             int size = 0;
             // remove extra var from sub because we are using push to add it
@@ -3017,7 +3017,7 @@ namespace Js
 
             return size;
         }
-        int ArgOut_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argIndex, int offset )
+        int ArgOut_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argIndex, int offset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3048,7 +3048,7 @@ namespace Js
             templateData->InvalidateAllVolatileReg();
             return size;
         }
-        int ArgOut_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argIndex, int offset )
+        int ArgOut_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argIndex, int offset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3076,7 +3076,7 @@ namespace Js
             return size;
         }
 
-        int Call::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset, int funcOffset, int nbArgs )
+        int Call::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset, int funcOffset, int nbArgs )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3112,7 +3112,7 @@ namespace Js
             return size;
         }
 
-        int Conv_VTI::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset, int srcOffset )
+        int Conv_VTI::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset, int srcOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3138,7 +3138,7 @@ namespace Js
 
             return size;
         }
-        int Conv_VTD::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset, int srcOffset )
+        int Conv_VTD::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset, int srcOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3165,7 +3165,7 @@ namespace Js
             return size;
         }
         //TODO - consider changing this to template (Conv_vtd and Conv_vtf)
-        int Conv_VTF::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int srcOffset)
+        int Conv_VTF::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int srcOffset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -3192,7 +3192,7 @@ namespace Js
             return size;
         }
 
-        int I_StartCall::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argBytesSize )
+        int I_StartCall::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argBytesSize )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3209,7 +3209,7 @@ namespace Js
             }
             return size;
         }
-        int I_ArgOut_Int::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argIndex, int offset )
+        int I_ArgOut_Int::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argIndex, int offset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3225,7 +3225,7 @@ namespace Js
 
             return size;
         }
-        int I_ArgOut_Db::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int argIndex, int offset )
+        int I_ArgOut_Db::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int argIndex, int offset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3242,7 +3242,7 @@ namespace Js
             return size;
         }
 
-        int I_ArgOut_Flt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int argIndex, int offset)
+        int I_ArgOut_Flt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int argIndex, int offset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -3259,7 +3259,7 @@ namespace Js
             return size;
         }
 
-        int I_Call::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int funcOffset, int nbArgs, AsmJsRetType retType)
+        int I_Call::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int funcOffset, int nbArgs, AsmJsRetType retType)
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3302,7 +3302,7 @@ namespace Js
             }
             return size;
         }
-        int AsmJsLoopBody::ApplyTemplate(TemplateContext context, BYTE*& buffer, int loopNumber)
+        int AsmJsLoopBody::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int loopNumber)
         {
             int size = 0;
             X86TemplateData* templateData = GetTemplateData(context);
@@ -3381,7 +3381,7 @@ namespace Js
             return size;
         }
 
-        int LdUndef::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset )
+        int LdUndef::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3393,7 +3393,7 @@ namespace Js
             return size;
         }
 
-        int LdArr_Func::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset, int arrOffset, int slotVarIndexOffset )
+        int LdArr_Func::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset, int arrOffset, int slotVarIndexOffset )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3433,7 +3433,7 @@ namespace Js
             return size;
         }
 
-        int LdSlot::ApplyTemplate( TemplateContext context, BYTE*& buffer,  int targetOffset, int arrOffset, int slotIndex )
+        int LdSlot::ApplyTemplate( TemplateContext context, uint8_t*& buffer,  int targetOffset, int arrOffset, int slotIndex )
         {
             X86TemplateData* templateData = GetTemplateData( context );
             int size = 0;
@@ -3463,7 +3463,7 @@ namespace Js
             return size;
         }
 
-        typedef int( *MovEncodingFunc )( BYTE*&, const InstrParamsRegAddr&, EncodingInfo* info );
+        typedef int( *MovEncodingFunc )( uint8_t*&, const InstrParamsRegAddr&, EncodingInfo* info );
         static const MovEncodingFunc ldArrMovEncodingFunc[] = {
              MOVSX::EncodeInstruction<int8>//TYPE_INT8 = 0,
             ,MOVZX::EncodeInstruction<int8>//TYPE_UINT8,
@@ -3475,7 +3475,7 @@ namespace Js
             ,MOVSD::EncodeInstruction<double>//TYPE_FLOAT64,
         };
 
-        typedef int( *StArrMovEncodingFunc )( BYTE*&, const InstrParamsAddrReg&, EncodingInfo* info );
+        typedef int( *StArrMovEncodingFunc )( uint8_t*&, const InstrParamsAddrReg&, EncodingInfo* info );
         static const StArrMovEncodingFunc stArrMovEncodingFunc[] = {
              MOV::EncodeInstruction<int8>//TYPE_INT8 = 0,
             ,MOV::EncodeInstruction<int8>//TYPE_UINT8,
@@ -3499,7 +3499,7 @@ namespace Js
             ,(uint32)~7 //TYPE_FLOAT64
         };
 
-        int LdArrDb::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
+        int LdArrDb::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT64);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3538,7 +3538,7 @@ namespace Js
             return size;
         }
 
-        int LdArrFlt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType)
+        int LdArrFlt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType)
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT32);
             X86TemplateData* templateData = GetTemplateData(context);
@@ -3579,7 +3579,7 @@ namespace Js
             return size;
         }
 
-        int LdArr::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
+        int LdArr::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType >= ArrayBufferView::TYPE_INT8 && viewType < ArrayBufferView::TYPE_FLOAT32);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3619,7 +3619,7 @@ namespace Js
             return size;
         }
 
-        int StArrDb::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
+        int StArrDb::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT64);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3649,7 +3649,7 @@ namespace Js
             return size;
         }
 
-        int StArrFlt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType)
+        int StArrFlt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType)
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT32);
             X86TemplateData* templateData = GetTemplateData(context);
@@ -3678,7 +3678,7 @@ namespace Js
             return size;
         }
 
-        int StArr::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
+        int StArr::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int slotVarIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType >= ArrayBufferView::TYPE_INT8 && viewType < ArrayBufferView::TYPE_FLOAT32);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3711,7 +3711,7 @@ namespace Js
         }
 
         // Version with const index
-        int ConstLdArrDb::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType )
+        int ConstLdArrDb::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT64);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3747,7 +3747,7 @@ namespace Js
         }
 
         // Version with const index
-        int ConstLdArrFlt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType)
+        int ConstLdArrFlt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType)
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT32);
             X86TemplateData* templateData = GetTemplateData(context);
@@ -3783,7 +3783,7 @@ namespace Js
             return size;
         }
 
-        int ConstLdArr::ApplyTemplate( TemplateContext context, BYTE*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType )
+        int ConstLdArr::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int targetOffset, int constIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType < ArrayBufferView::TYPE_FLOAT32 && viewType >= ArrayBufferView::TYPE_INT8);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3818,7 +3818,7 @@ namespace Js
         }
 
         template<typename Size>
-        int ConstStArrDbOrFlt(TemplateContext context, BYTE*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType)
+        int ConstStArrDbOrFlt(TemplateContext context, uint8_t*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType)
         {
             AnalysisAssert(viewType == ArrayBufferView::TYPE_FLOAT32 || viewType == ArrayBufferView::TYPE_FLOAT64);
             X86TemplateData* templateData = GetTemplateData(context);
@@ -3844,19 +3844,19 @@ namespace Js
             return size;
         }
 
-        int ConstStArrDb::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType )
+        int ConstStArrDb::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType )
         {
             Assert(viewType == ArrayBufferView::TYPE_FLOAT64);
             return ConstStArrDbOrFlt<double>(context, buffer, srcOffset, constIndex, viewType);
         }
 
-        int ConstStArrFlt::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType)
+        int ConstStArrFlt::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType)
         {
             Assert(viewType == ArrayBufferView::TYPE_FLOAT32);
             return ConstStArrDbOrFlt<float>(context, buffer, srcOffset, constIndex, viewType);
         }
 
-        int ConstStArr::ApplyTemplate( TemplateContext context, BYTE*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType )
+        int ConstStArr::ApplyTemplate( TemplateContext context, uint8_t*& buffer, int srcOffset, int constIndex, ArrayBufferView::ViewType viewType )
         {
             AnalysisAssert(viewType < ArrayBufferView::TYPE_FLOAT32 && viewType >= ArrayBufferView::TYPE_INT8);
             X86TemplateData* templateData = GetTemplateData( context );
@@ -3882,7 +3882,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Ld_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4, int srcOffsetF4)
+        int Simd128_Ld_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4, int srcOffsetF4)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4 -= templateData->GetBaseOffSet();
@@ -3900,12 +3900,12 @@ namespace Js
             return size;
         }
 
-        int Simd128_Ld_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4, int srcOffsetI4)
+        int Simd128_Ld_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4, int srcOffsetI4)
         {
             return Simd128_Ld_F4::ApplyTemplate(context, buffer, targetOffsetI4, srcOffsetI4);
         }
 
-        int Simd128_Ld_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2, int srcOffsetD2)
+        int Simd128_Ld_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2, int srcOffsetD2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2 -= templateData->GetBaseOffSet();
@@ -3923,7 +3923,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_LdSlot_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex)
+        int Simd128_LdSlot_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -3937,17 +3937,17 @@ namespace Js
             return size;
         }
 
-        int Simd128_LdSlot_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex)
+        int Simd128_LdSlot_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex)
         {
             return Simd128_LdSlot_F4::ApplyTemplate(context, buffer, targetOffset, slotIndex);
         }
 
-        int Simd128_LdSlot_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffset, int slotIndex)
+        int Simd128_LdSlot_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffset, int slotIndex)
         {
             return Simd128_LdSlot_F4::ApplyTemplate(context, buffer, targetOffset, slotIndex);
         }
 
-        int Simd128_StSlot_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex)
+        int Simd128_StSlot_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -3961,35 +3961,35 @@ namespace Js
             return size;
         }
 
-        int Simd128_StSlot_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex)
+        int Simd128_StSlot_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex)
         {
             return Simd128_StSlot_F4::ApplyTemplate(context, buffer, srcOffset, slotIndex);
         }
 
-        int Simd128_StSlot_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffset, int slotIndex)
+        int Simd128_StSlot_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffset, int slotIndex)
         {
             return Simd128_StSlot_F4::ApplyTemplate(context, buffer, srcOffset, slotIndex);
         }
 
-        int Simd128_FloatsToF4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF1, int srcOffsetF2, int srcOffsetF3, int srcOffsetF4)
+        int Simd128_FloatsToF4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF1, int srcOffsetF2, int srcOffsetF3, int srcOffsetF4)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDInitFromPrimitives<float>(buffer, templateData, targetOffsetF4_0, srcOffsetF1, srcOffsetF2, srcOffsetF3, srcOffsetF4);
         }
 
-        int Simd128_IntsToI4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI1, int srcOffsetI2, int srcOffsetI3, int srcOffsetI4)
+        int Simd128_IntsToI4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI1, int srcOffsetI2, int srcOffsetI3, int srcOffsetI4)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDInitFromPrimitives<int>(buffer, templateData, targetOffsetI4_0, srcOffsetI1, srcOffsetI2, srcOffsetI3, srcOffsetI4);
         }
 
-        int Simd128_DoublesToD2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD1, int srcOffsetD2)
+        int Simd128_DoublesToD2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD1, int srcOffsetD2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDInitFromPrimitives<double>(buffer, templateData, targetOffsetD2_0, srcOffsetD1, srcOffsetD2);
         }
 
-        int Simd128_Return_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffsetF4)
+        int Simd128_Return_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffsetF4)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             srcOffsetF4 -= templateData->GetBaseOffSet();
@@ -4006,17 +4006,17 @@ namespace Js
             return 0;
         }
 
-        int Simd128_Return_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffsetI4)
+        int Simd128_Return_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffsetI4)
         {
             return Simd128_Return_F4::ApplyTemplate(context, buffer, srcOffsetI4);
         }
 
-        int Simd128_Return_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int srcOffsetD2)
+        int Simd128_Return_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int srcOffsetD2)
         {
             return Simd128_Return_F4::ApplyTemplate(context, buffer, srcOffsetD2);
         }
 
-        int Simd128_Splat_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF1)
+        int Simd128_Splat_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4029,7 +4029,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Splat_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI1)
+        int Simd128_Splat_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetI4_0 -= templateData->GetBaseOffSet();
@@ -4047,7 +4047,7 @@ namespace Js
 
         }
 
-        int Simd128_Splat_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD1)
+        int Simd128_Splat_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4064,59 +4064,59 @@ namespace Js
         }
 
         // Type conversions
-        int Simd128_FromFloat64x2_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetD2_1)
+        int Simd128_FromFloat64x2_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetD2_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTPD2PS, float>(buffer, GetTemplateData(context), targetOffsetF4_0, srcOffsetD2_1);
         }
-        int Simd128_FromInt32x4_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetI4_1)
+        int Simd128_FromInt32x4_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetI4_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTDQ2PS, float>(buffer, GetTemplateData(context), targetOffsetF4_0, srcOffsetI4_1);
         }
-        int Simd128_FromFloat32x4_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetF4_1)
+        int Simd128_FromFloat32x4_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetF4_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTTPS2DQ, int>(buffer, GetTemplateData(context), targetOffsetI4_0, srcOffsetF4_1);
         }
-        int Simd128_FromFloat64x2_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetD2_1)
+        int Simd128_FromFloat64x2_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetD2_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTTPD2DQ, int>(buffer, GetTemplateData(context), targetOffsetI4_0, srcOffsetD2_1);
         }
-        int Simd128_FromFloat32x4_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetF4_1)
+        int Simd128_FromFloat32x4_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetF4_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTPS2PD, double>(buffer, GetTemplateData(context), targetOffsetD2_0, srcOffsetF4_1);
         }
-        int Simd128_FromInt32x4_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetI4_1)
+        int Simd128_FromInt32x4_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetI4_1)
         {
             return EncodingHelpers::SIMDUnaryOperation<CVTDQ2PD, float>(buffer, GetTemplateData(context), targetOffsetD2_0, srcOffsetI4_1);
         }
 
         // Bits conversions
-        int Simd128_FromFloat64x2Bits_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetD2_1)
+        int Simd128_FromFloat64x2Bits_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetD2_1)
         {
             return Simd128_Ld_F4::ApplyTemplate(context, buffer, targetOffsetF4_0, srcOffsetD2_1);
         }
-        int Simd128_FromInt32x4Bits_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetI4_1)
+        int Simd128_FromInt32x4Bits_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetI4_1)
         {
             return Simd128_Ld_F4::ApplyTemplate(context, buffer, targetOffsetF4_0, srcOffsetI4_1);
         }
-        int Simd128_FromFloat32x4Bits_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetF4_1)
+        int Simd128_FromFloat32x4Bits_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetF4_1)
         {
             return Simd128_Ld_I4::ApplyTemplate(context, buffer, targetOffsetI4_0, srcOffsetF4_1);
         }
-        int Simd128_FromFloat64x2Bits_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetD2_1)
+        int Simd128_FromFloat64x2Bits_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetD2_1)
         {
             return Simd128_Ld_I4::ApplyTemplate(context, buffer, targetOffsetI4_0, srcOffsetD2_1);
         }
-        int Simd128_FromFloat32x4Bits_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetF4_1)
+        int Simd128_FromFloat32x4Bits_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetF4_1)
         {
             return Simd128_Ld_D2::ApplyTemplate(context, buffer, targetOffsetD2_0, srcOffsetF4_1);
         }
-        int Simd128_FromInt32x4Bits_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetI4_1)
+        int Simd128_FromInt32x4Bits_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetI4_1)
         {
             return Simd128_Ld_D2::ApplyTemplate(context, buffer, targetOffsetD2_0, srcOffsetI4_1);
         }
 
         // Unary operations
-        int Simd128_Abs_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_Abs_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4134,7 +4134,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Abs_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
+        int Simd128_Abs_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4151,7 +4151,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Neg_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_Neg_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4168,7 +4168,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Neg_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1)
+        int Simd128_Neg_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetI4_0 -= templateData->GetBaseOffSet();
@@ -4187,7 +4187,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Neg_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
+        int Simd128_Neg_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4205,7 +4205,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Rcp_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_Rcp_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4219,7 +4219,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Rcp_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
+        int Simd128_Rcp_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4233,7 +4233,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_RcpSqrt_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_RcpSqrt_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4249,7 +4249,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_RcpSqrt_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
+        int Simd128_RcpSqrt_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4265,7 +4265,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Sqrt_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_Sqrt_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4279,7 +4279,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Sqrt_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
+        int Simd128_Sqrt_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetD2_0 -= templateData->GetBaseOffSet();
@@ -4293,7 +4293,7 @@ namespace Js
             return size;
         }
 
-        int Simd128_Not_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
+        int Simd128_Not_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4310,54 +4310,54 @@ namespace Js
             return size;
         }
 
-        int Simd128_Not_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1)
+        int Simd128_Not_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1)
         {
             return Simd128_Not_F4::ApplyTemplate(context, buffer, targetOffsetI4_0, srcOffsetI4_1);
         }
 
-        int Simd128_Add_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Add_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<ADDPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Add_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Add_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<PADDD, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
 
-        int Simd128_Add_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Add_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<ADDPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
-        int Simd128_Sub_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Sub_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<SUBPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Sub_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Sub_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<PSUBD, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
 
-        int Simd128_Sub_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Sub_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<SUBPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
-        int Simd128_Mul_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Mul_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MULPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Mul_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Mul_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             RegNum srcReg1, srcReg2, tmpReg;
@@ -4402,173 +4402,173 @@ namespace Js
             return size;
         }
 
-        int Simd128_Mul_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Mul_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MULPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
-        int Simd128_Div_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Div_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<DIVPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Div_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Div_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<DIVPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
-        int Simd128_Min_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Min_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MINPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Min_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Min_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MINPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
-        int Simd128_Max_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Max_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MAXPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2);
         }
 
-        int Simd128_Max_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Max_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<MAXPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2);
         }
 
         // comparison
-        int Simd128_Lt_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Lt_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2, CMP_IMM8::LT);
         }
-        int Simd128_Lt_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Lt_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<PCMPGTD, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_2, srcOffsetI4_1);
         }
-        int Simd128_Lt_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Lt_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2, CMP_IMM8::LT);
         }
 
-        int Simd128_Gt_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Gt_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_2, srcOffsetF4_1, CMP_IMM8::LT);
         }
-        int Simd128_Gt_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Gt_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<PCMPGTD, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
-        int Simd128_Gt_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Gt_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_2, srcOffsetD2_1, CMP_IMM8::LT);
         }
 
-        int Simd128_LtEq_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_LtEq_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2, CMP_IMM8::LE);
         }
-        int Simd128_LtEq_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_LtEq_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2, CMP_IMM8::LE);
         }
 
-        int Simd128_GtEq_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_GtEq_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_2, srcOffsetF4_1, CMP_IMM8::LE);
         }
-        int Simd128_GtEq_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_GtEq_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_2, srcOffsetD2_1, CMP_IMM8::LE);
         }
 
-        int Simd128_Eq_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Eq_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2, CMP_IMM8::EQ);
         }
-        int Simd128_Eq_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Eq_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<PCMPEQD, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_2, srcOffsetI4_1);
         }
-        int Simd128_Eq_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Eq_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2, CMP_IMM8::EQ);
         }
 
-        int Simd128_Neq_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Neq_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_1, srcOffsetF4_2, CMP_IMM8::NEQ);
         }
-        int Simd128_Neq_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
+        int Simd128_Neq_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetD2_1, int srcOffsetD2_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<CMPPD, double>(buffer, templateData, targetOffsetD2_0, srcOffsetD2_1, srcOffsetD2_2, CMP_IMM8::NEQ);
         }
 
-        int Simd128_And_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_And_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<ANDPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_2, srcOffsetF4_1);
         }
-        int Simd128_And_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_And_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<PAND, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
 
-        int Simd128_Or_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Or_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<ORPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_2, srcOffsetF4_1);
         }
-        int Simd128_Or_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Or_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<POR, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
 
-        int Simd128_Xor_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
+        int Simd128_Xor_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             // reversed operands
             return EncodingHelpers::SIMDBinaryOperation<XORPS, float>(buffer, templateData, targetOffsetF4_0, srcOffsetF4_2, srcOffsetF4_1);
         }
-        int Simd128_Xor_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
+        int Simd128_Xor_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDBinaryOperation<PXOR, int>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2);
         }
 
-        int Simd128_Select_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetI4_1, int srcOffsetF4_2, int srcOffsetF4_3)
+        int Simd128_Select_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetI4_1, int srcOffsetF4_2, int srcOffsetF4_3)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             targetOffsetF4_0 -= templateData->GetBaseOffSet();
@@ -4606,34 +4606,34 @@ namespace Js
             return size;
         }
 
-        int Simd128_Select_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2, int srcOffsetI4_3)
+        int Simd128_Select_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI4_2, int srcOffsetI4_3)
         {
             // ok to re-use F4, size of I4 lane >= size of F4 lane. Important for correct invalidation of regs upon store to stack.
             return Simd128_Select_F4::ApplyTemplate(context, buffer, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI4_2, srcOffsetI4_3);
         }
 
-        int Simd128_Select_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetD2_0, int srcOffsetI4_1, int srcOffsetD2_2, int srcOffsetD2_3)
+        int Simd128_Select_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetD2_0, int srcOffsetI4_1, int srcOffsetD2_2, int srcOffsetD2_3)
         {
             // ok to re-use F4, size of D2 lane >= size of F4 lane. Important for correct invalidation of regs upon store to stack.
             return Simd128_Select_F4::ApplyTemplate(context, buffer, targetOffsetD2_0, srcOffsetI4_1, srcOffsetD2_2, srcOffsetD2_3);
         }
 
         //Lane Access
-        int Simd128_ExtractLane_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI0, int srcOffsetI4_1, int index)
+        int Simd128_ExtractLane_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI0, int srcOffsetI4_1, int index)
         {
             AssertMsg(index >= 0 && index < 4, "Invalid lane index");
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDLdLaneOperation<MOVSS, int>(buffer, templateData, targetOffsetI0, srcOffsetI4_1, index, false);
         }
 
-        int Simd128_ExtractLane_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF0, int srcOffsetF4_1, int index)
+        int Simd128_ExtractLane_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF0, int srcOffsetF4_1, int index)
         {
             AssertMsg(index >= 0 && index < 4, "Invalid lane index");
             X86TemplateData* templateData = GetTemplateData(context);
             return EncodingHelpers::SIMDLdLaneOperation<MOVSS, int>(buffer, templateData, targetOffsetF0, srcOffsetF4_1, index, false);
         }
 
-        int Simd128_ReplaceLane_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF2, int laneIndex)
+        int Simd128_ReplaceLane_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetF4_0, int srcOffsetF4_1, int srcOffsetF2, int laneIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             AssertMsg(laneIndex >= 0 && laneIndex < 4, "Invalid lane index");
@@ -4641,14 +4641,14 @@ namespace Js
 
         }
 
-        int Simd128_ReplaceLane_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI2, int laneIndex)
+        int Simd128_ReplaceLane_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int targetOffsetI4_0, int srcOffsetI4_1, int srcOffsetI2, int laneIndex)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             AssertMsg(laneIndex >= 0 && laneIndex < 4, "Invalid lane index");
             return EncodingHelpers::SIMDSetLaneOperation<int, PSHUFD>(buffer, templateData, targetOffsetI4_0, srcOffsetI4_1, srcOffsetI2, laneIndex);
         }
 
-        int Simd128_I_ArgOut_F4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int argIndex, int offset)
+        int Simd128_I_ArgOut_F4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int argIndex, int offset)
         {
             X86TemplateData* templateData = GetTemplateData(context);
             int size = 0;
@@ -4663,11 +4663,11 @@ namespace Js
             callInfo->nextArgIndex += sizeof(AsmJsSIMDValue) / sizeof(Var);
             return size;
         }
-        int Simd128_I_ArgOut_I4::ApplyTemplate(TemplateContext context, BYTE*& buffer, int argIndex, int offset)
+        int Simd128_I_ArgOut_I4::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int argIndex, int offset)
         {
             return Simd128_I_ArgOut_F4::ApplyTemplate(context, buffer, argIndex, offset);
         }
-        int Simd128_I_ArgOut_D2::ApplyTemplate(TemplateContext context, BYTE*& buffer, int argIndex, int offset)
+        int Simd128_I_ArgOut_D2::ApplyTemplate(TemplateContext context, uint8_t*& buffer, int argIndex, int offset)
         {
             return Simd128_I_ArgOut_F4::ApplyTemplate(context, buffer, argIndex, offset);
         }

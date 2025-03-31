@@ -6,21 +6,21 @@
 
 #define ASSERT_INLINEE_FUNC(instr) Assert(instr->m_func->IsInlinee() ? (instr->m_func != this->m_func) : (instr->m_func == this->m_func))
 
-enum IndirScale : BYTE {
+enum IndirScale : uint8_t {
     IndirScale1 = 0,
     IndirScale2 = 1,
     IndirScale4 = 2,
     IndirScale8 = 3
 };
 
-enum RoundMode : BYTE {
+enum RoundMode : uint8_t {
     RoundModeTowardZero = 0,
     RoundModeTowardInteger = 1,
     RoundModeHalfToEven = 2
 };
 
 #if DBG
-enum HelperCallCheckState : BYTE {
+enum HelperCallCheckState : uint8_t {
     HelperCallCheckState_None = 0,
     HelperCallCheckState_ImplicitCallsBailout = 1 << 0,
     HelperCallCheckState_NoHelperCalls = 1 << 1
@@ -341,7 +341,7 @@ private:
     static const uint32 OffsetsOfHeadSegment[static_cast<ValueType::TSize>(ObjectType::Count)];
     static const uint32 OffsetsOfLength[static_cast<ValueType::TSize>(ObjectType::Count)];
     static const IRType IndirTypes[static_cast<ValueType::TSize>(ObjectType::Count)];
-    static const BYTE IndirScales[static_cast<ValueType::TSize>(ObjectType::Count)];
+    static const uint8_t IndirScales[static_cast<ValueType::TSize>(ObjectType::Count)];
 
 private:
     static VTableValue GetArrayVtableAddress(const ValueType valueType, bool getVirtual = false);
@@ -350,7 +350,7 @@ public:
     static uint32   GetArrayOffsetOfHeadSegment(const ValueType valueType);
     static uint32   GetArrayOffsetOfLength(const ValueType valueType);
     static IRType   GetArrayIndirType(const ValueType valueType);
-    static BYTE     GetArrayIndirScale(const ValueType valueType);
+    static uint8_t     GetArrayIndirScale(const ValueType valueType);
     static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8 dataWidth);
 private:
     bool            ShouldGenerateArrayFastPath(const IR::Opnd *const arrayOpnd, const bool supportsObjectsWithArrays, const bool supportsTypedArrays, const bool requiresSse2ForFloatArrays) const;

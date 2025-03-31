@@ -1019,47 +1019,47 @@ public:
     // Getters
     bool HasCalls() const { return m_hasCalls; }
     bool HasTry() const { return m_hasTry; }
-    ULONG ArgSlotCount() const { return m_argSlotCount; }
+    uint32_t ArgSlotCount() const { return m_argSlotCount; }
     BitVector HomedParams() const { return m_homedParams; }
     BitVector SavedRegisters() const { return m_savedRegisters; }
     BitVector SavedDoubles() const { return m_savedDoubles; }
 
     // Locals area sits right after space allocated for arguments
-    ULONG LocalsOffset() const { return this->m_argSlotCount * MachRegInt; }
-    ULONG LocalsSize() const { return this->m_localsArea; }
+    uint32_t LocalsOffset() const { return this->m_argSlotCount * MachRegInt; }
+    uint32_t LocalsSize() const { return this->m_localsArea; }
 
     // Saved non-volatile double registers sit past the locals area
-    ULONG SavedDoublesOffset() const { return this->LocalsOffset() + this->LocalsSize(); }
-    ULONG SavedDoublesSize() const { return this->m_savedDoubles.Count() * MachRegDouble; }
+    uint32_t SavedDoublesOffset() const { return this->LocalsOffset() + this->LocalsSize(); }
+    uint32_t SavedDoublesSize() const { return this->m_savedDoubles.Count() * MachRegDouble; }
 
     // Saved non-volatile integer registers sit after the saved doubles
-    ULONG SavedRegistersOffset() const { return this->SavedDoublesOffset() + this->SavedDoublesSize(); }
-    ULONG SavedRegistersSize() const { return this->m_savedRegisters.Count() * MachRegInt; }
+    uint32_t SavedRegistersOffset() const { return this->SavedDoublesOffset() + this->SavedDoublesSize(); }
+    uint32_t SavedRegistersSize() const { return this->m_savedRegisters.Count() * MachRegInt; }
 
     // The argument slot and StackFunctionList entry come after the saved integer registers
-    ULONG ArgSlotOffset() const { return this->SavedRegistersOffset() + this->SavedRegistersSize(); }
-    ULONG ArgSlotSize() const { return this->m_hasCalls ? (2 * MachRegInt) : 0; }
+    uint32_t ArgSlotOffset() const { return this->SavedRegistersOffset() + this->SavedRegistersSize(); }
+    uint32_t ArgSlotSize() const { return this->m_hasCalls ? (2 * MachRegInt) : 0; }
 
     // Next comes the frame chain
-    ULONG FpLrOffset() const { return this->ArgSlotOffset() + this->ArgSlotSize(); }
-    ULONG FpLrSize() const { return this->m_hasCalls ? (2 * MachRegInt) : 0; }
+    uint32_t FpLrOffset() const { return this->ArgSlotOffset() + this->ArgSlotSize(); }
+    uint32_t FpLrSize() const { return this->m_hasCalls ? (2 * MachRegInt) : 0; }
 
     // Followed by any homed parameters
-    ULONG HomedParamsOffset() const { return this->FpLrOffset() + this->FpLrSize(); }
-    ULONG HomedParamsSize() const { return this->m_homedParams.Count() * MachRegInt; }
+    uint32_t HomedParamsOffset() const { return this->FpLrOffset() + this->FpLrSize(); }
+    uint32_t HomedParamsSize() const { return this->m_homedParams.Count() * MachRegInt; }
 
     // And that's the total stack allocation
-    ULONG TotalStackSize() const { return this->HomedParamsOffset() + this->HomedParamsSize(); }
+    uint32_t TotalStackSize() const { return this->HomedParamsOffset() + this->HomedParamsSize(); }
 
     // The register area is the area at the far end that doesn't include locals or arg slots
-    ULONG RegisterAreaOffset() const { return this->SavedDoublesOffset(); }
-    ULONG RegisterAreaSize() const { return this->TotalStackSize() - this->RegisterAreaOffset(); }
+    uint32_t RegisterAreaOffset() const { return this->SavedDoublesOffset(); }
+    uint32_t RegisterAreaSize() const { return this->TotalStackSize() - this->RegisterAreaOffset(); }
 
 private:
     bool m_hasCalls;
     bool m_hasTry;
-    ULONG m_argSlotCount;
-    ULONG m_localsArea;
+    uint32_t m_argSlotCount;
+    uint32_t m_localsArea;
     BitVector m_homedParams;
     BitVector m_savedRegisters;
     BitVector m_savedDoubles;
@@ -1222,8 +1222,8 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     //
 
     // Determine the 1 or 2 stack allocation sizes
-    ULONG stackAllocation1 = (layout.TotalStackSize() < 512) ? layout.TotalStackSize() : layout.RegisterAreaSize();
-    ULONG stackAllocation2 = layout.TotalStackSize() - stackAllocation1;
+    uint32_t stackAllocation1 = (layout.TotalStackSize() < 512) ? layout.TotalStackSize() : layout.RegisterAreaSize();
+    uint32_t stackAllocation2 = layout.TotalStackSize() - stackAllocation1;
 
 //    this->GenerateDebugBreak(insertInstr);
 
@@ -1250,7 +1250,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // Save doubles in pairs
     if (!layout.SavedDoubles().IsEmpty())
     {
-        ULONG curOffset = layout.SavedDoublesOffset() - stackAllocation2;
+        uint32_t curOffset = layout.SavedDoublesOffset() - stackAllocation2;
         for (RegNum curReg = FIRST_CALLEE_SAVED_DBL_REG; curReg <= LAST_CALLEE_SAVED_DBL_REG; curReg = RegNum(curReg + 2))
         {
             if (layout.SavedDoubles().Test(curReg))
@@ -1269,7 +1269,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // Save integer registers in pairs
     if (!layout.SavedRegisters().IsEmpty())
     {
-        ULONG curOffset = layout.SavedRegistersOffset() - stackAllocation2;
+        uint32_t curOffset = layout.SavedRegistersOffset() - stackAllocation2;
         for (RegNum curReg = FIRST_CALLEE_SAVED_GP_REG; curReg <= LAST_CALLEE_SAVED_GP_REG; curReg = RegNum(curReg + 2))
         {
             if (layout.SavedRegisters().Test(curReg))
@@ -1290,7 +1290,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     if (layout.HasCalls())
     {
         // STP fp, lr, [sp, #offs]
-        ULONG fpOffset = layout.FpLrOffset() - stackAllocation2;
+        uint32_t fpOffset = layout.FpLrOffset() - stackAllocation2;
         IR::Instr * instrStp = IR::Instr::New(Js::OpCode::STP,
             IR::IndirOpnd::New(spOpnd, fpOffset, TyMachReg, this->m_func),
             fpOpnd, IR::RegOpnd::New(RegLR, TyMachReg, this->m_func), this->m_func);
@@ -1313,7 +1313,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
 
     // Future work in the register area should be done FP-relative if it is set up
     IR::RegOpnd *regAreaBaseOpnd = layout.HasCalls() ? fpOpnd : spOpnd;
-    ULONG regAreaBaseOffset = layout.HasCalls() ? layout.FpLrOffset() : 0;
+    uint32_t regAreaBaseOffset = layout.HasCalls() ? layout.FpLrOffset() : 0;
 
     // This marks the end of the formal prolog (for EH purposes); create and register a label
     IR::LabelInstr *prologEndLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func);
@@ -1339,7 +1339,7 @@ LowererMD::LowerEntryInstr(IR::EntryInstr * entryInstr)
     // Home parameter registers in pairs
     if (!layout.HomedParams().IsEmpty())
     {
-        ULONG curOffset = layout.HomedParamsOffset() - regAreaBaseOffset;
+        uint32_t curOffset = layout.HomedParamsOffset() - regAreaBaseOffset;
         for (RegNum curReg = FIRST_INT_ARG_REG; curReg <= LAST_INT_ARG_REG; curReg = RegNum(curReg + 2))
         {
             if (layout.HomedParams().Test(curReg))
@@ -1394,8 +1394,8 @@ LowererMD::LowerExitInstr(IR::ExitInstr * exitInstr)
     // Determine the 1 or 2 stack allocation sizes
     // Note that on exit, if there is a try, we always do a 2-step deallocation because the
     // epilog is re-used by the try/catch/finally code
-    ULONG stackAllocation1 = (layout.TotalStackSize() < 512 && !layout.HasTry()) ? layout.TotalStackSize() : layout.RegisterAreaSize();
-    ULONG stackAllocation2 = layout.TotalStackSize() - stackAllocation1;
+    uint32_t stackAllocation1 = (layout.TotalStackSize() < 512 && !layout.HasTry()) ? layout.TotalStackSize() : layout.RegisterAreaSize();
+    uint32_t stackAllocation2 = layout.TotalStackSize() - stackAllocation1;
 
     // Mark the start of the epilog
     IR::LabelInstr *epilogStartLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func);
@@ -1423,7 +1423,7 @@ LowererMD::LowerExitInstr(IR::ExitInstr * exitInstr)
     if (layout.HasCalls())
     {
         // LDP fp, lr, [sp, #offs]
-        ULONG fpOffset = layout.FpLrOffset() - stackAllocation2;
+        uint32_t fpOffset = layout.FpLrOffset() - stackAllocation2;
         IR::Instr * instrLdp = IR::Instr::New(Js::OpCode::LDP, fpOpnd,
             IR::IndirOpnd::New(spOpnd, fpOffset, TyMachReg, this->m_func),
             IR::RegOpnd::New(RegLR, TyMachReg, this->m_func), this->m_func);
@@ -1433,7 +1433,7 @@ LowererMD::LowerExitInstr(IR::ExitInstr * exitInstr)
     // Recover integer registers in pairs
     if (!layout.SavedRegisters().IsEmpty())
     {
-        ULONG curOffset = layout.SavedRegistersOffset() - stackAllocation2 + layout.SavedRegistersSize();
+        uint32_t curOffset = layout.SavedRegistersOffset() - stackAllocation2 + layout.SavedRegistersSize();
         for (RegNum curReg = RegNum(LAST_CALLEE_SAVED_GP_REG - 1); curReg >= FIRST_CALLEE_SAVED_GP_REG; curReg = RegNum(curReg - 2))
         {
             if (layout.SavedRegisters().Test(curReg))
@@ -1452,7 +1452,7 @@ LowererMD::LowerExitInstr(IR::ExitInstr * exitInstr)
     // Recover doubles in pairs
     if (!layout.SavedDoubles().IsEmpty())
     {
-        ULONG curOffset = layout.SavedDoublesOffset() - stackAllocation2 + layout.SavedDoublesSize();
+        uint32_t curOffset = layout.SavedDoublesOffset() - stackAllocation2 + layout.SavedDoublesSize();
         for (RegNum curReg = RegNum(LAST_CALLEE_SAVED_DBL_REG - 1); curReg >= FIRST_CALLEE_SAVED_DBL_REG; curReg = RegNum(curReg - 2))
         {
             if (layout.SavedDoubles().Test(curReg))
@@ -4771,7 +4771,7 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
         Assert(regOpnd->m_sym->m_isSingleDef);
 
         Js::Var value = regOpnd->m_sym->GetFloatConstValueAsVar_PostGlobOpt();
-        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((BYTE*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
+        IR::MemRefOpnd *memRef = IR::MemRefOpnd::New((uint8_t*)value + Js::JavascriptNumber::GetValueOffset(), TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
         instr = IR::Instr::New(Js::OpCode::FLDR, regFloatOpnd, memRef, this->m_func);
         insertInstr->InsertBefore(instr);
@@ -6862,7 +6862,7 @@ LowererMD::FinalLower()
                     }
                     else
                     {
-                        EncodeReloc::New(&pRelocList, RelocTypeBranch19, (BYTE*)instrOffset, branchInstr, &tempAlloc);
+                        EncodeReloc::New(&pRelocList, RelocTypeBranch19, (uint8_t*)instrOffset, branchInstr, &tempAlloc);
                         //Assume this is a backward long branch, we shall fix up after complete pass, be conservative here
                         instrOffset = instrOffset + MachMaxInstrSize;
                     }
@@ -6904,7 +6904,7 @@ LowererMD::FinalLower()
                 }
                 else
                 {
-                    EncodeReloc::New(&pRelocList, RelocTypeLabelAdr, (BYTE*)instrOffset, instr, &tempAlloc);
+                    EncodeReloc::New(&pRelocList, RelocTypeLabelAdr, (uint8_t*)instrOffset, instr, &tempAlloc);
                     //Assume this is a backward long branch, we shall fix up after complete pass, be conservative here
                     instrOffset = instrOffset + MachMaxInstrSize * 2;
                 }
@@ -7114,7 +7114,7 @@ LowererMD::LowerTypeof(IR::Instr* typeOfInstr)
 
     // MOV typeDisplayStringsArray, &javascriptLibrary->typeDisplayStrings
     IR::RegOpnd * typeDisplayStringsArrayOpnd = IR::RegOpnd::New(TyMachPtr, func);
-    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
+    m_lowerer->InsertMove(typeDisplayStringsArrayOpnd, IR::AddrOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetTypeDisplayStringsOffset(), IR::AddrOpndKindConstantAddress, this->m_func), typeOfInstr);
 
     GenerateObjectTest(src1, typeOfInstr, taggedIntLabel);
 

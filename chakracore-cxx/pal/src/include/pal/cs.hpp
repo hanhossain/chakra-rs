@@ -29,7 +29,7 @@ namespace CorUnix
     
     void InternalInitializeCriticalSectionAndSpinCount(
         PCRITICAL_SECTION pCriticalSection,
-        DWORD dwSpinCount,
+        uint32_t dwSpinCount,
         bool fInternal);
     
     void InternalEnterCriticalSection(

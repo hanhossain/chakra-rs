@@ -25,7 +25,7 @@ inline T WasmMath::ShrU( T aLeft, T aRight )
 template<> 
 inline int WasmMath::Ctz(int value)
 {
-    DWORD index;
+    uint32_t index;
     if (_BitScanForward(&index, value))
     {
         return index;
@@ -36,7 +36,7 @@ inline int WasmMath::Ctz(int value)
 template<> 
 inline int64 WasmMath::Ctz(int64 value)
 {
-    DWORD index;
+    uint32_t index;
 #if TARGET_64
     if (_BitScanForward64(&index, value))
     {
@@ -58,7 +58,7 @@ inline int64 WasmMath::Ctz(int64 value)
 template<> 
 inline int64 WasmMath::Clz(int64 value)
 {
-    DWORD index;
+    uint32_t index;
 #if TARGET_64
     if (_BitScanReverse64(&index, value))
     {

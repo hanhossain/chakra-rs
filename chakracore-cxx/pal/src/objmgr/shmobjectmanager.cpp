@@ -38,8 +38,8 @@ PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsGranted,
-    DWORD dwRightsRequired
+    uint32_t dwRightsGranted,
+    uint32_t dwRightsRequired
     );
 
 /*++
@@ -221,7 +221,7 @@ CSharedMemoryObjectManager::RegisterObject(
     CPalThread *pthr,
     IPalObject *pobjToRegister,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequested,
+    uint32_t dwRightsRequested,
     HANDLE *pHandle,                 // OUT
     IPalObject **ppobjRegistered     // OUT
     )
@@ -396,7 +396,7 @@ CSharedMemoryObjectManager::RegisterObject(
 
     if (fShared && 0 != potObj->GetImmutableDataSize())
     {
-        VOID *pvImmutableData;
+        void *pvImmutableData;
         SHMObjData *psmod;
 
         palError = pobjToRegister->GetImmutableData(&pvImmutableData);
@@ -409,8 +409,8 @@ CSharedMemoryObjectManager::RegisterObject(
         psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
         if (NULL != psmod)
         {
-            VOID *pvSharedImmutableData =
-                SHMPTR_TO_TYPED_PTR(VOID, psmod->shmObjImmutableData);
+            void *pvSharedImmutableData =
+                SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
             
             if (NULL != pvSharedImmutableData)
             {
@@ -732,7 +732,7 @@ PAL_ERROR
 CSharedMemoryObjectManager::ObtainHandleForObject(
     CPalThread *pthr,
     IPalObject *pobj,
-    DWORD dwRightsRequested,
+    uint32_t dwRightsRequested,
     bool fInheritHandle,
     IPalProcess *pProcessForHandle,     // IN, OPTIONAL
     HANDLE *pNewHandle                  // OUT
@@ -835,12 +835,12 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     CPalThread *pthr,
     HANDLE hHandleToReference,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
     )
 {
     PAL_ERROR palError;
-    DWORD dwRightsGranted;
+    uint32_t dwRightsGranted;
     IPalObject *pobj;
 
     _ASSERTE(NULL != pthr);
@@ -917,16 +917,16 @@ PAL_ERROR
 CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     CPalThread *pthr,
     HANDLE rghHandlesToReference[],
-    DWORD dwHandleCount,
+    uint32_t dwHandleCount,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject *rgpobjs[]            // OUT (caller allocated)
     )
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj = NULL;
-    DWORD dwRightsGranted;
-    DWORD dw;
+    uint32_t dwRightsGranted;
+    uint32_t dw;
 
     _ASSERTE(NULL != pthr);
     _ASSERTE(NULL != rghHandlesToReference);
@@ -1041,7 +1041,7 @@ CSharedMemoryObjectManager::ReferenceObjectByForeignHandle(
     HANDLE hForeignHandle,
     IPalProcess *pForeignProcess,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsRequired,
+    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
     )
 {
@@ -1183,10 +1183,8 @@ Parameters:
   hLocal -- the handle to generate a "remote handle" for
 --*/
 
-PALIMPORT
 RHANDLE
-PALAPI
-PAL_LocalHandleToRemote(IN HANDLE hLocal)
+PAL_LocalHandleToRemote( HANDLE hLocal)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr;
@@ -1472,10 +1470,8 @@ Parameters:
   rhRemote -- the "remote handle" to convert to a local handle
 --*/
 
-PALIMPORT
 HANDLE
-PALAPI
-PAL_RemoteHandleToLocal(IN RHANDLE rhRemote)
+PAL_RemoteHandleToLocal( RHANDLE rhRemote)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr;
@@ -1523,8 +1519,8 @@ PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
     CAllowedObjectTypes *paot,
-    DWORD dwRightsGranted,
-    DWORD dwRightsRequired
+    uint32_t dwRightsGranted,
+    uint32_t dwRightsRequired
     )
 {
     PAL_ERROR palError = NO_ERROR;

@@ -31,8 +31,8 @@ Abstract:
 namespace CorUnix
 {
 #ifdef SYNCH_STATISTICS
-    LONG g_rglStatWaitCount[ObjectTypeIdCount]       = { 0 };
-    LONG g_rglStatContentionCount[ObjectTypeIdCount] = { 0 };
+    int32_t g_rglStatWaitCount[ObjectTypeIdCount]       = { 0 };
+    int32_t g_rglStatContentionCount[ObjectTypeIdCount] = { 0 };
 #endif // SYNCH_STATISTICS
     ////////////////////////////
     //                        //
@@ -178,7 +178,7 @@ namespace CorUnix
             // whether or not the process has already exited.
            
             CProcProcessLocalData * pProcLocalData = GetProcessLocalData();
-            DWORD dwExitCode = 0;
+            uint32_t dwExitCode = 0;
             bool fIsActualExitCode = false;
 
             _ASSERT_MSG(NULL != pProcLocalData, 
@@ -258,7 +258,7 @@ namespace CorUnix
     --*/
     PAL_ERROR CSynchWaitController::RegisterWaitingThread(
         WaitType wtWaitType,
-        DWORD dwIndex,
+        uint32_t dwIndex,
         bool fAlertable)
     {
         VALIDATEOBJECT(m_psdSynchData);
@@ -267,7 +267,7 @@ namespace CorUnix
         WaitingThreadsListNode * pwtlnNewNode = NULL;
         SharedID shridNewNode = NULLSharedID;
         ThreadWaitInfo * ptwiWaitInfo; 
-        DWORD * pdwWaitState;
+        uint32_t * pdwWaitState;
         bool fSharedObject = (SharedObject == m_odObjectDomain);
         bool fEarlyDeath = false;
         bool fSynchDataRefd = false;
@@ -281,7 +281,7 @@ namespace CorUnix
 
         _ASSERTE(ptwiWaitInfo->pthrOwner == m_pthrOwner);
         
-        pdwWaitState = SharedIDToTypePointer(DWORD,
+        pdwWaitState = SharedIDToTypePointer(uint32_t,
                 m_pthrOwner->synchronizationInfo.m_shridWaitAwakened);
 
         if (fSharedObject)
@@ -383,19 +383,19 @@ namespace CorUnix
         
         if (0 == ptwiWaitInfo->lObjCount)
         {
-            DWORD dwWaitState;
+            uint32_t dwWaitState;
 
             // Setting the thread in wait state 
-            dwWaitState = (DWORD)(fAlertable ? TWS_ALERTABLE: TWS_WAITING);
+            dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE: TWS_WAITING);
 
             TRACE("Switching my wait state [%p] from TWS_ACTIVE to %u \n", 
                   pdwWaitState, dwWaitState);
 
             dwWaitState = InterlockedCompareExchange(
-                (LONG *)pdwWaitState, (LONG)dwWaitState, TWS_ACTIVE);
-            if ((DWORD)TWS_ACTIVE != dwWaitState)
+                (int32_t *)pdwWaitState, (int32_t)dwWaitState, TWS_ACTIVE);
+            if ((uint32_t)TWS_ACTIVE != dwWaitState)
             {
-                if ((DWORD)TWS_EARLYDEATH == dwWaitState)
+                if ((uint32_t)TWS_EARLYDEATH == dwWaitState)
                 {
                     // Process is terminating, this thread will soon be 
                     // suspended (by SuspendOtherThreads).
@@ -452,8 +452,8 @@ namespace CorUnix
                 // Early death detected, i.e. the process is about to exit. 
                 // We need to completely release the synch lock(s) before
                 // going to sleep
-                LONG lLocalSynchLockCount; 
-                LONG lSharedSynchLockCount;
+                int32_t lLocalSynchLockCount;
+                int32_t lSharedSynchLockCount;
                                           
                 lSharedSynchLockCount = CPalSynchronizationManager::ResetSharedSynchLock(m_pthrOwner);
                 lLocalSynchLockCount = CPalSynchronizationManager::ResetLocalSynchLock(m_pthrOwner);
@@ -532,12 +532,12 @@ namespace CorUnix
 
     Returns the current signal count of the target object
     --*/
-    PAL_ERROR CSynchStateController::GetSignalCount(LONG *plSignalCount)
+    PAL_ERROR CSynchStateController::GetSignalCount(int32_t *plSignalCount)
     {
         VALIDATEOBJECT(m_psdSynchData);
                 
         PAL_ERROR palErr = NO_ERROR;        
-        LONG lCount = m_psdSynchData->GetSignalCount();
+        int32_t lCount = m_psdSynchData->GetSignalCount();
 
         _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
         _ASSERTE(NULL != plSignalCount);
@@ -556,7 +556,7 @@ namespace CorUnix
     Sets the signal count of the target object, possibly triggering
     waiting threads awakening.
     --*/
-    PAL_ERROR CSynchStateController::SetSignalCount(LONG lNewCount)
+    PAL_ERROR CSynchStateController::SetSignalCount(int32_t lNewCount)
     {
         VALIDATEOBJECT(m_psdSynchData);
 
@@ -576,15 +576,15 @@ namespace CorUnix
     waiting threads awakening.
     --*/
     PAL_ERROR CSynchStateController::IncrementSignalCount(
-        LONG lAmountToIncrement)
+        int32_t lAmountToIncrement)
     {
         VALIDATEOBJECT(m_psdSynchData);
 
         _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
         _ASSERTE(lAmountToIncrement > 0);
 
-        LONG lOldCount = m_psdSynchData->GetSignalCount();
-        LONG lNewCount = lOldCount + lAmountToIncrement;
+        int32_t lOldCount = m_psdSynchData->GetSignalCount();
+        int32_t lNewCount = lOldCount + lAmountToIncrement;
 
         _ASSERT_MSG(lNewCount > lOldCount,
             "Signal count increment %d would make current signal count %d to "
@@ -602,7 +602,7 @@ namespace CorUnix
     Decrements the signal count of the target object.
     --*/
     PAL_ERROR CSynchStateController::DecrementSignalCount(
-        LONG lAmountToDecrement)
+        int32_t lAmountToDecrement)
     {
         VALIDATEOBJECT(m_psdSynchData);
 
@@ -610,7 +610,7 @@ namespace CorUnix
         _ASSERTE(lAmountToDecrement > 0);
         
         PAL_ERROR palErr = NO_ERROR;
-        LONG lCount = m_psdSynchData->GetSignalCount();
+        int32_t lCount = m_psdSynchData->GetSignalCount();
         _ASSERTE(lAmountToDecrement <= lCount);
 
         m_psdSynchData->SetSignalCount(lCount - lAmountToDecrement);
@@ -671,7 +671,7 @@ namespace CorUnix
         VALIDATEOBJECT(m_psdSynchData);
         
         PAL_ERROR palErr = NO_ERROR;
-        LONG lOwnershipCount = m_psdSynchData->GetOwnershipCount();
+        int32_t lOwnershipCount = m_psdSynchData->GetOwnershipCount();
 
         _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
         _ASSERT_MSG(CObjectType::OwnershipTracked == 
@@ -757,11 +757,11 @@ namespace CorUnix
     Decremnt the reference count of the target synchdata and retrurns 
     it to the appropriate cache if the reference count reaches zero.
     --*/
-    LONG CSynchData::Release(CPalThread * pthrCurrent)
+    int32_t CSynchData::Release(CPalThread * pthrCurrent)
     {
         VALIDATEOBJECT(this);
         
-        LONG lCount = InterlockedDecrement(&m_lRefCount);
+        int32_t lCount = InterlockedDecrement(&m_lRefCount);
 
         _ASSERT_MSG(0 <= lCount,
                     "CSynchData %p with negative reference count [%d]\n", 
@@ -781,13 +781,13 @@ namespace CorUnix
             TRACE("Disposing %s waitable object with SynchData @ "
                   "{shrid=%p, p=%p}\n",
                   (SharedObject == m_odObjectDomain) ? "shared" : "local",
-                  (PVOID)m_shridThis, this);
+                  (void *)m_shridThis, this);
             
 
 #ifdef SYNCH_STATISTICS
-            LONG lStatWaitCount = GetStatWaitCount();
-            LONG lStatContentionCount = GetStatContentionCount();
-            LONG lCount, lNewCount;
+            int32_t lStatWaitCount = GetStatWaitCount();
+            int32_t lStatContentionCount = GetStatContentionCount();
+            int32_t lCount, lNewCount;
 
             TRACE("Statistical data for SynchData of otiType=%u @ %p: WaitCount=%d "
                   "ContentionCount=%d\n", m_otiObjectTypeId, this, lStatWaitCount, 
@@ -995,7 +995,7 @@ namespace CorUnix
     --*/
     void CSynchData::Signal(
         CPalThread * pthrCurrent, 
-        LONG lSignalCount, 
+        int32_t lSignalCount,
         bool fWorkerThread)
     {
         VALIDATEOBJECT(this);
@@ -1072,11 +1072,11 @@ namespace CorUnix
         bool fSharedObject = (SharedObject == GetObjectDomain());
         bool fThreadAwakened = false;
         bool fDelegatedSignaling = false;
-        DWORD * pdwWaitState;
-        DWORD dwObjIdx;
+        uint32_t * pdwWaitState;
+        uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        DWORD dwPid = gPID;
+        uint32_t dwPid = gPID;
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1100,7 +1100,7 @@ namespace CorUnix
             
             WaitCompletionState wcsWaitCompletionState;
             bool fWaitAll = (0 != (WTLN_FLAG_WAIT_ALL & pwtlnItem->dwFlags));
-            pdwWaitState = SharedIDToTypePointer(DWORD, 
+            pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
             if (fSharedObject)
@@ -1314,7 +1314,7 @@ namespace CorUnix
                     pwtlnItem->ptrOwnerObjSynchData.shrid);
 
                 TRACE("Delegating object signaling for SynchData shrid=%p\n",
-                      (VOID *)pwtlnItem->ptrOwnerObjSynchData.shrid);
+                      (void *)pwtlnItem->ptrOwnerObjSynchData.shrid);
                 
                 if (NO_ERROR == palErr)
                 {
@@ -1383,18 +1383,18 @@ namespace CorUnix
           synchronization locks (the local process synch lock if the target 
           object is local, both local and shared one if the object is shared).
     --*/
-    LONG CSynchData::ReleaseAllLocalWaiters(
+    int32_t CSynchData::ReleaseAllLocalWaiters(
         CPalThread * pthrCurrent)
     {        
         PAL_ERROR palErr = NO_ERROR;
-        LONG lAwakenedCount = 0;
+        int32_t lAwakenedCount = 0;
         bool fSharedSynchLock = false;
         bool fSharedObject = (SharedObject == GetObjectDomain());
-        DWORD * pdwWaitState;
-        DWORD dwObjIdx;
+        uint32_t * pdwWaitState;
+        uint32_t dwObjIdx;
         SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
-        DWORD dwPid = gPID;
+        uint32_t dwPid = gPID;
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
@@ -1415,7 +1415,7 @@ namespace CorUnix
             VALIDATEOBJECT(pwtlnItem);
             
             bool fWaitAll = (0 != (WTLN_FLAG_WAIT_ALL & pwtlnItem->dwFlags));
-            pdwWaitState = SharedIDToTypePointer(DWORD, 
+            pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
             if (fSharedObject)

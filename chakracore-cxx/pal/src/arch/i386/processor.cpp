@@ -33,9 +33,8 @@ on a single processor, such as Intel's Hyper-Threading technology.
 
 --*/
 void
-PALAPI
 YieldProcessor(
-    VOID)
+    void)
 {
     __asm__ __volatile__ (
         "rep\n"

@@ -308,7 +308,7 @@ private:
 #define RecyclerHeapNew(recycler,heapInfo,T,...) new (recycler, heapInfo) T(__VA_ARGS__)
 #define RecyclerHeapDelete(recycler,heapInfo,addr) (static_cast<Recycler *>(recycler)->HeapFree(heapInfo,addr))
 
-typedef void (__cdecl* ExternalRootMarker)(void *);
+typedef void (* ExternalRootMarker)(void *);
 
 typedef void (*DOMWrapperTracingCallback)(_In_opt_ void *data);
 typedef bool (*DOMWrapperTracingDoneCallback)(_In_opt_ void *data);
@@ -548,10 +548,10 @@ struct RecyclerCollectionStats
 };
 #define RECYCLER_STATS_INC_IF(cond, r, f) if (cond) { RECYCLER_STATS_INC(r, f); }
 #define RECYCLER_STATS_INC(r, f) ++r->collectionStats.f
-#define RECYCLER_STATS_INTERLOCKED_INC(r, f) { InterlockedIncrement((LONG *)&r->collectionStats.f); }
+#define RECYCLER_STATS_INTERLOCKED_INC(r, f) { InterlockedIncrement((int32_t *)&r->collectionStats.f); }
 #define RECYCLER_STATS_DEC(r, f) --r->collectionStats.f
 #define RECYCLER_STATS_ADD(r, f, v) r->collectionStats.f += (v)
-#define RECYCLER_STATS_INTERLOCKED_ADD(r, f, v) { InterlockedAdd((LONG *)&r->collectionStats.f, (LONG)(v)); }
+#define RECYCLER_STATS_INTERLOCKED_ADD(r, f, v) { InterlockedAdd((int32_t *)&r->collectionStats.f, (int32_t)(v)); }
 #define RECYCLER_STATS_SUB(r, f, v) r->collectionStats.f -= (v)
 #define RECYCLER_STATS_SET(r, f, v) r->collectionStats.f = v
 #else
@@ -617,7 +617,7 @@ public:
 
 private:
     // Static entry point for thread creation
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int CALLBACK StaticThreadProc(void * lpParameter);
 
     // Static entry point for thread service usage
     static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
@@ -967,7 +967,7 @@ private:
     bool needExternalWrapperTracing;
     bool hasDisposableObject;
     bool hasNativeGCHost;
-    DWORD tickCountNextDispose;
+    uint32_t tickCountNextDispose;
     bool inExhaustiveCollection;
     bool hasExhaustiveCandidate;
     bool inCacheCleanupCollection;
@@ -1074,7 +1074,7 @@ private:
 
 #ifdef IDLE_DECOMMIT_ENABLED
     HANDLE concurrentIdleDecommitEvent;
-    LONG needIdleDecommitSignal;
+    int32_t needIdleDecommitSignal;
 #endif
 
 #if ENABLE_PARTIAL_GC
@@ -1603,7 +1603,7 @@ private:
 
     bool NeedDisposeTimed()
     {
-        DWORD ticks = ::GetTickCount();
+        uint32_t ticks = ::GetTickCount();
         return (ticks > tickCountNextDispose && this->hasDisposableObject);
     }
 
@@ -1741,8 +1741,8 @@ private:
 
 #endif
 
-    size_t RescanMark(DWORD waitTime);
-    size_t FinishMark(DWORD waitTime);
+    size_t RescanMark(uint32_t waitTime);
+    size_t FinishMark(uint32_t waitTime);
     size_t FinishMarkRescan(bool background);
 #if ENABLE_CONCURRENT_GC
     void ProcessTrackedObjects();
@@ -1784,9 +1784,9 @@ private:
     bool AbortConcurrent(bool restoreState);
     void FinalizeConcurrent(bool restoreState);
 
-    static unsigned int CALLBACK StaticThreadProc(LPVOID lpParameter);
+    static unsigned int CALLBACK StaticThreadProc(void * lpParameter);
     static int ExceptFilter(LPEXCEPTION_POINTERS pEP);
-    DWORD ThreadProc();
+    uint32_t ThreadProc();
 
     void DoBackgroundWork(bool forceForeground = false);
     static void CALLBACK StaticBackgroundWorkCallback(void * callbackData);
@@ -1802,7 +1802,7 @@ private:
     template <CollectionFlags flags>
     BOOL TryFinishConcurrentCollect();
 
-    BOOL WaitForConcurrentThread(DWORD waitTime, RecyclerWaitReason caller = RecyclerWaitReason::Other);
+    BOOL WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller = RecyclerWaitReason::Other);
     void FlushBackgroundPages();
 
     BOOL FinishConcurrentCollect(CollectionFlags flags);
@@ -1837,7 +1837,7 @@ private:
     void CleanupPendingUnroot();
 
 #ifdef ENABLE_JS_ETW
-    ULONG EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
+    uint32_t EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
     void FlushFreeRecord();
     void AppendFreeMemoryETWRecord(__in char *address, size_t size);
     static const uint BulkFreeMemoryCount = 400;
@@ -2638,20 +2638,20 @@ struct ForceLeafAllocator<RecyclerNonLeafAllocator>
 #endif
 }
 
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, Recycler * alloc, HeapInfo * heapInfo)
 {
     return alloc->HeapAllocR(heapInfo, byteSize);
 }
 
-inline void __cdecl
+inline void
 operator delete(void * obj, Recycler * alloc, HeapInfo * heapInfo)
 {
     alloc->HeapFree(heapInfo, obj);
 }
 
 template<ObjectInfoBits infoBits>
-_Ret_notnull_ inline void * __cdecl
+_Ret_notnull_ inline void *
 operator new(DECLSPEC_GUARD_OVERFLOW size_t byteSize, Recycler * recycler, const InfoBitsWrapper<infoBits>&)
 {
     AssertCanHandleOutOfMemory();

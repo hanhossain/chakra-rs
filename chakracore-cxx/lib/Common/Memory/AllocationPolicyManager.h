@@ -22,7 +22,7 @@ public:
         MemoryFailure = 2,
         MemoryMax = 2,
     };
-    typedef bool (__stdcall * PageAllocatorMemoryAllocationCallback)(__in LPVOID context,
+    typedef bool (* PageAllocatorMemoryAllocationCallback)(__in void * context,
         __in AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
         __in size_t allocationSize);
 
@@ -111,7 +111,7 @@ public:
         }
     }
 
-    void SetMemoryAllocationCallback(LPVOID newContext, PageAllocatorMemoryAllocationCallback callback)
+    void SetMemoryAllocationCallback(void * newContext, PageAllocatorMemoryAllocationCallback callback)
     {
         this->memoryAllocationCallback = callback;
 

@@ -79,7 +79,7 @@ namespace Js
         IndexPropertyDescriptorMap * Clone(Recycler * recycler);
 
     private:
-        static int __cdecl CompareIndex(const void* left, const void* right)
+        static int CompareIndex(const void* left, const void* right)
         {
             return *static_cast<const uint32*>(left) - *static_cast<const uint32*>(right);
         }

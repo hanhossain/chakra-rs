@@ -312,8 +312,8 @@ typedef struct _pid_and_tid
     Volatile<pthread_t> tid;
 } pid_and_tid;
 
-const DWORD HeadSignature  PAL_GLOBAL = 0x48454144;
-const DWORD TailSignature  PAL_GLOBAL = 0x5441494C;
+const uint32_t HeadSignature  PAL_GLOBAL = 0x48454144;
+const uint32_t TailSignature  PAL_GLOBAL = 0x5441494C;
 
 #endif // TRACK_SHMLOCK_OWNERSHIP
 
@@ -321,14 +321,14 @@ typedef struct
 {
     SHM_SEGMENT_HEADER header;
 #ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<DWORD> dwHeadCanaries[2];
+    Volatile<uint32_t> dwHeadCanaries[2];
 #endif // TRACK_SHMLOCK_OWNERSHIP
     Volatile<pid_t> spinlock;
 #ifdef TRACK_SHMLOCK_OWNERSHIP
-    Volatile<DWORD> dwTailCanaries[2];
+    Volatile<uint32_t> dwTailCanaries[2];
     pid_and_tid pidtidCurrentOwner;
     pid_and_tid pidtidOwners[SHMLOCK_OWNERSHIP_HISTORY_ARRAY_SIZE];
-    Volatile<ULONG> ulOwnersIdx;
+    Volatile<uint32_t> ulOwnersIdx;
 #endif // TRACK_SHMLOCK_OWNERSHIP
     SHM_POOL_INFO pools[SPS_LAST]; /* information about each memory pool */
     Volatile<SHMPTR> shm_info[SIID_LAST]; /* basic blocks of shared information.*/
@@ -352,13 +352,13 @@ static CCLock shm_critsec(false);
 int shm_numsegments;
 
 /* array containing the base address of each segment */
-Volatile<LPVOID> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
+Volatile<void *> shm_segment_bases[MAX_SEGMENTS] PAL_GLOBAL;
 
 /* number of locks the process currently holds (SHMLock calls without matching
 SHMRelease). Because we take the critical section while inside a
 SHMLock/SHMRelease pair, this is actually the number of locks held by a single
 thread. */
-static Volatile<LONG> lock_count PAL_GLOBAL;
+static Volatile<int32_t> lock_count PAL_GLOBAL;
 
 /* thread ID of thread holding the SHM lock. used for debugging purposes :
    SHMGet/SetInfo will verify that the calling thread holds the lock */
@@ -418,7 +418,7 @@ BOOL SHMInitialize(void)
         /* Initialize first segment's header */
         header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
 
-        InterlockedExchange((LONG *)&header->spinlock, 0);
+        InterlockedExchange((int32_t *)&header->spinlock, 0);
 
 #ifdef TRACK_SHMLOCK_OWNERSHIP
         header->dwHeadCanaries[0] = HeadSignature;
@@ -427,7 +427,7 @@ BOOL SHMInitialize(void)
         header->dwTailCanaries[1] = TailSignature;
 
         // Check spinlock size
-        _ASSERTE(sizeof(DWORD) == sizeof(header->spinlock));
+        _ASSERTE(sizeof(uint32_t) == sizeof(header->spinlock));
         // Check spinlock alignment
         _ASSERTE(0 == ((DWORD_PTR)&header->spinlock % (DWORD_PTR)sizeof(void *)));
 #endif // TRACK_SHMLOCK_OWNERSHIP
@@ -812,7 +812,7 @@ we must obtain an address for that new segment and add it to our array
 In the simplest case (no need to map new segments), there is no need to hold
 the lock, since we don't access any information that can change
 --*/
-LPVOID SHMPtrToPtr(SHMPTR shmptr)
+void * SHMPtrToPtr(SHMPTR shmptr)
 {
     void *retval;
     int segment;
@@ -873,7 +873,7 @@ LPVOID SHMPtrToPtr(SHMPTR shmptr)
     }
 
     retval = shm_segment_bases[segment];
-    retval = static_cast<BYTE*>(retval) + offset;
+    retval = static_cast<uint8_t*>(retval) + offset;
 
     TRACE("SHMPTR %#x is at offset %d in segment %d; maps to address %p\n",
           shmptr, offset, segment, retval);
@@ -1038,7 +1038,7 @@ in the memory location corresponding to the previous SHMPTR :
 --*/
 static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
 {
-    LPBYTE item_ptr;
+    uint8_t * item_ptr;
     SHMPTR *shmptr_ptr;
     SHMPTR next_shmptr;
     int i;
@@ -1046,8 +1046,8 @@ static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
     TRACE("Linking %d blocks of %d bytes, starting at 0x%08x\n",
           num_blocks, block_size, first);
 
-    item_ptr = static_cast<LPBYTE>(
-        static_cast<LPBYTE>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
+    item_ptr = static_cast<uint8_t *>(
+        static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
             (SHMPTR_OFFSET(first)));
     next_shmptr = first/*+block_size*/;
 
@@ -1106,7 +1106,7 @@ Notes :
 --*/
 static BOOL SHMAddSegment(void)
 {
-    LPVOID segment_base;
+    void * segment_base;
     SHM_SEGMENT_HEADER *header;
     SHM_FIRST_HEADER *first_header;
     SHMPTR first_shmptr;
@@ -1234,7 +1234,7 @@ static BOOL SHMAddSegment(void)
            old global linked list. We don't use SHMPTR_TO_PTR because the pool
            data isn't updated yet */
         shmptr_ptr = reinterpret_cast<SHMPTR*>(
-            static_cast<LPBYTE>(shm_segment_bases[SHMPTR_SEGMENT(header->last_pool_blocks[sps])].Load()) +
+            static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(header->last_pool_blocks[sps])].Load()) +
                      SHMPTR_OFFSET(header->last_pool_blocks[sps]));
 
         *shmptr_ptr = first_header->pools[sps].first_free;
@@ -1270,7 +1270,7 @@ Returns (SHMPTR)NULL on failure.
 --*/
 SHMPTR SHMStrDup( LPCSTR string )
 {
-    UINT length = 0;
+    uint32_t length = 0;
     SHMPTR retVal = 0;
 
     if ( string )
@@ -1281,7 +1281,7 @@ SHMPTR SHMStrDup( LPCSTR string )
 
         if ( retVal != 0 )
         {
-            LPVOID ptr = SHMPTR_TO_PTR( retVal );
+            void * ptr = SHMPTR_TO_PTR( retVal );
             _ASSERT_MSG(ptr != NULL, "SHMPTR_TO_PTR returned NULL.\n");
             if (ptr != NULL)
             {
@@ -1313,7 +1313,7 @@ Returns (SHMPTR)NULL on failure.
 --*/
 SHMPTR SHMWStrDup( LPCWSTR string )
 {
-    UINT length = 0;
+    uint32_t length = 0;
     SHMPTR retVal = 0;
 
     if ( string )
@@ -1324,7 +1324,7 @@ SHMPTR SHMWStrDup( LPCWSTR string )
 
         if ( retVal != 0 )
         {
-            LPVOID ptr = SHMPTR_TO_PTR(retVal);
+            void * ptr = SHMPTR_TO_PTR(retVal);
             _ASSERT_MSG(ptr != NULL, "SHMPTR_TO_PTR returned NULL.\n");
             if (ptr != NULL)
             {

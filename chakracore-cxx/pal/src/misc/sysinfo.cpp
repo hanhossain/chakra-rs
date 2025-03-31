@@ -131,12 +131,11 @@ Others are set to zero.
 
 --*/
 
-int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
+int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
 
-VOID
-PALAPI
+void
 GetSystemInfo(
-          OUT LPSYSTEM_INFO lpSystemInfo)
+           LPSYSTEM_INFO lpSystemInfo)
 {
     int nrcpus = 0;
     long pagesize;
@@ -177,7 +176,7 @@ GetSystemInfo(
 
 // TODO: (BSD) is it a good idea to take maxOf(GetCurrentThreadStackLimits, USRSTACKXX) ?
 #ifdef __APPLE__ // defined(USRSTACK64) || defined(USRSTACK)
-ULONG_PTR lowl, highl;
+size_t lowl, highl;
 GetCurrentThreadStackLimits(&lowl, &highl);
 #ifndef PAL_MAX
 #define PAL_MAX(a, b) ((a > b) ? (a) : (b))
@@ -185,26 +184,26 @@ GetCurrentThreadStackLimits(&lowl, &highl);
 #endif
 
 #ifdef VM_MAXUSER_ADDRESS
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) VM_MAXUSER_ADDRESS;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) VM_MAXUSER_ADDRESS;
 #elif defined(__LINUX__)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) MAX_PROCESS_VA_SPACE_LINUX;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) MAX_PROCESS_VA_SPACE_LINUX;
 #elif defined(USERLIMIT)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) USERLIMIT;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
 #elif defined(_WIN64)
 #if defined(_M_ARM64)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) (1ull << 47);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) (1ull << 47);
 #elif defined(USRSTACK64)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) PAL_MAX(highl, USRSTACK64);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK64);
 #else // !USRSTACK64
 #error How come USRSTACK64 is not defined for 64bit?
 #endif // USRSTACK64
 #elif defined(USRSTACK)
-    lpSystemInfo->lpMaximumApplicationAddress = (PVOID) PAL_MAX(highl, USRSTACK);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK);
 #else
 #error The maximum application address is not known on this platform.
 #endif
 
-    lpSystemInfo->lpMinimumApplicationAddress = (PVOID) pagesize;
+    lpSystemInfo->lpMinimumApplicationAddress = (void *) pagesize;
 
     lpSystemInfo->dwProcessorType_PAL_Undefined = 0;
 
@@ -231,9 +230,8 @@ This function returns a BOOL to indicate its success status.
 
 --*/
 BOOL
-PALAPI
 GlobalMemoryStatusEx(
-            IN OUT LPMEMORYSTATUSEX lpBuffer)
+              LPMEMORYSTATUSEX lpBuffer)
 {
 
     PERF_ENTRY(GlobalMemoryStatusEx);
@@ -290,11 +288,11 @@ GlobalMemoryStatusEx(
 #if defined(__ANDROID__)
         lpBuffer->ullAvailPhys = sysconf(_SC_AVPHYS_PAGES) * sysconf( _SC_PAGE_SIZE );
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__LINUX__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__APPLE__)
         vm_size_t page_size;
         mach_port_t mach_port;
@@ -308,7 +306,7 @@ GlobalMemoryStatusEx(
             {
                 lpBuffer->ullAvailPhys = (int64_t)vm_stats.free_count * (int64_t)page_size;
                 int64_t used_memory = ((int64_t)vm_stats.active_count + (int64_t)vm_stats.inactive_count + (int64_t)vm_stats.wire_count) *  (int64_t)page_size;
-                lpBuffer->dwMemoryLoad = (DWORD)((used_memory * 100) / lpBuffer->ullTotalPhys);
+                lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
             }
         }
         mach_port_deallocate(mach_task_self(), mach_port);
@@ -330,9 +328,7 @@ GlobalMemoryStatusEx(
     return fRetVal;
 }
 
-PALIMPORT
-DWORD
-PALAPI
+uint32_t
 GetCurrentProcessorNumber()
 {
 #if HAVE_SCHED_GETCPU
@@ -343,17 +339,15 @@ GetCurrentProcessorNumber()
 }
 
 BOOL
-PALAPI
 PAL_HasGetCurrentProcessorNumber()
 {
     return HAVE_SCHED_GETCPU;
 }
 
-DWORD
-PALAPI
+uint32_t
 PAL_GetLogicalCpuCountFromOS()
 {
-    DWORD numLogicalCores = 0;
+    uint32_t numLogicalCores = 0;
 
 #if HAVE_SYSCONF
     numLogicalCores = sysconf(_SC_NPROCESSORS_ONLN);
@@ -363,7 +357,6 @@ PAL_GetLogicalCpuCountFromOS()
 }
 
 size_t
-PALAPI
 PAL_GetLogicalProcessorCacheSizeFromOS()
 {
     size_t cacheSize = 0;

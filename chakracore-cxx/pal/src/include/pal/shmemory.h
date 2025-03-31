@@ -133,12 +133,12 @@ validation (if segment is unknown, we have to call the function)
 extern int shm_numsegments;
 
 /* array containing the base address of each segment */
-extern Volatile<LPVOID> shm_segment_bases[MAX_SEGMENTS];
+extern Volatile<void *> shm_segment_bases[MAX_SEGMENTS];
 
 #define SHMPTR_TO_PTR(shmptr)\
     ((shmptr)?(((static_cast<int>(shmptr)>>24)<shm_numsegments)?\
-    reinterpret_cast<LPVOID>(reinterpret_cast<size_t>(shm_segment_bases[static_cast<int>(shmptr)>>24].Load())+(static_cast<int>(shmptr)&0x00FFFFFF)):\
-    SHMPtrToPtr(shmptr)): static_cast<LPVOID>(NULL))
+    reinterpret_cast<void *>(reinterpret_cast<size_t>(shm_segment_bases[static_cast<int>(shmptr)>>24].Load())+(static_cast<int>(shmptr)&0x00FFFFFF)):\
+    SHMPtrToPtr(shmptr)): static_cast<void *>(NULL))
 
 
 #endif /* _DEBUG */
@@ -158,7 +158,7 @@ Unlike the macro defined above, this function performs as much validation as
 possible, and can handle cases when the SHMPTR is located in an aread of shared
 memory the process doesn't yet know about.
 --*/
-LPVOID SHMPtrToPtr(SHMPTR shmptr);
+void * SHMPtrToPtr(SHMPTR shmptr);
 
 /*++
 SHMInitialize

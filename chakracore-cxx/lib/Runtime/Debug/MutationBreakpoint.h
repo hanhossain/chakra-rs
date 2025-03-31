@@ -13,7 +13,7 @@ namespace Js
     {
         MutationBreakpointDelegate(MutationBreakpoint *bp);
 
-        ULONG m_refCount;
+        uint32_t m_refCount;
         MutationBreakpoint *m_breakpoint;
         bool m_didCauseBreak;
         PropertyRecord *m_propertyRecord;
@@ -26,8 +26,8 @@ namespace Js
 
         /* IMutationBreakpoint methods */
 
-        STDMETHODIMP_(ULONG) AddRef();
-        STDMETHODIMP_(ULONG) Release();
+        STDMETHODIMP_(uint32_t) AddRef();
+        STDMETHODIMP_(uint32_t) Release();
         STDMETHODIMP QueryInterface(REFIID iid, void ** ppv);
 
         STDMETHODIMP Delete(void);

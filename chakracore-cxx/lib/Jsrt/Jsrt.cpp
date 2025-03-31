@@ -24,7 +24,7 @@
 #endif
 
 CHAKRA_API RunScriptWithParserStateCore(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,
@@ -2082,7 +2082,7 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
     _In_opt_ JsFinalizeCallback finalizeCallback, _In_opt_ void *callbackState, _Out_ JsValueRef *result)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalArrayBuffer, reinterpret_cast<BYTE*>(data), byteLength);
+        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalArrayBuffer, reinterpret_cast<uint8_t*>(data), byteLength);
 
         PARAM_NOT_NULL(result);
 
@@ -2093,7 +2093,7 @@ CHAKRA_API JsCreateExternalArrayBuffer(_Pre_maybenull_ _Pre_writable_byte_size_(
 
         Js::JavascriptLibrary* library = scriptContext->GetLibrary();
         *result = Js::JsrtExternalArrayBuffer::New(
-            reinterpret_cast<BYTE*>(data),
+            reinterpret_cast<uint8_t*>(data),
             byteLength,
             finalizeCallback,
             callbackState,
@@ -2271,7 +2271,7 @@ CHAKRA_API JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _Out_opt_ JsTypedArra
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer,
+CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
@@ -2292,7 +2292,7 @@ CHAKRA_API JsGetArrayBufferStorage(_In_ JsValueRef instance, _Outptr_result_byte
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer,
+CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer,
     _Out_ unsigned int *bufferLength, _Out_opt_ JsTypedArrayType *typedArrayType, _Out_opt_ int *elementSize)
 {
     VALIDATE_JSREF(instance);
@@ -2357,7 +2357,7 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
     END_JSRT_NO_EXCEPTION
 }
 
-CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) BYTE **buffer, _Out_ unsigned int *bufferLength)
+CHAKRA_API JsGetDataViewStorage(_In_ JsValueRef instance, _Outptr_result_bytebuffer_(*bufferLength) uint8_t **buffer, _Out_ unsigned int *bufferLength)
 {
     VALIDATE_JSREF(instance);
     PARAM_NOT_NULL(buffer);
@@ -2488,7 +2488,7 @@ Js::ArrayObject* CreateTypedArray(Js::ScriptContext *scriptContext, void* data, 
     Js::ArrayBufferBase* arrayBuffer = RecyclerNew(
         scriptContext->GetRecycler(),
         Js::ExternalArrayBuffer,
-        reinterpret_cast<BYTE*>(data),
+        reinterpret_cast<uint8_t*>(data),
         length * sizeof(T),
         library->GetArrayBufferType());
 
@@ -2906,7 +2906,7 @@ typedef struct JsNativeFunctionInfo
     bool isConstructCall;
 }JsNativeFunctionInfo;
 
-typedef _Ret_maybenull_ JsValueRef(CHAKRA_CALLBACK * JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
+typedef _Ret_maybenull_ JsValueRef(* JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
 #endif
 
 typedef struct JsNativeFunctionWrapperHolder
@@ -3572,7 +3572,7 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<ULONG>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
+            /* ichLimHost          */ static_cast<uint32_t>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
             /* ulCharOffset        */ 0,
             /* mod                 */ kmodGlobal,
             /* grfsi               */ 0
@@ -3791,7 +3791,7 @@ JsErrorCode GetScriptBufferDetails(
 }
 
 JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
-    LoadScriptFlag loadScriptFlag, BYTE *functionTable, int functionTableSize,
+    LoadScriptFlag loadScriptFlag, uint8_t *functionTable, int functionTableSize,
     unsigned char *buffer, unsigned int *bufferSize, JsValueRef scriptSource)
 {
     Js::JavascriptFunction *function;
@@ -3823,7 +3823,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<ULONG>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
+            /* ichLimHost          */ static_cast<uint32_t>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
             /* ulCharOffset        */ 0,
             /* mod                 */ kmodGlobal,
             /* grfsi               */ 0
@@ -3875,19 +3875,19 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         }
 
         LPCUTF8 utf8Code = sourceInfo->GetSource(_u("JsSerializeScript"));
-        DWORD dwFlags = 0;
+        uint32_t dwFlags = 0;
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         dwFlags = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary() ? GENERATE_BYTE_CODE_BUFFER_LIBRARY : 0;
 #endif
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
-        // We cast buffer size to DWORD* because on Windows, DWORD = unsigned long = unsigned int
+        // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
-        // However, the PAL defines DWORD for us on linux as unsigned int so the cast is safe here.
+        // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
         HRESULT hr = Js::ByteCodeSerializer::SerializeToBuffer(scriptContext,
-            tempAllocator, static_cast<DWORD>(cSourceCodeLength), utf8Code,
+            tempAllocator, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
             functionBody, functionBody->GetHostSrcInfo(), &buffer,
-            (DWORD*) bufferSize, dwFlags);
+            (uint32_t*) bufferSize, dwFlags);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         if (SUCCEEDED(hr))
@@ -3915,7 +3915,7 @@ JsErrorCode RunSerializedScriptCore(
     JsSourceContext scriptLoadSourceContext, // only used by scriptLoadCallback
     unsigned char *buffer, Js::ArrayBuffer* bufferVal,
     JsSourceContext sourceContext, const WCHAR *sourceUrl,
-    DWORD bgParseCookie,
+    uint32_t bgParseCookie,
     bool parseOnly, bool useParserStateCache, JsValueRef *result,
     uint sourceIndex)
 {
@@ -4057,7 +4057,7 @@ JsErrorCode RunSerializedScriptCore(
     });
 }
 
-static void CHAKRA_CALLBACK DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
+static void DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
 {
     // Do nothing
 }
@@ -5192,7 +5192,7 @@ CHAKRA_API JsSerializeParserStateCore(
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<ULONG>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
+            /* ichLimHost          */ static_cast<uint32_t>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
             /* ulCharOffset        */ 0,
             /* mod                 */ kmodGlobal,
             /* grfsi               */ 0
@@ -5202,11 +5202,11 @@ CHAKRA_API JsSerializeParserStateCore(
         loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_CreateParserState);
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("ByteCodeSerializer"));
-        // We cast buffer size to DWORD* because on Windows, DWORD = unsigned long = unsigned int
+        // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
         // On 64-bit clang on linux, this is not true, unsigned long is larger than unsigned int
-        // However, the PAL defines DWORD for us on linux as unsigned int so the cast is safe here.
+        // However, the PAL defines uint32_t for us on linux as unsigned int so the cast is safe here.
         HRESULT hr = scriptContext->SerializeParserState(script, cb, &si, &se, &sourceInfo,
-            Js::Constants::GlobalCode, loadScriptFlag, &buffer, (DWORD*)bufferSize, tempAllocator, &function, nullptr);
+            Js::Constants::GlobalCode, loadScriptFlag, &buffer, (uint32_t*)bufferSize, tempAllocator, &function, nullptr);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         if (function == nullptr)
@@ -5283,7 +5283,7 @@ CHAKRA_API JsSerializeParserState(
     return errorCode;
 }
 
-static bool CHAKRA_CALLBACK DummyScriptLoadSourceCallbackForRunScriptWithParserState(
+static bool DummyScriptLoadSourceCallbackForRunScriptWithParserState(
     JsSourceContext sourceContext,
     _Out_ JsValueRef *value,
     _Out_ JsParseScriptAttributes *parseAttributes)
@@ -5294,7 +5294,7 @@ static bool CHAKRA_CALLBACK DummyScriptLoadSourceCallbackForRunScriptWithParserS
 }
 
 CHAKRA_API RunScriptWithParserStateCore(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,
@@ -5340,7 +5340,7 @@ CHAKRA_API RunScriptWithParserStateCore(
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<ULONG>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
+            /* ichLimHost          */ static_cast<uint32_t>(cb / chsize), // OK to truncate since this is used to limit sourceText in debugDocument/compilation errors.
             /* ulCharOffset        */ 0,
             /* mod                 */ kmodGlobal,
             /* grfsi               */ 0
@@ -5354,7 +5354,7 @@ CHAKRA_API RunScriptWithParserStateCore(
             return JsErrorInvalidArgument;
         }
 
-        ULONG grfscr = scriptContext->GetParseFlags(loadScriptFlag, utf8SourceInfo, sourceContextInfo);
+        uint32_t grfscr = scriptContext->GetParseFlags(loadScriptFlag, utf8SourceInfo, sourceContextInfo);
         utf8SourceInfo->SetParseFlags(grfscr);
 
         if ((loadScriptFlag & LoadScriptFlag_Utf8Source) != LoadScriptFlag_Utf8Source)
@@ -5438,7 +5438,7 @@ CHAKRA_API JsDeserializeParserState(
 
 CHAKRA_API
 JsExecuteBackgroundParse_Experimental(
-    _In_ DWORD dwBgParseCookie,
+    _In_ uint32_t dwBgParseCookie,
     _In_ JsValueRef script,
     _In_ JsSourceContext sourceContext,
     _In_ WCHAR *url,

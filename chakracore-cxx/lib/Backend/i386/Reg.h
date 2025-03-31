@@ -9,7 +9,7 @@
 
 # define RA_BYTEABLE        0x4
 
-enum RegNum : BYTE {
+enum RegNum : uint8_t {
 #define REGDAT(Name, Listing,    Encode,    Type,    BitVec)  Reg ## Name,
 #include "RegList.h"
 #undef REGDAT

@@ -63,12 +63,11 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 RtlMoveMemory(
-          IN PVOID Destination,
-          IN CONST VOID *Source,
-          IN SIZE_T Length)
+           void * Destination,
+           const void *Source,
+           SIZE_T Length)
 {
     PERF_ENTRY(RtlMoveMemory);
     ENTRY("RtlMoveMemory(Destination:%p, Source:%p, Length:%d)\n",
@@ -86,10 +85,9 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 RtlZeroMemory(
-    PVOID Destination,
+    void * Destination,
     SIZE_T Length
 )
 {
@@ -109,11 +107,10 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 HeapCreate(
-	       IN DWORD flOptions,
-	       IN SIZE_T dwInitialSize,
-	       IN SIZE_T dwMaximumSize)
+	        uint32_t flOptions,
+	        SIZE_T dwInitialSize,
+	        SIZE_T dwMaximumSize)
 {
     HANDLE ret = INVALID_HANDLE_VALUE;
     PERF_ENTRY(HeapCreate);
@@ -164,9 +161,8 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetProcessHeap(
-	       VOID)
+	       void)
 {
     HANDLE ret;
 #ifdef DEBUG
@@ -209,14 +205,13 @@ Abstract
 
 See MSDN doc.
 --*/
-LPVOID
-PALAPI
+void *
 HeapAlloc(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN SIZE_T numberOfBytes)
+     HANDLE hHeap,
+     uint32_t dwFlags,
+     SIZE_T numberOfBytes)
 {
-    BYTE *pMem;
+    uint8_t *pMem;
 
     PERF_ENTRY(HeapAlloc);
     ENTRY("HeapAlloc (hHeap=%p, dwFlags=%#x, numberOfBytes=%u)\n",
@@ -247,10 +242,10 @@ HeapAlloc(
 #ifdef __APPLE__
     // This is patterned off of InternalMalloc in malloc.cpp.
     {
-        pMem = (BYTE *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
+        pMem = (uint8_t *)malloc_zone_malloc((malloc_zone_t *)hHeap, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (BYTE *) PAL_malloc(numberOfBytes);
+    pMem = (uint8_t *) PAL_malloc(numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)
@@ -284,11 +279,10 @@ Abstract
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 HeapFree(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN LPVOID lpMem)
+     HANDLE hHeap,
+     uint32_t dwFlags,
+     void * lpMem)
 {
     BOOL bRetVal = FALSE;
 
@@ -346,15 +340,14 @@ Abstract
 
 See MSDN doc.
 --*/
-LPVOID
-PALAPI
+void *
 HeapReAlloc(
-    IN HANDLE hHeap,
-    IN DWORD dwFlags,
-    IN LPVOID lpmem,
-    IN SIZE_T numberOfBytes)
+     HANDLE hHeap,
+     uint32_t dwFlags,
+     void * lpmem,
+     SIZE_T numberOfBytes)
 {
-    BYTE *pMem = NULL;
+    uint8_t *pMem = NULL;
 
     PERF_ENTRY(HeapReAlloc);
     ENTRY("HeapReAlloc (hHeap=%p, dwFlags=%#x, lpmem=%p, numberOfBytes=%u)\n",
@@ -396,10 +389,10 @@ HeapReAlloc(
 #ifdef __APPLE__
     // This is patterned off of InternalRealloc in malloc.cpp.
     {
-        pMem = (BYTE *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
+        pMem = (uint8_t *) malloc_zone_realloc((malloc_zone_t *)hHeap, lpmem, numberOfBytes);
     }
 #else // __APPLE__
-    pMem = (BYTE *) PAL_realloc(lpmem, numberOfBytes);
+    pMem = (uint8_t *) PAL_realloc(lpmem, numberOfBytes);
 #endif // __APPLE__ else
 
     if (pMem == NULL)
@@ -416,12 +409,11 @@ done:
 }
 
 BOOL
-PALAPI
 HeapSetInformation(
-        IN OPTIONAL HANDLE HeapHandle,
-        IN HEAP_INFORMATION_CLASS HeapInformationClass,
-        IN PVOID HeapInformation,
-        IN SIZE_T HeapInformationLength)
+          HANDLE HeapHandle,
+         HEAP_INFORMATION_CLASS HeapInformationClass,
+         void * HeapInformation,
+         SIZE_T HeapInformationLength)
 {
     return TRUE;
 }

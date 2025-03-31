@@ -10,18 +10,18 @@ namespace Js
     DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(PropertyRecord);
 
     // Constructor for runtime-constructed PropertyRecords
-    PropertyRecord::PropertyRecord(DWORD byteCount, bool isNumeric, uint hash, bool isSymbol)
+    PropertyRecord::PropertyRecord(uint32_t byteCount, bool isNumeric, uint hash, bool isSymbol)
         : pid(Js::Constants::NoProperty), hash(hash), isNumeric(isNumeric), byteCount(byteCount), isBound(false), isSymbol(isSymbol)
     {
     }
 
     // Constructor for built-in PropertyRecords
-    PropertyRecord::PropertyRecord(PropertyId pid, uint hash, bool isNumeric, DWORD byteCount, bool isSymbol)
+    PropertyRecord::PropertyRecord(PropertyId pid, uint hash, bool isNumeric, uint32_t byteCount, bool isSymbol)
         : pid(pid), hash(hash), isNumeric(isNumeric), byteCount(byteCount), isBound(true), isSymbol(isSymbol)
     {
     }
 
-    PropertyRecord::PropertyRecord(const WCHAR* buffer, const int length, DWORD bytelength, bool isSymbol)
+    PropertyRecord::PropertyRecord(const WCHAR* buffer, const int length, uint32_t bytelength, bool isSymbol)
         : pid(Js::Constants::NoProperty), isSymbol(isSymbol), byteCount(bytelength)
     {
         Assert(length >= 0 && buffer != nullptr);

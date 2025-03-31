@@ -31,8 +31,8 @@ namespace Js
         int jscriptBlockRegistrationCount;
         bool isDebuggerAttaching;
         DebuggingFlags debuggingFlags;
-        UINT nextBreakPointId;
-        DWORD localsDisplayFlags;
+        uint32_t nextBreakPointId;
+        uint32_t localsDisplayFlags;
         void * dispatchHaltFrameAddress;
     public:
         StepController stepController;
@@ -91,7 +91,7 @@ namespace Js
             return -1;
         }
 
-        UINT GetNextBreakpointId()
+        uint32_t GetNextBreakpointId()
         {
             return ++nextBreakPointId;
         }
@@ -109,7 +109,7 @@ namespace Js
 
         bool IsLocalsDisplayFlagsSet(LocalsDisplayFlags localsDisplayFlags)
         {
-            return (this->localsDisplayFlags & localsDisplayFlags) == (DWORD)localsDisplayFlags;
+            return (this->localsDisplayFlags & localsDisplayFlags) == (uint32_t)localsDisplayFlags;
         }
     };
 }

@@ -580,31 +580,31 @@ void qsort_s(WriteBarrierPtr<T>* _Base, size_t _NumOfElements, size_t _SizeOfEle
 
 // Disallow memcpy, memmove of WriteBarrierPtr
 template <typename T>
-void *  __cdecl memmove(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
+void *  memmove(_Out_writes_bytes_all_opt_(_Size) WriteBarrierPtr<T> * _Dst, _In_reads_bytes_opt_(_Size) const void * _Src, _In_ size_t _Size)
 {
     CompileAssert(false);
 }
 
 template <typename T>
-void* __cdecl memcpy(WriteBarrierPtr<T> *dst, const void *src, size_t count)
+void* memcpy(WriteBarrierPtr<T> *dst, const void *src, size_t count)
 {
     CompileAssert(false);
 }
 
 template <typename T>
-errno_t __cdecl memcpy_s(WriteBarrierPtr<T> *dst, size_t dstSize, const void *src, size_t srcSize)
+errno_t memcpy_s(WriteBarrierPtr<T> *dst, size_t dstSize, const void *src, size_t srcSize)
 {
     static_assert(false, "Use CopyArray instead");
 }
 
 template <typename T>
-void __stdcall js_memcpy_s(__bcount(sizeInBytes) WriteBarrierPtr<T> *dst, size_t sizeInBytes, __bcount(count) const void *src, size_t count)
+void js_memcpy_s(__bcount(sizeInBytes) WriteBarrierPtr<T> *dst, size_t sizeInBytes, __bcount(count) const void *src, size_t count)
 {
     static_assert(false, "Use CopyArray instead");
 }
 
 template <typename T>
-void *  __cdecl memset(_Out_writes_bytes_all_(_Size) WriteBarrierPtr<T> * _Dst, _In_ int _Val, _In_ size_t _Size)
+void *  memset(_Out_writes_bytes_all_(_Size) WriteBarrierPtr<T> * _Dst, _In_ int _Val, _In_ size_t _Size)
 {
     CompileAssert(false);
 }
@@ -630,11 +630,11 @@ public:
 
     TaggedPointer() : ptr(NULL) {};
 private:
-    T * GetPointerValue() const { return reinterpret_cast<T*>(reinterpret_cast<ULONG_PTR>(ptr) & ~3); }
+    T * GetPointerValue() const { return reinterpret_cast<T*>(reinterpret_cast<size_t>(ptr) & ~3); }
     T * SetPointerValue(T* inPtr)
     {
-        AssertMsg((reinterpret_cast<ULONG_PTR>(inPtr) & 3) == 0, "Invalid pointer value, 2 least significant bits must be zero");
-        ptr = reinterpret_cast<T*>((reinterpret_cast<ULONG_PTR>(inPtr) | 3));
+        AssertMsg((reinterpret_cast<size_t>(inPtr) & 3) == 0, "Invalid pointer value, 2 least significant bits must be zero");
+        ptr = reinterpret_cast<T*>((reinterpret_cast<size_t>(inPtr) | 3));
         return ptr;
     }
 

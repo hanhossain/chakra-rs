@@ -14,7 +14,7 @@
 ****/
 
 _FUNC_PROLOGUE
-_CHAR * __cdecl _FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
+_CHAR * _FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
 {
     _CHAR *token;
     const _CHAR *ctl;

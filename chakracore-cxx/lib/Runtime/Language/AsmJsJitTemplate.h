@@ -37,21 +37,21 @@ namespace Js
 #define CreateTemplate(name,...) \
         struct name\
         {\
-            static int ApplyTemplate( TemplateContext context, BYTE*& buffer,##__VA_ARGS__ );\
+            static int ApplyTemplate( TemplateContext context, uint8_t*& buffer,##__VA_ARGS__ );\
         }
 #else
 #define CreateTemplate(name,...)  \
         struct name\
         {\
-            static int ApplyTemplate( TemplateContext context, BYTE*& buffer,##__VA_ARGS__ ) { __debugbreak(); return 0; }\
+            static int ApplyTemplate( TemplateContext context, uint8_t*& buffer,##__VA_ARGS__ ) { __debugbreak(); return 0; }\
         }
 #endif
 
         CreateTemplate( FunctionEntry );
         CreateTemplate( FunctionExit );
-        CreateTemplate( Br, BYTE** relocAddr, bool isBackEdge);
-        CreateTemplate( BrTrue, int offset, BYTE** relocAddr, bool isBackEdge);
-        CreateTemplate( BrEq, int leftOffset, int rightOffset, BYTE** relocAddr, bool isBackEdge, bool isSrc2Const = false);
+        CreateTemplate( Br, uint8_t** relocAddr, bool isBackEdge);
+        CreateTemplate( BrTrue, int offset, uint8_t** relocAddr, bool isBackEdge);
+        CreateTemplate( BrEq, int leftOffset, int rightOffset, uint8_t** relocAddr, bool isBackEdge, bool isSrc2Const = false);
         CreateTemplate( Label );
         CreateTemplate( LdUndef, int targetOffset );
         CreateTemplate( LdSlot, int targetOffset, int arrOffset, int slotIndex );

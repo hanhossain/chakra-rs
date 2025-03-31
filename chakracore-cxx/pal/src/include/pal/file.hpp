@@ -41,7 +41,7 @@ namespace CorUnix
         IFileLockController *pLockController;
 
         int  unix_fd;
-        DWORD dwDesiredAccess; /* Unix assumes files are always opened for reading.
+        uint32_t dwDesiredAccess; /* Unix assumes files are always opened for reading.
                                   In Windows we can open a file for writing only */
         int  open_flags;       /* stores Unix file creation flags */
         BOOL open_flags_deviceaccessonly;
@@ -53,11 +53,11 @@ namespace CorUnix
     InternalCreateFile(
         CPalThread *pThread,
         LPCSTR lpFileName,
-        DWORD dwDesiredAccess,
-        DWORD dwShareMode,
+        uint32_t dwDesiredAccess,
+        uint32_t dwShareMode,
         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        DWORD dwCreationDisposition,
-        DWORD dwFlagsAndAttributes,
+        uint32_t dwCreationDisposition,
+        uint32_t dwFlagsAndAttributes,
         HANDLE hTemplateFile,
         HANDLE *pFileHandle
         );
@@ -66,9 +66,9 @@ namespace CorUnix
     InternalWriteFile(
         CPalThread *pThread,
         HANDLE hFile,
-        LPCVOID lpBuffer,
-        DWORD nNumberOfBytesToWrite,
-        LPDWORD lpNumberOfBytesWritten,
+        const void * lpBuffer,
+        uint32_t nNumberOfBytesToWrite,
+        uint32_t * lpNumberOfBytesWritten,
         LPOVERLAPPED lpOverlapped
         );
 
@@ -76,9 +76,9 @@ namespace CorUnix
     InternalReadFile(
         CPalThread *pThread,
         HANDLE hFile,
-        LPVOID lpBuffer,
-        DWORD nNumberOfBytesToRead,
-        LPDWORD lpNumberOfBytesRead,
+        void * lpBuffer,
+        uint32_t nNumberOfBytesToRead,
+        uint32_t * lpNumberOfBytesRead,
         LPOVERLAPPED lpOverlapped
         );
 
@@ -92,8 +92,8 @@ namespace CorUnix
     InternalGetFileSize(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD *pdwFileSizeLow,
-        DWORD *pdwFileSizeHigh
+        uint32_t *pdwFileSizeLow,
+        uint32_t *pdwFileSizeHigh
         );
 
     PAL_ERROR
@@ -106,7 +106,7 @@ namespace CorUnix
     InternalGetFileType(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD *pdwFileType
+        uint32_t *pdwFileType
         );
 
     PAL_ERROR
@@ -115,55 +115,55 @@ namespace CorUnix
         HANDLE *phReadPipe,
         HANDLE *phWritePipe,
         LPSECURITY_ATTRIBUTES lpPipeAttributes,
-        DWORD nSize
+        uint32_t nSize
         );
 
     PAL_ERROR
     InternalLockFile(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD dwFileOffsetLow,
-        DWORD dwFileOffsetHigh,
-        DWORD nNumberOfBytesToLockLow,
-        DWORD nNumberOfBytesToLockHigh
+        uint32_t dwFileOffsetLow,
+        uint32_t dwFileOffsetHigh,
+        uint32_t nNumberOfBytesToLockLow,
+        uint32_t nNumberOfBytesToLockHigh
         );
 
     PAL_ERROR
     InternalUnlockFile(
         CPalThread *pThread,
         HANDLE hFile,
-        DWORD dwFileOffsetLow,
-        DWORD dwFileOffsetHigh,
-        DWORD nNumberOfBytesToUnlockLow,
-        DWORD nNumberOfBytesToUnlockHigh
+        uint32_t dwFileOffsetLow,
+        uint32_t dwFileOffsetHigh,
+        uint32_t nNumberOfBytesToUnlockLow,
+        uint32_t nNumberOfBytesToUnlockHigh
         );
 
     PAL_ERROR
     InternalSetFilePointer(
         CPalThread *pThread,
         HANDLE hFile,
-        LONG lDistanceToMove,
-        PLONG lpDistanceToMoveHigh,
-        DWORD dwMoveMethod,
-        PLONG lpNewFilePointerLow
+        int32_t lDistanceToMove,
+        int32_t * lpDistanceToMoveHigh,
+        uint32_t dwMoveMethod,
+        int32_t * lpNewFilePointerLow
         );
 
     PAL_ERROR
     InternalSetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime
+         HANDLE hFile,
+         const FILETIME *lpCreationTime,
+         const FILETIME *lpLastAccessTime,
+         const FILETIME *lpLastWriteTime
         );
 
     PAL_ERROR
     InternalGetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime
+         HANDLE hFile,
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime
         );
 
     /*++
@@ -182,7 +182,7 @@ namespace CorUnix
     InternalCanonicalizeRealPath(
         LPCSTR lpUnixPath,
         LPSTR lpBuffer,
-        DWORD cch
+        uint32_t cch
         );
 
     /*++
@@ -216,7 +216,7 @@ namespace CorUnix
         size_t nSize,
         size_t nCount,
         FILE *f,
-        INT *pnErrorCode
+        int32_t *pnErrorCode
         );
 
     /*++
@@ -308,8 +308,8 @@ characters written to the buffer. If the buffer is not large enough,
 return the required size of the buffer including the NULL character. If
 there is no directory part in the path, return 0.
 --*/
-DWORD FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
-                     DWORD  nBufferLength,
+uint32_t FILEGetDirectoryFromFullPathA( LPCSTR lpFullPath,
+                     uint32_t  nBufferLength,
                      LPSTR  lpBuffer );
 
 /*++
@@ -326,7 +326,7 @@ Function:
   
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno( void );
 
 /*++
 FILEInitStdHandles
@@ -358,9 +358,9 @@ Returns the proper error code, based on the
 Windows behavoir.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode );
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode );
 
 }
 

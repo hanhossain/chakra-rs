@@ -4,15 +4,15 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-typedef BYTE ubyte;
+typedef uint8_t ubyte;
 typedef uint16 uhalf;
 typedef uint32 uword;
 CompileAssert(sizeof(ubyte) == 1);
 CompileAssert(sizeof(uhalf) == 2);
 CompileAssert(sizeof(uword) == 4);
 
-BYTE* EmitLEB128(BYTE* pc, unsigned value);
-BYTE* EmitLEB128(BYTE* pc, int value);
+uint8_t* EmitLEB128(uint8_t* pc, unsigned value);
+uint8_t* EmitLEB128(uint8_t* pc, int value);
 ubyte GetDwarfRegNum(ubyte regNum);
 
 template <class T>
@@ -25,7 +25,7 @@ public:
     LEB128Wrapper(T value): value(value)
     {}
 
-    BYTE* Write(BYTE* pc) const
+    uint8_t* Write(uint8_t* pc) const
     {
         return EmitLEB128(pc, value);
     }
@@ -44,12 +44,12 @@ class EhFrame
     class Writer
     {
     private:
-        BYTE* buffer;   // original buffer head
-        BYTE* cur;      // current output position
+        uint8_t* buffer;   // original buffer head
+        uint8_t* cur;      // current output position
         const size_t size;  // original size of buffer, for debug only
 
     public:
-        Writer(BYTE* buffer, size_t size) : buffer(buffer), cur(buffer), size(size)
+        Writer(uint8_t* buffer, size_t size) : buffer(buffer), cur(buffer), size(size)
         {}
 
         // Write a value, and advance cur position
@@ -78,7 +78,7 @@ class EhFrame
         }
 
         // Get original buffer head
-        BYTE* Buffer() const
+        uint8_t* Buffer() const
         {
             return buffer;
         }
@@ -180,7 +180,7 @@ private:
     FDE fde;
 
 public:
-    EhFrame(BYTE* buffer, size_t size);
+    EhFrame(uint8_t* buffer, size_t size);
 
     Writer* GetWriter()
     {
@@ -194,7 +194,7 @@ public:
 
     void End();
 
-    BYTE* Buffer() const
+    uint8_t* Buffer() const
     {
         return writer.Buffer();
     }

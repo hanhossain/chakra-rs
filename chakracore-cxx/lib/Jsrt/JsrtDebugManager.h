@@ -41,11 +41,11 @@ public:
     Js::JavascriptArray* GetStackFrames(Js::ScriptContext* scriptContext);
     bool TryGetFrameObjectFromFrameIndex(Js::ScriptContext *scriptContext, uint frameIndex, JsrtDebuggerStackFrame ** debuggerStackFrame);
 
-    Js::DynamicObject* SetBreakPoint(Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, UINT lineNumber, UINT columnNumber);
+    Js::DynamicObject* SetBreakPoint(Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber);
     void GetBreakpoints(Js::JavascriptArray** bpsArray, Js::ScriptContext* scriptContext);
 
 #if ENABLE_TTD
-    Js::BreakpointProbe* SetBreakpointHelper_TTD(int64 desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, UINT lineNumber, UINT columnNumber, BOOL* isNewBP);
+    Js::BreakpointProbe* SetBreakpointHelper_TTD(int64 desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber, BOOL* isNewBP);
 #endif
 
     JsrtDebuggerObjectsManager* GetDebuggerObjectsManager();
@@ -57,7 +57,7 @@ public:
     void ClearDebugDocument(Js::ScriptContext* scriptContext);
     void ClearBreakpointDebugDocumentDictionary();
 
-    bool RemoveBreakpoint(UINT breakpointId);
+    bool RemoveBreakpoint(uint32_t breakpointId);
 
     void SetBreakOnException(JsDiagBreakOnExceptionAttributes exceptionAttributes);
     JsDiagBreakOnExceptionAttributes GetBreakOnException();

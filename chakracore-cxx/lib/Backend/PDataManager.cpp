@@ -11,8 +11,8 @@
 // ----------------------------------------------------------------------------
 
 void PDataManager::RegisterPdata(RUNTIME_FUNCTION* pdataStart,
-    _In_ const ULONG_PTR functionStart, _In_ const ULONG_PTR functionEnd,
-    _Out_ PVOID* pdataTable, ULONG entryCount, ULONG maxEntryCount)
+    _In_ const size_t functionStart, _In_ const size_t functionEnd,
+    _Out_ void ** pdataTable, uint32_t entryCount, uint32_t maxEntryCount)
 {
     __REGISTER_FRAME(pdataStart);
     *pdataTable = pdataStart;

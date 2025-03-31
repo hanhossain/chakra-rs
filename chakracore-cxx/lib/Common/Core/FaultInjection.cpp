@@ -110,19 +110,19 @@ namespace Js
 #if _M_X64
     // for amd64 jit frame, RtlCaptureStackBackTrace stops walking after hitting jit frame on amd64
     _NOINLINE
-        WORD StackTrace64(_In_ DWORD FramesToSkip,
-        _In_ DWORD FramesToCapture,
-        _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
-        _Out_opt_ PDWORD BackTraceHash,
+        uint16_t StackTrace64(_In_ uint32_t FramesToSkip,
+        _In_ uint32_t FramesToCapture,
+        _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
+        _Out_opt_ uint32_t * BackTraceHash,
         _In_opt_ const CONTEXT* pCtx = nullptr)
     {
         CONTEXT                         Context;
         UNWIND_HISTORY_TABLE            UnwindHistoryTable;
         PRUNTIME_FUNCTION               RuntimeFunction;
-        PVOID                           HandlerData;
+        void *                           HandlerData;
         ULONG64                         EstablisherFrame;
         ULONG64                         ImageBase;
-        ULONG                           Frame = 0;
+        uint32_t                           Frame = 0;
 
         if (BackTraceHash)
         {
@@ -168,7 +168,7 @@ namespace Js
                 break;
             }
 
-            BackTrace[Frame] = (PVOID)Context.Rip;
+            BackTrace[Frame] = (void *)Context.Rip;
             if (BackTraceHash)
             {
                 *BackTraceHash += (Context.Rip & 0xffffffff);
@@ -176,7 +176,7 @@ namespace Js
             Frame++;
         }
 
-        return (WORD)Frame;
+        return (uint16_t)Frame;
     }
 
 #define CaptureStack(FramesToSkip, FramesToCapture, BackTrace, BackTraceHash) \
@@ -186,17 +186,17 @@ namespace Js
 #pragma warning( push )
 #pragma warning( disable : 4748 )
 #pragma warning( disable : 4995 )
-    WORD StackTrace86(
-        _In_ DWORD FramesToSkip,
-        _In_ DWORD FramesToCapture,
-        _Out_writes_to_(FramesToCapture, return) PVOID * BackTrace,
-        _Inout_opt_ PDWORD BackTraceHash,
-        __in_opt CONST PCONTEXT InitialContext = NULL
+    uint16_t StackTrace86(
+        _In_ uint32_t FramesToSkip,
+        _In_ uint32_t FramesToCapture,
+        _Out_writes_to_(FramesToCapture, return) void * * BackTrace,
+        _Inout_opt_ uint32_t * BackTraceHash,
+        __in_opt const PCONTEXT InitialContext = NULL
         )
     {
         _Analysis_assume_(FramesToSkip >= 0);
         _Analysis_assume_(FramesToCapture >= 0);
-        DWORD MachineType;
+        uint32_t MachineType;
         CONTEXT Context;
         STACKFRAME64 StackFrame;
 
@@ -228,7 +228,7 @@ namespace Js
         StackFrame.AddrStack.Offset = Context.Esp;
         StackFrame.AddrStack.Mode = AddrModeFlat;
 
-        WORD FrameCount = 0;
+        uint16_t FrameCount = 0;
         while (FrameCount < FramesToSkip + FramesToCapture)
         {
             if (!pfnStackWalk64(MachineType, GetCurrentProcess(), GetCurrentThread(), &StackFrame,
@@ -243,7 +243,7 @@ namespace Js
                 {
 #pragma warning(suppress: 22102)
 #pragma warning(suppress: 26014)
-                    BackTrace[FrameCount - FramesToSkip] = (PVOID)StackFrame.AddrPC.Offset;
+                    BackTrace[FrameCount - FramesToSkip] = (void *)StackFrame.AddrPC.Offset;
                     if (BackTraceHash)
                     {
                         *BackTraceHash += (StackFrame.AddrPC.Offset & 0xffffffff);
@@ -259,7 +259,7 @@ namespace Js
 
         if (FrameCount > FramesToSkip)
         {
-            return (WORD)(FrameCount - FramesToSkip);
+            return (uint16_t)(FrameCount - FramesToSkip);
         }
         else
         {
@@ -346,8 +346,8 @@ namespace Js
     FaultInjection FaultInjection::Global;
     static CriticalSection cs_Sym; // for Sym* method is not thread safe
     const auto& globalFlags = Js::Configuration::Global.flags;
-    PVOID FaultInjection::vectoredExceptionHandler = nullptr;
-    DWORD FaultInjection::exceptionFilterRemovalLastError = 0;
+    void * FaultInjection::vectoredExceptionHandler = nullptr;
+    uint32_t FaultInjection::exceptionFilterRemovalLastError = 0;
     THREAD_LOCAL int(*Js::FaultInjection::pfnHandleAV)(int, PEXCEPTION_POINTERS) = nullptr;
     static SymbolInfoPackage sip;
     static ModuleInfo mi;
@@ -416,7 +416,7 @@ namespace Js
         FaultInjectionCookie = 0;
         baselineFrameCount = 0;
         stackHashOfAllInjectionPointsSize = 256;
-        stackHashOfAllInjectionPoints = (ULONG_PTR*)malloc(stackHashOfAllInjectionPointsSize*sizeof(ULONG_PTR));
+        stackHashOfAllInjectionPoints = (size_t*)malloc(stackHashOfAllInjectionPointsSize*sizeof(size_t));
         faultInjectionTypes = nullptr;
         symInitialized = false;
 
@@ -746,7 +746,7 @@ namespace Js
 
                 // enum symbols, if succeed we compare with address when doing stack matching
                 pfnSymEnumSymbolsW(GetCurrentProcess(), 0, baselineStack[i],
-                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ ULONG SymbolSize, _In_opt_  PVOID UserContext)->BOOL
+                    [](_In_ PSYMBOL_INFOW pSymInfo, _In_ uint32_t SymbolSize, _In_opt_  void * UserContext)->BOOL
                 {
                     Assert(UserContext != nullptr); // did passed in the user context
                     if (pSymInfo->Size > 0)
@@ -880,11 +880,11 @@ namespace Js
             }
             //C28725:    Use Watson instead of this SetUnhandledExceptionFilter.
 #pragma prefast(suppress: 28725)
-            SetUnhandledExceptionFilter([](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->LONG
+            SetUnhandledExceptionFilter([](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->int32_t
             {
                 return FaultInjectionExceptionFilter(ExceptionInfo);
             });
-            vectoredExceptionHandler = AddVectoredExceptionHandler(0, [](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->LONG
+            vectoredExceptionHandler = AddVectoredExceptionHandler(0, [](_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)->int32_t
             {
                 switch (ExceptionInfo->ExceptionRecord->ExceptionCode)
                 {
@@ -929,7 +929,7 @@ namespace Js
     }
 
     // Calculate stack hash by adding the addresses (only jscript9 frames)
-    UINT_PTR FaultInjection::CalculateStackHash(void* frames[], WORD frameCount, WORD framesToSkip)
+    UINT_PTR FaultInjection::CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip)
     {
         UINT_PTR hash = 0;
         for (int i = framesToSkip; i < frameCount; i++)
@@ -1077,8 +1077,8 @@ namespace Js
             if (countOfInjectionPoints > stackHashOfAllInjectionPointsSize)
             {
                 stackHashOfAllInjectionPointsSize += 1024;
-                auto extended = (ULONG_PTR*)realloc(stackHashOfAllInjectionPoints,
-                    stackHashOfAllInjectionPointsSize*sizeof(ULONG_PTR));
+                auto extended = (size_t*)realloc(stackHashOfAllInjectionPoints,
+                    stackHashOfAllInjectionPointsSize*sizeof(size_t));
                 AssertMsg(extended, "OOM in FaultInjection Infra");
                 stackHashOfAllInjectionPoints = extended;
             }
@@ -1133,7 +1133,7 @@ namespace Js
         // this can be used for additional stack matching repro
         HANDLE hProcess = GetCurrentProcess();
         DWORD64 dwSymDisplacement = 0;
-        auto printFrame = [&](LPVOID addr)
+        auto printFrame = [&](void * addr)
         {
             sip.Init();
             if (pfnSymFromAddrW(hProcess, (DWORD64)addr, &dwSymDisplacement, &sip.si))
@@ -1148,14 +1148,14 @@ namespace Js
             }
         };
 
-        LPVOID backTrace[MAX_FRAME_COUNT] = { 0 };
+        void * backTrace[MAX_FRAME_COUNT] = { 0 };
         DWORD64 displacements[MAX_FRAME_COUNT] = { 0 };
 #if _M_IX86
-        WORD nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
+        uint16_t nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
 #elif _M_X64
-        WORD nStackCount = StackTrace64(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
+        uint16_t nStackCount = StackTrace64(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
 #else
-        WORD nStackCount = CaptureStack(0, MAX_FRAME_COUNT, backTrace, 0);
+        uint16_t nStackCount = CaptureStack(0, MAX_FRAME_COUNT, backTrace, 0);
 #endif
 
         // Print current crash stacks
@@ -1167,7 +1167,7 @@ namespace Js
             displacements[i] = dwSymDisplacement;
         }
 
-        LPVOID internalExceptionAddr = nullptr;
+        void * internalExceptionAddr = nullptr;
         for (int i = 0; i < nStackCount - 1 && internalExceptionAddr == nullptr; i++)
         {
             if (backTrace[i] == (char*)Js::Throw::FatalInternalError + displacements[i])
@@ -1404,7 +1404,7 @@ namespace Js
                 MINIDUMP_USER_STREAM UserStreams[1];
                 UserStreams[0].Type = CommentStreamW;
                 UserStreams[0].Buffer = dbgTip;
-                UserStreams[0].BufferSize = (ULONG)wcslen(dbgTip)*sizeof(char16);
+                UserStreams[0].BufferSize = (uint32_t)wcslen(dbgTip)*sizeof(char16);
                 MINIDUMP_USER_STREAM_INFORMATION musi;
                 musi.UserStreamCount = 1;
                 musi.UserStreamArray = UserStreams;
@@ -1428,7 +1428,7 @@ namespace Js
     }
 
     static volatile bool inExceptionHandler = false;
-    LONG WINAPI FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
+    int32_t WINAPI FaultInjection::FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo)
     {
         if (inExceptionHandler)
         {

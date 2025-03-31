@@ -96,7 +96,7 @@ static void* GetStackBase();
 
 template _ALWAYSINLINE char * Recycler::AllocWithAttributesInlined<NoBit, false>(size_t size);
 template _ALWAYSINLINE char* Recycler::RealAlloc<NoBit, false>(HeapInfo* heap, size_t size);
-template _ALWAYSINLINE _Ret_notnull_ void * __cdecl operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
+template _ALWAYSINLINE _Ret_notnull_ void * operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
 
 Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllocator * pageAllocator, void (*outOfMemoryFunc)(), Js::ConfigFlagsTable& configFlagsTable, RecyclerTelemetryHostInterface* hostInterface) :
     collectionStateChangedObserver(this),
@@ -1508,8 +1508,8 @@ void Recycler::TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBl
 
 static void* GetStackBase()
 {
-    ULONG_PTR highLimit = 0;
-    ULONG_PTR lowLimit = 0;
+    size_t highLimit = 0;
+    size_t lowLimit = 0;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     return (void*) highLimit;
 }
@@ -1968,12 +1968,12 @@ Recycler::TryMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks)
 size_t
 Recycler::TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks)
 {
-    DWORD pageSize = AutoSystemInfo::PageSize;
+    uint32_t pageSize = AutoSystemInfo::PageSize;
     size_t scanRootBytes = 0;
     BigBlock *blockp = memoryBlocks;
 
     // Reset the write watch bit if we are scanning this in the background thread
-    DWORD const writeWatchFlags = this->IsConcurrentFindRootState()? WRITE_WATCH_FLAG_RESET : 0;
+    uint32_t const writeWatchFlags = this->IsConcurrentFindRootState()? WRITE_WATCH_FLAG_RESET : 0;
     while (blockp != NULL)
     {
         char * currentAddress = (char *)blockp->GetBytes();
@@ -1982,7 +1982,7 @@ Recycler::TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks)
         while (currentAddress < endAddress)
         {
             void * written;
-            ULONG_PTR count = 1;
+            size_t count = 1;
             if (::GetWriteWatch(writeWatchFlags, currentPageStart, AutoSystemInfo::PageSize, &written, &count, &pageSize) != 0 || count == 1)
             {
                 char * currentEnd = min(currentPageStart + pageSize, endAddress);
@@ -2382,7 +2382,7 @@ Recycler::PrepareSweep()
 #endif
 
 size_t
-Recycler::RescanMark(DWORD waitTime)
+Recycler::RescanMark(uint32_t waitTime)
 {
     bool const onLowMemory = this->NeedOOMRescan();
 
@@ -2452,7 +2452,7 @@ Recycler::RescanMark(DWORD waitTime)
 }
 
 size_t
-Recycler::FinishMark(DWORD waitTime)
+Recycler::FinishMark(uint32_t waitTime)
 {
     size_t scannedRootBytes = RescanMark(waitTime);
     Assert(waitTime != INFINITE || scannedRootBytes != Recycler::InvalidScanRootBytes);
@@ -4513,7 +4513,7 @@ Recycler::CollectOnConcurrentThread()
         return false;
     }
 
-    const DWORD waitTime = RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
+    const uint32_t waitTime = RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
     GCETW(GC_SYNCHRONOUSMARKWAIT_START, (this, waitTime));
     const BOOL waited = WaitForConcurrentThread(waitTime, RecyclerWaitReason::CollectOnConcurrentThread);
     GCETW(GC_SYNCHRONOUSMARKWAIT_STOP, (this, !waited));
@@ -4834,9 +4834,9 @@ bool Recycler::AbortConcurrent(bool restoreState)
 
     // Note, concurrentThread will be null if we have a threadService.
     Assert(concurrentThread != NULL || threadService->HasCallback());
-    DWORD handleCount = (concurrentThread == NULL ? 1 : 2);
+    uint32_t handleCount = (concurrentThread == NULL ? 1 : 2);
 
-    DWORD ret = WAIT_OBJECT_0;
+    uint32_t ret = WAIT_OBJECT_0;
     if (this->IsConcurrentState())
     {
         this->isAborting = true;
@@ -5004,7 +5004,7 @@ Recycler::FinalizeConcurrent(bool restoreState)
 
         SetThreadPriority(this->concurrentThread, THREAD_PRIORITY_NORMAL);
         // In case the thread already died, wait for that too
-        DWORD fRet = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
+        uint32_t fRet = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
         AssertOrFailFastMsg(fRet != WAIT_FAILED, "Wait for concurrent thread failed. Check handles passed to WaitForMultipleObjectsEx.");
     }
 
@@ -5126,7 +5126,7 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
                 HANDLE concurrentThreadWin32Handle = reinterpret_cast<HANDLE>(concurrentThread);
                 // Wait for recycler thread to initialize
                 HANDLE handle[2] = { this->concurrentWorkDoneEvent, concurrentThreadWin32Handle };
-                DWORD ret = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
+                uint32_t ret = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
                 if (ret == WAIT_OBJECT_0)
                 {
                     this->threadService = threadService;
@@ -5721,7 +5721,7 @@ uint64 DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
 }
 
 BOOL
-Recycler::WaitForConcurrentThread(DWORD waitTime, RecyclerWaitReason caller)
+Recycler::WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller)
 {
     Assert(this->IsConcurrentState() || this->collectionState == CollectionStateParallelMark);
 
@@ -5752,7 +5752,7 @@ Recycler::WaitForConcurrentThread(DWORD waitTime, RecyclerWaitReason caller)
     }
 #endif
 
-    DWORD ret = WaitForSingleObject(concurrentWorkDoneEvent, waitTime);
+    uint32_t ret = WaitForSingleObject(concurrentWorkDoneEvent, waitTime);
 
 #ifdef ENABLE_BASIC_TELEMETRY
     if (isBlockingMainThread)
@@ -5860,7 +5860,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
     collectionParam.priorityBoostConcurrentSweepOverride = priorityBoost;
 #endif
 
-    const DWORD waitTime = forceInThread? INFINITE : RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
+    const uint32_t waitTime = forceInThread? INFINITE : RecyclerHeuristic::FinishConcurrentCollectWaitTime(this->GetRecyclerFlagsTable());
     GCETW(GC_FINISHCONCURRENTWAIT_START, (this, waitTime));
     const BOOL waited = WaitForConcurrentThread(waitTime, RecyclerWaitReason::FinishConcurrentCollect);
     GCETW(GC_FINISHCONCURRENTWAIT_STOP, (this, !waited));
@@ -5897,7 +5897,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
 #endif
 
         const bool backgroundFinishMark = !forceInThread && concurrent && ((flags & CollectOverride_BackgroundFinishMark) != 0);
-        const DWORD finishMarkWaitTime = RecyclerHeuristic::BackgroundFinishMarkWaitTime(backgroundFinishMark, GetRecyclerFlagsTable());
+        const uint32_t finishMarkWaitTime = RecyclerHeuristic::BackgroundFinishMarkWaitTime(backgroundFinishMark, GetRecyclerFlagsTable());
         size_t rescanRootBytes = FinishMark(finishMarkWaitTime);
 
         if (rescanRootBytes == Recycler::InvalidScanRootBytes)
@@ -6077,9 +6077,9 @@ Recycler::ExceptFilter(LPEXCEPTION_POINTERS pEP)
 #endif
 
 unsigned int
-Recycler::StaticThreadProc(LPVOID lpParameter)
+Recycler::StaticThreadProc(void * lpParameter)
 {
-    DWORD ret = (DWORD)-1;
+    uint32_t ret = (uint32_t)-1;
 #if !DISABLE_SEH
     __try
     {
@@ -6322,7 +6322,7 @@ Recycler::DoBackgroundWork(bool forceForeground)
     collectionWrapper->WaitCollectionCallBack();
 }
 
-DWORD
+uint32_t
 Recycler::ThreadProc()
 {
     Assert(this->IsConcurrentEnabled());
@@ -6360,7 +6360,7 @@ Recycler::ThreadProc()
     this->backgroundProfilerPageAllocator.SetConcurrentThreadId(::GetCurrentThreadId());
 #endif
 #ifdef IDLE_DECOMMIT_ENABLED
-    DWORD handleCount = this->concurrentIdleDecommitEvent? 2 : 1;
+    uint32_t handleCount = this->concurrentIdleDecommitEvent? 2 : 1;
     HANDLE handles[2] = { this->concurrentWorkReadyEvent, this->concurrentIdleDecommitEvent };
 #endif
     do
@@ -6368,10 +6368,10 @@ Recycler::ThreadProc()
 #ifdef IDLE_DECOMMIT_ENABLED
         needIdleDecommitSignal = IdleDecommitSignal_None;
 
-        DWORD waitTime = autoHeap.IdleDecommit();
+        uint32_t waitTime = autoHeap.IdleDecommit();
         if (waitTime == INFINITE)
         {
-            DWORD ret = ::InterlockedCompareExchange(&needIdleDecommitSignal, IdleDecommitSignal_NeedSignal, IdleDecommitSignal_None);
+            uint32_t ret = ::InterlockedCompareExchange(&needIdleDecommitSignal, IdleDecommitSignal_NeedSignal, IdleDecommitSignal_None);
             if (ret == IdleDecommitSignal_NeedTimer)
             {
 #if DBG
@@ -6395,7 +6395,7 @@ Recycler::ThreadProc()
         }
 #endif
 
-        DWORD result = WaitForMultipleObjectsEx(handleCount, handles, FALSE, waitTime, FALSE);
+        uint32_t result = WaitForMultipleObjectsEx(handleCount, handles, FALSE, waitTime, FALSE);
 
         if (result != WAIT_OBJECT_0)
         {
@@ -6417,7 +6417,7 @@ Recycler::ThreadProc()
             continue;
         }
 #else
-        DWORD result = WaitForSingleObject(this->concurrentWorkReadyEvent, INFINITE);
+        uint32_t result = WaitForSingleObject(this->concurrentWorkReadyEvent, INFINITE);
         Assert(result == WAIT_OBJECT_0);
 #endif
         if (this->collectionState == CollectionStateExit)
@@ -6850,7 +6850,7 @@ RecyclerParallelThread::EnableConcurrent(bool waitForThread)
     {
         // Wait for thread to initialize
         HANDLE handle[2] = { this->concurrentWorkDoneEvent, this->concurrentThread };
-        DWORD ret = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
+        uint32_t ret = WaitForMultipleObjectsEx(2, handle, FALSE, INFINITE, FALSE);
         if (ret == WAIT_OBJECT_0)
         {
             return true;
@@ -6902,7 +6902,7 @@ RecyclerParallelThread::WaitForConcurrent()
     Assert(this->concurrentThread != NULL || this->recycler->threadService->HasCallback());
     Assert(this->concurrentWorkDoneEvent != NULL);
 
-    DWORD ret = WaitForSingleObject(concurrentWorkDoneEvent, INFINITE);
+    uint32_t ret = WaitForSingleObject(concurrentWorkDoneEvent, INFINITE);
     Assert(ret == WAIT_OBJECT_0);
 }
 
@@ -6931,7 +6931,7 @@ RecyclerParallelThread::Shutdown()
             // When we are performing shutdown of main (recycler) thread here, if we wait on concurrentWorkDoneEvent, WaitForObject() will never return.
             // Hence wait for concurrentWorkDoneEvent + concurrentThread so if concurrentThread got killed, WaitForObject() will return and we will
             // proceed further.
-            DWORD fRet = WaitForMultipleObjectsEx(2, handles, FALSE, INFINITE, FALSE);
+            uint32_t fRet = WaitForMultipleObjectsEx(2, handles, FALSE, INFINITE, FALSE);
             AssertMsg(fRet != WAIT_FAILED, "Check handles passed to WaitForMultipleObjectsEx.");
 
             CloseHandle(this->concurrentWorkDoneEvent);
@@ -6950,9 +6950,9 @@ RecyclerParallelThread::Shutdown()
 
 // static
 unsigned int
-RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
+RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 {
-    DWORD ret = (DWORD)-1;
+    uint32_t ret = (uint32_t)-1;
 #if !DISABLE_SEH
     __try
     {
@@ -6985,7 +6985,7 @@ RecyclerParallelThread::StaticThreadProc(LPVOID lpParameter)
             {
                 // Signal completion and wait for next work
                 SetEvent(parallelThread->concurrentWorkDoneEvent);
-                DWORD result = WaitForSingleObject(parallelThread->concurrentWorkReadyEvent, INFINITE);
+                uint32_t result = WaitForSingleObject(parallelThread->concurrentWorkReadyEvent, INFINITE);
                 Assert(result == WAIT_OBJECT_0);
             }
 
@@ -8804,13 +8804,13 @@ Recycler::SetInDetachProcess()
 
 #ifdef ENABLE_JS_ETW
 
-ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
+uint32_t Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
 {
     if (EventEnabledJSCRIPT_RECYCLER_FREE_MEMORY_BLOCK())
     {
         char* memoryAddress = NULL;
-        ULONG objectSize = 0;
-        ULONG blockSize = 0;
+        uint32_t objectSize = 0;
+        uint32_t blockSize = 0;
         switch (heapBlock->GetHeapBlockType())
         {
         case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
@@ -8823,7 +8823,7 @@ ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
             {
                 SmallHeapBlock* smallHeapBlock = static_cast<SmallHeapBlock*>(heapBlock);
                 memoryAddress = smallHeapBlock->GetAddress();
-                blockSize = (ULONG)(smallHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(smallHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = smallHeapBlock->GetObjectSize();
             }
             break;
@@ -8837,14 +8837,14 @@ ULONG Recycler::EventWriteFreeMemoryBlock(HeapBlock* heapBlock)
             {
                 MediumHeapBlock* mediumHeapBlock = static_cast<MediumHeapBlock*>(heapBlock);
                 memoryAddress = mediumHeapBlock->GetAddress();
-                blockSize = (ULONG)(mediumHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(mediumHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = mediumHeapBlock->GetObjectSize();
             }
         case HeapBlock::HeapBlockType::LargeBlockType:
                 {
                 LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
                 memoryAddress = largeHeapBlock->GetBeginAddress();
-                blockSize = (ULONG)(largeHeapBlock->GetEndAddress() - memoryAddress);
+                blockSize = (uint32_t)(largeHeapBlock->GetEndAddress() - memoryAddress);
                 objectSize = blockSize;
             }
             break;
@@ -9077,7 +9077,7 @@ Recycler::NotifyFree(__in char *address, size_t size)
 #ifdef ENABLE_JS_ETW
     if (EventEnabledJSCRIPT_RECYCLER_FREE_MEMORY())
     {
-        AppendFreeMemoryETWRecord(address, (UINT)size);
+        AppendFreeMemoryETWRecord(address, (uint32_t)size);
     }
 #endif
 

@@ -22,13 +22,13 @@ typedef uint32   UnitWord32;
 typedef uint64   UnitWord64;
 
 inline BOOLEAN
-GetFirstBitSet(DWORD *Index, UnitWord32 Mask)
+GetFirstBitSet(uint32_t *Index, UnitWord32 Mask)
 {
     return _BitScanForward(Index, Mask);
 }
 
 inline BOOLEAN
-GetFirstBitSet(DWORD *Index, UnitWord64 Mask)
+GetFirstBitSet(uint32_t *Index, UnitWord64 Mask)
 {
 #if defined(TARGET_64)
     return _BitScanForward64(Index, Mask);
@@ -49,12 +49,12 @@ GetFirstBitSet(DWORD *Index, UnitWord64 Mask)
 }
 
 inline BOOLEAN
-GetLastBitSet(DWORD *Index, UnitWord32 Mask)
+GetLastBitSet(uint32_t *Index, UnitWord32 Mask)
 {
     return _BitScanReverse(Index, Mask);
 }
 inline BOOLEAN
-GetLastBitSet(DWORD *Index, UnitWord64 Mask)
+GetLastBitSet(uint32_t *Index, UnitWord64 Mask)
 {
 #if defined(TARGET_64)
     return _BitScanReverse64(Index, Mask);
@@ -72,11 +72,11 @@ GetLastBitSet(DWORD *Index, UnitWord64 Mask)
 namespace {
 
 //ShiftValue is essentially log(sizeof(T))
-template <typename T> constexpr LONG BVUnitT_GetShiftValue();
+template <typename T> constexpr int32_t BVUnitT_GetShiftValue();
 
-template<> constexpr LONG BVUnitT_GetShiftValue<UnitWord32>() { return 5; }
+template<> constexpr int32_t BVUnitT_GetShiftValue<UnitWord32>() { return 5; }
 
-template<> constexpr LONG BVUnitT_GetShiftValue<UnitWord64>() { return 6; }
+template<> constexpr int32_t BVUnitT_GetShiftValue<UnitWord64>() { return 6; }
 
 }
 
@@ -233,7 +233,7 @@ public:
         AllOnesMask  = -1
     };
 
-    enum : LONG {
+    enum : int32_t {
         ShiftValue = BVUnitT_GetShiftValue<T>()
     };
 
@@ -315,7 +315,7 @@ public:
 
     BVIndex GetNextBit() const
     {
-        DWORD index;
+        uint32_t index;
         if(GetFirstBitSet(&index, this->word))
         {
             return index;
@@ -335,7 +335,7 @@ public:
 
     BVIndex GetPrevBit() const
     {
-        DWORD index;
+        uint32_t index;
         if(GetLastBitSet(&index, this->word))
         {
             return index;

@@ -18,12 +18,12 @@ struct EmitBufferAllocation
     bool   recorded;
     EmitBufferAllocation<TAlloc, TPreReservedAlloc> * nextAllocation;
 
-    BYTE * GetUnused() const            { return (BYTE*) allocation->address + bytesUsed; }
-    BYTE * GetUncommitted() const       { return (BYTE*) allocation->address + bytesCommitted; }
+    uint8_t * GetUnused() const            { return (uint8_t*) allocation->address + bytesUsed; }
+    uint8_t * GetUncommitted() const       { return (uint8_t*) allocation->address + bytesCommitted; }
     size_t GetBytesUsed() const       { return bytesUsed; }
 
-    // Truncation to DWORD okay here
-    DWORD BytesFree() const    { return static_cast<DWORD>(this->bytesCommitted - this->bytesUsed); }
+    // Truncation to uint32_t okay here
+    uint32_t BytesFree() const    { return static_cast<uint32_t>(this->bytesCommitted - this->bytesUsed); }
 };
 typedef void* NativeMethod;
 
@@ -42,10 +42,10 @@ public:
     void Decommit();
     void Clear();
 
-    TEmitBufferAllocation* AllocateBuffer(DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) BYTE** ppBuffer, ushort pdataCount = 0, ushort xdataSize = 0, bool canAllocInPreReservedHeapPageSegment = false, bool isAnyJittedCode = false);
-    bool CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) BYTE* destBuffer, __in size_t bytes, __in_bcount(bytes) const BYTE* sourceBuffer, __in DWORD alignPad = 0);
+    TEmitBufferAllocation* AllocateBuffer(DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount = 0, ushort xdataSize = 0, bool canAllocInPreReservedHeapPageSegment = false, bool isAnyJittedCode = false);
+    bool CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in uint32_t alignPad = 0);
     bool ProtectBufferWithExecuteReadWriteForInterpreter(TEmitBufferAllocation* allocation);
-    bool CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) BYTE* pBuffer, _In_ size_t bufferSize);
+    bool CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) uint8_t* pBuffer, _In_ size_t bufferSize);
     void CompletePreviousAllocation(TEmitBufferAllocation* allocation);
     bool FreeAllocation(void* address);
     void SetValidCallTarget(TEmitBufferAllocation* allocation, void* callTarget, bool isValid);
@@ -80,9 +80,9 @@ private:
     ThreadContextInfo * threadContext;
 
     TEmitBufferAllocation * NewAllocation(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode);
-    TEmitBufferAllocation* GetBuffer(TEmitBufferAllocation *allocation, DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) BYTE** ppBuffer);
+    TEmitBufferAllocation* GetBuffer(TEmitBufferAllocation *allocation, DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer);
 
-    bool FinalizeAllocation(TEmitBufferAllocation *allocation, BYTE* dstBuffer);
+    bool FinalizeAllocation(TEmitBufferAllocation *allocation, uint8_t* dstBuffer);
     CustomHeap::Heap<TAlloc, TPreReservedAlloc> allocationHeap;
 
     SyncObject  criticalSection;

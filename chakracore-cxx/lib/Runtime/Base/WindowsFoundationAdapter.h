@@ -25,8 +25,8 @@ namespace Js
     public:
         HRESULT TraceOperationCreation(
             _In_ ScriptContext* scriptContext,
-            _In_ INT traceLevel,
-            _In_ INT source,
+            _In_ int32_t traceLevel,
+            _In_ int32_t source,
             _In_ GUID platformId,
             _In_ UINT64 operationId,
             _In_z_ PCWSTR operationName,
@@ -34,33 +34,33 @@ namespace Js
 
         HRESULT TraceOperationCompletion(
             _In_ ScriptContext* scriptContext,
-            _In_ INT traceLevel,
-            _In_ INT source,
+            _In_ int32_t traceLevel,
+            _In_ int32_t source,
             _In_ GUID platformId,
             _In_ UINT64 operationId,
-            _In_ INT status);
+            _In_ int32_t status);
 
         HRESULT TraceOperationRelation(
             _In_ ScriptContext* scriptContext,
-            _In_ INT traceLevel,
-            _In_ INT source,
+            _In_ int32_t traceLevel,
+            _In_ int32_t source,
             _In_ GUID platformId,
             _In_ UINT64 operationId,
-            _In_ INT relation);
+            _In_ int32_t relation);
 
         HRESULT TraceSynchronousWorkStart(
             _In_ ScriptContext* scriptContext,
-            _In_ INT traceLevel,
-            _In_ INT source,
+            _In_ int32_t traceLevel,
+            _In_ int32_t source,
             _In_ GUID platformId,
             _In_ UINT64 operationId,
-            _In_ INT work);
+            _In_ int32_t work);
 
         HRESULT TraceSynchronousWorkCompletion(
             _In_ ScriptContext* scriptContext,
-            _In_ INT traceLevel,
-            _In_ INT source,
-            _In_ INT work);
+            _In_ int32_t traceLevel,
+            _In_ int32_t source,
+            _In_ int32_t work);
     };
 }
 #endif

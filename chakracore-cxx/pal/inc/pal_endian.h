@@ -18,7 +18,7 @@
 
 #ifdef __cplusplus
 extern "C++" {
-inline UINT16 SWAP16(UINT16 x)
+inline uint16_t SWAP16(uint16_t x)
 {
     return (x >> 8) | (x << 8);
 }
@@ -37,7 +37,7 @@ inline uint32_t SWAP32(uint32_t x)
 #if BIGENDIAN
 #ifdef __cplusplus
 extern "C++" {
-inline UINT16 VAL16(UINT16 x)
+inline uint16_t VAL16(uint16_t x)
 {
     return SWAP16(x);
 }
@@ -61,7 +61,7 @@ inline void SwapString(WCHAR *szString)
     }
 }
 
-inline void SwapStringLength(WCHAR *szString, ULONG StringLength)
+inline void SwapStringLength(WCHAR *szString, uint32_t StringLength)
 {
     unsigned i;
     for (i = 0; i < StringLength; i++)
@@ -95,20 +95,16 @@ inline void SwapGuid(GUID *pGuid)
 
 #endif  // !BIGENDIAN
 
-#ifdef BIT64
 #define VALPTR(x) VAL64(x)
-#else
-#define VALPTR(x) VAL32(x)
-#endif
 
 #if defined(ALIGN_ACCESS)
 
 #ifdef __cplusplus
 extern "C++" {
 // Get Unaligned values from a potentially unaligned object
-inline UINT16 GET_UNALIGNED_16(const void *pObject)
+inline uint16_t GET_UNALIGNED_16(const void *pObject)
 {
-    UINT16 temp;
+    uint16_t temp;
     memcpy(&temp, pObject, sizeof(temp));
     return temp; 
 }
@@ -126,9 +122,9 @@ inline UINT64 GET_UNALIGNED_64(const void *pObject)
 }
 
 // Set Value on an potentially unaligned object
-inline void SET_UNALIGNED_16(void *pObject, UINT16 Value)
+inline void SET_UNALIGNED_16(void *pObject, uint16_t Value)
 {
-    memcpy(pObject, &Value, sizeof(UINT16));
+    memcpy(pObject, &Value, sizeof(uint16_t));
 }
 inline void SET_UNALIGNED_32(void *pObject, uint32_t Value)
 {
@@ -144,12 +140,12 @@ inline void SET_UNALIGNED_64(void *pObject, UINT64 Value)
 #else
 
 // Get Unaligned values from a potentially unaligned object
-#define GET_UNALIGNED_16(_pObject)  (*(UINT16 UNALIGNED *)(_pObject))
+#define GET_UNALIGNED_16(_pObject)  (*(uint16_t UNALIGNED *)(_pObject))
 #define GET_UNALIGNED_32(_pObject)  (*(uint32_t UNALIGNED *)(_pObject))
 #define GET_UNALIGNED_64(_pObject)  (*(UINT64 UNALIGNED *)(_pObject))
 
 // Set Value on an potentially unaligned object 
-#define SET_UNALIGNED_16(_pObject, _Value)  (*(UNALIGNED UINT16 *)(_pObject)) = (UINT16)(_Value)
+#define SET_UNALIGNED_16(_pObject, _Value)  (*(UNALIGNED uint16_t *)(_pObject)) = (uint16_t)(_Value)
 #define SET_UNALIGNED_32(_pObject, _Value)  (*(UNALIGNED uint32_t *)(_pObject)) = (uint32_t)(_Value)
 #define SET_UNALIGNED_64(_pObject, _Value)  (*(UNALIGNED UINT64 *)(_pObject)) = (UINT64)(_Value) 
 
@@ -161,7 +157,7 @@ inline void SET_UNALIGNED_64(void *pObject, UINT64 Value)
 #define GET_UNALIGNED_VAL64(_pObject) VAL64(GET_UNALIGNED_64(_pObject))
 
 // Set a swap Value on an potentially unaligned object 
-#define SET_UNALIGNED_VAL16(_pObject, _Value) SET_UNALIGNED_16(_pObject, VAL16((UINT16)_Value))
+#define SET_UNALIGNED_VAL16(_pObject, _Value) SET_UNALIGNED_16(_pObject, VAL16((uint16_t)_Value))
 #define SET_UNALIGNED_VAL32(_pObject, _Value) SET_UNALIGNED_32(_pObject, VAL32((uint32_t)_Value))
 #define SET_UNALIGNED_VAL64(_pObject, _Value) SET_UNALIGNED_64(_pObject, VAL64((UINT64)_Value))
 

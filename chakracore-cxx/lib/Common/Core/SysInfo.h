@@ -35,8 +35,8 @@ public:
     bool IsLowMemoryProcess();
     BOOL GetAvailableCommit(ULONG64 *pCommit);
     void SetAvailableCommit(ULONG64 commit);
-    DWORD GetNumberOfLogicalProcessors() const { return this->dwNumberOfProcessors; }
-    DWORD GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
+    uint32_t GetNumberOfLogicalProcessors() const { return this->dwNumberOfProcessors; }
+    uint32_t GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
 #if SYSINFO_IMAGE_BASE_AVAILABLE
     UINT_PTR GetChakraBaseAddr() const;
@@ -45,9 +45,9 @@ public:
 #if defined(_M_ARM32_OR_ARM64)
     bool ArmDivAvailable() const { return this->armDivAvailable; }
 #endif
-    static DWORD SaveModuleFileName(HANDLE hMod);
+    static uint32_t SaveModuleFileName(HANDLE hMod);
     static LPCWSTR GetJscriptDllFileName();
-    static HRESULT GetJscriptFileVersion(DWORD* majorVersion, DWORD* minorVersion, DWORD *buildDateHash = nullptr, DWORD *buildTimeHash = nullptr);
+    static HRESULT GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t *buildDateHash = nullptr, uint32_t *buildTimeHash = nullptr);
 #if DBG
     static bool IsInitialized();
 #endif
@@ -55,22 +55,22 @@ public:
     static bool IsJscriptModulePointer(void * ptr);
 #endif
 #if defined(__APPLE__) && defined(_M_ARM64)
-    static DWORD const PageSize = 16384;
+    static uint32_t const PageSize = 16384;
 #else
-    static DWORD const PageSize = 4096;
+    static uint32_t const PageSize = 4096;
 #endif
 
     static size_t const MaxPageCount = SIZE_MAX / PageSize;
 
 #ifdef STACK_ALIGN
-    static DWORD const StackAlign = STACK_ALIGN;
+    static uint32_t const StackAlign = STACK_ALIGN;
 #else
 # if defined(TARGET_64)
-    static DWORD const StackAlign = 16;
+    static uint32_t const StackAlign = 16;
 # elif defined(_M_ARM)
-    static DWORD const StackAlign = 8;
+    static uint32_t const StackAlign = 8;
 # elif defined(_M_IX86)
-    static DWORD const StackAlign = 4;
+    static uint32_t const StackAlign = 4;
 # else
     # error missing_target
 # endif
@@ -88,14 +88,14 @@ private:
     bool isWindows8Point1OrGreater;
     uint allocationGranularityPageCount;
     HANDLE processHandle;
-    DWORD crtSize;
+    uint32_t crtSize;
 #if defined(_M_IX86) || defined(_M_X64)
     int CPUInfo[4];
 #endif
 #if defined(_M_ARM32_OR_ARM64)
     bool armDivAvailable;
 #endif
-    DWORD dwNumberOfPhysicalProcessors;
+    uint32_t dwNumberOfPhysicalProcessors;
 
     bool disableDebugScopeCapture;
 #if DBG
@@ -111,13 +111,13 @@ private:
     bool InitPhysicalProcessorCount();
 
     WCHAR binaryName[MAX_PATH + 1];
-    DWORD majorVersion;
-    DWORD minorVersion;
-    DWORD buildDateHash;
-    DWORD buildTimeHash;
-    static HRESULT GetVersionInfo(__in LPCWSTR pszPath, DWORD* majorVersion, DWORD* minorVersion);
+    uint32_t majorVersion;
+    uint32_t minorVersion;
+    uint32_t buildDateHash;
+    uint32_t buildTimeHash;
+    static HRESULT GetVersionInfo(__in LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
 
-    static const DWORD INVALID_VERSION = (DWORD)-1;
+    static const uint32_t INVALID_VERSION = (uint32_t)-1;
 
     ULONG64 availableCommit;
     bool shouldQCMoreFrequently;

@@ -32,7 +32,7 @@ public:
 
 private:
     EhFrame ehFrame;
-    BYTE buffer[JIT_EHFRAME_SIZE];
+    uint8_t buffer[JIT_EHFRAME_SIZE];
 
     size_t cfiInstrOffset;      // last cfi emit instr offset
     size_t currentInstrOffset;  // current instr offset
@@ -51,12 +51,12 @@ public:
     void EncodeInstr(IR::Instr *instr, uint8 size);
 
     void EncodeSmallProlog(uint8 prologSize, size_t size);
-    DWORD SizeOfPData();
-    BYTE *Finalize(BYTE *functionStart, DWORD codeSize, BYTE *pdataBuffer);
+    uint32_t SizeOfPData();
+    uint8_t *Finalize(uint8_t *functionStart, uint32_t codeSize, uint8_t *pdataBuffer);
 
     void Begin(size_t prologStartOffset);
     void End();
-    DWORD SizeOfUnwindInfo() { return SizeOfPData(); }
-    BYTE *GetUnwindInfo() { return ehFrame.Buffer(); }
-    void FinalizeUnwindInfo(BYTE *functionStart, DWORD codeSize);
+    uint32_t SizeOfUnwindInfo() { return SizeOfPData(); }
+    uint8_t *GetUnwindInfo() { return ehFrame.Buffer(); }
+    void FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize);
 };

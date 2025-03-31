@@ -216,7 +216,7 @@ using namespace Js;
     }
 
     Var GlobalObject::FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16 *file,
-        const char16 *function, ULONG lineNum, ULONG colNum,
+        const char16 *function, uint32_t lineNum, uint32_t colNum,
         uint functionId, Js::Utf8SourceInfo *utf8SrcInfo, Js::Var source)
     {
         Js::DynamicObject *fnInfoObj = scriptContext->GetLibrary()->CreateObject();
@@ -332,8 +332,8 @@ using namespace Js;
                 {
                     char16 const *functionName = functionBody->GetExternalDisplayName();
 
-                    ULONG lineNum = functionBody->GetLineNumber();
-                    ULONG colNum = functionBody->GetColumnNumber();
+                    uint32_t lineNum = functionBody->GetLineNumber();
+                    uint32_t colNum = functionBody->GetColumnNumber();
 
                     uint funcId = functionBody->GetLocalFunctionId();
                     Js::Utf8SourceInfo *utf8SrcInfo = functionBody->GetUtf8SourceInfo();
@@ -862,8 +862,8 @@ using namespace Js;
             ParseNodeProg * parseTree = nullptr;
 
             SourceContextInfo * sourceContextInfo = pSrcInfo->sourceContextInfo;
-            ULONG deferParseThreshold = Parser::GetDeferralThreshold(sourceContextInfo->IsSourceProfileLoaded());
-            if ((ULONG)sourceLength > deferParseThreshold && !PHASE_OFF1(Phase::DeferParsePhase))
+            uint32_t deferParseThreshold = Parser::GetDeferralThreshold(sourceContextInfo->IsSourceProfileLoaded());
+            if ((uint32_t)sourceLength > deferParseThreshold && !PHASE_OFF1(Phase::DeferParsePhase))
             {
                 // Defer function bodies declared inside large dynamic blocks.
                 grfscr |= fscrWillDeferFncParse;
@@ -1353,7 +1353,7 @@ using namespace Js;
 
     // This is a bit field for the hex values: 00-29, 2C, 3A-3F, 5B-5E, 60, 7B-FF
     // These are the values escape encodes using the default mask (or mask >= 4)
-    static const BYTE _grfbitEscape[] =
+    static const uint8_t _grfbitEscape[] =
     {
         0xFF, 0xFF, // 00 - 0F
         0xFF, 0xFF, // 10 - 1F

@@ -103,7 +103,7 @@ namespace Js
         _refactor_ static void SetProperty(Js::DynamicObject *obj, Js::PropertyId id, Js::Var value);
 #undef  _refactor_
         static Var FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16 *file,
-            const char16 *function, ULONG lineNum, ULONG colNum,
+            const char16 *function, uint32_t lineNum, uint32_t colNum,
             uint funcId, Js::Utf8SourceInfo *utf8SrcInfo, Js::Var source);
         static Var EntryFunctionList(RecyclableObject *function, CallInfo callInfo, ...);
         static Var EntryRejitFunction(RecyclableObject *function, CallInfo callInfo, ...);

@@ -100,7 +100,7 @@ namespace Js
         return _u("\0");
     }
 
-    HRESULT DelayLoadWinRtString::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ INT32 * result)
+    HRESULT DelayLoadWinRtString::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)
     {
         if (m_hModule)
         {
@@ -202,7 +202,7 @@ namespace Js
 #if DBG
             // This unused variable is to allow one to see the value of lastError in case both LoadLibrary (DelayLoadLibrary::Ensure has one) fail.
             // As the issue might be with the first one, as opposed to the second
-            DWORD errorWhenLoadingBluePlus = GetLastError();
+            uint32_t errorWhenLoadingBluePlus = GetLastError();
             Unused(errorWhenLoadingBluePlus);
 #endif
             //Perform a check to see if Windows.Globalization.dll was loaded; if not try loading jsIntl.dll as we are on Win7.
@@ -261,7 +261,7 @@ namespace Js
         }
         return DelayLoadWinRtString::WindowsGetStringRawBuffer(string, length);
     }
-    HRESULT DelayLoadWindowsGlobalization::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ INT32 * result)
+    HRESULT DelayLoadWindowsGlobalization::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)
     {
         //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
         //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
@@ -287,7 +287,7 @@ namespace Js
     BOOL DelayLoadWinCoreProcessThreads::GetProcessInformation(
         __in HANDLE hProcess,
         __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
-        __out_bcount(nLength) PVOID lpBuffer,
+        __out_bcount(nLength) void * lpBuffer,
         __in SIZE_T nLength
     )
     {

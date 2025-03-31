@@ -70,7 +70,6 @@ Notes :
 
 --*/
 void
-__cdecl
 _wsplitpath(
             const char16_t *dospath,
             char16_t *drive,
@@ -81,7 +80,7 @@ _wsplitpath(
     WCHAR path[_MAX_PATH+1];
     LPCWSTR slash_ptr = NULL;
     LPCWSTR period_ptr = NULL;
-    INT size = 0;
+    int32_t size = 0;
 
     PERF_ENTRY(_wsplitpath);
     ENTRY("_wsplitpath (path=%p (%S), drive=%p, dir=%p, fname=%p, ext=%p)\n",
@@ -151,7 +150,7 @@ _wsplitpath(
     size = slash_ptr - path + 1;
     if( dir != NULL )
     {
-        INT i;
+        int32_t i;
 
         if( (size + 1 ) > _MAX_DIR )
         {
@@ -218,7 +217,6 @@ See description above for _wsplitpath.
 
 --*/
 void
-__cdecl
 _splitpath(
            const char *path,
            char *drive,
@@ -318,7 +316,6 @@ See MSDN doc.
 
 --*/
 void
-__cdecl
 _makepath(
           char *path,
           const char *drive,
@@ -326,7 +323,7 @@ _makepath(
           const char *fname,
           const char *ext)
 {
-    UINT Length = 0;
+    uint32_t Length = 0;
 
     PERF_ENTRY(_makepath);
     ENTRY( "_makepath (path=%p, drive=%p (%s), dir=%p (%s), fname=%p (%s), ext=%p (%s))\n",
@@ -346,7 +343,7 @@ _makepath(
 
     if ( dir != NULL && dir[ 0 ] != '\0' )
     {
-        UINT DirLength = strlen( dir );
+        uint32_t DirLength = strlen( dir );
         Length += DirLength ;
 
         if ( Length < _MAX_PATH )
@@ -374,7 +371,7 @@ _makepath(
 
     if ( fname != NULL && fname[ 0 ] != '\0' )
     {
-        UINT fNameLength = strlen( fname );
+        uint32_t fNameLength = strlen( fname );
         Length += fNameLength;
 
         if ( Length < _MAX_PATH )
@@ -389,7 +386,7 @@ _makepath(
 
     if ( ext != NULL && ext[ 0 ] != '\0' )
     {
-        UINT ExtLength = strlen( ext );
+        uint32_t ExtLength = strlen( ext );
         Length += ExtLength;
 
         if ( ext[ 0 ] !=  '.' )
@@ -443,7 +440,6 @@ See MSDN doc.
 
 --*/
 void
-__cdecl
 _wmakepath(
           char16_t *path,
           const char16_t *drive,
@@ -451,10 +447,10 @@ _wmakepath(
           const char16_t *fname,
           const char16_t *ext)
 {
-    CHAR Dir[ _MAX_DIR ]={0};
-    CHAR FileName[ _MAX_FNAME ]={0};
-    CHAR Ext[ _MAX_EXT ]={0};
-    CHAR Path[ _MAX_PATH ]={0};
+    char Dir[ _MAX_DIR ]={0};
+    char FileName[ _MAX_FNAME ]={0};
+    char Ext[ _MAX_EXT ]={0};
+    char Path[ _MAX_PATH ]={0};
 
     PERF_ENTRY(_wmakepath);
     ENTRY("_wmakepath (path=%p, drive=%p (%S), dir=%p (%S), fname=%p (%S), ext=%p (%S))\n",
@@ -524,7 +520,6 @@ See MSDN doc.
 
 --*/
 char *
-__cdecl
 _fullpath(
           char *absPath,
           const char *relPath,
@@ -533,7 +528,7 @@ _fullpath(
     char realpath_buf[PATH_MAX+1];
     char path_copy[PATH_MAX+1];
     char *retval = NULL;
-    DWORD cPathCopy = sizeof(path_copy)/sizeof(path_copy[0]);
+    uint32_t cPathCopy = sizeof(path_copy)/sizeof(path_copy[0]);
     size_t min_length;
     BOOL fBufAllocated = FALSE;
 

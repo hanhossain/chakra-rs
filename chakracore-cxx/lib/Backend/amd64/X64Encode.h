@@ -102,7 +102,7 @@
 //#define OLB_XOP9 0x9    // XOP prefix with mmmmm = 01001
 //#define OLB_XOPA 0xA    // XOP prefix with mmmmm = 01010
 
-enum Forms : BYTE
+enum Forms : uint8_t
 {
     FORM_BINOP,
     FORM_CALL,

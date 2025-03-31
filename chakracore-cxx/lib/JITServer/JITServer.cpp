@@ -35,7 +35,7 @@ HRESULT JsInitializeJITServer(
             NULL,
             RPC_IF_AUTOLISTEN,
             RPC_C_LISTEN_MAX_CALLS_DEFAULT,
-            (ULONG)-1,
+            (uint32_t)-1,
             NULL,
             securityDescriptor);
     }
@@ -47,7 +47,7 @@ HRESULT JsInitializeJITServer(
             NULL,
             RPC_IF_AUTOLISTEN,
             RPC_C_LISTEN_MAX_CALLS_DEFAULT,
-            (ULONG)-1,
+            (uint32_t)-1,
             NULL);
     }
     if (status != RPC_S_OK)
@@ -130,7 +130,7 @@ ServerConnectProcessWithProcessHandle(
     intptr_t crtBaseAddress
 )
 {
-    DWORD clientPid;
+    uint32_t clientPid;
     HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
@@ -168,7 +168,7 @@ ServerInitializeThreadContext(
 
     ServerThreadContext * contextInfo = nullptr;
 
-    DWORD clientPid;
+    uint32_t clientPid;
     HRESULT hr = HRESULT_FROM_WIN32(I_RpcBindingInqLocalClientPID(binding, &clientPid));
     if (FAILED(hr))
     {
@@ -459,7 +459,7 @@ ServerNewInterpreterThunkBlock(
 
         OOPEmitBufferManagerWithLock * emitBufferManager = scriptContext->GetEmitBufferManager(thunkInput->asmJsThunk != FALSE);
 
-        BYTE* runtimeAddress;
+        uint8_t* runtimeAddress;
         EmitBufferAllocation<SectionAllocWrapper, PreReservedSectionAllocWrapper> * alloc = emitBufferManager->AllocateBuffer(InterpreterThunkEmitter::BlockSize, &runtimeAddress);
 
         CompileAssert(InterpreterThunkEmitter::BlockSize <= CustomHeap::Page::MaxAllocationSize);
@@ -475,14 +475,14 @@ ServerNewInterpreterThunkBlock(
         PRUNTIME_FUNCTION pdataStart = {0};
         intptr_t epilogEnd = 0;
 #endif
-        DWORD thunkCount = 0;
+        uint32_t thunkCount = 0;
 
         InterpreterThunkEmitter::FillBuffer(
             threadContext,
             thunkInput->asmJsThunk != FALSE,
             (intptr_t)runtimeAddress,
             InterpreterThunkEmitter::BlockSize,
-            (BYTE*)localAlloc.localAddress,
+            (uint8_t*)localAlloc.localAddress,
 #if PDATA_ENABLED
             &pdataStart,
             &epilogEnd,
@@ -764,11 +764,11 @@ JsUtil::BaseHashSet<ServerThreadContext*, HeapAllocator> ServerContextManager::t
 JsUtil::BaseHashSet<ServerScriptContext*, HeapAllocator> ServerContextManager::scriptContexts(&HeapAllocator::Instance);
 CriticalSection ServerContextManager::cs;
 
-BaseDictionary<DWORD, ProcessContext*, HeapAllocator> ProcessContextManager::ProcessContexts(&HeapAllocator::Instance);
+BaseDictionary<uint32_t, ProcessContext*, HeapAllocator> ProcessContextManager::ProcessContexts(&HeapAllocator::Instance);
 CriticalSection ProcessContextManager::cs;
 
 HRESULT
-ProcessContextManager::RegisterNewProcess(DWORD pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress)
+ProcessContextManager::RegisterNewProcess(uint32_t pid, HANDLE processHandle, intptr_t chakraBaseAddress, intptr_t crtBaseAddress)
 {
     AutoCriticalSection autoCS(&cs);
     for (auto iter = ProcessContexts.GetIteratorWithRemovalSupport(); iter.IsValid(); iter.MoveNext())
@@ -810,7 +810,7 @@ ProcessContextManager::RegisterNewProcess(DWORD pid, HANDLE processHandle, intpt
 }
 
 ProcessContext*
-ProcessContextManager::GetProcessContext(DWORD pid)
+ProcessContextManager::GetProcessContext(uint32_t pid)
 {
     AutoCriticalSection autoCS(&cs);
     ProcessContext* context = nullptr;

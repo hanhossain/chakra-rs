@@ -228,7 +228,7 @@ public:
         }
     }
 
-    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag)
+    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
     {
         // This is merely a wrapper for VirtualProtect, no need to synchornize, and doesn't touch any data.
         // No need to assert locked.
@@ -296,11 +296,11 @@ public:
         }
     }
 
-    bool AllocSecondary(void* segment, ULONG_PTR functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+    bool AllocSecondary(void* segment, size_t functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
     {
         Assert(this->cs.IsLocked());
         Assert(functionSize_t <= MAXUINT32);
-        DWORD functionSize = static_cast<DWORD>(functionSize_t);
+        uint32_t functionSize = static_cast<uint32_t>(functionSize_t);
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
@@ -407,7 +407,7 @@ public:
         return page->HasNoSpace() || (codePageAllocators->AllocXdata() && !((Segment*)(page->segment))->CanAllocSecondary());
     }
 
-    BOOL ProtectAllocation(__in Allocation* allocation, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag, __in_opt char* addressInPage = nullptr);
+    BOOL ProtectAllocation(__in Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage = nullptr);
     BOOL ProtectAllocationWithExecuteReadWrite(Allocation *allocation, __in_opt char* addressInPage = nullptr);
     BOOL ProtectAllocationWithExecuteReadOnly(__in Allocation *allocation, __in_opt char* addressInPage = nullptr);
 
@@ -460,25 +460,25 @@ private:
     void FreeLargeObjects();
 
     //Called during Free
-    DWORD EnsurePageWriteable(Page* page);
+    uint32_t EnsurePageWriteable(Page* page);
 
     // this get called when freeing the whole page
-    DWORD EnsureAllocationWriteable(Allocation* allocation);
+    uint32_t EnsureAllocationWriteable(Allocation* allocation);
 
     // this get called when only freeing a part in the page
-    DWORD EnsureAllocationExecuteWriteable(Allocation* allocation);
+    uint32_t EnsureAllocationExecuteWriteable(Allocation* allocation);
 
-    template<DWORD readWriteFlags>
-    DWORD EnsurePageReadWrite(Page* page)
+    template<uint32_t readWriteFlags>
+    uint32_t EnsurePageReadWrite(Page* page)
     {
         Assert(!page->isDecommitted);
         this->codePageAllocators->ProtectPages(page->address, 1, page->segment, readWriteFlags, PAGE_EXECUTE_READ);
         return PAGE_EXECUTE_READ;
     }
 
-    template<DWORD readWriteFlags>
+    template<uint32_t readWriteFlags>
 
-    DWORD EnsureAllocationReadWrite(Allocation* allocation)
+    uint32_t EnsureAllocationReadWrite(Allocation* allocation)
     {
         if (allocation->IsLargeAllocation())
         {
@@ -560,7 +560,7 @@ typedef Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcHeap;
 // Helpers
 unsigned int log2(size_t number);
 BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
-void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t byteCount);
+void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount);
 } // namespace CustomHeap
 } // namespace Memory
 #endif

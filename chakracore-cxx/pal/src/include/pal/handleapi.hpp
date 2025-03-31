@@ -33,9 +33,9 @@ namespace CorUnix
         HANDLE hSource,
         HANDLE hTargetProcess,
         LPHANDLE phDuplicate,
-        DWORD dwDesiredAccess,
+        uint32_t dwDesiredAccess,
         BOOL bInheritHandle,
-        DWORD dwOptions
+        uint32_t dwOptions
         );
 
     PAL_ERROR

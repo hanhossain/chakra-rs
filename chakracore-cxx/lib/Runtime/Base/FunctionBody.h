@@ -208,7 +208,7 @@ namespace Js
             jsMethod(jsMethod)
         {
         }
-        static DWORD GetAddressOffset() { return offsetof(ProxyEntryPointInfo, jsMethod); }
+        static uint32_t GetAddressOffset() { return offsetof(ProxyEntryPointInfo, jsMethod); }
         virtual void Expire()
         {
             AssertMsg(false, "Expire called on object that doesn't support expiration");
@@ -229,7 +229,7 @@ namespace Js
     {
         
     private:
-        enum State : BYTE
+        enum State : uint8_t
         {
             NotScheduled,       // code gen has not been scheduled
             CodeGenPending,     // code gen job has been scheduled
@@ -585,9 +585,9 @@ namespace Js
         bool HasInlinees();
 
 #if DBG
-        void DoLazyBailout(BYTE **addressOfInstructionPointer, BYTE *framePointer, Js::FunctionBody *functionBody, const PropertyRecord *propertyRecord);
+        void DoLazyBailout(uint8_t **addressOfInstructionPointer, uint8_t *framePointer, Js::FunctionBody *functionBody, const PropertyRecord *propertyRecord);
 #else
-        void DoLazyBailout(BYTE **addressOfInstructionPointer, BYTE *framePointer);
+        void DoLazyBailout(uint8_t **addressOfInstructionPointer, uint8_t *framePointer);
 #endif
 
         void CleanupNativeCode(ScriptContext * scriptContext);
@@ -1176,8 +1176,8 @@ namespace Js
                 );
         }
 
-        ULONG GetHostStartLine() const;
-        ULONG GetHostStartColumn() const;
+        uint32_t GetHostStartLine() const;
+        uint32_t GetHostStartColumn() const;
 
     protected:
         // Static method(s)
@@ -1208,9 +1208,9 @@ namespace Js
             PERF_COUNTER_DEC(Code, TotalFunction);
         }
 
-        ULONG ComputeAbsoluteLineNumber(ULONG relativeLineNumber) const;
-        ULONG ComputeAbsoluteColumnNumber(ULONG relativeLineNumber, ULONG relativeColumnNumber) const;
-        ULONG GetLineNumberInHostBuffer(ULONG relativeLineNumber) const;
+        uint32_t ComputeAbsoluteLineNumber(uint32_t relativeLineNumber) const;
+        uint32_t ComputeAbsoluteColumnNumber(uint32_t relativeLineNumber, uint32_t relativeColumnNumber) const;
+        uint32_t GetLineNumberInHostBuffer(uint32_t relativeLineNumber) const;
 
     private:
         ScriptFunctionType * AllocDeferredPrototypeType();
@@ -1670,15 +1670,15 @@ namespace Js
         uint LengthInBytes() const { return m_cbLength; }
         uint StartOffset() const;
         uint PrintableStartOffset() const;
-        ULONG GetLineNumber() const;
-        ULONG GetColumnNumber() const;
+        uint32_t GetLineNumber() const;
+        uint32_t GetColumnNumber() const;
         template <class T>
         LPCWSTR GetSourceName(const T& sourceContextInfo) const;
         template <class T>
         static LPCWSTR GetSourceName(const T& sourceContextInfo, bool m_isEval, bool m_isDynamicFunction);
         LPCWSTR GetSourceName() const;
-        ULONG GetRelativeLineNumber() const { return m_lineNumber; }
-        ULONG GetRelativeColumnNumber() const { return m_columnNumber; }
+        uint32_t GetRelativeLineNumber() const { return m_lineNumber; }
+        uint32_t GetRelativeColumnNumber() const { return m_columnNumber; }
         uint GetSourceIndex() const;
         LPCUTF8 GetSource(const  char16* reason = nullptr) const;
         LPCUTF8 GetToStringSource(const  char16* reason = nullptr) const;
@@ -1856,8 +1856,8 @@ namespace Js
         FieldWithBarrier(uint) m_cbStartOffset;         // pUtf8Source is this many bytes from the start of the scriptContext's source buffer.
                                                         // This is generally the same as m_cchStartOffset unless the buffer has a BOM or other non-ascii characters
 
-        FieldWithBarrier(ULONG) m_lineNumber;
-        FieldWithBarrier(ULONG) m_columnNumber;
+        FieldWithBarrier(uint32_t) m_lineNumber;
+        FieldWithBarrier(uint32_t) m_columnNumber;
         FieldWithBarrier(const char16*) m_displayName;  // Optional name
         FieldWithBarrier(uint) m_displayNameLength;
         FieldWithBarrier(NestedArray*) nestedArray;
@@ -1867,7 +1867,7 @@ namespace Js
         FieldWithBarrier(Js::LocalFunctionId) deferredParseNextFunctionId;
 #endif
 #if DBG
-        FieldWithBarrier(UINT) scopeObjectSize; // If the scope is an activation object - its size
+        FieldWithBarrier(uint32_t) scopeObjectSize; // If the scope is an activation object - its size
 #endif
     };
 
@@ -2103,7 +2103,7 @@ namespace Js
         {
             return cacheIdToPropertyIdMap;
         }
-        static DWORD GetAsmJsTotalLoopCountOffset() { return offsetof(FunctionBody, m_asmJsTotalLoopCount); }
+        static uint32_t GetAsmJsTotalLoopCountOffset() { return offsetof(FunctionBody, m_asmJsTotalLoopCount); }
 #if DBG
         FieldWithBarrier(int) m_DEBUG_executionCount;     // Count of outstanding on InterpreterStackFrame
         FieldWithBarrier(bool) m_nativeEntryPointIsInterpreterThunk; // NativeEntry entry point is in fact InterpreterThunk.
@@ -2255,7 +2255,7 @@ namespace Js
 
         // select dynamic profile info saved off when we codegen and later
         // used for rejit decisions (see bailout.cpp)
-        FieldWithBarrier(BYTE) savedInlinerVersion;
+        FieldWithBarrier(uint8_t) savedInlinerVersion;
 #if ENABLE_NATIVE_CODEGEN
         FieldWithBarrier(ImplicitCallFlags) savedImplicitCallsFlags;
 #endif
@@ -2636,8 +2636,8 @@ namespace Js
 
         // Find out an offset falls within the range. returns TRUE if found.
         BOOL GetBranchOffsetWithin(uint start, uint end, StatementAdjustmentRecord* record);
-        bool GetLineCharOffset(int byteCodeOffset, ULONG* line, LONG* charOffset, bool canAllocateLineCache = true);
-        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, ULONG* _line, LONG* _charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffset(int byteCodeOffset, uint32_t* line, int32_t* charOffset, bool canAllocateLineCache = true);
+        bool GetLineCharOffsetFromStartChar(int startCharOfStatement, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache = true);
 
         // Given bytecode position, returns the start position of the statement and length of the statement.
         bool GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength);
@@ -2682,7 +2682,7 @@ namespace Js
 
 #ifdef VTUNE_PROFILING
         uint GetStartOffset(uint statementIndex) const;
-        ULONG GetSourceLineNumber(uint statementIndex);
+        uint32_t GetSourceLineNumber(uint statementIndex);
 #endif
 
 #pragma endregion
@@ -2722,7 +2722,7 @@ namespace Js
         bool IsSimpleJitOriginalEntryPoint() const;
 
 #if DYNAMIC_INTERPRETER_THUNK
-        static BYTE GetOffsetOfDynamicInterpreterThunk() { return static_cast<BYTE>(offsetof(FunctionBody, m_dynamicInterpreterThunk)); }
+        static uint8_t GetOffsetOfDynamicInterpreterThunk() { return static_cast<uint8_t>(offsetof(FunctionBody, m_dynamicInterpreterThunk)); }
         void* GetDynamicInterpreterEntryPoint() const
         {
             return m_dynamicInterpreterThunk;
@@ -2732,7 +2732,7 @@ namespace Js
             return m_dynamicInterpreterThunk != nullptr;
         }
 
-        DWORD GetDynamicInterpreterThunkSize() const;
+        uint32_t GetDynamicInterpreterThunkSize() const;
 #endif
 
         bool GetHasHotLoop() const { return hasHotLoop; };
@@ -3222,7 +3222,7 @@ namespace Js
         DynamicProfileInfo * GetAnyDynamicProfileInfo() const { Assert(HasDynamicProfileInfo()); return dynamicProfileInfo; }
         DynamicProfileInfo * EnsureDynamicProfileInfo();
         DynamicProfileInfo * AllocateDynamicProfile();
-        BYTE GetSavedInlinerVersion() const;
+        uint8_t GetSavedInlinerVersion() const;
         uint32 GetSavedPolymorphicCacheState() const;
         void SetSavedPolymorphicCacheState(uint32 state);
         ImplicitCallFlags GetSavedImplicitCallsFlags() const;
@@ -3293,13 +3293,13 @@ namespace Js
 
 #ifdef IR_VIEWER
         void GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, LONG * col);
+            uint32_t * line, int32_t * col);
         void GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            ULONG * line, LONG * col);
+            uint32_t * line, int32_t * col);
 #endif
 
 #if ENABLE_TTD
-        void GetSourceLineFromStartOffset_TTD(const uint startOffset, ULONG* line, LONG* col);
+        void GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col);
 #endif
 
 #ifdef ENABLE_SCRIPT_PROFILING

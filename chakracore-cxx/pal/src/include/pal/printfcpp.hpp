@@ -38,7 +38,6 @@ typedef __va_list va_list;
 extern "C"
 {
     int
-    __cdecl
     PAL__vsnprintf(
         LPSTR Buffer,
         size_t Count,
@@ -46,7 +45,6 @@ extern "C"
         va_list ap);
 
     int
-    __cdecl
     PAL__wvsnprintf(
         LPWSTR Buffer,
         size_t Count,
@@ -54,14 +52,12 @@ extern "C"
         va_list ap);
 
     int
-    __cdecl
     PAL_vfprintf(
         PAL_FILE *stream,
         const char *format,
         va_list ap);
 
     int
-    __cdecl
     PAL_vfwprintf(
         PAL_FILE *stream,
         const char16_t *format,
@@ -104,7 +100,6 @@ namespace CorUnix
 #else // __cplusplus
 
     int
-    __cdecl
     PAL__vsnprintf(
         LPSTR Buffer,
         size_t Count,
@@ -112,7 +107,6 @@ namespace CorUnix
         va_list ap);
 
     int
-    __cdecl
     PAL__wvsnprintf(
         LPWSTR Buffer,
         size_t Count,
@@ -120,14 +114,12 @@ namespace CorUnix
         va_list ap);
 
     int
-    __cdecl
     PAL_vfprintf(
         PAL_FILE *stream,
         const char *format,
         va_list ap);
 
     int
-    __cdecl
     PAL_vfwprintf(
         PAL_FILE *stream,
         const char16_t *format,

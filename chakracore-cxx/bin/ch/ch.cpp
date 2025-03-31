@@ -30,10 +30,10 @@ uint32_t snapHistoryLength = MAXUINT32;
 LPCWSTR connectionUuidString = NULL;
 uint32_t startEventCount = 1;
 
-HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName);
+HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName);
 
 extern "C"
-HRESULT __stdcall OnChakraCoreLoadedEntry(TestHooks& testHooks)
+HRESULT OnChakraCoreLoadedEntry(TestHooks& testHooks)
 {
     return ChakraRTInterface::OnChakraCoreLoaded(testHooks);
 }
@@ -63,7 +63,7 @@ int HostExceptionFilter(int exceptionCode, _EXCEPTION_POINTERS *ep)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void __stdcall PrintUsageFormat()
+void PrintUsageFormat()
 {
     wprintf(_u("\nUsage: %s [-v|-version] [-h|-help] [-?] [flaglist] <source file>\n"), hostName);
     wprintf(_u("\t-v|-version\t\tDisplays version info\n"));
@@ -72,7 +72,7 @@ void __stdcall PrintUsageFormat()
 }
 
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-void __stdcall PrintReleaseUsage()
+void PrintReleaseUsage()
 {
     wprintf(_u("\nUsage: %s [-v|-version] [-h|-help|-?] <source file> %s"), hostName,
         _u("\nNote: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags.\n"));
@@ -81,7 +81,7 @@ void __stdcall PrintReleaseUsage()
 }
 #endif
 
-void __stdcall PrintUsage()
+void PrintUsage()
 {
 #if !defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     PrintReleaseUsage();
@@ -90,7 +90,7 @@ void __stdcall PrintUsage()
 #endif
 }
 
-void __stdcall PrintChVersion()
+void PrintChVersion()
 {
 #if CHAKRA_CORE_VERSION_RELEASE
     wprintf(_u("%s version %d.%d.%d.0\n"),
@@ -100,7 +100,7 @@ void __stdcall PrintChVersion()
         hostName, CHAKRA_CORE_MAJOR_VERSION, CHAKRA_CORE_MINOR_VERSION, CHAKRA_CORE_PATCH_VERSION);
 }
 
-void __stdcall PrintVersion()
+void PrintVersion()
 {
     PrintChVersion();
 }
@@ -133,7 +133,7 @@ HANDLE GetFileHandle(LPCWSTR filename)
 HRESULT CreateLibraryByteCode(const char* contentsRaw)
 {
     JsValueRef bufferVal;
-    BYTE *bcBuffer = nullptr;
+    uint8_t *bcBuffer = nullptr;
     unsigned int bcBufferSize = 0;
     HRESULT hr = E_FAIL;
     
@@ -175,7 +175,7 @@ typedef struct {
     bool freeingHandled;
 } SerializedCallbackInfo;
 
-static bool CHAKRA_CALLBACK DummyJsSerializedScriptLoadUtf8Source(
+static bool DummyJsSerializedScriptLoadUtf8Source(
     JsSourceContext sourceContext,
     JsValueRef* scriptBuffer,
     JsParseScriptAttributes *parseAttributes)
@@ -505,7 +505,7 @@ HRESULT CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCall
     HRESULT hr = S_OK;
     HANDLE fileHandle = nullptr;
     JsValueRef parserStateBuffer = nullptr;
-    BYTE *buffer = nullptr;
+    uint8_t *buffer = nullptr;
     unsigned int bufferSize = 0;
 
     IfFailedGoLabel(GetParserStateBuffer(fileContents, fileContentsFinalizeCallback, &parserStateBuffer), Error);
@@ -517,12 +517,12 @@ HRESULT CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCall
     for (unsigned int i = 0; i < bufferSize; i++)
     {
         const unsigned int BYTES_PER_LINE = 32;
-        DWORD written = 0;
+        uint32_t written = 0;
         char scratch[3];
         auto scratchLen = sizeof(scratch);
         int num = _snprintf_s(scratch, scratchLen, _countof(scratch), "%02X", buffer[i]);
         Assert(num == 2);
-        IfFalseGo(WriteFile(fileHandle, scratch, (DWORD)(scratchLen - 1), &written, nullptr));
+        IfFalseGo(WriteFile(fileHandle, scratch, (uint32_t)(scratchLen - 1), &written, nullptr));
 
         // Add line breaks so this block can be readable
         if (i % BYTES_PER_LINE == (BYTES_PER_LINE - 1) && i < bufferSize - 1)
@@ -639,7 +639,7 @@ Error:
 }
 
 // Use the asynchronous BGParse JSRT APIs in a synchronous call
-HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName)
+HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName)
 {
     JsValueRef scriptSource;
     JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContents,
@@ -655,13 +655,13 @@ HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileNa
     }
 
     JsScriptContents scriptContents = { 0 };
-    scriptContents.container = (LPVOID)fileContents;
+    scriptContents.container = (void *)fileContents;
     scriptContents.containerType = JsScriptContainerType::HeapAllocatedBuffer;
     scriptContents.encodingType = JsScriptEncodingType::Utf8;
     scriptContents.contentLengthInBytes = lengthBytes;
     scriptContents.fullPath = fileNameWide;
 
-    DWORD cookie = 0;
+    uint32_t cookie = 0;
     e = ChakraRTInterface::JsQueueBackgroundParse_Experimental(&scriptContents, &cookie);
     Assert(e == JsErrorCode::JsNoError);
 
@@ -684,7 +684,7 @@ HRESULT ExecuteTest(const char* fileName)
     HRESULT hr = S_OK;
     LPCSTR fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
-    UINT lengthBytes = 0;
+    uint32_t lengthBytes = 0;
 
     if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
     {

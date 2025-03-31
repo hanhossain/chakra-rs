@@ -34,7 +34,7 @@ typedef int (*WINPUTFN)(miniFILE *, const unsigned short*, va_list);
 *
 *******************************************************************************/
 
-static int __cdecl vscan_fn (
+static int vscan_fn (
         INPUTFN inputfn,
         const char *string,
         const char *format,
@@ -67,7 +67,7 @@ static int __cdecl vscan_fn (
         return(retval);
 }
 
-static int __cdecl vnscan_fn (
+static int vnscan_fn (
         INPUTFN inputfn,
         const char *string,
         size_t count,
@@ -106,7 +106,7 @@ static int __cdecl vnscan_fn (
         return(retval);
 }
 
-static int __cdecl vwscan_fn (
+static int vwscan_fn (
         WINPUTFN inputfn,
         const char16_t *string,
         const char16_t *format,
@@ -139,7 +139,7 @@ static int __cdecl vwscan_fn (
         return(retval);
 }
 
-static int __cdecl vnwscan_fn (
+static int vnwscan_fn (
         WINPUTFN inputfn,
         const char16_t *string,
         size_t count,
@@ -190,7 +190,7 @@ static int __cdecl vnwscan_fn (
 *
 *******************************************************************************/
 
-int __cdecl sscanf_s (
+int sscanf_s (
         const char *string,
         const char *format,
         ...
@@ -204,7 +204,7 @@ int __cdecl sscanf_s (
         return ret;
 }
 
-int __cdecl _snscanf_s (
+int _snscanf_s (
         const char *string,
         size_t count,
         const char *format,
@@ -219,7 +219,7 @@ int __cdecl _snscanf_s (
         return ret;
 }
 
-int __cdecl swscanf_s (
+int swscanf_s (
         const char16_t *string,
         const char16_t *format,
         ...
@@ -233,7 +233,7 @@ int __cdecl swscanf_s (
         return ret;
 }
 
-int __cdecl _snwscanf_s (
+int _snwscanf_s (
         const char16_t *string,
         size_t count,
         const char16_t *format,

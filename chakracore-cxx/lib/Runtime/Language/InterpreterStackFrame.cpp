@@ -8098,7 +8098,7 @@ skipThunk:
 #endif
             GetAsmJsBuffer();
 
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         uint8 dataWidth = playout->DataWidth;
         RegSlot dstReg = playout->Value;
         if (index + dataWidth > arr->GetByteLength())
@@ -8118,7 +8118,7 @@ skipThunk:
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
         const uint64 index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         uint8 dataWidth = playout->DataWidth;
         RegSlot dstReg = playout->Value;
 
@@ -8151,7 +8151,7 @@ skipThunk:
 #endif
             GetAsmJsBuffer();
 
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         uint8 dataWidth = playout->DataWidth;
         RegSlot srcReg = playout->Value;
 
@@ -8170,7 +8170,7 @@ skipThunk:
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
         const uint64 index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         uint8 dataWidth = playout->DataWidth;
         RegSlot srcReg = playout->Value;
 
@@ -8724,7 +8724,7 @@ skipThunk:
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         if (index < arr->GetByteLength())
         {
-            BYTE* buffer = arr->GetBuffer();
+            uint8_t* buffer = arr->GetBuffer();
             *(ArrayType*)(buffer + index) = (ArrayType)GetRegRaw<RegType>(regSlot);
         }
     }
@@ -8802,7 +8802,7 @@ skipThunk:
     void InterpreterStackFrame::OP_LdArr(uint32 index, RegSlot regSlot)
     {
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         ArrayType val = index < (arr->GetByteLength()) ? *(ArrayType*)(buffer + index) : GetArrayViewOverflowVal<ArrayType>();
         SetRegRaw<RegType>(regSlot, (RegType)val);
     }
@@ -8876,7 +8876,7 @@ skipThunk:
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW(name, align, RegType, MemType, ...) \
@@ -8902,7 +8902,7 @@ skipThunk:
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW_INT(name, align, RegType, MemType, ...) \
@@ -8930,7 +8930,7 @@ skipThunk:
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW_INT(name, align, RegType, MemType, ...) \
@@ -8985,7 +8985,7 @@ skipThunk:
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
-        BYTE* buffer = arr->GetBuffer();
+        uint8_t* buffer = arr->GetBuffer();
         switch (playout->ViewType)
         {
 #define ARRAYBUFFER_VIEW(name, align, RegType, MemType, ...) \
@@ -9433,7 +9433,7 @@ skipThunk:
         return previousAllocation;
     }
 
-    void __cdecl InterpreterStackFrame::operator delete(void * allocationToFree, void * previousAllocation) throw()
+    void InterpreterStackFrame::operator delete(void * allocationToFree, void * previousAllocation) throw()
     {
         AssertMsg(allocationToFree == previousAllocation, "Memory locations should match");
         AssertMsg(false, "This function should never actually be called");

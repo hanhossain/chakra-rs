@@ -5435,13 +5435,13 @@ namespace UnifiedRegex
         }
     }
 
-    inline bool Matcher::MatchBOILiteral2(const Char* const input, const CharCount inputLength, CharCount offset, DWORD literal2)
+    inline bool Matcher::MatchBOILiteral2(const Char* const input, const CharCount inputLength, CharCount offset, uint32_t literal2)
     {
         if (offset == 0 && inputLength >= 2)
         {
             CompileAssert(sizeof(Char) == 2);
             const Program * program = this->program;
-            if (program->rep.boiLiteral2.literal == *(DWORD *)input)
+            if (program->rep.boiLiteral2.literal == *(uint32_t *)input)
             {
                 GroupInfo* const info = GroupIdToGroupInfo(0);
                 info->offset = 0;

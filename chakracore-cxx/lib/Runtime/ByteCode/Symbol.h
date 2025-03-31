@@ -27,30 +27,30 @@ private:
     Symbol *next;
 
     SymbolType symbolType;
-    BYTE defCount;
-    BYTE needDeclaration : 1;
-    BYTE isBlockVar : 1;
-    BYTE isConst : 1;
-    BYTE isGlobal : 1;
-    BYTE hasNonLocalReference : 1;  // if true, then this symbol needs to be heap-allocated
-    BYTE isFuncExpr : 1;              // if true, then this symbol is allocated on it's on activation object
-    BYTE isCatch : 1;               // if true then this a catch identifier
-    BYTE hasInit : 1;
-    BYTE isUsed : 1;
-    BYTE isGlobalCatch : 1;
-    BYTE isCommittedToSlot : 1;
-    BYTE hasNonCommittedReference : 1;
-    BYTE hasVisitedCapturingFunc : 1;
-    BYTE isTrackedForDebugger : 1; // Whether the sym is tracked for debugger scope. This is fine because a sym can only be added to (not more than) one scope.
-    BYTE isModuleExportStorage : 1; // If true, this symbol should be stored in the global scope export storage array.
-    BYTE isModuleImport : 1; // If true, this symbol is the local name of a module import statement
-    BYTE isUsedInLdElem : 1;
-    BYTE isThis : 1;
-    BYTE isNewTarget : 1;
-    BYTE isSuper : 1;
-    BYTE isSuperConstructor : 1;
-    BYTE isImportMeta : 1;
-    BYTE needsScopeObject : 1;
+    uint8_t defCount;
+    uint8_t needDeclaration : 1;
+    uint8_t isBlockVar : 1;
+    uint8_t isConst : 1;
+    uint8_t isGlobal : 1;
+    uint8_t hasNonLocalReference : 1;  // if true, then this symbol needs to be heap-allocated
+    uint8_t isFuncExpr : 1;              // if true, then this symbol is allocated on it's on activation object
+    uint8_t isCatch : 1;               // if true then this a catch identifier
+    uint8_t hasInit : 1;
+    uint8_t isUsed : 1;
+    uint8_t isGlobalCatch : 1;
+    uint8_t isCommittedToSlot : 1;
+    uint8_t hasNonCommittedReference : 1;
+    uint8_t hasVisitedCapturingFunc : 1;
+    uint8_t isTrackedForDebugger : 1; // Whether the sym is tracked for debugger scope. This is fine because a sym can only be added to (not more than) one scope.
+    uint8_t isModuleExportStorage : 1; // If true, this symbol should be stored in the global scope export storage array.
+    uint8_t isModuleImport : 1; // If true, this symbol is the local name of a module import statement
+    uint8_t isUsedInLdElem : 1;
+    uint8_t isThis : 1;
+    uint8_t isNewTarget : 1;
+    uint8_t isSuper : 1;
+    uint8_t isSuperConstructor : 1;
+    uint8_t isImportMeta : 1;
+    uint8_t needsScopeObject : 1;
 
     // These are get and set a lot, don't put it in bit fields, we are exceeding the number of bits anyway
     bool hasFuncAssignment;

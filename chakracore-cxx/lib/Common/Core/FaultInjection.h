@@ -87,8 +87,8 @@ namespace Js
         uint baselineFrameCount;
         char16 *baselineStack[MAX_FRAME_COUNT];
         UINT_PTR baselineAddresses[MAX_FRAME_COUNT];
-        ULONG_PTR* stackHashOfAllInjectionPoints;
-        UINT stackHashOfAllInjectionPointsSize;
+        size_t* stackHashOfAllInjectionPoints;
+        uint32_t stackHashOfAllInjectionPointsSize;
 
     public:
         static FaultInjection Global;
@@ -120,7 +120,7 @@ namespace Js
         struct InjectionRecord{
             void* StackFrames[MAX_FRAME_COUNT];
             UINT_PTR hash;
-            WORD FrameCount;
+            uint16_t FrameCount;
             void* StackData;
             size_t StackDataLength;
             CONTEXT Context;
@@ -138,12 +138,12 @@ namespace Js
 
     private:
         bool symInitialized;
-        static PVOID vectoredExceptionHandler;
-        static DWORD exceptionFilterRemovalLastError;
+        static void * vectoredExceptionHandler;
+        static uint32_t exceptionFilterRemovalLastError;
         static void InstallExceptionFilters();
         static void RemoveExceptionFilters();
-        static UINT_PTR CalculateStackHash(void* frames[], WORD frameCount, WORD framesToSkip);
-        static LONG WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
+        static UINT_PTR CalculateStackHash(void* frames[], uint16_t frameCount, uint16_t framesToSkip);
+        static int32_t WINAPI FaultInjectionExceptionFilter(_In_  struct _EXCEPTION_POINTERS *ExceptionInfo);
         void FaultInjectionAnalyzeException(_EXCEPTION_POINTERS *ep);
     };
 #endif

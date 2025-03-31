@@ -112,8 +112,8 @@ namespace UnifiedRegex
 
         struct BOILiteral2
         {
-            Field(DWORD) literal;
-            Field(uint8) padding[sizeof(Instructions) - sizeof(DWORD)];
+            Field(uint32_t) literal;
+            Field(uint8) padding[sizeof(Instructions) - sizeof(uint32_t)];
         };
 
         struct LeadingTrailingSpaces
@@ -1949,7 +1949,7 @@ namespace UnifiedRegex
         inline bool MatchOctoquad(const Char* const input, const CharCount inputLength, CharCount offset, OctoquadMatcher* matcher);
 
         // Specialized matcher for regex ^literal
-        inline bool MatchBOILiteral2(const Char * const input, const CharCount inputLength, CharCount offset, DWORD literal2);
+        inline bool MatchBOILiteral2(const Char * const input, const CharCount inputLength, CharCount offset, uint32_t literal2);
 
         void SaveInnerGroups(const int fromGroupId, const int toGroupId, const bool reset, const Char *const input, ContStack &contStack);
         void DoSaveInnerGroups(const int fromGroupId, const int toGroupId, const bool reset, const Char *const input, ContStack &contStack);

@@ -8,7 +8,7 @@
 
 namespace Js
 {
-    bool Exception::RaiseIfScriptActive(ScriptContext *scriptContext, unsigned kind, PVOID returnAddress)
+    bool Exception::RaiseIfScriptActive(ScriptContext *scriptContext, unsigned kind, void * returnAddress)
     {
         ThreadContext *threadContext = ThreadContext::GetContextForCurrentThread();
 

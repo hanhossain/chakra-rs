@@ -13,7 +13,7 @@ CompileAssert(false)
 
 #include "PlatformAgnostic/AssemblyCommon.h" // __REGISTER_FRAME / __DEREGISTER_FRAME
 
-XDataAllocator::XDataAllocator(BYTE* address, uint size)
+XDataAllocator::XDataAllocator(uint8_t* address, uint size)
 {
     Assert(size == 0);
 }
@@ -29,15 +29,15 @@ bool XDataAllocator::Initialize(void* segmentStart, void* segmentEnd)
     return true;
 }
 
-bool XDataAllocator::Alloc(ULONG_PTR functionStart, DWORD functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
+bool XDataAllocator::Alloc(size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
 {
     XDataAllocation* xdata = static_cast<XDataAllocation*>(allocation);
     Assert(pdataCount > 0);
     Assert(xdataSize >= 0);
     Assert(xdata);
 
-    DWORD size = GetAllocSize(pdataCount, xdataSize);
-    BYTE* alloc = HeapNewNoThrowArray(BYTE, size);
+    uint32_t size = GetAllocSize(pdataCount, xdataSize);
+    uint8_t* alloc = HeapNewNoThrowArray(uint8_t, size);
     if (alloc != nullptr)
     {
         xdata->address = alloc;
@@ -60,7 +60,7 @@ void XDataAllocator::Release(const SecondaryAllocation& allocation)
 }
 
 /* static */
-void XDataAllocator::Register(XDataAllocation * xdataInfo, DWORD functionStart, DWORD functionSize)
+void XDataAllocator::Register(XDataAllocation * xdataInfo, uint32_t functionStart, uint32_t functionSize)
 {
     Assert(ReadHead(xdataInfo->address));  // should be non-empty .eh_frame
     __REGISTER_FRAME(xdataInfo->address);

@@ -226,7 +226,7 @@ public:
             static Js::OpCode   GetLoadOp(IRType type) { return IRType_IsFloat(type) ? Js::OpCode::FLDR : Js::OpCode::LDR; }
             static Js::OpCode   GetStoreOp(IRType type) { return IRType_IsFloat(type) ? Js::OpCode::FSTR : Js::OpCode::STR; }
 
-            static BYTE         GetDefaultIndirScale()
+            static uint8_t         GetDefaultIndirScale()
             {
                 return IndirScale8;
             }

@@ -27,7 +27,7 @@ Abstract:
 
 namespace CorUnix
 {
-    typedef DWORD PAL_ERROR;
+    typedef uint32_t PAL_ERROR;
 
     //
     // Forward declarations for classes defined in other headers
@@ -57,13 +57,13 @@ namespace CorUnix
         // Length of string, not including terminating NULL
         //
 
-        DWORD m_dwStringLength;
+        uint32_t m_dwStringLength;
 
         //
         // Length of buffer backing string; must be at least 1+dwStringLength
         //
 
-        DWORD m_dwMaxLength;
+        uint32_t m_dwMaxLength;
 
     public:
 
@@ -93,7 +93,7 @@ namespace CorUnix
         void
         SetStringWithLength(
             const WCHAR *pwsz,
-            DWORD dwStringLength
+            uint32_t dwStringLength
             )
         {
             m_pwsz = pwsz;
@@ -116,13 +116,13 @@ namespace CorUnix
             return m_pwsz;
         };
 
-        DWORD
+        uint32_t
         GetStringLength()
         {
             return m_dwStringLength;
         };
 
-        DWORD
+        uint32_t
         GetMaxLength()
         {
             return m_dwMaxLength;
@@ -315,10 +315,10 @@ namespace CorUnix
         PalObjectTypeId m_eTypeId;
         OBJECTCLEANUPROUTINE m_pCleanupRoutine;
         OBJECTINITROUTINE m_pInitRoutine;
-        DWORD m_dwImmutableDataSize;
-        DWORD m_dwProcessLocalDataSize;
-        DWORD m_dwSharedDataSize;
-        DWORD m_dwSupportedAccessRights;
+        uint32_t m_dwImmutableDataSize;
+        uint32_t m_dwProcessLocalDataSize;
+        uint32_t m_dwSharedDataSize;
+        uint32_t m_dwSupportedAccessRights;
         // Generic access rights mapping
         SecuritySupport m_eSecuritySupport;
         SecurityPersistence m_eSecurityPersistence;
@@ -335,10 +335,10 @@ namespace CorUnix
             PalObjectTypeId eTypeId,
             OBJECTCLEANUPROUTINE pCleanupRoutine,
             OBJECTINITROUTINE pInitRoutine,
-            DWORD dwImmutableDataSize,
-            DWORD dwProcessLocalDataSize,
-            DWORD dwSharedDataSize,
-            DWORD dwSupportedAccessRights,
+            uint32_t dwImmutableDataSize,
+            uint32_t dwProcessLocalDataSize,
+            uint32_t dwSharedDataSize,
+            uint32_t dwSupportedAccessRights,
             SecuritySupport eSecuritySupport,
             SecurityPersistence eSecurityPersistence,
             ObjectNameSupport eObjectNameSupport,
@@ -401,7 +401,7 @@ namespace CorUnix
             return  m_pInitRoutine;
         };
 
-        DWORD
+        uint32_t
         GetImmutableDataSize(
             void
             )
@@ -409,7 +409,7 @@ namespace CorUnix
             return  m_dwImmutableDataSize;
         };
 
-        DWORD
+        uint32_t
         GetProcessLocalDataSize(
             void
             )
@@ -417,7 +417,7 @@ namespace CorUnix
             return m_dwProcessLocalDataSize;
         };
 
-        DWORD
+        uint32_t
         GetSharedDataSize(
             void
             )
@@ -425,7 +425,7 @@ namespace CorUnix
             return m_dwSharedDataSize;
         };
 
-        DWORD
+        uint32_t
         GetSupportedAccessRights(
             void
             )
@@ -517,7 +517,7 @@ namespace CorUnix
 
         CAllowedObjectTypes(
             PalObjectTypeId rgAllowedTypes[],
-            DWORD dwAllowedTypeCount
+            uint32_t dwAllowedTypeCount
             );
 
         //
@@ -536,7 +536,7 @@ namespace CorUnix
             bool fAllowAllObjectTypes
             )
         {
-            for (DWORD dw = 0; dw < ObjectTypeIdCount; dw += 1)
+            for (uint32_t dw = 0; dw < ObjectTypeIdCount; dw += 1)
             {
                 m_rgfAllowedTypes[dw] = fAllowAllObjectTypes;
             }
@@ -600,25 +600,25 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetSignalCount(
-            LONG *plSignalCount
+            int32_t *plSignalCount
             ) = 0;
 
         virtual
         PAL_ERROR
         SetSignalCount(
-            LONG lNewCount
+            int32_t lNewCount
             ) = 0;
 
         virtual
         PAL_ERROR
         IncrementSignalCount(
-            LONG lAmountToIncrement
+            int32_t lAmountToIncrement
             ) = 0;
 
         virtual
         PAL_ERROR
         DecrementSignalCount(
-            LONG lAmountToDecrement
+            int32_t lAmountToDecrement
             ) = 0;
 
         //
@@ -715,7 +715,7 @@ namespace CorUnix
         PAL_ERROR
         RegisterWaitingThread(
             WaitType eWaitType,
-            DWORD dwIndex,
+            uint32_t dwIndex,
             bool fAltertable
             ) = 0;
 
@@ -783,13 +783,13 @@ namespace CorUnix
         virtual
         CObjectType *
         GetObjectType(
-            VOID
+            void
             ) = 0;
 
         virtual
         CObjectAttributes *
         GetObjectAttributes(
-            VOID
+            void
             ) = 0;
 
         virtual
@@ -860,13 +860,13 @@ namespace CorUnix
             ) = 0;
 
         virtual
-        DWORD
+        uint32_t
         AddReference(
             void
             ) = 0;
 
         virtual
-        DWORD
+        uint32_t
         ReleaseReference(
             CPalThread *pThread
             ) = 0;
@@ -893,7 +893,7 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetObjectSynchData(
-            VOID **ppvSynchData             // OUT
+            void **ppvSynchData             // OUT
             ) = 0;
 
     };
@@ -902,7 +902,7 @@ namespace CorUnix
     {
     public:
         virtual
-        DWORD
+        uint32_t
         GetProcessID(
             void
             ) = 0;
@@ -960,7 +960,7 @@ namespace CorUnix
             CPalThread *pThread,                // IN, OPTIONAL
             IPalObject *pObjectToRegister,
             CAllowedObjectTypes *pAllowedTypes,
-            DWORD dwRightsRequested,
+            uint32_t dwRightsRequested,
             HANDLE *pHandle,                    // OUT
             IPalObject **ppRegisteredObject     // OUT
             ) = 0;
@@ -992,7 +992,7 @@ namespace CorUnix
         ObtainHandleForObject(
             CPalThread *pThread,                // IN, OPTIONAL
             IPalObject *pObject,
-            DWORD dwRightsRequested,
+            uint32_t dwRightsRequested,
             bool fInheritHandle,
             IPalProcess *pProcessForHandle,     // IN, OPTIONAL
             HANDLE *pNewHandle                  // OUT
@@ -1025,7 +1025,7 @@ namespace CorUnix
             CPalThread *pThread,                // IN, OPTIONAL
             HANDLE hHandleToReference,
             CAllowedObjectTypes *pAllowedTypes,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject **ppObject               // OUT
             ) = 0;
 
@@ -1038,9 +1038,9 @@ namespace CorUnix
         ReferenceMultipleObjectsByHandleArray(
             CPalThread *pThread,                // IN, OPTIONAL
             HANDLE rghHandlesToReference[],
-            DWORD dwHandleCount,
+            uint32_t dwHandleCount,
             CAllowedObjectTypes *pAllowedTypes,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject *rgpObjects[]            // OUT
             ) = 0;
 
@@ -1055,7 +1055,7 @@ namespace CorUnix
             HANDLE hForeignHandle,
             IPalProcess *pForeignProcess,
             CAllowedObjectTypes *pAllowedTypes,
-            DWORD dwRightsRequired,
+            uint32_t dwRightsRequired,
             IPalObject **ppObject               // OUT
             ) = 0;
 
@@ -1091,11 +1091,11 @@ namespace CorUnix
         PAL_ERROR
         BlockThread(
             CPalThread *pCurrentThread,
-            DWORD dwTimeout,
+            uint32_t dwTimeout,
             bool fAlertable,
             bool fIsSleep,
             ThreadWakeupReason *peWakeupReason, // OUT
-            DWORD *pdwSignaledObject       // OUT
+            uint32_t *pdwSignaledObject       // OUT
             ) = 0;
 
         virtual
@@ -1111,7 +1111,7 @@ namespace CorUnix
             CPalThread *pThread,
             CPalThread *pTargetThread,
             PAPCFUNC pfnAPC,
-            ULONG_PTR dwData
+            size_t dwData
             ) = 0;
 
         virtual
@@ -1137,7 +1137,7 @@ namespace CorUnix
         GetSynchWaitControllersForObjects(
             CPalThread *pThread,
             IPalObject *rgObjects[],
-            DWORD dwObjectCount,
+            uint32_t dwObjectCount,
             ISynchWaitController *rgControllers[]
             ) = 0;
 
@@ -1146,7 +1146,7 @@ namespace CorUnix
         GetSynchStateControllersForObjects(
             CPalThread *pThread,
             IPalObject *rgObjects[],
-            DWORD dwObjectCount,
+            uint32_t dwObjectCount,
             ISynchStateController *rgControllers[]
             ) = 0;
 
@@ -1162,7 +1162,7 @@ namespace CorUnix
         AllocateObjectSynchData(
             CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
-            VOID **ppvSynchData                 // OUT
+            void **ppvSynchData                 // OUT
             ) = 0;
 
         virtual
@@ -1170,15 +1170,15 @@ namespace CorUnix
         FreeObjectSynchData(
             CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
-            VOID *pvSynchData
+            void *pvSynchData
             ) = 0;
 
         virtual
         PAL_ERROR
         PromoteObjectSynchData(
             CPalThread *pThread,
-            VOID *pvLocalSynchData,
-            VOID **ppvSharedSynchData           // OUT
+            void *pvLocalSynchData,
+            void **ppvSharedSynchData           // OUT
             ) = 0;
 
         //
@@ -1208,7 +1208,7 @@ namespace CorUnix
         CreateSynchStateController(
             CPalThread *pThread,                // IN, OPTIONAL
             CObjectType *pObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain eObjectDomain,
             ISynchStateController **ppStateController       // OUT
             ) = 0;
@@ -1218,7 +1218,7 @@ namespace CorUnix
         CreateSynchWaitController(
             CPalThread *pThread,                // IN, OPTIONAL
             CObjectType *pObjectType,
-            VOID *pvSynchData,
+            void *pvSynchData,
             ObjectDomain eObjectDomain,
             ISynchWaitController **ppWaitController       // OUT
             ) = 0;
@@ -1264,10 +1264,10 @@ namespace CorUnix
         GetTransactionLock(
             CPalThread *pThread,                // IN, OPTIONAL
             FileTransactionLockType eLockType,
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToLockLow,
-            DWORD nNumberOfBytesToLockHigh,
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToLockLow,
+            uint32_t nNumberOfBytesToLockHigh,
             IFileTransactionLock **ppTransactionLock    // OUT
             ) = 0;
 
@@ -1287,10 +1287,10 @@ namespace CorUnix
         PAL_ERROR
         CreateFileLock(
             CPalThread *pThread,                // IN, OPTIONAL
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToLockLow,
-            DWORD nNumberOfBytesToLockHigh,
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToLockLow,
+            uint32_t nNumberOfBytesToLockHigh,
             FileLockExclusivity eFileLockExclusivity,
             FileLockWaitMode eFileLockWaitMode
             ) = 0;
@@ -1299,10 +1299,10 @@ namespace CorUnix
         PAL_ERROR
         ReleaseFileLock(
             CPalThread *pThread,                // IN, OPTIONAL
-            DWORD dwOffsetLow,
-            DWORD dwOffsetHigh,
-            DWORD nNumberOfBytesToUnlockLow,
-            DWORD nNumberOfBytesToUnlockHigh
+            uint32_t dwOffsetLow,
+            uint32_t dwOffsetHigh,
+            uint32_t nNumberOfBytesToUnlockLow,
+            uint32_t nNumberOfBytesToUnlockHigh
             ) = 0;
 
         //
@@ -1332,8 +1332,8 @@ namespace CorUnix
         GetLockControllerForFile(
             CPalThread *pThread,                // IN, OPTIONAL
             LPCSTR szFileName,
-            DWORD dwAccessRights,
-            DWORD dwShareMode,
+            uint32_t dwAccessRights,
+            uint32_t dwShareMode,
             IFileLockController **ppLockController  // OUT
             ) = 0;
 
@@ -1346,7 +1346,7 @@ namespace CorUnix
         PAL_ERROR
         GetFileShareModeForFile(
             LPCSTR szFileName,
-            DWORD* pdwShareMode) = 0;
+            uint32_t* pdwShareMode) = 0;
     };
 
     extern IFileLockManager *g_pFileLockManager;

@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    const DWORD  ExceptionParameters = 1;
+    const uint32_t  ExceptionParameters = 1;
     const int    ExceptionObjectIndex = 0;
 
     class JavascriptExceptionContext;
@@ -14,7 +14,7 @@ namespace Js
     class JavascriptExceptionObject
     {
     public:
-        typedef Var (__stdcall *HostWrapperCreateFuncType)(Var var, ScriptContext * sourceScriptContext, ScriptContext * destScriptContext);
+        typedef Var (*HostWrapperCreateFuncType)(Var var, ScriptContext * sourceScriptContext, ScriptContext * destScriptContext);
 
         JavascriptExceptionObject(Var object, ScriptContext * scriptContext, JavascriptExceptionContext* exceptionContextIn, bool isPendingExceptionObject = false) :
             thrownObject(object),

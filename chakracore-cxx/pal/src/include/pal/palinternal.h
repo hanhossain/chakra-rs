@@ -316,7 +316,6 @@ function_name() to call the system's implementation
 // The standard headers define va_start and va_end as macros,
 // To avoid redefinition problems, undefine those macros.
 
-#define ptrdiff_t PAL_ptrdiff_t
 #define uintptr_t PAL_uintptr_t
 #define timeval PAL_timeval
 #define FILE PAL_FILE
@@ -582,7 +581,7 @@ function_name() to call the system's implementation
 #if (__GNUC__ >= 4)
 #define OffsetOf(TYPE, MEMBER) __builtin_offsetof(TYPE, MEMBER)
 #else
-#define OffsetOf(s, f) (INT)(SIZE_T)&(((s*)0)->f)
+#define OffsetOf(s, f) (int32_t)(SIZE_T)&(((s*)0)->f)
 #endif /* __GNUC__ version check*/
 
 #undef assert
@@ -618,8 +617,8 @@ T* InterlockedExchangePointerT(
     T* Value)
 {
     return (T*)(InterlockedExchangePointer(
-        (PVOID volatile*)Target,
-        (PVOID)Value));
+        (void * volatile*)Target,
+        (void *)Value));
 }
 
 template <typename T>
@@ -630,9 +629,9 @@ T* InterlockedCompareExchangePointerT(
     T* comparand)
 {
     return (T*)(InterlockedCompareExchangePointer(
-        (PVOID volatile*)destination,
-        (PVOID)exchange,
-        (PVOID)comparand));
+        (void * volatile*)destination,
+        (void *)exchange,
+        (void *)comparand));
 }
 
 template <typename T>

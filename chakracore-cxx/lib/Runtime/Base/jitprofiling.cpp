@@ -48,10 +48,10 @@ void* m_libHandle = NULL;
 #define ANDROID_JIT_AGENT_PATH  "/data/intel/libittnotify.so"
 
 /* the function pointers */
-typedef unsigned int(JITAPI *TPInitialize)(void);
+typedef unsigned int(*TPInitialize)(void);
 static TPInitialize FUNC_Initialize=NULL;
 
-typedef unsigned int(JITAPI *TPNotify)(unsigned int, void*);
+typedef unsigned int(*TPNotify)(unsigned int, void*);
 static TPNotify FUNC_NotifyEvent=NULL;
 
 static iJIT_IsProfilingActiveFlags executionMode = iJIT_NOTHING_RUNNING;
@@ -69,7 +69,7 @@ static int loadiJIT_Funcs(void);
 /* global representing whether the collector can't be loaded */
 static int iJIT_DLL_is_missing = 0;
 
-ITT_EXTERN_C int JITAPI
+ITT_EXTERN_C int
 iJIT_NotifyEvent(iJIT_JVM_EVENT event_type, void *EventSpecificData)
 {
     int ReturnValue = 0;
@@ -115,7 +115,7 @@ iJIT_NotifyEvent(iJIT_JVM_EVENT event_type, void *EventSpecificData)
     return ReturnValue;
 }
 
-ITT_EXTERN_C iJIT_IsProfilingActiveFlags JITAPI iJIT_IsProfilingActive()
+ITT_EXTERN_C iJIT_IsProfilingActiveFlags iJIT_IsProfilingActive()
 {
     if (!iJIT_DLL_is_missing)
     {
@@ -136,7 +136,7 @@ static int loadiJIT_Funcs()
     static int bDllWasLoaded = 0;
     char *dllName = (char*)rcsid; /* !! Just to avoid unused code elimination */
 #if ITT_PLATFORM==ITT_PLATFORM_WIN
-    DWORD dNameLength = 0;
+    uint32_t dNameLength = 0;
 #endif /* ITT_PLATFORM==ITT_PLATFORM_WIN */
 
     if(bDllWasLoaded)
@@ -164,7 +164,7 @@ static int loadiJIT_Funcs()
     dNameLength = GetEnvironmentVariableA(NEW_DLL_ENVIRONMENT_VAR, NULL, 0);
     if (dNameLength)
     {
-        DWORD envret = 0;
+        uint32_t envret = 0;
         dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
         if(dllName != NULL)
         {
@@ -183,7 +183,7 @@ static int loadiJIT_Funcs()
         dNameLength = GetEnvironmentVariableA(DLL_ENVIRONMENT_VAR, NULL, 0);
         if (dNameLength)
         {
-            DWORD envret = 0;
+            uint32_t envret = 0;
             dllName = (char*)malloc(sizeof(char) * (dNameLength + 1));
             if(dllName != NULL)
             {
@@ -261,7 +261,7 @@ static int loadiJIT_Funcs()
     return 1;
 }
 
-ITT_EXTERN_C unsigned int JITAPI iJIT_GetNewMethodID()
+ITT_EXTERN_C unsigned int iJIT_GetNewMethodID()
 {
     static unsigned int methodID = 1;
 

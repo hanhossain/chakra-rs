@@ -44,7 +44,7 @@ namespace Js
         Type(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint);
 
     public:
-        static DWORD GetJavascriptLibraryOffset() { return offsetof(Type, javascriptLibrary); }
+        static uint32_t GetJavascriptLibraryOffset() { return offsetof(Type, javascriptLibrary); }
         inline TypeId GetTypeId() const { return typeId; }
         void SetTypeId(TypeId typeId) { this->typeId = typeId; }
         RecyclableObject* GetPrototype() const { return prototype; }
@@ -84,7 +84,7 @@ namespace Js
         void SetHasSpecialPrototype(const bool hasSpecialPrototype);
 
         // This is for static lib verification use only.
-        static DWORD GetTypeIdFieldOffset() { return offsetof(Type, typeId); }
+        static uint32_t GetTypeIdFieldOffset() { return offsetof(Type, typeId); }
         static size_t OffsetOfWritablePropertiesFlag()
         {
             return offsetof(Type, flags);

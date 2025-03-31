@@ -13,54 +13,54 @@
 class StackBackTrace
 {
 public:
-    static const ULONG DefaultFramesToCapture = 30;
-    static StackBackTrace * Capture(char* buffer, size_t bufSize, ULONG framesToSkip = 0);
+    static const uint32_t DefaultFramesToCapture = 30;
+    static StackBackTrace * Capture(char* buffer, size_t bufSize, uint32_t framesToSkip = 0);
     template <typename TAllocator> _NOINLINE
-        static StackBackTrace * Capture(TAllocator * alloc, ULONG framesToSkip = 0, ULONG framesToCapture = DefaultFramesToCapture);
+        static StackBackTrace * Capture(TAllocator * alloc, uint32_t framesToSkip = 0, uint32_t framesToCapture = DefaultFramesToCapture);
 
     template <typename TAllocator> _NOINLINE
-        static StackBackTrace * Create(TAllocator * alloc, ULONG framesToCaptureLater = DefaultFramesToCapture);
+        static StackBackTrace * Create(TAllocator * alloc, uint32_t framesToCaptureLater = DefaultFramesToCapture);
     size_t Print();
     template<typename Fn>void Map(Fn fn);   // The Fn is expected to be: void Fn(void*).
-    ULONG Capture(ULONG framesToSkip);
-    ULONG GetRequestedFrameCount() { return this->requestedFramesToCapture; }
+    uint32_t Capture(uint32_t framesToSkip);
+    uint32_t GetRequestedFrameCount() { return this->requestedFramesToCapture; }
     template <typename TAllocator>
     void Delete(TAllocator * alloc);
 private:
     // We want to skip at lease the StackBackTrace::Capture and the constructor frames
-    static const ULONG BaseFramesToSkip = 2;
+    static const uint32_t BaseFramesToSkip = 2;
 
-    _NOINLINE StackBackTrace(ULONG framesToSkip, ULONG framesToCapture);
-    _NOINLINE StackBackTrace(ULONG framesToCapture);
+    _NOINLINE StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture);
+    _NOINLINE StackBackTrace(uint32_t framesToCapture);
 
-    ULONG requestedFramesToCapture;
-    ULONG framesCount;
-    PVOID stackBackTrace[];
+    uint32_t requestedFramesToCapture;
+    uint32_t framesCount;
+    void * stackBackTrace[];
 };
 
 template <typename TAllocator>
 StackBackTrace *
-StackBackTrace::Capture(TAllocator * alloc, ULONG framesToSkip, ULONG framesToCapture)
+StackBackTrace::Capture(TAllocator * alloc, uint32_t framesToSkip, uint32_t framesToCapture)
 {
-    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID) * framesToCapture, StackBackTrace, framesToSkip, framesToCapture);
+    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(void *) * framesToCapture, StackBackTrace, framesToSkip, framesToCapture);
 }
 
 template <typename TAllocator>
-StackBackTrace* StackBackTrace::Create(TAllocator * alloc, ULONG framesToCaptureLater)
+StackBackTrace* StackBackTrace::Create(TAllocator * alloc, uint32_t framesToCaptureLater)
 {
-    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(PVOID)* framesToCaptureLater, StackBackTrace, framesToCaptureLater);
+    return AllocatorNewPlusZ(TAllocator, alloc, sizeof(void *)* framesToCaptureLater, StackBackTrace, framesToCaptureLater);
 }
 
 template <typename TAllocator>
 void StackBackTrace::Delete(TAllocator * alloc)
 {
-    AllocatorDeletePlus(TAllocator, alloc, sizeof(PVOID)* requestedFramesToCapture, this);
+    AllocatorDeletePlus(TAllocator, alloc, sizeof(void *)* requestedFramesToCapture, this);
 }
 
 template <typename Fn>
 void StackBackTrace::Map(Fn fn)
 {
-    for (ULONG i = 0; i < this->framesCount; ++i)
+    for (uint32_t i = 0; i < this->framesCount; ++i)
     {
         fn(this->stackBackTrace[i]);
     }
@@ -135,14 +135,14 @@ uint _trace_ring_next_id();
 // A buffer of size "T[count]", dynamically allocated (!useStatic) or
 // statically embedded (useStatic).
 //
-template <class T, LONG count, bool useStatic>
+template <class T, int32_t count, bool useStatic>
 struct _TraceRingBuffer
 {
     T* buf;
     _TraceRingBuffer() { buf = HeapNewArray(T, count); }
     ~_TraceRingBuffer() { HeapDeleteArray(count, buf); }
 };
-template <class T, LONG count>
+template <class T, int32_t count>
 struct _TraceRingBuffer<T, count, true>
 {
     T buf[count];
@@ -195,7 +195,7 @@ struct _TraceRingFrame
 //      ?? &s_ev.buf[i]
 //      dds/dqs [above address]
 //
-template <class Header, LONG COUNT,
+template <class Header, int32_t COUNT,
           uint STACK_FRAMES = 30,
           bool USE_STATIC_BUFFER = false,
           uint SKIP_TOP_FRAMES = 1>
@@ -203,7 +203,7 @@ class TraceRing:
     protected _TraceRingBuffer<_TraceRingFrame<Header, STACK_FRAMES>, COUNT, USE_STATIC_BUFFER>
 {
 protected:
-    LONG cur;
+    int32_t cur;
 
 public:
     TraceRing()
@@ -214,7 +214,7 @@ public:
     template <class HeaderFunc>
     void Capture(const HeaderFunc& writeHeader)
     {
-        LONG i = InterlockedIncrement(&cur);
+        int32_t i = InterlockedIncrement(&cur);
         if (i >= COUNT)
         {
             InterlockedCompareExchange(&cur, i % COUNT, i);

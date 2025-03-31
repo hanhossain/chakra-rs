@@ -24,21 +24,19 @@ Abstract:
 #define E_INVALIDARG ((HRESULT) 0x80070057L)
 #define SUCCEEDED(Status) ((HRESULT)(Status) >= 0)
 #define FAILED(Status) ((HRESULT)(Status)<0)
-#define STDAPICALLTYPE       __stdcall
 #define NULL    0
-#define STDAPI_(type)        EXTERN_C type STDAPICALLTYPE
 
 #include "pal_assert.h"
 #include "rt/intsafe.h"
 
 #define WIN32_ALLOC_ALIGN (16 - 1)
 
-PALIMPORT size_t __cdecl PAL_wcslen(const WCHAR *);
+size_t PAL_wcslen(const WCHAR *);
 
 typedef WCHAR OLECHAR;
 typedef WCHAR *BSTR;
 
-inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
+inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *result)
 {
     if (result == nullptr)
         return E_INVALIDARG;
@@ -57,7 +55,7 @@ inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
     }
     else
     {
-        ULONG temp = 0; // should not use in-place addition in ULongAdd
+        uint32_t temp = 0; // should not use in-place addition in ULongAdd
         if (SUCCEEDED(ULongMult(cchSize, sizeof(WCHAR), &temp)) &
             SUCCEEDED(ULongAdd(temp, constant, result)))
         {
@@ -83,11 +81,11 @@ inline HRESULT CbSysStringSize(ULONG cchSize, BOOL isByteLen, ULONG *result)
  *  return value = BSTR, NULL if the allocation failed.
  *
  ***********************************************************************/
-STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *psz, UINT len)
+extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
 {
 
     BSTR bstr;
-    DWORD cbTotal = 0;
+    uint32_t cbTotal = 0;
 
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return NULL;
@@ -100,13 +98,13 @@ STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *psz, UINT len)
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
-        // looking one DWORD before the BSTR pointer.
+        // looking one uint32_t before the BSTR pointer.
         *(DWORD_PTR *)bstr = (DWORD_PTR) 0;
-        bstr = (BSTR) ((char *) bstr + sizeof (DWORD));
+        bstr = (BSTR) ((char *) bstr + sizeof (uint32_t));
 #endif
-        *(DWORD FAR*)bstr = (DWORD)len * sizeof(OLECHAR);
+        *(uint32_t *)bstr = (uint32_t)len * sizeof(OLECHAR);
 
-        bstr = (BSTR) ((char*) bstr + sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr + sizeof(uint32_t));
 
         if(psz != NULL){
             memcpy(bstr, psz, len * sizeof(OLECHAR));
@@ -130,20 +128,20 @@ STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *psz, UINT len)
  *  return value = void
  *
  ***********************************************************************/
-STDAPI_(void) SysFreeString(BSTR bstr)
+extern "C" void SysFreeString(BSTR bstr)
 {
     if (bstr != NULL)
     {
-        bstr = (BSTR) ((char*) bstr - sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
 #if defined(_WIN64)
-        bstr = (BSTR) ((char*) bstr - sizeof(DWORD));
+        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
 #endif
-        HeapFree(GetProcessHeap(), 0, (LPVOID) bstr);
+        HeapFree(GetProcessHeap(), 0, (void *) bstr);
     }
 }
 
 /***
- *UINT SysStringLen(BSTR)
+ *uint32_t SysStringLen(BSTR)
  *Purpose:
  *  Return the length of the string in characters (not including null terminator)
  *
@@ -154,14 +152,14 @@ STDAPI_(void) SysFreeString(BSTR bstr)
  *  return value = length of the string
  *
  ***********************************************************************/
-STDAPI_(UINT) SysStringLen(BSTR bstr)
+extern "C" uint32_t SysStringLen(BSTR bstr)
 {
     if (bstr == NULL)
     {
         return 0;
     }
 
-    return (UINT)((((DWORD FAR*)bstr)[-1]) / sizeof(OLECHAR));
+    return (uint32_t)((((uint32_t *)bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***
@@ -176,12 +174,12 @@ STDAPI_(UINT) SysStringLen(BSTR bstr)
  *  return value = BSTR, NULL if allocation failed
  *
  ***********************************************************************/
-STDAPI_(BSTR) SysAllocString(const OLECHAR* psz)
+extern "C" BSTR SysAllocString(const OLECHAR* psz)
 {
     if(psz == NULL)
     {
         return NULL;
     }
 
-    return SysAllocStringLen(psz, (DWORD)PAL_wcslen(psz));
+    return SysAllocStringLen(psz, (uint32_t)PAL_wcslen(psz));
 }

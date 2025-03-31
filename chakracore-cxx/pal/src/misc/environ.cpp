@@ -62,15 +62,14 @@ value is the buffer size, in TCHARs, required to hold the value string
 and its terminating null character.
 
 --*/
-DWORD
-PALAPI
+uint32_t
 GetEnvironmentVariableA(
-            IN LPCSTR lpName,
-            OUT LPSTR lpBuffer,
-            IN DWORD nSize)
+             LPCSTR lpName,
+             LPSTR lpBuffer,
+             uint32_t nSize)
 {
     char  *value;
-    DWORD dwRet = 0;
+    uint32_t dwRet = 0;
 
     PERF_ENTRY(GetEnvironmentVariableA);
     ENTRY("GetEnvironmentVariableA(lpName=%p (%s), lpBuffer=%p, nSize=%u)\n",
@@ -132,17 +131,16 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetEnvironmentVariableW(
-            IN LPCWSTR lpName,
-            OUT LPWSTR lpBuffer,
-            IN DWORD nSize)
+             LPCWSTR lpName,
+             LPWSTR lpBuffer,
+             uint32_t nSize)
 {
-    CHAR *inBuff = NULL;
-    CHAR *outBuff = NULL;
-    INT inBuffSize;
-    DWORD size = 0;
+    char *inBuff = NULL;
+    char *outBuff = NULL;
+    int32_t inBuffSize;
+    uint32_t size = 0;
 
     PERF_ENTRY(GetEnvironmentVariableW);
     ENTRY("GetEnvironmentVariableW(lpName=%p (%S), lpBuffer=%p, nSize=%u)\n",
@@ -158,7 +156,7 @@ GetEnvironmentVariableW(
         goto done;
     }
 
-    inBuff = (CHAR *)PAL_malloc(inBuffSize);
+    inBuff = (char *)PAL_malloc(inBuffSize);
     if (inBuff == NULL)
     {
         ERROR("malloc failed\n");
@@ -167,7 +165,7 @@ GetEnvironmentVariableW(
     }
     
     if (nSize) {
-        outBuff = (CHAR *)PAL_malloc(nSize*2);
+        outBuff = (char *)PAL_malloc(nSize*2);
         if (outBuff == NULL)
         {
             ERROR("malloc failed\n");
@@ -253,15 +251,14 @@ environment variables of other processes.
 
 --*/
 BOOL
-PALAPI
 SetEnvironmentVariableW(
-            IN LPCWSTR lpName,
-            IN LPCWSTR lpValue)
+             LPCWSTR lpName,
+             LPCWSTR lpValue)
 {
     PCHAR name = NULL;
     PCHAR value = NULL;
-    INT nameSize = 0;
-    INT valueSize = 0;
+    int32_t nameSize = 0;
+    int32_t valueSize = 0;
     BOOL bRet = FALSE;
 
     PERF_ENTRY(SetEnvironmentVariableW);
@@ -277,7 +274,7 @@ SetEnvironmentVariableW(
         goto done;
     }
 
-    name = (PCHAR)PAL_malloc(sizeof(CHAR)* nameSize);
+    name = (PCHAR)PAL_malloc(sizeof(char)* nameSize);
     if (name == NULL)
     {
         ERROR("malloc failed\n");
@@ -303,7 +300,7 @@ SetEnvironmentVariableW(
             goto done;
         }
 
-        value = (PCHAR)PAL_malloc(sizeof(CHAR)*valueSize);
+        value = (PCHAR)PAL_malloc(sizeof(char)*valueSize);
         
         if ( NULL == value )
         {
@@ -360,9 +357,8 @@ FreeEnvironmentStrings.
 
 --*/
 LPWSTR
-PALAPI
 GetEnvironmentStringsW(
-               VOID)
+               void)
 {
     WCHAR *wenviron = NULL, *tempEnviron;
     int i, len, envNum;
@@ -418,9 +414,8 @@ See GetEnvironmentStringsW.
 
 --*/
 LPSTR
-PALAPI
 GetEnvironmentStringsA(
-               VOID)
+               void)
 {
     char *environ = NULL, *tempEnviron;
     int i, len, envNum;
@@ -495,9 +490,8 @@ be freed by calling FreeEnvironmentStrings.
 
 --*/
 BOOL
-PALAPI
 FreeEnvironmentStringsW(
-            IN LPWSTR lpValue)
+             LPWSTR lpValue)
 {
     PERF_ENTRY(FreeEnvironmentStringsW);
     ENTRY("FreeEnvironmentStringsW(lpValue=%p (%S))\n", lpValue?lpValue:W16_NULLSTRING, lpValue?lpValue:W16_NULLSTRING);
@@ -521,9 +515,8 @@ See FreeEnvironmentStringsW.
 
 --*/
 BOOL
-PALAPI
 FreeEnvironmentStringsA(
-            IN LPSTR lpValue)
+             LPSTR lpValue)
 {
     PERF_ENTRY(FreeEnvironmentStringsA);
     ENTRY("FreeEnvironmentStringsA(lpValue=%p (%s))\n", lpValue?lpValue:"NULL", lpValue?lpValue:"NULL");
@@ -573,10 +566,9 @@ environment variables of other processes.
 
 --*/
 BOOL
-PALAPI
 SetEnvironmentVariableA(
-			IN LPCSTR lpName,
-			IN LPCSTR lpValue)
+			 LPCSTR lpName,
+			 LPCSTR lpValue)
 {
 
     BOOL bRet = FALSE;

@@ -90,7 +90,7 @@ bool JsrtContext::TrySetCurrent(JsrtContext * context)
         // no need to rootAddRef and Release for the same context
         if (s_tlvSlot == context) return true;
 
-        threadContext->GetRecycler()->RootAddRef((LPVOID)context);
+        threadContext->GetRecycler()->RootAddRef((void *)context);
     }
     else
     {
@@ -103,7 +103,7 @@ bool JsrtContext::TrySetCurrent(JsrtContext * context)
     JsrtContext* originalContext = s_tlvSlot;
     if (originalContext != nullptr)
     {
-        originalContext->GetScriptContext()->GetRecycler()->RootRelease((LPVOID) originalContext);
+        originalContext->GetScriptContext()->GetRecycler()->RootRelease((void *) originalContext);
     }
 
     s_tlvSlot = context;

@@ -269,7 +269,7 @@ void JsrtDebugManager::ReportBreak(Js::InterpreterHaltState* haltState)
 
         if (jsDiagDebugEvent == JsDiagDebugEventBreakpoint)
         {
-            UINT bpId = 0;
+            uint32_t bpId = 0;
             probeContainer->MapProbesUntil([&](int i, Js::Probe* pProbe)
             {
                 Js::BreakpointProbe* bp = (Js::BreakpointProbe*)pProbe;
@@ -562,7 +562,7 @@ bool JsrtDebugManager::TryGetFrameObjectFromFrameIndex(Js::ScriptContext *script
     return this->stackFrames->TryGetFrameObjectFromFrameIndex(frameIndex, debuggerStackFrame);
 }
 
-Js::DynamicObject* JsrtDebugManager::SetBreakPoint(Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, UINT lineNumber, UINT columnNumber)
+Js::DynamicObject* JsrtDebugManager::SetBreakPoint(Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber)
 {
     Js::DebugDocument* debugDocument = utf8SourceInfo->GetDebugDocument();
     if (debugDocument != nullptr && SUCCEEDED(utf8SourceInfo->EnsureLineOffsetCacheNoThrow()) && lineNumber < utf8SourceInfo->GetLineCount())
@@ -629,7 +629,7 @@ void JsrtDebugManager::GetBreakpoints(Js::JavascriptArray** bpsArray, Js::Script
 }
 
 #if ENABLE_TTD
-Js::BreakpointProbe* JsrtDebugManager::SetBreakpointHelper_TTD(int64 desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, UINT lineNumber, UINT columnNumber, BOOL* isNewBP)
+Js::BreakpointProbe* JsrtDebugManager::SetBreakpointHelper_TTD(int64 desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber, BOOL* isNewBP)
 {
     *isNewBP = FALSE;
     Js::DebugDocument* debugDocument = utf8SourceInfo->GetDebugDocument();
@@ -720,7 +720,7 @@ void JsrtDebugManager::ClearBreakpointDebugDocumentDictionary()
     }
 }
 
-bool JsrtDebugManager::RemoveBreakpoint(UINT breakpointId)
+bool JsrtDebugManager::RemoveBreakpoint(uint32_t breakpointId)
 {
     if (this->debugDocumentManager != nullptr)
     {

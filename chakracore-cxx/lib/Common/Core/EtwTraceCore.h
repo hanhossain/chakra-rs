@@ -22,14 +22,14 @@
 // C-style callback
 extern "C" {
     void EtwCallback(
-        ULONG controlCode,
-        PVOID callbackContext);
+        uint32_t controlCode,
+        void * callbackContext);
 }
 
 class EtwCallbackApi
 {
 public:
-    static void OnSessionChange(ULONG controlCode, PVOID callbackContext);
+    static void OnSessionChange(uint32_t controlCode, void * callbackContext);
 };
 
 // The macro 'MCGEN_PRIVATE_ENABLE_CALLBACK_V2' below should be defined before microsoft-scripting-jscript9events.h

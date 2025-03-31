@@ -7,7 +7,7 @@
 namespace HelperMethodAttributes
 {
 // [Flags]
-enum HelperMethodAttribute : BYTE
+enum HelperMethodAttribute : uint8_t
 {
     AttrNone = 0x00,
     AttrCanThrow = 0x01,     // Can throw non-OOM / non-SO exceptions. Under debugger / Fast F12, these helpers are wrapped with try-catch wrapper.

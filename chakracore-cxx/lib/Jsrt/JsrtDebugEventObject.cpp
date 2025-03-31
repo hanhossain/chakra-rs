@@ -48,7 +48,7 @@ JsrtDebugDocumentManager::~JsrtDebugDocumentManager()
     this->jsrtDebugManager = nullptr;
 }
 
-void JsrtDebugDocumentManager::AddDocument(UINT bpId, Js::DebugDocument * debugDocument)
+void JsrtDebugDocumentManager::AddDocument(uint32_t bpId, Js::DebugDocument * debugDocument)
 {
     BreakpointDebugDocumentDictionary* breakpointDebugDocumentDictionary = this->GetBreakpointDictionary();
 
@@ -70,7 +70,7 @@ void JsrtDebugDocumentManager::ClearDebugDocument(Js::ScriptContext * scriptCont
                 // Remove the debugdocument from breakpoint dictionary
                 if (this->breakpointDebugDocumentDictionary != nullptr)
                 {
-                    this->breakpointDebugDocumentDictionary->MapAndRemoveIf([&](JsUtil::SimpleDictionaryEntry<UINT, Js::DebugDocument *> keyValue)
+                    this->breakpointDebugDocumentDictionary->MapAndRemoveIf([&](JsUtil::SimpleDictionaryEntry<uint32_t, Js::DebugDocument *> keyValue)
                     {
                         if (keyValue.Value() != nullptr && keyValue.Value() == debugDocument)
                         {
@@ -96,7 +96,7 @@ void JsrtDebugDocumentManager::ClearBreakpointDebugDocumentDictionary()
     }
 }
 
-bool JsrtDebugDocumentManager::RemoveBreakpoint(UINT breakpointId)
+bool JsrtDebugDocumentManager::RemoveBreakpoint(uint32_t breakpointId)
 {
     if (this->breakpointDebugDocumentDictionary != nullptr)
     {

@@ -35,7 +35,7 @@ typedef struct _LIST_ENTRY {
 } LIST_ENTRY, *PLIST_ENTRY;
 
 //
-//  VOID
+//  void
 //  InitializeListHead(
 //      PLIST_ENTRY ListHead
 //      );
@@ -77,7 +77,7 @@ typedef struct _LIST_ENTRY {
     {RemoveEntryList((ListHead)->Blink)}
 
 //
-//  VOID
+//  void
 //  RemoveEntryList(
 //      PLIST_ENTRY Entry
 //      );
@@ -93,7 +93,7 @@ typedef struct _LIST_ENTRY {
     }
 
 //
-//  VOID
+//  void
 //  InsertTailList(
 //      PLIST_ENTRY ListHead,
 //      PLIST_ENTRY Entry
@@ -112,7 +112,7 @@ typedef struct _LIST_ENTRY {
     }
 
 //
-//  VOID
+//  void
 //  InsertHeadList(
 //      PLIST_ENTRY ListHead,
 //      PLIST_ENTRY Entry
@@ -132,7 +132,7 @@ typedef struct _LIST_ENTRY {
 
 #define CONTAINING_RECORD(address, type, field) ((type *)( \
                                                   (PCHAR)(address) - \
-                                                  (ULONG_PTR)(&((type *)0)->field)))
+                                                  (size_t)(&((type *)0)->field)))
 
 #ifdef __cplusplus
 }

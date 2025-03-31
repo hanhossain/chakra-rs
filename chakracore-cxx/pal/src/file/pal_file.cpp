@@ -50,10 +50,10 @@ int MaxWCharToAcpLengthFactor = 3;
 PAL_ERROR
 InternalSetFilePointerForUnixFd(
     int iUnixFd,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
-    DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
+    uint32_t dwMoveMethod,
+    int32_t * lpNewFilePointerLow
     );
 
 void
@@ -153,9 +153,9 @@ Returns the proper error code, based on the
 Windows behavior.
 
     IN LPSTR lpPath - The path to check.
-    LPDWORD lpErrorCode - The error to set.
+    uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( LPSTR lpPath, LPDWORD lpErrorCode )
+void FILEGetProperNotFoundError( LPSTR lpPath, uint32_t * lpErrorCode )
 {
     struct stat stat_data;
     LPSTR lpDupedPath = NULL;
@@ -246,7 +246,7 @@ InternalCanonicalizeRealPath
     realpath() requires the buffer to be at least PATH_MAX).
 --*/
 PAL_ERROR
-CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, DWORD cch)
+CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, uint32_t cch)
 {
     PAL_ERROR palError = NO_ERROR;
     LPSTR lpRealPath = NULL;
@@ -255,8 +255,8 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, DWORD c
     LPSTR lpExistingPath = NULL;
     LPSTR pchSeparator = NULL;
     LPSTR lpFilename = NULL;
-    DWORD cchBuffer = 0;
-    DWORD cchFilename = 0;
+    uint32_t cchBuffer = 0;
+    uint32_t cchFilename = 0;
 #endif // !REALPATH_SUPPORTS_NONEXISTENT_FILES
  
     if ( (lpUnixPath == NULL) || (lpBuffer == NULL) || (cch < PATH_MAX) )
@@ -282,7 +282,7 @@ CorUnix::InternalCanonicalizeRealPath(LPCSTR lpUnixPath, LPSTR lpBuffer, DWORD c
     if (pchSeparator == NULL)
     {
         char pszCwdBuffer[MAXPATHLEN+1]; // MAXPATHLEN is for getcwd()
-        DWORD cchCwdBuffer = sizeof(pszCwdBuffer)/sizeof(pszCwdBuffer[0]);
+        uint32_t cchCwdBuffer = sizeof(pszCwdBuffer)/sizeof(pszCwdBuffer[0]);
 
         if (getcwd(pszCwdBuffer, cchCwdBuffer) == NULL)
         {
@@ -453,11 +453,11 @@ PAL_ERROR
 CorUnix::InternalCreateFile(
     CPalThread *pThread,
     LPCSTR lpFileName,
-    DWORD dwDesiredAccess,
-    DWORD dwShareMode,
+    uint32_t dwDesiredAccess,
+    uint32_t dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-    DWORD dwCreationDisposition,
-    DWORD dwFlagsAndAttributes,
+    uint32_t dwCreationDisposition,
+    uint32_t dwFlagsAndAttributes,
     HANDLE hTemplateFile,
     HANDLE *phFile
     )
@@ -484,7 +484,7 @@ CorUnix::InternalCreateFile(
 
     const char* szNonfilePrefix = "\\\\.\\";
     LPSTR lpFullUnixPath = NULL;
-    DWORD cchFullUnixPath = PATH_MAX+1; // InternalCanonicalizeRealPath requires this to be at least PATH_MAX
+    uint32_t cchFullUnixPath = PATH_MAX+1; // InternalCanonicalizeRealPath requires this to be at least PATH_MAX
 
     /* for dwShareMode only three flags are accepted */
     if ( dwShareMode & ~(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE) )
@@ -900,15 +900,14 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileA(
-        IN LPCSTR lpFileName,
-        IN DWORD dwDesiredAccess,
-        IN DWORD dwShareMode,
-        IN LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        IN DWORD dwCreationDisposition,
-        IN DWORD dwFlagsAndAttributes,
-        IN HANDLE hTemplateFile
+         LPCSTR lpFileName,
+         uint32_t dwDesiredAccess,
+         uint32_t dwShareMode,
+         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+         uint32_t dwCreationDisposition,
+         uint32_t dwFlagsAndAttributes,
+         HANDLE hTemplateFile
         )
 {
     CPalThread *pThread;
@@ -963,15 +962,14 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 CreateFileW(
-        IN LPCWSTR lpFileName,
-        IN DWORD dwDesiredAccess,
-        IN DWORD dwShareMode,
-        IN LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-        IN DWORD dwCreationDisposition,
-        IN DWORD dwFlagsAndAttributes,
-        IN HANDLE hTemplateFile)
+         LPCWSTR lpFileName,
+         uint32_t dwDesiredAccess,
+         uint32_t dwShareMode,
+         LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+         uint32_t dwCreationDisposition,
+         uint32_t dwFlagsAndAttributes,
+         HANDLE hTemplateFile)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -1009,7 +1007,7 @@ CreateFileW(
 
     if( size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1062,11 +1060,10 @@ This is because we know that CreateFile, ReadFile, and WriteFile will do so,
 and will have a much better idea of the specific error.
 --*/
 BOOL
-PALAPI
 CopyFileW(
-      IN LPCWSTR lpExistingFileName,
-      IN LPCWSTR lpNewFileName,
-      IN BOOL bFailIfExists)
+       LPCWSTR lpExistingFileName,
+       LPCWSTR lpNewFileName,
+       BOOL bFailIfExists)
 {
     CPalThread *pThread;
     PathCharString sourcePathString;
@@ -1102,7 +1099,7 @@ CopyFileW(
     
     if( src_size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpExistingFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1134,7 +1131,7 @@ CopyFileW(
     
     if( dest_size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpNewFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1164,20 +1161,19 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DeleteFileA(
-        IN LPCSTR lpFileName)
+         LPCSTR lpFileName)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
     int     result;
     BOOL    bRet = FALSE;
-    DWORD   dwLastError = 0;
+    uint32_t   dwLastError = 0;
     char * lpUnixFileName;
     int length;
     PathCharString lpUnixFileNamePS;
     LPSTR lpFullUnixFileName = NULL;
-    DWORD cchFullUnixFileName = MAX_LONGPATH+1;// InternalCanonicalizeRealPath requires this to be at least PATH_MAX
+    uint32_t cchFullUnixFileName = MAX_LONGPATH+1;// InternalCanonicalizeRealPath requires this to be at least PATH_MAX
 
     PERF_ENTRY(DeleteFileA);
     ENTRY("DeleteFileA(lpFileName=%p (%s))\n", lpFileName?lpFileName:"NULL", lpFileName?lpFileName:"NULL");
@@ -1255,9 +1251,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DeleteFileW(
-        IN LPCWSTR lpFileName)
+         LPCWSTR lpFileName)
 {
     CPalThread *pThread;
     int  size;
@@ -1291,7 +1286,7 @@ DeleteFileW(
     
     if( size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpFilePathName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1322,10 +1317,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileA(
-     IN LPCSTR lpExistingFileName,
-     IN LPCSTR lpNewFileName)
+      LPCSTR lpExistingFileName,
+      LPCSTR lpNewFileName)
 {
     BOOL bRet;
 
@@ -1353,10 +1347,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileW(
-     IN LPCWSTR lpExistingFileName,
-     IN LPCWSTR lpNewFileName)
+      LPCWSTR lpExistingFileName,
+      LPCWSTR lpNewFileName)
 {
     BOOL bRet;
 
@@ -1383,11 +1376,10 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileExA(
-        IN LPCSTR lpExistingFileName,
-        IN LPCSTR lpNewFileName,
-        IN DWORD dwFlags)
+         LPCSTR lpExistingFileName,
+         LPCSTR lpNewFileName,
+         uint32_t dwFlags)
 {
     CPalThread *pThread;
     int   result;
@@ -1397,7 +1389,7 @@ MoveFileExA(
     char * source;
     char * dest;
     BOOL  bRet = TRUE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     PERF_ENTRY(MoveFileExA);
     ENTRY("MoveFileExA(lpExistingFileName=%p (%S), lpNewFileName=%p (%S), "
@@ -1557,11 +1549,10 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 MoveFileExW(
-        IN LPCWSTR lpExistingFileName,
-        IN LPCWSTR lpNewFileName,
-        IN DWORD dwFlags)
+         LPCWSTR lpExistingFileName,
+         LPCWSTR lpNewFileName,
+         uint32_t dwFlags)
 {
     CPalThread *pThread;
     PathCharString sourcePS;
@@ -1597,7 +1588,7 @@ MoveFileExW(
     sourcePS.CloseBuffer(src_size);
     if( src_size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpExistingFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1629,7 +1620,7 @@ MoveFileExW(
     
     if( dest_size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpNewFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1676,16 +1667,15 @@ FILE_ATTRIBUTE_ARCHIVE
 FILE_ATTRIBUTE_HIDDEN
 
 --*/
-DWORD
-PALAPI
+uint32_t
 GetFileAttributesA(
-           IN LPCSTR lpFileName)
+            LPCSTR lpFileName)
 {
     CPalThread *pThread;
     struct stat stat_data;
-    DWORD dwAttr = 0;
-    DWORD dwLastError = 0;
-    CHAR * UnixFileName;
+    uint32_t dwAttr = 0;
+    uint32_t dwLastError = 0;
+    char * UnixFileName;
     int length = 0;
     PathCharString UnixFileNamePS;
 
@@ -1765,17 +1755,16 @@ Note:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetFileAttributesW(
-           IN LPCWSTR lpFileName)
+            LPCWSTR lpFileName)
 {
     CPalThread *pThread;
     int   size;
     PathCharString filenamePS;
     int length = 0;
     char * filename;
-    DWORD dwRet = (DWORD) -1;
+    uint32_t dwRet = (uint32_t) -1;
 
     PERF_ENTRY(GetFileAttributesW);
     ENTRY("GetFileAttributesW(lpFileName=%p (%S))\n",
@@ -1802,7 +1791,7 @@ GetFileAttributesW(
     
     if( size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpFileName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1830,15 +1819,14 @@ Function:
 See MSDN doc, and notes for GetFileAttributesW.
 --*/
 BOOL
-PALAPI
 GetFileAttributesExW(
-             IN LPCWSTR lpFileName,
-             IN GET_FILEEX_INFO_LEVELS fInfoLevelId,
-             OUT LPVOID lpFileInformation)
+              LPCWSTR lpFileName,
+              GET_FILEEX_INFO_LEVELS fInfoLevelId,
+              void * lpFileInformation)
 {
     CPalThread *pThread;
     BOOL bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     LPWIN32_FILE_ATTRIBUTE_DATA attr_data;
 
     struct stat stat_data;
@@ -1905,7 +1893,7 @@ GetFileAttributesExW(
 
     attr_data->dwFileAttributes = GetFileAttributesW(lpFileName);
     /* assume that GetFileAttributes will call SetLastError appropriately */
-    if ( attr_data->dwFileAttributes == (DWORD)-1 )
+    if ( attr_data->dwFileAttributes == (uint32_t)-1 )
     {
         goto done;
     }
@@ -1932,9 +1920,9 @@ GetFileAttributesExW(
 
     /* Get the file size. GetFileSize is not used because it gets the
        size of an already-open file */
-    attr_data->nFileSizeLow = (DWORD) stat_data.st_size;
+    attr_data->nFileSizeLow = (uint32_t) stat_data.st_size;
 #if SIZEOF_OFF_T > 4
-    attr_data->nFileSizeHigh = (DWORD)(stat_data.st_size >> 32);
+    attr_data->nFileSizeHigh = (uint32_t)(stat_data.st_size >> 32);
 #else
     attr_data->nFileSizeHigh = 0;
 #endif
@@ -1958,10 +1946,9 @@ Notes:
 
 --*/
 BOOL
-PALAPI
 SetFileAttributesW(
-           IN LPCWSTR lpFileName,
-           IN DWORD dwFileAttributes)
+            LPCWSTR lpFileName,
+            uint32_t dwFileAttributes)
 {
     CPalThread *pThread;
     char * name;
@@ -1969,7 +1956,7 @@ SetFileAttributesW(
     int length = 0;
     int  size;
 
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
 
     PERF_ENTRY(SetFileAttributesW);
@@ -2024,9 +2011,9 @@ PAL_ERROR
 CorUnix::InternalWriteFile(
     CPalThread *pThread,
     HANDLE hFile,
-    LPCVOID lpBuffer,
-    DWORD nNumberOfBytesToWrite,
-    LPDWORD lpNumberOfBytesWritten,
+    const void * lpBuffer,
+    uint32_t nNumberOfBytesToWrite,
+    uint32_t * lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped
     )
 {
@@ -2037,7 +2024,7 @@ CorUnix::InternalWriteFile(
     IFileTransactionLock *pTransactionLock = NULL;
     int ifd;
 
-    LONG writeOffsetStartLow = 0, writeOffsetStartHigh = 0;
+    int32_t writeOffsetStartLow = 0, writeOffsetStartHigh = 0;
     int res;
 
     if (NULL != lpNumberOfBytesWritten)
@@ -2204,13 +2191,12 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 WriteFile(
-      IN HANDLE hFile,
-      IN LPCVOID lpBuffer,
-      IN DWORD nNumberOfBytesToWrite,
-      OUT LPDWORD lpNumberOfBytesWritten,
-      IN LPOVERLAPPED lpOverlapped)
+       HANDLE hFile,
+       const void * lpBuffer,
+       uint32_t nNumberOfBytesToWrite,
+       uint32_t * lpNumberOfBytesWritten,
+       LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -2245,9 +2231,9 @@ PAL_ERROR
 CorUnix::InternalReadFile(
     CPalThread *pThread,
     HANDLE hFile,
-    LPVOID lpBuffer,
-    DWORD nNumberOfBytesToRead,
-    LPDWORD lpNumberOfBytesRead,
+    void * lpBuffer,
+    uint32_t nNumberOfBytesToRead,
+    uint32_t * lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped
     )
 {
@@ -2258,7 +2244,7 @@ CorUnix::InternalReadFile(
     IFileTransactionLock *pTransactionLock = NULL;
     int ifd;
     
-    LONG readOffsetStartLow = 0, readOffsetStartHigh = 0;
+    int32_t readOffsetStartLow = 0, readOffsetStartHigh = 0;
     int res;
 
     if (NULL != lpNumberOfBytesRead)
@@ -2428,13 +2414,12 @@ Note:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 ReadFile(
-     IN HANDLE hFile,
-     OUT LPVOID lpBuffer,
-     IN DWORD nNumberOfBytesToRead,
-     OUT LPDWORD lpNumberOfBytesRead,
-     IN LPOVERLAPPED lpOverlapped)
+      HANDLE hFile,
+      void * lpBuffer,
+      uint32_t nNumberOfBytesToRead,
+      uint32_t * lpNumberOfBytesRead,
+      LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -2474,9 +2459,8 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-PALAPI
 GetStdHandle(
-         IN DWORD nStdHandle)
+          uint32_t nStdHandle)
 {
     CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
@@ -2654,9 +2638,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetEndOfFile(
-         IN HANDLE hFile)
+          HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;;
@@ -2694,10 +2677,10 @@ SetEndOfFile(
 PAL_ERROR
 InternalSetFilePointerForUnixFd(
     int iUnixFd,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
-    DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
+    uint32_t dwMoveMethod,
+    int32_t * lpNewFilePointerLow
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -2736,7 +2719,7 @@ InternalSetFilePointerForUnixFd(
         
         /* set the low 32 bits */
         /* cast to unsigned long to avoid sign extension */
-        seek_offset |= (ULONG) lDistanceToMove;
+        seek_offset |= (uint32_t) lDistanceToMove;
     }
     else
     {
@@ -2804,12 +2787,12 @@ InternalSetFilePointerForUnixFd(
     }
     else
     {
-        /* store high-order DWORD */
+        /* store high-order uint32_t */
         if ( lpDistanceToMoveHigh )
-            *lpDistanceToMoveHigh = (DWORD)(seek_res >> 32);
+            *lpDistanceToMoveHigh = (uint32_t)(seek_res >> 32);
     
-        /* return low-order DWORD of seek result */
-        *lpNewFilePointerLow = (DWORD)seek_res;
+        /* return low-order uint32_t of seek result */
+        *lpNewFilePointerLow = (uint32_t)seek_res;
     }
 
 done:
@@ -2821,10 +2804,10 @@ PAL_ERROR
 CorUnix::InternalSetFilePointer(
     CPalThread *pThread,
     HANDLE hFile,
-    LONG lDistanceToMove,
-    PLONG lpDistanceToMoveHigh,
-    DWORD dwMoveMethod,
-    PLONG lpNewFilePointerLow
+    int32_t lDistanceToMove,
+    int32_t * lpDistanceToMoveHigh,
+    uint32_t dwMoveMethod,
+    int32_t * lpNewFilePointerLow
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -2893,17 +2876,16 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 SetFilePointer(
-           IN HANDLE hFile,
-           IN LONG lDistanceToMove,
-           IN PLONG lpDistanceToMoveHigh,
-           IN DWORD dwMoveMethod)
+            HANDLE hFile,
+            int32_t lDistanceToMove,
+            int32_t * lpDistanceToMoveHigh,
+            uint32_t dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
-    LONG lNewFilePointerLow = 0;
+    int32_t lNewFilePointerLow = 0;
 
     PERF_ENTRY(SetFilePointer);
     ENTRY("SetFilePointer(hFile=%p, lDistance=%d, lpDistanceHigh=%p, "
@@ -2952,12 +2934,11 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetFilePointerEx(
-           IN HANDLE hFile,
-           IN LARGE_INTEGER liDistanceToMove,
-           OUT PLARGE_INTEGER lpNewFilePointer,
-           IN DWORD dwMoveMethod)
+            HANDLE hFile,
+            LARGE_INTEGER liDistanceToMove,
+            PLARGE_INTEGER lpNewFilePointer,
+            uint32_t dwMoveMethod)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -2969,12 +2950,12 @@ SetFilePointerEx(
            liDistanceToMove.QuadPart, lpNewFilePointer, 
            (lpNewFilePointer) ? (*lpNewFilePointer).QuadPart : 0, dwMoveMethod);
 
-    LONG lDistanceToMove;
-    lDistanceToMove = (LONG)liDistanceToMove.u.LowPart;
-    LONG lDistanceToMoveHigh;
+    int32_t lDistanceToMove;
+    lDistanceToMove = (int32_t)liDistanceToMove.u.LowPart;
+    int32_t lDistanceToMoveHigh;
     lDistanceToMoveHigh = liDistanceToMove.u.HighPart;
 
-    LONG lNewFilePointerLow = 0;
+    int32_t lNewFilePointerLow = 0;
 
     pThread = InternalGetCurrentThread();
 
@@ -2995,8 +2976,8 @@ SetFilePointerEx(
     {
         if (lpNewFilePointer != NULL)
         {
-            lpNewFilePointer->u.LowPart = (DWORD)lNewFilePointerLow;
-            lpNewFilePointer->u.HighPart = (DWORD)lDistanceToMoveHigh;
+            lpNewFilePointer->u.LowPart = (uint32_t)lNewFilePointerLow;
+            lpNewFilePointer->u.HighPart = (uint32_t)lDistanceToMoveHigh;
         }
         Ret = TRUE;
     }
@@ -3010,8 +2991,8 @@ PAL_ERROR
 CorUnix::InternalGetFileSize(
     CPalThread *pThread,
     HANDLE hFile,
-    DWORD *pdwFileSizeLow,
-    DWORD *pdwFileSizeHigh
+    uint32_t *pdwFileSizeLow,
+    uint32_t *pdwFileSizeHigh
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -3060,12 +3041,12 @@ CorUnix::InternalGetFileSize(
         goto InternalGetFileSizeExit;
     }
 
-    *pdwFileSizeLow = (DWORD)stat_data.st_size;
+    *pdwFileSizeLow = (uint32_t)stat_data.st_size;
     
     if (NULL != pdwFileSizeHigh)
     {
 #if SIZEOF_OFF_T > 4
-        *pdwFileSizeHigh = (DWORD)(stat_data.st_size >> 32);
+        *pdwFileSizeHigh = (uint32_t)(stat_data.st_size >> 32);
 #else
         *pdwFileSizeHigh = 0;
 #endif
@@ -3092,15 +3073,14 @@ Function:
 
 See MSDN doc.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetFileSize(
-        IN HANDLE hFile,
-        OUT LPDWORD lpFileSizeHigh)
+         HANDLE hFile,
+         uint32_t * lpFileSizeHigh)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
-    DWORD dwFileSizeLow;
+    uint32_t dwFileSizeLow;
 
     PERF_ENTRY(GetFileSize);
     ENTRY("GetFileSize(hFile=%p, lpFileSizeHigh=%p)\n", hFile, lpFileSizeHigh);
@@ -3132,14 +3112,14 @@ GetFileSizeEx
 See MSDN doc.
 --*/
 BOOL
-PALAPI GetFileSizeEx(
-IN   HANDLE hFile,
-OUT  PLARGE_INTEGER lpFileSize)
+GetFileSizeEx(
+   HANDLE hFile,
+  PLARGE_INTEGER lpFileSize)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
-    DWORD dwFileSizeHigh;
-    DWORD dwFileSizeLow;
+    uint32_t dwFileSizeHigh;
+    uint32_t dwFileSizeLow;
 
     PERF_ENTRY(GetFileSizeEx);
     ENTRY("GetFileSizeEx(hFile=%p, lpFileSize=%p)\n", hFile, lpFileSize);
@@ -3278,9 +3258,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FlushFileBuffers(
-         IN HANDLE hFile)
+          HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
@@ -3309,7 +3288,7 @@ PAL_ERROR
 CorUnix::InternalGetFileType(
     CPalThread *pThread,
     HANDLE hFile,
-    DWORD *pdwFileType
+    uint32_t *pdwFileType
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -3408,14 +3387,13 @@ Function:
 See MSDN doc.
 
 --*/
-DWORD
-PALAPI
+uint32_t
 GetFileType(
-        IN HANDLE hFile)
+         HANDLE hFile)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pThread;
-    DWORD dwFileType;
+    uint32_t dwFileType;
 
     PERF_ENTRY(GetFileType);
     ENTRY("GetFileType(hFile=%p)\n", hFile);
@@ -3459,29 +3437,28 @@ uUnique is always 0.
 const int MAX_PREFIX        = 3;
 const int MAX_SEEDSIZE      = 8; /* length of "unique portion of 
                                    the string, plus extension(FFFF.TMP). */
-static USHORT uUniqueSeed   = 0;
+static unsigned short uUniqueSeed   = 0;
 static BOOL IsInitialized   = FALSE;
 
-UINT
-PALAPI
+uint32_t
 GetTempFileNameA(
-                 IN LPCSTR lpPathName,
-                 IN LPCSTR lpPrefixString,
-                 IN UINT   uUnique,
-                 OUT LPSTR lpTempFileName)
+                  LPCSTR lpPathName,
+                  LPCSTR lpPrefixString,
+                  uint32_t   uUnique,
+                  LPSTR lpTempFileName)
 {
     CPalThread *pThread;
-    CHAR * full_name;
+    char * full_name;
     PathCharString full_namePS;
     int length;
-    CHAR * file_template;
+    char * file_template;
     PathCharString file_templatePS;
-    CHAR    chLastPathNameChar;
+    char    chLastPathNameChar;
  
     HANDLE  hTempFile;
-    UINT    uRet = 0;
-    DWORD   dwError;
-    USHORT  uLoopCounter = 0;
+    uint32_t    uRet = 0;
+    uint32_t   dwError;
+    unsigned short  uLoopCounter = 0;
 
     PERF_ENTRY(GetTempFileNameA);
     ENTRY("GetTempFileNameA(lpPathName=%p (%s), lpPrefixString=%p (%s), uUnique=%u, " 
@@ -3493,7 +3470,7 @@ GetTempFileNameA(
     pThread = InternalGetCurrentThread();
     if ( !IsInitialized )
     {
-        uUniqueSeed = (USHORT)( time( NULL ) );
+        uUniqueSeed = (unsigned short)( time( NULL ) );
     
         /* On the off chance 0 is returned.
         0 being the error return code.  */
@@ -3564,7 +3541,7 @@ GetTempFileNameA(
     
     if (uUnique == 0)
     {
-        /* The USHORT will overflow back to 0 if we go past
+        /* The unsigned short will overflow back to 0 if we go past
         65536 files, so break the loop after 65536 iterations.
         If the CreateFile call was not successful within that 
         number of iterations, then there are no temp file names
@@ -3655,23 +3632,22 @@ Function:
 
 uUnique is always 0.
 --*/
-UINT
-PALAPI
+uint32_t
 GetTempFileNameW(
-         IN LPCWSTR lpPathName,
-         IN LPCWSTR lpPrefixString,
-         IN UINT uUnique,
-         OUT LPWSTR lpTempFileName)
+          LPCWSTR lpPathName,
+          LPCWSTR lpPrefixString,
+          uint32_t uUnique,
+          LPWSTR lpTempFileName)
 {
     CPalThread *pThread;
-    INT path_size = 0;
-    INT prefix_size = 0;
-    CHAR * full_name;
-    CHAR * prefix_string;
-    CHAR * tempfile_name;
+    int32_t path_size = 0;
+    int32_t prefix_size = 0;
+    char * full_name;
+    char * prefix_string;
+    char * tempfile_name;
     PathCharString full_namePS, prefix_stringPS;
-    INT length = 0;
-    UINT   uRet;
+    int32_t length = 0;
+    uint32_t   uRet;
 
     PERF_ENTRY(GetTempFileNameW);
     ENTRY("GetTempFileNameW(lpPathName=%p (%S), lpPrefixString=%p (%S), uUnique=%u, "
@@ -3702,7 +3678,7 @@ GetTempFileNameW(
                                      
     if( path_size == 0 )
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
         {
             WARN("lpPathName is larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -3735,7 +3711,7 @@ GetTempFileNameW(
         
         if( prefix_size == 0 )
         {
-            DWORD dwLastError = GetLastError();
+            uint32_t dwLastError = GetLastError();
             if( dwLastError == ERROR_INSUFFICIENT_BUFFER )
             {
                 WARN("Full name would be larger than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -3771,7 +3747,7 @@ GetTempFileNameW(
         tempfile_name = NULL;
         if (!path_size)
         {
-            DWORD dwLastError = GetLastError();
+            uint32_t dwLastError = GetLastError();
             if (dwLastError == ERROR_INSUFFICIENT_BUFFER)
             {
                 WARN("File names larger than MAX_PATH_FNAME (%d)! \n", MAX_LONGPATH);
@@ -3799,9 +3775,9 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD FILEGetLastErrorFromErrno( void )
+uint32_t FILEGetLastErrorFromErrno( void )
 {
-    DWORD dwRet;
+    uint32_t dwRet;
 
     switch(errno)
     {
@@ -3871,7 +3847,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-DWORD DIRGetLastErrorFromErrno( void )
+uint32_t DIRGetLastErrorFromErrno( void )
 {
     if (errno == ENOENT)
         return ERROR_PATH_NOT_FOUND;
@@ -3892,25 +3868,24 @@ This is because we know that CreateFile, ReadFile, and WriteFile will do so,
 and will have a much better idea of the specific error.
 --*/
 BOOL
-PALAPI
 CopyFileA(
-      IN LPCSTR lpExistingFileName,
-      IN LPCSTR lpNewFileName,
-      IN BOOL bFailIfExists)
+       LPCSTR lpExistingFileName,
+       LPCSTR lpNewFileName,
+       BOOL bFailIfExists)
 {
     CPalThread *pThread;
     HANDLE       hSource = INVALID_HANDLE_VALUE;
     HANDLE       hDest = INVALID_HANDLE_VALUE;
-    DWORD        dwDestCreationMode;
+    uint32_t        dwDestCreationMode;
     BOOL         bGood = FALSE;
-    DWORD        dwSrcFileAttributes;
+    uint32_t        dwSrcFileAttributes;
     struct stat  SrcFileStats;
     
     LPSTR lpUnixPath = NULL;
     const int    buffer_size = 16*1024;
     char        *buffer = (char*)alloca(buffer_size);
-    DWORD        bytes_read;
-    DWORD        bytes_written;
+    uint32_t        bytes_read;
+    uint32_t        bytes_written;
     int          permissions;
 
 
@@ -4064,16 +4039,15 @@ Notes:
 
 --*/
 BOOL
-PALAPI
 SetFileAttributesA(
-           IN LPCSTR lpFileName,
-           IN DWORD dwFileAttributes)
+            LPCSTR lpFileName,
+            uint32_t dwFileAttributes)
 {
     CPalThread *pThread;
     struct stat stat_data;
     mode_t new_mode;
 
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
     BOOL  bRet = FALSE;
     LPSTR UnixFileName = NULL;
 
@@ -4186,7 +4160,7 @@ CorUnix::InternalCreatePipe(
     HANDLE *phReadPipe,
     HANDLE *phWritePipe,
     LPSECURITY_ATTRIBUTES lpPipeAttributes,
-    DWORD nSize
+    uint32_t nSize
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -4413,14 +4387,12 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
-PALAPI
 CreatePipe(
-        OUT PHANDLE hReadPipe,
-        OUT PHANDLE hWritePipe,
-        IN LPSECURITY_ATTRIBUTES lpPipeAttributes,
-        IN DWORD nSize)
+         PHANDLE hReadPipe,
+         PHANDLE hWritePipe,
+         LPSECURITY_ATTRIBUTES lpPipeAttributes,
+         uint32_t nSize)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -4453,10 +4425,10 @@ PAL_ERROR
 CorUnix::InternalLockFile(
     CPalThread *pThread,
     HANDLE hFile,
-    DWORD dwFileOffsetLow,
-    DWORD dwFileOffsetHigh,
-    DWORD nNumberOfBytesToLockLow,
-    DWORD nNumberOfBytesToLockHigh
+    uint32_t dwFileOffsetLow,
+    uint32_t dwFileOffsetHigh,
+    uint32_t nNumberOfBytesToLockLow,
+    uint32_t nNumberOfBytesToLockHigh
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -4540,14 +4512,12 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
-PALAPI
 LockFile(HANDLE hFile,
-         DWORD dwFileOffsetLow,
-         DWORD dwFileOffsetHigh,
-         DWORD nNumberOfBytesToLockLow,
-         DWORD nNumberOfBytesToLockHigh)
+         uint32_t dwFileOffsetLow,
+         uint32_t dwFileOffsetHigh,
+         uint32_t nNumberOfBytesToLockLow,
+         uint32_t nNumberOfBytesToLockHigh)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -4582,10 +4552,10 @@ PAL_ERROR
 CorUnix::InternalUnlockFile(
     CPalThread *pThread,
     HANDLE hFile,
-    DWORD dwFileOffsetLow,
-    DWORD dwFileOffsetHigh,
-    DWORD nNumberOfBytesToUnlockLow,
-    DWORD nNumberOfBytesToUnlockHigh
+    uint32_t dwFileOffsetLow,
+    uint32_t dwFileOffsetHigh,
+    uint32_t nNumberOfBytesToUnlockLow,
+    uint32_t nNumberOfBytesToUnlockHigh
     )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -4666,14 +4636,12 @@ Function:
 
 See MSDN doc.
 --*/
-PALIMPORT
 BOOL
-PALAPI
 UnlockFile(HANDLE hFile,
-           DWORD dwFileOffsetLow,
-           DWORD dwFileOffsetHigh,
-           DWORD nNumberOfBytesToUnlockLow,
-           DWORD nNumberOfBytesToUnlockHigh)
+           uint32_t dwFileOffsetLow,
+           uint32_t dwFileOffsetHigh,
+           uint32_t nNumberOfBytesToUnlockLow,
+           uint32_t nNumberOfBytesToUnlockHigh)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -4922,20 +4890,19 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetFileInformationByHandle(
-             IN HANDLE hFile,
-             OUT LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
+              HANDLE hFile,
+              LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
 {
     CPalThread *pThread;
     BOOL bRet = FALSE;
-    DWORD dwLastError = 0;
+    uint32_t dwLastError = 0;
 
     IPalObject *pFileObject = NULL;
     CFileProcessLocalData *pLocalData = NULL;
     IDataLock *pLocalDataLock = NULL;
 
-    DWORD dwAttr = 0;
+    uint32_t dwAttr = 0;
     struct stat stat_data;
 
     PERF_ENTRY(GetFileInformationByHandle);
@@ -5026,9 +4993,9 @@ GetFileInformationByHandle(
 
     /* Get the file size. GetFileSize is not used because it gets the
        size of an already-open file */
-    lpFileInformation->nFileSizeLow = (DWORD) stat_data.st_size;
+    lpFileInformation->nFileSizeLow = (uint32_t) stat_data.st_size;
 #if SIZEOF_OFF_T > 4
-    lpFileInformation->nFileSizeHigh = (DWORD)(stat_data.st_size >> 32);
+    lpFileInformation->nFileSizeHigh = (uint32_t)(stat_data.st_size >> 32);
 #else
     lpFileInformation->nFileSizeHigh = 0;
 #endif

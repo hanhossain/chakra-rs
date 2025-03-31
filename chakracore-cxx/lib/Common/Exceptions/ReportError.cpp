@@ -8,10 +8,10 @@
 // Disable inline so that _ReturnAddress() will get the address of the calling function.
 _NOINLINE
 void ReportFatalException(
-    __in ULONG_PTR context,
+    __in size_t context,
     __in HRESULT exceptionCode,
     __in ErrorReason reasonCode,
-    __in ULONG_PTR scenario)
+    __in size_t scenario)
 {
     // avoid the error text methods to be optimized out.
     UNREFERENCED_PARAMETER(scenario);
@@ -22,15 +22,15 @@ void ReportFatalException(
     }
 
 #ifdef DISABLE_SEH
-    TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+    TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
 #else
     void * addressToBlame = _ReturnAddress();
     __try
     {
-        ULONG_PTR ExceptionInformation[2];
-        ExceptionInformation[0] = (ULONG_PTR)reasonCode;
-        ExceptionInformation[1] = (ULONG_PTR)context;
-        RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 2, (ULONG_PTR*)ExceptionInformation);
+        size_t ExceptionInformation[2];
+        ExceptionInformation[0] = (size_t)reasonCode;
+        ExceptionInformation[1] = (size_t)context;
+        RaiseException(exceptionCode, EXCEPTION_NONCONTINUABLE, 2, (size_t*)ExceptionInformation);
     }
     __except(FatalExceptionFilter(GetExceptionInformation(), addressToBlame))
     {
@@ -41,14 +41,14 @@ void ReportFatalException(
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
 #pragma optimize("", off)
 _NOINLINE void JavascriptDispatch_OOM_fatal_error(
-    __in ULONG_PTR context)
+    __in size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_OUTOFMEMORY, JavascriptDispatch_OUTOFMEMORY, scenario);
 };
 
 _NOINLINE void CustomHeap_BadPageState_unrecoverable_error(
-    __in ULONG_PTR context)
+    __in size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, CustomHeap_MEMORYCORRUPTION, scenario);
@@ -61,14 +61,14 @@ _NOINLINE void MarkStack_OOM_unrecoverable_error()
 };
 
 _NOINLINE void Amd64StackWalkerOutOfContexts_unrecoverable_error(
-    __in ULONG_PTR context)
+    __in size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, Fatal_Amd64StackWalkerOutOfContexts, scenario);
 }
 
 _NOINLINE void FailedToBox_OOM_unrecoverable_error(
-    __in ULONG_PTR context)
+    __in size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, Fatal_FailedToBox_OUTOFMEMORY, scenario);
@@ -102,7 +102,7 @@ _NOINLINE void Version_Inconsistency_fatal_error()
 
 #ifdef LARGEHEAPBLOCK_ENCODING
 _NOINLINE void LargeHeapBlock_Metadata_Corrupted(
-    __in ULONG_PTR context, __in unsigned char calculatedChecksum)
+    __in size_t context, __in unsigned char calculatedChecksum)
 {
     int scenario = calculatedChecksum; /* For debugging purpose if checksum mismatch happen*/
     ReportFatalException(context, E_UNEXPECTED, LargeHeapBlock_Metadata_Corrupt, scenario);
@@ -182,7 +182,7 @@ _NOINLINE void OutOfMemoryAllocationPolicy_unrecoverable_error()
     ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
 }
 
-_NOINLINE void XDataRegistration_unrecoverable_error(HRESULT hr, ULONG_PTR scenario)
+_NOINLINE void XDataRegistration_unrecoverable_error(HRESULT hr, size_t scenario)
 {
     ReportFatalException(NULL, hr, Fatal_XDataRegistration, scenario);
 }

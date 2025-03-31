@@ -8,24 +8,24 @@
 #include "Core/StackBackTrace.h"
 #include "Core/DbgHelpSymbolManager.h"
 
-StackBackTrace::StackBackTrace(ULONG framesToSkip, ULONG framesToCapture) : requestedFramesToCapture(framesToCapture)
+StackBackTrace::StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture) : requestedFramesToCapture(framesToCapture)
 {
     this->Capture(framesToSkip);
 }
 
 // Don't capture, just remember requestedFramesToCapture/allocate buffer for them.
-StackBackTrace::StackBackTrace(ULONG framesToCaptureLater) : requestedFramesToCapture(framesToCaptureLater), framesCount(0)
+StackBackTrace::StackBackTrace(uint32_t framesToCaptureLater) : requestedFramesToCapture(framesToCaptureLater), framesCount(0)
 {
 }
 
 StackBackTrace *
-StackBackTrace::Capture(char* buffer, size_t bufSize, ULONG framesToSkip)
+StackBackTrace::Capture(char* buffer, size_t bufSize, uint32_t framesToSkip)
 {
-    return new (buffer) StackBackTrace(framesToSkip, (ULONG)(bufSize - offsetof(StackBackTrace, stackBackTrace)) / sizeof(void*));
+    return new (buffer) StackBackTrace(framesToSkip, (uint32_t)(bufSize - offsetof(StackBackTrace, stackBackTrace)) / sizeof(void*));
 }
 
 // This can be called multiple times, together with Create, in which case we will use (overwrite) same buffer.
-ULONG StackBackTrace::Capture(ULONG framesToSkip)
+uint32_t StackBackTrace::Capture(uint32_t framesToSkip)
 {
     this->framesCount = CaptureStackBackTrace(framesToSkip + BaseFramesToSkip, this->requestedFramesToCapture, this->stackBackTrace, NULL);
     return this->framesCount;
@@ -39,9 +39,9 @@ StackBackTrace::Print()
 #ifdef DBGHELP_SYMBOL_MANAGER
     DbgHelpSymbolManager::EnsureInitialized();
 
-    for(ULONG i = 0; i < this->framesCount; i++)
+    for(uint32_t i = 0; i < this->framesCount; i++)
     {
-        PVOID address = this->stackBackTrace[i];
+        void * address = this->stackBackTrace[i];
         retValue += Output::Print(_u(" "));
         retValue += DbgHelpSymbolManager::PrintSymbol(address);
         retValue += Output::Print(_u("\n"));
@@ -50,7 +50,7 @@ StackBackTrace::Print()
     char** f = backtrace_symbols(this->stackBackTrace, this->framesCount);
     if (f)
     {
-        for (ULONG i = 0; i < this->framesCount; i++)
+        for (uint32_t i = 0; i < this->framesCount; i++)
         {
             retValue += Output::Print(_u(" %S\n"), f[i]);
         }

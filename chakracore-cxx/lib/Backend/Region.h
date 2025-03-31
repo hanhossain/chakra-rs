@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-enum RegionType : BYTE
+enum RegionType : uint8_t
 {
     RegionTypeInvalid,
     RegionTypeRoot,

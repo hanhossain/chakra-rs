@@ -74,7 +74,6 @@ add_library (Chakra.Backend OBJECT
     IntConstMath.cpp
     InterpreterThunkEmitter.cpp
     JavascriptNativeOperators.cpp
-    JITThunkEmitter.cpp
     JITOutput.cpp
     JITTimeConstructorCache.cpp
     JITTimeFunctionBody.cpp

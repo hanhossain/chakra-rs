@@ -38,10 +38,10 @@ public:
     static uint UncollectedAllocBytesCollection();
 #if ENABLE_CONCURRENT_GC
     static uint MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable&);
-    static DWORD BackgroundFinishMarkWaitTime(bool, Js::ConfigFlagsTable&);
+    static uint32_t BackgroundFinishMarkWaitTime(bool, Js::ConfigFlagsTable&);
     static size_t MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable&);
-    static DWORD FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable&);
-    static DWORD PriorityBoostTimeout(Js::ConfigFlagsTable&);
+    static uint32_t FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable&);
+    static uint32_t PriorityBoostTimeout(Js::ConfigFlagsTable&);
 #endif
 #if ENABLE_PARTIAL_GC && ENABLE_CONCURRENT_GC
     static bool PartialConcurrentNextCollection(double ratio, Js::ConfigFlagsTable& flags);
@@ -84,9 +84,9 @@ private:
 
 #if ENABLE_CONCURRENT_GC
     static const uint TickCountConcurrentPriorityBoost = 5000;                              // 5 second
-    static const DWORD DefaultFinishConcurrentCollectWaitTime = 1000;                       // 1 second
+    static const uint32_t DefaultFinishConcurrentCollectWaitTime = 1000;                       // 1 second
     static const uint DefaultMaxBackgroundFinishMarkCount = 1;
-    static const DWORD DefaultBackgroundFinishMarkWaitTime = 15; // ms
+    static const uint32_t DefaultBackgroundFinishMarkWaitTime = 15; // ms
     static const size_t DefaultMinBackgroundRepeatMarkRescanBytes = 1 MEGABYTES;
 #endif
 };

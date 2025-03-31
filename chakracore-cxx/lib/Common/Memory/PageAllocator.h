@@ -87,7 +87,7 @@ typedef void* FunctionTableHandle;
 //
 struct SecondaryAllocation
 {
-    BYTE* address;   // address of the allocation by the secondary allocator
+    uint8_t* address;   // address of the allocation by the secondary allocator
 
     SecondaryAllocation() : address(nullptr)
     {
@@ -118,7 +118,7 @@ struct XDataInfo
 class SecondaryAllocator
 {
 public:
-    virtual bool Alloc(ULONG_PTR functionStart, DWORD functionSize, DECLSPEC_GUARD_OVERFLOW ushort pdataCount, DECLSPEC_GUARD_OVERFLOW ushort xdataSize, SecondaryAllocation* xdata) = 0;
+    virtual bool Alloc(size_t functionStart, uint32_t functionSize, DECLSPEC_GUARD_OVERFLOW ushort pdataCount, DECLSPEC_GUARD_OVERFLOW ushort xdataSize, SecondaryAllocation* xdata) = 0;
     virtual void Release(const SecondaryAllocation& allocation) = 0;
     virtual void Delete() = 0;
     virtual bool CanAllocate() = 0;
@@ -175,7 +175,7 @@ public:
         return static_cast<PageAllocatorBase<TVirtualAlloc>*>(allocator);
     }
 
-    bool Initialize(DWORD allocFlags, bool excludeGuardPages);
+    bool Initialize(uint32_t allocFlags, bool excludeGuardPages);
 
 #if DBG
     bool IsPageSegment() const
@@ -267,7 +267,7 @@ public:
 
     void Prime();
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
-    bool Initialize(DWORD allocFlags, bool excludeGuardPages);
+    bool Initialize(uint32_t allocFlags, bool excludeGuardPages);
 #endif
     uint GetFreePageCount() const { return freePageCount; }
     uint GetDecommitPageCount() const { return decommitPageCount; }
@@ -354,7 +354,7 @@ public:
         return unallocPages;
     }
 
-    void ChangeSegmentProtection(DWORD protectFlags, DWORD expectedOldProtectFlags);
+    void ChangeSegmentProtection(uint32_t protectFlags, uint32_t expectedOldProtectFlags);
 
 //---------- Private members ---------------/
 private:
@@ -589,7 +589,7 @@ public:
             pendingZeroPageList = entry;
         }
 
-        USHORT QueryDepth()
+        unsigned short QueryDepth()
         {
             AutoCriticalSection autoCS(&this->backgroundPageQueueCriticalSection);
             FreePageEntry* head = pendingZeroPageList;
@@ -600,7 +600,7 @@ public:
                 count++;
             }
             // If the specified singly linked list contains more than 65535 entries, QueryDepthSList returns the number of entries in the list modulo 65535
-            return (USHORT)(count % 65536);
+            return (unsigned short)(count % 65536);
         }
     };
 #endif
@@ -691,17 +691,17 @@ public:
     virtual bool HasMultiThreadAccess() const { return false; }
     bool ValidThreadAccess()
     {
-        DWORD currentThreadId = ::GetCurrentThreadId();
+        uint32_t currentThreadId = ::GetCurrentThreadId();
         return disableThreadAccessCheck ||
             (this->concurrentThreadId == -1 && this->threadContextHandle == NULL) ||  // JIT thread after close
             (this->concurrentThreadId != -1 && this->concurrentThreadId == currentThreadId) ||
             this->threadContextHandle == GetCurrentThreadContextId();
     }
     virtual void UpdateThreadContextHandle(ThreadContextId updatedThreadContextHandle) { threadContextHandle = updatedThreadContextHandle; }
-    void SetConcurrentThreadId(DWORD threadId) { this->concurrentThreadId = threadId; }
-    void ClearConcurrentThreadId() { this->concurrentThreadId = (DWORD)-1; }
-    DWORD GetConcurrentThreadId() { return this->concurrentThreadId;  }
-    DWORD HasConcurrentThreadId() { return this->concurrentThreadId != -1; }
+    void SetConcurrentThreadId(uint32_t threadId) { this->concurrentThreadId = threadId; }
+    void ClearConcurrentThreadId() { this->concurrentThreadId = (uint32_t)-1; }
+    uint32_t GetConcurrentThreadId() { return this->concurrentThreadId;  }
+    uint32_t HasConcurrentThreadId() { return this->concurrentThreadId != -1; }
 #endif
 
     bool IsWriteWatchEnabled()
@@ -795,7 +795,7 @@ protected:
     DListBase<TSegment> largeSegments;
 
     uint maxAllocPageCount;
-    DWORD allocFlags;
+    uint32_t allocFlags;
     uint maxFreePageCount;
     size_t freePageCount;
     uint secondaryAllocPageCount;
@@ -842,7 +842,7 @@ protected:
 #if DBG
     size_t debugMinFreePageCount;
     ThreadContextId threadContextHandle;
-    DWORD concurrentThreadId;
+    uint32_t concurrentThreadId;
 #endif
 #if DBG_DUMP
     size_t decommitPageCount;
@@ -1008,8 +1008,8 @@ class HeapPageAllocator : public PageAllocatorBase<TVirtualAlloc>
 public:
     HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, TVirtualAlloc * virtualAllocator, HANDLE processHandle = nullptr);
 
-    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag);
-    bool AllocSecondary(void* segment, ULONG_PTR functionStart, DWORD functionSize, DECLSPEC_GUARD_OVERFLOW ushort pdataCount, DECLSPEC_GUARD_OVERFLOW ushort xdataSize, SecondaryAllocation* allocation);
+    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag);
+    bool AllocSecondary(void* segment, size_t functionStart, uint32_t functionSize, DECLSPEC_GUARD_OVERFLOW ushort pdataCount, DECLSPEC_GUARD_OVERFLOW ushort xdataSize, SecondaryAllocation* allocation);
     bool ReleaseSecondary(const SecondaryAllocation& allocation, void* segment);
     void TrackDecommittedPages(void * address, uint pageCount, __in void* segment);
     void DecommitPages(__in char* address, size_t pageCount = 1);

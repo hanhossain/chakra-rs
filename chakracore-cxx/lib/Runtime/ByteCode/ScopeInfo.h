@@ -47,15 +47,15 @@ namespace Js {
         Field(ScopeInfo *) parent;               // link to parent scope info (if any)
         Field(FunctionInfo * const) functionInfo;// link to function owning this scope
 
-        Field(BYTE) isDynamic : 1;             // isDynamic bit affects how deferredChild access global ref
-        Field(BYTE) isObject : 1;              // isObject bit affects how deferredChild access closure symbols
-        Field(BYTE) mustInstantiate : 1;       // the scope must be instantiated as an object/array
-        Field(BYTE) isCached : 1;              // indicates that local vars and functions are cached across invocations
-        Field(BYTE) areNamesCached : 1;
-        Field(BYTE) hasLocalInClosure : 1;
-        Field(BYTE) isGeneratorFunctionBody : 1;
-        Field(BYTE) isAsyncFunctionBody : 1;
-        Field(BYTE) isClassConstructor : 1;
+        Field(uint8_t) isDynamic : 1;             // isDynamic bit affects how deferredChild access global ref
+        Field(uint8_t) isObject : 1;              // isObject bit affects how deferredChild access closure symbols
+        Field(uint8_t) mustInstantiate : 1;       // the scope must be instantiated as an object/array
+        Field(uint8_t) isCached : 1;              // indicates that local vars and functions are cached across invocations
+        Field(uint8_t) areNamesCached : 1;
+        Field(uint8_t) hasLocalInClosure : 1;
+        Field(uint8_t) isGeneratorFunctionBody : 1;
+        Field(uint8_t) isAsyncFunctionBody : 1;
+        Field(uint8_t) isClassConstructor : 1;
 
         FieldNoBarrier(Scope *) scope;
         Field(::ScopeType) scopeType;

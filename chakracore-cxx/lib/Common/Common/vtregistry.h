@@ -16,7 +16,7 @@ private:
         LPCSTR className;
     };
     static TableEntry m_knownVtables[];
-    static UINT m_knownVtableCount;
+    static uint32_t m_knownVtableCount;
 
 };
 #endif

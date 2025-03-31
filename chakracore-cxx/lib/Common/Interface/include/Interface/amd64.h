@@ -10,4 +10,4 @@
 #error Include amd64.h in builds of AMD64 targets only.
 #endif
 
-extern "C" VOID amd64_SAVE_REGISTERS(void*);
+extern "C" void amd64_SAVE_REGISTERS(void*);

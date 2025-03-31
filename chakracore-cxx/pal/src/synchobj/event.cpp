@@ -83,12 +83,11 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateEventA(
-         IN LPSECURITY_ATTRIBUTES lpEventAttributes,
-         IN BOOL bManualReset,
-         IN BOOL bInitialState,
-         IN LPCSTR lpName)
+          LPSECURITY_ATTRIBUTES lpEventAttributes,
+          BOOL bManualReset,
+          BOOL bInitialState,
+          LPCSTR lpName)
 {
     HANDLE hEvent = NULL;
     CPalThread *pthr = NULL;
@@ -146,12 +145,11 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 CreateEventW(
-         IN LPSECURITY_ATTRIBUTES lpEventAttributes,
-         IN BOOL bManualReset,
-         IN BOOL bInitialState,
-         IN LPCWSTR lpName)
+          LPSECURITY_ATTRIBUTES lpEventAttributes,
+          BOOL bManualReset,
+          BOOL bInitialState,
+          LPCWSTR lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError;
@@ -315,9 +313,8 @@ See MSDN doc.
 --*/
 
 BOOL
-PALAPI
 SetEvent(
-     IN HANDLE hEvent)
+      HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -348,9 +345,8 @@ See MSDN doc.
 --*/
 
 BOOL
-PALAPI
 ResetEvent(
-       IN HANDLE hEvent)
+        HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -466,11 +462,10 @@ Parameters:
 --*/
 
 HANDLE
-PALAPI
 OpenEventW(
-       IN DWORD dwDesiredAccess,
-       IN BOOL bInheritHandle,
-       IN LPCWSTR lpName)
+        uint32_t dwDesiredAccess,
+        BOOL bInheritHandle,
+        LPCWSTR lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError = NO_ERROR;
@@ -526,7 +521,7 @@ Parameters:
 PAL_ERROR
 CorUnix::InternalOpenEvent(
     CPalThread *pthr,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
     LPCWSTR lpName,
     HANDLE *phEvent

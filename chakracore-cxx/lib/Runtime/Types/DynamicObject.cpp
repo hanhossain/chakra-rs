@@ -391,17 +391,17 @@ namespace Js
         this->type = predecessorType;
     }
 
-    DWORD DynamicObject::GetOffsetOfAuxSlots()
+    uint32_t DynamicObject::GetOffsetOfAuxSlots()
     {
         return offsetof(DynamicObject, auxSlots);
     }
 
-    DWORD DynamicObject::GetOffsetOfObjectArray()
+    uint32_t DynamicObject::GetOffsetOfObjectArray()
     {
         return offsetof(DynamicObject, objectArray);
     }
 
-    DWORD DynamicObject::GetOffsetOfType()
+    uint32_t DynamicObject::GetOffsetOfType()
     {
         return offsetof(DynamicObject, type);
     }

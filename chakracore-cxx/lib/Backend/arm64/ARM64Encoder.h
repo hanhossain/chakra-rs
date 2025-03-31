@@ -25,7 +25,7 @@
 // Core types
 //
 
-typedef UCHAR ARM64_REGISTER;
+typedef unsigned char ARM64_REGISTER;
 
 enum
 {
@@ -198,10 +198,10 @@ enum
 // Special opcodes.
 //
 
-static const ULONG ARM64_OPCODE_NOP = 0xd503201f;
-static const ULONG ARM64_OPCODE_DMB_ISH = 0xd5033bbf;
-static const ULONG ARM64_OPCODE_DMB_ISHST = 0xd5033abf;
-static const ULONG ARM64_OPCODE_DMB_ISHLD = 0xd50339bf;
+static const uint32_t ARM64_OPCODE_NOP = 0xd503201f;
+static const uint32_t ARM64_OPCODE_DMB_ISH = 0xd5033bbf;
+static const uint32_t ARM64_OPCODE_DMB_ISHST = 0xd5033abf;
+static const uint32_t ARM64_OPCODE_DMB_ISHLD = 0xd50339bf;
 
 //
 // Conditional compare flags for CCMP and CCMN instructions.
@@ -261,7 +261,7 @@ enum INDEX_SCALE
     INDEX_SCALE_8 = 3,
 };
 
-static const BYTE RegEncode[] =
+static const uint8_t RegEncode[] =
 {
 #define REGDAT(Name, Listing, Encoding, ...) Encoding,
 #include "RegList.h"
@@ -276,8 +276,8 @@ class Arm64CodeEmitter
 {
 public:
     Arm64CodeEmitter(
-        PULONG BasePtr,
-        ULONG BufferSizeInBytes
+        uint32_t * BasePtr,
+        uint32_t BufferSizeInBytes
         ) 
         : m_BasePtr(BasePtr),
           m_Offset(0),
@@ -287,7 +287,7 @@ public:
     
     int
     EmitFourBytes(
-        ULONG Data
+        uint32_t Data
         )
     {
         Assert(m_Offset < m_MaxOffset);
@@ -295,22 +295,22 @@ public:
         return 4;
     }
 
-    ULONG
+    uint32_t
     GetEmittedByteCount() const
     {
         return m_Offset * 4;
     }
 
-    PULONG
+    uint32_t *
     GetEmitAreaBase() const
     {
         return m_BasePtr;
     }
 
 private:
-    PULONG m_BasePtr;
-    ULONG m_Offset;
-    ULONG m_MaxOffset;
+    uint32_t * m_BasePtr;
+    uint32_t m_Offset;
+    uint32_t m_MaxOffset;
 };
 
 //
@@ -326,7 +326,7 @@ public:
         {
         }
     
-    DWORD
+    uint32_t
     Opcode(
         int Index = 0
         )
@@ -335,7 +335,7 @@ public:
     }
 
 private:
-    ULONG m_Buffer[MaxOpcodes];
+    uint32_t m_Buffer[MaxOpcodes];
 };
 
 //
@@ -344,18 +344,18 @@ private:
 
 class Arm64RegisterParam
 {
-    static const UCHAR REGISTER_SHIFT = 0;
-    static const UCHAR REGISTER_MASK = 0xff;
-    static const ULONG REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
+    static const unsigned char REGISTER_SHIFT = 0;
+    static const unsigned char REGISTER_MASK = 0xff;
+    static const uint32_t REGISTER_MASK_SHIFTED = REGISTER_MASK << REGISTER_SHIFT;
 
-    static const UCHAR SHIFT_TYPE_SHIFT = 8;
-    static const UCHAR SHIFT_TYPE_MASK = 0x0f;
-    static const ULONG SHIFT_TYPE_MASK_SHIFTED = SHIFT_TYPE_MASK << SHIFT_TYPE_SHIFT;
-    static const ULONG SHIFT_NONE_SHIFTED = SHIFT_NONE << SHIFT_TYPE_SHIFT;
+    static const unsigned char SHIFT_TYPE_SHIFT = 8;
+    static const unsigned char SHIFT_TYPE_MASK = 0x0f;
+    static const uint32_t SHIFT_TYPE_MASK_SHIFTED = SHIFT_TYPE_MASK << SHIFT_TYPE_SHIFT;
+    static const uint32_t SHIFT_NONE_SHIFTED = SHIFT_NONE << SHIFT_TYPE_SHIFT;
 
-    static const UCHAR SHIFT_COUNT_SHIFT = 12;
-    static const UCHAR SHIFT_COUNT_MASK = 0x3f;
-    static const ULONG SHIFT_COUNT_MASK_SHIFTED = SHIFT_COUNT_MASK << SHIFT_COUNT_SHIFT;
+    static const unsigned char SHIFT_COUNT_SHIFT = 12;
+    static const unsigned char SHIFT_COUNT_MASK = 0x3f;
+    static const uint32_t SHIFT_COUNT_MASK_SHIFTED = SHIFT_COUNT_MASK << SHIFT_COUNT_SHIFT;
 
 protected:
 
@@ -369,7 +369,7 @@ public:
     Arm64RegisterParam(
         ARM64_REGISTER Reg,
         SHIFT_EXTEND_TYPE Type = SHIFT_NONE,
-        UCHAR Amount = 0
+        unsigned char Amount = 0
         )
         : m_Encoded(((Reg & REGISTER_MASK) << REGISTER_SHIFT) |
                     ((Type & SHIFT_TYPE_MASK) << SHIFT_TYPE_SHIFT) |
@@ -385,10 +385,10 @@ public:
         return (m_Encoded >> REGISTER_SHIFT) & REGISTER_MASK;
     }
 
-    UCHAR
+    unsigned char
     RawRegister() const
     {
-        return UCHAR(Register() - ARMREG_FIRST);
+        return (unsigned char)(Register() - ARMREG_FIRST);
     }
 
     SHIFT_EXTEND_TYPE
@@ -397,7 +397,7 @@ public:
         return SHIFT_EXTEND_TYPE((m_Encoded >> SHIFT_TYPE_SHIFT) & SHIFT_TYPE_MASK);
     }
 
-    UCHAR
+    unsigned char
     ShiftCount() const
     {
         return (m_Encoded >> SHIFT_COUNT_SHIFT) & SHIFT_COUNT_MASK;
@@ -415,7 +415,7 @@ public:
         return (ShiftType() >= EXTEND_UXTB);
     }
 
-    ULONG
+    uint32_t
     Encode() const
     {
         Assert(!IsExtended());
@@ -424,7 +424,7 @@ public:
                  (ShiftCount() << 10));
     }
 
-    ULONG
+    uint32_t
     EncodeExtended() const
     {
         Assert(IsExtended());
@@ -448,7 +448,7 @@ protected:
     void
     AssertValidShift(
         SHIFT_EXTEND_TYPE Type,
-        UCHAR Amount
+        unsigned char Amount
         )
     {
         UNREFERENCED_PARAMETER(Type);
@@ -461,7 +461,7 @@ protected:
         Assert(Type < EXTEND_UXTB || (Amount >= 0 && Amount <= 4));
     }
 
-    ULONG m_Encoded;
+    uint32_t m_Encoded;
 };
 
 //
@@ -493,7 +493,7 @@ public:
     }
 
 private:
-    ULONG
+    uint32_t
     Encode() const
     {
         return 0;
@@ -506,11 +506,11 @@ private:
 
 class ArmBranchLinker
 {
-    static const ULONG EMITTER_INVALID_OFFSET = 0x80000000;
+    static const uint32_t EMITTER_INVALID_OFFSET = 0x80000000;
 
 public:
     ArmBranchLinker(
-        ULONG OffsetFromEmitterBase = EMITTER_INVALID_OFFSET
+        uint32_t OffsetFromEmitterBase = EMITTER_INVALID_OFFSET
         ) 
         : m_InstructionOffset(EMITTER_INVALID_OFFSET), 
           m_TargetOffset(OffsetFromEmitterBase), 
@@ -558,7 +558,7 @@ public:
     
     void
     SetInstructionOffset(
-        ULONG InstructionOffset
+        uint32_t InstructionOffset
         )
     {
         Assert(InstructionOffset % 4 == 0);
@@ -585,7 +585,7 @@ public:
     
     void
     SetTarget(
-        INT32 OffsetFromEmitterBase
+        int32_t OffsetFromEmitterBase
         )
     {
         Assert(OffsetFromEmitterBase % 4 == 0);
@@ -604,12 +604,12 @@ public:
     void 
     SetTargetAbsolute(
         Arm64CodeEmitter &Emitter,
-        PULONG Target
+        uint32_t * Target
         )
     {
-        ULONG_PTR Delta = ULONG_PTR(Target) - ULONG_PTR(Emitter.GetEmitAreaBase());
-        Assert(INT32(Delta) == Delta);
-        SetTarget(INT32(Delta));
+        size_t Delta = size_t(Target) - size_t(Emitter.GetEmitAreaBase());
+        Assert(int32_t(Delta) == Delta);
+        SetTarget(int32_t(Delta));
         Resolve(Emitter);
     }
 
@@ -621,14 +621,14 @@ public:
     
     void
     Resolve(
-        PULONG EmitterBlockBase
+        uint32_t * EmitterBlockBase
         )
     {
         if (!HasInstruction() || !HasTarget()) {
             return;
         }
     
-        PULONG InstructionAddress = EmitterBlockBase + m_InstructionOffset;
+        uint32_t * InstructionAddress = EmitterBlockBase + m_InstructionOffset;
         *InstructionAddress = UpdateInstruction(*InstructionAddress);
         m_Resolved = true;
     }
@@ -643,11 +643,11 @@ public:
     
     static void
     LinkRaw(
-        PULONG ExistingInstruction,
-        PULONG TargetInstruction
+        uint32_t * ExistingInstruction,
+        uint32_t * TargetInstruction
         )
     {
-        ULONG Instruction = *ExistingInstruction;
+        uint32_t Instruction = *ExistingInstruction;
 
         //
         // Determine instruction class from bits:
@@ -675,35 +675,35 @@ public:
         Arm64CodeEmitter Emitter(ExistingInstruction, 4);
         ArmBranchLinker Linker;
         Linker.SetInstructionAddressAndClass(Emitter, Class);
-        Linker.SetTarget(INT32(4 * (TargetInstruction - ExistingInstruction)));
+        Linker.SetTarget(int32_t(4 * (TargetInstruction - ExistingInstruction)));
         Linker.Resolve(Emitter);
     }
     
 private:
-    ULONG
+    uint32_t
     UpdateInstruction(
-        ULONG Instruction
+        uint32_t Instruction
         )
     {
-        INT32 Delta = INT32(m_TargetOffset - m_InstructionOffset);
+        int32_t Delta = int32_t(m_TargetOffset - m_InstructionOffset);
         switch (m_BranchClass) {
         
         case CLASS_IMM26:
-            Assert(((INT32(Delta << (32-26))) >> (32-26)) == Delta);
+            Assert(((int32_t(Delta << (32-26))) >> (32-26)) == Delta);
             Assert((Instruction & 0x03ffffff) == 0);
             Assert((Instruction & 0x7c000000) == 0x14000000);
             Instruction = (Instruction & 0xfc000000) | (Delta & 0x03ffffff);
             break;
         
         case CLASS_IMM19:
-            Assert(((INT32(Delta << (32-19))) >> (32-19)) == Delta);
+            Assert(((int32_t(Delta << (32-19))) >> (32-19)) == Delta);
             Assert((Instruction & 0x00ffffe0) == 0);
             Assert((Instruction & 0xff000000) == 0x54000000 || (Instruction & 0x7e000000) == 0x34000000);
             Instruction = (Instruction & 0xff00001f) | ((Delta << 5) & 0x00ffffe0);
             break;
         
         case CLASS_IMM14:
-            Assert(((INT32(Delta << (32-14))) >> (32-14)) == Delta);
+            Assert(((int32_t(Delta << (32-14))) >> (32-14)) == Delta);
             Assert((Instruction & 0x0007ffe0) == 0);
             Assert((Instruction & 0x7e000000) == 0x36000000);
             Instruction = (Instruction & 0xfff8001f) | ((Delta << 5) & 0x0007ffe0);
@@ -712,8 +712,8 @@ private:
         return Instruction;
     }
 
-    ULONG m_InstructionOffset;
-    INT32 m_TargetOffset;
+    uint32_t m_InstructionOffset;
+    int32_t m_TargetOffset;
     BRANCH_CLASS m_BranchClass;
     bool m_Resolved;
 };
@@ -782,7 +782,7 @@ inline
 int
 EmitBrk(
     Arm64CodeEmitter &Emitter,
-    USHORT Code
+    unsigned short Code
     )
 {
     return Emitter.EmitFourBytes(BrkOpcode(Code));
@@ -836,7 +836,7 @@ int
 EmitMrs(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG SystemReg 
+    uint32_t SystemReg
     )
 {
 
@@ -855,7 +855,7 @@ int
 EmitMsr(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
-    ULONG SystemReg
+    uint32_t SystemReg
     )
 {
 
@@ -869,9 +869,9 @@ EmitMsr(
 //
 
 inline
-ULONG
+uint32_t
 BranchOpcode(
-    LONG Offset
+    int32_t Offset
     )
 
 {
@@ -879,7 +879,7 @@ BranchOpcode(
     Assert((Offset >= -(1 << 25)) && (Offset < (1 << 25)));
     Assert((Offset & 0x3) == 0);
 
-    LONG OffsetInWords = (Offset / 4);
+    int32_t OffsetInWords = (Offset / 4);
 
     return (0x14000000 | (OffsetInWords & ((1 << 26) - 1)));
 }
@@ -913,7 +913,7 @@ int
 EmitBranch(
     Arm64CodeEmitter &Emitter,
     ArmBranchLinker &Linker,
-    ULONG Condition = COND_AL
+    uint32_t Condition = COND_AL
     )
 {
     if (Condition == COND_AL) {
@@ -982,7 +982,7 @@ int
 EmitTbz(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Reg,
-    ULONG Bit,
+    uint32_t Bit,
     ArmBranchLinker &Linker
     )
 {
@@ -997,7 +997,7 @@ int
 EmitTbnz(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Reg,
-    ULONG Bit,
+    uint32_t Bit,
     ArmBranchLinker &Linker
     )
 {
@@ -1325,7 +1325,7 @@ EmitMaddMsubCommon(
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
     Arm64SimpleRegisterParam Src3,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src2.RawRegister() << 16) | (Src3.RawRegister() << 10) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -1495,7 +1495,7 @@ EmitDivideCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src2.RawRegister() << 16) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -1569,7 +1569,7 @@ EmitLogicalRegisterCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64RegisterParam Src2,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | Src2.Encode() | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -1971,10 +1971,10 @@ EmitBitfieldCommon(
     Arm64SimpleRegisterParam Src,
     ULONG64 Immr,
     ULONG64 Imms,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
-    return Emitter.EmitFourBytes(Opcode | (ULONG(Immr) << 16) | (ULONG(Imms) << 10) | (Src.RawRegister() << 5) | Dest.RawRegister());
+    return Emitter.EmitFourBytes(Opcode | (uint32_t(Immr) << 16) | (uint32_t(Imms) << 10) | (Src.RawRegister() << 5) | Dest.RawRegister());
 }
 
 inline
@@ -2156,8 +2156,8 @@ EmitBfi(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 31);
@@ -2173,8 +2173,8 @@ EmitBfi64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 63);
@@ -2190,8 +2190,8 @@ EmitBfxil(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 31);
@@ -2207,8 +2207,8 @@ EmitBfxil64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 63);
@@ -2224,8 +2224,8 @@ EmitSbfx(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 31);
@@ -2241,8 +2241,8 @@ EmitSbfx64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 63);
@@ -2258,8 +2258,8 @@ EmitUbfx(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 31);
@@ -2275,8 +2275,8 @@ EmitUbfx64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Lsb,
-    ULONG Width
+    uint32_t Lsb,
+    uint32_t Width
     )
 {
     Assert(Lsb <= 63);
@@ -2382,7 +2382,7 @@ EmitExtr(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Shift
+    uint32_t Shift
     )
 {
     return Emitter.EmitFourBytes(0x13800000 | (Src2.RawRegister() << 16) | ((Shift & 0x3f) << 10) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -2395,7 +2395,7 @@ EmitExtr64(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Shift
+    uint32_t Shift
     )
 {
     return Emitter.EmitFourBytes(0x93c00000 | (Src2.RawRegister() << 16) | ((Shift & 0x3f) << 10) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -2407,7 +2407,7 @@ EmitRorImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     //Assert(Immediate >= 0 && Immediate < 32);
@@ -2420,7 +2420,7 @@ EmitRorImmediate64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     //Assert(Immediate >= 0 && Immediate < 64);
@@ -2445,8 +2445,8 @@ EmitConditionalCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition,
-    ULONG Opcode
+    uint32_t Condition,
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src2.RawRegister() << 16) | (Condition << 12) | (Src1.RawRegister() << 5) | Dest.RawRegister());
@@ -2459,7 +2459,7 @@ EmitCsel(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x1a800000);
@@ -2472,7 +2472,7 @@ EmitCsel64(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x9a800000);
@@ -2485,7 +2485,7 @@ EmitCsinc(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x1a800400);
@@ -2498,7 +2498,7 @@ EmitCsinc64(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x9a800400);
@@ -2511,7 +2511,7 @@ EmitCsinv(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x5a800000);
@@ -2524,7 +2524,7 @@ EmitCsinv64(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0xda800000);
@@ -2537,7 +2537,7 @@ EmitCsneg(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0x5a800400);
@@ -2550,7 +2550,7 @@ EmitCsneg64(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitConditionalCommon(Emitter, Dest, Src1, Src2, Condition, 0xda800400);
@@ -2562,7 +2562,7 @@ EmitCinc(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinc(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2574,7 +2574,7 @@ EmitCinc64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinc64(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2585,7 +2585,7 @@ int
 EmitCset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinc(Emitter, Dest, ARMREG_ZR, ARMREG_ZR, Condition ^ 1);
@@ -2596,7 +2596,7 @@ int
 EmitCset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinc64(Emitter, Dest, ARMREG_ZR, ARMREG_ZR, Condition ^ 1);
@@ -2608,7 +2608,7 @@ EmitCinv(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinv(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2620,7 +2620,7 @@ EmitCinv64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinv64(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2631,7 +2631,7 @@ int
 EmitCsetm(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinv(Emitter, Dest, ARMREG_ZR, ARMREG_ZR, Condition ^ 1);
@@ -2642,7 +2642,7 @@ int
 EmitCsetm64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsinv64(Emitter, Dest, ARMREG_ZR, ARMREG_ZR, Condition ^ 1);
@@ -2654,7 +2654,7 @@ EmitCneg(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsneg(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2666,7 +2666,7 @@ EmitCneg64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Condition
+    uint32_t Condition
     )
 {
     return EmitCsneg64(Emitter, Dest, Src, Src, Condition ^ 1);
@@ -2683,9 +2683,9 @@ EmitConditionalCompareRegister(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Nzcv,
-    ULONG Condition,
-    ULONG Opcode
+    uint32_t Nzcv,
+    uint32_t Condition,
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src2.RawRegister() << 16) | (Condition << 12) | (Src1.RawRegister() << 5) | Nzcv);
@@ -2697,8 +2697,8 @@ EmitCcmnRegister(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Nzcv,
-    ULONG Condition
+    uint32_t Nzcv,
+    uint32_t Condition
     )
 {
     return EmitConditionalCompareRegister(Emitter, Src1, Src2, Nzcv, Condition, 0x3A400000);
@@ -2710,8 +2710,8 @@ EmitCcmnRegister64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Nzcv,
-    ULONG Condition
+    uint32_t Nzcv,
+    uint32_t Condition
     )
 {
     return EmitConditionalCompareRegister(Emitter, Src1, Src2, Nzcv, Condition, 0xBA400000);
@@ -2723,8 +2723,8 @@ EmitCcmpRegister(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Nzcv,
-    ULONG Condition
+    uint32_t Nzcv,
+    uint32_t Condition
     )
 {
     return EmitConditionalCompareRegister(Emitter, Src1, Src2, Nzcv, Condition, 0x7A400000);
@@ -2736,8 +2736,8 @@ EmitCcmpRegister64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src1,
     Arm64SimpleRegisterParam Src2,
-    ULONG Nzcv,
-    ULONG Condition
+    uint32_t Nzcv,
+    uint32_t Condition
     )
 {
     return EmitConditionalCompareRegister(Emitter, Src1, Src2, Nzcv, Condition, 0xFA400000);
@@ -2752,9 +2752,9 @@ int
 EmitMovImmediateCommon(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift,
-    ULONG Opcode
+    uint32_t Immediate,
+    uint32_t Shift,
+    uint32_t Opcode
     )
 {
     Assert(Shift % 16 == 0);
@@ -2767,8 +2767,8 @@ int
 EmitMovk(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0x72800000);
@@ -2779,8 +2779,8 @@ int
 EmitMovk64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0xf2800000);
@@ -2791,8 +2791,8 @@ int
 EmitMovn(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0x12800000);
@@ -2803,8 +2803,8 @@ int
 EmitMovn64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0x92800000);
@@ -2815,8 +2815,8 @@ int
 EmitMovz(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0x52800000);
@@ -2827,8 +2827,8 @@ int
 EmitMovz64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate,
-    ULONG Shift
+    uint32_t Immediate,
+    uint32_t Shift
     )
 {
     return EmitMovImmediateCommon(Emitter, Dest, Immediate, Shift, 0xd2800000);
@@ -2839,12 +2839,12 @@ int
 EmitLoadImmediate32(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
 
-    ULONG Word0 = Immediate & 0xffff;
-    ULONG Word1 = (Immediate >> 16) & 0xffff;
+    uint32_t Word0 = Immediate & 0xffff;
+    uint32_t Word1 = (Immediate >> 16) & 0xffff;
 
     if (Word0 != 0 && Word1 != 0) {
 
@@ -2852,7 +2852,7 @@ EmitLoadImmediate32(
         // Try to encode as a bitfield. If possible, use ORR immediate.
         //
 
-        ULONG BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, 4);
+        uint32_t BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, 4);
         if (BitfieldResult != ARM64_LOGICAL_IMMEDIATE_NO_ENCODING) {
             return Emitter.EmitFourBytes(0x32000000 | (BitfieldResult << 10) | (31 << 5) | Dest.RawRegister());
         }
@@ -2872,7 +2872,7 @@ EmitLoadImmediate32(
     // Otherwise use MOVZ (+MOVK).
     //
 
-    ULONG Opcode = 0x52800000;
+    uint32_t Opcode = 0x52800000;
     int Result = 0;
     if (Word0 != 0 || Word1 == 0) {
         Result += Emitter.EmitFourBytes(Opcode | (0 << 21) | (Word0 << 5) | Dest.RawRegister());
@@ -2898,14 +2898,14 @@ EmitLoadImmediate64(
     //
 
     if ((Immediate >> 32) == 0) {
-        return EmitLoadImmediate32(Emitter, Dest, ULONG(Immediate));
+        return EmitLoadImmediate32(Emitter, Dest, uint32_t(Immediate));
     }
 
     //
     // Try to encode as a bitfield. If possible, use ORR immediate.
     //
 
-    ULONG BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, 8);
+    uint32_t BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, 8);
     if (BitfieldResult != ARM64_LOGICAL_IMMEDIATE_NO_ENCODING) {
         return Emitter.EmitFourBytes(0xb2000000 | (BitfieldResult << 10) | (31 << 5) | Dest.RawRegister());
     }
@@ -2914,10 +2914,10 @@ EmitLoadImmediate64(
     // Break into words and count the number of 0's and ffff's
     //
 
-    ULONG Word0 = Immediate & 0xffff;
-    ULONG Word1 = (Immediate >> 16) & 0xffff;
-    ULONG Word2 = (Immediate >> 32) & 0xffff;
-    ULONG Word3 = (Immediate >> 48) & 0xffff;
+    uint32_t Word0 = Immediate & 0xffff;
+    uint32_t Word1 = (Immediate >> 16) & 0xffff;
+    uint32_t Word2 = (Immediate >> 32) & 0xffff;
+    uint32_t Word3 = (Immediate >> 48) & 0xffff;
     int NumZero = (Word0 == 0) + (Word1 == 0) + (Word2 == 0) + (Word3 == 0);
     int NumOnes = (Word0 == 0xffff) + (Word1 == 0xffff) + (Word2 == 0xffff) + (Word3 == 0xffff);
 
@@ -2925,9 +2925,9 @@ EmitLoadImmediate64(
     // Use MOVZ/MOVN (+MOVK)
     //
 
-    ULONG WordMask = (NumOnes > NumZero) ? 0xffff : 0x0000;
-    ULONG WordXor = WordMask;
-    ULONG Opcode = (WordMask == 0xffff) ? 0x92800000 : 0xd2800000;
+    uint32_t WordMask = (NumOnes > NumZero) ? 0xffff : 0x0000;
+    uint32_t WordXor = WordMask;
+    uint32_t Opcode = (WordMask == 0xffff) ? 0x92800000 : 0xd2800000;
     int Result = 0;
     if (Word0 != WordMask) {
         Result += Emitter.EmitFourBytes(Opcode | (0 << 21) | ((Word0 ^ WordXor) << 5) | Dest.RawRegister());
@@ -2955,7 +2955,7 @@ int
 EmitLoadImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    ULONG Immediate
+    uint32_t Immediate
     )
 
 {
@@ -2972,8 +2972,8 @@ int
 EmitAdrAdrp(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    LONG Offset,
-    ULONG Opcode
+    int32_t Offset,
+    uint32_t Opcode
 )
 {
 
@@ -2986,7 +2986,7 @@ int
 EmitAdr(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    LONG Offset
+    int32_t Offset
 )
 {
     return EmitAdrAdrp(Emitter, Dest, Offset, 0x10000000);
@@ -2997,7 +2997,7 @@ int
 EmitAdrp(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
-    LONG PageOffset
+    int32_t PageOffset
 )
 {
     return EmitAdrAdrp(Emitter, Dest, PageOffset, 0x90000000);
@@ -3017,10 +3017,10 @@ EmitAddSubImmediateCommon(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    LONG Immediate,
+    int32_t Immediate,
     bool SetFlags,
     bool IsAdd,
-    ULONG OpcodeHighBit
+    uint32_t OpcodeHighBit
     )
 {
     //
@@ -3084,7 +3084,7 @@ EmitAddImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitAddSubImmediateCommon(Emitter, Dest, Src, Immediate, false, true, 0);
@@ -3099,8 +3099,8 @@ EmitAddImmediate64(
     ULONG64 Immediate
     )
 {
-    if (LONG(Immediate) == Immediate) {
-        return EmitAddSubImmediateCommon(Emitter, Dest, Src, LONG(Immediate), false, true, 0x80000000);
+    if (int32_t(Immediate) == Immediate) {
+        return EmitAddSubImmediateCommon(Emitter, Dest, Src, int32_t(Immediate), false, true, 0x80000000);
     }
 
     AssertMsg(false, "EmitAddImmediate64 failed to emit");
@@ -3113,7 +3113,7 @@ EmitAddsImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitAddSubImmediateCommon(Emitter, Dest, Src, Immediate, true, true, 0);
@@ -3128,8 +3128,8 @@ EmitAddsImmediate64(
     ULONG64 Immediate
     )
 {
-    if (LONG(Immediate) == Immediate) {
-        return EmitAddSubImmediateCommon(Emitter, Dest, Src, LONG(Immediate), true, true, 0x80000000);
+    if (int32_t(Immediate) == Immediate) {
+        return EmitAddSubImmediateCommon(Emitter, Dest, Src, int32_t(Immediate), true, true, 0x80000000);
     }
 
     AssertMsg(false, "EmitAddsImmediate64 failed to emit");
@@ -3142,10 +3142,10 @@ EmitSubImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
-    return EmitAddSubImmediateCommon(Emitter, Dest, Src, -LONG(Immediate), false, false, 0);
+    return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), false, false, 0);
 }
 
 inline
@@ -3157,8 +3157,8 @@ EmitSubImmediate64(
     ULONG64 Immediate
     )
 {
-    if (-LONG(Immediate) == -LONG64(Immediate)) {
-        return EmitAddSubImmediateCommon(Emitter, Dest, Src, -LONG(Immediate), false, false, 0x80000000);
+    if (-int32_t(Immediate) == -LONG64(Immediate)) {
+        return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), false, false, 0x80000000);
     }
 
     AssertMsg(false, "EmitSubImmediate64 failed to emit");
@@ -3171,10 +3171,10 @@ EmitSubsImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
-    return EmitAddSubImmediateCommon(Emitter, Dest, Src, -LONG(Immediate), true, false, 0);
+    return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), true, false, 0);
 }
 
 inline
@@ -3186,8 +3186,8 @@ EmitSubsImmediate64(
     ULONG64 Immediate
     )
 {
-    if (-LONG(Immediate) == -LONG64(Immediate)) {
-        return EmitAddSubImmediateCommon(Emitter, Dest, Src, -LONG(Immediate), true, false, 0x80000000);
+    if (-int32_t(Immediate) == -LONG64(Immediate)) {
+        return EmitAddSubImmediateCommon(Emitter, Dest, Src, -int32_t(Immediate), true, false, 0x80000000);
     }
 
     AssertMsg(false, "EmitSubsImmediate64 failed to emit");
@@ -3199,7 +3199,7 @@ int
 EmitCmpImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitSubsImmediate(Emitter, ARMREG_ZR, Src, Immediate);
@@ -3254,12 +3254,12 @@ EmitLogicalImmediateCommon(
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
     ULONG64 Immediate,
-    ULONG Opcode,
-    ULONG NotRegisterOpcode,
-    ULONG Size
+    uint32_t Opcode,
+    uint32_t NotRegisterOpcode,
+    uint32_t Size
     )
 {
-    ULONG BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, Size);
+    uint32_t BitfieldResult = FindArm64LogicalImmediateEncoding(Immediate, Size);
     if (BitfieldResult == ARM64_LOGICAL_IMMEDIATE_NO_ENCODING) {
 
         //
@@ -3268,7 +3268,7 @@ EmitLogicalImmediateCommon(
         //
 
         if (NotRegisterOpcode != 0 &&
-            ((Size == 4 && ULONG(Immediate) == ULONG(-1)) ||
+            ((Size == 4 && uint32_t(Immediate) == uint32_t(-1)) ||
              (Size == 8 && ULONG64(Immediate) == ULONG64(-1)))) {
 
             return Emitter.EmitFourBytes(NotRegisterOpcode | (31 << 16) | (Src.RawRegister() << 5) | Dest.RawRegister());
@@ -3287,7 +3287,7 @@ EmitAndImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitLogicalImmediateCommon(Emitter, Dest, Src, Immediate, 0x12000000, 0x0a200000, 4);
@@ -3311,7 +3311,7 @@ EmitAndsImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitLogicalImmediateCommon(Emitter, Dest, Src, Immediate, 0x72000000, 0x6a200000, 4);
@@ -3335,7 +3335,7 @@ EmitOrrImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitLogicalImmediateCommon(Emitter, Dest, Src, Immediate, 0x32000000, 0x2a200000, 4);
@@ -3359,7 +3359,7 @@ EmitEorImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitLogicalImmediateCommon(Emitter, Dest, Src, Immediate, 0x52000000, 0x4a200000, 4);
@@ -3382,7 +3382,7 @@ int
 EmitTestImmediate(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Src,
-    ULONG Immediate
+    uint32_t Immediate
     )
 {
     return EmitAndsImmediate(Emitter, ARMREG_ZR, Src, Immediate);
@@ -3412,7 +3412,7 @@ EmitReverseCommon(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Src,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Src.RawRegister() << 5) | Dest.RawRegister());
@@ -3556,7 +3556,7 @@ EmitLdrStrRegisterCommon(
     // Determine shift amount or return 0 if it can't be encoded.
     //
 
-    ULONG Amount = 0;
+    uint32_t Amount = 0;
     if (Index.ShiftType() != SHIFT_NONE && Index.ShiftCount() == AccessShift) {
         Amount = 1;
     } else if (Index.ShiftCount() != 0) {
@@ -3751,14 +3751,14 @@ EmitLdrStrOffsetCommon(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam SrcDest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset,
-    ULONG AccessShift,
-    ULONG Opcode,
-    ULONG OpcodeUnscaled
+    int32_t Offset,
+    uint32_t AccessShift,
+    uint32_t Opcode,
+    uint32_t OpcodeUnscaled
     )
 {
     if (Opcode != 0) {
-        LONG EncodeOffset = Offset >> AccessShift;
+        int32_t EncodeOffset = Offset >> AccessShift;
         if ((EncodeOffset << AccessShift) == Offset && (EncodeOffset & 0xfff) == EncodeOffset) {
             return Emitter.EmitFourBytes(Opcode | ((EncodeOffset & 0xfff) << 10) | (Addr.RawRegister() << 5) | SrcDest.RawRegister());
         }
@@ -3778,7 +3778,7 @@ EmitLdrbOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 0, 0x39400000, 0x38400000);
@@ -3790,7 +3790,7 @@ EmitLdrsbOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 0, 0x39c00000, 0x38c00000);
@@ -3802,7 +3802,7 @@ EmitLdrsbOffset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 0, 0x39800000, 0x38800000);
@@ -3814,7 +3814,7 @@ EmitLdrhOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 1, 0x79400000, 0x78400000);
@@ -3826,7 +3826,7 @@ EmitLdrhOffsetPostIndex(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     if (Offset == 0) {
@@ -3842,7 +3842,7 @@ EmitLdrshOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 1, 0x79c00000, 0x78c00000);
@@ -3854,7 +3854,7 @@ EmitLdrshOffset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 1, 0x79800000, 0x78800000);
@@ -3866,7 +3866,7 @@ EmitLdrOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 2, 0xb9400000, 0xb8400000);
@@ -3878,7 +3878,7 @@ EmitLdrOffsetPostIndex(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     if (Offset == 0) {
@@ -3894,7 +3894,7 @@ EmitLdrswOffset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 2, 0xb9800000, 0xb8800000);
@@ -3906,7 +3906,7 @@ EmitLdrOffset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Dest, Addr, Offset, 3, 0xf9400000, 0xf8400000);
@@ -3918,7 +3918,7 @@ EmitLdrOffsetPostIndex64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     if (Offset == 0) {
@@ -3934,7 +3934,7 @@ EmitStrbOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Source, Addr, Offset, 0, 0x39000000, 0x38000000);
@@ -3946,7 +3946,7 @@ EmitStrhOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Source, Addr, Offset, 1, 0x79000000, 0x78000000);
@@ -3958,7 +3958,7 @@ EmitStrhOffsetPreIndex(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     if (Offset == 0) {
@@ -3974,7 +3974,7 @@ EmitStrOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Source, Addr, Offset, 2, 0xb9000000, 0xb8000000);
@@ -3986,7 +3986,7 @@ EmitStrOffsetPreIndex(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     if (Offset == 0) {
@@ -4002,7 +4002,7 @@ EmitStrOffset64(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, Source, Addr, Offset, 3, 0xf9000000, 0xf8000000);
@@ -4013,7 +4013,7 @@ int
 EmitPrfmOffset(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdrStrOffsetCommon(Emitter, ARMREG_R0 /* PLDL1KEEP */, Addr, Offset, 2, 0xf9800000, 0xf8800000);
@@ -4031,12 +4031,12 @@ EmitLdpStpOffsetCommon(
     Arm64SimpleRegisterParam SrcDest1,
     Arm64SimpleRegisterParam SrcDest2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset,
-    LONG AccessShift,
-    ULONG Opcode
+    int32_t Offset,
+    int32_t AccessShift,
+    uint32_t Opcode
     )
 {
-    LONG EncodeOffset = Offset >> AccessShift;
+    int32_t EncodeOffset = Offset >> AccessShift;
     if ((EncodeOffset << AccessShift) == Offset && EncodeOffset >= -0x40 && EncodeOffset <= 0x3f) {
         return Emitter.EmitFourBytes(Opcode | ((EncodeOffset & 0x7f) << 15) | (SrcDest2.RawRegister() << 10) | (Addr.RawRegister() << 5) | SrcDest1.RawRegister());
     }
@@ -4052,7 +4052,7 @@ EmitLdpOffset(
     Arm64SimpleRegisterParam Dest1,
     Arm64SimpleRegisterParam Dest2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     Assert(Dest1.RawRegister() != Dest2.RawRegister());
@@ -4066,7 +4066,7 @@ EmitLdpOffset64(
     Arm64SimpleRegisterParam Dest1,
     Arm64SimpleRegisterParam Dest2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     Assert(Dest1.RawRegister() != Dest2.RawRegister());
@@ -4080,7 +4080,7 @@ EmitLdpOffsetPostIndex(
     Arm64SimpleRegisterParam Dest1,
     Arm64SimpleRegisterParam Dest2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
 )
 {
     if (Offset == 0) {
@@ -4097,7 +4097,7 @@ EmitLdpOffsetPostIndex64(
     Arm64SimpleRegisterParam Dest1,
     Arm64SimpleRegisterParam Dest2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
 )
 {
     if (Offset == 0) {
@@ -4114,7 +4114,7 @@ EmitStpOffset(
     Arm64SimpleRegisterParam Source1,
     Arm64SimpleRegisterParam Source2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdpStpOffsetCommon(Emitter, Source1, Source2, Addr, Offset, 2, 0x29000000);
@@ -4127,7 +4127,7 @@ EmitStpOffset64(
     Arm64SimpleRegisterParam Source1,
     Arm64SimpleRegisterParam Source2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
     )
 {
     return EmitLdpStpOffsetCommon(Emitter, Source1, Source2, Addr, Offset, 3, 0xa9000000);
@@ -4140,7 +4140,7 @@ EmitStpOffsetPreIndex(
     Arm64SimpleRegisterParam Source1,
     Arm64SimpleRegisterParam Source2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
 )
 {
     if (Offset == 0) {
@@ -4157,7 +4157,7 @@ EmitStpOffsetPreIndex64(
     Arm64SimpleRegisterParam Source1,
     Arm64SimpleRegisterParam Source2,
     Arm64SimpleRegisterParam Addr,
-    LONG Offset
+    int32_t Offset
 )
 {
     if (Offset == 0) {
@@ -4191,7 +4191,7 @@ EmitLdaStlCommon(
     Arm64CodeEmitter &Emitter,
     Arm64SimpleRegisterParam Dest,
     Arm64SimpleRegisterParam Addr,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Addr.RawRegister() << 5) | Dest.RawRegister());
@@ -4410,7 +4410,7 @@ EmitStlxrCommon(
     Arm64SimpleRegisterParam Status,
     Arm64SimpleRegisterParam Source,
     Arm64SimpleRegisterParam Addr,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Status.RawRegister() << 16) | (Addr.RawRegister() << 5) | Source.RawRegister());
@@ -4533,7 +4533,7 @@ EmitLdaxpCommon(
     Arm64SimpleRegisterParam Dest1,
     Arm64SimpleRegisterParam Dest2,
     Arm64SimpleRegisterParam Addr,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Dest2.RawRegister() << 10) | (Addr.RawRegister() << 5) | Dest1.RawRegister());
@@ -4575,7 +4575,7 @@ EmitStlxpCommon(
     Arm64SimpleRegisterParam Source1,
     Arm64SimpleRegisterParam Source2,
     Arm64SimpleRegisterParam Addr,
-    ULONG Opcode
+    uint32_t Opcode
     )
 {
     return Emitter.EmitFourBytes(Opcode | (Status.RawRegister() << 16) | (Source2.RawRegister() << 10) | (Addr.RawRegister() << 5) | Source1.RawRegister());

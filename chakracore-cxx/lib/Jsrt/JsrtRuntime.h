@@ -60,7 +60,7 @@ public:
 #endif
 
 private:
-    static void __cdecl RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags);
+    static void RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags);
 
 private:
     ThreadContext * threadContext;

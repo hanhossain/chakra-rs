@@ -34,24 +34,24 @@ enum ErrorReason
 };
 
 extern "C" void ReportFatalException(
-    __in ULONG_PTR context,
+    __in size_t context,
     __in HRESULT exceptionCode,
     __in ErrorReason reasonCode,
-    __in ULONG_PTR scenario);
+    __in size_t scenario);
 
 // We can have other error handle code path with
 // unique call stack so we can collect data in Dr. Watson.
 void JavascriptDispatch_OOM_fatal_error(
-    __in ULONG_PTR context);
+    __in size_t context);
 
 void CustomHeap_BadPageState_unrecoverable_error(
-    __in ULONG_PTR context);
+    __in size_t context);
 
 void Amd64StackWalkerOutOfContexts_unrecoverable_error(
-    __in ULONG_PTR context);
+    __in size_t context);
 
 void FailedToBox_OOM_unrecoverable_error(
-    __in ULONG_PTR context);
+    __in size_t context);
 
 #if defined(RECYCLER_WRITE_BARRIER) && defined(TARGET_64)
 void X64WriteBarrier_OOM_unrecoverable_error();
@@ -68,7 +68,7 @@ void UnexpectedExceptionHandling_fatal_error();
 
 #ifdef LARGEHEAPBLOCK_ENCODING
 void LargeHeapBlock_Metadata_Corrupted(
-    __in ULONG_PTR context, __in unsigned char calculatedCheckSum);
+    __in size_t context, __in unsigned char calculatedCheckSum);
 #endif
 
 void FromDOM_NoScriptScope_unrecoverable_error();
@@ -90,9 +90,9 @@ void OutOfMemoryTooManyPinnedObjects_unrecoverable_error_notvisible();
 void OutOfMemoryTooManyClosedContexts_unrecoverable_error_notvisible();
 void OutOfMemoryAllocationPolicy_unrecoverable_error_notvisible();
 
-void XDataRegistration_unrecoverable_error(HRESULT hr, ULONG_PTR scenario);
+void XDataRegistration_unrecoverable_error(HRESULT hr, size_t scenario);
 
-inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {
@@ -108,7 +108,7 @@ inline void OutOfMemoryTooManyPinnedObjects_unrecoverable_error(BYTE visibility)
     }
 }
 
-inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {
@@ -124,7 +124,7 @@ inline void OutOfMemoryTooManyClosedContexts_unrecoverable_error(BYTE visibility
     }
 }
 
-inline void OutOfMemoryAllocationPolicy_unrecoverable_error(BYTE visibility)
+inline void OutOfMemoryAllocationPolicy_unrecoverable_error(uint8_t visibility)
 {
     switch (visibility)
     {
@@ -143,7 +143,7 @@ inline void OutOfMemoryAllocationPolicy_unrecoverable_error(BYTE visibility)
 #ifndef DISABLE_SEH
 // RtlReportException is available on Vista and up, but we cannot use it for OOB release.
 // Use UnhandleExceptionFilter to let the default handler handles it.
-inline LONG FatalExceptionFilter(
+inline int32_t FatalExceptionFilter(
     __in LPEXCEPTION_POINTERS lpep, 
     __in void * addressToBlame = nullptr)
 {
@@ -152,7 +152,7 @@ inline LONG FatalExceptionFilter(
         lpep->ExceptionRecord->ExceptionAddress = addressToBlame;
     }
 
-    LONG rc = UnhandledExceptionFilter(lpep);
+    int32_t rc = UnhandledExceptionFilter(lpep);
 
     // re == EXCEPTION_EXECUTE_HANDLER means there is no debugger attached, let's terminate
     // the process. Otherwise give control to the debugger.
@@ -160,14 +160,14 @@ inline LONG FatalExceptionFilter(
     //       rc will be 0 (and EXCEPTION_EXECUTE_HANDLER is 1), so it acts as if there is debugger attached.
     if (rc == EXCEPTION_EXECUTE_HANDLER)
     {
-        TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+        TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
     }
     else
     {
         // However, if debugger was not attached for some reason, terminate the process.
         if (!IsDebuggerPresent())
         {
-            TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+            TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
         }
         DebugBreak();
     }

@@ -32,18 +32,18 @@ namespace Memory
 X64WriteBarrierCardTableManager RecyclerWriteBarrierManager::x64CardTableManager;
 X64WriteBarrierCardTableManager::CommittedSectionBitVector X64WriteBarrierCardTableManager::committedSections(&HeapAllocator::Instance);
 
-BYTE* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x64CardTableManager.Initialize();
+uint8_t* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x64CardTableManager.Initialize();
 #else
 // Each byte in the card table covers 4096 bytes so the range covered by the table is 4GB
-BYTE RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
+uint8_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 bool dummy = RecyclerWriteBarrierManager::Initialize();
 #endif
 #endif
 
 #else
-// Each *bit* in the card table covers 128 bytes. So each DWORD covers 4096 bytes and therefore the cardTable covers 4GB
-DWORD RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
+// Each *bit* in the card table covers 128 bytes. So each uint32_t covers 4096 bytes and therefore the cardTable covers 4GB
+uint32_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
 #endif
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
@@ -57,8 +57,8 @@ X64WriteBarrierCardTableManager::OnThreadInit()
 
     // ToDo (SaAgarwa) __readgsqword is not on ARM64?
     // xplat-todo: Replace this on Windows too with GetCurrentThreadStackBounds
-    ULONG_PTR stackBase = 0;
-    ULONG_PTR stackEnd = 0;
+    size_t stackBase = 0;
+    size_t stackEnd = 0;
     ::GetCurrentThreadStackLimits(&stackEnd, &stackBase);
 
 #ifdef X64_WB_DIAG
@@ -136,8 +136,8 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
 
     // Section Start is the card table's starting entry aligned *down* to the page boundary
     // Section End is the card table's ending entry aligned *up* to the page boundary
-    BYTE* sectionStart = (BYTE*) (((uintptr_t) &_cardTable[startIndex]) & ~(pageSize - 1));
-    BYTE* sectionEnd   = (BYTE*) Math::Align<uintptr_t>((uintptr_t)&_cardTable[endIndex], pageSize);
+    uint8_t* sectionStart = (uint8_t*) (((uintptr_t) &_cardTable[startIndex]) & ~(pageSize - 1));
+    uint8_t* sectionEnd   = (uint8_t*) Math::Align<uintptr_t>((uintptr_t)&_cardTable[endIndex], pageSize);
     size_t commitSize  = (sectionEnd - sectionStart);
 
 #ifdef X64_WB_DIAG
@@ -149,7 +149,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
     Assert(commitSize % pageSize == 0);
     Assert(commitSize / pageSize == sectionLastIndex - sectionStartIndex + 1);
 
-    LPVOID ret = ::VirtualAlloc((LPVOID) sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
+    void * ret = ::VirtualAlloc((void *) sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
     if (!ret)
     {
         // If this is the error that occurred while trying to commit the page, this likely means
@@ -191,7 +191,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
         }
 
 #pragma prefast(suppress:6250, "This method decommits memory")
-        BOOL result = ::VirtualFree((LPVOID)sectionStart, commitSize, MEM_DECOMMIT);
+        BOOL result = ::VirtualFree((void *)sectionStart, commitSize, MEM_DECOMMIT);
         Assert(result != 0);
         return false;
     }
@@ -225,7 +225,7 @@ X64WriteBarrierCardTableManager::GetSectionIndex(void* address)
     return sectionIndex;
 }
 
-BYTE *
+uint8_t *
 X64WriteBarrierCardTableManager::Initialize()
 {
     AutoCriticalSection critSec(&_cardTableInitCriticalSection);
@@ -259,14 +259,14 @@ X64WriteBarrierCardTableManager::Initialize()
         _cardTableNumEntries = Math::Align<size_t>(maxUmProcessAddressSpace / AutoSystemInfo::PageSize,
             AutoSystemInfo::PageSize) /* s_writeBarrierPageSize */;
 
-        LPVOID cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
+        void * cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
         if (!cardTableSpace) // Crash Early with a meaningful message. Otherwise the behavior is undefined.
         {
             fprintf(stderr, "Out of Memory\n"); fflush(stderr);
             abort();
         }
 
-        _cardTable = (BYTE*) cardTableSpace;
+        _cardTable = (uint8_t*) cardTableSpace;
     }
 
     OnThreadInit();
@@ -364,7 +364,7 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 
     size_t remainingBytes = endAddress - alignedAddress;
     size_t fullMaskCount = remainingBytes  / g_WriteBarrierPageSize;
-    memset(&cardTable[cardIndex + 1], 0xFFFFFFFF, fullMaskCount * sizeof(DWORD));
+    memset(&cardTable[cardIndex + 1], 0xFFFFFFFF, fullMaskCount * sizeof(uint32_t));
 
     uint endAddressShift = (((uint)endAddress) >> s_BitArrayCardTableShift);
     uint endAddressBitMask = 0xFFFFFFFF << endAddressShift;
@@ -508,7 +508,7 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
         memset(&cardTable[cardIndex], WRITE_BARRIER_PAGE_BIT, pageCount);
 #else
-        memset(&cardTable[cardIndex], 0, sizeof(DWORD) * pageCount);
+        memset(&cardTable[cardIndex], 0, sizeof(uint32_t) * pageCount);
 #endif
     }
 #endif
@@ -523,9 +523,9 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 }
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-BYTE
+uint8_t
 #else
-DWORD
+uint32_t
 #endif
 RecyclerWriteBarrierManager::GetWriteBarrier(void * address)
 {

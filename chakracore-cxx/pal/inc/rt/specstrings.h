@@ -349,7 +349,7 @@ __inner_analysis_assume_nullterminated_dec
 
 
 //
-// A common pattern is to pass an "_Inout_ PCHAR* ppBuf" of size "_Inout_ DWORD* pSize"
+// A common pattern is to pass an "_Inout_ PCHAR* ppBuf" of size "_Inout_ uint32_t* pSize"
 // to a function that writes to **pBuf, incrementing *ppBuf to point to one
 // past the last written byte. Thus the length of the write is
 // (*ppBuf - Old(*ppBuf)). The size of the remaining unwritten capacity 
@@ -363,7 +363,7 @@ __inner_analysis_assume_nullterminated_dec
 // _At_, like so:
 //
 // _At_(*ppBuf, _Writes_and_advances_ptr_(*pBufSize))
-// HRESULT WriteChunkOfData(_Inout_ PCHAR* ppBuf, _Inout_ DWORD* pBufSize);
+// HRESULT WriteChunkOfData(_Inout_ PCHAR* ppBuf, _Inout_ uint32_t* pBufSize);
 //
 #ifndef _Writes_and_advances_ptr_
 #define _Writes_and_advances_ptr_(size) \

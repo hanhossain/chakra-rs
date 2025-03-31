@@ -97,7 +97,7 @@
 #define TEMPLATE_FORM_TEST_AH    {IMM+WBIT, INVALID}
 #define TEMPLATE_FORM_XCHG       {SPECIAL, MODRM+WBIT, INVALID}
 
-enum Forms : BYTE
+enum Forms : uint8_t
 {
     FORM_BINOP,
     FORM_CALL,

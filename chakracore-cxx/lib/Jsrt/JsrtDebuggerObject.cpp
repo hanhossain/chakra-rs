@@ -850,7 +850,7 @@ JsrtDebugStackFrames::~JsrtDebugStackFrames()
     }
 }
 
-static int __cdecl DiagStackFrameSorter(void * dispatchHaltFrameAddress, const void * diagStackFrame1, const void * diagStackFrame2)
+static int DiagStackFrameSorter(void * dispatchHaltFrameAddress, const void * diagStackFrame1, const void * diagStackFrame2)
 {
     const DWORD_PTR *p1 = reinterpret_cast<const DWORD_PTR*>(diagStackFrame1);
     const DWORD_PTR *p2 = reinterpret_cast<const DWORD_PTR*>(diagStackFrame2);

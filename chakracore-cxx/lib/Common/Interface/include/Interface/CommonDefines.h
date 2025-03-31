@@ -9,7 +9,6 @@
  * This file contains defines that switch feature on or off, or configuration a feature at build time
  *****************************************************************************************************/
 
-#include "Interface/TargetVer.h"
 #include "Interface/Warnings.h"
 #include "Interface/ChakraCoreVersion.h"
 
@@ -464,7 +463,7 @@
 #define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 #else
-#define MAX_NATURAL_ALIGNMENT sizeof(DWORD)
+#define MAX_NATURAL_ALIGNMENT sizeof(uint32_t)
 #define MEMORY_ALLOCATION_ALIGNMENT 8
 #endif
 

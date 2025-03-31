@@ -94,7 +94,7 @@ namespace Js
 
         static const int numberLinesPrependedToAnonymousFunction = 1;
 
-        static DWORD GetFunctionInfoOffset() { return offsetof(JavascriptFunction, functionInfo); }
+        static uint32_t GetFunctionInfoOffset() { return offsetof(JavascriptFunction, functionInfo); }
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var NewInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);
@@ -150,7 +150,7 @@ namespace Js
         static Var DeferredDeserializeThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static JavascriptMethod DeferredDeserialize(ScriptFunction* function);
 
-        static BYTE GetOffsetOfFunctionInfo()
+        static uint8_t GetOffsetOfFunctionInfo()
         {
             CompileAssert(offsetof(JavascriptFunction, functionInfo) <= UCHAR_MAX);
             return offsetof(JavascriptFunction, functionInfo);
@@ -247,8 +247,8 @@ namespace Js
             bool isFloat64 : 1;
             bool isSimd : 1;
             bool isInvalidInstr : 1;
-            BYTE bufferReg = 0;
-            BYTE dstReg = 0;
+            uint8_t bufferReg = 0;
+            uint8_t dstReg = 0;
             uint instrSizeInByte = 0;
             uint64 bufferValue = 0;
             InstructionData() :isLoad(0), isFloat32(0), isFloat64(0), isSimd(0), isInvalidInstr(0){}
@@ -263,7 +263,7 @@ namespace Js
             uint rexValue;
             RexByteValue() :isR(0), isX(0), isW(0), isB(0), rexValue(0){}
         };
-        static InstructionData CheckValidInstr(BYTE* &pc, PEXCEPTION_POINTERS exceptionInfo);
+        static InstructionData CheckValidInstr(uint8_t* &pc, PEXCEPTION_POINTERS exceptionInfo);
     };
 #endif
 

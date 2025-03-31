@@ -4207,9 +4207,9 @@ bool Instr::UnaryCalculator(IntConstType src1Const, IntConstType *pResult, IRTyp
         break;
 
     case Js::OpCode::InlineMathClz:
-        DWORD clz;
-        DWORD src1Const32;
-        src1Const32 = (DWORD)src1Const;
+        uint32_t clz;
+        uint32_t src1Const32;
+        src1Const32 = (uint32_t)src1Const;
         if (_BitScanReverse(&clz, src1Const32))
         {
             value = 31 - clz;
@@ -4455,7 +4455,7 @@ Instr::Dump(IRDumpFlags flags)
     const auto PrintOpCodeName = [&]() {
         Output::SkipToColumn(23);
 #if DBG
-        WORD oldValue = 0;
+        uint16_t oldValue = 0;
         if (this->highlight != 0)
         {
             oldValue = Output::SetConsoleForeground(this->highlight);

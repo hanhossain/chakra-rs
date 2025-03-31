@@ -21,6 +21,6 @@ public:
     void EnsureFromSystemDirOnly();
     bool IsAvailable();
 private:
-    void Ensure(DWORD dwFlags = 0);
+    void Ensure(uint32_t dwFlags = 0);
 
 };

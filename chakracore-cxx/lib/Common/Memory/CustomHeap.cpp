@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "CommonMemoryPch.h"
-#include "Memory/SectionAllocWrapper.h"
 #include "Core/GlobalSecurityPolicy.h"
 
 #if ENABLE_NATIVE_CODEGEN || DYNAMIC_INTERPRETER_THUNK
@@ -284,7 +283,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::Alloc(size_t bytes, ushort pdataCou
 template<typename TAlloc, typename TPreReservedAlloc>
 BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadWrite(Allocation *allocation, __in_opt char* addressInPage)
 {
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
 
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -304,7 +303,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadWrite(Allo
 template<typename TAlloc, typename TPreReservedAlloc>
 BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadOnly(__in Allocation *allocation, __in_opt char* addressInPage)
 {
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
         protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
@@ -321,7 +320,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocationWithExecuteReadOnly(__in 
 }
 
 template<typename TAlloc, typename TPreReservedAlloc>
-BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(__in Allocation* allocation, DWORD dwVirtualProtectFlags, DWORD desiredOldProtectFlag, __in_opt char* addressInPage)
+BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(__in Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage)
 {
     // Allocate at the page level so that our protections don't
     // transcend allocation page boundaries. Here, allocation->address is page
@@ -417,12 +416,12 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
         {
             return nullptr;
         }
-        FillDebugBreak((BYTE*)localAddr, pages*AutoSystemInfo::PageSize);
+        FillDebugBreak((uint8_t*)localAddr, pages*AutoSystemInfo::PageSize);
         this->codePageAllocators->FreeLocal(localAddr, segment);
 
         if (this->processHandle == GetCurrentProcess())
         {
-            DWORD protectFlags = 0;
+            uint32_t protectFlags = 0;
             if (GlobalSecurityPolicy::IsCFGEnabled())
             {
                 protectFlags = PAGE_EXECUTE_RO_TARGETS_NO_UPDATE;
@@ -436,7 +435,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 #if PDATA_ENABLED
         if(pdataCount > 0)
         {
-            if (!this->codePageAllocators->AllocSecondary(segment, (ULONG_PTR) address, bytes, pdataCount, xdataSize, &xdata))
+            if (!this->codePageAllocators->AllocSecondary(segment, (size_t) address, bytes, pdataCount, xdataSize, &xdata))
             {
                 this->codePageAllocators->Release(address, pages, segment);
                 return nullptr;
@@ -503,21 +502,21 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeDecommittedLargeObjects()
 
 //Called during Free (while shutting down)
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsurePageWriteable(Page* page)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsurePageWriteable(Page* page)
 {
     return EnsurePageReadWrite<PAGE_READWRITE>(page);
 }
 
 // this get called when freeing the whole page
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationWriteable(Allocation* allocation)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationWriteable(Allocation* allocation)
 {
     return EnsureAllocationReadWrite<PAGE_READWRITE>(allocation);
 }
 
 // this get called when only freeing a part in the page
 template<typename TAlloc, typename TPreReservedAlloc>
-DWORD Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Allocation* allocation)
+uint32_t Heap<TAlloc, TPreReservedAlloc>::EnsureAllocationExecuteWriteable(Allocation* allocation)
 {
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -579,7 +578,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     BVIndex index = GetFreeIndexForPage(page, bytes);
     if (index == BVInvalidIndex)
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
     char* address = page->address + Page::Alignment * index;
@@ -602,7 +601,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
             return false;
         }
 
-        if (!this->codePageAllocators->AllocSecondary(page->segment, (ULONG_PTR)address, bytes, pdataCount, xdataSize, &xdata))
+        if (!this->codePageAllocators->AllocSecondary(page->segment, (size_t)address, bytes, pdataCount, xdataSize, &xdata))
         {
             Adelete(this->auxiliaryAllocator, allocation);
             return true;
@@ -628,14 +627,14 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 
@@ -686,10 +685,10 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     {
         return nullptr;
     }
-    FillDebugBreak((BYTE*)localAddr, AutoSystemInfo::PageSize);
+    FillDebugBreak((uint8_t*)localAddr, AutoSystemInfo::PageSize);
     this->codePageAllocators->FreeLocal(localAddr, pageSegment);
 
-    DWORD protectFlags = 0;
+    uint32_t protectFlags = 0;
 
     if (GlobalSecurityPolicy::IsCFGEnabled())
     {
@@ -822,7 +821,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
     // Make sure that the section under interest or the whole page has not already been freed
     if (page->IsEmpty() || page->freeBitVector.TestAnyInRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((ULONG_PTR)this);
+        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
         return false;
     }
 
@@ -847,7 +846,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
                 MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
                 return false;
             }
-            FillDebugBreak((BYTE*)localAddr, object->size);
+            FillDebugBreak((uint8_t*)localAddr, object->size);
             this->codePageAllocators->FreeLocal(localAddr, page->segment);
 
             void* pageAddress = page->address;
@@ -889,7 +888,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
 
         // after freeing part of the page, the page should be in PAGE_EXECUTE_READWRITE protection, and turning to PAGE_EXECUTE_READ (always with TARGETS_NO_UPDATE state)
 
-        DWORD protectFlags = 0;
+        uint32_t protectFlags = 0;
 
         if (GlobalSecurityPolicy::IsCFGEnabled())
         {
@@ -915,7 +914,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeAllocationHelper(Allocation* object, B
     char* localAddr = this->codePageAllocators->AllocLocal(object->address, object->size, page->segment);
     if (localAddr)
     {
-        FillDebugBreak((BYTE*)localAddr, object->size);
+        FillDebugBreak((uint8_t*)localAddr, object->size);
         this->codePageAllocators->FreeLocal(localAddr, page->segment);
     }
     else
@@ -963,7 +962,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreePage(Page* page)
 {
     // CodePageAllocators is locked in FreeAll
     Assert(inDtor);
-    DWORD pageSize = AutoSystemInfo::PageSize;
+    uint32_t pageSize = AutoSystemInfo::PageSize;
     EnsurePageWriteable(page);
     size_t freeSpace = page->freeBitVector.Count() * Page::Alignment;
 
@@ -1118,7 +1117,7 @@ inline BucketId GetBucketForSize(size_t bytes)
 // Fills the specified buffer with "debug break" instruction encoding.
 // If there is any space left after that due to alignment, fill it with 0.
 // static
-void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t byteCount)
+void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount)
 {
 #if defined(_M_ARM)
     // On ARM there is breakpoint instruction (BKPT) which is 0xBEii, where ii (immediate 8) can be any value, 0xBE in particular.
@@ -1128,7 +1127,7 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t 
     CompileAssert(sizeof(char16) == 2);
     char16 pattern = 0xDEFE;
 
-    BYTE * writeBuffer = buffer;
+    uint8_t * writeBuffer = buffer;
     wmemset((char16 *)writeBuffer, pattern, byteCount / 2);
     if (byteCount % 2)
     {
@@ -1137,11 +1136,11 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) BYTE* buffer, _In_ size_t 
     }
 
 #elif defined(_M_ARM64)
-    CompileAssert(sizeof(DWORD) == 4);
-    DWORD pattern = 0xd4200000 | (0xf000 << 5);
+    CompileAssert(sizeof(uint32_t) == 4);
+    uint32_t pattern = 0xd4200000 | (0xf000 << 5);
     for (size_t i = 0; i < byteCount / 4; i++)
     {
-        reinterpret_cast<DWORD*>(buffer)[i] = pattern;
+        reinterpret_cast<uint32_t*>(buffer)[i] = pattern;
     }
     for (size_t i = (byteCount / 4) * 4; i < byteCount; i++)
     {
@@ -1182,7 +1181,7 @@ CodePageAllocators<SectionAllocWrapper, PreReservedSectionAllocWrapper>::AllocLo
 {
     AutoCriticalSection autoLock(&this->cs);
     Assert(segment);
-    LPVOID address = nullptr;
+    void * address = nullptr;
     if (IsPreReservedSegment(segment))
     {
         address = ((SegmentBase<PreReservedSectionAllocWrapper>*)segment)->GetAllocator()->GetVirtualAllocator()->AllocLocal(remoteAddr, size);

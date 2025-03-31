@@ -332,7 +332,7 @@ Parameter
 Return
  returns TRUE if it succeeds, FALSE otherwise
 --*/
-BOOL CONTEXT_GetRegisters(DWORD processId, LPCONTEXT lpContext)
+BOOL CONTEXT_GetRegisters(uint32_t processId, LPCONTEXT lpContext)
 {
 #if HAVE_BSD_REGS_T
     int regFd = -1;
@@ -391,7 +391,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_GetThreadContext(
-         DWORD dwProcessId,
+         uint32_t dwProcessId,
          pthread_t self,
          LPCONTEXT lpContext)
 {
@@ -414,7 +414,7 @@ CONTEXT_GetThreadContext(
     {
         if (self != pthread_self())
         {
-            DWORD flags;
+            uint32_t flags;
             // There aren't any APIs for this. We can potentially get the
             // context of another thread by using per-thread signals, but
             // on FreeBSD signal handlers that are called as a result
@@ -458,9 +458,9 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_SetThreadContext(
-           DWORD dwProcessId,
+           uint32_t dwProcessId,
            pthread_t self,
-           CONST CONTEXT *lpContext)
+           const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
@@ -552,14 +552,14 @@ Function :
     Converts a CONTEXT record to a native context.
 
 Parameters :
-    CONST CONTEXT *lpContext : CONTEXT to convert
+    const CONTEXT *lpContext : CONTEXT to convert
     native_context_t *native : native context to fill in
 
 Return value :
     None
 
 --*/
-void CONTEXTToNativeContext(CONST CONTEXT *lpContext, native_context_t *native)
+void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native)
 {
 #define ASSIGN_REG(reg) MCREG_##reg(native->uc_mcontext) = lpContext->reg;
     if ((lpContext->ContextFlags & CONTEXT_CONTROL) == CONTEXT_CONTROL)
@@ -685,7 +685,7 @@ Function :
 Parameters :
     const native_context_t *native : native context to convert
     LPCONTEXT lpContext : CONTEXT to fill in
-    ULONG contextFlags : flags that determine which registers are valid in
+    uint32_t contextFlags : flags that determine which registers are valid in
                          native and which ones to set in lpContext
 
 Return value :
@@ -693,7 +693,7 @@ Return value :
 
 --*/
 void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext,
-                              ULONG contextFlags)
+                              uint32_t contextFlags)
 {
     lpContext->ContextFlags = contextFlags;
 
@@ -730,8 +730,8 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         // the architecture bits. We determine what those are by inverting the union of
         // CONTEXT_CONTROL and CONTEXT_INTEGER, both of which should also have the
         // architecture bit(s) set.
-        const ULONG floatingPointFlags = CONTEXT_FLOATING_POINT & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
-        const ULONG xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+        const uint32_t floatingPointFlags = CONTEXT_FLOATING_POINT & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+        const uint32_t xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
 
         lpContext->ContextFlags &= ~(floatingPointFlags | xstateFlags);
 
@@ -747,7 +747,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         lpContext->FltSave.ControlWord = FPREG_ControlWord(native);
         lpContext->FltSave.StatusWord = FPREG_StatusWord(native);
 #if HAVE_FPREGS_WITH_CW
-        lpContext->FltSave.TagWord = ((DWORD)FPREG_TagWord1(native) << 8) | FPREG_TagWord2(native);
+        lpContext->FltSave.TagWord = ((uint32_t)FPREG_TagWord1(native) << 8) | FPREG_TagWord2(native);
 #else
         lpContext->FltSave.TagWord = FPREG_TagWord(native);
 #endif
@@ -802,7 +802,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         {
             // Floating point state is not valid
             // Mark the context correctly
-            lpContext->ContextFlags &= ~(ULONG)CONTEXT_FLOATING_POINT;
+            lpContext->ContextFlags &= ~(uint32_t)CONTEXT_FLOATING_POINT;
         }
 #elif defined(HOST_S390X)
         const fpregset_t *fp = &native->uc_mcontext.fpregs;
@@ -837,7 +837,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         {
             // Reset the CONTEXT_XSTATE bit(s) so it's clear that the extended state data in
             // the CONTEXT is not valid.
-            const ULONG xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
+            const uint32_t xstateFlags = CONTEXT_XSTATE & ~(CONTEXT_CONTROL & CONTEXT_INTEGER);
             lpContext->ContextFlags &= ~xstateFlags;
         }
     }
@@ -858,18 +858,18 @@ Return value :
     The program counter from the native context.
 
 --*/
-LPVOID GetNativeContextPC(const native_context_t *context)
+void * GetNativeContextPC(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (LPVOID)MCREG_Rip(context->uc_mcontext);
+    return (void *)MCREG_Rip(context->uc_mcontext);
 #elif defined(_X86_)
-    return (LPVOID) MCREG_Eip(context->uc_mcontext);
+    return (void *) MCREG_Eip(context->uc_mcontext);
 #elif defined(HOST_S390X)
-    return (LPVOID) MCREG_PSWAddr(context->uc_mcontext);
+    return (void *) MCREG_PSWAddr(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (LPVOID) MCREG_Nip(context->uc_mcontext);
+    return (void *) MCREG_Nip(context->uc_mcontext);
 #else
-    return (LPVOID) MCREG_Pc(context->uc_mcontext);
+    return (void *) MCREG_Pc(context->uc_mcontext);
 #endif
 }
 
@@ -886,18 +886,18 @@ Return value :
     The stack pointer from the native context.
 
 --*/
-LPVOID GetNativeContextSP(const native_context_t *context)
+void * GetNativeContextSP(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (LPVOID)MCREG_Rsp(context->uc_mcontext);
+    return (void *)MCREG_Rsp(context->uc_mcontext);
 #elif defined(_X86_)
-    return (LPVOID) MCREG_Esp(context->uc_mcontext);
+    return (void *) MCREG_Esp(context->uc_mcontext);
 #elif defined(HOST_S390X)
-    return (LPVOID) MCREG_R15(context->uc_mcontext);
+    return (void *) MCREG_R15(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (LPVOID) MCREG_R31(context->uc_mcontext);
+    return (void *) MCREG_R31(context->uc_mcontext);
 #else
-    return (LPVOID) MCREG_Sp(context->uc_mcontext);
+    return (void *) MCREG_Sp(context->uc_mcontext);
 #endif
 }
 
@@ -919,7 +919,7 @@ Return value :
 --*/
 #ifdef ILL_ILLOPC
 // If si_code values are available for all signals, use those.
-DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
@@ -1013,7 +1013,7 @@ DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
     return EXCEPTION_ILLEGAL_INSTRUCTION;
 }
 #else   // ILL_ILLOPC
-DWORD CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
                                        const native_context_t *context)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
@@ -1282,8 +1282,8 @@ CONTEXT_GetThreadContextFromThreadState(
             {
                 x86_float_state64_t *pState = (x86_float_state64_t *)threadState;
 
-                lpContext->FltSave.ControlWord = *(DWORD*)&pState->__fpu_fcw;
-                lpContext->FltSave.StatusWord = *(DWORD*)&pState->__fpu_fsw;
+                lpContext->FltSave.ControlWord = *(uint32_t*)&pState->__fpu_fcw;
+                lpContext->FltSave.StatusWord = *(uint32_t*)&pState->__fpu_fsw;
                 lpContext->FltSave.TagWord = pState->__fpu_ftw;
                 lpContext->FltSave.ErrorOffset = pState->__fpu_ip;
                 lpContext->FltSave.ErrorSelector = pState->__fpu_cs;
@@ -1356,7 +1356,7 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_GetThreadContext(
-         DWORD dwProcessId,
+         uint32_t dwProcessId,
          pthread_t self,
          LPCONTEXT lpContext)
 {
@@ -1405,7 +1405,7 @@ Function:
 kern_return_t
 CONTEXT_SetThreadContextOnPort(
            mach_port_t Port,
-           IN CONST CONTEXT *lpContext)
+            const CONTEXT *lpContext)
 {
     kern_return_t MachRet = KERN_SUCCESS;
     mach_msg_type_number_t StateCount;
@@ -1450,8 +1450,8 @@ CONTEXT_SetThreadContextOnPort(
         if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
         {
 #ifdef _AMD64_
-            *(DWORD*)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
-            *(DWORD*)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
+            *(uint32_t*)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
+            *(uint32_t*)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
             State.__fpu_ftw = lpContext->FltSave.TagWord;
             State.__fpu_ip = lpContext->FltSave.ErrorOffset;
             State.__fpu_cs = lpContext->FltSave.ErrorSelector;
@@ -1571,9 +1571,9 @@ See MSDN doc.
 --*/
 BOOL
 CONTEXT_SetThreadContext(
-           DWORD dwProcessId,
+           uint32_t dwProcessId,
            pthread_t self,
-           CONST CONTEXT *lpContext)
+           const CONTEXT *lpContext)
 {
     BOOL ret = FALSE;
 
@@ -1624,8 +1624,8 @@ See MSDN doc.
 --*/
 BOOL
 DBG_FlushInstructionCache(
-                          IN LPCVOID lpBaseAddress,
-                          IN SIZE_T dwSize)
+                           const void * lpBaseAddress,
+                           SIZE_T dwSize)
 {
 #if defined(__linux__) && defined(_ARM_)
     // On Linux/arm (at least on 3.10) we found that there is a problem with __do_cache_op (arch/arm/kernel/traps.c)

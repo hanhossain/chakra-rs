@@ -234,7 +234,7 @@ enum tagDBGPROP_ATTRIB_FLAGS
     DBGPROP_ATTRIB_FRAME_INFINALLYBLOCK= 0x4000000,
     DBGPROP_ATTRIB_VALUE_IS_RETURN_VALUE= 0x8000000
 };
-typedef DWORD DBGPROP_ATTRIB_FLAGS;
+typedef uint32_t DBGPROP_ATTRIB_FLAGS;
 
 enum tagDBGPROP_INFO_FLAgS
 {
@@ -249,7 +249,7 @@ enum tagDBGPROP_INFO_FLAgS
     DBGPROP_INFO_AUTOEXPAND= 0x800000
 };
 
-typedef DWORD DBGPROP_INFO_FLAGS;
+typedef uint32_t DBGPROP_INFO_FLAGS;
 
 #define DBGPROP_INFO_STANDARD ((((DBGPROP_INFO_NAME | DBGPROP_INFO_TYPE) | DBGPROP_INFO_VALUE) | DBGPROP_INFO_ATTRIBUTES))
 
@@ -336,8 +336,8 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   CpuId;
+    uint16_t   Depth;
+    uint16_t   CpuId;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 
@@ -347,8 +347,8 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   Reserved;
+    uint16_t   Depth;
+    uint16_t   Reserved;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 
@@ -358,45 +358,45 @@ typedef union _SLIST_HEADER {
   ULONGLONG Alignment;
   struct {
     SLIST_ENTRY Next;
-    WORD   Depth;
-    WORD   Reserved;
+    uint16_t   Depth;
+    uint16_t   Reserved;
   } DUMMYSTRUCTNAME;
 } SLIST_HEADER, *PSLIST_HEADER;
 
 
 #endif
 
-PALIMPORT VOID PALAPI InitializeSListHead(IN OUT PSLIST_HEADER ListHead);
-PALIMPORT PSLIST_ENTRY PALAPI InterlockedPushEntrySList(IN OUT PSLIST_HEADER ListHead, IN OUT PSLIST_ENTRY  ListEntry);
-PALIMPORT PSLIST_ENTRY PALAPI InterlockedPopEntrySList(IN OUT PSLIST_HEADER ListHead);
+void InitializeSListHead(  PSLIST_HEADER ListHead);
+PSLIST_ENTRY InterlockedPushEntrySList(  PSLIST_HEADER ListHead,   PSLIST_ENTRY  ListEntry);
+PSLIST_ENTRY InterlockedPopEntrySList(  PSLIST_HEADER ListHead);
 
 
 template <class T>
 inline T InterlockedExchangeAdd(
-    IN OUT T volatile *Addend,
-    IN T Value)
+      T volatile *Addend,
+     T Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
 
 template <class T>
 inline T InterlockedExchangeSubtract(
-    IN OUT T volatile *Addend,
-    IN T Value)
+      T volatile *Addend,
+     T Value)
 {
     return __sync_fetch_and_sub(Addend, Value);
 }
 
 template <class T>
 inline T InterlockedIncrement(
-    IN OUT T volatile *Addend)
+      T volatile *Addend)
 {
     return __sync_add_and_fetch(Addend, T(1));
 }
 
 template <class T>
 inline T InterlockedDecrement(
-    IN OUT T volatile *Addend)
+      T volatile *Addend)
 {
     return __sync_sub_and_fetch(Addend, T(1));
 }
@@ -406,8 +406,8 @@ inline __int64 _abs64(__int64 n)
     return n < 0 ? -n : n;
 }
 
-int GetCurrentThreadStackLimits(ULONG_PTR* lowLimit, ULONG_PTR* highLimit);
-bool IsAddressOnStack(ULONG_PTR address);
+int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
+bool IsAddressOnStack(size_t address);
 
 errno_t rand_s(unsigned int* randomValue);
 
@@ -444,8 +444,8 @@ inline errno_t _wcserror_s(char16 (&buffer)[size], int errnum)
 #define midl_user_free(ptr) \
     if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
 
-DWORD __cdecl CharLowerBuffW(const char16* lpsz, DWORD  cchLength);
-DWORD __cdecl CharUpperBuffW(const char16* lpsz, DWORD  cchLength);
+uint32_t CharLowerBuffW(const char16* lpsz, uint32_t  cchLength);
+uint32_t CharUpperBuffW(const char16* lpsz, uint32_t  cchLength);
 
 // TODO (hanhossain): replace with std::numeric_limits<uint32_t>::max()
 #define MAXUINT32   ((uint32_t)~((uint32_t)0))
@@ -493,12 +493,12 @@ extern "C" void * _AddressOfReturnAddress(void);
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.
 #if defined(STRSAFE_LIB)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #pragma comment(lib, "strsafe.lib")
 #elif defined(STRSAFE_LIB_IMPL)
-#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT __stdcall
+#define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
-#define STRSAFEAPI  inline HRESULT __stdcall
+#define STRSAFEAPI  inline HRESULT
 #define STRSAFE_INLINE
 #endif
 
@@ -578,7 +578,7 @@ STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszForm
 }
 
 __inline
-HRESULT ULongMult(ULONG ulMultiplicand, ULONG ulMultiplier, ULONG* pulResult);
+HRESULT ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t* pulResult);
 
 /* **** WARNING : finallyFunc is not allowed to raise exception *****
  * **** DO NOT ADD stack probe or memory allocations within the finallyFunc ****
@@ -614,7 +614,7 @@ void TryFinally(const TryFunc& tryFunc, const FinallyFunc& finallyFunc)
 
 namespace PlatformAgnostic
 {
-    __forceinline unsigned char _BitTestAndSet(LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _BitTestAndSet(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittestandset intrinic to bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -632,7 +632,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _BitTest(LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _BitTest(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittest intrinic to bt, and it's implemention also doesn't work for _BitPos >= 32
@@ -650,7 +650,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndSet(volatile LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _InterlockedBitTestAndSet(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -668,7 +668,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndReset(volatile LONG *_BitBase, int _BitPos)
+    __forceinline unsigned char _InterlockedBitTestAndReset(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock btr, and it's implemention also doesn't work for _BitPos >= 32

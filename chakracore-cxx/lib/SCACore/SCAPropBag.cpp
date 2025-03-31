@@ -38,16 +38,16 @@ namespace Js
         *ppInstance = HeapNew(SCAPropBag, scriptContext);
     }
 
-    STDMETHODIMP_(ULONG) SCAPropBag::AddRef()
+    STDMETHODIMP_(uint32_t) SCAPropBag::AddRef()
     {
         Assert(m_refCount > 0);
         return InterlockedIncrement(&m_refCount);
     }
 
-    STDMETHODIMP_(ULONG) SCAPropBag::Release()
+    STDMETHODIMP_(uint32_t) SCAPropBag::Release()
     {
         Assert(m_refCount > 0);
-        ULONG ref = InterlockedDecrement(&m_refCount);
+        uint32_t ref = InterlockedDecrement(&m_refCount);
         if (ref == 0)
         {
             HeapDelete(this);

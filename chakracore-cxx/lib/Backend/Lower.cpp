@@ -7587,7 +7587,7 @@ Lowerer::GenerateCachedTypeCheck(IR::Instr *instrChk, IR::PropertySymOpnd *prope
     IR::Opnd *sourceType;
     if (regOpnd->m_sym->IsConst() && !regOpnd->m_sym->IsIntConst() && !regOpnd->m_sym->IsFloatConst())
     {
-        sourceType = IR::MemRefOpnd::New((BYTE*)regOpnd->m_sym->GetConstAddress() +
+        sourceType = IR::MemRefOpnd::New((uint8_t*)regOpnd->m_sym->GetConstAddress() +
             Js::RecyclableObject::GetOffsetOfType(), TyMachReg, func, IR::AddrOpndKindDynamicObjectTypeRef);
     }
     else
@@ -10224,7 +10224,7 @@ Lowerer::LowerJumpTableMultiBranch(IR::MultiBranchInstr * multiBrInstr, IR::RegO
 
     //Indirect addressing @ target location in the jump table.
     //MOV eax, [nativeJumpTableReg + (offset * indirScale)]
-    BYTE indirScale = this->m_lowererMD.GetDefaultIndirScale();
+    uint8_t indirScale = this->m_lowererMD.GetDefaultIndirScale();
     IR::Opnd * opndSrc = IR::IndirOpnd::New(nativeJumpTableReg, indexOpnd, indirScale, TyMachReg, this->m_func);
 
     IR::Instr * indirInstr = InsertMove(opndDst, opndSrc, multiBrInstr);
@@ -10964,7 +10964,7 @@ Lowerer::LowerStLoopBodyCount(IR::Instr* instr)
 {
     intptr_t header = m_func->m_workItem->GetLoopHeaderAddr();
 
-    IR::MemRefOpnd *loopBodyCounterOpnd = IR::MemRefOpnd::New((BYTE*)(header) + Js::LoopHeader::GetOffsetOfProfiledLoopCounter(), TyUint32, this->m_func);
+    IR::MemRefOpnd *loopBodyCounterOpnd = IR::MemRefOpnd::New((uint8_t*)(header) + Js::LoopHeader::GetOffsetOfProfiledLoopCounter(), TyUint32, this->m_func);
     instr->SetDst(loopBodyCounterOpnd);
     instr->ReplaceSrc1(instr->GetSrc1()->AsRegOpnd()->UseWithNewType(TyUint32, this->m_func));
     IR::AutoReuseOpnd autoReuse(loopBodyCounterOpnd, this->m_func);
@@ -11366,7 +11366,7 @@ Lowerer::LowerStElemC(IR::Instr * stElem)
     Assert(value >= 0);
 
     //  MOV [r3 + offset(element) + index], src
-    const BYTE indirScale =
+    const uint8_t indirScale =
         baseValueType.IsLikelyAnyOptimizedArray() ? GetArrayIndirScale(baseValueType) : m_lowererMD.GetDefaultIndirScale();
     IntConstType offset = base + (value << indirScale);
     Assert(Math::FitsInDWord(offset));
@@ -12202,9 +12202,9 @@ Lowerer::GenerateFastInlineBuiltInMathRandom(IR::Instr* instr)
         // s1 = scriptContext->GetLibrary()->GetRandSeed0();
         // ===========================================================
         this->InsertMove(r0,
-            IR::MemRefOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed1Offset(), TyUint64, instr->m_func), instr);
+            IR::MemRefOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed1Offset(), TyUint64, instr->m_func), instr);
         this->InsertMove(r1,
-            IR::MemRefOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed0Offset(), TyUint64, instr->m_func), instr);
+            IR::MemRefOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed0Offset(), TyUint64, instr->m_func), instr);
 
         // ===========================================================
         // s1 ^= s1 << 23;
@@ -12237,9 +12237,9 @@ Lowerer::GenerateFastInlineBuiltInMathRandom(IR::Instr* instr)
         // scriptContext->GetLibrary()->SetRandSeed1(s1);
         // ===========================================================
         this->InsertMove(
-            IR::MemRefOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed0Offset(), TyUint64, m_func), r0, instr);
+            IR::MemRefOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed0Offset(), TyUint64, m_func), r0, instr);
         this->InsertMove(
-            IR::MemRefOpnd::New((BYTE*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed1Offset(), TyUint64, m_func), r1, instr);
+            IR::MemRefOpnd::New((uint8_t*)m_func->GetScriptContextInfo()->GetLibraryAddr() + Js::JavascriptLibrary::GetRandSeed1Offset(), TyUint64, m_func), r1, instr);
 
         // ===========================================================
         // dst = bit_cast<float64>(((s0 + s1) & mMant) | mExp);
@@ -12892,7 +12892,7 @@ Lowerer::LowerBailForDebugger(IR::Instr* instr, bool isInsideHelper /* = false *
             // It's faster to check these together in 1 check rather than 2 separate checks at run time.
             // CMP [&(flags->m_forceInterpreter, flags->m_isIgnoreException)], 0
             // BNE bailout
-            IR::Opnd* opnd1 = IR::MemRefOpnd::New((BYTE*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt16, m_func);
+            IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt16, m_func);
             IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt16, m_func, /*dontEncode*/ true);
             InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
             bailOutKind ^= c_forceAndIgnoreEx;
@@ -12903,7 +12903,7 @@ Lowerer::LowerBailForDebugger(IR::Instr* instr, bool isInsideHelper /* = false *
             {
                 // CMP [&flags->m_forceInterpreter], 0
                 // BNE bailout
-                IR::Opnd* opnd1 = IR::MemRefOpnd::New((BYTE*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt8, m_func);
+                IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt8, m_func);
                 IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt8, m_func, /*dontEncode*/ true);
                 InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
                 bailOutKind ^= IR::BailOutForceByFlag;
@@ -12912,7 +12912,7 @@ Lowerer::LowerBailForDebugger(IR::Instr* instr, bool isInsideHelper /* = false *
             {
                 // CMP [&flags->m_byteCodeOffsetAfterIgnoreException], DebuggingFlags::InvalidByteCodeOffset
                 // BNE bailout
-                IR::Opnd* opnd1 = IR::MemRefOpnd::New((BYTE*)flags + DebuggingFlags::GetByteCodeOffsetAfterIgnoreExceptionOffset(), TyInt32, m_func);
+                IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetByteCodeOffsetAfterIgnoreExceptionOffset(), TyInt32, m_func);
                 IR::Opnd* opnd2 = IR::IntConstOpnd::New(DebuggingFlags::InvalidByteCodeOffset, TyInt32, m_func, /*dontEncode*/ true);
                 InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
                 bailOutKind ^= IR::BailOutIgnoreException;
@@ -14160,7 +14160,7 @@ void Lowerer::InsertMoveForPolymorphicCacheIndex(IR::Instr * instr, BailOutInfo 
     }
     else
     {
-        indexOpnd = IR::MemRefOpnd::New((BYTE*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfPolymorphicCacheIndex(), TyUint32, this->m_func);
+        indexOpnd = IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfPolymorphicCacheIndex(), TyUint32, this->m_func);
     }
 
     InsertMove(
@@ -14214,7 +14214,7 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
         else
         {
             indexOpndForBailOutKind =
-                IR::MemRefOpnd::New((BYTE*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfBailOutKind(), TyUint32, this->m_func, IR::AddrOpndKindDynamicBailOutKindRef);
+                IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfBailOutKind(), TyUint32, this->m_func, IR::AddrOpndKindDynamicBailOutKindRef);
         }
 
         InsertMove(
@@ -14248,7 +14248,7 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
             }
             else
             {
-                functionBodyOpnd = IR::MemRefOpnd::New((BYTE*)bailOutInfo->bailOutRecord + SharedBailOutRecord::GetOffsetOfFunctionBody(), TyMachPtr, this->m_func);
+                functionBodyOpnd = IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + SharedBailOutRecord::GetOffsetOfFunctionBody(), TyMachPtr, this->m_func);
             }
             InsertMove(
                 functionBodyOpnd, CreateFunctionBodyOpnd(instr->m_func), instr, false);
@@ -15104,11 +15104,11 @@ const IRType Lowerer::IndirTypes[static_cast<ValueType::TSize>(ObjectType::Count
     /* ObjectType::CharArray                */ TyUint16
 };
 
-const BYTE Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Count)] =
+const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Count)] =
 {
-    /* ObjectType::UninitializedObject      */ static_cast<BYTE>(-1),
-    /* ObjectType::Object                   */ static_cast<BYTE>(-1),
-    /* ObjectType::RegExp                   */ static_cast<BYTE>(-1),
+    /* ObjectType::UninitializedObject      */ static_cast<uint8_t>(-1),
+    /* ObjectType::Object                   */ static_cast<uint8_t>(-1),
+    /* ObjectType::RegExp                   */ static_cast<uint8_t>(-1),
     /* ObjectType::ObjectWithArray          */ LowererMD::GetDefaultIndirScale(),
     /* ObjectType::Array                    */ LowererMD::GetDefaultIndirScale(),
     /* ObjectType::Int8Array                */ 0, // log2(sizeof(int8))
@@ -15195,7 +15195,7 @@ IRType Lowerer::GetArrayIndirType(const ValueType valueType)
     return IndirTypes[static_cast<ValueType::TSize>(valueType.GetObjectType())];
 }
 
-BYTE Lowerer::GetArrayIndirScale(const ValueType valueType)
+uint8_t Lowerer::GetArrayIndirScale(const ValueType valueType)
 {
     Assert(valueType.IsLikelyAnyOptimizedArray());
     if(valueType.IsLikelyArrayOrObjectWithArray())
@@ -15217,7 +15217,7 @@ int Lowerer::SimdGetElementCountFromBytes(ValueType arrValueType, uint8 dataWidt
 {
     Assert(dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
     Assert(arrValueType.IsTypedArray());
-    BYTE bpe = 1 << Lowerer::GetArrayIndirScale(arrValueType);
+    uint8_t bpe = 1 << Lowerer::GetArrayIndirScale(arrValueType);
 
     // round up
     return (int)::ceil(((float)dataWidth) / bpe);
@@ -16874,7 +16874,7 @@ Lowerer::GenerateFastElemIIntIndexCommon(
         *indirOpndOverflowed = false;
     }
 
-    BYTE indirScale = this->m_lowererMD.GetDefaultIndirScale();
+    uint8_t indirScale = this->m_lowererMD.GetDefaultIndirScale();
     IRType indirType = TyVar;
     const ValueType baseValueType(baseOpnd->GetValueType());
 
@@ -20734,7 +20734,7 @@ Lowerer::GenerateFastInlineRegExpExec(IR::Instr * instr)
             labelNoMatch,
             instr);
 
-        // ...or the DWORD doesn't match the pattern...
+        // ...or the uint32_t doesn't match the pattern...
         IR::RegOpnd *opndBuffer = IR::RegOpnd::New(TyMachReg, m_func);
         Lowerer::InsertMove(
             opndBuffer,
@@ -22030,7 +22030,7 @@ Lowerer::GenerateLoadStackArgumentByIndex(IR::Opnd *dst, IR::RegOpnd *indexOpnd,
 
     int32 actualOffset = GetFormalParamOffset() + offset;
     Assert(GetFormalParamOffset() == 4);
-    const BYTE indirScale = this->m_lowererMD.GetDefaultIndirScale();
+    const uint8_t indirScale = this->m_lowererMD.GetDefaultIndirScale();
 
     argIndirOpnd = IR::IndirOpnd::New(ebpOpnd, indexOpnd, indirScale, TyMachReg, this->m_func);
     argIndirOpnd->SetOffset(actualOffset << indirScale);
@@ -22090,7 +22090,7 @@ Lowerer::GetArgsIndirOpndForInlinee(IR::Instr* ldElem, IR::Opnd* valueOpnd)
     else
     {
         Assert(valueOpnd->IsRegOpnd());
-        const BYTE indirScale = this->m_lowererMD.GetDefaultIndirScale();
+        const uint8_t indirScale = this->m_lowererMD.GetDefaultIndirScale();
         argIndirOpnd = IR::IndirOpnd::New(baseOpnd, valueOpnd->AsRegOpnd(), indirScale, TyMachReg, ldElem->m_func);
     }
     return argIndirOpnd;
@@ -22124,7 +22124,7 @@ Lowerer::GetArgsIndirOpndForTopFunction(IR::Instr* ldElem, IR::Opnd* valueOpnd)
     }
     else
     {
-        const BYTE indirScale = this->m_lowererMD.GetDefaultIndirScale();
+        const uint8_t indirScale = this->m_lowererMD.GetDefaultIndirScale();
         argIndirOpnd = IR::IndirOpnd::New(baseOpnd->AsRegOpnd(), valueOpnd->AsRegOpnd(), indirScale, TyMachReg, this->m_func);
 
         // Need to offset valueOpnd by 5. Instead of changing valueOpnd, we can just add an offset to the indir. Changing

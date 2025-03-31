@@ -32,12 +32,12 @@ enum InstructionType {
 class EncodeReloc
 {
 public:
-    static void     New(EncodeReloc **pHead, RelocType relocType, BYTE *offset, IR::Instr *relocInstr, ArenaAllocator *alloc);
+    static void     New(EncodeReloc **pHead, RelocType relocType, uint8_t *offset, IR::Instr *relocInstr, ArenaAllocator *alloc);
 
 public:
     EncodeReloc *   m_next;
     RelocType       m_relocType;
-    BYTE *          m_consumerOffset;  // offset in instruction stream
+    uint8_t *          m_consumerOffset;  // offset in instruction stream
     IR::Instr *     m_relocInstr;
 };
 
@@ -53,14 +53,14 @@ class EncoderMD
 {
 public:
     EncoderMD(Func * func) : m_func(func), consecutiveThumbInstrCount(0) { }
-    ptrdiff_t       Encode(IR::Instr * instr, BYTE *pc, BYTE* beginCodeAddress = nullptr);
+    ptrdiff_t       Encode(IR::Instr * instr, uint8_t *pc, uint8_t* beginCodeAddress = nullptr);
     void            Init(Encoder *encoder);
     void            ApplyRelocs(uint32 codeBufferAddress, size_t codeSize, uint* bufferCRC, BOOL isBrShorteningSucceeded, bool isFinalBufferValidation = false);
     static bool     TryConstFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
     static bool     TryFold(IR::Instr *instr, IR::RegOpnd *regOpnd);
-    BYTE            GetRegEncode(IR::RegOpnd *regOpnd);
-    BYTE            GetFloatRegEncode(IR::RegOpnd *regOpnd);
-    static BYTE     GetRegEncode(RegNum reg);
+    uint8_t            GetRegEncode(IR::RegOpnd *regOpnd);
+    uint8_t            GetFloatRegEncode(IR::RegOpnd *regOpnd);
+    static uint8_t     GetRegEncode(RegNum reg);
     static uint32   GetOpdope(IR::Instr *instr);
     static uint32   GetOpdope(Js::OpCode op);
 
@@ -94,23 +94,23 @@ public:
         return SETS_SBIT(instr->m_opcode);
     }
 
-    void            AddLabelReloc(BYTE* relocAddress);
+    void            AddLabelReloc(uint8_t* relocAddress);
 
-    static bool     CanEncodeModConst12(DWORD constant);
+    static bool     CanEncodeModConst12(uint32_t constant);
     static bool     CanEncodeLoadStoreOffset(int32 offset) { return IS_CONST_UINT12(offset); }
     static void     BaseAndOffsetFromSym(IR::SymOpnd *symOpnd, RegNum *pBaseReg, int32 *pOffset, Func * func);
-    static bool     EncodeImmediate16(int32 constant, DWORD * result);
+    static bool     EncodeImmediate16(int32 constant, uint32_t * result);
     static ENCODE_32  BranchOffset_T2_24(int x);
     void            EncodeInlineeCallInfo(IR::Instr *instr, uint32 offset);
 private:
     Func *          m_func;
     Encoder *       m_encoder;
-    BYTE *          m_pc;
+    uint8_t *          m_pc;
     EncodeReloc *   m_relocList;
     uint            consecutiveThumbInstrCount; //Count of consecutive 16 bit thumb instructions.
 private:
     int             GetForm(IR::Instr *instr, int32 size);
-    ENCODE_32       GenerateEncoding(IR::Instr* instr, IFORM iform, BYTE *pc, int32 size, InstructionType intrType);
+    ENCODE_32       GenerateEncoding(IR::Instr* instr, IFORM iform, uint8_t *pc, int32 size, InstructionType intrType);
     InstructionType CanonicalizeInstr(IR::Instr *instr);
     InstructionType CanonicalizeAdd(IR::Instr * instr);
     InstructionType CanonicalizeSub(IR::Instr * instr);
@@ -128,7 +128,7 @@ private:
     bool            IsWideAddSub(IR::Instr * instr);
 
     static ENCODE_32 EncodeT2Immediate12(ENCODE_32 encode, int32 constant);
-    static bool     EncodeModConst12(DWORD constant, DWORD * result);
+    static bool     EncodeModConst12(uint32_t constant, uint32_t * result);
     static ENCODE_32 EncodeT2Offset(ENCODE_32 encode, IR::Instr *instr, int offset, int bitOffset);
 
 #ifdef SOFTWARE_FIXFOR_HARDWARE_BUGWIN8_502326

@@ -105,10 +105,10 @@ Function:
     to reserve virtual memory from the OS.
 
 --*/
-static LPVOID ReserveVirtualMemory(
-               IN CPalThread *pthrCurrent, /* Currently executing thread */
-               IN LPVOID lpAddress,        /* Region to reserve or commit */
-               IN SIZE_T dwSize);          /* Size of Region */
+static void * ReserveVirtualMemory(
+                CPalThread *pthrCurrent, /* Currently executing thread */
+                void * lpAddress,        /* Region to reserve or commit */
+                SIZE_T dwSize);          /* Size of Region */
 
 /*++
 Function:
@@ -207,7 +207,7 @@ void VIRTUALCleanup()
  *  VIRTUALContainsInvalidProtectionFlags()
  *          Returns TRUE if an invalid flag is specified. FALSE otherwise.
  */
-static BOOL VIRTUALContainsInvalidProtectionFlags( IN DWORD flProtect )
+static BOOL VIRTUALContainsInvalidProtectionFlags(  uint32_t flProtect )
 {
     if ( ( flProtect & ~( PAGE_NOACCESS | PAGE_READONLY |
                           PAGE_READWRITE | PAGE_EXECUTE | PAGE_EXECUTE_READ |
@@ -231,11 +231,11 @@ static BOOL VIRTUALContainsInvalidProtectionFlags( IN DWORD flProtect )
  *  Returns TRUE if committed, FALSE otherwise.
  *
  */
-static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
+static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
-    UINT nBitOffset = 0;
-    UINT byteMask = 0;
+    uint32_t nBitOffset = 0;
+    uint32_t byteMask = 0;
 
     if ( !pInformation )
     {
@@ -269,11 +269,11 @@ static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, CONST PCMI pInformati
  *  FALSE otherwise.
  *
  */
-static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
+static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
-    UINT nBitOffset = 0;
-    UINT byteMask = 0;
+    uint32_t nBitOffset = 0;
+    uint32_t byteMask = 0;
 
     if ( !pInformation )
     {
@@ -307,7 +307,7 @@ static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, CONST PCMI pInformation )
  *      IN pInformation - The virtual memory object.
  *
  */
-static INT VIRTUALGetAllocationType( SIZE_T Index, CONST PCMI pInformation )
+static int32_t VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
 {
     if ( VIRTUALIsPageCommitted( Index, pInformation ) )
     {
@@ -323,18 +323,18 @@ static INT VIRTUALGetAllocationType( SIZE_T Index, CONST PCMI pInformation )
  *
  * VIRTUALSetPageBits
  *
- *  IN UINT nStatus - Bit set / reset [0: reset, any other value: set].
+ *  IN uint32_t nStatus - Bit set / reset [0: reset, any other value: set].
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
- *  IN BYTE* pBitArray - A pointer the array to be manipulated.
+ *  IN uint8_t* pBitArray - A pointer the array to be manipulated.
  *
  *  Returns TRUE on success, FALSE otherwise.
  *  Turn on/off memory staus bits.
  *
  */
-static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
-                                 SIZE_T nNumberOfBits, BYTE * pBitArray )
+static BOOL VIRTUALSetPageBits ( uint32_t nStatus, SIZE_T nStartingBit,
+                                 SIZE_T nNumberOfBits, uint8_t * pBitArray )
 {
     /* byte masks for optimized modification of partial bytes (changing less
        than 8 bits in a single byte). note that bits are treated in little
@@ -344,7 +344,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
     /* start masks : for modifying bits >= n while preserving bits < n.
        example : if nStartignBit%8 is 3, then bits 0, 1, 2 remain unchanged
        while bits 3..7 are changed; startmasks[3] can be used for this.  */
-    static const BYTE startmasks[8] = {
+    static const uint8_t startmasks[8] = {
       0xff, /* start at 0 : 1111 1111 */
       0xfe, /* start at 1 : 1111 1110 */
       0xfc, /* start at 2 : 1111 1100 */
@@ -358,7 +358,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
     /* end masks : for modifying bits <= n while preserving bits > n.
        example : if the last bit to change is 5, then bits 6 & 7 stay unchanged
        while bits 1..5 are changed; endmasks[5] can be used for this.  */
-    static const BYTE endmasks[8] = {
+    static const uint8_t endmasks[8] = {
       0x01, /* end at 0 : 0000 0001 */
       0x03, /* end at 1 : 0000 0011 */
       0x07, /* end at 2 : 0000 0111 */
@@ -376,7 +376,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
        bitwise AND :   0x1c   0001 1100  (change 2,3,4)
     */
 
-    BYTE byte_mask;
+    uint8_t byte_mask;
     SIZE_T nLastBit;
     SIZE_T nFirstByte;
     SIZE_T nLastByte;
@@ -463,7 +463,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
  *
  * VIRTUALSetAllocState
  *
- *  IN UINT nAction - Which action to perform.
+ *  IN uint32_t nAction - Which action to perform.
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
@@ -473,8 +473,8 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
  *  Turn bit on to indicate committed, turn bit off to indicate reserved.
  *
  */
-static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
-                           SIZE_T nNumberOfBits, CONST PCMI pInformation )
+static BOOL VIRTUALSetAllocState( uint32_t nAction, SIZE_T nStartingBit,
+                           SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetAllocState( nAction = %d, nStartingBit = %d, "
            "nNumberOfBits = %d, pStateArray = 0x%p )\n",
@@ -495,7 +495,7 @@ static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
  *
  * VIRTUALSetDirtyPages
  *
- *  IN UINT nStatus - 0: memory clean, any other value: memory is dirty
+ *  IN uint32_t nStatus - 0: memory clean, any other value: memory is dirty
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
@@ -505,8 +505,8 @@ static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
  *  Turns bit(s) on/off bit to indicate dirty page(s)
  *
  */
-static BOOL VIRTUALSetDirtyPages( UINT nStatus, SIZE_T nStartingBit,
-                           SIZE_T nNumberOfBits, CONST PCMI pInformation )
+static BOOL VIRTUALSetDirtyPages( uint32_t nStatus, SIZE_T nStartingBit,
+                           SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetDirtyPages( nStatus = %d, nStartingBit = %d, "
            "nNumberOfBits = %d, pStateArray = 0x%p )\n",
@@ -532,7 +532,7 @@ static BOOL VIRTUALSetDirtyPages( UINT nStatus, SIZE_T nStartingBit,
  *
  *          Returns the PCMI if found, NULL otherwise.
  */
-static PCMI VIRTUALFindRegionInformation( IN UINT_PTR address )
+static PCMI VIRTUALFindRegionInformation(  UINT_PTR address )
 {
     PCMI pEntry = NULL;
 
@@ -580,7 +580,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion( IN UINT_PTR address )
+BOOL VIRTUALOwnedRegion(  UINT_PTR address )
 {
     PCMI pEntry = NULL;
     CPalThread * pthrCurrent = InternalGetCurrentThread();
@@ -668,9 +668,9 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
  *          internal VIRTUAL flags.
  *
  */
-static BYTE VIRTUALConvertWinFlags( IN DWORD flProtect )
+static uint8_t VIRTUALConvertWinFlags(  uint32_t flProtect )
 {
-    BYTE MemAccessControl = 0;
+    uint8_t MemAccessControl = 0;
 
     switch ( flProtect & 0xff )
     {
@@ -705,9 +705,9 @@ static BYTE VIRTUALConvertWinFlags( IN DWORD flProtect )
  *              Converts internal virtual protection
  *              flags to their win32 counterparts.
  */
-static DWORD VIRTUALConvertVirtualFlags( IN BYTE VirtualProtect )
+static uint32_t VIRTUALConvertVirtualFlags(  uint8_t VirtualProtect )
 {
-    DWORD MemAccessControl = 0;
+    uint32_t MemAccessControl = 0;
 
     if ( VirtualProtect == VIRTUAL_READONLY )
     {
@@ -749,10 +749,10 @@ static DWORD VIRTUALConvertVirtualFlags( IN BYTE VirtualProtect )
  *      NOTE: The caller must own the critical section.
  */
 static BOOL VIRTUALStoreAllocationInfo(
-            IN UINT_PTR startBoundary,      /* Start of the region. */
-            IN SIZE_T memSize,            /* Size of the region. */
-            IN DWORD flAllocationType,  /* Allocation Types. */
-            IN DWORD flProtection )     /* Protections flags on the memory. */
+             UINT_PTR startBoundary,      /* Start of the region. */
+             SIZE_T memSize,            /* Size of the region. */
+             uint32_t flAllocationType,  /* Allocation Types. */
+             uint32_t flProtection )     /* Protections flags on the memory. */
 {
     PCMI pNewEntry       = NULL;
     PCMI pMemInfo        = NULL;
@@ -784,10 +784,10 @@ static BOOL VIRTUALStoreAllocationInfo(
         nBufferSize++;
     }
 
-    pNewEntry->pAllocState      = (BYTE*)InternalMalloc( nBufferSize  );
-    pNewEntry->pProtectionState = (BYTE*)InternalMalloc( (memSize / VIRTUAL_PAGE_SIZE)  );
+    pNewEntry->pAllocState      = (uint8_t*)InternalMalloc( nBufferSize  );
+    pNewEntry->pProtectionState = (uint8_t*)InternalMalloc( (memSize / VIRTUAL_PAGE_SIZE)  );
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pNewEntry->pDirtyPages  = (BYTE*)InternalMalloc( nBufferSize );
+    pNewEntry->pDirtyPages  = (uint8_t*)InternalMalloc( nBufferSize );
 #endif //
 
     if ( pNewEntry->pAllocState && pNewEntry->pProtectionState
@@ -874,9 +874,9 @@ done:
  *      NOTE: The caller must own the critical section virtual_critsec.
  */
 static BOOL VIRTUALUpdateAllocationInfo(
-    IN PCMI pExistingEntry,         /* Existing entry in the virtual memory regions list that we are currently managing. */
-    IN UINT_PTR startBoundary,      /* The new starting address of the region. */
-    IN SIZE_T memSize)              /* The new size of the region. */
+     PCMI pExistingEntry,         /* Existing entry in the virtual memory regions list that we are currently managing. */
+     UINT_PTR startBoundary,      /* The new starting address of the region. */
+     SIZE_T memSize)              /* The new size of the region. */
 {
     BOOL bRetVal = TRUE;
     SIZE_T nBufferSize = 0;
@@ -918,10 +918,10 @@ static BOOL VIRTUALUpdateAllocationInfo(
         pExistingEntry->pAllocState = NULL;
     }
 
-    pExistingEntry->pAllocState = (BYTE*)InternalMalloc(nBufferSize);
-    pExistingEntry->pProtectionState = (BYTE*)InternalMalloc((memSize / VIRTUAL_PAGE_SIZE));
+    pExistingEntry->pAllocState = (uint8_t*)InternalMalloc(nBufferSize);
+    pExistingEntry->pProtectionState = (uint8_t*)InternalMalloc((memSize / VIRTUAL_PAGE_SIZE));
 #if MMAP_DOESNOT_ALLOW_REMAP
-    pExistingEntry->pDirtyPages = (BYTE*)InternalMalloc(nBufferSize);
+    pExistingEntry->pDirtyPages = (uint8_t*)InternalMalloc(nBufferSize);
 #endif //  MMAP_DOESNOT_ALLOW_REMAP
 
     if (pExistingEntry->pAllocState && pExistingEntry->pProtectionState
@@ -970,14 +970,14 @@ done:
  *              exists, and that would be very complicated to work around.
  *
  */
-static LPVOID VIRTUALReserveMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize,           /* Size of Region */
-                IN DWORD flAllocationType,  /* Type of allocation */
-                IN DWORD flProtect)         /* Type of access protection */
+static void * VIRTUALReserveMemory(
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 void * lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize,           /* Size of Region */
+                 uint32_t flAllocationType,  /* Type of allocation */
+                 uint32_t flProtect)         /* Type of access protection */
 {
-    LPVOID pRetVal      = NULL;
+    void * pRetVal      = NULL;
     UINT_PTR StartBoundary;
     SIZE_T MemSize;
 
@@ -1002,7 +1002,7 @@ static LPVOID VIRTUALReserveMemory(
     if (pRetVal == NULL)
     {
         // Try to reserve memory from the OS
-        pRetVal = ReserveVirtualMemory(pthrCurrent, (LPVOID)StartBoundary, MemSize);
+        pRetVal = ReserveVirtualMemory(pthrCurrent, (void *)StartBoundary, MemSize);
     }
 
     if (pRetVal != NULL)
@@ -1039,12 +1039,12 @@ static LPVOID VIRTUALReserveMemory(
  *  and ExecutableMemoryAllocator to reserve virtual memory from the OS.
  *
  */
-static LPVOID ReserveVirtualMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize)           /* Size of Region */
+static void * ReserveVirtualMemory(
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 void * lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize)           /* Size of Region */
 {
-    LPVOID pRetVal = NULL;
+    void * pRetVal = NULL;
 #if !defined(__APPLE__) && !defined(vm_address_t)
 #define vm_address_t UINT_PTR
 #endif
@@ -1068,7 +1068,7 @@ static LPVOID ReserveVirtualMemory(
 #if HAVE_VM_ALLOCATE
     // Allocate with vm_allocate first, then map at the fixed address.
     result = vm_allocate(mach_task_self(), &StartBoundary, MemSize,
-                          ((LPVOID) StartBoundary != NULL) ? FALSE : TRUE);
+                          ((void *) StartBoundary != NULL) ? FALSE : TRUE);
     if (result != KERN_SUCCESS) {
         ERROR("vm_allocate failed to allocated the requested region!\n");
         pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
@@ -1086,7 +1086,7 @@ static LPVOID ReserveVirtualMemory(
     mmapFlags |= MAP_ANON | MAP_PRIVATE;
 #endif // RESERVE_FROM_BACKING_FILE
 
-    pRetVal = mmap((LPVOID) StartBoundary, MemSize, PROT_NONE,
+    pRetVal = mmap((void *) StartBoundary, MemSize, PROT_NONE,
                    mmapFlags, mmapFile, mmapOffset);
 
     /* Check to see if the region is what we asked for. */
@@ -1137,27 +1137,27 @@ done:
  *              exists, and that would be very complicated to work around.
  *
  */
-static LPVOID VIRTUALCommitMemory(
-                IN CPalThread *pthrCurrent, /* Currently executing thread */
-                IN LPVOID lpAddress,        /* Region to reserve or commit */
-                IN SIZE_T dwSize,           /* Size of Region */
-                IN DWORD flAllocationType,  /* Type of allocation */
-                IN DWORD flProtect)         /* Type of access protection */
+static void * VIRTUALCommitMemory(
+                 CPalThread *pthrCurrent, /* Currently executing thread */
+                 void * lpAddress,        /* Region to reserve or commit */
+                 SIZE_T dwSize,           /* Size of Region */
+                 uint32_t flAllocationType,  /* Type of allocation */
+                 uint32_t flProtect)         /* Type of access protection */
 {
     UINT_PTR StartBoundary      = 0;
     SIZE_T MemSize              = 0;
     PCMI pInformation           = 0;
-    LPVOID pRetVal              = NULL;
+    void * pRetVal              = NULL;
     BOOL IsLocallyReserved      = FALSE;
     SIZE_T totalPages;
-    INT allocationType, curAllocationType;
-    INT protectionState, curProtectionState;
+    int32_t allocationType, curAllocationType;
+    int32_t protectionState, curProtectionState;
     SIZE_T initialRunStart;
     SIZE_T runStart;
     SIZE_T runLength;
     SIZE_T index;
-    INT nProtect;
-    INT vProtect;
+    int32_t nProtect;
+    int32_t vProtect;
 
     if ( lpAddress )
     {
@@ -1179,7 +1179,7 @@ static LPVOID VIRTUALCommitMemory(
         /* According to the new MSDN docs, if MEM_COMMIT is specified,
         and the memory is not reserved, you reserve and then commit.
         */
-        LPVOID pReservedMemory =
+        void * pReservedMemory =
                 VIRTUALReserveMemory( pthrCurrent, lpAddress, dwSize,
                                       flAllocationType, flProtect );
 
@@ -1673,14 +1673,13 @@ done:
 }
 #endif // RESERVE_FROM_BACKING_FILE
 
-LPVOID
-PALAPI
+void *
 VirtualAllocEx(
-         IN HANDLE hProcess,
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          HANDLE hProcess,
+          void * lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
     return VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
 }
@@ -1703,19 +1702,19 @@ Note:
 
 See MSDN doc.
 --*/
-LPVOID
+void *
 VirtualAlloc_(
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          void * lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
 #ifdef DEBUG
     static bool was_pal_initialized = PAL_Initialize_Check_Once();
     _ASSERTE(was_pal_initialized);
 #endif
 
-    LPVOID  pRetVal       = NULL;
+    void *  pRetVal       = NULL;
     CPalThread *pthrCurrent;
 
     PERF_ENTRY(VirtualAlloc);
@@ -1801,10 +1800,10 @@ Function:
 --*/
 BOOL
 VirtualFreeEnclosing_(
-    IN LPVOID lpRegionStartAddress,         /* Starting address of the original region. */
-    IN SIZE_T dwSize,                       /* Size of the requested region i.e. the intended size of the VirtualAlloc call.*/
-    IN SIZE_T dwAlignmentSize,              /* The intended alignment of the returned address. This is also the size of the extra memory reserved i.e. 64KB in our case whenw e try a 64K alignment. */
-    IN LPVOID lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
+     void * lpRegionStartAddress,         /* Starting address of the original region. */
+     SIZE_T dwSize,                       /* Size of the requested region i.e. the intended size of the VirtualAlloc call.*/
+     SIZE_T dwAlignmentSize,              /* The intended alignment of the returned address. This is also the size of the extra memory reserved i.e. 64KB in our case whenw e try a 64K alignment. */
+     void * lpActualAlignedStartAddress)  /* Actual starting address that will be returned for the new allocation. */
 {
     BOOL bRetVal = TRUE;
 
@@ -1824,7 +1823,7 @@ VirtualFreeEnclosing_(
 #ifdef DEBUG
     _ASSERTE(dwSize + dwAlignmentSize == beforeRegionSize + dwSize + afterRegionSize);
 
-    SIZE_T alignmentDiff = ((ULONG_PTR)lpRegionStartAddress % dwAlignmentSize);
+    SIZE_T alignmentDiff = ((size_t)lpRegionStartAddress % dwAlignmentSize);
     size_t beforeRegionSize2 = dwAlignmentSize - alignmentDiff;
     _ASSERTE(beforeRegionSize == beforeRegionSize2);
 #endif
@@ -1858,7 +1857,7 @@ VirtualFreeEnclosing_(
     if (mmap((void *)beforeRegionStart, beforeRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
         (char *)beforeRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-    if (munmap((LPVOID)beforeRegionStart, beforeRegionSize) == 0)
+    if (munmap((void *)beforeRegionStart, beforeRegionSize) == 0)
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
     {
         beforeRegionFreed = true;
@@ -1884,7 +1883,7 @@ VirtualFreeEnclosing_(
         if (mmap((void *)afterRegionStart, afterRegionSize, PROT_NONE, MAP_FIXED | MAP_PRIVATE, gBackingFile,
             (char *)afterRegionStart - (char *)gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-        if (munmap((LPVOID)afterRegionStart, afterRegionSize) == 0)
+        if (munmap((void *)afterRegionStart, afterRegionSize) == 0)
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
             afterRegionFreed = true;
@@ -1918,13 +1917,12 @@ VirtualFreeEnclosingExit:
 #define KB64 (64 * 1024)
 #define MB64 (KB64 * 1024)
 
-LPVOID
-PALAPI
+void *
 VirtualAlloc(
-         IN LPVOID lpAddress,       /* Region to reserve or commit */
-         IN SIZE_T dwSize,          /* Size of Region */
-         IN DWORD flAllocationType, /* Type of allocation */
-         IN DWORD flProtect)        /* Type of access protection */
+          void * lpAddress,       /* Region to reserve or commit */
+          SIZE_T dwSize,          /* Size of Region */
+          uint32_t flAllocationType, /* Type of allocation */
+          uint32_t flProtect)        /* Type of access protection */
 {
     if (lpAddress)
     {
@@ -1947,7 +1945,7 @@ VirtualAlloc(
             flAllocationType &= ~MEM_RESERVE;
         }
 
-        SIZE_T diff = ((ULONG_PTR)address % KB64);
+        SIZE_T diff = ((size_t)address % KB64);
         if (diff != 0)
         {
             // Free the previously allocated address as it's not 64K aligned.
@@ -1962,7 +1960,7 @@ VirtualAlloc(
                 return nullptr;
             }
 
-            diff = ((ULONG_PTR)address % KB64);
+            diff = ((size_t)address % KB64);
             char * addr64 = address + (KB64 - diff);
 
             // Free the regions enclosing the 64K aligned region we intend to use.
@@ -1998,12 +1996,11 @@ VirtualAlloc(
 #undef MB64
 
 BOOL
-PALAPI
 VirtualFreeEx(
-        IN HANDLE hProcess,
-        IN LPVOID lpAddress,    /* Address of region. */
-        IN SIZE_T dwSize,       /* Size of region. */
-        IN DWORD dwFreeType )   /* Operation type. */
+         HANDLE hProcess,
+         void * lpAddress,    /* Address of region. */
+         SIZE_T dwSize,       /* Size of region. */
+         uint32_t dwFreeType )   /* Operation type. */
 {
     return VirtualFree(lpAddress, dwSize, dwFreeType);
 }
@@ -2015,11 +2012,10 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 VirtualFree(
-        IN LPVOID lpAddress,    /* Address of region. */
-        IN SIZE_T dwSize,       /* Size of region. */
-        IN DWORD dwFreeType )   /* Operation type. */
+         void * lpAddress,    /* Address of region. */
+         SIZE_T dwSize,       /* Size of region. */
+         uint32_t dwFreeType )   /* Operation type. */
 {
     BOOL bRetVal = TRUE;
     CPalThread *pthrCurrent;
@@ -2095,28 +2091,28 @@ VirtualFree(
 #if MMAP_DOESNOT_ALLOW_REMAP
         // if no double mapping is supported,
         // just mprotect the memory with no access
-        if (mprotect((LPVOID)StartBoundary, MemSize, PROT_NONE) == 0)
+        if (mprotect((void *)StartBoundary, MemSize, PROT_NONE) == 0)
 #else // MMAP_DOESNOT_ALLOW_REMAP
         // Explicitly calling mmap instead of mprotect here makes it
         // that much more clear to the operating system that we no
         // longer need these pages.
 #if RESERVE_FROM_BACKING_FILE
-        if ( mmap( (LPVOID)StartBoundary, MemSize, PROT_NONE,
+        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
                    MAP_FIXED | MAP_PRIVATE, gBackingFile,
                    (char *) StartBoundary - (char *) gBackingBaseAddress ) !=
              MAP_FAILED )
 #else   // RESERVE_FROM_BACKING_FILE
-        if ( mmap( (LPVOID)StartBoundary, MemSize, PROT_NONE,
+        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
                    MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0 ) != MAP_FAILED )
 #endif  // RESERVE_FROM_BACKING_FILE
 #endif // MMAP_DOESNOT_ALLOW_REMAP
         {
 #if (MMAP_ANON_IGNORES_PROTECTION && !MMAP_DOESNOT_ALLOW_REMAP)
-            if (mprotect((LPVOID) StartBoundary, MemSize, PROT_NONE) != 0)
+            if (mprotect((void *) StartBoundary, MemSize, PROT_NONE) != 0)
             {
                 ASSERT("mprotect failed to protect the region!\n");
                 pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
-                munmap((LPVOID) StartBoundary, MemSize);
+                munmap((void *) StartBoundary, MemSize);
                 bRetVal = FALSE;
                 goto VirtualFreeExit;
             }
@@ -2177,7 +2173,7 @@ VirtualFree(
                  (char *) pMemoryToBeReleased->startBoundary -
                  (char *) gBackingBaseAddress) != MAP_FAILED)
 #else   // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
-        if ( munmap( (LPVOID)pMemoryToBeReleased->startBoundary,
+        if ( munmap( (void *)pMemoryToBeReleased->startBoundary,
                      pMemoryToBeReleased->memSize ) == 0 )
 #endif  // MMAP_IGNORES_HINT && !MMAP_DOESNOT_ALLOW_REMAP
         {
@@ -2213,13 +2209,12 @@ VirtualFreeExit:
 }
 
 BOOL
-PALAPI
 VirtualProtectEx(
-           IN HANDLE hProcess,
-           IN LPVOID lpAddress,
-           IN SIZE_T dwSize,
-           IN DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect)
+            HANDLE hProcess,
+            void * lpAddress,
+            SIZE_T dwSize,
+            uint32_t flNewProtect,
+            uint32_t * lpflOldProtect)
 {
     return VirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
 }
@@ -2231,12 +2226,11 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 VirtualProtect(
-           IN LPVOID lpAddress,
-           IN SIZE_T dwSize,
-           IN DWORD flNewProtect,
-           OUT PDWORD lpflOldProtect)
+            void * lpAddress,
+            SIZE_T dwSize,
+            uint32_t flNewProtect,
+            uint32_t * lpflOldProtect)
 {
     BOOL     bRetVal = FALSE;
     PCMI     pEntry = NULL;
@@ -2300,7 +2294,7 @@ VirtualProtect(
         }
     }
 
-    if ( 0 == mprotect( (LPVOID)StartBoundary, MemSize,
+    if ( 0 == mprotect( (void *)StartBoundary, MemSize,
                    W32toUnixAccessControl( flNewProtect ) ) )
     {
         /* Reset the access protection. */
@@ -2358,7 +2352,7 @@ ExitVirtualProtect:
 //    Return the corresponding memory protection on Windows (e.g. PAGE_READ_WRITE, etc.)
 //
 
-static DWORD VirtualMapMachProtectToWinProtect(vm_prot_t protection)
+static uint32_t VirtualMapMachProtectToWinProtect(vm_prot_t protection)
 {
     if (protection & VM_PROT_READ)
     {
@@ -2412,7 +2406,7 @@ static DWORD VirtualMapMachProtectToWinProtect(vm_prot_t protection)
     }
 }
 
-static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer)
+static void VM_ALLOCATE_VirtualQuery(const void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer)
 {
     kern_return_t MachRet;
     vm_address_t vm_address;
@@ -2420,22 +2414,12 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
     vm_region_flavor_t vm_flavor;
     mach_msg_type_number_t infoCnt;
     mach_port_t object_name;
-#ifdef BIT64
     vm_region_basic_info_data_64_t info;
     infoCnt = VM_REGION_BASIC_INFO_COUNT_64;
     vm_flavor = VM_REGION_BASIC_INFO_64;
-#else
-    vm_region_basic_info_data_t info;
-    infoCnt = VM_REGION_BASIC_INFO_COUNT;
-    vm_flavor = VM_REGION_BASIC_INFO;
-#endif
 
     vm_address = (vm_address_t)lpAddress;
-#ifdef BIT64
     MachRet = vm_region_64(
-#else
-    MachRet = vm_region(
-#endif
                         mach_task_self(),
                         &vm_address,
                         &vm_size,
@@ -2453,7 +2437,7 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
         return;
     }
 
-    lpBuffer->BaseAddress = (PVOID)vm_address;
+    lpBuffer->BaseAddress = (void *)vm_address;
 
     // We don't actually have any information on the Mach kernel which maps to AllocationProtect.
     lpBuffer->AllocationProtect = VM_PROT_NONE;
@@ -2488,12 +2472,11 @@ static void VM_ALLOCATE_VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATIO
 #endif // HAVE_VM_ALLOCATE
 
 SIZE_T
-PALAPI
 VirtualQueryEx(
-    IN HANDLE hProcess,
-    IN LPCVOID lpAddress,
-    OUT PMEMORY_BASIC_INFORMATION lpBuffer,
-    IN SIZE_T dwLength)
+     HANDLE hProcess,
+     const void * lpAddress,
+     PMEMORY_BASIC_INFORMATION lpBuffer,
+     SIZE_T dwLength)
 {
     return VirtualQuery(lpAddress, lpBuffer, dwLength);
 }
@@ -2505,11 +2488,10 @@ Function:
 See MSDN doc.
 --*/
 SIZE_T
-PALAPI
 VirtualQuery(
-         IN LPCVOID lpAddress,
-         OUT PMEMORY_BASIC_INFORMATION lpBuffer,
-         IN SIZE_T dwLength)
+          const void * lpAddress,
+          PMEMORY_BASIC_INFORMATION lpBuffer,
+          SIZE_T dwLength)
 {
     PCMI     pEntry = NULL;
     UINT_PTR StartBoundary = 0;
@@ -2571,13 +2553,13 @@ VirtualQuery(
     {
         /* Can't find a match, or no list present. */
         /* Next, looking for this region in file maps */
-        if (!MAPGetRegionInfo((LPVOID)StartBoundary, lpBuffer))
+        if (!MAPGetRegionInfo((void *)StartBoundary, lpBuffer))
         {
             // When all else fails, call vm_region() if it's available.
 
             // Initialize the State to be MEM_FREE, in which case AllocationBase, AllocationProtect,
             // Protect, and Type are all undefined.
-            lpBuffer->BaseAddress = (LPVOID)StartBoundary;
+            lpBuffer->BaseAddress = (void *)StartBoundary;
             lpBuffer->RegionSize = 0;
             lpBuffer->State = MEM_FREE;
 #if HAVE_VM_ALLOCATE
@@ -2591,8 +2573,8 @@ VirtualQuery(
         SIZE_T Index = ( StartBoundary - pEntry->startBoundary ) / VIRTUAL_PAGE_SIZE;
 
         /* Attributes to check for. */
-        BYTE AccessProtection = pEntry->pProtectionState[ Index ];
-        INT AllocationType = VIRTUALGetAllocationType( Index, pEntry );
+        uint8_t AccessProtection = pEntry->pProtectionState[ Index ];
+        int32_t AllocationType = VIRTUALGetAllocationType( Index, pEntry );
         SIZE_T RegionSize = 0;
 
         TRACE( "Index = %d, Number of Pages = %d. \n",
@@ -2610,7 +2592,7 @@ VirtualQuery(
 
         /* Fill the structure.*/
         lpBuffer->AllocationProtect = pEntry->accessProtection;
-        lpBuffer->BaseAddress = (LPVOID)StartBoundary;
+        lpBuffer->BaseAddress = (void *)StartBoundary;
 
         lpBuffer->Protect = AllocationType == MEM_COMMIT ?
             VIRTUALConvertVirtualFlags( AccessProtection ) : 0;

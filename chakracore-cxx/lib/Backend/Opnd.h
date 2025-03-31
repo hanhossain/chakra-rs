@@ -26,7 +26,7 @@ class LabelOpnd;
 class MemRefOpnd;
 class RegBVOpnd;
 
-enum OpndKind : BYTE {
+enum OpndKind : uint8_t {
     OpndKindInvalid,
     OpndKindIntConst,
     OpndKindInt64Const,
@@ -44,7 +44,7 @@ enum OpndKind : BYTE {
     OpndKindList
 };
 
-enum AddrOpndKind : BYTE {
+enum AddrOpndKind : uint8_t {
     // The following address kinds are safe for relocatable JIT and regular
     // JIT
     AddrOpndKindConstantAddress,

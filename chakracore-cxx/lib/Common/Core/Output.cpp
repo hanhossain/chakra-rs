@@ -38,7 +38,7 @@ unsigned int Output::s_traceEntryId = 0;
 
 THREAD_ST FILE*    Output::s_file = nullptr;
 THREAD_ST size_t   Output::s_Column  = 0;
-THREAD_ST WORD     Output::s_color = 0;
+THREAD_ST uint16_t     Output::s_color = 0;
 THREAD_ST bool     Output::s_hasColor = false;
 THREAD_ST bool     Output::s_capture = false;
 
@@ -49,7 +49,7 @@ THREAD_ST const char16* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
 
-size_t __cdecl
+size_t
 Output::VerboseNote(const char16 * format, ...)
 {
 #ifdef ENABLE_TRACE
@@ -68,7 +68,7 @@ Output::VerboseNote(const char16 * format, ...)
 }
 
 #ifdef ENABLE_TRACE
-size_t __cdecl
+size_t
 Output::Trace(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -84,7 +84,7 @@ Output::Trace(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::Trace2(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -100,7 +100,7 @@ Output::Trace2(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -118,7 +118,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *fo
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -135,7 +135,7 @@ Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
     return retValue;
 }
 
-size_t __cdecl
+size_t
 Output::TraceWithFlush(Js::Flag flag, const char16 *form, ...)
 {
     size_t retValue = 0;
@@ -164,8 +164,8 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
     // Print stack trace.
     if (s_stackTraceHelper)
     {
-        const ULONG c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
-        const ULONG c_frameCount = 10;  // TODO: make it configurable.
+        const uint32_t c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
+        const uint32_t c_frameCount = 10;  // TODO: make it configurable.
         const char16 callStackPrefix[] = _u("call stack:");
         if (s_inMemoryLogger)
         {
@@ -181,9 +181,9 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
             Assert(temp != -1);
             start += temp;
 
-            ULONG framesObtained = s_stackTraceHelper->GetStackTrace(c_framesToSkip, c_frameCount, frames);
+            uint32_t framesObtained = s_stackTraceHelper->GetStackTrace(c_framesToSkip, c_frameCount, frames);
             Assert(framesObtained <= c_frameCount);
-            for (ULONG i = 0; i < framesObtained && i < c_frameCount; ++i)
+            for (uint32_t i = 0; i < framesObtained && i < c_frameCount; ++i)
             {
                 Assert(_countof(callStackMsg) >= start);
                 temp = _snwprintf_s(callStackMsg + start, _countof(callStackMsg) - start, _TRUNCATE, _u(" %p"), frames[i]);
@@ -206,7 +206,7 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
 }
 
 #ifdef BGJIT_STATS
-size_t __cdecl
+size_t
 Output::TraceStats(Js::Phase phase, const char16 *form, ...)
 {
     if(PHASE_STATS1(phase))
@@ -231,7 +231,7 @@ Output::TraceStats(Js::Phase phase, const char16 *form, ...)
 ///
 ///----------------------------------------------------------------------------
 
-size_t __cdecl
+size_t
 Output::Print(const char16 *form, ...)
 {
     va_list argptr;
@@ -241,7 +241,7 @@ Output::Print(const char16 *form, ...)
     return ret_val;
 }
 
-size_t __cdecl
+size_t
 Output::Print(int column, const char16 *form, ...)
 {
     Output::SkipToColumn(column);
@@ -252,7 +252,7 @@ Output::Print(int column, const char16 *form, ...)
     return ret_val;
 }
 
-size_t __cdecl
+size_t
 Output::VPrint(const char16 *form, va_list argptr)
 {
     char16 buf[2048];
@@ -270,7 +270,7 @@ Output::VPrint(const char16 *form, va_list argptr)
 // buf: a null terminated string
 // size: characters in buf, excluding the terminating null ==> wcslen(buf)
 //
-size_t __cdecl
+size_t
 Output::PrintBuffer(const char16 * buf, size_t size)
 {
     // Handle custom line prefixing
@@ -517,8 +517,8 @@ Output::SetStackTraceHelper(Js::IStackTraceHelper* helper)
 // Sets the foreground color and returns the old color. Returns 0 on failure
 //
 
-WORD
-Output::SetConsoleForeground(WORD color)
+uint16_t
+Output::SetConsoleForeground(uint16_t color)
 {
     AutoCriticalSection autocs(&s_critsect);
     return 0;

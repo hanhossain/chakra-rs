@@ -53,15 +53,14 @@ PAL-specific behavior :
 
 --*/
 BOOL
-PALAPI
 DuplicateHandle(
-        IN HANDLE hSourceProcessHandle,
-        IN HANDLE hSourceHandle,
-        IN HANDLE hTargetProcessHandle,
-        OUT LPHANDLE lpTargetHandle,
-        IN DWORD dwDesiredAccess,
-        IN BOOL bInheritHandle,
-        IN DWORD dwOptions)
+         HANDLE hSourceProcessHandle,
+         HANDLE hSourceHandle,
+         HANDLE hTargetProcessHandle,
+         LPHANDLE lpTargetHandle,
+         uint32_t dwDesiredAccess,
+         BOOL bInheritHandle,
+         uint32_t dwOptions)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -103,17 +102,17 @@ CorUnix::InternalDuplicateHandle(
     HANDLE hSource,
     HANDLE hTargetProcess,
     LPHANDLE phDuplicate,
-    DWORD dwDesiredAccess,
+    uint32_t dwDesiredAccess,
     BOOL bInheritHandle,
-    DWORD dwOptions
+    uint32_t dwOptions
     )
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjSource = NULL;
     
-    DWORD source_process_id;
-    DWORD target_process_id;
-    DWORD cur_process_id;
+    uint32_t source_process_id;
+    uint32_t target_process_id;
+    uint32_t cur_process_id;
 
     cur_process_id = GetCurrentProcessId();
     source_process_id = PROCGetProcessIDFromHandle(hSourceProcess);
@@ -273,9 +272,8 @@ debugger [or, alternately, if a special registry key is set]. This behavior is
 not required in the PAL, so we'll always return FALSE.
 --*/
 BOOL
-PALAPI
 CloseHandle(
-        IN OUT HANDLE hObject)
+          HANDLE hObject)
 {
     CPalThread *pThread;
     PAL_ERROR palError;

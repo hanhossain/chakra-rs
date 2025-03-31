@@ -42,10 +42,10 @@ StackProber::Initialize()
     const size_t stackOverflowBuffer = Js::Constants::StackOverflowHandlingBufferPages * AutoSystemInfo::PageSize;
 
     size_t stackBottom = 0;      // This is the low address limit (here we consider stack growing down).
-    ULONG stackGuarantee = 0;
+    uint32_t stackGuarantee = 0;
 
 #if defined(_M_ARM)
-    ULONG lowLimit, highLimit;
+    uint32_t lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     stackBottom = lowLimit;
 #elif defined(_M_ARM64)
@@ -53,8 +53,8 @@ StackProber::Initialize()
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     stackBottom =  lowLimit;
 #else
-    ULONG_PTR lowLimit = 0;
-    ULONG_PTR highLimit = 0;
+    size_t lowLimit = 0;
+    size_t highLimit = 0;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
     stackBottom = lowLimit;
 #endif

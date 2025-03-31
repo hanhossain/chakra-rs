@@ -110,11 +110,10 @@ Function:
 
 See MSDN doc.
 --*/
-LONG
-PALAPI
+int32_t
 CompareFileTime(
-        IN CONST FILETIME *lpFileTime1,
-        IN CONST FILETIME *lpFileTime2)
+         const FILETIME *lpFileTime1,
+         const FILETIME *lpFileTime2)
 {
     __int64 First;
     __int64 Second;
@@ -143,7 +142,7 @@ CompareFileTime(
         Ret = 0;
     }
     
-    LOGEXIT("CompareFileTime returns LONG %ld\n", Ret);
+    LOGEXIT("CompareFileTime returns int32_t %ld\n", Ret);
     PERF_EXIT(CompareFileTime);
     return Ret;
 }
@@ -163,12 +162,11 @@ systems, so the lpCreationTime argument to this function will always be
 ignored, and the inode change time will be set to the current time.
 --*/
 BOOL
-PALAPI
 SetFileTime(
-        IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime)
+         HANDLE hFile,
+         const FILETIME *lpCreationTime,
+         const FILETIME *lpLastAccessTime,
+         const FILETIME *lpLastWriteTime)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -214,10 +212,10 @@ SetFileTime(
 PAL_ERROR
 CorUnix::InternalSetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
-        IN CONST FILETIME *lpCreationTime,
-        IN CONST FILETIME *lpLastAccessTime,
-        IN CONST FILETIME *lpLastWriteTime)
+         HANDLE hFile,
+         const FILETIME *lpCreationTime,
+         const FILETIME *lpLastAccessTime,
+         const FILETIME *lpLastWriteTime)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pFileObject = NULL;
@@ -353,12 +351,11 @@ To be consistent with Win32, this function returns the greater of mtime and
 atime for LastAccessTime.
 --*/
 BOOL
-PALAPI
 GetFileTime(
-        IN HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime)
+         HANDLE hFile,
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime)
 {
     CPalThread *pThread;
     PAL_ERROR palError = NO_ERROR;
@@ -391,10 +388,10 @@ GetFileTime(
 PAL_ERROR
 CorUnix::InternalGetFileTime(
         CPalThread *pThread,
-        IN HANDLE hFile,
-        OUT LPFILETIME lpCreationTime,
-        OUT LPFILETIME lpLastAccessTime,
-        OUT LPFILETIME lpLastWriteTime)
+         HANDLE hFile,
+         LPFILETIME lpCreationTime,
+         LPFILETIME lpLastAccessTime,
+         LPFILETIME lpLastWriteTime)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pFileObject = NULL;
@@ -500,10 +497,9 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 GetSystemTimeAsFileTime(
-            OUT LPFILETIME lpSystemTimeAsFileTime)
+             LPFILETIME lpSystemTimeAsFileTime)
 {
     struct timeval Time;
 
@@ -547,8 +543,8 @@ FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec )
     
     Result = ((__int64)sec + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
 
-    Ret.dwLowDateTime = (DWORD)Result;
-    Ret.dwHighDateTime = (DWORD)(Result >> 32);
+    Ret.dwLowDateTime = (uint32_t)Result;
+    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
 
     TRACE("CFAbsoluteTime = [%9f] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, Ret.dwHighDateTime, Ret.dwLowDateTime);
@@ -576,8 +572,8 @@ FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec )
     Result = ((__int64)sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
         (nsec / 100);
 
-    Ret.dwLowDateTime = (DWORD)Result;
-    Ret.dwHighDateTime = (DWORD)(Result >> 32);
+    Ret.dwLowDateTime = (uint32_t)Result;
+    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
 
     TRACE("Unix time = [%ld.%09ld] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, nsec, Ret.dwHighDateTime, Ret.dwLowDateTime);
@@ -647,7 +643,7 @@ Function
     easier manipulation in FileTimeToDosTime.
         
 --*/
-BOOL PALAPI FileTimeToSystemTime( CONST FILETIME * lpFileTime, 
+BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
                                   LPSYSTEMTIME lpSystemTime )
 {
     UINT64 FileTime = 0;
@@ -657,7 +653,7 @@ BOOL PALAPI FileTimeToSystemTime( CONST FILETIME * lpFileTime,
     /* Combine the file time. */
     FileTime = lpFileTime->dwHighDateTime;
     FileTime <<= 32;
-    FileTime |= (UINT)lpFileTime->dwLowDateTime;
+    FileTime |= (uint32_t)lpFileTime->dwLowDateTime;
     const UINT64 since1601 = SECS_BETWEEN_1601_AND_1970_EPOCHS * SECS_TO_100NS;
 
     if (FileTime > since1601 && since1601 >= 0) 
@@ -718,11 +714,10 @@ Function:
 See msdn for more details.
 --*/
 BOOL
-PALAPI
 FileTimeToDosDateTime(
-            IN CONST FILETIME *lpFileTime,
-            OUT LPWORD lpFatDate,
-            OUT LPWORD lpFatTime )
+             const FILETIME *lpFileTime,
+             uint16_t * lpFatDate,
+             uint16_t * lpFatTime )
 {
     BOOL bRetVal = FALSE;
 

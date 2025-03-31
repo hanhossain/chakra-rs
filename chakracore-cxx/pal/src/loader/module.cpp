@@ -104,7 +104,7 @@ template<class TChar> static bool LOADVerifyLibraryPath(const TChar *libraryPath
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     LPCWSTR wideLibraryPath,
     LPSTR multibyteLibraryPath,
-    INT *multibyteLibraryPathLengthRef);
+    int32_t *multibyteLibraryPathLengthRef);
 static BOOL LOADValidateModule(MODSTRUCT *module);
 static LPWSTR LOADGetModuleFileName(MODSTRUCT *module);
 static MODSTRUCT *LOADAddModule(void *dl_handle, LPCSTR libraryNameOrPath);
@@ -112,7 +112,7 @@ static void *LOADLoadLibraryDirect(LPCSTR libraryNameOrPath);
 static BOOL LOADFreeLibrary(MODSTRUCT *module, BOOL fCallDllMain);
 static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPath, BOOL fDynamic);
 static HMODULE LOADLoadLibrary(LPCSTR shortAsciiName, BOOL fDynamic);
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpReserved);
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved);
 
 /* API function definitions ***************************************************/
 
@@ -123,9 +123,8 @@ Function:
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryA(
-    IN LPCSTR lpLibFileName)
+     LPCSTR lpLibFileName)
 {
     return LoadLibraryExA(lpLibFileName, nullptr, 0);
 }
@@ -137,9 +136,8 @@ Function:
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryW(
-    IN LPCWSTR lpLibFileName)
+     LPCWSTR lpLibFileName)
 {
     return LoadLibraryExW(lpLibFileName, nullptr, 0);
 }
@@ -151,11 +149,10 @@ LoadLibraryExA
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryExA(
-    IN LPCSTR lpLibFileName,
-    IN /*Reserved*/ HANDLE hFile,
-    IN DWORD dwFlags)
+     LPCSTR lpLibFileName,
+     /*Reserved*/ HANDLE hFile,
+     uint32_t dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -209,11 +206,10 @@ LoadLibraryExW
 See MSDN doc.
 --*/
 HMODULE
-PALAPI
 LoadLibraryExW(
-    IN LPCWSTR lpLibFileName,
-    IN /*Reserved*/ HANDLE hFile,
-    IN DWORD dwFlags)
+     LPCWSTR lpLibFileName,
+     /*Reserved*/ HANDLE hFile,
+     uint32_t dwFlags)
 {
     if (dwFlags != 0)
     {
@@ -222,8 +218,8 @@ LoadLibraryExW(
         return nullptr;
     }
 
-    CHAR * lpstr;
-    INT name_length;
+    char * lpstr;
+    int32_t name_length;
     PathCharString pathstr;
     HMODULE hModule = nullptr;
 
@@ -267,10 +263,9 @@ Function:
 See MSDN doc.
 --*/
 FARPROC
-PALAPI
 GetProcAddress(
-    IN HMODULE hModule,
-    IN LPCSTR lpProcName)
+     HMODULE hModule,
+     LPCSTR lpProcName)
 {
     MODSTRUCT *module;
     FARPROC ProcAddress = nullptr;
@@ -301,7 +296,7 @@ GetProcAddress(
     }
 
     /* try to assert on attempt to locate symbol by ordinal */
-    /* this can't be an exact test for HIWORD((DWORD)lpProcName) == 0
+    /* this can't be an exact test for HIWORD((uint32_t)lpProcName) == 0
        because of the address range reserved for ordinals contain can
        be a valid string address on non-Windows systems
     */
@@ -353,7 +348,7 @@ GetProcAddress(
         /* if we don't know the module's full name yet, this is our chance to obtain it */
         if (!module->lib_name && module->dl_handle)
         {
-            const char* libName = PAL_dladdr((LPVOID)ProcAddress);
+            const char* libName = PAL_dladdr((void *)ProcAddress);
             if (libName)
             {
                 module->lib_name = UTIL_MBToWC_Alloc(libName, -1);
@@ -389,9 +384,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 FreeLibrary(
-    IN OUT HMODULE hLibModule)
+      HMODULE hLibModule)
 {
     BOOL retval = FALSE;
 
@@ -411,12 +405,10 @@ Function:
 See MSDN doc.
 
 --*/
-PALIMPORT
-VOID
-PALAPI
+void
 FreeLibraryAndExitThread(
-    IN HMODULE hLibModule,
-    IN DWORD dwExitCode)
+     HMODULE hLibModule,
+     uint32_t dwExitCode)
 {
     PERF_ENTRY(FreeLibraryAndExitThread);
     ENTRY("FreeLibraryAndExitThread()\n");
@@ -439,15 +431,14 @@ Notes :
     the short name as given to LoadLibrary. The exception is if hModule is
     NULL : in this case, the full path of the executable is always returned.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetModuleFileNameA(
-    IN HMODULE hModule,
-    OUT LPSTR lpFileName,
-    IN DWORD nSize)
+     HMODULE hModule,
+     LPSTR lpFileName,
+     uint32_t nSize)
 {
-    INT name_length;
-    DWORD retval = 0;
+    int32_t name_length;
+    uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
     PERF_ENTRY(GetModuleFileNameA);
@@ -503,15 +494,14 @@ Notes :
     the short name as given to LoadLibrary. The exception is if hModule is
     NULL : in this case, the full path of the executable is always returned.
 --*/
-DWORD
-PALAPI
+uint32_t
 GetModuleFileNameW(
-    IN HMODULE hModule,
-    OUT LPWSTR lpFileName,
-    IN DWORD nSize)
+     HMODULE hModule,
+     LPWSTR lpFileName,
+     uint32_t nSize)
 {
-    INT name_length;
-    DWORD retval = 0;
+    int32_t name_length;
+    uint32_t retval = 0;
     LPWSTR wide_name = nullptr;
 
     PERF_ENTRY(GetModuleFileNameW);
@@ -540,7 +530,7 @@ GetModuleFileNameW(
     /* Copy module name into supplied buffer */
 
     name_length = lstrlenW(wide_name);
-    if (name_length >= (INT)nSize)
+    if (name_length >= (int32_t)nSize)
     {
         TRACE("Buffer too small (%u) to copy module's file name (%u).\n", nSize, name_length);
         SetLastError(ERROR_INSUFFICIENT_BUFFER);
@@ -559,9 +549,8 @@ done:
 }
 
 HMODULE
-PALAPI
 GetModuleHandleW(
-    IN OPTIONAL LPCWSTR lpModuleName)
+      LPCWSTR lpModuleName)
 {
     if (lpModuleName)
     {
@@ -574,11 +563,10 @@ GetModuleHandleW(
 }
 
 BOOL
-PALAPI
 GetModuleHandleExW(
-    IN DWORD dwFlags,
-    IN OPTIONAL LPCWSTR lpModuleName,
-    OUT HMODULE *phModule)
+     uint32_t dwFlags,
+      LPCWSTR lpModuleName,
+     HMODULE *phModule)
 {
     *phModule = NULL;
     return FALSE;
@@ -593,13 +581,12 @@ Function:
   Returns the system handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
 void *
-PALAPI
 PAL_LoadLibraryDirect(
-    IN LPCWSTR lpLibFileName)
+     LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
-    CHAR * lpstr = nullptr;
-    INT name_length;
+    char * lpstr = nullptr;
+    int32_t name_length;
     void *dl_handle = nullptr;
 
     PERF_ENTRY(LoadLibraryDirect);
@@ -643,14 +630,13 @@ Function:
   Returns a PAL handle to the loaded library, or nullptr upon failure (error is set via SetLastError()).
 */
 HMODULE
-PALAPI
 PAL_RegisterLibraryDirect(
-    IN void *dl_handle,
-    IN LPCWSTR lpLibFileName)
+     void *dl_handle,
+     LPCWSTR lpLibFileName)
 {
     PathCharString pathstr;
-    CHAR * lpstr = nullptr;
-    INT name_length;
+    char * lpstr = nullptr;
+    int32_t name_length;
     HMODULE hModule = nullptr;
 
     PERF_ENTRY(RegisterLibraryDirect);
@@ -694,10 +680,9 @@ Function:
 
   Used to cleanup the module HINSTANCE from PAL_RegisterModule.
 --*/
-VOID
-PALAPI
+void
 PAL_UnregisterModule(
-    IN HINSTANCE hInstance)
+     HINSTANCE hInstance)
 {
     PERF_ENTRY(PAL_UnregisterModule);
     ENTRY("PAL_UnregisterModule(hInstance=%p)\n", hInstance);
@@ -722,7 +707,6 @@ Return value:
     NULL - error, with last error set.
 --*/
 void *
-PALAPI
 PAL_LOADLoadPEFile(HANDLE hFile)
 {
     ENTRY("PAL_LOADLoadPEFile (hFile=%p)\n", hFile);
@@ -759,7 +743,6 @@ Return value:
     FALSE - failure (incorrect ptr, etc.)
 --*/
 BOOL
-PALAPI
 PAL_LOADUnloadPEFile(void * ptr)
 {
     BOOL retval = FALSE;
@@ -790,11 +773,10 @@ Parameters:
 Return value:
     module base address
 --*/
-LPCVOID
-PALAPI
+const void *
 PAL_GetSymbolModuleBase(void *symbol)
 {
-    LPCVOID retval = nullptr;
+    const void * retval = nullptr;
 
     PERF_ENTRY(PAL_GetPalModuleBase);
     ENTRY("PAL_GetPalModuleBase\n");
@@ -936,10 +918,10 @@ Function :
     Call DllMain for all modules (that have one) with the given "fwReason"
 
 Parameters :
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpReserved : parameter to pass down to DllMain
+    void * lpReserved : parameter to pass down to DllMain
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary
             and non-NULL if DllMain has been called during process termination.
@@ -950,7 +932,7 @@ Notes :
     This is used to send DLL_THREAD_*TACH messages to modules
 --*/
 extern "C"
-void LOADCallDllMain(DWORD dwReason, LPVOID lpReserved)
+void LOADCallDllMain(uint32_t dwReason, void * lpReserved)
 {
     MODSTRUCT *module = nullptr;
     BOOL InLoadOrder = TRUE; /* true if in load order, false for reverse */
@@ -1113,10 +1095,10 @@ Function :
 Parameters :
     MODSTRUCT *module : module whose DllMain must be called
 
-    DWORD dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
+    uint32_t dwReason : parameter to pass down to DllMain, one of DLL_PROCESS_ATTACH, DLL_PROCESS_DETACH,
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH
 
-    LPVOID lpvReserved : parameter to pass down to DllMain,
+    void * lpvReserved : parameter to pass down to DllMain,
         If dwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads.
         If dwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if DllMain has been called by using FreeLibrary
             and non-NULL if DllMain has been called during process termination.
@@ -1124,7 +1106,7 @@ Parameters :
 Returns:
     BOOL : DllMain's return value
 */
-static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpReserved)
+static BOOL LOADCallDllMainSafe(MODSTRUCT *module, uint32_t dwReason, void * lpReserved)
 {
 #if _ENABLE_DEBUG_MESSAGES_
     /* reset ENTRY nesting level back to zero while inside the callback... */
@@ -1134,8 +1116,8 @@ static BOOL LOADCallDllMainSafe(MODSTRUCT *module, DWORD dwReason, LPVOID lpRese
     struct Param
     {
         MODSTRUCT *module;
-        DWORD dwReason;
-        LPVOID lpReserved;
+        uint32_t dwReason;
+        void * lpReserved;
         BOOL ret;
     } param;
     param.module = module;
@@ -1171,9 +1153,8 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 DisableThreadLibraryCalls(
-    IN HMODULE hLibModule)
+     HMODULE hLibModule)
 {
     BOOL ret = FALSE;
     MODSTRUCT *module;
@@ -1234,7 +1215,7 @@ static bool LOADVerifyLibraryPath(const TChar *libraryPath)
 static bool LOADConvertLibraryPathWideStringToMultibyteString(
     LPCWSTR wideLibraryPath,
     LPSTR multibyteLibraryPath,
-    INT *multibyteLibraryPathLengthRef)
+    int32_t *multibyteLibraryPathLengthRef)
 {
     _ASSERTE(multibyteLibraryPathLengthRef != nullptr);
     _ASSERTE(wideLibraryPath != nullptr);
@@ -1245,7 +1226,7 @@ static bool LOADConvertLibraryPathWideStringToMultibyteString(
 
     if (*multibyteLibraryPathLengthRef == 0)
     {
-        DWORD dwLastError = GetLastError();
+        uint32_t dwLastError = GetLastError();
         if (dwLastError == ERROR_INSUFFICIENT_BUFFER)
         {
             ERROR("wideLibraryPath converted to a multibyte string is longer than MAX_LONGPATH (%d)!\n", MAX_LONGPATH);
@@ -1549,7 +1530,7 @@ static HMODULE LOADRegisterLibraryDirect(void *dl_handle, LPCSTR libraryNameOrPa
             }
         }
 
-        BOOL dllMainRetVal = LOADCallDllMainSafe(module, DLL_PROCESS_ATTACH, fDynamic ? nullptr : (LPVOID)-1);
+        BOOL dllMainRetVal = LOADCallDllMainSafe(module, DLL_PROCESS_ATTACH, fDynamic ? nullptr : (void *)-1);
 
         // If DlMain(DLL_PROCESS_ATTACH) returns FALSE, we must immediately unload the module
         if (!dllMainRetVal)
@@ -1643,7 +1624,7 @@ MODSTRUCT *LOADGetPalLibrary()
         TRACE("Loading module for PAL library\n");
 
         Dl_info info;
-        if (dladdr((PVOID)&LOADGetPalLibrary, &info) == 0)
+        if (dladdr((void *)&LOADGetPalLibrary, &info) == 0)
         {
             ERROR("LOADGetPalLibrary: dladdr() failed. dlerror message is \"%s\"\n", dlerror());
             goto exit;

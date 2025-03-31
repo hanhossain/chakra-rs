@@ -46,10 +46,9 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcatW(
-	 IN OUT LPWSTR lpString1,
-	 IN LPCWSTR lpString2)
+	   LPWSTR lpString1,
+	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
 
@@ -118,10 +117,9 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcpyW(
-	 OUT LPWSTR lpString1,
-	 IN LPCWSTR lpString2)
+	  LPWSTR lpString1,
+	  LPCWSTR lpString2)
 {
     LPWSTR lpStart = lpString1;
 
@@ -181,8 +179,7 @@ Unicode versions.
 
 --*/
 int
-PALAPI
-lstrlenA( IN LPCSTR lpString)
+lstrlenA(  LPCSTR lpString)
 {
     int nChar = 0;
 
@@ -221,9 +218,8 @@ Unicode versions.
 
 --*/
 int
-PALAPI
 lstrlenW(
-	 IN LPCWSTR lpString)
+	  LPCWSTR lpString)
 {
     int nChar = 0;
 
@@ -267,11 +263,10 @@ If the function fails, the return value is NULL.
 
 --*/
 LPWSTR
-PALAPI
 lstrcpynW(
-	  OUT LPWSTR lpString1,
-	  IN LPCWSTR lpString2,
-	  IN int iMaxLength)
+	   LPWSTR lpString1,
+	   LPCWSTR lpString2,
+	   int iMaxLength)
 {
     LPWSTR lpStart = lpString1;
 

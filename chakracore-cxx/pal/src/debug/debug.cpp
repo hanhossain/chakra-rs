@@ -21,11 +21,6 @@ Revision History:
 
 --*/
 
-#ifndef BIT64
-#undef _LARGEFILE64_SOURCE
-#undef _FILE_OFFSET_BITS
-#endif
-
 #include "pal/thread.hpp"
 #include "pal/procobj.hpp"
 #include "pal/file.hpp"
@@ -97,19 +92,19 @@ static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
 
 #if !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 static int
-DBGWriteProcMem_Int(DWORD processId, int *addr, int data);
+DBGWriteProcMem_Int(uint32_t processId, int *addr, int data);
 static int
-DBGWriteProcMem_IntWithMask(DWORD processId, int *addr, int data,
+DBGWriteProcMem_IntWithMask(uint32_t processId, int *addr, int data,
                             unsigned int mask);
 #endif  // !HAVE_VM_READ && !HAVE_PROCFS_CTL && !HAVE_TTRACE
 
 #if !HAVE_VM_READ && !HAVE_PROCFS_CTL
 
 static BOOL
-DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, DWORD dwProcessId);
+DBGAttachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 
 static BOOL
-DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, DWORD dwProcessId);
+DBGDetachProcess(CPalThread *pThread, HANDLE hProcess, uint32_t dwProcessId);
 
 static int
 DBGSetProcessAttached(CPalThread *pThread, HANDLE hProcess, BOOL bAttach);
@@ -133,11 +128,10 @@ usually maps to a kernel API to flush the D-caches on all processors.
 
 --*/
 BOOL
-PALAPI
 FlushInstructionCache(
-        IN HANDLE hProcess,
-        IN LPCVOID lpBaseAddress,
-        IN SIZE_T dwSize)
+         HANDLE hProcess,
+         const void * lpBaseAddress,
+         SIZE_T dwSize)
 {
     BOOL Ret;
 
@@ -166,10 +160,9 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 OutputDebugStringA(
-        IN LPCSTR lpOutputString)
+         LPCSTR lpOutputString)
 {
     PERF_ENTRY(OutputDebugStringA);
     ENTRY("OutputDebugStringA (lpOutputString=%p (%s))\n",
@@ -194,12 +187,11 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 OutputDebugStringW(
-        IN LPCWSTR lpOutputString)
+         LPCWSTR lpOutputString)
 {
-    CHAR *lpOutputStringA;
+    char *lpOutputStringA;
     int strLen;
 
     PERF_ENTRY(OutputDebugStringW);
@@ -223,7 +215,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(CHAR)))) == NULL)
+    if ((lpOutputStringA = (LPSTR) InternalMalloc((strLen * sizeof(char)))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -352,7 +344,7 @@ DebugBreakCommand()
         }
 
         SIZE_T dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
-        CHAR * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
+        char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
 
         if (NULL == exe_buf)
         {
@@ -362,7 +354,7 @@ DebugBreakCommand()
         if (snprintf (pid_buf, sizeof (pid_buf), PID_TEXT "%d", getpid()) <= 0) {
             goto FAILED;
         }
-        if (snprintf (exe_buf, sizeof (CHAR) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
+        if (snprintf (exe_buf, sizeof (char) * (dwexe_buf + 1), EXE_TEXT "%ls", (char16_t *)exe_module.lib_name) <= 0) {
             goto FAILED;
         }
 
@@ -394,10 +386,9 @@ Function:
 
 See MSDN doc.
 --*/
-VOID
-PALAPI
+void
 DebugBreak(
-       VOID)
+       void)
 {
     PERF_ENTRY(DebugBreak);
     ENTRY("DebugBreak()\n");
@@ -438,10 +429,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 GetThreadContext(
-           IN HANDLE hThread,
-           IN OUT LPCONTEXT lpContext)
+            HANDLE hThread,
+             LPCONTEXT lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -500,10 +490,9 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 SetThreadContext(
-           IN HANDLE hThread,
-           IN CONST CONTEXT *lpContext)
+            HANDLE hThread,
+            const CONTEXT *lpContext)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -560,23 +549,22 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 ReadProcessMemory(
-           IN HANDLE hProcess,
-           IN LPCVOID lpBaseAddress,
-           IN LPVOID lpBuffer,
-           IN SIZE_T nSize,
-           OUT SIZE_T * lpNumberOfBytesRead
+            HANDLE hProcess,
+            const void * lpBaseAddress,
+            void * lpBuffer,
+            SIZE_T nSize,
+            SIZE_T * lpNumberOfBytesRead
            )
 {
     CPalThread *pThread;
-    DWORD processId;
+    uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<SIZE_T> numberOfBytesRead = 0;
 #if HAVE_VM_READ
     kern_return_t result;
     vm_map_t task;
-    LONG_PTR bytesToRead;
+    ptrdiff_t bytesToRead;
 #elif HAVE_PROCFS_CTL
     int fd;
     char memPath[64];
@@ -613,8 +601,8 @@ ReadProcessMemory(
 
         struct Param
         {
-            LPCVOID lpBaseAddress;
-            LPVOID lpBuffer;
+            const void * lpBaseAddress;
+            void * lpBuffer;
             SIZE_T nSize;
             SIZE_T numberOfBytesRead;
             BOOL ret;
@@ -666,7 +654,7 @@ ReadProcessMemory(
         vm_size_t bytesRead;
 
         bytesToRead = VIRTUAL_PAGE_SIZE - offset;
-        if (bytesToRead > (LONG_PTR)nSize)
+        if (bytesToRead > (ptrdiff_t)nSize)
         {
             bytesToRead = nSize;
         }
@@ -850,18 +838,17 @@ Function:
 See MSDN doc.
 --*/
 BOOL
-PALAPI
 WriteProcessMemory(
-           IN HANDLE hProcess,
-           IN LPVOID lpBaseAddress,
-           IN LPCVOID lpBuffer,
-           IN SIZE_T nSize,
-           OUT SIZE_T * lpNumberOfBytesWritten
+            HANDLE hProcess,
+            void * lpBaseAddress,
+            const void * lpBuffer,
+            SIZE_T nSize,
+            SIZE_T * lpNumberOfBytesWritten
            )
 
 {
     CPalThread *pThread;
-    DWORD processId;
+    uint32_t processId;
     Volatile<BOOL> ret = FALSE;
     Volatile<SIZE_T> numberOfBytesWritten = 0;
 #if HAVE_VM_READ
@@ -870,7 +857,7 @@ WriteProcessMemory(
 #elif HAVE_PROCFS_CTL
     int fd;
     char memPath[64];
-    LONG_PTR bytesWritten;
+    ptrdiff_t bytesWritten;
     off_t offset;
 #elif !HAVE_TTRACE
     SIZE_T FirstIntOffset;
@@ -905,8 +892,8 @@ WriteProcessMemory(
 
         struct Param
         {
-            LPVOID lpBaseAddress;
-            LPCVOID lpBuffer;
+            void * lpBaseAddress;
+            const void * lpBuffer;
             SIZE_T nSize;
             SIZE_T numberOfBytesWritten;
             BOOL ret;
@@ -1153,9 +1140,9 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_Int(IN DWORD processId,
-                    IN int *addr,
-                    IN int data)
+DBGWriteProcMem_Int( uint32_t processId,
+                     int *addr,
+                     int data)
 {
     if (PAL_PTRACE( PAL_PT_WRITE_D, processId, addr, data ) == -1)
     {
@@ -1195,10 +1182,10 @@ Return
 --*/
 static
 int
-DBGWriteProcMem_IntWithMask(IN DWORD processId,
-                            IN int *addr,
-                            IN int data,
-                            IN unsigned int mask )
+DBGWriteProcMem_IntWithMask( uint32_t processId,
+                             int *addr,
+                             int data,
+                             unsigned int mask )
 {
     int readInt;
 
@@ -1254,7 +1241,7 @@ BOOL
 DBGAttachProcess(
     CPalThread *pThread,
     HANDLE hProcess,
-    DWORD processId
+    uint32_t processId
     )
 {
     int attachmentCount;
@@ -1405,7 +1392,7 @@ BOOL
 DBGDetachProcess(
     CPalThread *pThread,
     HANDLE hProcess,
-    DWORD processId
+    uint32_t processId
     )
 {
     int nbAttachLeft;
@@ -1603,16 +1590,16 @@ Return
   A Win32 error code
 --*/
 
-DWORD
+uint32_t
 PAL_CreateExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     )
 {
     PERF_ENTRY(PAL_CreateExecWatchpoint);
     ENTRY("PAL_CreateExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
-    DWORD dwError = ERROR_NOT_SUPPORTED;
+    uint32_t dwError = ERROR_NOT_SUPPORTED;
 
 #if HAVE_PRWATCH_T
 
@@ -1638,7 +1625,7 @@ PAL_CreateExecWatchpoint(
     //
 
 #if defined(_SPARC_)
-    if (*(DWORD*)pvInstruction == 0x91d02008) // ta 8
+    if (*(uint32_t*)pvInstruction == 0x91d02008) // ta 8
     {
         TRACE("Watchpoint requested on sysenter instruction -- ignoring");
         dwError = ERROR_SUCCESS;
@@ -1675,7 +1662,7 @@ PAL_CreateExecWatchpoint(
 
     ctlStruct.ctlCode = PCWATCH;
     ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(DWORD);
+    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
     ctlStruct.prwatch.pr_wflags = WA_EXEC | WA_TRAPAFTER;
 
     if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))
@@ -1725,16 +1712,16 @@ Return
   underlying operating system.
 --*/
 
-DWORD
+uint32_t
 PAL_DeleteExecWatchpoint(
     HANDLE hThread,
-    PVOID pvInstruction
+    void * pvInstruction
     )
 {
     PERF_ENTRY(PAL_DeleteExecWatchpoint);
     ENTRY("PAL_DeleteExecWatchpoint (hThread=%p, pvInstruction=%p)\n", hThread, pvInstruction);
 
-    DWORD dwError = ERROR_NOT_SUPPORTED;
+    uint32_t dwError = ERROR_NOT_SUPPORTED;
 
 #if HAVE_PRWATCH_T
 
@@ -1778,7 +1765,7 @@ PAL_DeleteExecWatchpoint(
 
     ctlStruct.ctlCode = PCWATCH;
     ctlStruct.prwatch.pr_vaddr = (uintptr_t) pvInstruction;
-    ctlStruct.prwatch.pr_size = sizeof(DWORD);
+    ctlStruct.prwatch.pr_size = sizeof(uint32_t);
     ctlStruct.prwatch.pr_wflags = 0;
 
     if (write(fd, (void*) &ctlStruct, sizeof(ctlStruct)) != sizeof(ctlStruct))
