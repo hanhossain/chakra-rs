@@ -97,3 +97,7 @@ target_include_directories(libwabt PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+target_compile_definitions(libwabt PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)

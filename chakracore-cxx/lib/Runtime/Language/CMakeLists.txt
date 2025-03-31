@@ -103,4 +103,8 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 )
 
+target_compile_definitions(Chakra.Runtime.Language PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.Runtime.Language PUBLIC RuntimeLanguagePch.h)

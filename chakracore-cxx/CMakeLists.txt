@@ -291,12 +291,6 @@ include(pal/src/configure.cmake)
 
 add_subdirectory (pal)
 
-# build the rest with NO_PAL_MINMAX and PAL_STDCPP_COMPAT
-add_definitions(
-    -DNO_PAL_MINMAX
-    -DPAL_STDCPP_COMPAT
-    )
-
 add_subdirectory (lib)
 
 add_subdirectory (bin)

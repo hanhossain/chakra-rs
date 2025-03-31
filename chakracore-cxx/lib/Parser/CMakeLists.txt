@@ -47,4 +47,8 @@ target_include_directories (Chakra.Parser PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Language
 )
 
+target_compile_definitions(Chakra.Parser PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.Parser PUBLIC ParserPch.h)

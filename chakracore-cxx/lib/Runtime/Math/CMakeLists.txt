@@ -21,4 +21,8 @@ target_include_directories (Chakra.Runtime.Math PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
 
+target_compile_definitions(Chakra.Runtime.Math PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.Runtime.Math PUBLIC RuntimeMathPch.h)
