@@ -119,7 +119,7 @@ namespace JsUtil
         // the specified amount of time
 
         Js::Tick startTick = Js::Tick::Now();
-        Js::TickDelta endTickDelta = Js::TickDelta::FromMicroseconds((__int64)milliseconds * 1000);
+        Js::TickDelta endTickDelta = Js::TickDelta::FromMicroseconds((long)milliseconds * 1000);
         do
         {
             if(manager->numJobsAddedToProcessor != 0)
@@ -258,7 +258,7 @@ namespace JsUtil
         }
 
         Js::Tick startTick = Js::Tick::Now();
-        Js::TickDelta endTickDelta = Js::TickDelta::FromMicroseconds((__int64)milliseconds * 1000);
+        Js::TickDelta endTickDelta = Js::TickDelta::FromMicroseconds((long)milliseconds * 1000);
         if(waitForQueuedJobs)
         {
             // Wait for the event, background thread should be alive

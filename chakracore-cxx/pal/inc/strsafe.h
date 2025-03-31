@@ -36,7 +36,7 @@
 
 #ifndef _SIZE_T_DEFINED
 #ifdef  _WIN64
-typedef unsigned __int64    size_t;
+typedef unsigned long    size_t;
 #else
 typedef __w64 unsigned int  size_t;
 #endif  // !_WIN64

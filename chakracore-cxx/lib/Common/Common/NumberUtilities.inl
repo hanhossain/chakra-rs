@@ -111,7 +111,7 @@ namespace Js
     }
 
     // Returns true <=> TryToInt64() call resulted in a valid value.
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsValidTryToInt64(__int64 value)
+    NUMBER_UTIL_INLINE bool NumberUtilities::IsValidTryToInt64(long value)
     {
 #if defined(_M_ARM32_OR_ARM64)
         return value != Pos_InvalidInt64 && value != Neg_InvalidInt64;

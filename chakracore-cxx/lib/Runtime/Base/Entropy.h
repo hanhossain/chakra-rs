@@ -23,14 +23,14 @@ public:
     void Add(const char *buffer, size_t size);
     void AddIoCounters();
     void AddThreadCycleTime();
-    unsigned __int64 GetRand() const;
+    unsigned long GetRand() const;
 
 private:
-    unsigned __int32 previousValue;
+    unsigned int previousValue;
     union
     {
-        unsigned __int32 value;
-        char             array[sizeof(unsigned __int32)];
+        unsigned int value;
+        char             array[sizeof(unsigned int)];
     } u;
     size_t currentIndex;
 

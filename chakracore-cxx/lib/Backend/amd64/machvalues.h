@@ -17,5 +17,5 @@ static const int MachRegDouble = 8;
 static const int MachStackAlignment = MachPtr;
 static const int MachArgsSlotOffset = MachPtr;
 static const int MachMaxInstrSize = 12;
-static const unsigned __int64 MachSignBit = 0x8000000000000000;
+static const unsigned long MachSignBit = 0x8000000000000000;
 static const int MachSimd128 = 16;

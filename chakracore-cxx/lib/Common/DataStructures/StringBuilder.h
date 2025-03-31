@@ -364,7 +364,7 @@ namespace Js
         }
 
 
-        errno_t AppendUint64(unsigned __int64 value)
+        errno_t AppendUint64(unsigned long value)
         {
             const int max_length = 20; // maximum length of 64-bit value converted to base 10 string
             const int radix = 10;

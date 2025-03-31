@@ -692,18 +692,18 @@ using namespace Js;
                 {
                 case TypeIds_Int64Number:
                     {
-                        __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                        __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                        long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                        long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                         return leftValue < rightValue;
                     }
                     break;
                 case TypeIds_UInt64Number:
                     {
-                        __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                        unsigned __int64 rightValue = UnsafeVarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                        long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                        unsigned long rightValue = UnsafeVarTo<JavascriptUInt64Number>(aRight)->GetValue();
                         if (rightValue <= INT_MAX && leftValue >= 0)
                         {
-                            return leftValue < (__int64)rightValue;
+                            return leftValue < (long)rightValue;
                         }
                     }
                     break;
@@ -722,18 +722,18 @@ using namespace Js;
                 {
                 case TypeIds_Int64Number:
                     {
-                        unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                        __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                        unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                        long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                         if (leftValue < INT_MAX && rightValue >= 0)
                         {
-                            return (__int64)leftValue < rightValue;
+                            return (long)leftValue < rightValue;
                         }
                     }
                     break;
                 case TypeIds_UInt64Number:
                     {
-                        unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                        unsigned __int64 rightValue = UnsafeVarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                        unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                        unsigned long rightValue = UnsafeVarTo<JavascriptUInt64Number>(aRight)->GetValue();
                         return leftValue < rightValue;
                     }
                     break;
@@ -861,15 +861,15 @@ using namespace Js;
             {
             case TypeIds_Int64Number:
             {
-                __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
             }
             case TypeIds_UInt64Number:
             {
-                __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                return ((unsigned __int64)leftValue == rightValue);
+                long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                return ((unsigned long)leftValue == rightValue);
             }
             case TypeIds_Number:
                 dblLeft = (double)UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
@@ -883,14 +883,14 @@ using namespace Js;
             {
             case TypeIds_Int64Number:
             {
-                unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
-                return (leftValue == (unsigned __int64)rightValue);
+                unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                return (leftValue == (unsigned long)rightValue);
             }
             case TypeIds_UInt64Number:
             {
-                unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
             }
             case TypeIds_Number:
@@ -1012,15 +1012,15 @@ using namespace Js;
             {
             case TypeIds_Int64Number:
                 {
-                    __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                    __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                    long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                     return leftValue == rightValue;
                 }
             case TypeIds_UInt64Number:
                 {
-                    __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                    unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                    return ((unsigned __int64)leftValue == rightValue);
+                    long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                    unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                    return ((unsigned long)leftValue == rightValue);
                 }
             case TypeIds_Number:
                 dblLeft     = (double)UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
@@ -1033,14 +1033,14 @@ using namespace Js;
             {
             case TypeIds_Int64Number:
                 {
-                    unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                    __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
-                    return (leftValue == (unsigned __int64)rightValue);
+                    unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                    long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    return (leftValue == (unsigned long)rightValue);
                 }
             case TypeIds_UInt64Number:
                 {
-                    unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                    unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                    unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                    unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
                     return leftValue == rightValue;
                 }
             case TypeIds_Number:

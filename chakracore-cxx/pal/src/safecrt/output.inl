@@ -29,7 +29,7 @@
 *******************************************************************************/
 
 
-//typedef __int64_t __int64;
+//typedef long_t long;
 
 
 #define FORMAT_VALIDATIONS
@@ -260,7 +260,7 @@ int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _
 #define FL_LONGDOUBLE 0x00400   /* long double value given */
 #define FL_WIDECHAR   0x00800   /* wide characters */
 #define FL_LONGLONG   0x01000   /* long long value given */
-#define FL_I64        0x08000   /* __int64 value given */
+#define FL_I64        0x08000   /* long value given */
 
 /* state definitions */
 enum STATE {
@@ -555,7 +555,7 @@ static void write_string(const _TCHAR *string, int len, miniFILE *f, int *numwri
     #define get_int_arg(list)           va_arg(*list, int)
     #define get_long_arg(list)          va_arg(*list, long)
     #define get_long_long_arg(list)     va_arg(*list, long long)
-    #define get_int64_arg(list)         va_arg(*list, __int64)
+    #define get_int64_arg(list)         va_arg(*list, long)
     #define get_crtdouble_arg(list)     va_arg(*list, _CRT_DOUBLE)
     #define get_ptr_arg(list)           va_arg(*list, void *)
 
@@ -572,7 +572,7 @@ __inline long long get_long_long_arg(va_list *pargptr);
 #endif  /* !LONGLONG_IS_INT64 */
 
 #if _INTEGRAL_MAX_BITS >= 64
-__inline __int64 get_int64_arg(va_list *pargptr);
+__inline long get_int64_arg(va_list *pargptr);
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
 
 #endif // __GNUC_VA_LIST
@@ -911,17 +911,17 @@ int _output (
                  * and defaults to 64 bit on WIN64 and 32 bit on WIN32
                  */
 #if PTR_IS_INT64
-                flags |= FL_I64;    /* 'I' => __int64 on WIN64 systems */
+                flags |= FL_I64;    /* 'I' => long on WIN64 systems */
 #endif  /* PTR_IS_INT64 */
                 if ( (*format == _T('6')) && (*(format + 1) == _T('4')) )
                 {
                     format += 2;
-                    flags |= FL_I64;    /* I64 => __int64 */
+                    flags |= FL_I64;    /* I64 => long */
                 }
                 else if ( (*format == _T('3')) && (*(format + 1) == _T('2')) )
                 {
                     format += 2;
-                    flags &= ~FL_I64;   /* I32 => __int32 */
+                    flags &= ~FL_I64;   /* I32 => int */
                 }
                 else if ( (*format == _T('d')) ||
                           (*format == _T('i')) ||
@@ -1262,7 +1262,7 @@ int _output (
 #if _INTEGRAL_MAX_BITS >= 64
                 __uint64_t number;    /* number to convert */
                 int digit;              /* ascii value of digit */
-                __int64 l;              /* temp long value */
+                long l;              /* temp long value */
 #else  /* _INTEGRAL_MAX_BITS >= 64        */
                 unsigned long number;   /* number to convert */
                 int digit;              /* ascii value of digit */
@@ -1729,11 +1729,11 @@ __inline long long get_long_long_arg (
 #endif  /* !LONGLONG_IS_INT64 */
 
 #if _INTEGRAL_MAX_BITS >= 64
-__inline __int64 get_int64_arg (
+__inline long get_int64_arg (
     va_list *pargptr
     )
 {
-    return va_arg(*pargptr, __int64);
+    return va_arg(*pargptr, long);
 }
 #endif  /* _INTEGRAL_MAX_BITS >= 64    */
 

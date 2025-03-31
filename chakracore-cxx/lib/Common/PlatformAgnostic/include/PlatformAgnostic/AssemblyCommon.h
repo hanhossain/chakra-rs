@@ -32,7 +32,7 @@ void mac_fde_wrapper(const char *dataStart, mac_fde_reg_op reg_op);
 #endif // _AMD64_ && !DISABLE_JIT
 
 #ifdef _M_ARM
-#define __iso_volatile_load32(x) (*(const volatile __int32*)x)
+#define __iso_volatile_load32(x) (*(const volatile int*)x)
 #elif defined(_M_ARM64)
-#define __iso_volatile_load64(x) (*(const volatile __int64*)x)
+#define __iso_volatile_load64(x) (*(const volatile long*)x)
 #endif

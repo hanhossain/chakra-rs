@@ -213,7 +213,7 @@ See MSDN doc
 --*/
 char16_t *
  _i64tow(
-    __int64 value,
+    long value,
     char16_t *string,
     int radix)
 {
@@ -1711,7 +1711,7 @@ Function :
 See MSDN for more details.
 --*/
 char16_t *
-_ui64tow( unsigned __int64 value , char16_t * string , int radix )
+_ui64tow( unsigned long value , char16_t * string , int radix )
 {
     uint32_t ReversedIndex = 0;
     WCHAR ReversedString[ 65 ];

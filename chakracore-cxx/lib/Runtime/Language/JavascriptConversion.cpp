@@ -90,13 +90,13 @@ using namespace Js;
             case TypeIds_Int64Number:
                 {
                 int leftValue = TaggedInt::ToInt32(aLeft);
-                __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
                 }
             case TypeIds_UInt64Number:
                 {
                 int leftValue = TaggedInt::ToInt32(aLeft);
-                unsigned __int64 rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
                 }
             }
@@ -106,7 +106,7 @@ using namespace Js;
             {
             case TypeIds_Integer:
                 {
-                __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
                 int rightValue = TaggedInt::ToInt32(aRight);
                 return leftValue == rightValue;
                 }
@@ -116,15 +116,15 @@ using namespace Js;
                 goto CommonNumber;
             case TypeIds_Int64Number:
                 {
-                __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
                 }
             case TypeIds_UInt64Number:
                 {
-                __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                unsigned __int64 rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                return ((unsigned __int64)leftValue == rightValue);
+                long leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                return ((unsigned long)leftValue == rightValue);
                 }
             }
             break;
@@ -133,9 +133,9 @@ using namespace Js;
             {
             case TypeIds_Integer:
                 {
-                unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                __int64 rightValue = TaggedInt::ToInt32(aRight);
-                return (leftValue == (unsigned __int64)rightValue);
+                unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                long rightValue = TaggedInt::ToInt32(aRight);
+                return (leftValue == (unsigned long)rightValue);
                 }
             case TypeIds_Number:
                 dblLeft     = (double)UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
@@ -143,14 +143,14 @@ using namespace Js;
                 goto CommonNumber;
             case TypeIds_Int64Number:
                 {
-                unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
-                return (leftValue == (unsigned __int64)rightValue);
+                unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                long rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
+                return (leftValue == (unsigned long)rightValue);
                 }
             case TypeIds_UInt64Number:
                 {
-                unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                unsigned __int64 rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                unsigned long leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
                 return leftValue == rightValue;
                 }
             }
@@ -615,7 +615,7 @@ CommonNumber:
 
             case TypeIds_Int64Number:
                 {
-                    __int64 value = UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue();
+                    long value = UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue();
                     if (!TaggedInt::IsOverflow(value))
                     {
                         return scriptContext->GetIntegerString((int)value);
@@ -628,7 +628,7 @@ CommonNumber:
 
             case TypeIds_UInt64Number:
                 {
-                    unsigned __int64 value = UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue();
+                    unsigned long value = UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue();
                     if (!TaggedInt::IsOverflow(value))
                     {
                         return scriptContext->GetIntegerString((uint)value);
@@ -769,13 +769,13 @@ CommonNumber:
 
         case TypeIds_Int64Number:
             {
-                __int64 value = UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue();
+                long value = UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue();
                 return value != 0;
             }
 
         case TypeIds_UInt64Number:
             {
-                unsigned __int64 value = UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue();
+                unsigned long value = UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue();
                 return value != 0;
             }
 
@@ -1132,7 +1132,7 @@ CommonNumber:
         return JavascriptMath::ToInt32Core(T1);
     }
 
-    __int64 JavascriptConversion::ToInt64(Var aValue, ScriptContext* scriptContext)
+    long JavascriptConversion::ToInt64(Var aValue, ScriptContext* scriptContext)
     {
         switch (JavascriptOperators::GetTypeId(aValue))
         {
@@ -1148,27 +1148,27 @@ CommonNumber:
         case TypeIds_UInt64Number:
             {
             JavascriptUInt64Number* uint64Number = UnsafeVarTo<JavascriptUInt64Number>(aValue);
-            return (__int64)uint64Number->GetValue();
+            return (long)uint64Number->GetValue();
             }
         case TypeIds_Number:
             return JavascriptMath::TryToInt64(JavascriptNumber::GetValue(aValue));
         default:
-            return (unsigned __int64)JavascriptConversion::ToInt32_Full(aValue, scriptContext);
+            return (unsigned long)JavascriptConversion::ToInt32_Full(aValue, scriptContext);
         }
     }
 
-    unsigned __int64 JavascriptConversion::ToUInt64(Var aValue, ScriptContext* scriptContext)
+    unsigned long JavascriptConversion::ToUInt64(Var aValue, ScriptContext* scriptContext)
     {
         switch (JavascriptOperators::GetTypeId(aValue))
         {
         case TypeIds_Integer:
             {
-                return (unsigned __int64)TaggedInt::ToInt32(aValue);
+                return (unsigned long)TaggedInt::ToInt32(aValue);
             }
         case TypeIds_Int64Number:
             {
             JavascriptInt64Number* int64Number = UnsafeVarTo<JavascriptInt64Number>(aValue);
-            return (unsigned __int64)int64Number->GetValue();
+            return (unsigned long)int64Number->GetValue();
             }
         case TypeIds_UInt64Number:
             {
@@ -1176,9 +1176,9 @@ CommonNumber:
             return uint64Number->GetValue();
             }
         case TypeIds_Number:
-            return static_cast<unsigned __int64>(JavascriptMath::TryToInt64(JavascriptNumber::GetValue(aValue)));
+            return static_cast<unsigned long>(JavascriptMath::TryToInt64(JavascriptNumber::GetValue(aValue)));
         default:
-            return (unsigned __int64)JavascriptConversion::ToInt32_Full(aValue, scriptContext);
+            return (unsigned long)JavascriptConversion::ToInt32_Full(aValue, scriptContext);
         }
     }
 
@@ -1373,23 +1373,23 @@ CommonNumber:
         JIT_HELPER_END(Op_ConvPrimitiveString);
     }
 
-    double JavascriptConversion::LongToDouble(__int64 aValue)
+    double JavascriptConversion::LongToDouble(long aValue)
     {
         return static_cast<double>(aValue);
     }
 
     // Windows x64 version implemented in masm to work around precision limitation
-    double JavascriptConversion::ULongToDouble(unsigned __int64 aValue)
+    double JavascriptConversion::ULongToDouble(unsigned long aValue)
     {
         return static_cast<double>(aValue);
     }
 
-    float JavascriptConversion::LongToFloat(__int64 aValue)
+    float JavascriptConversion::LongToFloat(long aValue)
     {
         return static_cast<float>(aValue);
     }
 
-    float JavascriptConversion::ULongToFloat (unsigned __int64 aValue)
+    float JavascriptConversion::ULongToFloat (unsigned long aValue)
     {
         return static_cast<float>(aValue);
     }

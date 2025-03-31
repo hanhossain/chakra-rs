@@ -88,9 +88,9 @@ void MarkContext::ScanMemory(void ** obj, size_t byteCount
         // This could cause the value to change after the marking checks (e.g., the null/low address check).
         // Intrinsics avoid the expensive memory barrier on ARM (due to /volatile:ms).
 #if defined(_M_ARM64)
-        void * candidate = reinterpret_cast<void *>(__iso_volatile_load64(reinterpret_cast<volatile __int64 *>(obj)));
+        void * candidate = reinterpret_cast<void *>(__iso_volatile_load64(reinterpret_cast<volatile long *>(obj)));
 #elif defined(_M_ARM)
-        void * candidate = reinterpret_cast<void *>(__iso_volatile_load32(reinterpret_cast<volatile __int32 *>(obj)));
+        void * candidate = reinterpret_cast<void *>(__iso_volatile_load32(reinterpret_cast<volatile int *>(obj)));
 #else
         void * candidate = *(static_cast<void * volatile *>(obj));
 #endif

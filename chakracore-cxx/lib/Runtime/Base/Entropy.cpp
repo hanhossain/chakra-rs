@@ -25,7 +25,7 @@ void Entropy::Add(const char byteValue)
     if (byteValue)
     {
         u.array[currentIndex++] ^= byteValue;
-        currentIndex %= sizeof(unsigned __int32);
+        currentIndex %= sizeof(unsigned int);
     }
 }
 
@@ -78,7 +78,7 @@ void Entropy::AddThreadCycleTime()
 }
 
 
-unsigned __int64 Entropy::GetRand() const
+unsigned long Entropy::GetRand() const
 {
-    return (((unsigned __int64)previousValue) << 32) | u.value;
+    return (((unsigned long)previousValue) << 32) | u.value;
 }

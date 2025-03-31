@@ -286,14 +286,14 @@ BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, in
     }
     if ((*Fmt)[0] == 'I')
     {
-        /* grab prefix of 'I64' for __int64 */
+        /* grab prefix of 'I64' for long */
         if ((*Fmt)[1] == '6' && (*Fmt)[2] == '4')
         {
             /* convert to 'll' so that Unix snprintf can handle it */
             *Fmt += 3;
             *Prefix = PFF_PREFIX_LONGLONG;
         }
-        /* grab prefix of 'I32' for __int32 */
+        /* grab prefix of 'I32' for int */
         else if ((*Fmt)[1] == '3' && (*Fmt)[2] == '2')
         {
             *Fmt += 3;
@@ -584,14 +584,14 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, i
     }
     if ((*Fmt)[0] == 'I')
     {
-        /* grab prefix of 'I64' for __int64 */
+        /* grab prefix of 'I64' for long */
         if ((*Fmt)[1] == '6' && (*Fmt)[2] == '4')
         {
             /* convert to 'll' so that Unix snprintf can handle it */
             *Fmt += 3;
             *Prefix = PFF_PREFIX_LONGLONG;
         }
-        /* grab prefix of 'I32' for __int32 */
+        /* grab prefix of 'I32' for int */
         else if ((*Fmt)[1] == '3' && (*Fmt)[2] == '2')
         {
             *Fmt += 3;

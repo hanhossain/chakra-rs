@@ -299,7 +299,7 @@ PAL_IsDebuggerPresent();
 #ifndef PAL_STDCPP_COMPAT
 typedef ULONG64   fpos_t;
 
-typedef __int64 time_t;
+typedef long time_t;
 #define _TIME_T_DEFINED
 #endif // !PAL_STDCPP_COMPAT
 
@@ -1872,8 +1872,8 @@ typedef struct _CONTEXT {
 
 // copied from winnt.h
 typedef struct _FLOAT128 {
-    __int64 LowPart;
-    __int64 HighPart;
+    long LowPart;
+    long HighPart;
 } FLOAT128;
 
 typedef FLOAT128 *PFLOAT128;
@@ -5607,8 +5607,8 @@ WCHAR PAL_towupper(WCHAR);
 
 WCHAR * _wcslwr(WCHAR *);
 ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-WCHAR * _i64tow(__int64, WCHAR *, int);
-WCHAR * _ui64tow(unsigned __int64, WCHAR *, int);
+WCHAR * _i64tow(long, WCHAR *, int);
+WCHAR * _ui64tow(unsigned long, WCHAR *, int);
 int _wtoi(const WCHAR *);
 
 #ifdef __cplusplus
@@ -5718,7 +5718,7 @@ float _copysignf(float, float);
 #ifdef __cplusplus
 extern "C++" {
 
-inline __int64 abs(__int64 _X) {
+inline long abs(long _X) {
     return llabs(_X);
 }
 

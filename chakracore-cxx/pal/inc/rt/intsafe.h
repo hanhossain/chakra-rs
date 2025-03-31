@@ -27,17 +27,17 @@ extern "C" {
 #ifndef FEATURE_PAL
 
 #ifdef  _WIN64
-typedef unsigned __int64    size_t;
-typedef unsigned __int64    UINT_PTR;
-typedef unsigned __int64    DWORD_PTR;
-typedef unsigned __int64    SIZE_T;
+typedef unsigned long    size_t;
+typedef unsigned long    UINT_PTR;
+typedef unsigned long    DWORD_PTR;
+typedef unsigned long    SIZE_T;
 #else
 typedef __w64 unsigned int  size_t;
 typedef __w64 unsigned int  UINT_PTR;
 typedef __w64 unsigned long DWORD_PTR;
 typedef __w64 unsigned long SIZE_T;
 #endif
-typedef unsigned __int64    ULONGLONG;
+typedef unsigned long    ULONGLONG;
 
 
 typedef int32_t HRESULT;
@@ -72,13 +72,13 @@ typedef int32_t HRESULT;
     || defined(_M_IA64) || defined(_M_AMD64) || defined(__ARM_ARCH)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) ((unsigned __int64)((uint32_t)(a)) * (unsigned __int64)((uint32_t)(b)))
+#define UInt32x32To64(a, b) ((unsigned long)((uint32_t)(a)) * (unsigned long)((uint32_t)(b)))
 #endif
 
 #elif defined(_M_IX86)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) (unsigned __int64)((unsigned __int64)(uint32_t)(a) * (uint32_t)(b))
+#define UInt32x32To64(a, b) (unsigned long)((unsigned long)(uint32_t)(a) * (uint32_t)(b))
 #endif
 
 #else

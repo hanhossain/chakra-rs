@@ -277,7 +277,7 @@ namespace Js
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Conv_ToInt32Core);
             // Try the int32 conversion first and only do the more expensive (& closer to spec)
             // i64 conversion if it fails.
-            __int32 i32 = (__int32)T1;
+            int i32 = (int)T1;
             if ((i32 != 0x80000000) && (i32 != 0x7fffffff))
                 return i32;     //No overflow so just return i32
 
@@ -319,7 +319,7 @@ namespace Js
 #endif
 
         // Implements platform-agnostic part of handling overflow when converting Number to int32, ES5 version.
-        inline __int64 JavascriptMath::ToInt32ES5OverflowHelper(double d)
+        inline long JavascriptMath::ToInt32ES5OverflowHelper(double d)
         {
             if (IsNanInfZero(d)) // ShortCut NaN Inf Zero
             {
@@ -331,7 +331,7 @@ namespace Js
 #pragma prefast(suppress:6031, "We don't care about the fraction part")
             modf(d, &floored);                      // take out the floating point part.
             double m2to32 = fmod(floored, k_2to32); // divide modulo 2^32.
-            __int64 result = TryToInt64(m2to32);
+            long result = TryToInt64(m2to32);
 
             AssertMsg(NumberUtilities::IsValidTryToInt64(result), "No more overflow expected");
 

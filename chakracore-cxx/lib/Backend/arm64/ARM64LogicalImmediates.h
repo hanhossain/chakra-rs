@@ -43,12 +43,12 @@ const int ARM64_LOGICAL_IMMEDIATE_HASH_MODULO = 6214;
 const unsigned short ARM64_LOGICAL_IMMEDIATE_NO_ENCODING = 0xFFFF;
 
 typedef struct {
-    unsigned __int64 ImmediateValue;
+    unsigned long ImmediateValue;
     int NextWithSameHash;
     unsigned short Encoding[2];
 } Arm64LogicalImmediateEncoding;
 
-inline unsigned short FindArm64LogicalImmediateEncoding(unsigned __int64 Value, int Size) {
+inline unsigned short FindArm64LogicalImmediateEncoding(unsigned long Value, int Size) {
     extern const Arm64LogicalImmediateEncoding g_Arm64LogicalImmediateEncodingTable[6214];
     for (int Index = int(Value % ARM64_LOGICAL_IMMEDIATE_HASH_MODULO); Index != -1; Index = g_Arm64LogicalImmediateEncodingTable[Index].NextWithSameHash) {
         const Arm64LogicalImmediateEncoding &Entry = g_Arm64LogicalImmediateEncodingTable[Index];

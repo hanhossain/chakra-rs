@@ -40,7 +40,7 @@ void
 NativeCodeData::AddFixupEntry(void* targetAddr, void* targetStartAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList)
 {
     Assert(addrToFixup >= startAddress);
-    Assert(((__int64)addrToFixup) % sizeof(void*) == 0);
+    Assert(((long)addrToFixup) % sizeof(void*) == 0);
 
     if (targetAddr == nullptr)
     {
@@ -74,7 +74,7 @@ NativeCodeData::AddFixupEntry(void* targetAddr, void* targetStartAddr, void* add
         Js::Throw::OutOfMemory();
     }
     __analysis_assume(entry);
-    entry->addrOffset = (unsigned int)((__int64)addrToFixup - (__int64)startAddress);
+    entry->addrOffset = (unsigned int)((long)addrToFixup - (long)startAddress);
     Assert(entry->addrOffset <= chunk->len - sizeof(void*));
 
     entry->targetTotalOffset = targetChunk->offset + inDataOffset;

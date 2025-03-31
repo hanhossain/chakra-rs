@@ -34,7 +34,7 @@ struct DefaultComparer<double>
 
     inline static hash_t GetHashCode(double d)
     {
-        __int64 i64 = *(__int64*)&d;
+        long i64 = *(long*)&d;
         return (hash_t)((i64>>32) ^ (uint)i64);
     }
 };

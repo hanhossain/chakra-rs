@@ -47,7 +47,7 @@ namespace Js
                 }
             }
 
-            __int64 v = *(__int64*)&d;
+            long v = *(long*)&d;
             return (uint)v ^ (uint)(v >> 32);
         }
 
@@ -63,9 +63,9 @@ namespace Js
             case TypeIds_Int64Number:
             case TypeIds_UInt64Number:
                 {
-                    __int64 v = VarTo<JavascriptInt64Number>(i)->GetValue();
+                    long v = VarTo<JavascriptInt64Number>(i)->GetValue();
                     double d = (double) v;
-                    if (v != (__int64) d)
+                    if (v != (long) d)
                     {
                         // this int64 is too large to represent in a double
                         // and thus will never be equal to a double so hash it

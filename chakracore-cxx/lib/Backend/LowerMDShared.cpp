@@ -4034,7 +4034,7 @@ LowererMD::GenerateLoadPolymorphicInlineCacheSlot(IR::Instr * instrLdSt, IR::Reg
     Assert(rightShiftAmount > leftShiftAmount);
     instr = IR::Instr::New(Js::OpCode::SHR, opndOffset, opndOffset, IR::IntConstOpnd::New(rightShiftAmount - leftShiftAmount, TyUint8, instrLdSt->m_func, true), instrLdSt->m_func);
     instrLdSt->InsertBefore(instr);
-    instr = IR::Instr::New(Js::OpCode::AND, opndOffset, opndOffset, IR::IntConstOpnd::New(((__int64)(polymorphicInlineCacheSize - 1) << leftShiftAmount), TyMachReg, instrLdSt->m_func, true), instrLdSt->m_func);
+    instr = IR::Instr::New(Js::OpCode::AND, opndOffset, opndOffset, IR::IntConstOpnd::New(((long)(polymorphicInlineCacheSize - 1) << leftShiftAmount), TyMachReg, instrLdSt->m_func, true), instrLdSt->m_func);
     instrLdSt->InsertBefore(instr);
 
     // LEA inlineCache, [inlineCache + r1]
@@ -4740,14 +4740,14 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
         Assert(varOpnd->IsVar() && Js::TaggedInt::Is(varOpnd->m_address));
 
 #ifdef _M_X64
-        __int64 absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
+        long absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #else
-        __int32 absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
+        int absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #endif
 
         if (!Js::TaggedInt::IsOverflow(absValue))
         {
-            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((__int32)absValue), IR::AddrOpndKindConstantVar);
+            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((int)absValue), IR::AddrOpndKindConstantVar);
 
             instr = IR::Instr::New(Js::OpCode::MOV, dst, varOpnd, this->m_func);
             insertInstr->InsertBefore(instr);

@@ -105,7 +105,7 @@
 /* uintptr_t */
 #if !defined(_UINTPTR_T_DEFINED)
 #if defined(_WIN64)
-typedef unsigned __int64    uintptr_t;
+typedef unsigned long    uintptr_t;
 #else
 typedef _W64 unsigned int   uintptr_t;
 #endif

@@ -97,23 +97,19 @@ extern "C" {
 // #define long to see where we do this.)
 //
 // But this fix is more complicated than it seems, because we also use the
-// preprocessor to #define __int64 to long for LP64 architectures (__int64
-// isn't a builtin in gcc).   We don't want __int64 to be an int (by cascading
+// preprocessor to #define long to long for LP64 architectures (long
+// isn't a builtin in gcc).   We don't want long to be an int (by cascading
 // macro rules).  So we play this little trick below where we add
-// __cppmungestrip before "long", which is what we're really #defining __int64
+// __cppmungestrip before "long", which is what we're really #defining long
 // to.  The preprocessor sees __cppmungestriplong as something different than
 // long, so it doesn't replace it with int.  The during the cppmunge phase, we
 // remove the __cppmungestrip part, leaving long for the compiler to see.
 //
-// Note that we can't just use a typedef to define __int64 as long before
+// Note that we can't just use a typedef to define long as long before
 // #defining long because typedefed types can't be signedness-agnostic (i.e.
 // they must be either signed or unsigned) and we want to be able to use
-// __int64 as though it were intrinsic
+// long as though it were intrinsic
 
-#define __int64     long
-
-// TODO (hanhossain): remove for int32_t
-#define __int32     int
 #define __int16     short int
 #define __int8      char        // assumes char is signed
 
@@ -129,8 +125,8 @@ typedef long double LONG_DOUBLE;
 
 #endif // !PAL_STDCPP_COMPAT
 
-typedef __int64 LONGLONG;
-typedef unsigned __int64 ULONGLONG;
+typedef long LONGLONG;
+typedef unsigned long ULONGLONG;
 typedef ULONGLONG DWORD64;
 typedef DWORD64 *PDWORD64;
 typedef LONGLONG *PLONG64;
@@ -142,21 +138,21 @@ typedef ULONGLONG DWORDLONG;
 typedef int BOOL, *PBOOL, *LPBOOL;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
-typedef unsigned __int64 UINT64, *PUINT64;
+typedef unsigned long UINT64, *PUINT64;
 
-typedef signed __int32 LONG32, *PLONG32;
-typedef unsigned __int64 ULONG64;
-typedef signed __int64 LONG64;
+typedef signed int LONG32, *PLONG32;
+typedef unsigned long ULONG64;
+typedef signed long LONG64;
 
 #define _W64
 
-#define _atoi64 (__int64)atoll
+#define _atoi64 (long)atoll
 
-typedef __int64 INT_PTR, *PINT_PTR;
-typedef unsigned __int64 UINT_PTR, *PUINT_PTR;
-typedef __int64 *PLONG_PTR;
-typedef unsigned __int64 *PULONG_PTR;
-typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
+typedef long INT_PTR, *PINT_PTR;
+typedef unsigned long UINT_PTR, *PUINT_PTR;
+typedef long *PLONG_PTR;
+typedef unsigned long *PULONG_PTR;
+typedef unsigned long DWORD_PTR, *PDWORD_PTR;
 
 /* maximum signed 64 bit value */
 #define LONG_PTR_MAX      I64(9223372036854775807)

@@ -72,7 +72,7 @@ unsigned __int8 PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, unsigned __in
     Assert(instr->GetDst() && instr->GetDst()->IsIndirOpnd());
 
     unsigned __int8 reg = ((instr->GetSrc1()->AsRegOpnd()->GetReg() - FIRST_XMM_REG) & 0xFF);
-    unsigned __int32 offsetFromInstr = instr->GetDst()->AsIndirOpnd()->GetOffset();
+    unsigned int offsetFromInstr = instr->GetDst()->AsIndirOpnd()->GetOffset();
 
     // The offset in the instruction is relative to the stack pointer before the saved reg size and stack args size were
     // subtracted, but the offset in the unwind info needs to be relative to the final stack pointer value
@@ -83,7 +83,7 @@ unsigned __int8 PrologEncoderMD::GetXmmRegToSave(IR::Instr *instr, unsigned __in
 
     // Can only encode nonnegative 16-byte-aligned offsets in the unwind info
     Assert(static_cast<int32>(offsetFromInstr) >= 0);
-    Assert(::Math::Align(offsetFromInstr, static_cast<unsigned __int32>(MachDouble * 2)) == offsetFromInstr);
+    Assert(::Math::Align(offsetFromInstr, static_cast<unsigned int>(MachDouble * 2)) == offsetFromInstr);
 
     // Stored offset is scaled by 16
     offsetFromInstr /= MachDouble * 2;

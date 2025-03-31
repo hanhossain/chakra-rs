@@ -254,7 +254,7 @@ X64WriteBarrierCardTableManager::Initialize()
             // Safest option : Max RSS can be beyond what we can allocate, aim the smaller one
             memoryLimit = min(memoryLimit, (size_t) AutoSystemInfo::Data.lpMaximumApplicationAddress);
         }
-        const unsigned __int64 maxUmProcessAddressSpace = (__int64) memoryLimit;
+        const unsigned long maxUmProcessAddressSpace = (long) memoryLimit;
 
         _cardTableNumEntries = Math::Align<size_t>(maxUmProcessAddressSpace / AutoSystemInfo::PageSize,
             AutoSystemInfo::PageSize) /* s_writeBarrierPageSize */;
