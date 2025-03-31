@@ -147,8 +147,8 @@ Notes:
         MS  -->  2.560000E+002
         gcc -->  2.560000E+02
 *******************************************************************************/
-BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, LPINT Flags,
-    LPINT Width, LPINT Precision, LPINT Prefix, LPINT Type)
+BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, LPCSTR *Fmt, LPSTR Out, int32_t * Flags,
+    int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;
@@ -446,8 +446,8 @@ Function:
 
   -- see Internal_ExtractFormatA above
 *******************************************************************************/
-BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, LPINT Flags,
-    LPINT Width, LPINT Precision, LPINT Prefix, LPINT Type)
+BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, LPCWSTR *Fmt, LPSTR Out, int32_t * Flags,
+    int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;

@@ -140,7 +140,6 @@ typedef char *PSZ;
 typedef ULONGLONG DWORDLONG;
 
 typedef int BOOL, *PBOOL, *LPBOOL;
-typedef int *PINT, *LPINT;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
 typedef signed __int32 INT32, *PINT32;

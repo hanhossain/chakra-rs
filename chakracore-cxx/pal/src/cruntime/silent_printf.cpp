@@ -33,8 +33,8 @@ Revision History:
 
 static int Silent_WideCharToMultiByte(LPCWSTR lpWideCharStr, int cchWideChar, 
                                       LPSTR lpMultiByteStr, int cbMultiByte);
-static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width,
-                                  LPINT Precision, LPINT Prefix, LPINT Type);
+static BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width,
+                                  int32_t * Precision, int32_t * Prefix, int32_t * Type);
 static int32_t Silent_AddPaddingVfprintf(PAL_FILE *stream, LPSTR In, int32_t Padding,
                                      int32_t Flags);
 
@@ -617,7 +617,7 @@ Function:
   
   see Internal_ExtractFormatA function in printf.c
 *******************************************************************************/
-BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, LPINT Flags, LPINT Width, LPINT Precision, LPINT Prefix, LPINT Type)
+BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;

@@ -3838,7 +3838,7 @@ FindNLSStringEx(
 	 int cchSource,
      LPCWSTR lpStringValue,
 	 int cchValue,
-	 LPINT pcchFound,
+	 int32_t * pcchFound,
 	 LPNLSVERSIONINFOEX lpVersionInformation,
 	 void * lpReserved,
 	 LPARAM lParam );

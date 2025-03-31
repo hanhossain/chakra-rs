@@ -462,7 +462,7 @@ Notes:
 
 __attribute__((no_instrument_function))
 static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
-                                         LPINT Width, LPINT Prefix, LPINT Type)
+                                         int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;
@@ -780,7 +780,7 @@ Function:
 *******************************************************************************/
 __attribute__((no_instrument_function))
 static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, LPBOOL Store,
-                                         LPINT Width, LPINT Prefix, LPINT Type)
+                                         int32_t * Width, int32_t * Prefix, int32_t * Type)
 {
     BOOL Result = FALSE;
     LPSTR TempStr;

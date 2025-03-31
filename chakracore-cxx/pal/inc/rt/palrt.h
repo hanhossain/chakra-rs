@@ -1187,7 +1187,7 @@ typedef HANDLE HWND;
 #define IS_TEXT_UNICODE_SIGNATURE             0x0008
 #define IS_TEXT_UNICODE_UNICODE_MASK          0x000F
 
-BOOL IsTextUnicode(const void* lpv, int iSize, LPINT lpiResult);
+BOOL IsTextUnicode(const void* lpv, int iSize, int32_t * lpiResult);
 
 typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Flink;
