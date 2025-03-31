@@ -160,14 +160,14 @@ inline int32_t FatalExceptionFilter(
     //       rc will be 0 (and EXCEPTION_EXECUTE_HANDLER is 1), so it acts as if there is debugger attached.
     if (rc == EXCEPTION_EXECUTE_HANDLER)
     {
-        TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+        TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
     }
     else
     {
         // However, if debugger was not attached for some reason, terminate the process.
         if (!IsDebuggerPresent())
         {
-            TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+            TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
         }
         DebugBreak();
     }

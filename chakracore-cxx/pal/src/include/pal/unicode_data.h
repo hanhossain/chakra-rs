@@ -41,8 +41,8 @@ typedef struct
 
 /* Global variables. */
 extern const UnicodeDataRec UnicodeData[];
-extern const UINT UNICODE_DATA_SIZE;
-extern const UINT UNICODE_DATA_DIRECT_ACCESS;
+extern const uint32_t UNICODE_DATA_SIZE;
+extern const uint32_t UNICODE_DATA_DIRECT_ACCESS;
 
 /*++
 Function:

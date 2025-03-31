@@ -3440,11 +3440,11 @@ const int MAX_SEEDSIZE      = 8; /* length of "unique portion of
 static unsigned short uUniqueSeed   = 0;
 static BOOL IsInitialized   = FALSE;
 
-UINT
+uint32_t
 GetTempFileNameA(
                   LPCSTR lpPathName,
                   LPCSTR lpPrefixString,
-                  UINT   uUnique,
+                  uint32_t   uUnique,
                   LPSTR lpTempFileName)
 {
     CPalThread *pThread;
@@ -3456,7 +3456,7 @@ GetTempFileNameA(
     char    chLastPathNameChar;
  
     HANDLE  hTempFile;
-    UINT    uRet = 0;
+    uint32_t    uRet = 0;
     uint32_t   dwError;
     unsigned short  uLoopCounter = 0;
 
@@ -3632,11 +3632,11 @@ Function:
 
 uUnique is always 0.
 --*/
-UINT
+uint32_t
 GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
-          UINT uUnique,
+          uint32_t uUnique,
           LPWSTR lpTempFileName)
 {
     CPalThread *pThread;
@@ -3647,7 +3647,7 @@ GetTempFileNameW(
     char * tempfile_name;
     PathCharString full_namePS, prefix_stringPS;
     INT length = 0;
-    UINT   uRet;
+    uint32_t   uRet;
 
     PERF_ENTRY(GetTempFileNameW);
     ENTRY("GetTempFileNameW(lpPathName=%p (%S), lpPrefixString=%p (%S), uUnique=%u, "

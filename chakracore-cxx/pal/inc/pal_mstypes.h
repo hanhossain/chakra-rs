@@ -141,7 +141,6 @@ typedef ULONGLONG DWORDLONG;
 
 typedef int BOOL, *PBOOL, *LPBOOL;
 typedef int INT, *PINT, *LPINT;
-typedef unsigned int UINT, *PUINT;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
 typedef signed __int32 INT32, *PINT32;
@@ -177,7 +176,7 @@ typedef unsigned __int64 DWORD_PTR, *PDWORD_PTR;
 #define LongToHandle( h )   ((HANDLE)(ptrdiff_t) (h) )
 #define PtrToUlong( p ) ((uint32_t)(size_t) (p) )
 #define PtrToLong( p )  ((int32_t)(ptrdiff_t) (p) )
-#define PtrToUint( p ) ((UINT)(UINT_PTR) (p) )
+#define PtrToUint( p ) ((uint32_t)(UINT_PTR) (p) )
 #define PtrToInt( p )  ((INT)(INT_PTR) (p) )
 #define PtrToUshort( p ) ((unsigned short)(size_t)(p) )
 #define PtrToShort( p )  ((short)(ptrdiff_t)(p) )

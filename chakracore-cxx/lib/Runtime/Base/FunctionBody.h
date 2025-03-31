@@ -1867,7 +1867,7 @@ namespace Js
         FieldWithBarrier(Js::LocalFunctionId) deferredParseNextFunctionId;
 #endif
 #if DBG
-        FieldWithBarrier(UINT) scopeObjectSize; // If the scope is an activation object - its size
+        FieldWithBarrier(uint32_t) scopeObjectSize; // If the scope is an activation object - its size
 #endif
     };
 

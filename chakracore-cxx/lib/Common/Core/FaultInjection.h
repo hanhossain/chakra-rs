@@ -88,7 +88,7 @@ namespace Js
         char16 *baselineStack[MAX_FRAME_COUNT];
         UINT_PTR baselineAddresses[MAX_FRAME_COUNT];
         size_t* stackHashOfAllInjectionPoints;
-        UINT stackHashOfAllInjectionPointsSize;
+        uint32_t stackHashOfAllInjectionPointsSize;
 
     public:
         static FaultInjection Global;

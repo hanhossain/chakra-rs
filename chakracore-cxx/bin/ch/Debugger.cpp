@@ -310,7 +310,7 @@ bool Debugger::SetBaseline()
     char* fileName = nullptr;
     JsValueRef scriptRef = JS_INVALID_REFERENCE;
     HRESULT hr = E_FAIL;
-    UINT lengthBytes = 0;
+    uint32_t lengthBytes = 0;
 
     if (SUCCEEDED(WideStringToNarrowDynamic(HostConfigFlags::flags.dbgbaseline, &fileName)))
     {

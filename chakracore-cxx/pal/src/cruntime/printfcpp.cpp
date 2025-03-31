@@ -1201,7 +1201,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 {
                     /* %lS assumes a LPSTR argument. */
                     LPSTR s = va_arg(ap, LPSTR );
-                    UINT Length = 0;
+                    uint32_t Length = 0;
                     Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
                     if ( Length != 0 )
                     {
@@ -1929,7 +1929,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                 {
                     // %lS and %hs assume an LPSTR argument.
                     LPSTR s = va_arg(ap, LPSTR );
-                    UINT Length = 0;
+                    uint32_t Length = 0;
                     Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
                     if ( Length != 0 )
                     {

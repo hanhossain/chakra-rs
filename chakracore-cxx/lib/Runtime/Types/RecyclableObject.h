@@ -460,7 +460,7 @@ namespace Js {
 
 #ifdef HEAP_ENUMERATION_VALIDATION
     private:
-        UINT m_heapEnumValidationCookie;
+        uint32_t m_heapEnumValidationCookie;
     public:
         void SetHeapEnumValidationCookie(int cookie ) { m_heapEnumValidationCookie = cookie; }
         int GetHeapEnumValidationCookie() { return m_heapEnumValidationCookie; }

@@ -81,7 +81,7 @@ inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
  *  return value = BSTR, NULL if the allocation failed.
  *
  ***********************************************************************/
-extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, UINT len)
+extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
 {
 
     BSTR bstr;
@@ -141,7 +141,7 @@ extern "C" void SysFreeString(BSTR bstr)
 }
 
 /***
- *UINT SysStringLen(BSTR)
+ *uint32_t SysStringLen(BSTR)
  *Purpose:
  *  Return the length of the string in characters (not including null terminator)
  *
@@ -152,14 +152,14 @@ extern "C" void SysFreeString(BSTR bstr)
  *  return value = length of the string
  *
  ***********************************************************************/
-extern "C" UINT SysStringLen(BSTR bstr)
+extern "C" uint32_t SysStringLen(BSTR bstr)
 {
     if (bstr == NULL)
     {
         return 0;
     }
 
-    return (UINT)((((uint32_t *)bstr)[-1]) / sizeof(OLECHAR));
+    return (uint32_t)((((uint32_t *)bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***

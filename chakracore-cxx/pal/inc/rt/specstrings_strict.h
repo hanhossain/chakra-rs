@@ -169,7 +169,7 @@
 *                                         //  on exit.
 *      LPCSTR pszSrc,                     //  No annotation required, 
 *                                         //  const implies __in.
-*      UINT cchMax,                              
+*      uint32_t cchMax,
 *      uint32_t dwFlags
 *  );
 * 

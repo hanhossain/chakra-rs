@@ -653,7 +653,7 @@ BOOL FileTimeToSystemTime( const FILETIME * lpFileTime,
     /* Combine the file time. */
     FileTime = lpFileTime->dwHighDateTime;
     FileTime <<= 32;
-    FileTime |= (UINT)lpFileTime->dwLowDateTime;
+    FileTime |= (uint32_t)lpFileTime->dwLowDateTime;
     const UINT64 since1601 = SECS_BETWEEN_1601_AND_1970_EPOCHS * SECS_TO_100NS;
 
     if (FileTime > since1601 && since1601 >= 0) 

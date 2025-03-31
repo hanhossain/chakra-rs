@@ -414,12 +414,12 @@ PAL_UnregisterModule(
 BOOL
 PAL_GetPALDirectoryW(
      LPWSTR lpDirectoryName,
-     UINT cchDirectoryName);
+     uint32_t cchDirectoryName);
 
 BOOL
 PAL_GetPALDirectoryA(
      LPSTR lpDirectoryName,
-     UINT cchDirectoryName);
+     uint32_t cchDirectoryName);
 
 #ifdef UNICODE
 #define PAL_GetPALDirectory PAL_GetPALDirectoryW
@@ -975,11 +975,11 @@ uint32_t
 GetFileType(
          HANDLE hFile);
 
-UINT
+uint32_t
 GetConsoleCP(
          void);
 
-UINT
+uint32_t
 GetConsoleOutputCP(
            void);
 
@@ -1024,18 +1024,18 @@ GetShortPathNameW(
 #endif
 
 
-UINT
+uint32_t
 GetTempFileNameA(
           LPCSTR lpPathName,
           LPCSTR lpPrefixString,
-          UINT uUnique,
+          uint32_t uUnique,
           LPSTR lpTempFileName);
 
-UINT
+uint32_t
 GetTempFileNameW(
           LPCWSTR lpPathName,
           LPCWSTR lpPrefixString,
-          UINT uUnique,
+          uint32_t uUnique,
           LPWSTR lpTempFileName);
 
 #ifdef UNICODE
@@ -1357,12 +1357,12 @@ CreateProcessW(
 __attribute__((noreturn))
 void
 ExitProcess(
-         UINT uExitCode);
+         uint32_t uExitCode);
 
 BOOL
 TerminateProcess(
           HANDLE hProcess,
-          UINT uExitCode);
+          uint32_t uExitCode);
 
 BOOL
 GetExitCodeProcess(
@@ -2962,9 +2962,9 @@ BOOL TryEnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 #define SEM_FAILCRITICALERRORS          0x0001
 #define SEM_NOOPENFILEERRORBOX          0x8000
 
-UINT
+uint32_t
 SetErrorMode(
-          UINT uMode);
+          uint32_t uMode);
 
 #define PAGE_NOACCESS                   0x01
 #define PAGE_READONLY                   0x02
@@ -3367,14 +3367,14 @@ HeapSetInformation(
 
 HLOCAL
 LocalAlloc(
-        UINT uFlags,
+        uint32_t uFlags,
         SIZE_T uBytes);
 
 HLOCAL
 LocalReAlloc(
         HLOCAL hMem,
         SIZE_T uBytes,
-        UINT   uFlags);
+        uint32_t   uFlags);
 
 HLOCAL
 LocalFree(
@@ -3481,23 +3481,23 @@ CompareStringEx(
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
 
-UINT
+uint32_t
 GetACP(void);
 
 typedef struct _cpinfo {
-    UINT MaxCharSize;
+    uint32_t MaxCharSize;
     uint8_t DefaultChar[MAX_DEFAULTCHAR];
     uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
 BOOL
 GetCPInfo(
-       UINT CodePage,
+       uint32_t CodePage,
        LPCPINFO lpCPInfo);
 
 BOOL
 IsDBCSLeadByteEx(
-          UINT CodePage,
+          uint32_t CodePage,
           uint8_t TestChar);
 
 BOOL
@@ -3506,7 +3506,7 @@ IsDBCSLeadByte(
 
 BOOL
 IsValidCodePage(
-         UINT CodePage);
+         uint32_t CodePage);
 
 
 #define MB_PRECOMPOSED            0x00000001
@@ -3514,7 +3514,7 @@ IsValidCodePage(
 
 int
 MultiByteToWideChar(
-             UINT CodePage,
+             uint32_t CodePage,
              uint32_t dwFlags,
              LPCSTR lpMultiByteStr,
              int cbMultiByte,
@@ -3525,7 +3525,7 @@ MultiByteToWideChar(
 
 int
 WideCharToMultiByte(
-             UINT CodePage,
+             uint32_t CodePage,
              uint32_t dwFlags,
              LPCWSTR lpWideCharStr,
              int cchWideChar,
@@ -4529,7 +4529,7 @@ inline
 unsigned char
 BitScanForward(
       uint32_t * Index,
-     UINT qwMask)
+     uint32_t qwMask)
 {
     unsigned char bRet = FALSE;
     static_assert(sizeof(qwMask) <= sizeof(int),
@@ -4572,7 +4572,7 @@ inline
 unsigned char
 BitScanReverse(
       uint32_t * Index,
-     UINT qwMask)
+     uint32_t qwMask)
 {
     unsigned char bRet = FALSE;
     if (qwMask != 0)

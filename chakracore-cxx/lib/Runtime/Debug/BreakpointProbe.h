@@ -12,7 +12,7 @@ namespace Js
         int byteOffset;
         DebugDocument* debugDocument;
         FunctionBody* functionBody;
-        UINT breakpointId;
+        uint32_t breakpointId;
 
     public:
         BreakpointProbe(DebugDocument* debugDocument, StatementLocation& statement, int breakpointId);
@@ -27,7 +27,7 @@ namespace Js
         bool Matches(StatementLocation statement);
         bool Matches(FunctionBody* _pBody, DebugDocument* debugDocument, int byteOffset);
 
-        UINT GetId() const { return this->breakpointId; }
+        uint32_t GetId() const { return this->breakpointId; }
         void GetStatementLocation(StatementLocation * statement);
         FunctionBody* GetFunctionBody() const { return this->functionBody; }
         int GetBytecodeOffset() const { return this->byteOffset; }

@@ -55,7 +55,7 @@ Return value:
 int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
 {
     char*               pLoadQueryBuf = NULL;
-    UINT                cbBuf = 1024;
+    uint32_t                cbBuf = 1024;
     struct ld_info *    pInfo = NULL;
     INT                 iLQRetVal = -1;
     INT                 iRetVal = -1;
@@ -108,7 +108,7 @@ int GetLibRotorNameViaLoadQuery(LPSTR pszBuf)
         {  
             if (strstr(pInfo->ldinfo_filename, "librotor_pal.a"))
             {
-                UINT cchFileName = strlen(pInfo->ldinfo_filename);
+                uint32_t cchFileName = strlen(pInfo->ldinfo_filename);
                 if (cchFileName + 1  > MAX_PATH_FNAME)
                 {
                     ASSERT("Filename returned by loadquery was longer than MAX_PATH_FNAME!\n");

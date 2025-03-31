@@ -146,7 +146,7 @@ namespace CorUnix
     {
     public:
         char szFileName[MAXPATHLEN];
-        UINT MaxSize;               // The max size of the file mapping object
+        uint32_t MaxSize;               // The max size of the file mapping object
         uint32_t flProtect;            // Protection desired for the file view
         BOOL bPALCreatedTempFile;   // TRUE if it's a PAL created file
         uint32_t dwDesiredAccessWhenOpened;  // FILE_MAP_WRITE etc

@@ -30,7 +30,7 @@ uint32_t snapHistoryLength = MAXUINT32;
 LPCWSTR connectionUuidString = NULL;
 uint32_t startEventCount = 1;
 
-HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName);
+HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName);
 
 extern "C"
 HRESULT OnChakraCoreLoadedEntry(TestHooks& testHooks)
@@ -639,7 +639,7 @@ Error:
 }
 
 // Use the asynchronous BGParse JSRT APIs in a synchronous call
-HRESULT RunBgParseSync(LPCSTR fileContents, UINT lengthBytes, const char* fileName)
+HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fileName)
 {
     JsValueRef scriptSource;
     JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContents,
@@ -684,7 +684,7 @@ HRESULT ExecuteTest(const char* fileName)
     HRESULT hr = S_OK;
     LPCSTR fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
-    UINT lengthBytes = 0;
+    uint32_t lengthBytes = 0;
 
     if(strlen(fileName) >= 14 && strcmp(fileName + strlen(fileName) - 14, "ttdSentinal.js") == 0)
     {

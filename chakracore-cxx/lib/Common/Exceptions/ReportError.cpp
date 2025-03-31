@@ -22,7 +22,7 @@ void ReportFatalException(
     }
 
 #ifdef DISABLE_SEH
-    TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+    TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
 #else
     void * addressToBlame = _ReturnAddress();
     __try

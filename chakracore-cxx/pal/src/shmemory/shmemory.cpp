@@ -1270,7 +1270,7 @@ Returns (SHMPTR)NULL on failure.
 --*/
 SHMPTR SHMStrDup( LPCSTR string )
 {
-    UINT length = 0;
+    uint32_t length = 0;
     SHMPTR retVal = 0;
 
     if ( string )
@@ -1313,7 +1313,7 @@ Returns (SHMPTR)NULL on failure.
 --*/
 SHMPTR SHMWStrDup( LPCWSTR string )
 {
-    UINT length = 0;
+    uint32_t length = 0;
     SHMPTR retVal = 0;
 
     if ( string )

@@ -31,7 +31,7 @@ namespace Js
         int jscriptBlockRegistrationCount;
         bool isDebuggerAttaching;
         DebuggingFlags debuggingFlags;
-        UINT nextBreakPointId;
+        uint32_t nextBreakPointId;
         uint32_t localsDisplayFlags;
         void * dispatchHaltFrameAddress;
     public:
@@ -91,7 +91,7 @@ namespace Js
             return -1;
         }
 
-        UINT GetNextBreakpointId()
+        uint32_t GetNextBreakpointId()
         {
             return ++nextBreakPointId;
         }

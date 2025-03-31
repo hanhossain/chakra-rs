@@ -53,9 +53,9 @@ Return Values
 The return value is the previous state of the error-mode bit flags. 
 
 --*/
-UINT
+uint32_t
 SetErrorMode(
-          UINT uMode)
+          uint32_t uMode)
 {
   PERF_ENTRY(SetErrorMode);
   ENTRY("SetErrorMode (uMode=%#x)\n", uMode);

@@ -56,7 +56,7 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 CRITICAL_SECTION mapping_critsec PAL_GLOBAL;
 LIST_ENTRY MappedViewList PAL_GLOBAL;
 
-static PAL_ERROR MAPGrowLocalFile(INT, UINT);
+static PAL_ERROR MAPGrowLocalFile(INT, uint32_t);
 static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
 static PAL_ERROR MAPDesiredAccessAllowed( uint32_t, uint32_t, uint32_t );
 
@@ -411,7 +411,7 @@ CorUnix::InternalCreateFileMapping(
     struct stat UnixFileInformation;
     INT UnixFd = -1;
     BOOL bPALCreatedTempFile = FALSE;
-    UINT nFileSize = 0;
+    uint32_t nFileSize = 0;
 
     //
     // Validate parameters
@@ -1775,7 +1775,7 @@ Function :
     Grows the file on disk to match the specified size.
     
 --*/
-static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
+static PAL_ERROR MAPGrowLocalFile( INT UnixFD, uint32_t NewSize )
 {
     PAL_ERROR palError = NO_ERROR;
     INT  TruncateRetVal = -1;
@@ -1797,10 +1797,10 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
     if ( TruncateRetVal != 0 || FileInfo.st_size != (int) NewSize )
     {
         INT OrigSize;
-        const UINT  BUFFER_SIZE = 128;
+        const uint32_t  BUFFER_SIZE = 128;
         uint8_t buf[BUFFER_SIZE];
-        UINT x = 0;
-        UINT CurrentPosition = 0;
+        uint32_t x = 0;
+        uint32_t CurrentPosition = 0;
 
         TRACE( "Trying the less efficent way.\n" );
 
@@ -1814,7 +1814,7 @@ static PAL_ERROR MAPGrowLocalFile( INT UnixFD, UINT NewSize )
             goto done;
         }
 
-        if (NewSize <= (UINT) OrigSize)
+        if (NewSize <= (uint32_t) OrigSize)
         {
             return TRUE;
         }
@@ -1966,7 +1966,7 @@ BOOL MAPGetRegionInfo(void * lpAddress,
         pLink != &MappedViewList;
         pLink = pLink->Flink)
     {
-        UINT MappedSize;
+        uint32_t MappedSize;
         void * real_map_addr;
         SIZE_T real_map_sz;
         PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);

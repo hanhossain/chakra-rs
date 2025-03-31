@@ -29,11 +29,11 @@ SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
 static
 int
-AllocFlagsToHeapAllocFlags (  UINT  AllocFlags,
-                        PUINT pHeapallocFlags)
+AllocFlagsToHeapAllocFlags (  uint32_t  AllocFlags,
+                        uint32_t * pHeapallocFlags)
 {
     int success = 1;
-    UINT newFlags = 0, flags = AllocFlags;
+    uint32_t newFlags = 0, flags = AllocFlags;
     if (flags & LMEM_ZEROINIT) {
         newFlags |= HEAP_ZERO_MEMORY;
         flags &= ~LMEM_ZEROINIT;
@@ -59,7 +59,7 @@ See MSDN doc.
 --*/
 HLOCAL
 LocalAlloc(
-	    UINT uFlags,
+	    uint32_t uFlags,
 	    SIZE_T uBytes)
 {
     void * lpRetVal = NULL;
@@ -88,7 +88,7 @@ HLOCAL
 LocalReAlloc(
         HLOCAL hMem,
         SIZE_T uBytes,
-        UINT   uFlags)
+        uint32_t   uFlags)
 {
     void * lpRetVal = NULL;
     PERF_ENTRY(LocalReAlloc);

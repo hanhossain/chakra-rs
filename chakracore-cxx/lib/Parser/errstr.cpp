@@ -120,9 +120,9 @@ BSTR BstrGetResourceString(int32 isz)
 {
     // NOTE - isz is expected to be HRESULT
 
-    const char16* LoadResourceStr(UINT id);
+    const char16* LoadResourceStr(uint32_t id);
 
-    UINT id = (uint16_t)isz;
+    uint32_t id = (uint16_t)isz;
     const char16* szT = LoadResourceStr(id);
     if (!szT || !szT[0])
     {

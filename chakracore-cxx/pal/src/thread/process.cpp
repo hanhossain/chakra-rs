@@ -269,10 +269,10 @@ PROCGetProcessStatus(
     uint32_t *pdwExitCode);
 
 static BOOL getFileName(LPCWSTR lpApplicationName, LPWSTR lpCommandLine, char *lpPathFileName);
-static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, UINT *pnArg);
-static BOOL getPath(LPCSTR lpFileName, UINT iLen, LPSTR  lpPathFileName);
+static char ** buildArgv(LPCWSTR lpCommandLine, LPSTR lpAppPath, uint32_t *pnArg);
+static BOOL getPath(LPCSTR lpFileName, uint32_t iLen, LPSTR  lpPathFileName);
 static int checkFileType(LPCSTR lpFileName);
-static BOOL PROCEndProcess(HANDLE hProcess, UINT uExitCode, BOOL bTerminateUnconditionally);
+static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
 /*++
 Function:
@@ -521,7 +521,7 @@ CorUnix::InternalCreateProcess(
     char * lpFileName;
     PathCharString lpFileNamePS;
     char **lppArgv = NULL;
-    UINT nArg;
+    uint32_t nArg;
     int  iRet;
     char **EnvironmentArray=NULL;
     int child_blocking_pipe = -1;
@@ -1120,7 +1120,7 @@ See MSDN doc.
 __attribute__((noreturn))
 void
 ExitProcess(
-     UINT uExitCode)
+     uint32_t uExitCode)
 {
     uint32_t old_terminator;
 
@@ -1196,7 +1196,7 @@ See MSDN doc.
 BOOL
 TerminateProcess(
      HANDLE hProcess,
-     UINT uExitCode)
+     uint32_t uExitCode)
 {
     BOOL ret;
 
@@ -1221,7 +1221,7 @@ Function:
   down any DLLs that are loaded.
 
 --*/
-static BOOL PROCEndProcess(HANDLE hProcess, UINT uExitCode, BOOL bTerminateUnconditionally)
+static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally)
 {
     uint32_t dwProcessId;
     BOOL ret = FALSE;
@@ -2557,15 +2557,15 @@ char **
 buildArgv(
       LPCWSTR lpCommandLine,
       LPSTR lpAppPath,
-      UINT *pnArg)
+      uint32_t *pnArg)
 {
     CPalThread *pThread = NULL;
-    UINT iWlen;
+    uint32_t iWlen;
     char *lpAsciiCmdLine;
     char *pChar;
     char **lppArgv;
     char **lppTemp;
-    UINT i,j;
+    uint32_t i,j;
 
     *pnArg = 0;
 
@@ -2831,7 +2831,7 @@ static
 BOOL
 getPath(
       LPCSTR lpFileName,
-      UINT iLen,
+      uint32_t iLen,
       LPSTR  lpPathFileName)
 {
     LPSTR lpPath;

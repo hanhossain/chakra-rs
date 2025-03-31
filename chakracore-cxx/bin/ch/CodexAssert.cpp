@@ -17,7 +17,7 @@ void CodexAssertOrFailFast(bool condition)
     Assert(condition);
     if (!condition)
     {
-        TerminateProcess(GetCurrentProcess(), (UINT)DBG_TERMINATE_PROCESS);
+        TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
     }
 }
 #endif

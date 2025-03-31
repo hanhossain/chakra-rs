@@ -371,11 +371,11 @@ typedef const OLECHAR* LPCOLESTR;
 typedef WCHAR *BSTR;
 
 STDAPI_(BSTR) SysAllocString(const OLECHAR*);
-STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, UINT);
-STDAPI_(BSTR) SysAllocStringByteLen(const char *, UINT);
+STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, uint32_t);
+STDAPI_(BSTR) SysAllocStringByteLen(const char *, uint32_t);
 STDAPI_(void) SysFreeString(BSTR);
-STDAPI_(UINT) SysStringLen(BSTR);
-STDAPI_(UINT) SysStringByteLen(BSTR);
+STDAPI_(uint32_t) SysStringLen(BSTR);
+STDAPI_(uint32_t) SysStringByteLen(BSTR);
 
 typedef double DATE;
 
@@ -545,14 +545,14 @@ struct tagVARIANT
                 uint32_t ulVal;
                 ULONGLONG ullVal;
                 INT intVal;
-                UINT uintVal;
+                uint32_t uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
                 unsigned short *puiVal;
                 uint32_t *pulVal;
                 ULONGLONG *pullVal;
                 INT *pintVal;
-                UINT *puintVal;
+                uint32_t *puintVal;
                 struct __tagBRECORD
                     {
                     void * pvRecord;
@@ -1319,10 +1319,10 @@ typedef SAFEARRAY *LPSAFEARRAY;
 
 
 STDAPI_(SAFEARRAY *) SafeArrayCreateVector(VARTYPE vt, int32_t lLbound, uint32_t cElements);
-STDAPI_(UINT) SafeArrayGetDim(SAFEARRAY * psa);
+STDAPI_(uint32_t) SafeArrayGetDim(SAFEARRAY * psa);
 STDAPI SafeArrayGetElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
-STDAPI SafeArrayGetLBound(SAFEARRAY * psa, UINT nDim, int32_t * plLbound);
-STDAPI SafeArrayGetUBound(SAFEARRAY * psa, UINT nDim, int32_t * plUbound);
+STDAPI SafeArrayGetLBound(SAFEARRAY * psa, uint32_t nDim, int32_t * plLbound);
+STDAPI SafeArrayGetUBound(SAFEARRAY * psa, uint32_t nDim, int32_t * plUbound);
 STDAPI SafeArrayGetVartype(SAFEARRAY * psa, VARTYPE * pvt);
 STDAPI SafeArrayPutElement(SAFEARRAY * psa, int32_t * rgIndices, void * pv);
 STDAPI SafeArrayDestroy(SAFEARRAY * psa);
@@ -1596,14 +1596,14 @@ typedef struct _HSATELLITE *HSATELLITE;
 EXTERN_C HSATELLITE PAL_LoadSatelliteResourceW(LPCWSTR SatelliteResourceFileName);
 EXTERN_C HSATELLITE PAL_LoadSatelliteResourceA(LPCSTR SatelliteResourceFileName);
 EXTERN_C BOOL PAL_FreeSatelliteResource(HSATELLITE SatelliteResource);
-EXTERN_C UINT PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
-             UINT uID,
+EXTERN_C uint32_t PAL_LoadSatelliteStringW(HSATELLITE SatelliteResource,
+             uint32_t uID,
              LPWSTR lpBuffer,
-             UINT nBufferMax);
-EXTERN_C UINT PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
-             UINT uID,
+             uint32_t nBufferMax);
+EXTERN_C uint32_t PAL_LoadSatelliteStringA(HSATELLITE SatelliteResource,
+             uint32_t uID,
              LPSTR lpBuffer,
-             UINT nBufferMax);
+             uint32_t nBufferMax);
 
 EXTERN_C HRESULT PAL_CoCreateInstance(REFCLSID   rclsid,
                              REFIID     riid,

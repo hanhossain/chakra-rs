@@ -192,7 +192,7 @@ namespace Js
         return probe;
     }
 
-    bool DebugDocument::FindBPStatementLocation(UINT bpId, StatementLocation * statement)
+    bool DebugDocument::FindBPStatementLocation(uint32_t bpId, StatementLocation * statement)
     {
         bool foundStatement = false;
         if (m_breakpointList != nullptr)

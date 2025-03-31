@@ -79,7 +79,7 @@ static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
 // - On OSX, HFS+ file names are encoded as UTF-8.
 // - On OSX, When writing strings to the console, the Terminal.app will interpret them as UTF-8.
 // - We want Ansi marshalling to mean marshal to UTF-8 on Mac and Linux
-static const UINT PAL_ACP = 65001;
+static const uint32_t PAL_ACP = 65001;
 
 #if !HAVE_COREFOUNDATION
 /*++
@@ -168,16 +168,16 @@ BOOL GetUnicodeData(INT nUnicodeValue, UnicodeDataRec *pDataRec)
 Function:
 CODEPAGEGetData
 
-    IN UINT CodePage - The code page the caller
+    IN uint32_t CodePage - The code page the caller
     is attempting to retrieve data on.
 
     Returns a pointer to structure, NULL otherwise.
 --*/
 const CP_MAPPING *
-CODEPAGEGetData(  UINT CodePage )
+CODEPAGEGetData(  uint32_t CodePage )
 {
-    UINT nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
-    UINT nIndex = 0;
+    uint32_t nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
+    uint32_t nIndex = 0;
 
     if ( CP_ACP == CodePage )
     {
@@ -205,7 +205,7 @@ the given codepage.
 
 Returns the CFStringEncoding for the given codepage.
 --*/
-CFStringEncoding CODEPAGECPToCFStringEncoding(UINT codepage)
+CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
 {
     const CP_MAPPING *cp_mapping = CODEPAGEGetData(codepage);
     if (cp_mapping == NULL)
@@ -320,11 +320,11 @@ GetConsoleCP
 
 See MSDN doc.
 --*/
-UINT
+uint32_t
 GetConsoleCP(
      void)
 {
-    UINT nRet = 0;
+    uint32_t nRet = 0;
     PERF_ENTRY(GetConsoleCP);
     ENTRY("GetConsoleCP()\n");
 
@@ -341,11 +341,11 @@ GetConsoleOutputCP
 
 See MSDN doc.
 --*/
-UINT
+uint32_t
 GetConsoleOutputCP(
        void)
 {
-    UINT nRet = 0;
+    uint32_t nRet = 0;
     PERF_ENTRY(GetConsoleOutputCP);
     ENTRY("GetConsoleOutputCP()\n");
     nRet = GetACP();
@@ -369,7 +369,7 @@ Note : CP_UTF7 support isn't required for Rotor
 --*/
 BOOL
 IsValidCodePage(
-     UINT CodePage)
+     uint32_t CodePage)
 {
     BOOL retval = FALSE;
 
@@ -520,7 +520,7 @@ See MSDN doc.
 --*/
 BOOL
 GetCPInfo(
-   UINT CodePage,
+   uint32_t CodePage,
    LPCPINFO lpCPInfo)
 {
     const CP_MAPPING * lpStruct = NULL;
@@ -571,7 +571,7 @@ GetACP
 
 See MSDN doc.
 --*/
-UINT
+uint32_t
 GetACP(void)
 {
     PERF_ENTRY(GetACP);
@@ -592,7 +592,7 @@ See MSDN doc.
 --*/
 BOOL
 IsDBCSLeadByteEx(
-      UINT CodePage,
+      uint32_t CodePage,
       uint8_t TestChar)
 {
     CPINFO cpinfo;
@@ -654,7 +654,7 @@ See MSDN doc.
 --*/
 int
 MultiByteToWideChar(
-         UINT CodePage,
+         uint32_t CodePage,
          uint32_t dwFlags,
          LPCSTR lpMultiByteStr,
          int cbMultiByte,
@@ -780,7 +780,7 @@ See MSDN doc.
 --*/
 int
 WideCharToMultiByte(
-         UINT CodePage,
+         uint32_t CodePage,
          uint32_t dwFlags,
          LPCWSTR lpWideCharStr,
          int cchWideChar,

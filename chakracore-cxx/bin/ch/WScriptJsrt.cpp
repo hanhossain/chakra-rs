@@ -1341,7 +1341,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
         if (errorCode == JsNoError)
         {
-            UINT lengthBytes = 0;
+            uint32_t lengthBytes = 0;
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent, &lengthBytes);
 
             if (FAILED(hr))
@@ -1503,7 +1503,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
         if (errorCode == JsNoError)
         {
-            UINT lengthBytes = 0;
+            uint32_t lengthBytes = 0;
 
             hr = Helpers::LoadBinaryFile(*fileName, fileContent, lengthBytes);
 

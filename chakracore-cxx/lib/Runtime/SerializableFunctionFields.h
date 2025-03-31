@@ -47,8 +47,8 @@ PROTECTED_FIELDS
     DECLARE_SERIALIZABLE_FIELD(uint, m_displayShortNameOffset, UInt32);     // Offset into the display name where the short name is found
 
 PUBLIC_FIELDS
-    DECLARE_SERIALIZABLE_FIELD(UINT, scopeSlotArraySize, UInt32);
-    DECLARE_SERIALIZABLE_FIELD(UINT, paramScopeSlotArraySize, UInt32);
+    DECLARE_SERIALIZABLE_FIELD(uint32_t, scopeSlotArraySize, UInt32);
+    DECLARE_SERIALIZABLE_FIELD(uint32_t, paramScopeSlotArraySize, UInt32);
 
 CURRENT_ACCESS_MODIFIER
 #endif

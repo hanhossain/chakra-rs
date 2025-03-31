@@ -323,7 +323,7 @@ _makepath(
           const char *fname,
           const char *ext)
 {
-    UINT Length = 0;
+    uint32_t Length = 0;
 
     PERF_ENTRY(_makepath);
     ENTRY( "_makepath (path=%p, drive=%p (%s), dir=%p (%s), fname=%p (%s), ext=%p (%s))\n",
@@ -343,7 +343,7 @@ _makepath(
 
     if ( dir != NULL && dir[ 0 ] != '\0' )
     {
-        UINT DirLength = strlen( dir );
+        uint32_t DirLength = strlen( dir );
         Length += DirLength ;
 
         if ( Length < _MAX_PATH )
@@ -371,7 +371,7 @@ _makepath(
 
     if ( fname != NULL && fname[ 0 ] != '\0' )
     {
-        UINT fNameLength = strlen( fname );
+        uint32_t fNameLength = strlen( fname );
         Length += fNameLength;
 
         if ( Length < _MAX_PATH )
@@ -386,7 +386,7 @@ _makepath(
 
     if ( ext != NULL && ext[ 0 ] != '\0' )
     {
-        UINT ExtLength = strlen( ext );
+        uint32_t ExtLength = strlen( ext );
         Length += ExtLength;
 
         if ( ext[ 0 ] !=  '.' )

@@ -2086,7 +2086,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
      __out_ecount(cchMax) LPSTR pszOut,   -- A string buffer with cch elements that will
                                           --   be NULL terminated on exit.
      __in LPCSTR pszSrc,
-     UINT cchMax,
+     uint32_t cchMax,
      uint32_t dwFlags
  );
 

@@ -359,7 +359,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
         propertyAttributes |= JsrtDebugPropertyAttribute::IN_TDZ;
     }
 
-    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::propertyAttributes, (UINT)propertyAttributes, scriptContext);
+    JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::propertyAttributes, (uint32_t)propertyAttributes, scriptContext);
 }
 
 void JsrtDebugUtils::AddVarPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, Js::Var value, Js::ScriptContext * scriptContext)

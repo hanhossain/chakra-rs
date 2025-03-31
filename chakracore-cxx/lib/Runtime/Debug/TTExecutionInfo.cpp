@@ -1152,7 +1152,7 @@ namespace TTD
 
         Js::DebugDocument* debugDocument = body->GetUtf8SourceInfo()->GetDebugDocument();
         Js::StatementLocation statement;
-        if(this->m_shouldRemoveWhenDone && debugDocument->FindBPStatementLocation((UINT)this->m_activeBPId, &statement))
+        if(this->m_shouldRemoveWhenDone && debugDocument->FindBPStatementLocation((uint32_t)this->m_activeBPId, &statement))
         {
             debugDocument->SetBreakPoint(statement, BREAKPOINT_DELETED);
         }

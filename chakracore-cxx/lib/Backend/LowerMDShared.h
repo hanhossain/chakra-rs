@@ -83,7 +83,7 @@ public:
     static const Js::OpCode MDSpecBlockNEOpcode;
     static const Js::OpCode MDSpecBlockFNEOpcode;
 
-    UINT FloatPrefThreshold;
+    uint32_t FloatPrefThreshold;
 
             void            Init(Lowerer *lowerer);
             IR::Opnd *      GenerateMemRef(intptr_t addr, IRType type, IR::Instr *instr, bool dontEncode = false);

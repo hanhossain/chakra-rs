@@ -234,8 +234,8 @@ static BOOL VIRTUALContainsInvalidProtectionFlags(  uint32_t flProtect )
 static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
-    UINT nBitOffset = 0;
-    UINT byteMask = 0;
+    uint32_t nBitOffset = 0;
+    uint32_t byteMask = 0;
 
     if ( !pInformation )
     {
@@ -272,8 +272,8 @@ static BOOL VIRTUALIsPageCommitted( SIZE_T nBitToRetrieve, const PCMI pInformati
 static BOOL VIRTUALIsPageDirty( SIZE_T nBitToRetrieve, const PCMI pInformation )
 {
     SIZE_T nByteOffset = 0;
-    UINT nBitOffset = 0;
-    UINT byteMask = 0;
+    uint32_t nBitOffset = 0;
+    uint32_t byteMask = 0;
 
     if ( !pInformation )
     {
@@ -323,7 +323,7 @@ static INT VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
  *
  * VIRTUALSetPageBits
  *
- *  IN UINT nStatus - Bit set / reset [0: reset, any other value: set].
+ *  IN uint32_t nStatus - Bit set / reset [0: reset, any other value: set].
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
@@ -333,7 +333,7 @@ static INT VIRTUALGetAllocationType( SIZE_T Index, const PCMI pInformation )
  *  Turn on/off memory staus bits.
  *
  */
-static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
+static BOOL VIRTUALSetPageBits ( uint32_t nStatus, SIZE_T nStartingBit,
                                  SIZE_T nNumberOfBits, uint8_t * pBitArray )
 {
     /* byte masks for optimized modification of partial bytes (changing less
@@ -463,7 +463,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
  *
  * VIRTUALSetAllocState
  *
- *  IN UINT nAction - Which action to perform.
+ *  IN uint32_t nAction - Which action to perform.
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
@@ -473,7 +473,7 @@ static BOOL VIRTUALSetPageBits ( UINT nStatus, SIZE_T nStartingBit,
  *  Turn bit on to indicate committed, turn bit off to indicate reserved.
  *
  */
-static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
+static BOOL VIRTUALSetAllocState( uint32_t nAction, SIZE_T nStartingBit,
                            SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetAllocState( nAction = %d, nStartingBit = %d, "
@@ -495,7 +495,7 @@ static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
  *
  * VIRTUALSetDirtyPages
  *
- *  IN UINT nStatus - 0: memory clean, any other value: memory is dirty
+ *  IN uint32_t nStatus - 0: memory clean, any other value: memory is dirty
  *  IN SIZE_T nStartingBit - The bit to set.
  *
  *  IN SIZE_T nNumberOfBits - The range of bits to set.
@@ -505,7 +505,7 @@ static BOOL VIRTUALSetAllocState( UINT nAction, SIZE_T nStartingBit,
  *  Turns bit(s) on/off bit to indicate dirty page(s)
  *
  */
-static BOOL VIRTUALSetDirtyPages( UINT nStatus, SIZE_T nStartingBit,
+static BOOL VIRTUALSetDirtyPages( uint32_t nStatus, SIZE_T nStartingBit,
                            SIZE_T nNumberOfBits, const PCMI pInformation )
 {
     TRACE( "VIRTUALSetDirtyPages( nStatus = %d, nStartingBit = %d, "

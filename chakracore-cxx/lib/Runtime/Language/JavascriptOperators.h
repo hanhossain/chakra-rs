@@ -689,8 +689,8 @@ namespace Js
 
         static void VarToNativeArray(Var arrayObject,
             JsNativeValueType valueType,
-            __in UINT length,
-            __in UINT elementSize,
+            __in uint32_t length,
+            __in uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 
@@ -729,13 +729,13 @@ namespace Js
         template <typename ArrayType>
         static void ObjectToNativeArray(ArrayType* arrayObject,
             JsNativeValueType valueType,
-            __in UINT length,
-            __in UINT elementSize,
+            __in uint32_t length,
+            __in uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 
         template <typename ArrayType>
-        static Js::Var GetElementAtIndex(ArrayType* arrayObject, UINT index, Js::ScriptContext* scriptContext);
+        static Js::Var GetElementAtIndex(ArrayType* arrayObject, uint32_t index, Js::ScriptContext* scriptContext);
 
         static Var GetElementIIntIndex(_In_ Var instance, _In_ Var index, _In_ ScriptContext* scriptContext);
 #if DBG

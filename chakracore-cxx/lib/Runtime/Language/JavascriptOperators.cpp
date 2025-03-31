@@ -10444,7 +10444,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     template <>
-    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptArray* arrayObject, UINT index, Js::ScriptContext* scriptContext)
+    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptArray* arrayObject, uint32_t index, Js::ScriptContext* scriptContext)
     {
         Js::Var result;
         if (Js::JavascriptOperators::OP_GetElementI_ArrayFastPath(arrayObject, index, &result, scriptContext))
@@ -10455,7 +10455,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     template<>
-    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptNativeIntArray* arrayObject, UINT index, Js::ScriptContext* scriptContext)
+    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptNativeIntArray* arrayObject, uint32_t index, Js::ScriptContext* scriptContext)
     {
         Js::Var result;
         if (Js::JavascriptOperators::OP_GetElementI_ArrayFastPath(arrayObject, index, &result, scriptContext))
@@ -10466,7 +10466,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     template<>
-    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptNativeFloatArray* arrayObject, UINT index, Js::ScriptContext* scriptContext)
+    Js::Var JavascriptOperators::GetElementAtIndex(Js::JavascriptNativeFloatArray* arrayObject, uint32_t index, Js::ScriptContext* scriptContext)
     {
         Js::Var result;
         if (Js::JavascriptOperators::OP_GetElementI_ArrayFastPath(arrayObject, index, &result, scriptContext))
@@ -10477,7 +10477,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     }
 
     template<>
-    Js::Var JavascriptOperators::GetElementAtIndex(Js::Var* arrayObject, UINT index, Js::ScriptContext* scriptContext)
+    Js::Var JavascriptOperators::GetElementAtIndex(Js::Var* arrayObject, uint32_t index, Js::ScriptContext* scriptContext)
     {
         return Js::JavascriptOperators::OP_GetElementI_Int32(*arrayObject, index, scriptContext);
     }
@@ -10485,8 +10485,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     template<typename T>
     void JavascriptOperators::ObjectToNativeArray(T* arrayObject,
         JsNativeValueType valueType,
-        __in UINT length,
-        __in UINT elementSize,
+        __in uint32_t length,
+        __in uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {
@@ -10499,7 +10499,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
         case JsInt8Type:
             AnalysisAssert(elementSize == sizeof(int8));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(int8) <= allocSize);
@@ -10509,7 +10509,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsUint8Type:
             AnalysisAssert(elementSize == sizeof(uint8));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(uint8) <= allocSize);
@@ -10518,7 +10518,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsInt16Type:
             AnalysisAssert(elementSize == sizeof(int16));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(int16) <= allocSize);
@@ -10527,7 +10527,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsUint16Type:
             AnalysisAssert(elementSize == sizeof(uint16));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(uint16) <= allocSize);
@@ -10536,7 +10536,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsInt32Type:
             AnalysisAssert(elementSize == sizeof(int32));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(int32) <= allocSize);
@@ -10545,7 +10545,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsUint32Type:
             AnalysisAssert(elementSize == sizeof(uint32));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(uint32) <= allocSize);
@@ -10554,7 +10554,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsInt64Type:
             AnalysisAssert(elementSize == sizeof(int64));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(int64) <= allocSize);
@@ -10563,7 +10563,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsUint64Type:
             AnalysisAssert(elementSize == sizeof(uint64));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(uint64) <= allocSize);
@@ -10572,7 +10572,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsFloatType:
             AnalysisAssert(elementSize == sizeof(float));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(float) <= allocSize);
@@ -10581,7 +10581,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsDoubleType:
             AnalysisAssert(elementSize == sizeof(double));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(double) <= allocSize);
@@ -10590,7 +10590,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             break;
         case JsNativeStringType:
             AnalysisAssert(elementSize == sizeof(JsNativeString));
-            for (UINT i = 0; i < length; i++)
+            for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
                 AnalysisAssert((i + 1) * sizeof(JsNativeString) <= allocSize);
@@ -10606,8 +10606,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::VarToNativeArray(Var arrayObject,
         JsNativeValueType valueType,
-        __in UINT length,
-        __in UINT elementSize,
+        __in uint32_t length,
+        __in uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {

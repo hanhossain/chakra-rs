@@ -1513,7 +1513,7 @@ see msdn doc.
 char16_t *
 PAL_wcsncpy( char16_t * strDest, const char16_t *strSource, size_t count )
 {
-    UINT length = sizeof( char16_t ) * count;
+    uint32_t length = sizeof( char16_t ) * count;
     PERF_ENTRY(wcsncpy);
     ENTRY("wcsncpy( strDest:%p, strSource:%p (%S), count:%lu)\n",
           strDest, strSource, strSource, (unsigned long) count);
@@ -1538,8 +1538,8 @@ char16_t *
 PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
 {
     char16_t *start = strDest;
-    UINT LoopCount = 0;
-    UINT StrSourceLength = 0;
+    uint32_t LoopCount = 0;
+    uint32_t StrSourceLength = 0;
 
     PERF_ENTRY(wcsncat);
     ENTRY( "wcsncat (strDestination=%p (%S), strSource=%p (%S), count=%lu )\n",
@@ -1621,7 +1621,7 @@ PAL_wcstod( const char16_t * nptr, char16_t **endptr )
     LPSTR  lpStringRep = NULL;
     LPWSTR lpStartOfExpression = (LPWSTR)nptr;
     LPWSTR lpEndOfExpression = NULL;
-    UINT Length = 0;
+    uint32_t Length = 0;
 
     PERF_ENTRY(wcstod);
     ENTRY( "wcstod( %p (%S), %p (%S) )\n", nptr, nptr, endptr , endptr );
@@ -1713,10 +1713,10 @@ See MSDN for more details.
 char16_t *
 _ui64tow( unsigned __int64 value , char16_t * string , int radix )
 {
-    UINT ReversedIndex = 0;
+    uint32_t ReversedIndex = 0;
     WCHAR ReversedString[ 65 ];
     LPWSTR lpString = string;
-    UINT Index = 0;
+    uint32_t Index = 0;
 
     PERF_ENTRY(_ui64tow);
     ENTRY( "_ui64tow( value=%I64d, string=%p (%S), radix=%d )\n",
@@ -1783,7 +1783,7 @@ See MSDN for more details.
 int
 PAL_iswdigit( char16_t c )
 {
-    UINT nRetVal = 0;
+    uint32_t nRetVal = 0;
 #if HAVE_COREFOUNDATION
     static CFCharacterSetRef sDigitSet;
 
@@ -1838,7 +1838,7 @@ numbers and letters are considered as "hex"; other "numbers"
 int
 PAL_iswxdigit( char16_t c )
 {
-    UINT nRetVal = 0;
+    uint32_t nRetVal = 0;
 
     PERF_ENTRY(iswxdigit);
     ENTRY("PAL_iswxdigit( c=%d )\n", c);

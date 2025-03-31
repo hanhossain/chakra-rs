@@ -32,7 +32,7 @@ namespace CorUnix
     {
         SHMPTR unix_filename;
         SHMPTR fileLockedRgns;    
-        UINT refCount;
+        uint32_t refCount;
         SHMPTR next;
         SHMPTR prev;
         uint32_t  share_mode; /* FILE_SHARE_READ, FILE_SHARE_WRITE,
