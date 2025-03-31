@@ -116,8 +116,6 @@ extern "C" {
 typedef int BOOL, *PBOOL, *LPBOOL;
 typedef uint8_t BOOLEAN, *PBOOLEAN;
 
-typedef unsigned long *PUINT64;
-
 typedef signed int LONG32, *PLONG32;
 typedef unsigned long ULONG64;
 typedef signed long LONG64;
