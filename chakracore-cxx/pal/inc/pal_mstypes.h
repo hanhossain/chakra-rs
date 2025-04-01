@@ -112,17 +112,6 @@ extern "C" {
 
 #define __int64     long
 
-#ifndef PAL_STDCPP_COMPAT
-// Defined in gnu's types.h. For non PAL_IMPLEMENTATION system
-// includes are not included, so we need to define them.
-// Types below are already defined by stdint.h on __APPLE__.
-
-#if _WIN64
-typedef long double LONG_DOUBLE;
-#endif
-
-#endif // !PAL_STDCPP_COMPAT
-
 typedef __int64 LONGLONG;
 typedef unsigned __int64 ULONGLONG;
 typedef ULONGLONG DWORD64;
