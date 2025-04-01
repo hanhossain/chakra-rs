@@ -209,27 +209,9 @@ typedef unsigned short char16_t;
 typedef char16_t char16;
 typedef char16_t WCHAR;
 
-#ifdef PAL_STDCPP_COMPAT
-
-#ifdef __APPLE__
-static_assert(sizeof(unsigned long) == sizeof(void*), "This platform is not supported");
-#else
-typedef unsigned long int uintptr_t;
-#endif
-
-#else // !PAL_STDCPP_COMPAT
-
-#if defined(__LINUX__)
-typedef long int intptr_t;
-typedef unsigned long int uintptr_t;
-#else
-typedef INT_PTR intptr_t;
-typedef UINT_PTR uintptr_t;
-#endif
-
-#endif // PAL_STDCPP_COMPAT
-
+// TODO (hanhossain): can probably remove this
 #define _INTPTR_T_DEFINED
+// TODO (hanhossain): can probably remove this
 #define _UINTPTR_T_DEFINED
 
 typedef uint32_t LCID;
