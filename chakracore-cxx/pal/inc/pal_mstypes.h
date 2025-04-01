@@ -146,28 +146,6 @@ typedef unsigned __int64 DWORD_PTR;
 #define SIZE_MAX _UI64_MAX
 #endif
 
-#define HandleToULong( h ) ((uint32_t)(size_t)(h) )
-#define HandleToLong( h )  ((int32_t)(ptrdiff_t) (h) )
-#define ULongToHandle( ul ) ((HANDLE)(size_t) (ul) )
-#define LongToHandle( h )   ((HANDLE)(ptrdiff_t) (h) )
-#define PtrToUlong( p ) ((uint32_t)(size_t) (p) )
-#define PtrToLong( p )  ((int32_t)(ptrdiff_t) (p) )
-#define PtrToUint( p ) ((uint32_t)(UINT_PTR) (p) )
-#define PtrToInt( p )  ((int32_t)(INT_PTR) (p) )
-#define PtrToUshort( p ) ((unsigned short)(size_t)(p) )
-#define PtrToShort( p )  ((short)(ptrdiff_t)(p) )
-#define IntToPtr( i )    ((void *)(INT_PTR)((int)(i)))
-#define UIntToPtr( ui )  ((void *)(UINT_PTR)((unsigned int)(ui)))
-#define LongToPtr( l )   ((void *)(ptrdiff_t)((long)(l)))
-#define ULongToPtr( ul ) ((void *)(size_t)((unsigned long)(ul)))
-#define ShortToPtr( s )  ((void *)(INT_PTR)((short)(s)))
-#define UShortToPtr( us )  ((void *)(UINT_PTR)((unsigned short)(s)))
-
-#define HandleToUlong(h)  HandleToULong(h)
-#define UlongToHandle(ul) ULongToHandle(ul)
-#define UlongToPtr(ul) ULongToPtr(ul)
-#define UintToPtr(ui)  UIntToPtr(ui)
-
 typedef size_t SIZE_T;
 
 #ifndef SIZE_T_MAX

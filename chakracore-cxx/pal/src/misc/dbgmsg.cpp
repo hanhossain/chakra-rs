@@ -771,17 +771,18 @@ if new_level is -1, the nesting level will not be modified
 --*/
 int DBG_change_entrylevel(int new_level)
 {
-    int old_level;
     int ret;
 
     if(0 == max_entry_level)
     {
         return 0;
     }
-    old_level = PtrToInt(pthread_getspecific(entry_level_key));
+
+    // cast to long first to prevent void* to int cast warning
+    int old_level = (int)(long) pthread_getspecific(entry_level_key);
     if(-1 != new_level)
     {
-        if ((ret = pthread_setspecific(entry_level_key,(void *)(IntToPtr(new_level)))) != 0)
+        if ((ret = pthread_setspecific(entry_level_key, (void *)new_level)) != 0)
         {
             fprintf(stderr, "ERROR : pthread_setspecific() failed "
                     "error:%d (%s)\n", ret, strerror(ret));
