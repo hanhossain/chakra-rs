@@ -159,7 +159,7 @@ static int __check_float_string(size_t nFloatStrUsed,
         size_t newSize;
 
         // Will (*pnFloatStrSz) * 2 * sizeof(_TCHAR) overflow?
-        if ( *pnFloatStrSz > (SIZE_T_MAX / 2 / sizeof(_TCHAR)))
+        if ( *pnFloatStrSz > (SIZE_MAX / 2 / sizeof(_TCHAR)))
         {
             return FALSE;
         }

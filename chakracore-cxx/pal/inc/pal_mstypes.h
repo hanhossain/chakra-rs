@@ -140,25 +140,8 @@ typedef unsigned __int64 DWORD_PTR;
 /* maximum signed 64 bit value */
 #define LONG_PTR_MAX      I64(9223372036854775807)
 /* maximum unsigned 64 bit value */
-#define ULONG_PTR_MAX     UI64(0xffffffffffffffff)
-
-#ifndef SIZE_MAX
-#define SIZE_MAX _UI64_MAX
-#endif
 
 typedef size_t SIZE_T;
-
-#ifndef SIZE_T_MAX
-#define SIZE_T_MAX ULONG_PTR_MAX
-#endif // SIZE_T_MAX
-
-#ifndef SSIZE_T_MAX
-#define SSIZE_T_MAX LONG_PTR_MAX
-#endif
-
-#ifndef SSIZE_T_MIN
-#define SSIZE_T_MIN I64(-9223372036854775808)
-#endif
 
 typedef ptrdiff_t LPARAM;
 
