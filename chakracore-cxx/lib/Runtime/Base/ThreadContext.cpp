@@ -4523,22 +4523,6 @@ Js::DelayLoadWinRtString * ThreadContext::GetWinRTStringLibrary()
     return &delayLoadWinRtString;
 }
 
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-Js::WindowsGlobalizationAdapter* ThreadContext::GetWindowsGlobalizationAdapter()
-{
-    return &windowsGlobalizationAdapter;
-}
-
-Js::DelayLoadWindowsGlobalization* ThreadContext::GetWindowsGlobalizationLibrary()
-{
-    delayLoadWindowsGlobalizationLibrary.Ensure(this->GetWinRTStringLibrary());
-
-    return &delayLoadWindowsGlobalizationLibrary;
-}
-#endif // INTL_WINGLOB
-#endif
-
 #ifdef ENABLE_FOUNDATION_OBJECT
 Js::WindowsFoundationAdapter* ThreadContext::GetWindowsFoundationAdapter()
 {

@@ -15,10 +15,6 @@
 #include "ByteCode/ByteCodeDumper.h"
 #include "Codex/Utf8Helper.h"
 
-#ifdef INTL_WINGLOB
-using namespace Windows::Globalization;
-#endif
-
 #ifdef INTL_ICU
 #include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/ChakraICU.h"
@@ -134,160 +130,14 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
     JavascriptError::MapAndThrowError(scriptContext, hr); \
     } \
 
-#ifdef INTL_WINGLOB
-
-#define TO_JSBOOL(sc, b) ((b) ? (sc)->GetLibrary()->GetTrue() : (sc)->GetLibrary()->GetFalse())
-
-#define IfCOMFailIgnoreSilentlyAndReturn(op) \
-    if(FAILED(hr=(op))) \
-    { \
-        return; \
-    } \
-
-#define HandleOOMSOEHR(hr) \
-    if (hr == E_OUTOFMEMORY) \
-    { \
-    JavascriptError::ThrowOutOfMemoryError(scriptContext); \
-    } \
-    else if(hr == VBSERR_OutOfStack) \
-    { \
-    JavascriptError::ThrowStackOverflowError(scriptContext); \
-    } \
-
-#define IfFailThrowHr(op) \
-    if (FAILED(hr=(op))) \
-    { \
-    JavascriptError::MapAndThrowError(scriptContext, hr); \
-    } \
-
-#define SetPropertyOn(obj, propID, value) \
-    obj->SetProperty(propID, value, Js::PropertyOperationFlags::PropertyOperation_None, nullptr) \
-
-#define SetStringPropertyOn(obj, propID, propValue) \
-    SetPropertyOn(obj, propID, Js::JavascriptString::NewCopySz(propValue, scriptContext)) \
-
-#define SetPropertyLOn(obj, literalProperty, value) \
-    obj->SetProperty(Js::JavascriptString::NewCopySz(literalProperty, scriptContext), value, Js::PropertyOperationFlags::PropertyOperation_None, nullptr) \
-
-#define SetStringPropertyLOn(obj, literalProperty, propValue) \
-    SetPropertyLOn(obj, literalProperty, Js::JavascriptString::NewCopySz(propValue, scriptContext)) \
-
-#define SetPropertyBuiltInOn(obj, builtInPropID, value) \
-    SetPropertyOn(obj, Js::PropertyIds::builtInPropID, value) \
-
-#define SetStringPropertyBuiltInOn(obj, builtInPropID, propValue) \
-    SetPropertyBuiltInOn(obj, builtInPropID, Js::JavascriptString::NewCopySz(propValue, scriptContext))
-
-#define GetPropertyFrom(obj, propertyID) \
-    Js::JavascriptOperators::GetProperty(obj, propertyID, &propertyValue, scriptContext) \
-
-#define GetPropertyLFrom(obj, propertyName) \
-    GetPropertyFrom(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, wcslen(propertyName)))
-
-#define GetPropertyBuiltInFrom(obj, builtInPropID) \
-    GetPropertyFrom(obj, Js::PropertyIds::builtInPropID) \
-
-#define GetTypedPropertyBuiltInFrom(obj, builtInPropID, Type) \
-    (GetPropertyFrom(obj, Js::PropertyIds::builtInPropID) && VarIs<Type>(propertyValue)) \
-
-#define HasPropertyOn(obj, propID) \
-    Js::JavascriptOperators::HasProperty(obj, propID) \
-
-#define HasPropertyBuiltInOn(obj, builtInPropID) \
-    HasPropertyOn(obj, Js::PropertyIds::builtInPropID) \
-
-#define HasPropertyLOn(obj, propertyName) \
-    HasPropertyOn(obj, scriptContext->GetOrAddPropertyIdTracked(propertyName, wcslen(propertyName)))
-
-#define SetHSTRINGPropertyOn(obj, propID, hstringValue) \
-    SetStringPropertyOn(obj, propID, wgl->WindowsGetStringRawBuffer(hstringValue, &length)) \
-
-#define SetHSTRINGPropertyLOn(obj, literalProperty, hstringValue) \
-    SetStringPropertyLOn(obj, literalProperty, wgl->WindowsGetStringRawBuffer(hstringValue, &length)) \
-
-#define SetHSTRINGPropertyBuiltInOn(obj, builtInPropID, hstringValue) \
-    SetStringPropertyBuiltInOn(obj, builtInPropID, wgl->WindowsGetStringRawBuffer(hstringValue, &length)) \
-
-#endif
-
 #define INTL_CHECK_ARGS(argcheck) AssertOrFailFastMsg((argcheck), "Intl platform function given bad arguments")
 
 namespace Js
 {
 #ifdef ENABLE_INTL_OBJECT
-#ifdef INTL_WINGLOB
-    class AutoHSTRING
-    {
-        PREVENT_COPY(AutoHSTRING)
-
-    private:
-        HSTRING value;
-    public:
-        HSTRING *operator&() { Assert(value == nullptr); return &value; }
-        HSTRING operator*() const { Assert(value != nullptr); return value; }
-
-        AutoHSTRING()
-            : value(nullptr)
-        { }
-
-        ~AutoHSTRING()
-        {
-            Clear();
-        }
-
-        void Clear()
-        {
-            if (value != nullptr)
-            {
-                WindowsDeleteString(value);
-                value = nullptr;
-            }
-        }
-    };
-#endif
 
 // Defining Finalizable wrappers for Intl data
-#if defined(INTL_WINGLOB)
-    class AutoCOMJSObject : public FinalizableObject
-    {
-        IInspectable *instance;
-
-    public:
-        DEFINE_VTABLE_CTOR_NOBASE(AutoCOMJSObject);
-
-        AutoCOMJSObject(IInspectable *object)
-            : instance(object)
-        { }
-
-        static AutoCOMJSObject * New(Recycler * recycler, IInspectable *object)
-        {
-            return RecyclerNewFinalized(recycler, AutoCOMJSObject, object);
-        }
-
-        void Finalize(bool isShutdown) override
-        {
-
-        }
-
-        void Dispose(bool isShutdown) override
-        {
-            if (!isShutdown)
-            {
-                instance->Release();
-            }
-        }
-        void Mark(Recycler * recycler) override
-        {
-
-        }
-
-        IInspectable *GetInstance()
-        {
-            return instance;
-        }
-    };
-
-#elif defined(INTL_ICU)
+#if defined(INTL_ICU)
 
     template<typename TResource, void(* CloseFunction)(TResource)>
     class FinalizableICUObject : public FinalizableObject
@@ -495,13 +345,6 @@ namespace Js
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 
-#ifdef INTL_WINGLOB
-    WindowsGlobalizationAdapter* IntlEngineInterfaceExtensionObject::GetWindowsGlobalizationAdapter(_In_ ScriptContext * scriptContext)
-    {
-        return scriptContext->GetThreadContext()->GetWindowsGlobalizationAdapter();
-    }
-#endif
-
     void IntlEngineInterfaceExtensionObject::Initialize()
     {
         if (wasInitialized)
@@ -579,12 +422,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 #undef PROJECTED_ENUM
 #undef ENUM_VALUE
 
-#if INTL_WINGLOB
-        library->AddMember(intlNativeInterfaces, Js::PropertyIds::winglob, library->GetTrue());
-#else
         library->AddMember(intlNativeInterfaces, Js::PropertyIds::winglob, library->GetFalse());
-
-#endif // else !INTL_WINGLOB
 
         // Add a reference to the built-in Intl object that can be referenced from the init code in Intl.js.
         library->AddMember(intlNativeInterfaces, Js::PropertyIds::Intl, library->GetIntlObject());
@@ -692,35 +530,19 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         scriptContext->GetLibrary()->EnsureMathBuiltInsAreReady();
 
         JavascriptExceptionObject *pExceptionObject = nullptr;
-#ifdef INTL_WINGLOB
-        WindowsGlobalizationAdapter* globAdapter = GetWindowsGlobalizationAdapter(scriptContext);
-#endif
 
         try {
             this->EnsureIntlByteCode(scriptContext);
             Assert(intlByteCode != nullptr);
 
-#ifdef INTL_WINGLOB
-            DelayLoadWindowsGlobalization *library = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-#endif
-
             JavascriptString* initType = nullptr;
 
-#ifdef INTL_WINGLOB
-            HRESULT hr;
-            //Ensure we have initialized all appropriate COM objects for the adapter (we will be using them now)
-            IfCOMFailIgnoreSilentlyAndReturn(globAdapter->EnsureCommonObjectsInitialized(library));
-#endif
             switch (intlInitializationType)
             {
                 default:
                     AssertMsg(false, "Not a valid intlInitializationType.");
                     // fall thru
                 case IntlInitializationType::Intl:
-#ifdef INTL_WINGLOB
-                    IfCOMFailIgnoreSilentlyAndReturn(globAdapter->EnsureNumberFormatObjectsInitialized(library));
-                    IfCOMFailIgnoreSilentlyAndReturn(globAdapter->EnsureDateTimeFormatObjectsInitialized(library));
-#endif
                     initType = scriptContext->GetPropertyString(PropertyIds::Intl);
                     break;
                 case IntlInitializationType::StringPrototype:
@@ -728,15 +550,9 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
                     initType = scriptContext->GetPropertyString(PropertyIds::String);
                     break;
                 case IntlInitializationType::DatePrototype:
-#ifdef INTL_WINGLOB
-                    IfCOMFailIgnoreSilentlyAndReturn(globAdapter->EnsureDateTimeFormatObjectsInitialized(library));
-#endif
                     initType = scriptContext->GetPropertyString(PropertyIds::Date);
                     break;
                 case IntlInitializationType::NumberPrototype:
-#ifdef INTL_WINGLOB
-                    IfCOMFailIgnoreSilentlyAndReturn(globAdapter->EnsureNumberFormatObjectsInitialized(library));
-#endif
                     initType = scriptContext->GetPropertyString(PropertyIds::Number);
                     break;
             }
@@ -798,32 +614,19 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
                 pExceptionObject == ThreadContext::GetContextForCurrentThread()->GetPendingSOErrorObject())
             {
                 // Reset factory objects that are might not have fully initialized
-#ifdef INTL_WINGLOB
-                globAdapter->ResetCommonFactoryObjects();
-#endif
                 switch (intlInitializationType) {
                 default:
                     AssertMsg(false, "Not a valid intlInitializationType.");
                     // fall thru
                 case IntlInitializationType::Intl:
-#ifdef INTL_WINGLOB
-                    globAdapter->ResetNumberFormatFactoryObjects();
-                    globAdapter->ResetDateTimeFormatFactoryObjects();
-#endif
                     scriptContext->GetLibrary()->ResetIntlObject();
                     break;
                 case IntlInitializationType::StringPrototype:
                     // No other windows globalization adapter is created. Resetting common adapter should suffice
                     break;
                 case IntlInitializationType::DatePrototype:
-#ifdef INTL_WINGLOB
-                    globAdapter->ResetDateTimeFormatFactoryObjects();
-#endif
                     break;
                 case IntlInitializationType::NumberPrototype:
-#ifdef INTL_WINGLOB
-                    globAdapter->ResetNumberFormatFactoryObjects();
-#endif
                     break;
                 }
 
@@ -1373,17 +1176,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
-#ifdef INTL_WINGLOB
-        char16 defaultLocale[LOCALE_NAME_MAX_LENGTH];
-        defaultLocale[0] = '\0';
-
-        if (GetUserDefaultLocaleName(defaultLocale, _countof(defaultLocale)) == 0)
-        {
-            JavascriptError::MapAndThrowError(scriptContext, HRESULT_FROM_WIN32(GetLastError()));
-        }
-
-        return JavascriptString::NewCopySz(defaultLocale, scriptContext);
-#else
         UErrorCode status = U_ZERO_ERROR;
         char defaultLangtag[ULOC_FULLNAME_CAPACITY] = { 0 };
         char defaultLocaleID[ULOC_FULLNAME_CAPACITY] = { 0 };
@@ -1399,7 +1191,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         utf8::NarrowStringToWideNoAlloc(defaultLangtag, static_cast<size_t>(langtagActual), defaultLangtag16, langtagActual + 1, &defaultLangtag16Actual);
         AssertOrFailFastMsg(defaultLangtag16Actual == static_cast<size_t>(langtagActual), "Language tags should always be ASCII");
         return JavascriptString::NewWithBuffer(defaultLangtag16, defaultLangtag16Actual, scriptContext);
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetExtensions(RecyclableObject* function, CallInfo callInfo, ...)
@@ -1412,55 +1203,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-#ifdef INTL_WINGLOB
-        DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-
-        AutoCOMPtr<ILanguage> language;
-        AutoCOMPtr<ILanguageExtensionSubtags> extensionSubtags;
-        HRESULT hr;
-        if (FAILED(hr = wga->CreateLanguage(scriptContext, VarTo<JavascriptString>(args.Values[1])->GetSz(), &language)))
-        {
-            HandleOOMSOEHR(hr);
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        if (FAILED(hr = language->QueryInterface(__uuidof(ILanguageExtensionSubtags), reinterpret_cast<void**>(&extensionSubtags))))
-        {
-            HandleOOMSOEHR(hr);
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-        Assert(extensionSubtags);
-
-        AutoHSTRING singletonString;
-        AutoCOMPtr<Windows::Foundation::Collections::IVectorView<HSTRING>> subtags;
-        uint32 length;
-
-        if (FAILED(hr = wgl->WindowsCreateString(_u("u"), 1, &singletonString)) || FAILED(hr = extensionSubtags->GetExtensionSubtags(*singletonString, &subtags)) || FAILED(subtags->get_Size(&length)))
-        {
-            HandleOOMSOEHR(hr);
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-        JavascriptArray *toReturn = scriptContext->GetLibrary()->CreateArray(length);
-
-        for (uint32 i = 0; i < length; i++)
-        {
-            AutoHSTRING str;
-            if (!FAILED(hr = wga->GetItemAt(subtags, i, &str)))
-            {
-                toReturn->SetItem(i, JavascriptString::NewCopySz(wgl->WindowsGetStringRawBuffer(*str, NULL), scriptContext), Js::PropertyOperationFlags::PropertyOperation_None);
-            }
-            else
-            {
-                HandleOOMSOEHR(hr);
-            }
-        }
-
-        return toReturn;
-#else
         AssertOrFailFastMsg(false, "ICU should not be calling platform.getExtensions");
         return nullptr;
-#endif
     }
 
 #ifdef INTL_ICU
@@ -1699,112 +1443,15 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-#ifdef INTL_WINGLOB
-        DynamicObject* obj = VarTo<DynamicObject>(args.Values[1]);
-
-        DelayLoadWindowsGlobalization* wgl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-
-        HRESULT hr;
-        Var propertyValue = nullptr;
-        uint32 length;
-
-        PCWSTR locale = GetTypedPropertyBuiltInFrom(obj, __locale, JavascriptString) ? VarTo<JavascriptString>(propertyValue)->GetSz() : nullptr;
-        PCWSTR templateString = GetTypedPropertyBuiltInFrom(obj, __templateString, JavascriptString) ? VarTo<JavascriptString>(propertyValue)->GetSz() : nullptr;
-
-        if (locale == nullptr || templateString == nullptr)
-        {
-            AssertMsg(false, "For some reason, locale and templateString aren't defined or aren't a JavascriptString.");
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        PCWSTR clock = GetTypedPropertyBuiltInFrom(obj, __windowsClock, JavascriptString) ? VarTo<JavascriptString>(propertyValue)->GetSz() : nullptr;
-
-        AutoHSTRING hDummyCalendar;
-        if (clock != nullptr)
-        {
-            //Because both calendar and clock are needed to pass into the datetimeformatter constructor (or neither); create a dummy one to get the value of calendar out so clock can be passed in with it.
-            AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter> dummyFormatter;
-            IfFailThrowHr(wga->CreateDateTimeFormatter(scriptContext, templateString, &locale, 1, nullptr, nullptr, &dummyFormatter));
-
-            IfFailThrowHr(wga->GetCalendar(dummyFormatter, &hDummyCalendar));
-        }
-
-        //Now create the real formatter.
-        AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter> cachedFormatter;
-        IfFailThrowHr(wga->CreateDateTimeFormatter(scriptContext, templateString, &locale, 1,
-            clock == nullptr ? nullptr : wgl->WindowsGetStringRawBuffer(*hDummyCalendar, &length), clock, &cachedFormatter));
-
-        AutoHSTRING hCalendar;
-        AutoHSTRING hClock;
-        AutoHSTRING hLocale;
-        AutoHSTRING hNumberingSystem;
-        //In case the upper code path wasn't hit; extract the calendar string again so it can be set.
-        IfFailThrowHr(wga->GetCalendar(cachedFormatter, &hCalendar));
-        SetHSTRINGPropertyBuiltInOn(obj, __windowsCalendar, *hCalendar);
-
-        IfFailThrowHr(wga->GetClock(cachedFormatter, &hClock));
-        SetHSTRINGPropertyBuiltInOn(obj, __windowsClock, *hClock);
-
-        IfFailThrowHr(wga->GetResolvedLanguage(cachedFormatter, &hLocale));
-        SetHSTRINGPropertyBuiltInOn(obj, __locale, *hLocale);
-
-        //Get the numbering system
-        IfFailThrowHr(wga->GetNumeralSystem(cachedFormatter, &hNumberingSystem));
-        SetHSTRINGPropertyBuiltInOn(obj, __numberingSystem, *hNumberingSystem);
-
-        //Extract the pattern strings
-        AutoCOMPtr<Windows::Foundation::Collections::IVectorView<HSTRING>> dateResult;
-        IfFailThrowHr(cachedFormatter->get_Patterns(&dateResult));
-
-        IfFailThrowHr(dateResult->get_Size(&length));
-
-        JavascriptArray *patternStrings = scriptContext->GetLibrary()->CreateArray(length);
-
-        for (uint32 i = 0; i < length; i++)
-        {
-            AutoHSTRING item;
-            IfFailThrowHr(wga->GetItemAt(dateResult, i, &item));
-            patternStrings->SetItem(i, Js::JavascriptString::NewCopySz(wgl->WindowsGetStringRawBuffer(*item, NULL), scriptContext), PropertyOperation_None);
-        }
-        SetPropertyBuiltInOn(obj, __patternStrings, patternStrings);
-
-        //This parameter tells us whether we are caching it this time around; or just validating pattern strings
-        if ((boolean)(VarTo<JavascriptBoolean>(args.Values[2])->GetValue()))
-        {
-            //If timeZone is undefined; then use the standard dateTimeFormatter to format in local time; otherwise use the IDateTimeFormatter2 to format using specified timezone (UTC)
-            if (!GetPropertyBuiltInFrom(obj, __timeZone) || JavascriptOperators::IsUndefinedObject(propertyValue))
-            {
-                cachedFormatter->AddRef();
-                obj->SetInternalProperty(Js::InternalPropertyIds::HiddenObject, AutoCOMJSObject::New(scriptContext->GetRecycler(), cachedFormatter), Js::PropertyOperationFlags::PropertyOperation_None, NULL);
-            }
-            else
-            {
-                AutoCOMPtr<DateTimeFormatting::IDateTimeFormatter2> tzCachedFormatter;
-                IfFailThrowHr(cachedFormatter->QueryInterface(__uuidof(DateTimeFormatting::IDateTimeFormatter2), reinterpret_cast<void**>(&tzCachedFormatter)));
-                tzCachedFormatter->AddRef();
-
-                //Set the object as a cache
-                obj->SetInternalProperty(Js::InternalPropertyIds::HiddenObject, AutoCOMJSObject::New(scriptContext->GetRecycler(), tzCachedFormatter), Js::PropertyOperationFlags::PropertyOperation_None, NULL);
-            }
-        }
-
-        return scriptContext->GetLibrary()->GetUndefined();
-#else
         // TODO (doilij): implement INTL_ICU version
 #ifdef INTL_ICU_DEBUG
         Output::Print(_u("EntryIntl_CreateDateTimeFormat > returning null, fallback to JS\n"));
 #endif
         return scriptContext->GetLibrary()->GetNull();
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_LocaleCompare(RecyclableObject* function, CallInfo callInfo, ...)
     {
-#ifdef INTL_WINGLOB
-        AssertOrFailFastMsg(false, "platform.localeCompare should not be called in Intl-WinGlob");
-        return nullptr;
-#else
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(
             args.Info.Count == 5 &&
@@ -1964,44 +1611,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         return ret;
-#endif
     }
-
-#ifdef INTL_WINGLOB
-    static uint32_t GetCompareStringComparisonFlags(CollatorSensitivity sensitivity, bool ignorePunctuation, bool numeric)
-    {
-        uint32_t flags = 0;
-
-        if (sensitivity == CollatorSensitivity::Base)
-        {
-            flags |= LINGUISTIC_IGNOREDIACRITIC | LINGUISTIC_IGNORECASE | NORM_IGNOREKANATYPE | NORM_IGNOREWIDTH;
-        }
-        else if (sensitivity == CollatorSensitivity::Accent)
-        {
-            flags |= LINGUISTIC_IGNORECASE | NORM_IGNOREKANATYPE | NORM_IGNOREWIDTH;
-        }
-        else if (sensitivity == CollatorSensitivity::Case)
-        {
-            flags |= NORM_IGNOREKANATYPE | NORM_IGNOREWIDTH | LINGUISTIC_IGNOREDIACRITIC;
-        }
-        else if (sensitivity == CollatorSensitivity::Variant)
-        {
-            flags |= NORM_LINGUISTIC_CASING;
-        }
-
-        if (ignorePunctuation)
-        {
-            flags |= NORM_IGNORESYMBOLS;
-        }
-
-        if (numeric)
-        {
-            flags |= SORT_DIGITSASNUMBERS;
-        }
-
-        return flags;
-    }
-#endif
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_CompareString(RecyclableObject* function, CallInfo callInfo, ...)
     {
@@ -2153,55 +1763,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         return JavascriptNumber::ToVar(fractionDigits, scriptContext);
 #endif
     }
-
-#ifdef INTL_WINGLOB
-    //Helper, this just prepares based on fraction and integer format options
-    void IntlEngineInterfaceExtensionObject::prepareWithFractionIntegerDigits(ScriptContext* scriptContext, NumberFormatting::INumberRounderOption* rounderOptions,
-        NumberFormatting::INumberFormatterOptions* formatterOptions, uint16 minFractionDigits, uint16 maxFractionDigits, uint16 minIntegerDigits)
-    {
-        HRESULT hr;
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-        AutoCOMPtr<NumberFormatting::INumberRounder> numberRounder(nullptr);
-        AutoCOMPtr<NumberFormatting::IIncrementNumberRounder> incrementNumberRounder(nullptr);
-
-        IfFailThrowHr(wga->CreateIncrementNumberRounder(scriptContext, &numberRounder));
-        IfFailThrowHr(numberRounder->QueryInterface(__uuidof(NumberFormatting::IIncrementNumberRounder), reinterpret_cast<void**>(&incrementNumberRounder)));
-        Assert(incrementNumberRounder);
-        IfFailThrowHr(incrementNumberRounder->put_RoundingAlgorithm(Windows::Globalization::NumberFormatting::RoundingAlgorithm::RoundingAlgorithm_RoundHalfAwayFromZero));
-
-        IfFailThrowHr(incrementNumberRounder->put_Increment(pow(10.0, -maxFractionDigits)));
-        IfFailThrowHr(rounderOptions->put_NumberRounder(numberRounder));
-
-        IfFailThrowHr(formatterOptions->put_FractionDigits(minFractionDigits));
-        IfFailThrowHr(formatterOptions->put_IntegerDigits(minIntegerDigits));
-    }
-
-    //Helper, this just prepares based on significant digits format options
-    void IntlEngineInterfaceExtensionObject::prepareWithSignificantDigits(ScriptContext* scriptContext, NumberFormatting::INumberRounderOption* rounderOptions, NumberFormatting::INumberFormatter *numberFormatter,
-        NumberFormatting::INumberFormatterOptions* formatterOptions, uint16 minSignificantDigits, uint16 maxSignificantDigits)
-    {
-        HRESULT hr;
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-        AutoCOMPtr<NumberFormatting::INumberRounder> numberRounder(nullptr);
-        AutoCOMPtr<NumberFormatting::ISignificantDigitsNumberRounder> incrementNumberRounder(nullptr);
-        AutoCOMPtr<NumberFormatting::ISignificantDigitsOption> significantDigitsOptions(nullptr);
-
-        IfFailThrowHr(wga->CreateSignificantDigitsRounder(scriptContext, &numberRounder));
-        IfFailThrowHr(numberRounder->QueryInterface(__uuidof(NumberFormatting::ISignificantDigitsNumberRounder), reinterpret_cast<void**>(&incrementNumberRounder)));
-        Assert(incrementNumberRounder);
-        IfFailThrowHr(incrementNumberRounder->put_RoundingAlgorithm(Windows::Globalization::NumberFormatting::RoundingAlgorithm::RoundingAlgorithm_RoundHalfAwayFromZero));
-
-        IfFailThrowHr(incrementNumberRounder->put_SignificantDigits(maxSignificantDigits));
-        IfFailThrowHr(rounderOptions->put_NumberRounder(numberRounder));
-
-        IfFailThrowHr(numberFormatter->QueryInterface(__uuidof(NumberFormatting::ISignificantDigitsOption), reinterpret_cast<void**>(&significantDigitsOptions)));
-        IfFailThrowHr(significantDigitsOptions->put_SignificantDigits(minSignificantDigits));
-        Assert(significantDigitsOptions);
-
-        //Clear minimum fraction digits as in the case of percent 2 is supplied
-        IfFailThrowHr(formatterOptions->put_FractionDigits(0));
-    }
-#endif
 
 #ifdef INTL_ICU
     // Rationale for this data structure: ICU reports back a tree of parts where each node in the tree
@@ -2512,63 +2073,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
-#ifdef INTL_WINGLOB
-        if (args.Info.Count < 3 || !(TaggedInt::Is(args.Values[1]) || JavascriptNumber::Is(args.Values[1])) || !DynamicObject::IsBaseDynamicObject(args.Values[2]))
-        {
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        Windows::Foundation::DateTime winDate;
-        HRESULT hr;
-        if (TaggedInt::Is(args.Values[1]))
-        {
-            hr = Js::DateUtilities::ES5DateToWinRTDate(TaggedInt::ToInt32(args.Values[1]), &(winDate.UniversalTime));
-        }
-        else
-        {
-            hr = Js::DateUtilities::ES5DateToWinRTDate(JavascriptNumber::GetValue(args.Values[1]), &(winDate.UniversalTime));
-        }
-        if (FAILED(hr))
-        {
-            HandleOOMSOEHR(hr);
-            // If conversion failed, double value is outside the range of WinRT DateTime
-            Js::JavascriptError::ThrowRangeError(scriptContext, JSERR_OutOfDateTimeRange);
-        }
-
-        DynamicObject* obj = VarTo<DynamicObject>(args.Values[2]);
-        Var hiddenObject = nullptr;
-        AssertOrFailFastMsg(obj->GetInternalProperty(obj, Js::InternalPropertyIds::HiddenObject, &hiddenObject, NULL, scriptContext),
-            "EntryIntl_FormatDateTime: Could not retrieve hiddenObject.");
-
-        //We are going to perform the same check for timeZone as when caching the formatter.
-        Var propertyValue = nullptr;
-        AutoHSTRING result;
-
-        //If timeZone is undefined; then use the standard dateTimeFormatter to format in local time; otherwise use the IDateTimeFormatter2 to format using specified timezone (UTC)
-        if (!GetPropertyBuiltInFrom(obj, __timeZone) || JavascriptOperators::IsUndefinedObject(propertyValue))
-        {
-            DateTimeFormatting::IDateTimeFormatter *formatter = static_cast<DateTimeFormatting::IDateTimeFormatter *>(((AutoCOMJSObject *)hiddenObject)->GetInstance());
-            Assert(formatter);
-            IfFailThrowHr(formatter->Format(winDate, &result));
-        }
-        else
-        {
-            DateTimeFormatting::IDateTimeFormatter2 *formatter = static_cast<DateTimeFormatting::IDateTimeFormatter2 *>(((AutoCOMJSObject *)hiddenObject)->GetInstance());
-            Assert(formatter);
-            HSTRING timeZone;
-            HSTRING_HEADER timeZoneHeader;
-
-            // IsValidTimeZone() has already verified that this is JavascriptString.
-            JavascriptString* userDefinedTimeZoneId = VarTo<JavascriptString>(propertyValue);
-            IfFailThrowHr(WindowsCreateStringReference(userDefinedTimeZoneId->GetSz(), userDefinedTimeZoneId->GetLength(), &timeZoneHeader, &timeZone));
-            Assert(timeZone);
-
-            IfFailThrowHr(formatter->FormatUsingTimeZone(winDate, timeZone, &result));
-        }
-        PCWSTR strBuf = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary()->WindowsGetStringRawBuffer(*result, NULL);
-
-        return Js::JavascriptString::NewCopySz(strBuf, scriptContext);
-#else
         // This function vaguely implements ECMA 402 #sec-partitiondatetimepattern
         INTL_CHECK_ARGS(
             args.Info.Count == 5 &&
@@ -2770,7 +2274,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
         return ret;
-#endif
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetPatternForSkeleton(RecyclableObject *function, CallInfo callInfo, ...)
@@ -2844,20 +2347,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         JavascriptString *tz = VarTo<JavascriptString>(args.Values[1]);
 
-#ifdef INTL_WINGLOB
-        AutoHSTRING canonicalizedTimeZone;
-        boolean isValidTimeZone = GetWindowsGlobalizationAdapter(scriptContext)->ValidateAndCanonicalizeTimeZone(scriptContext, tz->GetSz(), &canonicalizedTimeZone);
-        if (isValidTimeZone)
-        {
-            DelayLoadWindowsGlobalization* wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-            PCWSTR strBuf = wsl->WindowsGetStringRawBuffer(*canonicalizedTimeZone, NULL);
-            return Js::JavascriptString::NewCopySz(strBuf, scriptContext);
-        }
-        else
-        {
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-#else
         UErrorCode status = U_ZERO_ERROR;
 
         // TODO(jahorto): Is this the list of timeZones that we want? How is this different from
@@ -2899,7 +2388,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
         return JavascriptString::NewCopyBuffer(reinterpret_cast<const char16 *>(match), matchLen, scriptContext);
-#endif
     }
 
     // returns the current system time zone
@@ -2907,22 +2395,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
-#ifdef INTL_WINGLOB
-        WindowsGlobalizationAdapter* wga = GetWindowsGlobalizationAdapter(scriptContext);
-        DelayLoadWindowsGlobalization* wsl = scriptContext->GetThreadContext()->GetWindowsGlobalizationLibrary();
-        AutoHSTRING str;
-
-        HRESULT hr;
-        if (FAILED(hr = wga->GetDefaultTimeZoneId(scriptContext, &str)))
-        {
-            HandleOOMSOEHR(hr);
-            //If we can't get default timeZone, return undefined.
-            return scriptContext->GetLibrary()->GetUndefined();
-        }
-
-        PCWSTR strBuf = wsl->WindowsGetStringRawBuffer(*str, NULL);
-        return Js::JavascriptString::NewCopySz(strBuf, scriptContext);
-#else
         int timeZoneLen = 0;
         char16 *timeZone = nullptr;
         EnsureBuffer([&](UChar *buf, int bufLen, UErrorCode *status)
@@ -2930,7 +2402,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return ucal_getDefaultTimeZone(buf, bufLen, status);
         }, scriptContext->GetRecycler(), &timeZone, &timeZoneLen);
         return JavascriptString::NewWithBuffer(timeZone, timeZoneLen, scriptContext);
-#endif
     }
 
 #ifdef INTL_ICU

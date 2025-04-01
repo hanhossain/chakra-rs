@@ -764,12 +764,6 @@ private:
 
 #ifdef ENABLE_GLOBALIZATION
     Js::DelayLoadWinRtString delayLoadWinRtString;
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-    Js::DelayLoadWindowsGlobalization delayLoadWindowsGlobalizationLibrary;
-    Js::WindowsGlobalizationAdapter windowsGlobalizationAdapter;
-#endif
-#endif
 #ifdef ENABLE_FOUNDATION_OBJECT
     Js::DelayLoadWinRtFoundation delayLoadWinRtFoundationLibrary;
     Js::WindowsFoundationAdapter windowsFoundationAdapter;
@@ -869,12 +863,6 @@ public:
 
 #ifdef ENABLE_GLOBALIZATION
     Js::DelayLoadWinRtString *GetWinRTStringLibrary();
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-    Js::DelayLoadWindowsGlobalization *GetWindowsGlobalizationLibrary();
-    Js::WindowsGlobalizationAdapter *GetWindowsGlobalizationAdapter();
-#endif
-#endif
 #ifdef ENABLE_FOUNDATION_OBJECT
     Js::DelayLoadWinRtFoundation *GetWinRtFoundationLibrary();
     Js::WindowsFoundationAdapter *GetWindowsFoundationAdapter();

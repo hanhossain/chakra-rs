@@ -140,35 +140,6 @@ namespace Js
         return E_NOTIMPL;
     }
 
-#ifdef INTL_WINGLOB
-    bool DelayLoadWindowsGlobalization::HasGlobalizationDllLoaded()
-    {
-        return this->hasGlobalizationDllLoaded;
-    }
-
-    HRESULT DelayLoadWindowsGlobalization::DllGetActivationFactory(
-        __in HSTRING activatableClassId,
-        __out IActivationFactory** factory)
-    {
-        if (m_hModule)
-        {
-            if (m_pfnFNCWDllGetActivationFactory == nullptr)
-            {
-                m_pfnFNCWDllGetActivationFactory = (PFNCWDllGetActivationFactory)GetFunction("DllGetActivationFactory");
-                if (m_pfnFNCWDllGetActivationFactory == nullptr)
-                {
-                    return E_UNEXPECTED;
-                }
-            }
-
-            Assert(m_pfnFNCWDllGetActivationFactory != nullptr);
-            return m_pfnFNCWDllGetActivationFactory(activatableClassId, factory);
-        }
-
-        return E_NOTIMPL;
-    }
-#endif
-
     HRESULT DelayLoadWinRtFoundation::RoGetActivationFactory(
         __in HSTRING activatableClassId,
         __in REFIID iid,
@@ -191,98 +162,6 @@ namespace Js
 
         return E_NOTIMPL;
     }
-
-#ifdef INTL_WINGLOB
-    void DelayLoadWindowsGlobalization::Ensure(Js::DelayLoadWinRtString *winRTStringLibrary)
-    {
-        if (!this->m_isInit)
-        {
-            DelayLoadLibrary::EnsureFromSystemDirOnly();
-
-#if DBG
-            // This unused variable is to allow one to see the value of lastError in case both LoadLibrary (DelayLoadLibrary::Ensure has one) fail.
-            // As the issue might be with the first one, as opposed to the second
-            uint32_t errorWhenLoadingBluePlus = GetLastError();
-            Unused(errorWhenLoadingBluePlus);
-#endif
-            //Perform a check to see if Windows.Globalization.dll was loaded; if not try loading jsIntl.dll as we are on Win7.
-            if (m_hModule == nullptr)
-            {
-                m_hModule = LoadLibraryEx(GetWin7LibraryName(), nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-            }
-
-            // Set the flag depending on Windows.globalization.dll or jsintl.dll was loaded successfully or not
-            if (m_hModule != nullptr)
-            {
-                hasGlobalizationDllLoaded = true;
-            }
-            this->winRTStringLibrary = winRTStringLibrary;
-            this->winRTStringsPresent = GetFunction("WindowsDuplicateString") != nullptr;
-        }
-    }
-
-    HRESULT DelayLoadWindowsGlobalization::WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
-    {
-        //If winRtStringLibrary isn't nullptr, that means it is available and we are on Win8+
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsCreateString(sourceString, length, string);
-        }
-
-        return DelayLoadWinRtString::WindowsCreateString(sourceString, length, string);
-    }
-    HRESULT DelayLoadWindowsGlobalization::WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string)
-    {
-        //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
-        //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsCreateStringReference(sourceString, length, header, string);
-        }
-        return DelayLoadWinRtString::WindowsCreateStringReference(sourceString, length, header, string);
-    }
-    HRESULT DelayLoadWindowsGlobalization::WindowsDeleteString(_In_opt_ HSTRING string)
-    {
-        //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
-        //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsDeleteString(string);
-        }
-        return DelayLoadWinRtString::WindowsDeleteString(string);
-    }
-    PCWSTR DelayLoadWindowsGlobalization::WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length)
-    {
-        //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
-        //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsGetStringRawBuffer(string, length);
-        }
-        return DelayLoadWinRtString::WindowsGetStringRawBuffer(string, length);
-    }
-    HRESULT DelayLoadWindowsGlobalization::WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result)
-    {
-        //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
-        //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsCompareStringOrdinal(string1, string2, result);
-        }
-        return DelayLoadWinRtString::WindowsCompareStringOrdinal(string1, string2, result);
-    }
-
-    HRESULT DelayLoadWindowsGlobalization::WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *newString)
-    {
-        //First, we attempt to use the WinStringRT api encapsulated in the globalization dll; if it is available then it is a downlevel dll.
-        //Otherwise; we might run into an error where we are using the Win8 (because testing is being done for instance) with the downlevel dll, and that would cause errors.
-        if(!winRTStringsPresent && winRTStringLibrary->IsAvailable())
-        {
-            return winRTStringLibrary->WindowsDuplicateString(original, newString);
-        }
-        return DelayLoadWinRtString::WindowsDuplicateString(original, newString);
-    }
-#endif
 
     BOOL DelayLoadWinCoreProcessThreads::GetProcessInformation(
         __in HANDLE hProcess,

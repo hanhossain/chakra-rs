@@ -28,9 +28,6 @@ namespace Js
         static const int64_t ticksPerMillisecond;
         static const double ticksPerMillisecondDouble;
         static const int64_t jsEpochMilliseconds;
-#ifdef INTL_WINGLOB
-        static HRESULT ES5DateToWinRTDate(double es5Date, __out int64_t* pResult);
-#endif
         static double TimeFromSt(SYSTEMTIME *pst);
         static double DayTimeFromSt(SYSTEMTIME *pst);
         static double TvFromDate(double year, double mon, double day, double time);

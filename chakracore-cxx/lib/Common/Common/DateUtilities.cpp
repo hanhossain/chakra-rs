@@ -68,42 +68,6 @@ namespace Js
         _u("PDT")
     };
 
-#ifdef INTL_WINGLOB
-    //
-    // Convert an ES5 date based on double to a WinRT DateTime
-    // DateTime is the number of ticks that have elapsed since 1/1/1601 00:00:00 in 100ns precision
-    // If we return a failure HRESULT other than E_INVALIDARG, the es5 date can't be expressed
-    // in the WinRT scheme
-    //
-    HRESULT DateUtilities::ES5DateToWinRTDate(double es5Date, __out int64_t* pRet)
-    {
-        Assert(pRet != NULL);
-
-        if (pRet == NULL)
-        {
-            return E_INVALIDARG;
-        }
-
-        int64_t es5DateAsInt64 = NumberUtilities::TryToInt64(es5Date);
-
-        if (!NumberUtilities::IsValidTryToInt64(es5DateAsInt64)) return INTSAFE_E_ARITHMETIC_OVERFLOW;
-
-        // First, we rebase it to the WinRT epoch, then we convert the time in milliseconds to ticks
-        int64_t numTicks;
-        if (!Int64Math::Add(es5DateAsInt64, jsEpochMilliseconds, &numTicks))
-        {
-            int64_t adjustedTicks = 0;
-            if (!Int64Math::Mul(numTicks, ticksPerMillisecond, &adjustedTicks))
-            {
-                (*pRet) = adjustedTicks;
-                return S_OK;
-            }
-        }
-
-         return INTSAFE_E_ARITHMETIC_OVERFLOW;
-    }
-#endif
-
     ///------------------------------------------------------------------------------
     /// Get a time value from SYSTEMTIME structure.
     ///

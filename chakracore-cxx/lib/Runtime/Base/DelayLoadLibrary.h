@@ -61,50 +61,6 @@ namespace Js
         virtual HRESULT WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * newString);
     };
 
-#ifdef INTL_WINGLOB
-    class DelayLoadWindowsGlobalization sealed : public DelayLoadWinRtString
-    {
-    private:
-        // DelayLoadWindowsGlobalization specific functions
-        typedef HRESULT FNCWDllGetActivationFactory(HSTRING clsid, IActivationFactory** factory);
-        typedef FNCWDllGetActivationFactory* PFNCWDllGetActivationFactory;
-        PFNCWDllGetActivationFactory m_pfnFNCWDllGetActivationFactory;
-
-        Js::DelayLoadWinRtString *winRTStringLibrary;
-        bool winRTStringsPresent;
-        bool hasGlobalizationDllLoaded;
-
-    public:
-        DelayLoadWindowsGlobalization() : DelayLoadWinRtString(),
-            m_pfnFNCWDllGetActivationFactory(nullptr),
-            winRTStringLibrary(nullptr),
-            winRTStringsPresent(false),
-            hasGlobalizationDllLoaded(false) { }
-
-        virtual ~DelayLoadWindowsGlobalization() { }
-
-        LPCTSTR GetLibraryName() const
-        {
-            return _u("windows.globalization.dll");
-        }
-        LPCTSTR GetWin7LibraryName() const
-        {
-            return _u("jsIntl.dll");
-        }
-        void Ensure(Js::DelayLoadWinRtString *winRTStringLibrary);
-
-        HRESULT DllGetActivationFactory(__in HSTRING activatibleClassId, __out IActivationFactory** factory);
-        bool HasGlobalizationDllLoaded();
-
-        HRESULT WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string) override;
-        HRESULT WindowsCreateStringReference(_In_reads_opt_(length+1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string) override;
-        HRESULT WindowsDeleteString(_In_opt_ HSTRING string) override;
-        PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length) override;
-        HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result) override;
-        HRESULT WindowsDuplicateString(_In_opt_ HSTRING original, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *newString) override;
-    };
-#endif
-
     class DelayLoadWinRtFoundation sealed : public DelayLoadLibrary
     {
     private:
