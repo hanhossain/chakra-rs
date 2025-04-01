@@ -6403,13 +6403,7 @@ ScriptContext::GetJitFuncRangeCache()
 #ifdef ENABLE_INTL_OBJECT
         if (GetConfig()->IsIntlEnabled())
         {
-#ifdef INTL_WINGLOB
-            // This will try to load globalization dlls if not already loaded.
-            Js::DelayLoadWindowsGlobalization* globLibrary = GetThreadContext()->GetWindowsGlobalizationLibrary();
-            return globLibrary->HasGlobalizationDllLoaded();
-#else
             return true;
-#endif
         }
 #endif
         return false;

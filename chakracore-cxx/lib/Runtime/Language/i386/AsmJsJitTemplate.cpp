@@ -1186,7 +1186,7 @@ namespace Js
                 Assert( size != nullptr );
                 reloc.Init( buffer, size );
                 EncodingInfo info;
-                *size += JCC::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>( 0 ), &info );
+                *size += JCC::EncodeInstruction<int8_t>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
                 reloc.JumpEncoded( info );
             }
 
@@ -1317,9 +1317,9 @@ namespace Js
                     // mov reg, [mod+bufferOffset]
                     size += MOV::EncodeInstruction<int>(buffer, InstrParamsRegAddr(reg, ModuleEnvReg, AsmJsModuleMemory::MemoryTableBeginOffset));
                     // mov reg, [reg+detachedOffset]
-                    size += MOV::EncodeInstruction<int8>(buffer, InstrParamsRegAddr(reg, reg, ArrayBuffer::GetIsDetachedOffset()));
+                    size += MOV::EncodeInstruction<int8_t>(buffer, InstrParamsRegAddr(reg, reg, ArrayBuffer::GetIsDetachedOffset()));
                     // test  reg,reg
-                    size += TEST::EncodeInstruction<int8>(buffer, InstrParams2Reg(reg, reg));
+                    size += TEST::EncodeInstruction<int8_t>(buffer, InstrParams2Reg(reg, reg));
                     // JE Done
                     JumpRelocation relocDone;
                     EncodingHelpers::EncodeShortJump<JE>(buffer, relocDone, &size);
@@ -1328,7 +1328,7 @@ namespace Js
                     size += MOV::EncodeInstruction<int>(buffer, InstrParamsRegImm<int32>(reg, throwOOM));
                     size += CALL::EncodeInstruction<int>(buffer, InstrParamsReg(reg));
                     // Done:
-                    relocDone.ApplyReloc<int8>();
+                    relocDone.ApplyReloc<int8_t>();
                 }
                 return size;
             }
@@ -1518,7 +1518,7 @@ namespace Js
              size += CALL::EncodeInstruction<int>(buffer, InstrParamsReg(RegEAX));
 
             // Done:
-            relocDone.ApplyReloc<int8>();
+            relocDone.ApplyReloc<int8_t>();
 
             //End Stack Probe:
             if (stackSize <= PAGESIZE)
@@ -1782,8 +1782,8 @@ namespace Js
             rightOffset -= templateData->GetBaseOffSet();
             RegNum reg = templateData->GetReg<int>(~Mask8BitsReg);
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( reg, reg ) );
-            size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int8>( RegEBP, rightOffset, 0 ) );
-            size += SETNE::EncodeInstruction<int8>( buffer, InstrParamsReg( reg ) );
+            size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int8_t>( RegEBP, rightOffset, 0 ) );
+            size += SETNE::EncodeInstruction<int8_t>( buffer, InstrParamsReg( reg ) );
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , reg);
 
             return size;
@@ -1797,8 +1797,8 @@ namespace Js
             rightOffset -= templateData->GetBaseOffSet();
             RegNum reg = templateData->GetReg<int>(~Mask8BitsReg);
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( reg, reg ) );
-            size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int8>( RegEBP, rightOffset, 0 ) );
-            size += SETE::EncodeInstruction<int8>( buffer, InstrParamsReg( reg ) );
+            size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int8_t>( RegEBP, rightOffset, 0 ) );
+            size += SETE::EncodeInstruction<int8_t>( buffer, InstrParamsReg( reg ) );
 
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , reg);
 
@@ -1993,7 +1993,7 @@ namespace Js
             EncodingHelpers::EncodeShortJump<JMP>( buffer, relocLabelEnd, &size );
 
             // Label1:
-            relocLabel1.ApplyReloc<int8>();
+            relocLabel1.ApplyReloc<int8_t>();
 
             // MOV  eax, [leftOffset]
             RegNum lhsReg;
@@ -2020,8 +2020,8 @@ namespace Js
             EncodingHelpers::EncodeShortJump<JMP>( buffer, relocLabelEnd2, &size );
 
             // LabelDoDiv:
-            relocLabelDoDiv.ApplyReloc<int8>();
-            relocLabelDoDiv2.ApplyReloc<int8>();
+            relocLabelDoDiv.ApplyReloc<int8_t>();
+            relocLabelDoDiv2.ApplyReloc<int8_t>();
 
             // cdq
             size += CDQ::EncodeInstruction<int>( buffer );
@@ -2029,8 +2029,8 @@ namespace Js
             size += IDIV::EncodeInstruction<int>(buffer, InstrParamsReg(rhsReg));
 
             // LabelEnd:
-            relocLabelEnd.ApplyReloc<int8>();
-            relocLabelEnd2.ApplyReloc<int8>();
+            relocLabelEnd.ApplyReloc<int8_t>();
+            relocLabelEnd2.ApplyReloc<int8_t>();
 
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset, RegEAX );
             templateData->InvalidateReg( RegEDX );
@@ -2058,7 +2058,7 @@ namespace Js
             //je    :L4
             JumpRelocation reloc(buffer, &size);
             EncodingInfo info;
-            size += JE::EncodeInstruction<int8>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JE::EncodeInstruction<int8_t>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc.JumpEncoded(info);
 
             //cmp   leftoffset -2147483648
@@ -2067,7 +2067,7 @@ namespace Js
             //jne   :L3
             JumpRelocation reloc2(buffer, &size);
             EncodingInfo info2;
-            size += JNE::EncodeInstruction<int8>(buffer, InstrParamsImm<int8>(0), &info2);
+            size += JNE::EncodeInstruction<int8_t>(buffer, InstrParamsImm<int8_t>(0), &info2);
             reloc2.JumpEncoded(info2);
 
             //cmp   rightoffset -1
@@ -2076,11 +2076,11 @@ namespace Js
             //je    :L4
             JumpRelocation reloc3(buffer, &size);
             EncodingInfo info3;
-            size += JE::EncodeInstruction<int8>(buffer, InstrParamsImm<int8>(0), &info3);
+            size += JE::EncodeInstruction<int8_t>(buffer, InstrParamsImm<int8_t>(0), &info3);
             reloc3.JumpEncoded(info3);
 
             //:L3
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
             //cdq
             size += CDQ::EncodeInstruction<int>(buffer);
 
@@ -2093,18 +2093,18 @@ namespace Js
             //jmp   :L5
             JumpRelocation reloc4(buffer, &size);
             EncodingInfo info4;
-            size += JMP::EncodeInstruction<int8>(buffer, InstrParamsImm<int8>(0), &info4);
+            size += JMP::EncodeInstruction<int8_t>(buffer, InstrParamsImm<int8_t>(0), &info4);
             reloc4.JumpEncoded(info4);
 
             //:L4
-            reloc.ApplyReloc<int8>();
-            reloc3.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
+            reloc3.ApplyReloc<int8_t>();
 
             //mov   targetoffset , 0
             size += MOV::EncodeInstruction<int>(buffer, InstrParamsAddrImm<int32>(RegEBP, targetOffset, 0));
 
             //:L5
-            reloc4.ApplyReloc<int8>();
+            reloc4.ApplyReloc<int8_t>();
 
             //mov   eax, targetoffset
             size += MOV::EncodeInstruction<int>(buffer, InstrParamsRegAddr(RegEAX, RegEBP, targetOffset));
@@ -2122,7 +2122,7 @@ namespace Js
             RegNum resultReg = templateData->GetReg<int>();\
             size += XOR::EncodeInstruction<int32>( buffer, InstrParams2Reg( resultReg, resultReg ) );\
             size += EncodingHelpers::NonCommutativeOperation<CMP,int>( context, buffer, leftOffset, rightOffset, nullptr, nullptr, 1 << resultReg );\
-            size += jmp::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>(1) );\
+            size += jmp::EncodeInstruction<int8_t>( buffer, InstrParamsImm<int8_t>(1) );\
             size += INC::EncodeInstruction<int32>( buffer, InstrParamsReg( resultReg ) );\
             targetOffset -= templateData->GetBaseOffSet();\
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , resultReg);\
@@ -2248,15 +2248,15 @@ namespace Js
 
             RegNum dstReg = templateData->GetReg<int>(1 << tmpReg);
             size += MOV::EncodeInstruction<int>(buffer, InstrParamsRegImm<int>(dstReg, 31));
-            size += SUB::EncodeInstruction<int8>(buffer, InstrParams2Reg(dstReg, tmpReg));
+            size += SUB::EncodeInstruction<int8_t>(buffer, InstrParams2Reg(dstReg, tmpReg));
 
             JumpRelocation relocLabelDone;
             EncodingHelpers::EncodeShortJump<JMP>(buffer, relocLabelDone, &size);
 
-            relocLabel32.ApplyReloc<int8>();
+            relocLabel32.ApplyReloc<int8_t>();
             size += MOV::EncodeInstruction<int>(buffer, InstrParamsRegImm<int>(dstReg, 32));
 
-            relocLabelDone.ApplyReloc<int8>();
+            relocLabelDone.ApplyReloc<int8_t>();
 
             templateData->InvalidateReg(tmpReg);
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , dstReg);
@@ -2281,7 +2281,7 @@ namespace Js
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info1;
             // JNE labelEnd
-            size += JE::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>( 0 ), &info1 );
+            size += JE::EncodeInstruction<int8_t>( buffer, InstrParamsImm<int8_t>( 0 ), &info1 );
             reloc.JumpEncoded( info1 );
 
             size += MOV::EncodeInstruction<int32>( buffer, InstrParamsRegAddr( RegEAX, RegEBP, leftOffset ) );
@@ -2289,7 +2289,7 @@ namespace Js
             size += DIV::EncodeInstruction<int32>( buffer, InstrParamsReg( reg ) );
 
             // labelEnd:
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             templateData->InvalidateReg( RegEDX );
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , RegEAX);
@@ -2307,7 +2307,7 @@ namespace Js
 
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( RegEDX, RegEDX ) );
             size += CMP::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int>( RegEBP, rightOffset, 0 ) );
-            size += JE::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>( 0 ) );
+            size += JE::EncodeInstruction<int8_t>( buffer, InstrParamsImm<int8_t>( 0 ) );
             uint8_t* reloc = &buffer[-1];
             int relocSize = 0;
             relocSize += MOV::EncodeInstruction<int>( buffer, InstrParamsRegAddr( RegEAX, RegEBP, leftOffset ) );
@@ -2588,7 +2588,7 @@ namespace Js
             rightOffset -= templateData->GetBaseOffSet();
 
             //AsmJsMath::Rem < int > ;
-            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, 16 ) );
+            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, 16 ) );
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsRegAddr( RegXMM0, RegEBP, rightOffset ) );
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsAddrReg( RegESP, 8, RegXMM0 ) );
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsRegAddr( RegXMM0, RegEBP, leftOffset ) );
@@ -2615,9 +2615,9 @@ namespace Js
             size += XOR::EncodeInstruction<int32>(buffer, InstrParams2Reg(resultReg, resultReg));
             size += EncodingHelpers::NonCommutativeOperation<OperationSignature, Size>(context, buffer, leftOffset, rightOffset);
             size += LAHF::EncodeInstruction<int32>(buffer);
-            size += TEST::EncodeInstruction<int8>(buffer, InstrParamsRegImm<int8>(RegNum(RegEAX), 0x44));
+            size += TEST::EncodeInstruction<int8_t>(buffer, InstrParamsRegImm<int8_t>(RegNum(RegEAX), 0x44));
             /*fix for ah*/buffer[-2] |= 0x04;
-            size += JCC::EncodeInstruction<int8>(buffer, InstrParamsImm<int8>(1));
+            size += JCC::EncodeInstruction<int8_t>(buffer, InstrParamsImm<int8_t>(1));
             size += INC::EncodeInstruction<int32>(buffer, InstrParamsReg(resultReg));
             templateData->InvalidateReg(RegEAX);
             targetOffset -= templateData->GetBaseOffSet();
@@ -2656,7 +2656,7 @@ namespace Js
             RegNum resultReg = templateData->GetReg<int>();
             size += XOR::EncodeInstruction<int32>( buffer, InstrParams2Reg( resultReg, resultReg ) );
             size += EncodingHelpers::NonCommutativeOperation<OperationSignature, Size>(context, buffer, leftOffset, rightOffset);
-            size += JCC::EncodeInstruction<int8>( buffer, InstrParamsImm<int8>(1) );
+            size += JCC::EncodeInstruction<int8_t>( buffer, InstrParamsImm<int8_t>(1) );
             size += INC::EncodeInstruction<int32>( buffer, InstrParamsReg( resultReg ) );
             size += EncodingHelpers::SetStackReg<int>( buffer, templateData, targetOffset , resultReg);
             return size;
@@ -2713,7 +2713,7 @@ namespace Js
             }
             size += MOVD::EncodeInstruction<double>( buffer, InstrParams2Reg(regDouble,regInt) );
             size += CVTDQ2PD::EncodeInstruction<double>( buffer, InstrParams2Reg( regDouble, regDouble ) );
-            size += SHR::EncodeInstruction<int32>( buffer, InstrParamsRegImm<int8>( regInt, 31 ) );
+            size += SHR::EncodeInstruction<int32>( buffer, InstrParamsRegImm<int8_t>( regInt, 31 ) );
             templateData->InvalidateReg( regInt );
 
             size += ADDSD::EncodeInstruction<double>( buffer, InstrParamsRegAddr( regDouble, RegNOREG, regInt, 8, (int)MaskConvUintDouble ) );
@@ -2797,7 +2797,7 @@ namespace Js
             rightOffset -= templateData->GetBaseOffSet();
 
             RegNum reg;
-            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, 8 ) );
+            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, 8 ) );
             if( !templateData->FindRegWithStackOffset<double>( reg, rightOffset ) )
             {
                 reg = templateData->GetReg<double>();
@@ -2896,7 +2896,7 @@ namespace Js
                 RegNum reg = templateData->GetReg<double>();
                 if( FitsInByte( stackSize ) )
                 {
-                    size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, (int8)( stackSize ) ) );
+                    size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, (int8_t)( stackSize ) ) );
                 }
                 else
                 {
@@ -2927,7 +2927,7 @@ namespace Js
             {
                 if( FitsInByte( stackSize ) )
                 {
-                    size += ADD::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, (int8)stackSize ) );
+                    size += ADD::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, (int8_t)stackSize ) );
                 }
                 else
                 {
@@ -2957,7 +2957,7 @@ namespace Js
                 RegNum reg = templateData->GetReg<float>();
                 if (FitsInByte(stackSize))
                 {
-                    size += SUB::EncodeInstruction<int>(buffer, InstrParamsRegImm<int8>(RegESP, (int8)(stackSize)));
+                    size += SUB::EncodeInstruction<int>(buffer, InstrParamsRegImm<int8_t>(RegESP, (int8_t)(stackSize)));
                 }
                 else
                 {
@@ -2988,7 +2988,7 @@ namespace Js
             {
                 if (FitsInByte(stackSize))
                 {
-                    size += ADD::EncodeInstruction<int>(buffer, InstrParamsRegImm<int8>(RegESP, (int8)stackSize));
+                    size += ADD::EncodeInstruction<int>(buffer, InstrParamsRegImm<int8_t>(RegESP, (int8_t)stackSize));
                 }
                 else
                 {
@@ -3005,7 +3005,7 @@ namespace Js
             argBytesSize -= sizeof(Var);
             if( FitsInByte( argBytesSize ) )
             {
-                size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, (int8)argBytesSize ) );
+                size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, (int8_t)argBytesSize ) );
             }
             else
             {
@@ -3063,7 +3063,7 @@ namespace Js
                 size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsRegAddr( regVariable, RegEBP, offset ) );
                 templateData->SetStackInfo( regVariable, offset );
             }
-            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, 8 ) );
+            size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, 8 ) );
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsAddrReg( RegESP, 0, regVariable ) );
 
             size += MOV::EncodeInstruction<int>( buffer, InstrParamsRegImm<int32>( RegEAX, (int32)(Var(*)(double,ScriptContext*))JavascriptNumber::NewWithCheck) );
@@ -3084,7 +3084,7 @@ namespace Js
             funcOffset -= templateData->GetBaseOffSet();
 
             size += PUSH::EncodeInstruction<int>( buffer, InstrParamsReg( RegESP ) );
-            size += PUSH::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( (int8)nbArgs ) );
+            size += PUSH::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( (int8_t)nbArgs ) );
             RegNum reg;
             if( !templateData->FindRegWithStackOffset<int>( reg, funcOffset ) )
             {
@@ -3099,7 +3099,7 @@ namespace Js
             size += CALL::EncodeInstruction<int>( buffer, InstrParamsReg( RegEAX ) );
             const int stackSize = nbArgs << 2;
             Assert( FitsInByte( stackSize ) );
-            size += ADD::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, (int8)stackSize ) );
+            size += ADD::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, (int8_t)stackSize ) );
             templateData->InvalidateAllVolatileReg();
             size += EncodingHelpers::ReloadArrayBuffer(context, buffer);
             size += EncodingHelpers::CheckForArrayBufferDetached(context, buffer);
@@ -3201,7 +3201,7 @@ namespace Js
             argBytesSize = ::Math::Align<int32>(argBytesSize - MachPtr, 8);
             if( FitsInByte( argBytesSize ) )
             {
-                size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8>( RegESP, (int8)argBytesSize ) );
+                size += SUB::EncodeInstruction<int>( buffer, InstrParamsRegImm<int8_t>( RegESP, (int8_t)argBytesSize ) );
             }
             else
             {
@@ -3373,10 +3373,10 @@ namespace Js
             // Jump to the offset
             size += JMP::EncodeInstruction<int>(buffer, InstrParamsReg(RegECX));
             // Label1:
-            relocLabel1.ApplyReloc<int8>();
+            relocLabel1.ApplyReloc<int8_t>();
 
             //$LabelCount:
-            relocLabelCount.ApplyReloc<int8>();
+            relocLabelCount.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3465,8 +3465,8 @@ namespace Js
 
         typedef int( *MovEncodingFunc )( uint8_t*&, const InstrParamsRegAddr&, EncodingInfo* info );
         static const MovEncodingFunc ldArrMovEncodingFunc[] = {
-             MOVSX::EncodeInstruction<int8>//TYPE_INT8 = 0,
-            ,MOVZX::EncodeInstruction<int8>//TYPE_UINT8,
+             MOVSX::EncodeInstruction<int8_t>//TYPE_INT8 = 0,
+            ,MOVZX::EncodeInstruction<int8_t>//TYPE_UINT8,
             ,MOVSX::EncodeInstruction<int16>//TYPE_INT16,
             ,MOVZX::EncodeInstruction<int16>//TYPE_UINT16,
             ,MOV::EncodeInstruction<int>//TYPE_INT32,
@@ -3477,8 +3477,8 @@ namespace Js
 
         typedef int( *StArrMovEncodingFunc )( uint8_t*&, const InstrParamsAddrReg&, EncodingInfo* info );
         static const StArrMovEncodingFunc stArrMovEncodingFunc[] = {
-             MOV::EncodeInstruction<int8>//TYPE_INT8 = 0,
-            ,MOV::EncodeInstruction<int8>//TYPE_UINT8,
+             MOV::EncodeInstruction<int8_t>//TYPE_INT8 = 0,
+            ,MOV::EncodeInstruction<int8_t>//TYPE_UINT8,
             ,MOV::EncodeInstruction<int16>//TYPE_INT16,
             ,MOV::EncodeInstruction<int16>//TYPE_UINT16,
             ,MOV::EncodeInstruction<int>//TYPE_INT32,
@@ -3517,7 +3517,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             size += ldArrMovEncodingFunc[viewType]( buffer, InstrParamsRegAddr( resultReg, regArrayBuffer, regIndex, 1, 0 ), nullptr );
@@ -3525,15 +3525,15 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2( buffer, &size );
-            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc2.JumpEncoded( info );
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             int* nanAddr = (int*)&NumberConstants::k_Nan;
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsRegPtr( resultReg, (void*)nanAddr ) );
             size += EncodingHelpers::SetStackReg<double>( buffer, templateData, targetOffset , resultReg);
 
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3557,7 +3557,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc(buffer, &size);
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc.JumpEncoded(info);
 
             size += ldArrMovEncodingFunc[viewType](buffer, InstrParamsRegAddr(resultReg, regArrayBuffer, regIndex, 1, 0), nullptr);
@@ -3565,16 +3565,16 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2(buffer, &size);
-            size += JMP::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JMP::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc2.JumpEncoded(info);
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             int* nanAddr = (int*)&NumberConstants::k_Nan;
             size += MOVSD::EncodeInstruction<double>(buffer, InstrParamsRegPtr(resultReg, (void*)nanAddr));
             size += CVTSD2SS::EncodeInstruction<double>(buffer, InstrParams2Reg(resultReg, resultReg));
             size += EncodingHelpers::SetStackReg<float>(buffer, templateData, targetOffset, resultReg);
 
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3599,7 +3599,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             size += ldArrMovEncodingFunc[viewType]( buffer, InstrParamsRegAddr( resultReg, regArrayBuffer, regIndex, 1, 0 ), nullptr );
@@ -3607,14 +3607,14 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2( buffer, &size );
-            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc2.JumpEncoded( info );
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             size += MOV::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int32>( RegEBP, targetOffset, 0 ) );
             // load the value into a register now since it will most likely be used very soon + avoids discrepancies in templateData between the 2 jumps
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( resultReg, resultReg) );
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3636,7 +3636,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             RegNum regVal;
@@ -3644,7 +3644,7 @@ namespace Js
 
             size += stArrMovEncodingFunc[viewType]( buffer, InstrParamsAddrReg( regArrayBuffer, regIndex, 1, 0, regVal ), nullptr );
             // do nothing if index is out of range
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3666,14 +3666,14 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc(buffer, &size);
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc.JumpEncoded(info);
 
             RegNum regVal;
             regVal = EncodingHelpers::GetStackReg<float>(buffer, templateData, srcOffset, size);
             size += stArrMovEncodingFunc[viewType](buffer, InstrParamsAddrReg(regArrayBuffer, regIndex, 1, 0, regVal), nullptr);
             // do nothing if index is out of range
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3697,7 +3697,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             int extraRestriction = viewType == ArrayBufferView::TYPE_INT8 || viewType == ArrayBufferView::TYPE_UINT8 ? ~Mask8BitsReg : 0;
@@ -3705,7 +3705,7 @@ namespace Js
             size += stArrMovEncodingFunc[viewType]( buffer, InstrParamsAddrReg( regArrayBuffer, regIndex, 1, 0, regVal ), nullptr );
 
             // do nothing if index is out of range
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3725,7 +3725,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             size += ldArrMovEncodingFunc[viewType]( buffer, InstrParamsRegAddr( resultReg, regArrayBuffer, constIndex ), nullptr );
@@ -3733,15 +3733,15 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2( buffer, &size );
-            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc2.JumpEncoded( info );
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             int* nanAddr = (int*)&NumberConstants::k_Nan;
             size += MOVSD::EncodeInstruction<double>( buffer, InstrParamsRegPtr( resultReg, (void*)nanAddr ) );
             size += EncodingHelpers::SetStackReg<double>( buffer, templateData, targetOffset , resultReg);
 
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3761,7 +3761,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc(buffer, &size);
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc.JumpEncoded(info);
 
             size += ldArrMovEncodingFunc[viewType](buffer, InstrParamsRegAddr(resultReg, regArrayBuffer, constIndex), nullptr);
@@ -3769,16 +3769,16 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2(buffer, &size);
-            size += JMP::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JMP::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc2.JumpEncoded(info);
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             int* nanAddr = (int*)&NumberConstants::k_Nan;
             size += MOVSD::EncodeInstruction<double>(buffer, InstrParamsRegPtr(resultReg, (void*)nanAddr));
             size += CVTSD2SS::EncodeInstruction<double>(buffer, InstrParams2Reg(resultReg, resultReg));
             size += EncodingHelpers::SetStackReg<float>(buffer, templateData, targetOffset, resultReg);
 
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3797,7 +3797,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             size += ldArrMovEncodingFunc[viewType]( buffer, InstrParamsRegAddr( resultReg, regArrayBuffer, constIndex ), nullptr );
@@ -3805,14 +3805,14 @@ namespace Js
 
             // Jump to load default value
             JumpRelocation reloc2( buffer, &size );
-            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JMP::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc2.JumpEncoded( info );
 
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
             size += MOV::EncodeInstruction<int>( buffer, InstrParamsAddrImm<int32>( RegEBP, targetOffset, 0 ) );
             // load the value into a register now since it will most likely be used very soon + avoids discrepancies in templateData between the 2 jumps
             size += XOR::EncodeInstruction<int>( buffer, InstrParams2Reg( resultReg, resultReg) );
-            reloc2.ApplyReloc<int8>();
+            reloc2.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3831,7 +3831,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc(buffer, &size);
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8>(0), &info);
+            size += JBE::EncodeInstruction<int>(buffer, InstrParamsImm<int8_t>(0), &info);
             reloc.JumpEncoded(info);
 
             RegNum regVal;
@@ -3839,7 +3839,7 @@ namespace Js
 
             size += stArrMovEncodingFunc[viewType](buffer, InstrParamsAddrReg(regArrayBuffer, constIndex, regVal), nullptr);
             // do nothing if index is out of range
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             return size;
         }
@@ -3869,7 +3869,7 @@ namespace Js
             // Jump to load value
             JumpRelocation reloc( buffer, &size );
             EncodingInfo info;
-            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8>( 0 ), &info );
+            size += JBE::EncodeInstruction<int>( buffer, InstrParamsImm<int8_t>( 0 ), &info );
             reloc.JumpEncoded( info );
 
             int extraRestriction = viewType == ArrayBufferView::TYPE_INT8 || viewType == ArrayBufferView::TYPE_UINT8 ? ~Mask8BitsReg : 0;
@@ -3877,7 +3877,7 @@ namespace Js
             size += stArrMovEncodingFunc[viewType]( buffer, InstrParamsAddrReg( regArrayBuffer, constIndex, regVal ), nullptr );
 
             // do nothing if index is out of range
-            reloc.ApplyReloc<int8>();
+            reloc.ApplyReloc<int8_t>();
 
             return size;
         }

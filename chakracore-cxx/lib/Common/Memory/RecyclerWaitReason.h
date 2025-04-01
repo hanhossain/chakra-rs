@@ -7,7 +7,7 @@
 
 #include "PlatformAgnostic/CommonTypedefs.h"
 
-enum RecyclerWaitReason : uint8
+enum RecyclerWaitReason : uint8_t
 {
 #define P(n) n,
 #include "RecyclerWaitReasonInc.h"

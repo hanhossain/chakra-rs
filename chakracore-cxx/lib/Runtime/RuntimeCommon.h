@@ -71,7 +71,7 @@ namespace Js
     #define PropertyModuleNamespaceDefault  (PropertyEnumerable|PropertyWritable)
 
     static const uint ObjectSlotAttr_BitSize = 8;
-    typedef uint8 ObjectSlotAttr_TSize;
+    typedef uint8_t ObjectSlotAttr_TSize;
 
     enum ObjectSlotAttributes : ObjectSlotAttr_TSize
     {

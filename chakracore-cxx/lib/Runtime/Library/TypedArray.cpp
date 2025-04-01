@@ -863,7 +863,7 @@ namespace Js
         // memmove buffer if views have same bit representation.
         // types of the same size are compatible, with the following exceptions:
         // - we cannot memmove between float and int arrays, due to different bit pattern
-        // - we cannot memmove to a uint8 clamped array from an int8 array, due to negatives rounding to 0
+        // - we cannot memmove to a uint8_t clamped array from an int8_t array, due to negatives rounding to 0
         if (GetTypeId() == source->GetTypeId() ||
             (GetBytesPerElement() == source->GetBytesPerElement()
              && !((VarIs<Uint8ClampedArray>(this) || VarIs<Uint8ClampedVirtualArray>(this)) && (VarIs<Int8Array>(source) || VarIs<Int8VirtualArray>(source)))
@@ -2497,11 +2497,11 @@ namespace Js
         switch (typeId)
         {
         case TypeIds_Int8Array:
-            return this->FindMinOrMax<int8, false>(scriptContext, findMax);
+            return this->FindMinOrMax<int8_t, false>(scriptContext, findMax);
 
         case TypeIds_Uint8Array:
         case TypeIds_Uint8ClampedArray:
-            return this->FindMinOrMax<uint8, false>(scriptContext, findMax);
+            return this->FindMinOrMax<uint8_t, false>(scriptContext, findMax);
 
         case TypeIds_Int16Array:
             return this->FindMinOrMax<int16, false>(scriptContext, findMax);

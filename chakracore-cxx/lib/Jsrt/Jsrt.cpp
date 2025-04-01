@@ -2321,13 +2321,13 @@ CHAKRA_API JsGetTypedArrayStorage(_In_ JsValueRef instance, _Outptr_result_byteb
             switch (typeId)
             {
                 case Js::TypeIds_Int8Array:
-                    *elementSize = sizeof(int8);
+                    *elementSize = sizeof(int8_t);
                     break;
                 case Js::TypeIds_Uint8Array:
-                    *elementSize = sizeof(uint8);
+                    *elementSize = sizeof(uint8_t);
                     break;
                 case Js::TypeIds_Uint8ClampedArray:
-                    *elementSize = sizeof(uint8);
+                    *elementSize = sizeof(uint8_t);
                     break;
                 case Js::TypeIds_Int16Array:
                     *elementSize = sizeof(int16);
@@ -2470,9 +2470,9 @@ CHAKRA_API JsDeleteIndexedProperty(_In_ JsValueRef object, _In_ JsValueRef index
 }
 
 template <class T, bool clamped = false> struct TypedArrayTypeTraits { static const JsTypedArrayType cTypedArrayType; };
-template<> struct TypedArrayTypeTraits<int8> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt8; };
-template<> struct TypedArrayTypeTraits<uint8, false> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint8; };
-template<> struct TypedArrayTypeTraits<uint8, true> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint8Clamped; };
+template<> struct TypedArrayTypeTraits<int8_t> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt8; };
+template<> struct TypedArrayTypeTraits<uint8_t, false> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint8; };
+template<> struct TypedArrayTypeTraits<uint8_t, true> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint8Clamped; };
 template<> struct TypedArrayTypeTraits<int16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt16; };
 template<> struct TypedArrayTypeTraits<uint16> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeUint16; };
 template<> struct TypedArrayTypeTraits<int32> { static const JsTypedArrayType cTypedArrayType = JsTypedArrayType::JsArrayTypeInt32; };
@@ -2537,13 +2537,13 @@ CHAKRA_API JsSetIndexedPropertiesToExternalData(
         switch (arrayType)
         {
         case JsArrayTypeInt8:
-            newTypedArray = CreateTypedArray<int8>(scriptContext, data, elementLength);
+            newTypedArray = CreateTypedArray<int8_t>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeUint8:
-            newTypedArray = CreateTypedArray<uint8>(scriptContext, data, elementLength);
+            newTypedArray = CreateTypedArray<uint8_t>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeUint8Clamped:
-            newTypedArray = CreateTypedArray<uint8, true>(scriptContext, data, elementLength);
+            newTypedArray = CreateTypedArray<uint8_t, true>(scriptContext, data, elementLength);
             break;
         case JsArrayTypeInt16:
             newTypedArray = CreateTypedArray<int16>(scriptContext, data, elementLength);
@@ -2625,13 +2625,13 @@ CHAKRA_API JsGetIndexedPropertiesExternalData(
         switch (Js::JavascriptOperators::GetTypeId(objectArray))
         {
         case Js::TypeIds_Int8Array:
-            GetObjectArrayData<int8>(objectArray, buffer, arrayType, elementLength);
+            GetObjectArrayData<int8_t>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Uint8Array:
-            GetObjectArrayData<uint8>(objectArray, buffer, arrayType, elementLength);
+            GetObjectArrayData<uint8_t>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Uint8ClampedArray:
-            GetObjectArrayData<uint8, true>(objectArray, buffer, arrayType, elementLength);
+            GetObjectArrayData<uint8_t, true>(objectArray, buffer, arrayType, elementLength);
             break;
         case Js::TypeIds_Int16Array:
             GetObjectArrayData<int16>(objectArray, buffer, arrayType, elementLength);

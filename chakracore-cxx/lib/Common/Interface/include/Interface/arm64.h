@@ -11,12 +11,7 @@
 #error Include arm64.h in builds of ARM64 targets only.
 #endif
 
-#if defined(__getReg) || defined(_WIN64)
-#define arm64_GET_CURRENT_FRAME() ((void *)__getReg(29))
-#else
 extern "C" void * arm64_GET_CURRENT_FRAME(void);
-#endif
-
 extern "C" void arm64_SAVE_REGISTERS(void*);
 
 /*

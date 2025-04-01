@@ -14,7 +14,7 @@ namespace UnifiedRegex
 
     const CharCount Compiler::initInstBufSize;
 
-    uint8* Compiler::Emit(size_t size)
+    uint8_t* Compiler::Emit(size_t size)
     {
         Assert(size <= UINT32_MAX);
 
@@ -34,10 +34,10 @@ namespace UnifiedRegex
                 newLen *= 2;
             }
 
-            instBuf = (uint8*)ctAllocator->Realloc(instBuf, instLen, newLen);
+            instBuf = (uint8_t*)ctAllocator->Realloc(instBuf, instLen, newLen);
             instLen = newLen;
         }
-        uint8* inst = instBuf + instNext;
+        uint8_t* inst = instBuf + instNext;
         instNext += (CharCount)size;
         return inst;
     }
@@ -4551,14 +4551,14 @@ namespace UnifiedRegex
 
     void Compiler::EmitAndCaptureSuccInst(Recycler* recycler, Program* program)
     {
-        program->rep.insts.insts = (uint8*)RecyclerNewLeaf(recycler, SuccInst);
+        program->rep.insts.insts = (uint8_t*)RecyclerNewLeaf(recycler, SuccInst);
         program->rep.insts.instsLen = sizeof(SuccInst);
         program->numLoops = 0;
     }
 
     void Compiler::CaptureInsts()
     {
-        program->rep.insts.insts = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), uint8, instNext);
+        program->rep.insts.insts = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), uint8_t, instNext);
 
         program->rep.insts.instsLen = instNext;
         memcpy_s(program->rep.insts.insts, instNext, instBuf, instNext);

@@ -30,4 +30,8 @@ target_include_directories (Chakra.WasmReader PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
 
+target_compile_definitions(Chakra.WasmReader PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.WasmReader PUBLIC WasmReaderPch.h)

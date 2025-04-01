@@ -2012,7 +2012,7 @@ namespace Js
         if (!GetSuccessor(key, &nextTypeWeakRef) || (nextType = nextTypeWeakRef->Get()) == nullptr)
         {
             TypePath * newTypePath = GetTypePath();
-            uint8 oldPathSize = GetTypePath()->GetPathSize();
+            uint8_t oldPathSize = GetTypePath()->GetPathSize();
 
             ObjectSlotAttributes *oldAttributes = GetAttributeArray();
             ObjectSlotAttributes *newAttributes = oldAttributes;
@@ -2277,10 +2277,10 @@ namespace Js
         return nextType;
     }
 
-    ObjectSlotAttributes * PathTypeHandlerBase::UpdateAttributes(Recycler * recycler, ObjectSlotAttributes * oldAttributes, uint8 oldPathSize, uint8 newTypePathSize)
+    ObjectSlotAttributes * PathTypeHandlerBase::UpdateAttributes(Recycler * recycler, ObjectSlotAttributes * oldAttributes, uint8_t oldPathSize, uint8_t newTypePathSize)
     {
         ObjectSlotAttributes * newAttributes = RecyclerNewArrayLeaf(recycler, ObjectSlotAttributes, newTypePathSize);
-        uint8 initStart;
+        uint8_t initStart;
         if (oldAttributes == nullptr)
         {
             initStart = 0;
@@ -2291,7 +2291,7 @@ namespace Js
             initStart = min(newTypePathSize, oldPathSize);
             memcpy(newAttributes, oldAttributes, sizeof(ObjectSlotAttributes) * initStart);
         }
-        for (uint8 i = initStart; i < newTypePathSize; i++)
+        for (uint8_t i = initStart; i < newTypePathSize; i++)
         {
             newAttributes[i] = ObjectSlotAttr_Default;
         }
@@ -2299,10 +2299,10 @@ namespace Js
         return newAttributes;
     }
 
-    PathTypeSetterSlotIndex * PathTypeHandlerBase::UpdateSetterSlots(Recycler * recycler, PathTypeSetterSlotIndex * oldSetters, uint8 oldPathSize, uint8 newTypePathSize)
+    PathTypeSetterSlotIndex * PathTypeHandlerBase::UpdateSetterSlots(Recycler * recycler, PathTypeSetterSlotIndex * oldSetters, uint8_t oldPathSize, uint8_t newTypePathSize)
     {
         PathTypeSetterSlotIndex * newSetters = RecyclerNewArrayLeaf(recycler, PathTypeSetterSlotIndex, newTypePathSize);
-        uint8 initStart;
+        uint8_t initStart;
         if (oldSetters == nullptr)
         {
             initStart = 0;
@@ -2312,7 +2312,7 @@ namespace Js
             uint16 pathLength = GetPathLength();
             // In branching cases, the new type path may be shorter than the old.
             initStart = min(newTypePathSize, oldPathSize);
-            for (uint8 i = 0; i < initStart; i++)
+            for (uint8_t i = 0; i < initStart; i++)
             {
                 // Only copy setter indices that refer to the part of the path contained by this handler already.
                 // Otherwise, wait for the correct index, which may be different on this path of the branch,
@@ -2321,7 +2321,7 @@ namespace Js
                 newSetters[i] = oldIndex < pathLength ? oldIndex : NoSetterSlot;
             }
         }
-        for (uint8 i = initStart; i < newTypePathSize; i++)
+        for (uint8_t i = initStart; i < newTypePathSize; i++)
         {
             newSetters[i] = NoSetterSlot;
         }
@@ -2665,7 +2665,7 @@ namespace Js
         }
         else
         {
-            uint8 newTypePathSize = clonedPath->GetPathSize();
+            uint8_t newTypePathSize = clonedPath->GetPathSize();
 
             ObjectSlotAttributes * newAttributes = RecyclerNewArrayLeaf(recycler, ObjectSlotAttributes, newTypePathSize);
             memcpy(newAttributes, attributes, sizeof(ObjectSlotAttributes) * newTypePathSize);

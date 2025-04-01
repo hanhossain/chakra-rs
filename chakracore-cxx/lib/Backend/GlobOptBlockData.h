@@ -47,7 +47,7 @@ public:
 
     void Init(Js::OpCode opcode, ValueNumber src1Val, ValueNumber src2Val, ExprAttributes exprAttributes)
     {
-        extern uint8 OpCodeToHash[(int)Js::OpCode::Count];
+        extern uint8_t OpCodeToHash[(int)Js::OpCode::Count];
 
         uint32 opCodeHash = OpCodeToHash[(int)opcode];
         this->opcode = opCodeHash;

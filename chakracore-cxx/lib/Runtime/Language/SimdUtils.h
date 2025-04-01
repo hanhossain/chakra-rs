@@ -20,10 +20,10 @@
 #define SIMD_DATA     \
     Field(int32)   i32[4];\
     Field(int16)   i16[8];\
-    Field(int8)    i8[16];\
+    Field(int8_t)    i8[16];\
     Field(uint32)  u32[4];\
     Field(uint16)  u16[8];\
-    Field(uint8)   u8[16];\
+    Field(uint8_t)   u8[16];\
     Field(float)   f32[4];\
     Field(double)  f64[2]; \
     Field(int64)   i64[2];
@@ -202,7 +202,7 @@ namespace Js {
             simdVal.i16[lane] = value;
             return simdVal;
         };
-        static inline SIMDValue SIMD128InnerReplaceLaneI16(SIMDValue simdVal, const uint32 lane, const int8 value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI16(SIMDValue simdVal, const uint32 lane, const int8_t value)
         {
             Assert(lane < 16);
             simdVal.i8[lane] = value;
@@ -223,10 +223,10 @@ namespace Js {
             return val ? 1 : 0;
         };
 
-        static inline int8 SIMD128InnerExtractLaneB16(const SIMDValue src1, const uint32 lane)
+        static inline int8_t SIMD128InnerExtractLaneB16(const SIMDValue src1, const uint32 lane)
         {
             Assert(lane < 16);
-            int8 val = SIMD128InnerExtractLaneI16(src1, lane);
+            int8_t val = SIMD128InnerExtractLaneI16(src1, lane);
             return val ? 1 : 0;
         };
 
@@ -235,7 +235,7 @@ namespace Js {
         static inline int64 SIMD128InnerExtractLaneI2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.i64[lane]; };
         static inline int32 SIMD128InnerExtractLaneI4(const SIMDValue src1, const uint32 lane) { Assert(lane < 4); return src1.i32[lane]; };
         static inline int16 SIMD128InnerExtractLaneI8(const SIMDValue src1, const uint32 lane) { Assert(lane < 8); return src1.i16[lane]; };
-        static inline int8 SIMD128InnerExtractLaneI16(const SIMDValue src1, const uint32 lane) { Assert(lane < 16); return src1.i8[lane];  };
+        static inline int8_t SIMD128InnerExtractLaneI16(const SIMDValue src1, const uint32 lane) { Assert(lane < 16); return src1.i8[lane];  };
 
         static inline SIMDValue SIMD128BitSelect(const SIMDValue src1, const SIMDValue src2, const SIMDValue mask)
         {
@@ -260,8 +260,8 @@ namespace Js {
         ///////////////////////////////////////////
         // SIMD Data load/store
         ///////////////////////////////////////////
-        static SIMDValue SIMDLdData(const SIMDValue *data, uint8 dataWidth);
-        static void SIMDStData(SIMDValue *data, const SIMDValue simdValue, uint8 dataWidth);
+        static SIMDValue SIMDLdData(const SIMDValue *data, uint8_t dataWidth);
+        static void SIMDStData(SIMDValue *data, const SIMDValue simdValue, uint8_t dataWidth);
 
         template <typename T>
         static SIMDValue CanonicalizeToBools(SIMDValue val)

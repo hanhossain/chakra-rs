@@ -11,7 +11,7 @@ struct JSONObjectProperty;
 struct JSONProperty;
 struct JSONArray;
 
-enum class JSONContentType : uint8
+enum class JSONContentType : uint8_t
 {
     Array,
     Object,

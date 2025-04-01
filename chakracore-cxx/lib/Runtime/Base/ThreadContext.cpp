@@ -303,7 +303,7 @@ ThreadContext::GetThreadStackLimitAddr() const
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)
 intptr_t
-ThreadContext::GetSimdTempAreaAddr(uint8 tempIndex) const
+ThreadContext::GetSimdTempAreaAddr(uint8_t tempIndex) const
 {
     return (intptr_t)&X86_TEMP_SIMD[tempIndex];
 }
@@ -4374,7 +4374,7 @@ void ThreadContext::SetAutoProxyName(LPCWSTR objectName)
 // Regex helpers
 //
 
-UnifiedRegex::StandardChars<uint8>* ThreadContext::GetStandardChars(__inout_opt uint8* dummy)
+UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(__inout_opt uint8_t* dummy)
 {
     if (standardUTF8Chars == 0)
     {
@@ -4522,22 +4522,6 @@ Js::DelayLoadWinRtString * ThreadContext::GetWinRTStringLibrary()
 
     return &delayLoadWinRtString;
 }
-
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-Js::WindowsGlobalizationAdapter* ThreadContext::GetWindowsGlobalizationAdapter()
-{
-    return &windowsGlobalizationAdapter;
-}
-
-Js::DelayLoadWindowsGlobalization* ThreadContext::GetWindowsGlobalizationLibrary()
-{
-    delayLoadWindowsGlobalizationLibrary.Ensure(this->GetWinRTStringLibrary());
-
-    return &delayLoadWindowsGlobalizationLibrary;
-}
-#endif // INTL_WINGLOB
-#endif
 
 #ifdef ENABLE_FOUNDATION_OBJECT
 Js::WindowsFoundationAdapter* ThreadContext::GetWindowsFoundationAdapter()

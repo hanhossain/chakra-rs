@@ -110,7 +110,7 @@ public:
     void                RegAlloc();
     JitArenaAllocator *    GetTempAlloc();
 
-    static uint8        GetRegAttribs(RegNum reg);
+    static uint8_t        GetRegAttribs(RegNum reg);
     static IRType       GetRegType(RegNum reg);
     static bool         IsCalleeSaved(RegNum reg);
     static uint         GetUseSpillCost(uint loopNest, BOOL isInHelperBlock);

@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    typedef uint8 PathTypeSetterSlotIndex;
+    typedef uint8_t PathTypeSetterSlotIndex;
     static const PathTypeSetterSlotIndex NoSetterSlot = (PathTypeSetterSlotIndex)-1;
 
     class PathTypeSuccessorKey
@@ -328,8 +328,8 @@ namespace Js
 
         template <bool isObjectLiteral>
         DynamicType* PromoteType(DynamicType* type, const PathTypeSuccessorKey key, bool shareType, ScriptContext* scriptContext, DynamicObject* object = nullptr, PropertyIndex* propertyIndex = nullptr);
-        ObjectSlotAttributes * UpdateAttributes(Recycler * recycler, ObjectSlotAttributes * oldAttributes, uint8 oldPathSize, uint8 newTypePathSize);
-        PathTypeSetterSlotIndex * UpdateSetterSlots(Recycler * recycler, PathTypeSetterSlotIndex * oldSetters, uint8 oldPathSize, uint8 newTypePathSize);
+        ObjectSlotAttributes * UpdateAttributes(Recycler * recycler, ObjectSlotAttributes * oldAttributes, uint8_t oldPathSize, uint8_t newTypePathSize);
+        PathTypeSetterSlotIndex * UpdateSetterSlots(Recycler * recycler, PathTypeSetterSlotIndex * oldSetters, uint8_t oldPathSize, uint8_t newTypePathSize);
 
         PropertyIndex GetPropertyIndex(PropertyId propertyId);
 

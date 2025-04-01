@@ -647,9 +647,9 @@ namespace Js
         virtual void Expire() override;
         virtual void EnterExpirableCollectMode() override;
         virtual void ResetOnNativeCodeInstallFailure() override;
-        static uint8 GetDecrCallCountPerBailout()
+        static uint8_t GetDecrCallCountPerBailout()
         {
-            return (uint8)CONFIG_FLAG(CallsToBailoutsRatioForRejit) + 1;
+            return (uint8_t)CONFIG_FLAG(CallsToBailoutsRatioForRejit) + 1;
         }
 #endif
 
@@ -685,9 +685,9 @@ namespace Js
 
 #if ENABLE_NATIVE_CODEGEN
         virtual void ResetOnNativeCodeInstallFailure() override;
-        static uint8 GetDecrLoopCountPerBailout()
+        static uint8_t GetDecrLoopCountPerBailout()
         {
-            return (uint8)CONFIG_FLAG(LoopIterationsToBailoutsRatioForRejit) + 1;
+            return (uint8_t)CONFIG_FLAG(LoopIterationsToBailoutsRatioForRejit) + 1;
         }
 #endif
 
@@ -882,7 +882,7 @@ namespace Js
         FunctionProxy(ScriptContext* scriptContext, Utf8SourceInfo* utf8SourceInfo, uint functionNumber);
         DEFINE_VTABLE_CTOR_NOBASE(FunctionProxy);
 
-        enum class AuxPointerType : uint8 {
+        enum class AuxPointerType : uint8_t {
             DeferredStubs = 0,
             CachedSourceString = 1,
             AsmJsFunctionInfo = 2,
@@ -1921,7 +1921,7 @@ namespace Js
             // same as MachDouble, used in the Func.h
             static const uint DIAGLOCALSLOTSIZE = 8;
 
-            enum class CounterFields : uint8
+            enum class CounterFields : uint8_t
             {
                 VarCount                                = 0,
                 ConstantCount                           = 1,
@@ -2222,8 +2222,8 @@ namespace Js
         FieldWithBarrier(Js::DynamicObject*) m_irDumpBaseObject;
 #endif /* IR_VIEWER */
 
-        FieldWithBarrier(uint8) bailOnMisingProfileCount;
-        FieldWithBarrier(uint8) bailOnMisingProfileRejitCount;
+        FieldWithBarrier(uint8_t) bailOnMisingProfileCount;
+        FieldWithBarrier(uint8_t) bailOnMisingProfileRejitCount;
 
         FieldWithBarrier(byte) inlineDepth; // Used by inlining to avoid recursively inlining functions excessively
 
@@ -2960,9 +2960,9 @@ namespace Js
             --inlineDepth;
         }
 
-        uint8 IncrementBailOnMisingProfileCount() { return ++bailOnMisingProfileCount; }
+        uint8_t IncrementBailOnMisingProfileCount() { return ++bailOnMisingProfileCount; }
         void ResetBailOnMisingProfileCount() { bailOnMisingProfileCount = 0; }
-        uint8 IncrementBailOnMisingProfileRejitCount() { return ++bailOnMisingProfileRejitCount; }
+        uint8_t IncrementBailOnMisingProfileRejitCount() { return ++bailOnMisingProfileRejitCount; }
         uint32 GetFrameHeight(EntryPointInfo* entryPointInfo) const;
 #endif
 

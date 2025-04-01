@@ -189,16 +189,10 @@ GetCurrentThreadStackLimits(&lowl, &highl);
     lpSystemInfo->lpMaximumApplicationAddress = (void *) MAX_PROCESS_VA_SPACE_LINUX;
 #elif defined(USERLIMIT)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
-#elif defined(_WIN64)
-#if defined(_M_ARM64)
+#elif defined(_M_ARM64)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) (1ull << 47);
 #elif defined(USRSTACK64)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK64);
-#else // !USRSTACK64
-#error How come USRSTACK64 is not defined for 64bit?
-#endif // USRSTACK64
-#elif defined(USRSTACK)
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK);
 #else
 #error The maximum application address is not known on this platform.
 #endif

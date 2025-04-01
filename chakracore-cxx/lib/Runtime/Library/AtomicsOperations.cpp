@@ -13,8 +13,8 @@
 #define InterlockedExchange32 InterlockedExchange
 
 template<typename T> struct ConvertType {};
-template<> struct ConvertType<int8> { typedef char _t; };
-template<> struct ConvertType<uint8> { typedef char _t; };
+template<> struct ConvertType<int8_t> { typedef char _t; };
+template<> struct ConvertType<uint8_t> { typedef char _t; };
 template<> struct ConvertType<int16> { typedef short _t; };
 template<> struct ConvertType<uint16> { typedef short _t; };
 template<> struct ConvertType<int32> { typedef int32_t _t; };
@@ -127,8 +127,8 @@ template<typename T> T AtomicsOperations::Xor(T* buffer, T value)
     template type AtomicsOperations::Sub(type*, type); \
     template type AtomicsOperations::Xor(type*, type); \
 
-ExplicitImplementation(int8);
-ExplicitImplementation(uint8);
+ExplicitImplementation(int8_t);
+ExplicitImplementation(uint8_t);
 ExplicitImplementation(int16);
 ExplicitImplementation(uint16);
 ExplicitImplementation(int32);

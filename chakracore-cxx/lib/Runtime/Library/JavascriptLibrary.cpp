@@ -487,7 +487,7 @@ namespace Js
         strictHeapArgumentsTypePath->Add<true /*isSetter*/>(BuiltInPropertyRecords::callee);
         strictHeapArgumentsTypePath->Add(BuiltInPropertyRecords::length);
         strictHeapArgumentsTypePath->Add(BuiltInPropertyRecords::_symbolIterator);
-        uint8 strictHeapArgumentsTypePathSize = strictHeapArgumentsTypePath->GetPathSize();
+        uint8_t strictHeapArgumentsTypePathSize = strictHeapArgumentsTypePath->GetPathSize();
         AnalysisAssert(strictHeapArgumentsTypePathSize >= 4);
         ObjectSlotAttributes *strictHeapArgumentsAttributes = RecyclerNewArrayLeaf(recycler, ObjectSlotAttributes, strictHeapArgumentsTypePathSize);
         strictHeapArgumentsAttributes[0] = (ObjectSlotAttributes)(ObjectSlotAttr_Writable | ObjectSlotAttr_Accessor);
@@ -2428,9 +2428,9 @@ namespace Js
         return true; \
     } \
 
-    INIT_TYPEDARRAY_CONSTRUCTOR(Int8Array, Int8ArrayPrototype, int8);
-    INIT_TYPEDARRAY_CONSTRUCTOR(Uint8Array, Uint8ArrayPrototype, uint8);
-    INIT_TYPEDARRAY_CONSTRUCTOR(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8);
+    INIT_TYPEDARRAY_CONSTRUCTOR(Int8Array, Int8ArrayPrototype, int8_t);
+    INIT_TYPEDARRAY_CONSTRUCTOR(Uint8Array, Uint8ArrayPrototype, uint8_t);
+    INIT_TYPEDARRAY_CONSTRUCTOR(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8_t);
     INIT_TYPEDARRAY_CONSTRUCTOR(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_CONSTRUCTOR(Uint16Array, Uint16ArrayPrototype, uint16);
     INIT_TYPEDARRAY_CONSTRUCTOR(Int32Array, Int32ArrayPrototype, int32);
@@ -2449,9 +2449,9 @@ namespace Js
         return true; \
     } \
 
-    INIT_TYPEDARRAY_PROTOTYPE(Int8Array, Int8ArrayPrototype, int8);
-    INIT_TYPEDARRAY_PROTOTYPE(Uint8Array, Uint8ArrayPrototype, uint8);
-    INIT_TYPEDARRAY_PROTOTYPE(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8);
+    INIT_TYPEDARRAY_PROTOTYPE(Int8Array, Int8ArrayPrototype, int8_t);
+    INIT_TYPEDARRAY_PROTOTYPE(Uint8Array, Uint8ArrayPrototype, uint8_t);
+    INIT_TYPEDARRAY_PROTOTYPE(Uint8ClampedArray, Uint8ClampedArrayPrototype, uint8_t);
     INIT_TYPEDARRAY_PROTOTYPE(Int16Array, Int16ArrayPrototype, int16);
     INIT_TYPEDARRAY_PROTOTYPE(Uint16Array, Uint16ArrayPrototype, uint16);
     INIT_TYPEDARRAY_PROTOTYPE(Int32Array, Int32ArrayPrototype, int32);

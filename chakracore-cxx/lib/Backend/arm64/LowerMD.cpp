@@ -2334,7 +2334,7 @@ void LowererMD::ChangeToShift(IR::Instr *const instr, const bool needFlags)
     }
 
     // Javascript requires the ShiftCount is masked to the bottom 5 bits.
-    uint8 mask = TySize[instr->GetDst()->GetType()] == 8 ? 63 : 31;
+    uint8_t mask = TySize[instr->GetDst()->GetType()] == 8 ? 63 : 31;
     if (instr->GetSrc2()->IsIntConstOpnd())
     {
         // In the constant case, do the mask manually.

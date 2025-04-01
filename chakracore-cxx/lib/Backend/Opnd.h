@@ -653,7 +653,7 @@ public:
                     bool writeGuardChecked: 1;
                     bool typeCheckRequired: 1;
                 };
-                uint8 typeCheckSeqFlags;
+                uint8_t typeCheckSeqFlags;
             };
         };
         uint16 objTypeSpecFlags;

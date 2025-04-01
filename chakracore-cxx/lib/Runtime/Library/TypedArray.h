@@ -230,9 +230,9 @@ namespace Js
 
     // These are referenced in the TypedArray implementation, so we need to forward-typedef these.
 
-    typedef TypedArray<int8>                Int8Array;
-    typedef TypedArray<uint8,false>         Uint8Array;
-    typedef TypedArray<uint8,true>          Uint8ClampedArray;
+    typedef TypedArray<int8_t>                Int8Array;
+    typedef TypedArray<uint8_t,false>         Uint8Array;
+    typedef TypedArray<uint8_t,true>          Uint8ClampedArray;
     typedef TypedArray<int16>               Int16Array;
     typedef TypedArray<uint16>              Uint16Array;
     typedef TypedArray<int32>               Int32Array;
@@ -242,9 +242,9 @@ namespace Js
     typedef TypedArray<int64>               Int64Array;
     typedef TypedArray<uint64>              Uint64Array;
     typedef TypedArray<bool>                BoolArray;
-    typedef TypedArray<int8, false, true>   Int8VirtualArray;
-    typedef TypedArray<uint8, false, true>  Uint8VirtualArray;
-    typedef TypedArray<uint8, true, true>   Uint8ClampedVirtualArray;
+    typedef TypedArray<int8_t, false, true>   Int8VirtualArray;
+    typedef TypedArray<uint8_t, false, true>  Uint8VirtualArray;
+    typedef TypedArray<uint8_t, true, true>   Uint8ClampedVirtualArray;
     typedef TypedArray<int16, false, true>  Int16VirtualArray;
     typedef TypedArray<uint16, false, true> Uint16VirtualArray;
     typedef TypedArray<int32, false, true>  Int32VirtualArray;

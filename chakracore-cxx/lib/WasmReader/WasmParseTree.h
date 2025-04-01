@@ -111,7 +111,7 @@ namespace Wasm
     }
     typedef WasmTypes::WasmType Local;
 
-    enum class ExternalKinds: uint8
+    enum class ExternalKinds: uint8_t
     {
         Function = 0,
         Table = 1,
@@ -168,7 +168,7 @@ namespace Wasm
 
     struct WasmShuffleNode
     {
-        uint8 indices[Simd::MAX_LANES];
+        uint8_t indices[Simd::MAX_LANES];
     };
 
     struct WasmLaneNode
@@ -184,7 +184,7 @@ namespace Wasm
     struct WasmMemOpNode
     {
         uint32 offset;
-        uint8 alignment;
+        uint8_t alignment;
     };
 
     struct WasmBrNode

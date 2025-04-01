@@ -15,11 +15,11 @@ namespace Js
     //     AuxPtr32 on x64    1 byte     3 bytes                      24 bytes to hold up to 3 pointers
     //     AuxPtr16 on x86    1 byte     3 bytes                      12 bytes to hold up to 3 pointers
     //     AuxPtr32 on x86    1 byte     6 bytes                      24 bytes to hold up to 6 pointers
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount = (size - 1) / (1 + sizeof(void*))>
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount = (size - 1) / (1 + sizeof(void*))>
     struct AuxPtrsFix
     {
-        static const uint8 MaxCount;
-        FieldWithBarrier(uint8) count;                 // always saving maxCount
+        static const uint8_t MaxCount;
+        FieldWithBarrier(uint8_t) count;                 // always saving maxCount
         typename FieldWithBarrier(FieldsEnum) type[_MaxCount];  // save instantiated pointer enum
         FieldWithBarrier(void*) ptr[_MaxCount];        // save instantiated pointer address
         AuxPtrsFix();
@@ -28,8 +28,8 @@ namespace Js
         bool Set(FieldsEnum e, void* p);
     };
 
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount>
-    const uint8 AuxPtrsFix<FieldsEnum, size, _MaxCount>::MaxCount = _MaxCount;
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount>
+    const uint8_t AuxPtrsFix<FieldsEnum, size, _MaxCount>::MaxCount = _MaxCount;
 
     // Use flexible size structure to save pointers. when pointer count exceeds AuxPtrsFix<FieldsEnum, 32>::MaxCount,
     // it will promote to this structure to save the pointers
@@ -43,52 +43,52 @@ namespace Js
         typedef AuxPtrsFix<FieldsEnum, 16> AuxPtrs16;
         typedef AuxPtrsFix<FieldsEnum, 32> AuxPtrs32;
         typedef AuxPtrs<T, FieldsEnum> AuxPtrsT;
-        FieldWithBarrier(uint8) count;                                      // save instantiated pointers count
-        FieldWithBarrier(uint8) capacity;                                   // save number of pointers can be hold in current instance of AuxPtrs
-        FieldWithBarrier(uint8) offsets[static_cast<int>(FieldsEnum::Max)]; // save position of each instantiated pointers, if not instantiate, it's invalid
+        FieldWithBarrier(uint8_t) count;                                      // save instantiated pointers count
+        FieldWithBarrier(uint8_t) capacity;                                   // save number of pointers can be hold in current instance of AuxPtrs
+        FieldWithBarrier(uint8_t) offsets[static_cast<int>(FieldsEnum::Max)]; // save position of each instantiated pointers, if not instantiate, it's invalid
         FieldWithBarrier(void*) ptrs[1];                                    // instantiated pointer addresses
-        AuxPtrs(uint8 capacity, AuxPtrs32* ptr32);               // called when promoting from AuxPtrs32 to AuxPtrs
-        AuxPtrs(uint8 capacity, AuxPtrs* ptr);                   // called when expanding (i.e. promoting from AuxPtrs to bigger AuxPtrs)
+        AuxPtrs(uint8_t capacity, AuxPtrs32* ptr32);               // called when promoting from AuxPtrs32 to AuxPtrs
+        AuxPtrs(uint8_t capacity, AuxPtrs* ptr);                   // called when expanding (i.e. promoting from AuxPtrs to bigger AuxPtrs)
         void* Get(FieldsEnum e);
         bool Set(FieldsEnum e, void* p);
-        static void AllocAuxPtrFix(T* host, uint8 size);
-        static void AllocAuxPtr(T* host, uint8 count);
+        static void AllocAuxPtrFix(T* host, uint8_t size);
+        static void AllocAuxPtr(T* host, uint8_t count);
         static void* GetAuxPtr(const T* host, FieldsEnum e);
         static void SetAuxPtr(T* host, FieldsEnum e, void* ptr);
     };
 
 
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount>
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount>
     AuxPtrsFix<FieldsEnum, size, _MaxCount>::AuxPtrsFix()
     {
         static_assert(_MaxCount == AuxPtrsFix<FieldsEnum, 16>::MaxCount, "Should only be called on AuxPtrsFix<FieldsEnum, 16>");
         this->count = AuxPtrsFix<FieldsEnum, 16>::MaxCount;
-        for (uint8 i = 0; i < count; i++)
+        for (uint8_t i = 0; i < count; i++)
         {
             this->type[i] = FieldsEnum::Invalid;
         }
     }
 
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount>
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount>
     AuxPtrsFix<FieldsEnum, size, _MaxCount>::AuxPtrsFix(AuxPtrsFix<FieldsEnum, 16>* ptr16)
     {
         static_assert(_MaxCount == AuxPtrsFix<FieldsEnum, 32>::MaxCount, "Should only be called on AuxPtrsFix<FieldsEnum, 32>");
         this->count = AuxPtrsFix<FieldsEnum, 32>::MaxCount;
-        for (uint8 i = 0; i < AuxPtrsFix<FieldsEnum, 16>::MaxCount; i++)
+        for (uint8_t i = 0; i < AuxPtrsFix<FieldsEnum, 16>::MaxCount; i++)
         {
             this->type[i] = ptr16->type[i];
             this->ptr[i] = ptr16->ptr[i];
         }
-        for (uint8 i = AuxPtrsFix<FieldsEnum, 16>::MaxCount; i < count; i++)
+        for (uint8_t i = AuxPtrsFix<FieldsEnum, 16>::MaxCount; i < count; i++)
         {
             this->type[i] = FieldsEnum::Invalid;
         }
     }
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount>
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount>
     inline void* AuxPtrsFix<FieldsEnum, size, _MaxCount>::Get(FieldsEnum e)
     {
         Assert(count == _MaxCount);
-        for (uint8 i = 0; i < _MaxCount; i++) // using _MaxCount instead of count so compiler can optimize in case _MaxCount is 1.
+        for (uint8_t i = 0; i < _MaxCount; i++) // using _MaxCount instead of count so compiler can optimize in case _MaxCount is 1.
         {
             if ((FieldsEnum) type[i] == e)
             {
@@ -97,11 +97,11 @@ namespace Js
         }
         return nullptr;
     }
-    template<typename FieldsEnum, uint8 size, uint8 _MaxCount>
+    template<typename FieldsEnum, uint8_t size, uint8_t _MaxCount>
     inline bool AuxPtrsFix<FieldsEnum, size, _MaxCount>::Set(FieldsEnum e, void* p)
     {
         Assert(count == _MaxCount);
-        for (uint8 i = 0; i < _MaxCount; i++)
+        for (uint8_t i = 0; i < _MaxCount; i++)
         {
             if ((FieldsEnum) type[i] == e || (FieldsEnum) type[i] == FieldsEnum::Invalid)
             {
@@ -113,20 +113,20 @@ namespace Js
         return false;
     }
     template<class T, typename FieldsEnum>
-    AuxPtrs<T, FieldsEnum>::AuxPtrs(uint8 capacity, AuxPtrs32* ptr32)
+    AuxPtrs<T, FieldsEnum>::AuxPtrs(uint8_t capacity, AuxPtrs32* ptr32)
     {
         Assert(ptr32->count >= AuxPtrs32::MaxCount);
         this->count = ptr32->count;
         this->capacity = capacity;
-        memset(offsets, (uint8)FieldsEnum::Invalid, (uint8)FieldsEnum::Max);
-        for (uint8 i = 0; i < ptr32->count; i++)
+        memset(offsets, (uint8_t)FieldsEnum::Invalid, (uint8_t)FieldsEnum::Max);
+        for (uint8_t i = 0; i < ptr32->count; i++)
         {
-            offsets[(uint8)(FieldsEnum)ptr32->type[i]] = i;
+            offsets[(uint8_t)(FieldsEnum)ptr32->type[i]] = i;
             ptrs[i] = ptr32->ptr[i];
         }
     }
     template<class T, typename FieldsEnum>
-    AuxPtrs<T, FieldsEnum>::AuxPtrs(uint8 capacity, AuxPtrs* ptr)
+    AuxPtrs<T, FieldsEnum>::AuxPtrs(uint8_t capacity, AuxPtrs* ptr)
     {
         ArrayWriteBarrierVerifyBits(&this->ptrs, ptr->count);
         memcpy(this, ptr, offsetof(AuxPtrs, ptrs) + ptr->count * sizeof(void*));
@@ -136,14 +136,14 @@ namespace Js
     template<class T, typename FieldsEnum>
     inline void* AuxPtrs<T, FieldsEnum>::Get(FieldsEnum e)
     {
-        uint8 u = (uint8)e;
-        return offsets[u] == (uint8)FieldsEnum::Invalid ? nullptr : (void*)ptrs[offsets[u]];
+        uint8_t u = (uint8_t)e;
+        return offsets[u] == (uint8_t)FieldsEnum::Invalid ? nullptr : (void*)ptrs[offsets[u]];
     }
     template<class T, typename FieldsEnum>
     inline bool AuxPtrs<T, FieldsEnum>::Set(FieldsEnum e, void* p)
     {
-        uint8 u = (uint8)e;
-        if (offsets[u] != (uint8)FieldsEnum::Invalid)
+        uint8_t u = (uint8_t)e;
+        if (offsets[u] != (uint8_t)FieldsEnum::Invalid)
         {
             ptrs[offsets[u]] = p;
             return true;
@@ -158,14 +158,14 @@ namespace Js
             else
             {
                 offsets[u] = count++;
-                ptrs[(uint8)offsets[u]] = p;
+                ptrs[(uint8_t)offsets[u]] = p;
                 return true;
             }
         }
     }
 
     template<class T, typename FieldsEnum>
-    void AuxPtrs<T, FieldsEnum>::AllocAuxPtrFix(T* host, uint8 size)
+    void AuxPtrs<T, FieldsEnum>::AllocAuxPtrFix(T* host, uint8_t size)
     {
         Recycler* recycler = host->GetRecycler();
         Assert(recycler != nullptr);
@@ -185,15 +185,15 @@ namespace Js
     }
 
     template<class T, typename FieldsEnum>
-    void AuxPtrs<T, FieldsEnum>::AllocAuxPtr(T* host, uint8 count)
+    void AuxPtrs<T, FieldsEnum>::AllocAuxPtr(T* host, uint8_t count)
     {
         Recycler* recycler = host->GetRecycler();
         Assert(recycler != nullptr);
         Assert(count >= AuxPtrs32::MaxCount);
 
         auto requestSize = sizeof(AuxPtrs<T, FieldsEnum>) + (count - 1)*sizeof(void*);
-        auto allocSize = ::Math::Align<uint8>((uint8)requestSize, 16);
-        auto capacity = (uint8)((allocSize - offsetof(AuxPtrsT, ptrs)) / sizeof(void*));
+        auto allocSize = ::Math::Align<uint8_t>((uint8_t)requestSize, 16);
+        auto capacity = (uint8_t)((allocSize - offsetof(AuxPtrsT, ptrs)) / sizeof(void*));
 
         if (host->auxPtrs->count != AuxPtrs32::MaxCount) // expanding
         {

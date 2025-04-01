@@ -332,9 +332,7 @@ function_name() to call the system's implementation
 #undef va_arg
 #endif
 
-#if defined(FEATURE_PAL) && defined(_WIN64)
 #undef _BitScanForward64
-#endif
 
 /* pal.h does "#define alloca _alloca", but we need access to the "real"
    alloca */

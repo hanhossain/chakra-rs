@@ -491,7 +491,7 @@ namespace Js
         const auto VerifyExecutionModeLimits = [this]()
         {
             const Number zero = static_cast<Number>(0);
-            const Number maxUint8 = static_cast<Number>(static_cast<uint8>(-1)); // entry point call count is uint8
+            const Number maxUint8 = static_cast<Number>(static_cast<uint8_t>(-1)); // entry point call count is uint8_t
             const Number maxUint16 = static_cast<Number>(static_cast<uint16>(-1));
 
         #if ENABLE_DEBUG_CONFIG_OPTIONS

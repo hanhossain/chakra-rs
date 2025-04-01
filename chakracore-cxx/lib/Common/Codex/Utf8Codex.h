@@ -68,7 +68,7 @@ inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((_ENUM_FL
 inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) ^= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
 }
 
-typedef unsigned __int32 uint32;
+typedef uint32_t uint32;
 // charcount_t represents a count of characters in a String
 // It is unsigned and the maximum value is (INT_MAX-1)
 typedef uint32 charcount_t;

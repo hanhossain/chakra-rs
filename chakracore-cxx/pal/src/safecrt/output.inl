@@ -174,40 +174,18 @@ int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _
 
 /* int/long/short/pointer sizes */
 
-/* the following should be set depending on the sizes of various types */
-#if __LP64__
-    #define LONG_IS_INT     0
-    CASSERT(sizeof(long) > sizeof(int));
-#else
-    #define LONG_IS_INT     1       /* 1 means long is same size as int */
-    CASSERT(sizeof(long) == sizeof(int));
-#endif
+#define LONG_IS_INT     0
+CASSERT(sizeof(long) > sizeof(int));
 
 #define SHORT_IS_INT     0      /* 1 means short is same size as int */
 #define LONGLONG_IS_INT64 1     /* 1 means long long is same as int64 */
-#if defined (_WIN64)
-    #define PTR_IS_INT       0      /* 1 means ptr is same size as int */
-    CASSERT(sizeof(void *) != sizeof(int));
-    #if __LP64__
-        #define PTR_IS_LONG      1      /* 1 means ptr is same size as long */
-        CASSERT(sizeof(void *) == sizeof(long));
-    #else
-        #define PTR_IS_LONG      0      /* 1 means ptr is same size as long */
-        CASSERT(sizeof(void *) != sizeof(long));
-    #endif
-    #define PTR_IS_INT64     1      /* 1 means ptr is same size as int64 */
-    CASSERT(sizeof(void *) == sizeof(int64_t));
-#else  /* defined (_WIN64) */
-    #define PTR_IS_INT       1      /* 1 means ptr is same size as int */
-    CASSERT(sizeof(void *) == sizeof(int));
-    #define PTR_IS_LONG      1      /* 1 means ptr is same size as long */
-    CASSERT(sizeof(void *) == sizeof(long));
-    #define PTR_IS_INT64     0      /* 1 means ptr is same size as int64 */
-#ifndef __APPLE__
-    // todo : investigate
-    CASSERT(sizeof(void *) != sizeof(int64_t));
-#endif
-#endif  /* defined (_WIN64) */
+
+#define PTR_IS_INT       0      /* 1 means ptr is same size as int */
+CASSERT(sizeof(void *) != sizeof(int));
+#define PTR_IS_LONG      1      /* 1 means ptr is same size as long */
+CASSERT(sizeof(void *) == sizeof(long));
+#define PTR_IS_INT64     1      /* 1 means ptr is same size as int64 */
+CASSERT(sizeof(void *) == sizeof(int64_t));
 
 #ifndef __GNUC_VA_LIST
 #if LONGLONG_IS_INT64
@@ -921,7 +899,7 @@ int _output (
                 else if ( (*format == _T('3')) && (*(format + 1) == _T('2')) )
                 {
                     format += 2;
-                    flags &= ~FL_I64;   /* I32 => __int32 */
+                    flags &= ~FL_I64;   /* I32 => int32_t */
                 }
                 else if ( (*format == _T('d')) ||
                           (*format == _T('i')) ||

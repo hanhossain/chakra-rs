@@ -5,7 +5,7 @@
 #include "Backend.h"
 
 
-uint8 OpCodeToHash[(uint)Js::OpCode::Count];
+uint8_t OpCodeToHash[(uint)Js::OpCode::Count];
 static Js::OpCode HashToOpCode[(uint)Js::OpCode::Count];
 
 class CSEInit
@@ -14,7 +14,7 @@ public:
     // Initializer for OpCodeToHash and HashToOpCode maps.
     CSEInit()
     {
-        uint8 hash = 1;
+        uint8_t hash = 1;
 
         for (Js::OpCode opcode = (Js::OpCode)0; opcode < Js::OpCode::Count; opcode = (Js::OpCode)(opcode + 1))
         {

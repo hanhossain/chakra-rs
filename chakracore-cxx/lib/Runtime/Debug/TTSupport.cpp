@@ -152,7 +152,7 @@ namespace TTD
 
             size_t origsize = (this->m_contents != nullptr ? wcslen(this->m_contents) : 0);
             size_t strsize = 0;
-            if(start == 0 && end == SIZE_T_MAX)
+            if(start == 0 && end == std::numeric_limits<size_t>::max())
             {
                 strsize = (str != nullptr ? wcslen(str) : 0);
             }

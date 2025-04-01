@@ -158,7 +158,7 @@ namespace UnifiedRegex
         , const CharCount inputLength
         , CharCount &matchStart
         , CharCount &inputOffset
-        , const uint8 *&instPointer
+        , const uint8_t *&instPointer
         , ContStack &contStack
         , AssertionStack &assertionStack
         , uint &qcTicks
@@ -200,7 +200,7 @@ namespace UnifiedRegex
         return true;
     }
 
-    inline bool Matcher::PopAssertion(CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, bool succeeded)
+    inline bool Matcher::PopAssertion(CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, bool succeeded)
     {
         AssertionInfo* info = assertionStack.Top();
         Assert(info != 0);
@@ -902,11 +902,11 @@ namespace UnifiedRegex
     }
 #endif
 
-    template <uint8 n>
+    template <uint8_t n>
     void SwitchMixin<n>::AddCase(char16 c, Label targetLabel)
     {
         AnalysisAssert(numCases < MaxCases);
-        uint8 i;
+        uint8_t i;
         for (i = 0; i < numCases; i++)
         {
             Assert(cases[i].c != c);
@@ -916,7 +916,7 @@ namespace UnifiedRegex
             }
         }
         __analysis_assume(numCases < MaxCases);
-        for (uint8 j = numCases; j > i; j--)
+        for (uint8_t j = numCases; j > i; j--)
         {
             cases[j] = cases[j - 1];
         }
@@ -951,12 +951,12 @@ namespace UnifiedRegex
     }
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-    template <uint8 n>
+    template <uint8_t n>
     void SwitchMixin<n>::Print(DebugWriter* w, const char16* litbuf) const
     {
         w->EOL();
         w->Indent();
-        for (uint8 i = 0; i < numCases; i++)
+        for (uint8_t i = 0; i < numCases; i++)
         {
             cases[i].Print(w);
         }
@@ -1207,7 +1207,7 @@ namespace UnifiedRegex
             return matcher.Fail(FAIL_PARAMETERS);                                               \
         }                                                                                       \
                                                                                                 \
-        const uint8 localNumCases = numCases;                                                     \
+        const uint8_t localNumCases = numCases;                                                     \
         for (int i = 0; i < localNumCases; i++)                                                 \
         {                                                                                       \
             COMP_STATS;                                                                         \
@@ -2919,7 +2919,7 @@ namespace UnifiedRegex
             else
             {
                 // CHOICEPOINT: Try no iterations of body, if backtrack do one iteration of body from here
-                Assert(instPointer == (uint8*)this);
+                Assert(instPointer == (uint8_t*)this);
                 PUSH(contStack, RepeatLoopCont, matcher.InstPointerToLabel(instPointer), inputOffset);
                 instPointer = matcher.LabelToInstPointer(exitLabel);
             }
@@ -3308,7 +3308,7 @@ namespace UnifiedRegex
         if (repeats.lower == 0)
         {
             // CHOICEPOINT: Try one iteration of body. Failure of body will rewind input to here and resume with follow.
-            Assert(instPointer == (uint8*)this);
+            Assert(instPointer == (uint8_t*)this);
             PUSH(contStack, RewindLoopFixedCont, matcher.InstPointerToLabel(instPointer), true);
 #if ENABLE_REGEX_CONFIG_OPTIONS
             matcher.PushStats(contStack, input);
@@ -3442,7 +3442,7 @@ namespace UnifiedRegex
         else if (loopInfo->number > repeats.lower)
         {
             // CHOICEPOINT: If follow fails, try consuming one fewer characters
-            Assert(instPointer == (uint8*)this);
+            Assert(instPointer == (uint8_t*)this);
             PUSH(contStack, RewindLoopSetCont, matcher.InstPointerToLabel(instPointer));
 #if ENABLE_REGEX_CONFIG_OPTIONS
             matcher.PushStats(contStack, input);
@@ -3522,7 +3522,7 @@ namespace UnifiedRegex
         else if (loopInfo->number > repeats.lower)
         {
             // CHOICEPOINT: If follow fails, try consuming one fewer characters
-            Assert(instPointer == (uint8*)this);
+            Assert(instPointer == (uint8_t*)this);
             PUSH(contStack, RewindLoopSetWithFollowFirstCont, matcher.InstPointerToLabel(instPointer));
 #if ENABLE_REGEX_CONFIG_OPTIONS
             matcher.PushStats(contStack, input);
@@ -3587,7 +3587,7 @@ namespace UnifiedRegex
         if (repeats.lower == 0)
         {
             // CHOICEPOINT: Try one iteration of body. Failure of body will rewind input to here and resume with follow.
-            Assert(instPointer == (uint8*)this);
+            Assert(instPointer == (uint8_t*)this);
             PUSH(contStack, RewindLoopFixedGroupLastIterationCont, matcher.InstPointerToLabel(instPointer), true);
 #if ENABLE_REGEX_CONFIG_OPTIONS
             matcher.PushStats(contStack, input);
@@ -4384,7 +4384,7 @@ namespace UnifiedRegex
 
     inline bool BeginAssertionInst::Exec(REGEX_INST_EXEC_PARAMETERS) const
     {
-        Assert(instPointer == (uint8*)this);
+        Assert(instPointer == (uint8_t*)this);
 
         if (!isNegation)
         {
@@ -5044,7 +5044,7 @@ namespace UnifiedRegex
         Output::Flush();
     }
 
-    bool Matcher::Fail(const Char* const input, CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks)
+    bool Matcher::Fail(const Char* const input, CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks)
     {
         if (!contStack.IsEmpty())
         {
@@ -5059,7 +5059,7 @@ namespace UnifiedRegex
         return true; // STOP EXECUTION
     }
 
-    inline bool Matcher::RunContStack(const Char* const input, CharCount &inputOffset, const uint8 *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks)
+    inline bool Matcher::RunContStack(const Char* const input, CharCount &inputOffset, const uint8_t *&instPointer, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks)
     {
         while (true)
         {
@@ -5104,7 +5104,7 @@ namespace UnifiedRegex
     inline void Matcher::Run(const Char* const input, const CharCount inputLength, CharCount &matchStart, CharCount &nextSyncInputOffset, ContStack &contStack, AssertionStack &assertionStack, uint &qcTicks, bool firstIteration)
     {
         CharCount inputOffset = matchStart;
-        const uint8 *instPointer = program->rep.insts.insts;
+        const uint8_t *instPointer = program->rep.insts.insts;
         Assert(instPointer != 0);
 
         while (true)
@@ -5561,7 +5561,7 @@ namespace UnifiedRegex
     }
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-    void Matcher::Print(DebugWriter* w, const Char* const input, const CharCount inputLength, CharCount inputOffset, const uint8* instPointer, ContStack &contStack, AssertionStack &assertionStack) const
+    void Matcher::Print(DebugWriter* w, const Char* const input, const CharCount inputLength, CharCount inputOffset, const uint8_t* instPointer, ContStack &contStack, AssertionStack &assertionStack) const
     {
         w->PrintEOL(_u("Matcher {"));
         w->Indent();
@@ -5713,7 +5713,7 @@ namespace UnifiedRegex
         }
 
         Inst *inst = reinterpret_cast<Inst *>(PointerValue(rep.insts.insts));
-        const auto instEnd = reinterpret_cast<Inst *>(reinterpret_cast<uint8 *>(inst) + rep.insts.instsLen);
+        const auto instEnd = reinterpret_cast<Inst *>(reinterpret_cast<uint8_t *>(inst) + rep.insts.instsLen);
         Assert(inst < instEnd);
         do
         {
@@ -5794,8 +5794,8 @@ namespace UnifiedRegex
                 {
                     w->PrintEOL(_u("       BOITest(hardFail: true)"));
                 }
-                uint8* instsLim = rep.insts.insts + rep.insts.instsLen;
-                uint8* curr = rep.insts.insts;
+                uint8_t* instsLim = rep.insts.insts + rep.insts.instsLen;
+                uint8_t* curr = rep.insts.insts;
                 int i = 0;
                 while (curr != instsLim)
                 {

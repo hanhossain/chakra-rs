@@ -25,7 +25,7 @@ void Entropy::Add(const char byteValue)
     if (byteValue)
     {
         u.array[currentIndex++] ^= byteValue;
-        currentIndex %= sizeof(unsigned __int32);
+        currentIndex %= sizeof(uint32_t);
     }
 }
 

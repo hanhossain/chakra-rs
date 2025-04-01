@@ -159,7 +159,7 @@ static int __check_float_string(size_t nFloatStrUsed,
         size_t newSize;
 
         // Will (*pnFloatStrSz) * 2 * sizeof(_TCHAR) overflow?
-        if ( *pnFloatStrSz > (SIZE_T_MAX / 2 / sizeof(_TCHAR)))
+        if ( *pnFloatStrSz > (SIZE_MAX / 2 / sizeof(_TCHAR)))
         {
             return FALSE;
         }
@@ -515,11 +515,7 @@ DEFAULT_LABEL:
                     va_copy(arglistsave, arglist);
 
                     /* Get the next argument - size of the array in characters */
-#ifdef _WIN64
-                    original_array_width = array_width = (size_t)(va_arg(arglist, unsigned int));
-#else  /* _WIN64 */
                     original_array_width = array_width = va_arg(arglist, size_t);
-#endif  /* _WIN64 */
 
                     if(array_width < 1) {
                         if (widechar > 0)
@@ -867,11 +863,9 @@ x_incwidth:
                     case _T('p') :
                         /* force %hp to be treated as %p */
                         longone = 1;
-#ifdef _WIN64
                         /* force %p to be 64 bit in WIN64 */
                         ++integer64;
                         num64 = 0;
-#endif  /* _WIN64 */
                     case _T('o') :
                     case _T('u') :
                     case _T('d') :

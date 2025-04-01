@@ -188,11 +188,7 @@ typedef enum tagEFaultRepRetVal
 #define ARGUMENT_PRESENT(ArgumentPointer)    (\
     (char *)(ArgumentPointer) != (char *)(NULL) )
 
-#if defined(_WIN64) || defined(_M_ALPHA)
-#define MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
-#else
-#define MAX_NATURAL_ALIGNMENT sizeof(uint32_t)
-#endif
+#define MAX_NATURAL_ALIGNMENT sizeof(uint64_t)
 
 #define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
 
@@ -600,17 +596,10 @@ STDAPI_(HRESULT) VariantClear(VARIANT * pvarg);
 #define V_UINTREF(X)     V_UNION(X, puintVal)
 #define V_ARRAY(X)       V_UNION(X, parray)
 
-#ifdef _WIN64
 #define V_INT_PTR(X)        V_UNION(X, llVal)
 #define V_UINT_PTR(X)       V_UNION(X, ullVal)
 #define V_INT_PTRREF(X)     V_UNION(X, pllVal)
 #define V_UINT_PTRREF(X)    V_UNION(X, pullVal)
-#else
-#define V_INT_PTR(X)        V_UNION(X, lVal)
-#define V_UINT_PTR(X)       V_UNION(X, ulVal)
-#define V_INT_PTRREF(X)     V_UNION(X, plVal)
-#define V_UINT_PTRREF(X)    V_UNION(X, pulVal)
-#endif
 
 #define V_CY(X)          V_UNION(X, cyVal)
 #define V_CYREF(X)       V_UNION(X, pcyVal)

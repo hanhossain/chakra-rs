@@ -16,7 +16,7 @@ namespace Js
         typedef JsUtil::BaseDictionary<Var, MapDataNode*, Recycler, PowerOf2SizePolicy, SameValueZeroComparer> ComplexVarDataMap;
 
     private:
-        enum class MapKind : uint8
+        enum class MapKind : uint8_t
         {
             // An EmptyMap is a map containing no elements
             EmptyMap,

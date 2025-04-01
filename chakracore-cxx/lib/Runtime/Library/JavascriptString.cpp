@@ -1383,22 +1383,6 @@ case_2:
                 IntlEngineInterfaceExtensionObject* intlExtensionObject = static_cast<IntlEngineInterfaceExtensionObject*>(
                     nativeEngineInterfaceObj->GetEngineExtension(EngineInterfaceExtensionKind_Intl));
 
-#ifdef INTL_WINGLOB
-                if (args.Info.Count == 2)
-                {
-                    auto undefined = scriptContext->GetLibrary()->GetUndefined();
-                    CallInfo toPass(callInfo.Flags, 3);
-                    ThreadContext *threadContext = scriptContext->GetThreadContext();
-                    return threadContext->ExecuteImplicitCall(function, ImplicitCall_Accessor,
-                        [threadContext, intlExtensionObject, function, toPass, undefined, pThis, pThat]() -> Var
-                        {
-                            return CALL_ENTRYPOINT(threadContext, intlExtensionObject->EntryIntl_CompareString,
-                                function, toPass, undefined, pThis, pThat);
-                        }
-                    );
-                }
-#endif
-
                 // Check if String.prototype.localeCompare/Intl.Collator was already initialized
                 JavascriptFunction* func = intlExtensionObject->GetStringLocaleCompare();
                 if (func)
@@ -2956,7 +2940,7 @@ case_2:
     }
     logMaxUintTable();
     */
-    const uint8 JavascriptString::maxUintStringLengthTable[] =
+    const uint8_t JavascriptString::maxUintStringLengthTable[] =
         { 0,0,32,20,16,13,12,11,10,10,9,9,8,8,8,8,8,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6 };
 
     // NumberUtil::FIntRadStrToDbl and parts of GlobalObject::EntryParseInt were refactored into ToInteger

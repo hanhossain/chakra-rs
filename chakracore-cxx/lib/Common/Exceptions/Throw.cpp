@@ -7,14 +7,6 @@
 #include "Exceptions/Throw.h"
 #include "Core/Assertions.h"
 
-#ifndef USING_PAL_STDLIB
-// === C Runtime Header Files ===
-#pragma warning(push)
-#pragma warning(disable: 4995) /* 'function': name was marked as #pragma deprecated */
-#include <strsafe.h>
-#pragma warning(pop)
-#endif
-
 #include "StackOverflowException.h"
 #include "AsmJsParseException.h"
 #include "OutOfMemoryException.h"

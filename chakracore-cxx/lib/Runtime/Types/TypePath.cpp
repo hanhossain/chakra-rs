@@ -31,7 +31,7 @@ namespace Js {
 
         TypePath * newTypePath = RecyclerNewPlusZ(recycler, sizeof(PropertyRecord *) * size, TypePath);
         // Allocate enough space for the "next" for the TinyDictionary;
-        newTypePath->data = RecyclerNewPlusLeafZ(recycler, size, TypePath::Data, (uint8)size);
+        newTypePath->data = RecyclerNewPlusLeafZ(recycler, size, TypePath::Data, (uint8_t)size);
 
         return newTypePath;
     }
@@ -67,7 +67,7 @@ namespace Js {
         // TypePath::New will take care of aligning this appropriately.
         TypePath * clonedPath = TypePath::New(recycler, currentPathLength + 1);
 
-        clonedPath->GetData()->pathLength = (uint8)currentPathLength;
+        clonedPath->GetData()->pathLength = (uint8_t)currentPathLength;
         memcpy(&clonedPath->GetData()->map, &this->GetData()->map, sizeof(TinyDictionary) + currentPathLength);
         CopyArray(clonedPath->assignments, currentPathLength, this->assignments, currentPathLength);
 

@@ -7,7 +7,7 @@
 
 class Lowerer;
 
-enum LegalForms : uint8
+enum LegalForms : uint8_t
 {
     L_None  = 0,
     L_Reg   = 1 << 0,
@@ -25,7 +25,7 @@ enum LegalForms : uint8
     LF_Optional = 0,        // Legal Form Flag: legal for the opnd to be missing
 #endif
 };
-ENUM_CLASS_HELPERS(LegalForms, uint8);
+ENUM_CLASS_HELPERS(LegalForms, uint8_t);
 
 
 #include "LowererMDArch.h"
@@ -259,7 +259,7 @@ public:
             IR::Instr *         LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper = false, IR::Instr * insertBeforeInstrForCFG = nullptr);
             IR::Instr *         LoadInt64HelperArgument(IR::Instr * instr, IR::Opnd* opnd);
             IR::Instr *         LoadHelperArgument(IR::Instr * instr, IR::Opnd * opndArg);
-            IR::MemRefOpnd *    LoadSimdHelperArgument(IR::Instr * instr, uint8 index);
+            IR::MemRefOpnd *    LoadSimdHelperArgument(IR::Instr * instr, uint8_t index);
             IR::Instr *         LoadDoubleHelperArgument(IR::Instr * instr, IR::Opnd * opndArg);
             IR::Instr *         LoadFloatHelperArgument(IR::Instr * instr, IR::Opnd * opndArg);
             IR::Instr *         LowerEntryInstr(IR::EntryInstr * entryInstr);
@@ -335,10 +335,10 @@ public:
     IR::Instr*          Simd128LowerFloat32x4FromUint32x4(IR::Instr *instr);
     IR::Instr*          Simd128AsmJsLowerLoadElem(IR::Instr *instr);
     IR::Instr*          Simd128LowerLoadElem(IR::Instr *instr);
-    IR::Instr*          Simd128ConvertToLoad(IR::Opnd *dst, IR::Opnd *src1, uint8 dataWidth, IR::Instr* instr, byte scaleFactor = 0);
+    IR::Instr*          Simd128ConvertToLoad(IR::Opnd *dst, IR::Opnd *src1, uint8_t dataWidth, IR::Instr* instr, byte scaleFactor = 0);
     IR::Instr*          Simd128AsmJsLowerStoreElem(IR::Instr *instr);
     IR::Instr*          Simd128LowerStoreElem(IR::Instr *instr);
-    IR::Instr*          Simd128ConvertToStore(IR::Opnd *dst, IR::Opnd *src1, uint8 dataWidth, IR::Instr* instr, byte scaleFactor = 0);
+    IR::Instr*          Simd128ConvertToStore(IR::Opnd *dst, IR::Opnd *src1, uint8_t dataWidth, IR::Instr* instr, byte scaleFactor = 0);
     void                Simd128LoadHeadSegment(IR::IndirOpnd *indirOpnd, ValueType arrType, IR::Instr *instr);
     void                Simd128GenerateUpperBoundCheck(IR::RegOpnd *indexOpnd, IR::IndirOpnd *indirOpnd, ValueType arrType, IR::Instr *instr);
     IR::Instr*          Simd128LowerSwizzle_4(IR::Instr *instr);
@@ -357,8 +357,8 @@ public:
     IR::Opnd*           EnregisterIntConst(IR::Instr* instr, IR::Opnd *constOpnd, IRType type = TyInt32);
     IR::Opnd*           EnregisterBoolConst(IR::Instr* instr, IR::Opnd *opnd, IRType type);
     SList<IR::Opnd*>  * Simd128GetExtendedArgs(IR::Instr *instr);
-    void                CheckShuffleLanes_4(uint8 lanes[], uint8 lanesSrc[], uint *fromSrc1, uint *fromSrc2);
-    void                InsertShufps(uint8 lanes[], IR::Opnd *dst, IR::Opnd *src1, IR::Opnd *src2, IR::Instr *insertBeforeInstr);
+    void                CheckShuffleLanes_4(uint8_t lanes[], uint8_t lanesSrc[], uint *fromSrc1, uint *fromSrc2);
+    void                InsertShufps(uint8_t lanes[], IR::Opnd *dst, IR::Opnd *src1, IR::Opnd *src2, IR::Instr *insertBeforeInstr);
 #endif
 
 private:

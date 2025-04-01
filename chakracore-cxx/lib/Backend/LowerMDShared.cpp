@@ -1570,7 +1570,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     case TyInt8:
                         if(intConstantSrc)
                         {
-                            UpdateIntConstantSrc(static_cast<int8>(intConstantSrc->GetValue())); // sign-extend
+                            UpdateIntConstantSrc(static_cast<int8_t>(intConstantSrc->GetValue())); // sign-extend
                             break;
                         }
                         instr->m_opcode = Js::OpCode::MOVSX;
@@ -1579,7 +1579,7 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
                     case TyUint8:
                         if(intConstantSrc)
                         {
-                            UpdateIntConstantSrc(static_cast<uint8>(intConstantSrc->GetValue())); // zero-extend
+                            UpdateIntConstantSrc(static_cast<uint8_t>(intConstantSrc->GetValue())); // zero-extend
                             break;
                         }
                         instr->m_opcode = Js::OpCode::MOVZX;
@@ -4742,12 +4742,12 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
 #ifdef _M_X64
         __int64 absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #else
-        __int32 absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
+        int32_t absValue = ::abs(Js::TaggedInt::ToInt32(varOpnd->m_address));
 #endif
 
         if (!Js::TaggedInt::IsOverflow(absValue))
         {
-            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((__int32)absValue), IR::AddrOpndKindConstantVar);
+            varOpnd->SetAddress(Js::TaggedInt::ToVarUnchecked((int32_t)absValue), IR::AddrOpndKindConstantVar);
 
             instr = IR::Instr::New(Js::OpCode::MOV, dst, varOpnd, this->m_func);
             insertInstr->InsertBefore(instr);
@@ -7088,7 +7088,7 @@ LowererMD::EmitNon32BitOvfCheck(IR::Instr *instr, IR::Instr *insertInstr, IR::La
 
     IR::RegOpnd *temp = IR::RegOpnd::New(TyInt32, instr->m_func);
     Assert(instr->ignoreOverflowBitCount > 32);
-    uint8 shamt = 64 - instr->ignoreOverflowBitCount;
+    uint8_t shamt = 64 - instr->ignoreOverflowBitCount;
 
     // MOV temp, edx
     newInstr = IR::Instr::New(Js::OpCode::MOV, temp, edxSym, instr->m_func);

@@ -91,21 +91,21 @@ namespace Js {
             ToUInt16_Full(aValue, scriptContext);
     }
 
-   inline int8 JavascriptConversion::ToInt8(Var aValue, ScriptContext* scriptContext)
+   inline int8_t JavascriptConversion::ToInt8(Var aValue, ScriptContext* scriptContext)
    {
        return TaggedInt::Is(aValue) ?
-           (int8) TaggedInt::ToInt32(aValue) :
-           (int8) ToInt32(aValue, scriptContext);
+           (int8_t) TaggedInt::ToInt32(aValue) :
+           (int8_t) ToInt32(aValue, scriptContext);
    }
 
-   inline uint8 JavascriptConversion::ToUInt8(Var aValue, ScriptContext* scriptContext)
+   inline uint8_t JavascriptConversion::ToUInt8(Var aValue, ScriptContext* scriptContext)
    {
        return TaggedInt::Is(aValue) ?
-           (uint8) TaggedInt::ToInt32(aValue) :
-           (uint8) ToUInt32(aValue, scriptContext);
+           (uint8_t) TaggedInt::ToInt32(aValue) :
+           (uint8_t) ToUInt32(aValue, scriptContext);
    }
 
-   inline uint8 JavascriptConversion::ToUInt8Clamped(Var aValue, ScriptContext* scriptContext)
+   inline uint8_t JavascriptConversion::ToUInt8Clamped(Var aValue, ScriptContext* scriptContext)
    {
        double dval;
 
@@ -124,7 +124,7 @@ namespace Js {
                return 0;
            }
 
-           return (uint8) val;
+           return (uint8_t) val;
        }
        else if (JavascriptOperators::GetTypeId(aValue) == TypeIds_Number)
        {
@@ -156,7 +156,7 @@ namespace Js {
        {
            // On x86 we have a convenient CVTSD2SI intrinsic function to handle this.
            __m128d t = _mm_load_sd(&dval);
-           return (uint8)_mm_cvtsd_si32(t);
+           return (uint8_t)_mm_cvtsd_si32(t);
        }
        else
 #endif
@@ -167,12 +167,12 @@ namespace Js {
            // 2. Round up or down as usual if the fractional part is <> 0.5
            // 3. If the fractional part == 0.5, round to nearest even integer:
            //    Divide by 2, add 0.5, cast to integer, multiply by 2 again.
-           uint8 u8 = (uint8)dval;
+           uint8_t u8 = (uint8_t)dval;
            double frac = dval - u8;
 
            if (frac > 0.5)
            {
-               return (uint8)(dval + 0.5);
+               return (uint8_t)(dval + 0.5);
            }
            else if (frac < 0.5)
            {
@@ -180,7 +180,7 @@ namespace Js {
            }
            else
            {
-               return ((uint8)(dval / 2.0 + 0.5)) * 2;
+               return ((uint8_t)(dval / 2.0 + 0.5)) * 2;
            }
        }
    }

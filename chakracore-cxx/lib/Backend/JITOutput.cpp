@@ -39,7 +39,7 @@ JITOutput::SetHasBailoutInstr(bool val)
 }
 
 void
-JITOutput::SetArgUsedForBranch(uint8 param)
+JITOutput::SetArgUsedForBranch(uint8_t param)
 {
     Assert(param > 0);
     Assert(param < Js::Constants::MaximumArgumentCountForConstantArgumentInlining);

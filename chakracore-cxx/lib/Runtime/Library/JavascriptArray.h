@@ -127,17 +127,17 @@ namespace Js
         static ushort const MergeSegmentsLengthHeuristics = 128; // If the length is less than MergeSegmentsLengthHeuristics then try to merge the segments
         static uint64 const FiftyThirdPowerOfTwoMinusOne = 0x1FFFFFFFFFFFFF;  // 2^53-1
 
-        static const uint8 AllocationBucketsInfoSize = 3;
+        static const uint8_t AllocationBucketsInfoSize = 3;
         // 0th colum in allocationBuckets
-        static const uint8 AllocationBucketIndex = 0;
+        static const uint8_t AllocationBucketIndex = 0;
         // 1st column in allocationBuckets that stores no. of missing elements to initialize for given bucket
-        static const uint8 MissingElementsCountIndex = 1;
+        static const uint8_t MissingElementsCountIndex = 1;
         // 2nd column in allocationBuckets that stores allocation size for given bucket
-        static const uint8 AllocationSizeIndex = 2;
+        static const uint8_t AllocationSizeIndex = 2;
 #if defined(TARGET_64)
-        static const uint8 AllocationBucketsCount = 3;
+        static const uint8_t AllocationBucketsCount = 3;
 #else
-        static const uint8 AllocationBucketsCount = 2;
+        static const uint8_t AllocationBucketsCount = 2;
 #endif
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const Var MissingItem;
@@ -1072,7 +1072,7 @@ namespace Js
 
         typedef int32 TElement;
 
-        static const uint8 AllocationBucketsCount = 3;
+        static const uint8_t AllocationBucketsCount = 3;
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const int32 MissingItem;
 
@@ -1239,7 +1239,7 @@ namespace Js
 
         typedef double TElement;
 
-        static const uint8 AllocationBucketsCount = 3;
+        static const uint8_t AllocationBucketsCount = 3;
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const double MissingItem;
 

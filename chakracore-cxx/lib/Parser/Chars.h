@@ -13,14 +13,14 @@ namespace UnifiedRegex
     };
 
     template <>
-    struct Chars<uint8>
+    struct Chars<uint8_t>
     {
-        typedef uint8 Char;
-        typedef uint8 UChar;
+        typedef uint8_t Char;
+        typedef uint8_t UChar;
 
         static const int CharWidth = sizeof(char) * 8;
         static const int NumChars = 1 << CharWidth;
-        static const uint MaxUChar = (uint8)-1;
+        static const uint MaxUChar = (uint8_t)-1;
         static const uint MaxUCharAscii = (1 << 7) - 1;
         static const Char MinChar = (Char)0;
         static const Char MaxChar = (Char)MaxUChar;
@@ -66,11 +66,11 @@ namespace UnifiedRegex
     struct Chars<char>
     {
         typedef char Char;
-        typedef uint8 UChar;
+        typedef uint8_t UChar;
 
         static const int CharWidth = sizeof(char) * 8;
         static const int NumChars = 1 << CharWidth;
-        static const uint MaxUChar = (uint8)-1;
+        static const uint MaxUChar = (uint8_t)-1;
         static const uint MaxUCharAscii = (1 << 7) - 1;
         static const Char MinChar = (Char)0;
         static const Char MaxChar = (Char)MaxUChar;
@@ -78,7 +78,7 @@ namespace UnifiedRegex
         // Char to unsigned int
         static inline uint CTU(Char c)
         {
-            return (uint8)c;
+            return (uint8_t)c;
         }
 
         // Unsigned int to Char
@@ -90,13 +90,13 @@ namespace UnifiedRegex
         // int to Char
         static inline Char ITC(int i) {
             Assert(i >= 0 && i <= MaxUChar);
-            return (Char)(uint8)i;
+            return (Char)(uint8_t)i;
         }
 
         // Char to char16
         static inline char16 CTW(Char c)
         {
-            return (char16)(uint8)c;
+            return (char16)(uint8_t)c;
         }
 
         // Offset, same buffer

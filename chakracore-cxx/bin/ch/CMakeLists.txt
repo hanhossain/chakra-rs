@@ -92,6 +92,11 @@ endif()
 target_link_libraries (ch
   ${lib_target}
   )
+
+target_compile_definitions(ch PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(ch PRIVATE stdafx.h)
 
 # Add a post build event to the ch target

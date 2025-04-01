@@ -203,35 +203,35 @@ private:
 private:
     Js::ArgSlot     m_slotNum;
 public:
-    uint8           m_isSingleDef:1;            // the symbol only has a single definition in the IR
-    uint8           m_isNotNumber:1;
-    uint8           m_isSafeThis : 1;
-    uint8           m_isConst : 1;              // single def and it is a constant
-    uint8           m_isIntConst : 1;           // a constant and it's value is an Int32
-    uint8           m_isTaggableIntConst : 1;   // a constant and it's value is taggable (Int31 in 32-bit, Int32 in x64)
-    uint8           m_isEncodedConstant : 1;    // the constant has
-    uint8           m_isInt64Const: 1;
-    uint8           m_isFltConst: 1;
-    uint8           m_isSimd128Const : 1;
-    uint8           m_isStrConst:1;
-    uint8           m_isStrEmpty:1;
-    uint8           m_allocated:1;
-    uint8           m_hasByteCodeRegSlot:1;
-    uint8           m_isInlinedArgSlot:1;
-    uint8           m_isOrphanedArg :1;
-    uint8           m_isTypeSpec:1;
-    uint8           m_requiresBailOnNotNumber:1;
-    uint8           m_isFromByteCodeConstantTable:1;
-    uint8           m_mayNotBeTempLastUse:1;
-    uint8           m_isArgSlotSym: 1;        // When set this implies an argument stack slot with no lifetime for register allocation
-    uint8           m_isArgSlotRegSym : 1;
-    uint8           m_isParamSym : 1;
-    uint8           m_isImplicitParamSym : 1;
-    uint8           m_isBailOutReferenced: 1;        // argument sym referenced by bailout
-    uint8           m_isArgCaptured: 1;       // True if there is a ByteCodeArgOutCapture for this symbol
-    uint8           m_nonEscapingArgObjAlias : 1;
-    uint8           m_isCatchObjectSym : 1;   // a catch object sym (used while jitting loop bodies)
-    uint8           m_isClosureSym : 1;
+    uint8_t           m_isSingleDef:1;            // the symbol only has a single definition in the IR
+    uint8_t           m_isNotNumber:1;
+    uint8_t           m_isSafeThis : 1;
+    uint8_t           m_isConst : 1;              // single def and it is a constant
+    uint8_t           m_isIntConst : 1;           // a constant and it's value is an Int32
+    uint8_t           m_isTaggableIntConst : 1;   // a constant and it's value is taggable (Int31 in 32-bit, Int32 in x64)
+    uint8_t           m_isEncodedConstant : 1;    // the constant has
+    uint8_t           m_isInt64Const: 1;
+    uint8_t           m_isFltConst: 1;
+    uint8_t           m_isSimd128Const : 1;
+    uint8_t           m_isStrConst:1;
+    uint8_t           m_isStrEmpty:1;
+    uint8_t           m_allocated:1;
+    uint8_t           m_hasByteCodeRegSlot:1;
+    uint8_t           m_isInlinedArgSlot:1;
+    uint8_t           m_isOrphanedArg :1;
+    uint8_t           m_isTypeSpec:1;
+    uint8_t           m_requiresBailOnNotNumber:1;
+    uint8_t           m_isFromByteCodeConstantTable:1;
+    uint8_t           m_mayNotBeTempLastUse:1;
+    uint8_t           m_isArgSlotSym: 1;        // When set this implies an argument stack slot with no lifetime for register allocation
+    uint8_t           m_isArgSlotRegSym : 1;
+    uint8_t           m_isParamSym : 1;
+    uint8_t           m_isImplicitParamSym : 1;
+    uint8_t           m_isBailOutReferenced: 1;        // argument sym referenced by bailout
+    uint8_t           m_isArgCaptured: 1;       // True if there is a ByteCodeArgOutCapture for this symbol
+    uint8_t           m_nonEscapingArgObjAlias : 1;
+    uint8_t           m_isCatchObjectSym : 1;   // a catch object sym (used while jitting loop bodies)
+    uint8_t           m_isClosureSym : 1;
     IRType          m_type;
     Js::BuiltinFunction m_builtInIndex;
 

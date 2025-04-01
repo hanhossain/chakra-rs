@@ -102,7 +102,7 @@ using namespace Js;
         JIT_HELPER_END(CheckIfTypeIsEquivalentForFixedField);
     }
 
-    bool JavascriptNativeOperators::CheckIfPolyTypeIsEquivalentForFixedField(Type* type, JitPolyEquivalentTypeGuard* guard, uint8 index)
+    bool JavascriptNativeOperators::CheckIfPolyTypeIsEquivalentForFixedField(Type* type, JitPolyEquivalentTypeGuard* guard, uint8_t index)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(CheckIfPolyTypeIsEquivalentForFixedField);
         JIT_HELPER_SAME_ATTRIBUTES(CheckIfPolyTypeIsEquivalentForFixedField, CheckIfPolyTypeIsEquivalent);
@@ -126,7 +126,7 @@ using namespace Js;
         JIT_HELPER_END(CheckIfTypeIsEquivalent);
     }
 
-    bool JavascriptNativeOperators::CheckIfPolyTypeIsEquivalent(Type* type, JitPolyEquivalentTypeGuard* guard, uint8 index)
+    bool JavascriptNativeOperators::CheckIfPolyTypeIsEquivalent(Type* type, JitPolyEquivalentTypeGuard* guard, uint8_t index)
     {
         JIT_HELPER_NOT_REENTRANT_HEADER(CheckIfPolyTypeIsEquivalent, reentrancylock, type->GetScriptContext()->GetThreadContext());
         bool result = EquivalenceCheckHelper(type, guard, guard->GetPolyValue(index));

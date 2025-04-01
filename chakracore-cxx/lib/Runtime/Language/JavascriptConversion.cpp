@@ -1355,14 +1355,14 @@ CommonNumber:
         return (int16)ToInt32(aValue);
     }
 
-    int8 JavascriptConversion::ToInt8(double aValue)
+    int8_t JavascriptConversion::ToInt8(double aValue)
     {
-        return (int8)ToInt32(aValue);
+        return (int8_t)ToInt32(aValue);
     }
 
-    uint8 JavascriptConversion::ToUInt8(double aValue)
+    uint8_t JavascriptConversion::ToUInt8(double aValue)
     {
-        return (uint8)ToUInt32(aValue);
+        return (uint8_t)ToUInt32(aValue);
     }
 
 

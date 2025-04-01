@@ -277,7 +277,7 @@ namespace Js
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(Conv_ToInt32Core);
             // Try the int32 conversion first and only do the more expensive (& closer to spec)
             // i64 conversion if it fails.
-            __int32 i32 = (__int32)T1;
+            int32_t i32 = (int32_t)T1;
             if ((i32 != 0x80000000) && (i32 != 0x7fffffff))
                 return i32;     //No overflow so just return i32
 

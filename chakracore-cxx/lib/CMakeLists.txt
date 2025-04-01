@@ -41,6 +41,10 @@ add_library (ChakraCoreStatic STATIC
   ${wabt_objects}
 )
 
+target_compile_definitions(ChakraCoreStatic PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 if(CC_TARGET_OS_OSX)
   target_link_libraries(ChakraCoreStatic
     "-framework CoreFoundation"

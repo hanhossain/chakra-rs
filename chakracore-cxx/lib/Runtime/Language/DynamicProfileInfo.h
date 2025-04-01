@@ -93,12 +93,12 @@ namespace Js
         }
 
         // False if there is more than one ArgIn that is a function object or a function object with arg number greater than MaxInlineeArgoutCount
-        Field(uint8) canInlineCallback : 1;
+        Field(uint8_t) canInlineCallback : 1;
 
-        Field(uint8) isPolymorphic : 1;
+        Field(uint8_t) isPolymorphic : 1;
 
         // Used to correlate from callee's ArgIn to this ArgOut
-        Field(uint8) argNumber : 5;
+        Field(uint8_t) argNumber : 5;
         static_assert(Js::InlineeCallInfo::MaxInlineeArgoutCount < (1 << 5), "Ensure CallbackInfo::argNumber is large enough to hold all inline arguments");
 
         Field(uint16) callSiteId;

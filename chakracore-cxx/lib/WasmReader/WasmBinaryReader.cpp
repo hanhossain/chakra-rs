@@ -135,8 +135,8 @@ SectionHeader WasmBinaryReader::ReadSectionHeader()
     header.code = bSectLimit;
 
     uint32 len = 0;
-    CompileAssert(sizeof(SectionCode) == sizeof(uint8));
-    SectionCode sectionId = (SectionCode)LEB128<uint8, 7>(len);
+    CompileAssert(sizeof(SectionCode) == sizeof(uint8_t));
+    SectionCode sectionId = (SectionCode)LEB128<uint8_t, 7>(len);
 
     if (sectionId > bsectLastKnownSection)
     {
@@ -441,7 +441,7 @@ WasmOp WasmBinaryReader::ReadExpr()
     case wbMemoryGrow:
     {
         // Reserved value currently unused
-        uint8 reserved = ReadConst<uint8>();
+        uint8_t reserved = ReadConst<uint8_t>();
         if (reserved != 0)
         {
             ThrowDecodingError(op == wbMemorySize
@@ -521,7 +521,7 @@ void WasmBinaryReader::CallIndirectNode()
 
     uint32 funcNum = LEB128(length);
     // Reserved value currently unused
-    uint8 reserved = ReadConst<uint8>();
+    uint8_t reserved = ReadConst<uint8_t>();
     if (reserved != 0)
     {
         ThrowDecodingError(_u("call_indirect reserved value must be 0"));
@@ -554,7 +554,7 @@ void WasmBinaryReader::BlockNode()
         {
             ThrowDecodingError(_u("Invalid blocktype %lld"), blocktype);
         }
-        int8 blockSig = (int8)blocktype;
+        int8_t blockSig = (int8_t)blocktype;
         // Check if it's an empty block
         if (blockSig == LanguageTypes::emptyBlock)
         {
@@ -623,14 +623,14 @@ void WasmBinaryReader::ShuffleNode()
     CheckBytesLeft(Simd::MAX_LANES);
     for (uint32 i = 0; i < Simd::MAX_LANES; i++)
     {
-        m_currentNode.shuffle.indices[i] = ReadConst<uint8>();
+        m_currentNode.shuffle.indices[i] = ReadConst<uint8_t>();
     }
     m_funcState.count += Simd::MAX_LANES;
 }
 
 void WasmBinaryReader::LaneNode()
 {
-    m_currentNode.lane.index = ReadConst<uint8>();
+    m_currentNode.lane.index = ReadConst<uint8_t>();
     m_funcState.count++;
 }
 
@@ -640,7 +640,7 @@ void WasmBinaryReader::MemNode()
 
     // flags
     const uint32 flags = LEB128(len);
-    m_currentNode.mem.alignment = (uint8)flags;
+    m_currentNode.mem.alignment = (uint8_t)flags;
     m_funcState.count += len;
 
     m_currentNode.mem.offset = LEB128(len);
@@ -750,7 +750,7 @@ void WasmBinaryReader::ReadSignatureTypeSection()
     {
         WasmSignature* sig = m_module->GetSignature(i);
         sig->SetSignatureId(i);
-        int8 form = SLEB128<int8, 7>(len);
+        int8_t form = SLEB128<int8_t, 7>(len);
         if (form != LanguageTypes::func)
         {
             ThrowDecodingError(_u("Unexpected type form 0x%X"), form);
@@ -934,7 +934,7 @@ void WasmBinaryReader::ReadTableSection(bool isImportSection)
 
     if (entries == 1)
     {
-        int8 elementType = SLEB128<int8, 7>(length);
+        int8_t elementType = SLEB128<int8_t, 7>(length);
         if (elementType != LanguageTypes::anyfunc)
         {
             ThrowDecodingError(_u("Only anyfunc type is supported. Unknown type %d"), elementType);
@@ -1406,7 +1406,7 @@ bool WasmBinaryReader::ReadMutableValue()
 
 WasmTypes::WasmType WasmBinaryReader::ReadWasmType(uint32& length)
 {
-    return LanguageTypes::ToWasmType(SLEB128<int8, 7>(length));
+    return LanguageTypes::ToWasmType(SLEB128<int8_t, 7>(length));
 }
 
 void WasmBinaryReader::CheckBytesLeft(uint32 bytesNeeded)

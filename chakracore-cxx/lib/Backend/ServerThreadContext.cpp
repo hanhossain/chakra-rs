@@ -78,7 +78,7 @@ ServerThreadContext::GetImplicitCallFlagsAddr() const
 
 #ifdef ENABLE_WASM_SIMD
 intptr_t
-ServerThreadContext::GetSimdTempAreaAddr(uint8 tempIndex) const
+ServerThreadContext::GetSimdTempAreaAddr(uint8_t tempIndex) const
 {
     Assert(tempIndex < SIMD_TEMP_SIZE);
     return m_threadContextData.simdTempAreaBaseAddr + tempIndex * sizeof(_x86_SIMDValue);

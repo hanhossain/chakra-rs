@@ -60,7 +60,7 @@ namespace Js
         return result;
     }
 
-    SIMDValue SIMDUtils::SIMDLdData(const SIMDValue *data, uint8 dataWidth)
+    SIMDValue SIMDUtils::SIMDLdData(const SIMDValue *data, uint8_t dataWidth)
     {
         SIMDValue result = { 0, 0, 0, 0 };
         // bitwise copy. Always use integer fields to avoid wrong copy of NaNs.
@@ -84,7 +84,7 @@ namespace Js
         return result;
     }
 
-    void SIMDUtils::SIMDStData(SIMDValue *data, const SIMDValue simdValue, uint8 dataWidth)
+    void SIMDUtils::SIMDStData(SIMDValue *data, const SIMDValue simdValue, uint8_t dataWidth)
     {
         // bitwise copy. Always use integer fields to avoid wrong copy of NaNs.
         switch (dataWidth)

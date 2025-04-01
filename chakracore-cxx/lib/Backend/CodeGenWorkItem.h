@@ -145,12 +145,12 @@ public:
 public:
     void ResetJitMode()
     {
-        this->jitData.jitMode = static_cast<uint8>(ExecutionMode::Interpreter);
+        this->jitData.jitMode = static_cast<uint8_t>(ExecutionMode::Interpreter);
     }
 
     void SetJitMode(const ExecutionMode jitMode)
     {
-        this->jitData.jitMode = static_cast<uint8>(jitMode);
+        this->jitData.jitMode = static_cast<uint8_t>(jitMode);
         VerifyJitMode();
     }
 

@@ -24,36 +24,6 @@ extern "C" {
 #endif
 #endif // _AMD64_
 
-#ifndef FEATURE_PAL
-
-#ifdef  _WIN64
-typedef unsigned __int64    size_t;
-typedef unsigned __int64    UINT_PTR;
-typedef unsigned __int64    DWORD_PTR;
-typedef unsigned __int64    SIZE_T;
-#else
-typedef __w64 unsigned int  size_t;
-typedef __w64 unsigned int  UINT_PTR;
-typedef __w64 unsigned long DWORD_PTR;
-typedef __w64 unsigned long SIZE_T;
-#endif
-typedef unsigned __int64    ULONGLONG;
-
-
-typedef int32_t HRESULT;
-
-#ifndef SUCCEEDED
-#define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
-#endif
-
-#ifndef FAILED
-#define FAILED(hr) (((HRESULT)(hr)) < 0)
-#endif
-
-#define S_OK ((HRESULT)0x00000000L)
-
-#endif // !FEATURE_PAL
-
 #define INTSAFE_E_ARITHMETIC_OVERFLOW       ((HRESULT)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 #ifndef LOWORD
@@ -104,11 +74,7 @@ typedef int32_t HRESULT;
 #define ULONG_ERROR     (0xffffffffUL)
 #define ULONGLONG_ERROR (0xffffffffffffffffULL)
 #define HIDWORD_MASK (0xffffffff00000000ULL)
-#ifdef _WIN64
 #define SIZET_ERROR     ULONGLONG_ERROR
-#else
-#define SIZET_ERROR     ULONG_ERROR
-#endif
 
 //
 // We make some assumptions about the sizes of various types. Let's be
@@ -657,34 +623,8 @@ ULongLongToULong(
 // UINT_PTR -> uint32_t conversion
 // size_t -> uint32_t conversion
 //
-#ifdef _WIN64
-
 #define UIntPtrToULong  ULongLongToULong
 #define ULongPtrToULong ULongLongToULong
-
-#else
-
-__inline
-HRESULT
-UIntPtrToULong(
-     UINT_PTR Operand,
-     uint32_t* pResult)
-{
-    *pResult = (uint32_t)Operand;
-    return S_OK;
-}
-
-__inline
-HRESULT
-ULongPtrToULong(
-     size_t Operand,
-     uint32_t* pResult)
-{
-    *pResult = (uint32_t)Operand;
-    return S_OK;
-}
-
-#endif
 
 //
 // ULONGLONG -> uint32_t conversion
@@ -711,34 +651,8 @@ ULongLongToUInt(
 // UINT_PTR -> uint32_t conversion
 // size_t -> uint32_t conversion
 //
-#ifdef _WIN64
-
 #define UIntPtrToUInt  ULongLongToUInt
 #define ULongPtrToUInt ULongLongToUInt
-
-#else
-
-__inline
-HRESULT
-UIntPtrToUInt(
-     UINT_PTR Operand,
-     uint32_t* pResult)
-{
-    *pResult = (uint32_t)Operand;
-    return S_OK;
-}
-
-__inline
-HRESULT
-ULongPtrToUInt(
-     size_t Operand,
-     uint32_t* pResult)
-{
-    *pResult = (uint32_t)Operand;
-    return S_OK;
-}
-
-#endif
 
 //
 // * -> uint8_t conversion (uint8_t is always unsigned char)
@@ -812,7 +726,6 @@ ULongPtrToUInt(
 //
 // * -> UINT_PTR conversion (UINT_PTR is uint32_t on Win32, ULONGLONG on Win64)
 //
-#ifdef _WIN64
 #define CharToUIntPtr           CharToULongLong
 #define SignedCharToUIntPtr     SignedCharToULongLong
 #define ShortToUIntPtr          ShortToULongLong
@@ -821,26 +734,6 @@ ULongPtrToUInt(
 #define LongLongToUIntPtr       LongLongToULongLong
 #define IntPtrToUIntPtr         IntPtrToULongLong
 #define LongPtrToUIntPtr        LongPtrToULongLong
-#else
-#define CharToUIntPtr           CharToUInt
-#define SignedCharToUIntPtr     SignedCharToUInt
-#define ShortToUIntPtr          ShortToUInt
-
-__inline
-HRESULT
-IntToUIntPtr(
-     int32_t iOperand,
-     UINT_PTR* puResult)
-{
-	return IntToUInt(iOperand, (uint32_t*)puResult);
-}
-
-#define LongToUIntPtr           LongToUInt
-#define LongLongToUIntPtr       LongLongToUInt
-
-#define IntPtrToUIntPtr         IntPtrToUInt
-#define LongPtrToUIntPtr        LongPtrToUInt
-#endif
 
 __inline
 HRESULT
@@ -848,64 +741,25 @@ ULongLongToUIntPtr(
      ULONGLONG ullOperand,
      UINT_PTR* puResult)
 {
-#ifdef _WIN64
 	*puResult = ullOperand;
 	return S_OK;
-#else
-	return ULongLongToUInt(ullOperand, (uint32_t*)puResult);
-#endif
 }
 
 
 //
 // UINT_PTR -> * conversion (UINT_PTR is uint32_t on Win32, ULONGLONG on Win64)
 //
-#ifdef _WIN64
 #define UIntPtrToUShort         ULongLongToUShort
 #define UIntPtrToInt            ULongLongToInt
 #define UIntPtrToLong           ULongLongToLong
 #define UIntPtrToLongLong       ULongLongToLongLong
 #define UIntPtrToIntPtr         ULongLongToIntPtr
 #define UIntPtrToLongPtr        ULongLongToLongPtr
-#else
-
-__inline
-HRESULT
-UIntPtrToUShort(
-     UINT_PTR uOperand,
-     unsigned short* pusResult)
-{
-	return UIntToUShort((uint32_t)uOperand, pusResult);
-}
-
-__inline
-HRESULT
-UIntPtrToInt(
-     UINT_PTR uOperand,
-     int32_t* piResult)
-{
-	return UIntToInt((uint32_t)uOperand, piResult);
-}
-
-__inline
-HRESULT
-UIntPtrToLong(
-     UINT_PTR Operand,
-     int32_t* Result)
-{
-	return UIntToLong((uint32_t)Operand, Result);
-}
-
-#define UIntPtrToLongLong       UIntToLongLong
-#define UIntPtrToIntPtr         UIntToIntPtr
-#define UIntPtrToLongPtr        UIntToLongPtr
-#endif
 
 
 //
 // * -> size_t conversion (size_t is uint32_t on Win32, ULONGLONG on Win64)
 //
-#ifdef _WIN64
 #define CharToULongPtr          CharToULongLong
 #define SignedCharToULongPtr    SignedCharToULongLong
 #define ShortToULongPtr         ShortToULongLong
@@ -914,26 +768,6 @@ UIntPtrToLong(
 #define LongLongToULongPtr      LongLongToULongLong
 #define IntPtrToULongPtr        IntPtrToULongLong
 #define LongPtrToULongPtr       LongPtrToULongLong
-#else
-#define CharToULongPtr          CharToULong
-#define SignedCharToULongPtr    SignedCharToULong
-#define ShortToULongPtr         ShortToULong
-
-__inline
-HRESULT
-IntToULongPtr(
-     int32_t iOperand,
-     size_t* pulResult)
-{
-	return IntToULong(iOperand, (uint32_t*)pulResult);
-}
-
-#define LongToULongPtr          LongToULong
-#define LongLongToULongPtr      LongLongToULong
-
-#define IntPtrToULongPtr        IntPtrToULong
-#define LongPtrToULongPtr       LongPtrToULong
-#endif
 
 __inline
 HRESULT
@@ -941,58 +775,20 @@ ULongLongToULongPtr(
      ULONGLONG ullOperand,
      size_t* pulResult)
 {
-#ifdef _WIN64
 	*pulResult = ullOperand;
 	return S_OK;
-#else
-	return ULongLongToULong(ullOperand, (uint32_t*)pulResult);
-#endif
 }
 
 
 //
 // size_t -> * conversion (size_t is uint32_t on Win32, ULONGLONG on Win64)
 //
-#ifdef _WIN64
 #define ULongPtrToUShort        ULongLongToUShort
 #define ULongPtrToInt           ULongLongToInt
 #define ULongPtrToLong          ULongLongToLong
 #define ULongPtrToLongLong      ULongLongToLongLong
 #define ULongPtrToIntPtr        ULongLongToIntPtr
 #define ULongPtrToLongPtr       ULongLongToLongPtr
-#else
-
-__inline
-HRESULT
-ULongPtrToUShort(
-     size_t ulOperand,
-     unsigned short* pusResult)
-{
-	return ULongToUShort((uint32_t)ulOperand, pusResult);
-}
-
-__inline
-HRESULT
-ULongPtrToInt(
-     size_t ulOperand,
-     int32_t* piResult)
-{
-	return ULongToInt((uint32_t)ulOperand, piResult);
-}
-
-__inline
-HRESULT
-ULongPtrToLong(
-     size_t Operand,
-     int32_t* Result)
-{
-	return ULongToLong((uint32_t)Operand, Result);
-}
-
-#define ULongPtrToLongLong      ULongToLongLong
-#define ULongPtrToIntPtr        ULongToIntPtr
-#define ULongPtrToLongPtr       ULongToLongPtr
-#endif
 
 //
 // * -> size_t conversion (size_t is always UINT_PTR)
@@ -1151,19 +947,7 @@ ULongAdd(
 //
 // size_t addition
 //
-#ifdef _WIN64
 #define ULongPtrAdd     ULongLongAdd
-#else
-__inline
-HRESULT
-ULongPtrAdd(
-     size_t ulAugend,
-     size_t ulAddend,
-     size_t* pulResult)
-{
-	return ULongAdd((uint32_t)ulAugend, (uint32_t)ulAddend, (uint32_t*)pulResult);
-}
-#endif // _WIN64
 
 //
 // uint32_t addition
@@ -1304,19 +1088,7 @@ ULongSub(
 //
 // size_t subtraction
 //
-#ifdef _WIN64
 #define ULongPtrSub ULongLongSub
-#else
-__inline
-HRESULT
-ULongPtrSub(
-     size_t ulMinuend,
-     size_t ulSubtrahend,
-     size_t* pulResult)
-{
-	return ULongSub((uint32_t)ulMinuend, (uint32_t)ulSubtrahend, (uint32_t*)pulResult);
-}
-#endif // _WIN64
 
 
 //
@@ -1414,21 +1186,6 @@ UIntMult(
 }
 
 //
-// UINT_PTR multiplication
-//
-#ifndef _WIN64
-__inline
-HRESULT
-UIntPtrMult(
-     UINT_PTR ulMultiplicand,
-     UINT_PTR ulMultiplier,
-     UINT_PTR* pulResult)
-{
-	return UIntMult((uint32_t)ulMultiplicand, (uint32_t)ulMultiplier, (uint32_t*)pulResult);
-}
-#endif // _WIN64
-
-//
 // uint32_t multiplication
 //
 __inline
@@ -1442,22 +1199,6 @@ ULongMult(
 
     return ULongLongToULong(ull64Result, pulResult);
 }
-
-//
-// size_t multiplication
-//
-#ifndef _WIN64
-__inline
-HRESULT
-ULongPtrMult(
-     size_t ulMultiplicand,
-     size_t ulMultiplier,
-     size_t* pulResult)
-{
-	return ULongMult((uint32_t)ulMultiplicand, (uint32_t)ulMultiplier, (uint32_t*)pulResult);
-}
-#endif // _WIN64
-
 
 //
 // uint32_t multiplication

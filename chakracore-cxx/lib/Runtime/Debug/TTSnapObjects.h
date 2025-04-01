@@ -1136,7 +1136,7 @@ namespace TTD
             uint32 state; // enum value of JavascriptGenerator.GeneratorState
             TTD_PTR_ID scriptFunction;
             uint32 arguments_callInfo_count;
-            uint8 arguments_callInfo_flags;
+            uint8_t arguments_callInfo_flags;
             uint arguments_count;
             TTDVar* arguments_values;
             uint byteCodeReader_offset;

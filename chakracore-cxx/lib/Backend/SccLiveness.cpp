@@ -828,14 +828,14 @@ SCCLiveness::FoldIndir(IR::Instr *instr, IR::Opnd *opnd)
     }
 
     IR::RegOpnd *base = indir->GetBaseOpnd();
-    uint8 *constValue = nullptr;
+    uint8_t *constValue = nullptr;
     if (base)
     {
         if (!base->m_sym || !base->m_sym->IsConst() || base->m_sym->IsIntConst() || base->m_sym->IsFloatConst())
         {
             return false;
         }
-        constValue = static_cast<uint8 *>(base->m_sym->GetConstAddress());
+        constValue = static_cast<uint8_t *>(base->m_sym->GetConstAddress());
         if (indir->GetOffset() < 0 ? constValue + indir->GetOffset() > constValue : constValue + indir->GetOffset() < constValue)
         {
             return false;

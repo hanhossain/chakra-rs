@@ -374,20 +374,20 @@ public:
     BasicBlock *         next;
     BasicBlock *         prev;
     Loop *               loop;
-    uint8                isDeleted:1;
-    uint8                isDead:1;
-    uint8                isLoopHeader:1;
-    uint8                hasCall:1;
-    uint8                hasYield:1;
-    uint8                isVisited:1;
-    uint8                isAirLockCompensationBlock:1;
-    uint8                beginsBailOnNoProfile:1;
+    uint8_t                isDeleted:1;
+    uint8_t                isDead:1;
+    uint8_t                isLoopHeader:1;
+    uint8_t                hasCall:1;
+    uint8_t                hasYield:1;
+    uint8_t                isVisited:1;
+    uint8_t                isAirLockCompensationBlock:1;
+    uint8_t                beginsBailOnNoProfile:1;
 
 #ifdef DBG
-    uint8                isBreakBlock:1;
-    uint8                isAirLockBlock:1;
-    uint8                isBreakCompensationBlockAtSink:1;
-    uint8                isBreakCompensationBlockAtSource:1;
+    uint8_t                isBreakBlock:1;
+    uint8_t                isAirLockBlock:1;
+    uint8_t                isBreakCompensationBlockAtSink:1;
+    uint8_t                isBreakCompensationBlockAtSource:1;
 #endif
 
     // Deadstore data

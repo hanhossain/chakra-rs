@@ -777,7 +777,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int8x16_1Int1, suffix); \
-    SetRegRawSimd(playout->I16_0, func(static_cast<int8>(GetRegRawInt(playout->I1)))); \
+    SetRegRawSimd(playout->I16_0, func(static_cast<int8_t>(GetRegRawInt(playout->I1)))); \
     break; \
     }
 #define PROCESS_SIMD_I1toI16_1(name, func, suffix) PROCESS_SIMD_I1toI16_1_COMMON(name, func, suffix)
@@ -813,7 +813,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint8x16_1Int1, suffix); \
-    SetRegRawSimd(playout->U16_0, func((uint8)GetRegRawInt(playout->I1))); \
+    SetRegRawSimd(playout->U16_0, func((uint8_t)GetRegRawInt(playout->I1))); \
     break; \
     }
 #define PROCESS_SIMD_I1toU16_1(name, func) PROCESS_SIMD_I1toU16_1_COMMON(name, func,)
@@ -1922,7 +1922,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int1Uint8x16_1Int1, suffix); \
-    SetRegRawInt(playout->I0, (uint8)func(GetRegRawSimd(playout->U16_1), GetRegRawInt(playout->I2))); \
+    SetRegRawInt(playout->I0, (uint8_t)func(GetRegRawSimd(playout->U16_1), GetRegRawInt(playout->I2))); \
     break; \
     }
 #define PROCESS_SIMD_U16_1I1toI1(name, func) PROCESS_SIMD_U16_1I1toI1_COMMON(name, func,)
@@ -1949,7 +1949,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int1Bool8x16_1Int1, suffix); \
-    SetRegRawInt(playout->I0, (uint8)func(GetRegRawSimd(playout->B16_1), GetRegRawInt(playout->I2))); \
+    SetRegRawInt(playout->I0, (uint8_t)func(GetRegRawSimd(playout->B16_1), GetRegRawInt(playout->I2))); \
     break; \
     }
 #define PROCESS_SIMD_B16_1I1toI1(name, func) PROCESS_SIMD_B16_1I1toI1_COMMON(name, func,)
@@ -1968,7 +1968,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Int8x16_2Int2, suffix); \
-    SetRegRawSimd(playout->I16_0, func(GetRegRawSimd(playout->I16_1), GetRegRawInt(playout->I2), static_cast<int8>(GetRegRawInt(playout->I3)))); \
+    SetRegRawSimd(playout->I16_0, func(GetRegRawSimd(playout->I16_1), GetRegRawInt(playout->I2), static_cast<int8_t>(GetRegRawInt(playout->I3)))); \
     break; \
     }
 #define PROCESS_SIMD_I16_1I2toI16_1(name, func, suffix) PROCESS_SIMD_I16_1I2toI16_1_COMMON(name, func, suffix)
@@ -2013,7 +2013,7 @@ if (switchProfileMode) \
     case OpCodeAsmJs::name: \
     { \
     PROCESS_READ_LAYOUT_ASMJS(name, Uint8x16_2Int2, suffix); \
-    SetRegRawSimd(playout->U16_0, func(GetRegRawSimd(playout->U16_1), GetRegRawInt(playout->I2), (uint8)GetRegRawInt(playout->I3))); \
+    SetRegRawSimd(playout->U16_0, func(GetRegRawSimd(playout->U16_1), GetRegRawInt(playout->I2), (uint8_t)GetRegRawInt(playout->I3))); \
     break; \
     }
 #define PROCESS_SIMD_U16_1I2toU16_1_1(name, func) PROCESS_SIMD_U16_1I2toU16_1_COMMON(name, func,)

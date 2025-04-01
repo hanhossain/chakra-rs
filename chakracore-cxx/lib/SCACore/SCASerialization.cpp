@@ -410,33 +410,33 @@ namespace Js
         case TypeIds_Int8Array:
             if (Int8VirtualArray::HasVirtualTableInfo(src))
             {
-                WriteTypedArray<int8, false, true>(src);
+                WriteTypedArray<int8_t, false, true>(src);
             }
             else
             {
-                WriteTypedArray<int8, false>(src);
+                WriteTypedArray<int8_t, false>(src);
             }
             break;
 
         case TypeIds_Uint8Array:
             if (Uint8VirtualArray::HasVirtualTableInfo(src))
             {
-                WriteTypedArray<uint8, false, true>(src);
+                WriteTypedArray<uint8_t, false, true>(src);
             }
             else
             {
-                WriteTypedArray<uint8, false>(src);
+                WriteTypedArray<uint8_t, false>(src);
             }
             break;
 
         case TypeIds_Uint8ClampedArray:
             if (Uint8ClampedVirtualArray::HasVirtualTableInfo(src))
             {
-                WriteTypedArray<uint8, true, true>(src);
+                WriteTypedArray<uint8_t, true, true>(src);
             }
             else
             {
-                WriteTypedArray<uint8, true>(src);
+                WriteTypedArray<uint8_t, true>(src);
             }
             break;
 

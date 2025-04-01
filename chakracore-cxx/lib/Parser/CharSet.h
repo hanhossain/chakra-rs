@@ -21,7 +21,7 @@ namespace UnifiedRegex
         static const int vecSize = Size / wordSize;
         static const uint32 ones = (uint32)-1;
 
-        static const uint8 oneBits[Size];
+        static const uint8_t oneBits[Size];
 
         uint32 vec[vecSize];
 
@@ -409,7 +409,7 @@ namespace UnifiedRegex
             size_t countPlusOne;
             // Characters, in no particular order, or (uint)-1 for tail empty slots
             uint cs[MaxCompact];
-            uint8 padding[sizeof(CharBitvec) - sizeof(uint) * MaxCompact];
+            uint8_t padding[sizeof(CharBitvec) - sizeof(uint) * MaxCompact];
         };
 
         struct FullRep

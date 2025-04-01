@@ -9,11 +9,11 @@
 
 namespace Js
 {
-    SIMDValue SIMDInt8x16Operation::OpInt8x16(int8 values[])
+    SIMDValue SIMDInt8x16Operation::OpInt8x16(int8_t values[])
     {
         SIMDValue result = {0, 0, 0, 0};
 
-        for (uint8 i = 0; i < 16; i++)
+        for (uint8_t i = 0; i < 16; i++)
         {
             result.i8[i] = values[i];
         }
@@ -21,7 +21,7 @@ namespace Js
         return result;
     }
 
-    SIMDValue SIMDInt8x16Operation::OpSplat(int8 x)
+    SIMDValue SIMDInt8x16Operation::OpSplat(int8_t x)
     {
         SIMDValue result;
 
@@ -96,9 +96,9 @@ namespace Js
         int mask = 0x80;
         for (uint idx = 0; idx < 16; ++idx)
         {
-            int8 val1 = aValue.i8[idx];
-            int8 val2 = bValue.i8[idx];
-            int8 sum = val1 + val2;
+            int8_t val1 = aValue.i8[idx];
+            int8_t val2 = bValue.i8[idx];
+            int8_t sum = val1 + val2;
 
             result.i8[idx] = sum;
             if (val1 > 0 && val2 > 0 && sum < 0)
@@ -107,7 +107,7 @@ namespace Js
             }
             else if (val1 < 0 && val2 < 0 && sum > 0)
             {
-                result.i8[idx] = static_cast<int8>(mask);
+                result.i8[idx] = static_cast<int8_t>(mask);
             }
         }
         return result;
@@ -119,18 +119,18 @@ namespace Js
         int mask = 0x80;
         for (uint idx = 0; idx < 16; ++idx)
         {
-            int8 val1 = aValue.i8[idx];
-            int8 val2 = bValue.i8[idx];
+            int8_t val1 = aValue.i8[idx];
+            int8_t val2 = bValue.i8[idx];
             int16 diff = val1 + val2;
 
-            result.i8[idx] = static_cast<int8>(diff);
+            result.i8[idx] = static_cast<int8_t>(diff);
             if (diff > 0x7F)
             {
                 result.i8[idx] = 0x7F;
             }
             else if (diff < 0x80)
             {
-                result.i8[idx] = static_cast<int8>(mask);
+                result.i8[idx] = static_cast<int8_t>(mask);
             }
         }
         return result;

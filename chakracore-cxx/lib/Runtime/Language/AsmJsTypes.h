@@ -57,7 +57,7 @@ namespace Js
 
     namespace ArrayBufferView
     {
-        enum ViewType: uint8
+        enum ViewType: uint8_t
         {
 #define ARRAYBUFFER_VIEW(name, ...) TYPE_##name,
 #include "AsmJsArrayBufferViews.h"
@@ -377,7 +377,7 @@ namespace Js
     class AsmJsModuleArg : public AsmJsSymbol
     {
     public:
-        enum ArgType: int8
+        enum ArgType: int8_t
         {
             StdLib,
             Import,

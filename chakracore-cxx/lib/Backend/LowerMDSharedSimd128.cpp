@@ -118,7 +118,7 @@ bool LowererMD::Simd128TryLowerMappedInstruction(IR::Instr *instr)
 }
 
 IR::MemRefOpnd *
-LowererMD::LoadSimdHelperArgument(IR::Instr * instr, uint8 index)
+LowererMD::LoadSimdHelperArgument(IR::Instr * instr, uint8_t index)
 {
     //the most reliable way to pass a simd value on x86/x64 win/lnx across calls
     //is to pass a pointer to a SIMD value in the simd temporary area.
@@ -1451,7 +1451,7 @@ IR::Instr* LowererMD::SIMD128LowerReplaceLane_4(IR::Instr* instr)
     else
     {
         Assert(lane == 1 || lane == 3);
-        uint8 shufMask = 0xE4; // 11 10 01 00
+        uint8_t shufMask = 0xE4; // 11 10 01 00
         shufMask |= lane;      // 11 10 01 id
         shufMask &= ~(0x03 << (lane << 1)); // set 2 bits corresponding to lane index to 00
 
@@ -1492,7 +1492,7 @@ IR::Instr* LowererMD::Simd128LowerSwizzle_4(IR::Instr* instr)
         srcs[i++] = args->Pop();
     }
 
-    int8 shufMask = 0;
+    int8_t shufMask = 0;
     int lane0 = 0, lane1 = 0, lane2 = 0, lane3 = 0;
     IR::Instr *pInstr = instr->m_prev;
 
@@ -1512,7 +1512,7 @@ IR::Instr* LowererMD::Simd128LowerSwizzle_4(IR::Instr* instr)
         lane1 = srcs[2]->AsIntConstOpnd()->AsInt32();
         Assert(lane0 >= 0 && lane0 < 2);
         Assert(lane1 >= 0 && lane1 < 2);
-        shufMask = (int8)((lane1 << 1) | lane0);
+        shufMask = (int8_t)((lane1 << 1) | lane0);
         shufOpcode = Js::OpCode::SHUFPD;
     }
 #endif // 0
@@ -1530,7 +1530,7 @@ IR::Instr* LowererMD::Simd128LowerSwizzle_4(IR::Instr* instr)
     Assert(lane2 >= 0 && lane2 < 4);
     Assert(lane2 >= 0 && lane2 < 4);
     Assert(lane3 >= 0 && lane3 < 4);
-    shufMask = (int8)((lane3 << 6) | (lane2 << 4) | (lane1 << 2) | lane0);
+    shufMask = (int8_t)((lane3 << 6) | (lane2 << 4) | (lane1 << 2) | lane0);
 
     instr->m_opcode = shufOpcode;
     instr->SetDst(dst);
@@ -1560,7 +1560,7 @@ IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
         srcs[j++] = args->Pop();
     }
 
-    uint8 lanes[4], lanesSrc[4];
+    uint8_t lanes[4], lanesSrc[4];
     uint fromSrc1, fromSrc2;
     IR::Instr *pInstr = instr->m_prev;
 
@@ -1573,10 +1573,10 @@ IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
               srcs[4] && srcs[4]->IsIntConstOpnd() &&
               srcs[5] && srcs[5]->IsIntConstOpnd(), "Type-specialized shuffle is supported only with constant lane indices");
 
-    lanes[0] = (uint8) srcs[2]->AsIntConstOpnd()->AsInt32();
-    lanes[1] = (uint8) srcs[3]->AsIntConstOpnd()->AsInt32();
-    lanes[2] = (uint8) srcs[4]->AsIntConstOpnd()->AsInt32();
-    lanes[3] = (uint8) srcs[5]->AsIntConstOpnd()->AsInt32();
+    lanes[0] = (uint8_t) srcs[2]->AsIntConstOpnd()->AsInt32();
+    lanes[1] = (uint8_t) srcs[3]->AsIntConstOpnd()->AsInt32();
+    lanes[2] = (uint8_t) srcs[4]->AsIntConstOpnd()->AsInt32();
+    lanes[3] = (uint8_t) srcs[5]->AsIntConstOpnd()->AsInt32();
     Assert(lanes[0] >= 0 && lanes[0] < 8);
     Assert(lanes[1] >= 0 && lanes[1] < 8);
     Assert(lanes[2] >= 0 && lanes[2] < 8);
@@ -1602,11 +1602,11 @@ IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
         else
         {
             // arbitrary shuffle with 2 lanes from each src
-            uint8 ordLanes[4], reArrLanes[4];
+            uint8_t ordLanes[4], reArrLanes[4];
 
             // order lanes based on which src they come from
             // compute re-arrangement mask
-            for (uint8 i = 0, j1 = 0, j2 = 2; i < 4; i++)
+            for (uint8_t i = 0, j1 = 0, j2 = 2; i < 4; i++)
             {
                 if (lanesSrc[i] == 1 && j1 < 4)
                 {
@@ -1636,7 +1636,7 @@ IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
         IR::RegOpnd *temp1 = IR::RegOpnd::New(dst->GetType(), m_func);
         IR::RegOpnd *temp2 = IR::RegOpnd::New(dst->GetType(), m_func);
         IR::RegOpnd *temp3 = IR::RegOpnd::New(dst->GetType(), m_func);
-        uint8 minorityLane = 0, maxLaneValue;
+        uint8_t minorityLane = 0, maxLaneValue;
         majSrc = fromSrc1 == 3 ? srcs[0] : srcs[1];
         minSrc = fromSrc1 == 3 ? srcs[1] : srcs[0];
         Assert(majSrc != minSrc);
@@ -1651,7 +1651,7 @@ IR::Instr* LowererMD::Simd128LowerShuffle_4(IR::Instr* instr)
 
         // find minorityLane to mask
         maxLaneValue = minSrc == srcs[0] ? 4 : 8;
-        for (uint8 i = 0; i < 4; i++)
+        for (uint8_t i = 0; i < 4; i++)
         {
             if (lanes[i] >= (maxLaneValue - 4) && lanes[i] < maxLaneValue)
             {
@@ -1689,7 +1689,7 @@ IR::Instr* LowererMD::Simd128LowerShuffle(IR::Instr* instr)
     SList<IR::Opnd*> *args = nullptr;
     IR::Opnd *dst = nullptr;
     IR::Opnd *src1 = nullptr, *src2 = nullptr;
-    uint8 lanes[16], laneCount = 0, scale = 1;
+    uint8_t lanes[16], laneCount = 0, scale = 1;
     bool isShuffle = false;
     IRType laneType = TyInt16;
     intptr_t temp1SIMD = m_func->GetThreadContextInfo()->GetSimdTempAreaAddr(0);
@@ -1752,7 +1752,7 @@ IR::Instr* LowererMD::Simd128LowerShuffle(IR::Instr* instr)
     {
         IR::Opnd * laneOpnd = args->Pop();
         Assert(laneOpnd->IsIntConstOpnd());
-        lanes[i] = (uint8)laneOpnd->AsIntConstOpnd()->AsInt32();
+        lanes[i] = (uint8_t)laneOpnd->AsIntConstOpnd()->AsInt32();
     }
 
     // MOVUPS [temp], src1
@@ -2609,7 +2609,7 @@ IR::Instr* LowererMD::Simd128AsmJsLowerLoadElem(IR::Instr *instr)
     IR::Opnd * src1 = instr->GetSrc1();
     IR::Opnd * src2 = instr->GetSrc2();
     ValueType arrType = baseOpnd->GetValueType();
-    uint8 dataWidth = instr->dataWidth;
+    uint8_t dataWidth = instr->dataWidth;
 
     // Type-specialized.
     Assert(dst->IsSimd128() && src1->IsSimd128() && src2->GetType() == TyUint32);
@@ -2669,7 +2669,7 @@ IR::Instr* LowererMD::Simd128LowerLoadElem(IR::Instr *instr)
 }
 
 IR::Instr *
-LowererMD::Simd128ConvertToLoad(IR::Opnd *dst, IR::Opnd *src, uint8 dataWidth, IR::Instr* instr, byte scaleFactor /* = 0*/)
+LowererMD::Simd128ConvertToLoad(IR::Opnd *dst, IR::Opnd *src, uint8_t dataWidth, IR::Instr* instr, byte scaleFactor /* = 0*/)
 {
     IR::Instr *newInstr = nullptr;
     IR::Instr * instrPrev = instr->m_prev;
@@ -2766,7 +2766,7 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
     IR::Opnd * src1 = instr->GetSrc1();
     IR::Opnd * src2 = instr->GetSrc2();
     ValueType arrType = baseOpnd->GetValueType();
-    uint8 dataWidth = instr->dataWidth;
+    uint8_t dataWidth = instr->dataWidth;
 
     // Type-specialized.
     Assert(dst->IsSimd128() && src1->IsSimd128() && src2->GetType() == TyUint32);
@@ -2819,7 +2819,7 @@ LowererMD::Simd128LowerStoreElem(IR::Instr *instr)
     IR::Opnd * dst = instr->GetDst();
     IR::RegOpnd * indexOpnd = dst->AsIndirOpnd()->GetIndexOpnd();
     IR::Opnd * src1 = instr->GetSrc1();
-    uint8 dataWidth = instr->dataWidth;
+    uint8_t dataWidth = instr->dataWidth;
     ValueType arrType = dst->AsIndirOpnd()->GetBaseOpnd()->GetValueType();
 
     // If we type-specialized, then array is a definite type-array.
@@ -2831,7 +2831,7 @@ LowererMD::Simd128LowerStoreElem(IR::Instr *instr)
 }
 
 IR::Instr *
-LowererMD::Simd128ConvertToStore(IR::Opnd *dst, IR::Opnd *src1, uint8 dataWidth, IR::Instr* instr, byte scaleFactor /* = 0 */)
+LowererMD::Simd128ConvertToStore(IR::Opnd *dst, IR::Opnd *src1, uint8_t dataWidth, IR::Instr* instr, byte scaleFactor /* = 0 */)
 {
     IR::Instr * instrPrev = instr->m_prev;
 
@@ -3241,7 +3241,7 @@ void LowererMD::Simd128InitOpcodeMap()
 #undef SIMD_SETOPCODE
 #undef SIMD_GETOPCODE
 
-void LowererMD::CheckShuffleLanes_4(uint8 lanes[], uint8 lanesSrc[], uint *fromSrc1, uint *fromSrc2)
+void LowererMD::CheckShuffleLanes_4(uint8_t lanes[], uint8_t lanesSrc[], uint *fromSrc1, uint *fromSrc2)
 {
     Assert(lanes);
     Assert(lanesSrc);
@@ -3267,16 +3267,16 @@ void LowererMD::CheckShuffleLanes_4(uint8 lanes[], uint8 lanesSrc[], uint *fromS
     }
 }
 
-void LowererMD::InsertShufps(uint8 lanes[], IR::Opnd *dst, IR::Opnd *src1, IR::Opnd *src2, IR::Instr *instr)
+void LowererMD::InsertShufps(uint8_t lanes[], IR::Opnd *dst, IR::Opnd *src1, IR::Opnd *src2, IR::Instr *instr)
 {
-    int8 shufMask;
-    uint8 normLanes[4];
+    int8_t shufMask;
+    uint8_t normLanes[4];
     IR::RegOpnd * tmp = IR::RegOpnd::New(TySimd128I4, m_func);
     for (uint i = 0; i < 4; i++)
     {
         normLanes[i] = (lanes[i] >= 4) ? (lanes[i] - 4) : lanes[i];
     }
-    shufMask = (int8)((normLanes[3] << 6) | (normLanes[2] << 4) | (normLanes[1] << 2) | normLanes[0]);
+    shufMask = (int8_t)((normLanes[3] << 6) | (normLanes[2] << 4) | (normLanes[1] << 2) | normLanes[0]);
     // ToDo: Move this to legalization code
     if (dst->IsEqual(src1))
     {

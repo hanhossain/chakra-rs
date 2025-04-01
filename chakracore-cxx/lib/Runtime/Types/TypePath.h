@@ -126,7 +126,7 @@ public:
     private:
         struct Data
         {
-            Data(uint8 pathSize) : pathSize(pathSize), pathLength(0)
+            Data(uint8_t pathSize) : pathSize(pathSize), pathLength(0)
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
                 , maxInitializedLength(0)
 #endif
@@ -140,10 +140,10 @@ public:
             // that populate the corresponding slots, e.g. for object literals or constructors with only
             // this statements.  This field keeps track of the longest instance associated with the given
             // TypePath.
-            Field(uint8) maxInitializedLength;
+            Field(uint8_t) maxInitializedLength;
 #endif
-            Field(uint8) pathLength;      // Entries in use
-            Field(uint8) pathSize;        // Allocated entries
+            Field(uint8_t) pathLength;      // Entries in use
+            Field(uint8_t) pathSize;        // Allocated entries
 
             // This map has to be at the end, because TinyDictionary has a zero size array
             Field(TinyDictionary) map;
@@ -299,8 +299,8 @@ public:
             return AddInternal<!isSetter>(propertyRecord);
         }
 
-        uint8 GetPathLength() { return this->GetData()->pathLength; }
-        uint8 GetPathSize() { return this->GetData()->pathSize; }
+        uint8_t GetPathLength() { return this->GetData()->pathLength; }
+        uint8_t GetPathSize() { return this->GetData()->pathSize; }
 
         PropertyIndex Lookup(PropertyId propId,int typePathLength);
         PropertyIndex LookupInline(PropertyId propId,int typePathLength);
@@ -335,13 +335,13 @@ public:
 
 #if ENABLE_FIXED_FIELDS
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        uint8 GetMaxInitializedLength() { return this->GetData()->maxInitializedLength; }
+        uint8_t GetMaxInitializedLength() { return this->GetData()->maxInitializedLength; }
         void SetMaxInitializedLength(int newMaxInitializedLength)
         {
             Assert(newMaxInitializedLength >= 0);
             Assert(newMaxInitializedLength <= MaxPathTypeHandlerLength);
             Assert(this->GetMaxInitializedLength() <= newMaxInitializedLength);
-            this->GetData()->maxInitializedLength = (uint8)newMaxInitializedLength;
+            this->GetData()->maxInitializedLength = (uint8_t)newMaxInitializedLength;
         }
 
         Var GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext * requestContext);

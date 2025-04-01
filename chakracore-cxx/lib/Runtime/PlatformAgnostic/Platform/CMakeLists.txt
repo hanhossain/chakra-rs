@@ -57,3 +57,7 @@ target_include_directories (Chakra.Runtime.PlatformAgnostic PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/PlatformAgnostic
   )
+
+target_compile_definitions(Chakra.Runtime.PlatformAgnostic PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)

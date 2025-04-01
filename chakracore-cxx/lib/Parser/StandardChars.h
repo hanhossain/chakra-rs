@@ -12,7 +12,7 @@ namespace UnifiedRegex
     class ASCIIChars : public Chars<char>
     {
     private:
-        enum CharClass : uint8
+        enum CharClass : uint8_t
         {
             Word       = 1 << 0,
             Newline    = 1 << 1,
@@ -22,8 +22,8 @@ namespace UnifiedRegex
             Octal      = 1 << 5,
             Hex        = 1 << 6
         };
-        static const uint8 classes[NumChars];
-        static const uint8 values[NumChars];
+        static const uint8_t classes[NumChars];
+        static const uint8_t values[NumChars];
 
     public:
         inline static bool IsWord(Char c)
@@ -68,7 +68,7 @@ namespace UnifiedRegex
     };
 
     template <>
-    class StandardChars<uint8> : Chars<uint8>
+    class StandardChars<uint8_t> : Chars<uint8_t>
     {
     public:
         inline StandardChars(ArenaAllocator* allocator) {}
@@ -374,6 +374,6 @@ namespace UnifiedRegex
         }
     };
 
-    typedef UnifiedRegex::StandardChars<uint8> UTF8StandardChars;
+    typedef UnifiedRegex::StandardChars<uint8_t> UTF8StandardChars;
     typedef UnifiedRegex::StandardChars<char16> UnicodeStandardChars;
 }

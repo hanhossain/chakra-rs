@@ -282,32 +282,32 @@ public:
     uintptr_t GetSize() const { return EQUIVALENT_TYPE_CACHE_SIZE; }
     intptr_t const * GetAddressOfPolyValues() { return &this->polyValues[0]; }
 
-    intptr_t GetPolyValue(uint8 index) const
+    intptr_t GetPolyValue(uint8_t index) const
     {
         AssertOrFailFast(index < GetSize());
         return polyValues[index];
     }
 
-    void SetPolyValue(intptr_t value, uint8 index)
+    void SetPolyValue(intptr_t value, uint8_t index)
     {
         AssertOrFailFast(index < GetSize());
         polyValues[index] = value;
     }
 
-    uint8 GetIndexForValue(intptr_t value) const
+    uint8_t GetIndexForValue(intptr_t value) const
     {
-        return (uint8)((value >> PolymorphicInlineCacheShift) & (GetSize() - 1));
+        return (uint8_t)((value >> PolymorphicInlineCacheShift) & (GetSize() - 1));
     }
 
     void Invalidate()
     {
-        for (uint8 i = 0; i < GetSize(); i++)
+        for (uint8_t i = 0; i < GetSize(); i++)
         {
             Invalidate(i);
         }
     }
 
-    void Invalidate(uint8 i)
+    void Invalidate(uint8_t i)
     {
         AssertOrFailFast(i < GetSize());
         polyValues[i] = GuardValue::Invalidated;
@@ -315,13 +315,13 @@ public:
 
     void InvalidateDuringSweep()
     {
-        for (uint8 i = 0; i < GetSize(); i++)
+        for (uint8_t i = 0; i < GetSize(); i++)
         {
             InvalidateDuringSweep(i);
         }
     }
 
-    void InvalidateDuringSweep(uint8 i)
+    void InvalidateDuringSweep(uint8_t i)
     {
         AssertOrFailFast(i < GetSize());
         polyValues[i] = GuardValue::Invalidated_DuringSweep;

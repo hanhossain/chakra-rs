@@ -16,8 +16,8 @@ namespace Js
             
         struct Fields {
             union {
-                uint8 u8Fields[static_cast<size_t>(CountT::Max)];
-                int8 i8Fields[static_cast<size_t>(CountT::Max)];
+                uint8_t u8Fields[static_cast<size_t>(CountT::Max)];
+                int8_t i8Fields[static_cast<size_t>(CountT::Max)];
                 uint16 u16Fields[static_cast<size_t>(CountT::Max)];
                 int16 i16Fields[static_cast<size_t>(CountT::Max)];
                 uint32 u32Fields[static_cast<size_t>(CountT::Max)];
@@ -26,11 +26,11 @@ namespace Js
             Fields() {}
         };
 
-        uint8 GetFieldSize() const { return fieldSize; }
+        uint8_t GetFieldSize() const { return fieldSize; }
         Fields* GetFields() const { return fields; }
 
     private:
-        FieldWithBarrier(uint8) fieldSize;
+        FieldWithBarrier(uint8_t) fieldSize;
 #if DBG
         mutable FieldWithBarrier(bool) isLockedDown:1;
         mutable FieldWithBarrier(bool) isClosing:1;
@@ -45,13 +45,13 @@ namespace Js
             , isClosing(false)
 #endif
         {
-            AllocCounters<uint8>(host);
+            AllocCounters<uint8_t>(host);
         }
 
         uint32 Get(CountT typeEnum) const
         {
-            uint8 type = static_cast<uint8>(typeEnum);
-            uint8 localFieldSize = fieldSize;
+            uint8_t type = static_cast<uint8_t>(typeEnum);
+            uint8_t localFieldSize = fieldSize;
             uint32 value = 0;
             if (localFieldSize == 1)
             {
@@ -75,12 +75,12 @@ namespace Js
 
         uint32 Set(CountT typeEnum, uint32 val, T* host)
         {
-            uint8 type = static_cast<uint8>(typeEnum);
+            uint8_t type = static_cast<uint8_t>(typeEnum);
             if (fieldSize == 1)
             {
                 if (val <= UINT8_MAX)
                 {
-                    return this->fields->u8Fields[type] = static_cast<uint8>(val);
+                    return this->fields->u8Fields[type] = static_cast<uint8_t>(val);
                 }
                 else
                 {
@@ -113,7 +113,7 @@ namespace Js
 
         uint32 Increase(CountT typeEnum, T* host)
         {
-            uint8 type = static_cast<uint8>(typeEnum);
+            uint8_t type = static_cast<uint8_t>(typeEnum);
             if (fieldSize == 1)
             {
                 if (this->fields->u8Fields[type] < UINT8_MAX)
@@ -152,11 +152,11 @@ namespace Js
             Assert(ThreadContext::GetContextForCurrentThread());
             Assert(host->GetRecycler() != nullptr);
 
-            const uint8 max = static_cast<uint8>(CountT::Max);
+            const uint8_t max = static_cast<uint8_t>(CountT::Max);
             typedef CompactCounters<T, CountT> CounterT;
             CounterT::Fields* fieldsArray = (CounterT::Fields*)RecyclerNewArrayLeafZ(host->GetRecycler(), FieldT, sizeof(FieldT)*max);
             CounterT::Fields* oldFieldsArray = host->counters.fields;
-            uint8 i = 0;
+            uint8_t i = 0;
             if (this->fieldSize == 1)
             {
                 if (sizeof(FieldT) == 2)

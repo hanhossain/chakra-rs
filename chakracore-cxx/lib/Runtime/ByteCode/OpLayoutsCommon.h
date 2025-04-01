@@ -7,9 +7,9 @@
 
 namespace Js {
 
-    typedef uint8 ArgSlot_OneByte;
+    typedef uint8_t ArgSlot_OneByte;
     typedef uint32 CacheId;
-    typedef uint8 CacheId_OneByte;
+    typedef uint8_t CacheId_OneByte;
     typedef uint16 CacheId_TwoByte;
     typedef uint32 RootCacheId;
     typedef uint16 PropertyIdIndexType_TwoByte;

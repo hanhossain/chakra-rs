@@ -33,4 +33,8 @@ target_include_directories (Chakra.Common.Core PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 )
 
+target_compile_definitions(Chakra.Common.Core PUBLIC
+    PAL_STDCPP_COMPAT
+    NO_PAL_MINMAX)
+
 target_precompile_headers(Chakra.Common.Core PUBLIC CommonCorePch.h)

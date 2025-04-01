@@ -9,7 +9,7 @@ namespace Js
 
     namespace DictionaryPropertyDescriptorFlags
     {
-        enum class Flags : uint8
+        enum class Flags : uint8_t
         {
             None                         = 0,
             PreventFalseReference        = 1 << 0,
@@ -23,7 +23,7 @@ namespace Js
 #endif
         };
 
-        ENUM_CLASS_HELPERS(Flags, uint8);
+        ENUM_CLASS_HELPERS(Flags, uint8_t);
 
         inline Flags FlagIf(bool condition, Flags flag)
         {

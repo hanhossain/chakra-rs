@@ -351,7 +351,7 @@ public:
     static uint32   GetArrayOffsetOfLength(const ValueType valueType);
     static IRType   GetArrayIndirType(const ValueType valueType);
     static uint8_t     GetArrayIndirScale(const ValueType valueType);
-    static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8 dataWidth);
+    static int      SimdGetElementCountFromBytes(ValueType arrValueType, uint8_t dataWidth);
 private:
     bool            ShouldGenerateArrayFastPath(const IR::Opnd *const arrayOpnd, const bool supportsObjectsWithArrays, const bool supportsTypedArrays, const bool requiresSse2ForFloatArrays) const;
     IR::RegOpnd *   LoadObjectArray(IR::RegOpnd *const baseOpnd, IR::Instr *const insertBeforeInstr);
@@ -428,7 +428,7 @@ public:
         argCount = Js::CallInfo::GetArgCountWithoutExtraArgs((Js::CallFlags)flags, (uint16)argCount);
 #ifdef _M_X64
         // This was defined differently for x64
-        Js::CallInfo callInfo = Js::CallInfo((Js::CallFlags)flags, (unsigned __int16)argCount);
+        Js::CallInfo callInfo = Js::CallInfo((Js::CallFlags)flags, (uint16_t)argCount);
         return IR::IntConstOpnd::New(*((IntConstType *)((void *)&callInfo)), TyInt32, func, true);
 #else
         AssertMsg(!(argCount & 0xFF000000), "Too many arguments"); //final 8 bits are for flags

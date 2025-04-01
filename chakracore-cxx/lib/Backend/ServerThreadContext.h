@@ -41,7 +41,7 @@ public:
     virtual intptr_t GetThreadStackLimitAddr() const override;
 
 #ifdef ENABLE_WASM_SIMD
-    virtual intptr_t GetSimdTempAreaAddr(uint8 tempIndex) const override;
+    virtual intptr_t GetSimdTempAreaAddr(uint8_t tempIndex) const override;
 #endif
 
     virtual intptr_t GetDisableImplicitFlagsAddr() const override;

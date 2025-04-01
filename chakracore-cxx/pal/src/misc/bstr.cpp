@@ -94,14 +94,12 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
 
     if(bstr != NULL) {
 
-#if defined(_WIN64)
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
         // looking one uint32_t before the BSTR pointer.
         *(DWORD_PTR *)bstr = (DWORD_PTR) 0;
         bstr = (BSTR) ((char *) bstr + sizeof (uint32_t));
-#endif
         *(uint32_t *)bstr = (uint32_t)len * sizeof(OLECHAR);
 
         bstr = (BSTR) ((char*) bstr + sizeof(uint32_t));
@@ -133,9 +131,7 @@ extern "C" void SysFreeString(BSTR bstr)
     if (bstr != NULL)
     {
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
-#if defined(_WIN64)
         bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
-#endif
         HeapFree(GetProcessHeap(), 0, (void *) bstr);
     }
 }

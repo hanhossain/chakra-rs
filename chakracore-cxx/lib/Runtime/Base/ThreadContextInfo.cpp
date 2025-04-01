@@ -347,7 +347,7 @@ ThreadContextInfo::GetX86NegTwoPower31F4Addr() const
 }
 
 intptr_t
-ThreadContextInfo::GetX86FourLanesMaskAddr(uint8 minorityLane) const
+ThreadContextInfo::GetX86FourLanesMaskAddr(uint8_t minorityLane) const
 {
     return ShiftAddr(this, &X86_4LANES_MASKS[minorityLane]);
 }

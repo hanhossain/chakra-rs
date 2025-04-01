@@ -10,15 +10,15 @@ namespace Wasm
     // Language Types binary encoding with varint7
     namespace LanguageTypes
     { 
-        const int8 i32 = -0x1;
-        const int8 i64 = -0x2;
-        const int8 f32 = -0x3;
-        const int8 f64 = -0x4;
-        const int8 v128 = -0x5;
-        const int8 anyfunc = -0x10;
-        const int8 func = -0x20;
-        const int8 emptyBlock = -0x40;
-        WasmTypes::WasmType ToWasmType(int8);
+        const int8_t i32 = -0x1;
+        const int8_t i64 = -0x2;
+        const int8_t f32 = -0x3;
+        const int8_t f64 = -0x4;
+        const int8_t v128 = -0x5;
+        const int8_t anyfunc = -0x10;
+        const int8_t func = -0x20;
+        const int8_t emptyBlock = -0x40;
+        WasmTypes::WasmType ToWasmType(int8_t);
     }
 
     struct SectionHeader
@@ -99,7 +99,7 @@ namespace Wasm
         // Primitive reader
         template <WasmTypes::WasmType type> void ConstNode();
         template <typename T> T ReadConst();
-        ExternalKinds ReadExternalKind() { return (ExternalKinds)ReadConst<uint8>(); }
+        ExternalKinds ReadExternalKind() { return (ExternalKinds)ReadConst<uint8_t>(); }
         bool ReadMutableValue();
         const char16* ReadInlineName(uint32& length, uint32& nameLength);
         template<typename LEBType = uint32, uint32 bits = sizeof(LEBType) * 8>

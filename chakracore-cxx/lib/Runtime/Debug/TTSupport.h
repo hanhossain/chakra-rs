@@ -343,8 +343,8 @@ namespace TTD
 
             bool IsNullString() const;
 
-            void Append(const char16* str, size_t start = 0, size_t end = SIZE_T_MAX);
-            void Append(const TTAutoString& str, size_t start = 0, size_t end = SIZE_T_MAX);
+            void Append(const char16* str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
+            void Append(const TTAutoString& str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
 
             void Append(uint64 val);
 

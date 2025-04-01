@@ -764,12 +764,6 @@ private:
 
 #ifdef ENABLE_GLOBALIZATION
     Js::DelayLoadWinRtString delayLoadWinRtString;
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-    Js::DelayLoadWindowsGlobalization delayLoadWindowsGlobalizationLibrary;
-    Js::WindowsGlobalizationAdapter windowsGlobalizationAdapter;
-#endif
-#endif
 #ifdef ENABLE_FOUNDATION_OBJECT
     Js::DelayLoadWinRtFoundation delayLoadWinRtFoundationLibrary;
     Js::WindowsFoundationAdapter windowsFoundationAdapter;
@@ -788,7 +782,7 @@ private:
     //
     // Regex globals
     //
-    UnifiedRegex::StandardChars<uint8>* standardUTF8Chars;
+    UnifiedRegex::StandardChars<uint8_t>* standardUTF8Chars;
     UnifiedRegex::StandardChars<char16>* standardUnicodeChars;
 
     Js::ImplicitCallFlags implicitCallFlags;
@@ -816,7 +810,7 @@ private:
 
     // Indicates the current loop depth as observed by the interpreter. The interpreter causes this value to be updated upon
     // entering and leaving a loop.
-    uint8 loopDepth;
+    uint8_t loopDepth;
 
     const ThreadConfiguration configuration;
 
@@ -869,12 +863,6 @@ public:
 
 #ifdef ENABLE_GLOBALIZATION
     Js::DelayLoadWinRtString *GetWinRTStringLibrary();
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_ES6_CHAR_CLASSIFIER)
-#ifdef INTL_WINGLOB
-    Js::DelayLoadWindowsGlobalization *GetWindowsGlobalizationLibrary();
-    Js::WindowsGlobalizationAdapter *GetWindowsGlobalizationAdapter();
-#endif
-#endif
 #ifdef ENABLE_FOUNDATION_OBJECT
     Js::DelayLoadWinRtFoundation *GetWinRtFoundationLibrary();
     Js::WindowsFoundationAdapter *GetWindowsFoundationAdapter();
@@ -1290,7 +1278,7 @@ public:
     virtual intptr_t GetThreadStackLimitAddr() const override;
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)
-    virtual intptr_t GetSimdTempAreaAddr(uint8 tempIndex) const override;
+    virtual intptr_t GetSimdTempAreaAddr(uint8_t tempIndex) const override;
 #endif
 
     virtual intptr_t GetDisableImplicitFlagsAddr() const override;
@@ -1718,7 +1706,7 @@ public:
     //
     // Regex helpers
     //
-    UnifiedRegex::StandardChars<uint8>* GetStandardChars(__inout_opt uint8* dummy);
+    UnifiedRegex::StandardChars<uint8_t>* GetStandardChars(__inout_opt uint8_t* dummy);
     UnifiedRegex::StandardChars<char16>* GetStandardChars(__inout_opt char16* dummy);
 
     bool IsOptimizedForManyInstances() const { return isOptimizedForManyInstances; }
@@ -1812,12 +1800,12 @@ public:
         entryPointToBuiltInOperationIdCache.ResetNoDelete();
     }
 
-    uint8 LoopDepth() const
+    uint8_t LoopDepth() const
     {
         return loopDepth;
     }
 
-    void SetLoopDepth(const uint8 loopDepth)
+    void SetLoopDepth(const uint8_t loopDepth)
     {
         this->loopDepth = loopDepth;
     }

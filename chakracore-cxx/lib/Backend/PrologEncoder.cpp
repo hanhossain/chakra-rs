@@ -9,7 +9,7 @@
 //  non-windows x64 unwind uses .eh_frame
 // ----------------------------------------------------------------------------
 
-void PrologEncoder::EncodeSmallProlog(uint8 prologSize, size_t size)
+void PrologEncoder::EncodeSmallProlog(uint8_t prologSize, size_t size)
 {
     auto fde = ehFrame.GetFDE();
 
@@ -51,11 +51,11 @@ void PrologEncoder::FinalizeUnwindInfo(uint8_t *functionStart, uint32_t codeSize
     fde->UpdateAddressRange(functionStart, codeSize);
 }
 
-void PrologEncoder::EncodeInstr(IR::Instr *instr, unsigned __int8 size)
+void PrologEncoder::EncodeInstr(IR::Instr *instr, uint8_t size)
 {
     auto fde = ehFrame.GetFDE();
 
-    uint8 unwindCodeOp = PrologEncoderMD::GetOp(instr);
+    uint8_t unwindCodeOp = PrologEncoderMD::GetOp(instr);
 
     Assert((currentInstrOffset + size) > currentInstrOffset);
     currentInstrOffset += size;

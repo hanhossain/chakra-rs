@@ -139,7 +139,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        return dataView->template GetValue<int8>(args[1], _u("DataView.prototype.GetInt8"), FALSE);
+        return dataView->template GetValue<int8_t>(args[1], _u("DataView.prototype.GetInt8"), FALSE);
     }
 
     Var DataView::EntryGetUint8(RecyclableObject* function, CallInfo callInfo, ...)
@@ -161,7 +161,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        return dataView->GetValue<uint8>(args[1], _u("DataView.prototype.GetUint8"), FALSE);
+        return dataView->GetValue<uint8_t>(args[1], _u("DataView.prototype.GetUint8"), FALSE);
     }
 
     Var DataView::EntryGetInt16(RecyclableObject* function, CallInfo callInfo, ...)
@@ -335,7 +335,7 @@ namespace Js
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        int8 value = 0;
+        int8_t value = 0;
         switch (args.Info.Count)
         {
         case 0:
@@ -358,7 +358,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        dataView->SetValue<int8>(args[1], value, _u("DataView.prototype.SetInt8"));
+        dataView->SetValue<int8_t>(args[1], value, _u("DataView.prototype.SetInt8"));
         return scriptContext->GetLibrary()->GetUndefined();
     }
 
@@ -371,7 +371,7 @@ namespace Js
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        uint8 value = 0;
+        uint8_t value = 0;
         switch (args.Info.Count)
         {
         case 0:
@@ -394,7 +394,7 @@ namespace Js
         }
 
         DataView* dataView = VarTo<DataView>(args[0]);
-        dataView->SetValue<uint8>(args[1], value, _u("DataView.prototype.SetUint8"));
+        dataView->SetValue<uint8_t>(args[1], value, _u("DataView.prototype.SetUint8"));
         return scriptContext->GetLibrary()->GetUndefined();
     }
 
