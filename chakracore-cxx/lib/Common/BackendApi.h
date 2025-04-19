@@ -177,11 +177,3 @@ struct StackFrameConstants
     static const size_t StackCheckCodeHeightWithInterruptProbe = StackFrameConstants::StackCheckCodeHeight;
 #endif
 };
-
-struct NativeResourceIds
-{
-    static const short SourceCodeResourceNameId = 0x64;
-    static const short ByteCodeResourceNameId = 0x65;
-    static const short NativeMapResourceNameId = 0x66;
-    static const short NativeThrowMapResourceNameId = 0x67;
-};
