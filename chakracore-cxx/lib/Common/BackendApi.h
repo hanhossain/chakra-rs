@@ -16,6 +16,7 @@
 
 #define DefaultDeferredParsingThunk Js::JavascriptFunction::DeferredParsingThunk
 #if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
+
 #define ProfileDeferredParsingThunk Js::ScriptContext::ProfileModeDeferredParsingThunk
 #endif
 
@@ -294,7 +295,3 @@ enum VTableValue {
     VtableSimd128U16,
     Count
 };
-
-#if DBG_DUMP || defined(ENABLE_IR_VIEWER)
-const char16 *GetVtableName(VTableValue value);
-#endif
