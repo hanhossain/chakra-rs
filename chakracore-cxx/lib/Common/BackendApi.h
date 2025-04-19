@@ -314,12 +314,3 @@ enum OptimizationOverridesValue {
     OptimizationOverridesFloatArraySetElementFastPathVtable,
     OptimizationOverridesSideEffects
 };
-
-enum FunctionBodyValue {
-    FunctionBodyConstantVar,
-    FunctionBodyNestedFuncReference,
-    FunctionBodyReferencedPropertyId,
-    FunctionBodyPropertyIdFromCacheId,
-    FunctionBodyLiteralRegex,
-    FunctionBodyStringTemplateCallsiteRef
-};
