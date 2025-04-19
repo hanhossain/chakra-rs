@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <stdint.h>
+
 #define ASSERT_INLINEE_FUNC(instr) Assert(instr->m_func->IsInlinee() ? (instr->m_func != this->m_func) : (instr->m_func == this->m_func))
 
 enum IndirScale : uint8_t {
@@ -17,6 +19,13 @@ enum RoundMode : uint8_t {
     RoundModeTowardZero = 0,
     RoundModeTowardInteger = 1,
     RoundModeHalfToEven = 2
+};
+
+enum OptimizationOverridesValue {
+    OptimizationOverridesArraySetElementFastPathVtable,
+    OptimizationOverridesIntArraySetElementFastPathVtable,
+    OptimizationOverridesFloatArraySetElementFastPathVtable,
+    OptimizationOverridesSideEffects
 };
 
 enum ScriptContextValue {

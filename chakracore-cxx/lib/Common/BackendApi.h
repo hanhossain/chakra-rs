@@ -307,10 +307,3 @@ enum AuxArrayValue {
     AuxVarArrayVarCount,
     AuxFuncInfoArray
 };
-
-enum OptimizationOverridesValue {
-    OptimizationOverridesArraySetElementFastPathVtable,
-    OptimizationOverridesIntArraySetElementFastPathVtable,
-    OptimizationOverridesFloatArraySetElementFastPathVtable,
-    OptimizationOverridesSideEffects
-};
