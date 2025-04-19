@@ -1,0 +1,30 @@
+#pragma once
+
+enum LibraryValue {
+    ValueInvalid,
+    ValueUndeclBlockVar,
+    ValueEmptyString,
+    ValueUndefined,
+    ValueNull,
+    ValueTrue,
+    ValueFalse,
+    ValueNegativeZero,
+    ValueNumberTypeStatic,
+    ValueStringTypeStatic,
+    ValueSymbolTypeStatic,
+    ValueObjectType,
+    ValueObjectHeaderInlinedType,
+    ValueRegexType,
+    ValueArrayConstructor,
+    ValuePositiveInfinity,
+    ValueNaN,
+    ValueJavascriptArrayType,
+    ValueNativeIntArrayType,
+    ValueNativeFloatArrayType,
+    ValueConstructorCacheDefaultInstance,
+    ValueAbsDoubleCst,
+    ValueUintConvertConst,
+    ValueBuiltinFunctions,
+    ValueJnHelperMethods,
+    ValueCharStringCache
+};
