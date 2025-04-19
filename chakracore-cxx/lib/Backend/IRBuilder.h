@@ -13,6 +13,15 @@
 ///
 ///---------------------------------------------------------------------------
 
+enum AuxArrayValue {
+    AuxPropertyIdArray,
+    AuxIntArray,
+    AuxFloatArray,
+    AuxVarsArray,
+    AuxVarArrayVarCount,
+    AuxFuncInfoArray
+};
+
 class BranchReloc
 {
 public:
