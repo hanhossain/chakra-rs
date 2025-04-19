@@ -185,11 +185,3 @@ struct NativeResourceIds
     static const short NativeMapResourceNameId = 0x66;
     static const short NativeThrowMapResourceNameId = 0x67;
 };
-
-#if defined(_M_IX86)
-struct ThunkConstants
-{
-    static const size_t ThunkInstructionSize = 2;
-    static const size_t ThunkSize = 6;
-};
-#endif
