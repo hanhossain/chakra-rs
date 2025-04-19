@@ -564,7 +564,16 @@ enum tagDEBUG_EVENT_INFO_TYPE
 // .inl files
 //
 
-#include "CommonInl.h"
+#include "Common/vtinfo.inl"
+#include "DataStructures/DoublyLinkedListElement.inl"
+#include "DataStructures/DoublyLinkedList.inl"
+#include "Memory/Recycler.inl"
+#include "Memory/MarkContext.inl"
+#include "Memory/HeapBucket.inl"
+#include "Memory/LargeHeapBucket.inl"
+#include "Memory/HeapBlock.inl"
+#include "Memory/HeapBlockMap.inl"
+#include "Common/Jobs.inl"
 
 #include "Language/JavascriptConversion.inl"
 #include "Types/RecyclableObject.inl"
