@@ -298,12 +298,3 @@ enum VTableValue {
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
 const char16 *GetVtableName(VTableValue value);
 #endif
-
-enum AuxArrayValue {
-    AuxPropertyIdArray,
-    AuxIntArray,
-    AuxFloatArray,
-    AuxVarsArray,
-    AuxVarArrayVarCount,
-    AuxFuncInfoArray
-};
