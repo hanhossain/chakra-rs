@@ -323,10 +323,3 @@ enum FunctionBodyValue {
     FunctionBodyLiteralRegex,
     FunctionBodyStringTemplateCallsiteRef
 };
-
-enum ScriptContextValue {
-    ScriptContextNumberAllocator,
-    ScriptContextCharStringCache,
-    ScriptContextRecycler,
-    ScriptContextOptimizationOverrides
-};

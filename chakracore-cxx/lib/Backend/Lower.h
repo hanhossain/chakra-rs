@@ -19,6 +19,13 @@ enum RoundMode : uint8_t {
     RoundModeHalfToEven = 2
 };
 
+enum ScriptContextValue {
+    ScriptContextNumberAllocator,
+    ScriptContextCharStringCache,
+    ScriptContextRecycler,
+    ScriptContextOptimizationOverrides
+};
+
 enum NumberAllocatorValue {
     NumberAllocatorEndAddress,
     NumberAllocatorFreeObjectList
