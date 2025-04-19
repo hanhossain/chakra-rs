@@ -330,8 +330,3 @@ enum ScriptContextValue {
     ScriptContextRecycler,
     ScriptContextOptimizationOverrides
 };
-
-enum NumberAllocatorValue {
-    NumberAllocatorEndAddress,
-    NumberAllocatorFreeObjectList
-};

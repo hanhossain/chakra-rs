@@ -19,6 +19,11 @@ enum RoundMode : uint8_t {
     RoundModeHalfToEven = 2
 };
 
+enum NumberAllocatorValue {
+    NumberAllocatorEndAddress,
+    NumberAllocatorFreeObjectList
+};
+
 #if DBG
 enum HelperCallCheckState : uint8_t {
     HelperCallCheckState_None = 0,
