@@ -91,7 +91,7 @@ namespace Js
 
     BEGIN_ENUM_UINT(InternalPropertyIds)
 #define INTERNALPROPERTY(n) n,
-#include "InternalPropertyList.h"
+#include "Library/InternalPropertyList.h"
         Count,
     END_ENUM_UINT()
 
