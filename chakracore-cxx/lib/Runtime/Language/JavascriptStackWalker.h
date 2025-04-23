@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Common/InlinedFrameLayout.h"
 
 #if defined(_M_IX86)
 #include "Language/i386/StackFrame.h"

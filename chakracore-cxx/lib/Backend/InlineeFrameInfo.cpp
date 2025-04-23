@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
-
+#include "Common/InlinedFrameLayout.h"
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 #define BAILOUT_VERBOSE_TRACE(functionBody, ...) \
