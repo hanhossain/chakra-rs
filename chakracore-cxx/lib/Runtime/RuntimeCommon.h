@@ -146,7 +146,7 @@ namespace Js
 
     BEGIN_ENUM_BYTE(BuiltinFunction)
 #define LIBRARY_FUNCTION(obj, name, argc, flags, entry) obj##_##name,
-#include "LibraryFunction.h"
+#include "Library/LibraryFunction.h"
 #undef LIBRARY_FUNCTION
         Count,
         None,
