@@ -126,7 +126,7 @@ enum FileVersionScheme : byte
 
 #define DEFINE_ALL_FIELDS
 struct SerializedFieldList {
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
     bool has_m_lineNumber: 1;
     bool has_m_columnNumber: 1;
     bool has_attributes : 1;
@@ -2118,7 +2118,7 @@ public:
                 DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType); \
             }
 
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
         }
 
         {
@@ -2388,7 +2388,7 @@ public:
             Prepend##serializableType(builder, _u(#name), function->##name); \
         }
 
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
 
         AddPropertyIdsForScopeSlotArray(builder, function);
 
@@ -4207,7 +4207,7 @@ public:
         if (definedFields->has_##name == true) { \
             current = Read##serializableType(current, &(*function)->##name); \
         }
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
 
         current = ReadPropertyIdsForScopeSlotArray(current, cache, *function);
 
@@ -4231,7 +4231,7 @@ public:
                 DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType); \
             }
 
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
 
             // TODO-STACK-NESTED-FUNC: Defer deserialize function doesn't have parent pointer, can't do stack nested func yet
             // The flags field is set to by default to Flags_HasNoExplicitReturnValue which means if it's serialized, the field will be set
