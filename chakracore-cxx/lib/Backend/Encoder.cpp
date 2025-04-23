@@ -6,6 +6,7 @@
 #include "Core/CRC.h"
 #include "NativeEntryPointData.h"
 #include "JitTransferData.h"
+#include "LazyBailOutRecord.h"
 
 ///----------------------------------------------------------------------------
 ///

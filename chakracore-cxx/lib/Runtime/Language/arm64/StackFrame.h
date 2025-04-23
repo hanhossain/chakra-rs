@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Language/StackFrameConstants.h"
+
 /*
  * Stackwalking on Evanesco:
  * ------------------------

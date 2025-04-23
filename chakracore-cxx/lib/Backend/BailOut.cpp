@@ -12,6 +12,8 @@
 #include "Debug/DebugManager.h"
 #endif
 #include "Language/JavascriptFunctionArgIndex.h"
+#include "LazyBailOutRecord.h"
+#include "Common/InlinedFrameLayout.h"
 
 extern const IRType RegTypes[RegNumCount];
 

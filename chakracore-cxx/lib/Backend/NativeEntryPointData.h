@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "LazyBailOutRecord.h"
 
 #if ENABLE_NATIVE_CODEGEN
 class NativeCodeData;

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
+#include "LazyBailOutRecord.h"
 
 #if ENABLE_NATIVE_CODEGEN
 #include "NativeEntryPointData.h"
