@@ -44,6 +44,8 @@
 #include "JitTransferData.h"
 #endif
 
+#include "LazyBailOutRecord.h"
+
 namespace Js
 {
     uint const ScopeSlots::MaxEncodedSlotCount;
