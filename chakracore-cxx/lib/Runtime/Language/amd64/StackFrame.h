@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <stdint.h>
+#include "Language/StackFrameConstants.h"
+
 ///
 /// Note: The below description is applicable to the x86-x64 calling
 /// convention on Windows. For other platforms, look at the comments in

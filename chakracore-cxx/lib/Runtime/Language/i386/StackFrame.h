@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <stdint.h>
+#include "Language/StackFrameConstants.h"
 
 namespace Js {
 
