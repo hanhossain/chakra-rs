@@ -507,7 +507,7 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/JavascriptSymbol.h"
 
 #include "Library/AtomicsObject.h"
-#include "DetachedStateBase.h"
+#include "Library/DetachedStateBase.h"
 #include "Library/ArrayBuffer.h"
 #include "Library/SharedArrayBuffer.h"
 #include "Library/TypedArray.h"
