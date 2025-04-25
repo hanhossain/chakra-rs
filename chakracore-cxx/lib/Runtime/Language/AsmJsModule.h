@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "Language/AsmJsTypes.h"
 
 #ifdef ASMJS_PLAT
 #define ASMMATH_BUILTIN_SIZE (32)

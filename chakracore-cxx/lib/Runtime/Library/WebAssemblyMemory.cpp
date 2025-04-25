@@ -7,6 +7,7 @@
 
 #ifdef ENABLE_WASM
 #include "WasmLimits.h"
+#include "Language/AsmJsTypes.h"
 
 using namespace Js;
 

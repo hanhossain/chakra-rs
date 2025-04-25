@@ -21,6 +21,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "Language/AsmJsTypes.h"
 
 #ifdef ASMJS_PLAT
 namespace Js
