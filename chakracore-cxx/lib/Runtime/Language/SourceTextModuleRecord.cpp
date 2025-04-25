@@ -8,6 +8,7 @@
 #include "Types/SimpleDictionaryTypeHandler.h"
 #include "ModuleNamespace.h"
 #include "Library/JavascriptPromise.h"
+#include "Library/JavascriptAsyncFunction.h"
 
 namespace Js
 {

@@ -548,10 +548,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Debug/TTEventLog.h"
 #endif
 
-#include "Library/JavascriptGeneratorFunction.h"
-#include "Library/JavascriptAsyncFunction.h"
-#include "Library/JavascriptAsyncGeneratorFunction.h"
-
 //
 // .inl files
 //
