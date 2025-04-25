@@ -524,8 +524,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/ScriptFunction.h"
 #include "Library/StackScriptFunction.h"
 
-#include "Library/CustomExternalWrapperObject.h"
-
 //
 // .inl files
 //

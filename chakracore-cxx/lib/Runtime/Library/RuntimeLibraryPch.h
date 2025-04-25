@@ -10,6 +10,8 @@
 #include "RegexCommon.h"
 #include "Runtime.h"
 
+#include "Library/CustomExternalWrapperObject.h"
+
 #if ENABLE_TTD
 #include "screrror.h"
 
