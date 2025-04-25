@@ -15,6 +15,7 @@
 #include "Language/AsmJsJitTemplate.h"
 #include "Language/AsmJsEncoder.h"
 #include "Language/AsmJsCodeGenerator.h"
+#include "Language/AsmJs.h"
 #endif
 
 #include "Language/ProfilingHelpers.h"

@@ -556,7 +556,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 
 #include "Language/AsmJsTypes.h"
 #include "Language/AsmJsModule.h"
-#include "Language/AsmJs.h"
 
 //
 // .inl files

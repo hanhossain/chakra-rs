@@ -8,6 +8,8 @@
 #include "SourceDynamicProfileManager.h"
 
 #include "ByteCode/ByteCodeSerializer.h"
+#include "Language/AsmJs.h"
+
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 #if DBG_DUMP
