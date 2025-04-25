@@ -461,8 +461,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Language/amd64/StackFrame.h"
 #endif
 
-#include "Base/Entropy.h"
-
 //
 // .inl files
 //

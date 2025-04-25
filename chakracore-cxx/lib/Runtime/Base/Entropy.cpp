@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
+#include "Entropy.h"
 
 const uint32 Entropy::kInitIterationCount = 3;
 

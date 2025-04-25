@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Entropy.h"
 #include "Core/FaultInjection.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"

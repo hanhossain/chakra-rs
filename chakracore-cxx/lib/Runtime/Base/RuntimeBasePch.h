@@ -7,6 +7,7 @@
 
 
 #include "Runtime.h"
+#include "Entropy.h"
 
 #include "Library/DelayFreeArrayBufferHelper.h"
 #include "Base/ThreadContext.h"
