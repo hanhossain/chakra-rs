@@ -38,9 +38,7 @@ public:
 
     void CloseContexts();
     void SetBeforeCollectCallback(JsBeforeCollectCallback beforeCollectCallback, void * callbackContext);
-#ifdef _CHAKRACOREBUILD
     void SetBeforeSweepCallback(JsBeforeSweepCallback beforeCollectCallback, void * callbackContext);
-#endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     void SetSerializeByteCodeForLibrary(bool set) { serializeByteCodeForLibrary = set; }
@@ -68,10 +66,8 @@ private:
     JsrtContext * contextList;
     ThreadContext::CollectCallBack * collectCallback;
     JsBeforeCollectCallback beforeCollectCallback;
-#ifdef _CHAKRACOREBUILD
     JsBeforeSweepCallback beforeSweepCallback;
     void * beforeSweepCallbackContext;
-#endif
     JsrtThreadService threadService;
     void * beforeCollectCallbackContext;
     bool useIdle;

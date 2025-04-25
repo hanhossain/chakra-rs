@@ -47,11 +47,7 @@
 #endif // ifdef WINDOWS10_ICU
 
 // Different assertion code is used in ChakraFull that enforces that messages are char literals
-#ifdef _CHAKRACOREBUILD
 #define ICU_ERRORMESSAGE(e) u_errorName(e)
-#else
-#define ICU_ERRORMESSAGE(e) "Bad status returned from ICU"
-#endif
 
 #define ICU_FAILURE(e) (U_FAILURE(e) || e == U_STRING_NOT_TERMINATED_WARNING)
 #define ICU_BUFFER_FAILURE(e) (e == U_BUFFER_OVERFLOW_ERROR || e == U_STRING_NOT_TERMINATED_WARNING)

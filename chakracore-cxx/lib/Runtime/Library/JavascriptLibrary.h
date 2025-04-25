@@ -446,7 +446,6 @@ namespace Js
         Field(void *) nativeHostPromiseContinuationFunctionState;
 
         typedef SList<Js::FunctionProxy*, Recycler> FunctionReferenceList;
-#ifdef _CHAKRACOREBUILD
         struct JsrtExternalCallbacks
         {
             JsrtExternalCallbacks() : traceCallback(0), finalizeCallback(0), prototype(0) {}
@@ -458,18 +457,6 @@ namespace Js
 
             operator hash_t() const { return (hash_t)(traceCallback ^ finalizeCallback ^ prototype); }
         };
-#else
-        struct JsrtExternalCallbacks
-        {
-            JsrtExternalCallbacks() : finalizeCallback(0), prototype(0) {}
-            JsrtExternalCallbacks(uintptr_t finalizeCallback, uintptr_t prototype) : finalizeCallback(finalizeCallback), prototype(prototype) {}
-
-            uintptr_t finalizeCallback;
-            uintptr_t prototype;
-
-            operator hash_t() const { return (hash_t)(finalizeCallback ^ prototype); }
-        };
-#endif
         typedef JsUtil::WeakReferenceDictionary<JsrtExternalCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> JsrtExternalTypesCache;
 
         Field(void *) bindRefChunkBegin;
@@ -946,16 +933,11 @@ namespace Js
         JavascriptExternalFunction* CreateIdMappedExternalFunction(MethodType entryPoint, DynamicType *pPrototypeType);
         JavascriptExternalFunction* CreateExternalConstructor(Js::ExternalMethod entryPoint, PropertyId nameId, RecyclableObject * prototype);
         JavascriptExternalFunction* CreateExternalConstructor(Js::ExternalMethod entryPoint, PropertyId nameId, InitializeMethod method, unsigned short deferredTypeSlots, bool hasAccessors);
-#ifdef _CHAKRACOREBUILD
         DynamicType* GetCachedCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype);
         void CacheCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype, DynamicType* dynamicType);
 
         JsrtExternalType* GetCachedJsrtExternalType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype);
         void CacheJsrtExternalType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicType);
-#else
-        JsrtExternalType* GetCachedJsrtExternalType(uintptr_t finalizeCallback, uintptr_t prototype);
-        void CacheJsrtExternalType(uintptr_t finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicType);
-#endif
         static DynamicTypeHandler * GetDeferredPrototypeGeneratorFunctionTypeHandler(ScriptContext* scriptContext);
         static DynamicTypeHandler * GetDeferredPrototypeAsyncFunctionTypeHandler(ScriptContext* scriptContext);
         DynamicType * CreateDeferredPrototypeAsyncGeneratorFunctionType(JavascriptMethod entrypoint, bool isAnonymousFunction, bool isShared = false);

@@ -59,9 +59,7 @@
 #include "Library/JavascriptAsyncFromSyncIterator.h"
 #include "Library/JavascriptPromise.h"
 #include "Library/JavascriptSymbolObject.h"
-#ifdef _CHAKRACOREBUILD
 #include "Library/CustomExternalWrapperObject.h"
-#endif
 #include "Library/JavascriptProxy.h"
 #include "Library/JavascriptReflect.h"
 #include "Library/JavascriptGenerator.h"

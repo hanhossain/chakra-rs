@@ -5,7 +5,6 @@
 
 #include "RuntimeLibraryPch.h"
 
-#ifdef _CHAKRACOREBUILD
 #include "Types/PathTypeHandler.h"
 
 using namespace Js;
@@ -1136,4 +1135,3 @@ void CustomExternalWrapperObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::
     TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapExternalObject>(objData, nullptr);
 }
 #endif
-#endif // _CHAKRACOREBUILD

@@ -134,7 +134,6 @@ endif()
 add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
 
 if(CLR_CMAKE_PLATFORM_XPLAT)
-    add_definitions(-D_CHAKRACOREBUILD)
     add_definitions(-DFEATURE_PAL)
     add_definitions(-DPLATFORM_UNIX=1)
 

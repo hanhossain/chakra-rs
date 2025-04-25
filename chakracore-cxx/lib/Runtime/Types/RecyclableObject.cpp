@@ -196,9 +196,7 @@ namespace Js
             DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
             return obj->GetTypeHandler()->GetHasOnlyWritableDataProperties() &&
                 (!obj->HasObjectArray() || obj->GetObjectArrayOrFlagsAsArray()->HasOnlyWritableDataProperties())
-#ifdef _CHAKRACOREBUILD
                 && (!VarIs<CustomExternalWrapperObject>(obj) || UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized())
-#endif
                 ;
         }
 
@@ -212,9 +210,7 @@ namespace Js
             DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
             return obj->GetTypeHandler()->GetHasSpecialProperties() ||
                 (obj->HasObjectArray() && obj->GetObjectArrayOrFlagsAsArray()->HasAnySpecialProperties())
-#ifdef _CHAKRACOREBUILD
                 || (VarIs<CustomExternalWrapperObject>(obj) && !UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized())
-#endif
                 ;
         }
 

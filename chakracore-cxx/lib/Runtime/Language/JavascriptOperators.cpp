@@ -835,7 +835,6 @@ using namespace Js;
         JIT_HELPER_END(Op_StrictEqualEmptyString);
     }
 
-#ifdef _CHAKRACOREBUILD
     BOOL JavascriptOperators::StrictEqualNumberType(Var aLeft, Var aRight, TypeId leftType, TypeId rightType, ScriptContext *requestContext)
     {
         double dblLeft, dblRight;
@@ -972,186 +971,6 @@ using namespace Js;
         return aLeft == aRight;
         JIT_HELPER_END(Op_StrictEqual);
     }
- #else
-    BOOL JavascriptOperators::StrictEqual(Var aLeft, Var aRight, ScriptContext* requestContext)
-    {
-        JIT_HELPER_REENTRANT_HEADER(Op_StrictEqual);
-        double dblLeft, dblRight;
-        TypeId rightType, leftType;
-        leftType = JavascriptOperators::GetTypeId(aLeft);
-
-        // Because NaN !== NaN, we may not return TRUE when typeId is Number
-        if (aLeft == aRight && leftType != TypeIds_Number) return TRUE;
-
-        rightType = JavascriptOperators::GetTypeId(aRight);
-
-        switch (leftType)
-        {
-        case TypeIds_String:
-            switch (rightType)
-            {
-            case TypeIds_String:
-                return JavascriptString::Equals(UnsafeVarTo<JavascriptString>(aLeft), UnsafeVarTo<JavascriptString>(aRight));
-            }
-            return FALSE;
-        case TypeIds_Integer:
-            switch (rightType)
-            {
-            case TypeIds_Integer:
-                return aLeft == aRight;
-            // we don't need to worry about int64: it cannot equal as we create
-            // JavascriptInt64Number only in overflow scenarios.
-            case TypeIds_Number:
-                dblLeft     = TaggedInt::ToDouble(aLeft);
-                dblRight    = JavascriptNumber::GetValue(aRight);
-                goto CommonNumber;
-            }
-            return FALSE;
-        case TypeIds_Int64Number:
-            switch (rightType)
-            {
-            case TypeIds_Int64Number:
-                {
-                    __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                    __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
-                    return leftValue == rightValue;
-                }
-            case TypeIds_UInt64Number:
-                {
-                    __int64 leftValue = UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                    unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                    return ((unsigned __int64)leftValue == rightValue);
-                }
-            case TypeIds_Number:
-                dblLeft     = (double)UnsafeVarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                dblRight    = JavascriptNumber::GetValue(aRight);
-                goto CommonNumber;
-            }
-            return FALSE;
-        case TypeIds_UInt64Number:
-            switch (rightType)
-            {
-            case TypeIds_Int64Number:
-                {
-                    unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                    __int64 rightValue = UnsafeVarTo<JavascriptInt64Number>(aRight)->GetValue();
-                    return (leftValue == (unsigned __int64)rightValue);
-                }
-            case TypeIds_UInt64Number:
-                {
-                    unsigned __int64 leftValue = UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                    unsigned __int64 rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                    return leftValue == rightValue;
-                }
-            case TypeIds_Number:
-                dblLeft     = (double)UnsafeVarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                dblRight    = JavascriptNumber::GetValue(aRight);
-                goto CommonNumber;
-            }
-            return FALSE;
-
-        case TypeIds_Number:
-            switch (rightType)
-            {
-            case TypeIds_Integer:
-                dblLeft     = JavascriptNumber::GetValue(aLeft);
-                dblRight    = TaggedInt::ToDouble(aRight);
-                goto CommonNumber;
-            case TypeIds_Int64Number:
-                dblLeft     = JavascriptNumber::GetValue(aLeft);
-                dblRight = (double)VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                goto CommonNumber;
-            case TypeIds_UInt64Number:
-                dblLeft     = JavascriptNumber::GetValue(aLeft);
-                dblRight = (double)UnsafeVarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                goto CommonNumber;
-            case TypeIds_Number:
-                dblLeft     = JavascriptNumber::GetValue(aLeft);
-                dblRight    = JavascriptNumber::GetValue(aRight);
-CommonNumber:
-                return FEqualDbl(dblLeft, dblRight);
-            }
-            return FALSE;
-
-        case TypeIds_BigInt:
-            switch (rightType)
-            {
-            case TypeIds_BigInt:
-                return JavascriptBigInt::Equals(aLeft, aRight);
-            }
-            return FALSE;
-        case TypeIds_Boolean:
-            switch (rightType)
-            {
-            case TypeIds_Boolean:
-                return aLeft == aRight;
-            }
-            return FALSE;
-
-        case TypeIds_Undefined:
-            return rightType == TypeIds_Undefined;
-
-        case TypeIds_Null:
-            return rightType == TypeIds_Null;
-
-        case TypeIds_Array:
-            return (rightType == TypeIds_Array && aLeft == aRight);
-#if DBG
-        case TypeIds_Symbol:
-            if (rightType == TypeIds_Symbol)
-            {
-                    const PropertyRecord* leftValue = UnsafeVarTo<JavascriptSymbol>(aLeft)->GetValue();
-                    const PropertyRecord* rightValue = UnsafeVarTo<JavascriptSymbol>(aRight)->GetValue();
-                    Assert(leftValue != rightValue);
-            }
-            break;
-#endif
-        case TypeIds_GlobalObject:
-        case TypeIds_HostDispatch:
-            switch (rightType)
-            {
-                case TypeIds_HostDispatch:
-                case TypeIds_GlobalObject:
-                {
-                    BOOL result;
-                    if(UnsafeVarTo<RecyclableObject>(aLeft)->StrictEquals(aRight, &result, requestContext))
-                    {
-                        return result;
-                    }
-                    return false;
-                }
-            }
-            break;
-        }
-
-        if (VarTo<RecyclableObject>(aLeft)->IsExternal())
-        {
-            BOOL result;
-            if (VarTo<RecyclableObject>(aLeft)->StrictEquals(aRight, &result, requestContext))
-            {
-                if (result)
-                {
-                    return TRUE;
-                }
-            }
-        }
-
-        if (!TaggedNumber::Is(aRight) && VarTo<RecyclableObject>(aRight)->IsExternal())
-        {
-            BOOL result;
-            if (VarTo<RecyclableObject>(aRight)->StrictEquals(aLeft, &result, requestContext))
-            {
-                if (result)
-                {
-                    return TRUE;
-                }
-            }
-        }
-
-        return aLeft == aRight;
-        JIT_HELPER_END(Op_StrictEqual);
-    }
-#endif
 
     BOOL JavascriptOperators::HasOwnProperty(
         Var instance,
@@ -9111,7 +8930,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return JavascriptProxy::DefineOwnPropertyDescriptor(obj, propId, descriptor, throwOnError, scriptContext, flags);
         }
-#ifdef _CHAKRACOREBUILD
         else if (VarIs<CustomExternalWrapperObject>(obj))
         {
             // See if there is a trap for defineProperty.
@@ -9121,7 +8939,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 return TRUE;
             }
         }
-#endif
 
         PropertyDescriptor currentDescriptor;
         BOOL isCurrentDescriptorDefined = JavascriptOperators::GetOwnPropertyDescriptor(obj, propId, scriptContext, &currentDescriptor);

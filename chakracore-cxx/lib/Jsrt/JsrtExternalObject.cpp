@@ -7,7 +7,6 @@
 #include "JsrtExternalObject.h"
 #include "Types/PathTypeHandler.h"
 
-#ifdef _CHAKRACOREBUILD
 JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype)
     : Js::DynamicType(
         scriptContext,
@@ -22,7 +21,6 @@ JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsTraceCall
 {
     this->flags |= TypeFlagMask_JsrtExternal;
 }
-#endif
 JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype)
     : Js::DynamicType(
         scriptContext,
@@ -32,9 +30,7 @@ JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeC
         Js::PathTypeHandlerNoAttr::New(scriptContext, scriptContext->GetLibrary()->GetRootPath(), 0, 0, 0, true, true),
         true,
         true)
-#ifdef _CHAKRACOREBUILD
     , jsTraceCallback(nullptr)
-#endif
     , jsFinalizeCallback(finalizeCallback)
 {
     this->flags |= TypeFlagMask_JsrtExternal;
@@ -78,7 +74,6 @@ JsrtExternalObject::JsrtExternalObject(JsrtExternalObject* instance, bool deepCo
     }
 }
 
-#ifdef _CHAKRACOREBUILD
 /* static */
 JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type)
 {
@@ -115,7 +110,6 @@ JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, 
 
     return externalObject;
 }
-#endif
 /* static */
 JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type)
 {
@@ -125,20 +119,12 @@ JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, 
     }
     if (type == nullptr)
     {
-#ifdef _CHAKRACOREBUILD
         type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(0, reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype));
-#else
-        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype));
-#endif
 
         if (type == nullptr)
         {
             type = RecyclerNew(scriptContext->GetRecycler(), JsrtExternalType, scriptContext, finalizeCallback, prototype);
-#ifdef _CHAKRACOREBUILD
             scriptContext->GetLibrary()->CacheJsrtExternalType(0, reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype), type);
-#else
-            scriptContext->GetLibrary()->CacheJsrtExternalType(reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype), type);
-#endif
         }
     }
 
@@ -163,12 +149,10 @@ JsrtExternalObject* JsrtExternalObject::Copy(bool deepCopy)
     JsrtExternalType* type = this->GetExternalType();
     int inlineSlotSize = this->GetInlineSlotSize();
 
-#ifdef _CHAKRACOREBUILD
     if (type->GetJsTraceCallback() != nullptr)
     {
         return RecyclerNewTrackedPlus(recycler, inlineSlotSize, JsrtExternalObject, this, deepCopy);
     }
-#endif
 
     if (type->GetJsFinalizeCallback() != nullptr)
     {
@@ -180,25 +164,17 @@ JsrtExternalObject* JsrtExternalObject::Copy(bool deepCopy)
 
 void JsrtExternalObject::Mark(Recycler * recycler) 
 {
-#ifdef _CHAKRACOREBUILD
     recycler->SetNeedExternalWrapperTracing();
     JsTraceCallback traceCallback = this->GetExternalType()->GetJsTraceCallback();
     Assert(nullptr != traceCallback);
     JsrtCallbackState scope(nullptr);
     traceCallback(this->GetSlotData());
-#else
-    Assert(UNREACHED);
-#endif
 }
 
 void JsrtExternalObject::Finalize(bool isShutdown)
 {
     JsFinalizeCallback finalizeCallback = this->GetExternalType()->GetJsFinalizeCallback();
-#ifdef _CHAKRACOREBUILD
     Assert(this->GetExternalType()->GetJsTraceCallback() != nullptr || finalizeCallback != nullptr);
-#else
-    Assert(finalizeCallback != nullptr);
-#endif
     if (nullptr != finalizeCallback)
     {
         JsrtCallbackState scope(nullptr);

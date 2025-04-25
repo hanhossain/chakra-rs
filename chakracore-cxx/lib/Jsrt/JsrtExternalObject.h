@@ -31,26 +31,18 @@ class JsrtExternalType sealed : public Js::DynamicType
 public:
     JsrtExternalType(JsrtExternalType *type) :
         Js::DynamicType(type),
-#ifdef _CHAKRACOREBUILD
         jsTraceCallback(type->jsTraceCallback),
-#endif
         jsFinalizeCallback(type->jsFinalizeCallback) {}
-#ifdef _CHAKRACOREBUILD
     JsrtExternalType(Js::ScriptContext* scriptContext, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype);
-#endif
     JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype);
 
     //Js::PropertyId GetNameId() const { return ((Js::PropertyRecord *)typeDescription.className)->GetPropertyId(); }
-#ifdef _CHAKRACOREBUILD
     JsTraceCallback GetJsTraceCallback() const { return this->jsTraceCallback; }
-#endif
     JsFinalizeCallback GetJsFinalizeCallback() const { return this->jsFinalizeCallback; }
 
 private:
     FieldNoBarrier(JsFinalizeCallback const) jsFinalizeCallback;
-#ifdef _CHAKRACOREBUILD
     FieldNoBarrier(JsTraceCallback const) jsTraceCallback;
-#endif
 };
 AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(JsrtExternalType, &Js::Type::DumpObjectFunction);
 
@@ -64,9 +56,7 @@ public:
     JsrtExternalObject(JsrtExternalType * type, void *data, uint inlineSlotSize);
     JsrtExternalObject(JsrtExternalObject* instance, bool deepCopy);
 
-#ifdef _CHAKRACOREBUILD
     static JsrtExternalObject * Create(void *data, uint inlineSlotSize, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type);
-#endif
     static JsrtExternalObject * Create(void *data, uint inlineSlotSize, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type);
 
     virtual JsrtExternalObject* Copy(bool deepCopy) override;
