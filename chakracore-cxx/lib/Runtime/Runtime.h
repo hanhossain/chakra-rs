@@ -526,8 +526,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 
 #include "Library/CustomExternalWrapperObject.h"
 
-#include "Library/JavascriptProxy.h"
-
 //
 // .inl files
 //

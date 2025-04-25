@@ -8,6 +8,7 @@
 #include "Language/InterpreterStackFrame.h"
 #include "Library/JavascriptPromise.h"
 #include "Library/JavascriptAsyncFunction.h"
+#include "Library/JavascriptProxy.h"
 
 #if ENABLE_TTD
 
