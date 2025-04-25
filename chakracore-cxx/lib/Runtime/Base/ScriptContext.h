@@ -26,10 +26,6 @@ struct IActiveScriptDirect;
 
 namespace Js
 {
-#ifdef ENABLE_BASIC_TELEMETRY
-    class ScriptContextTelemetry;
-#endif
-
     class ScriptContext;
     class ScriptEditQuery;
     class MutationBreakpoint;
@@ -529,9 +525,6 @@ namespace Js
         OnlyWritablePropertyScriptRegistry onlyWritablePropertyRegistry;
 
         ArenaAllocator generalAllocator;
-#ifdef ENABLE_BASIC_TELEMETRY
-        ArenaAllocator telemetryAllocator;
-#endif
 
         ArenaAllocator dynamicProfileInfoAllocator;
         InlineCacheAllocator inlineCacheAllocator;
@@ -704,15 +697,6 @@ public:
         uint *rejitReasonCountsCap;
         void ClearBailoutReasonCountsMap();
         void ClearRejitReasonCountsArray();
-#endif
-#ifdef ENABLE_BASIC_TELEMETRY
-
-    private:
-        Js::ScriptContextTelemetry * telemetry;
-    public:
-        Js::ScriptContextTelemetry& GetTelemetry();
-        bool HasTelemetry();
-
 #endif
 #ifdef INLINE_CACHE_STATS
         // This is a strongly referenced dictionary, since we want to know hit rates for dead caches.
@@ -1306,10 +1290,6 @@ private:
         uint32_t GetParseFlags(LoadScriptFlag loadScriptFlag, Utf8SourceInfo* pSourceInfo, SourceContextInfo* sourceContextInfo);
 
         ArenaAllocator* GeneralAllocator() { return &generalAllocator; }
-
-#ifdef ENABLE_BASIC_TELEMETRY
-        ArenaAllocator* TelemetryAllocator() { return &telemetryAllocator; }
-#endif
 
 #ifdef SEPARATE_ARENA
         ArenaAllocator* SourceCodeAllocator() { return &sourceCodeAllocator; }

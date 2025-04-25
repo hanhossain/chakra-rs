@@ -118,10 +118,6 @@ static BOOL AttachProcess(HANDLE hmod)
     lockedDll = ::AddAtom(engine);
     AssertMsg(lockedDll, "Failed to lock chakracore.dll");
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    g_TraceLoggingClient = NoCheckHeapNewStruct(TraceLoggingClient);
-#endif
-
 #ifdef DYNAMIC_PROFILE_STORAGE
     return DynamicProfileStorage::Initialize();
 #else

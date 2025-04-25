@@ -226,9 +226,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef HEAP_ENUMERATION_VALIDATION
     ,pfPostHeapEnumScanCallback(nullptr)
 #endif
-#ifdef ENABLE_BASIC_TELEMETRY
-    , telemetryStats(this, hostInterface)
-#endif
 #ifdef ENABLE_JS_ETW
     ,bulkFreeMemoryWrittenCount(0)
 #endif
@@ -247,22 +244,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     , trackerCriticalSection(nullptr)
 #endif
 {
-
-#ifdef ENABLE_BASIC_TELEMETRY
-
-    if (CoCreateGuid(&recyclerID) != S_OK)
-    {
-        // CoCreateGuid failed
-        recyclerID = { 0 };
-    }
-
-    this->GetHeapInfo()->GetRecyclerPageAllocator()->SetDecommitStats(this->GetRecyclerTelemetryInfo().GetThreadPageAllocator_decommitStats());
-    this->GetHeapInfo()->GetRecyclerLeafPageAllocator()->SetDecommitStats(this->GetRecyclerTelemetryInfo().GetRecyclerLeafPageAllocator_decommitStats());
-    this->GetHeapInfo()->GetRecyclerLargeBlockPageAllocator()->SetDecommitStats(this->GetRecyclerTelemetryInfo().GetRecyclerLargeBlockPageAllocator_decommitStats());
-#ifdef RECYCLER_WRITE_BARRIER_ALLOC_SEPARATE_PAGE
-    this->GetHeapInfo()->GetRecyclerWithBarrierPageAllocator()->SetDecommitStats(this->GetRecyclerTelemetryInfo().GetRecyclerWithBarrierPageAllocator_decommitStats());
-#endif
-#endif
 
 #ifdef RECYCLER_MARK_TRACK
     this->markMap = NoCheckHeapNew(MarkMap, &NoCheckHeapAllocator::Instance, 163, &markMapCriticalSection);
@@ -5733,52 +5714,7 @@ Recycler::WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller)
         SetThreadPriority(this->concurrentThread, THREAD_PRIORITY_NORMAL);
     }
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    bool isBlockingMainThread = false;
-    Js::Tick start;
-    FILETIME kernelTime1;
-    FILETIME userTime1;
-    HANDLE hProcess = GetCurrentProcess();
-    if (this->telemetryStats.ShouldStartTelemetryCapture())
-    {
-        isBlockingMainThread = this->telemetryStats.IsOnScriptThread();
-        if (isBlockingMainThread)
-        {
-            start = Js::Tick::Now();
-            FILETIME creationTime;
-            FILETIME exitTime;
-            GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime1, &userTime1);
-        }
-    }
-#endif
-
     uint32_t ret = WaitForSingleObject(concurrentWorkDoneEvent, waitTime);
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    if (isBlockingMainThread)
-    {
-        Js::Tick end = Js::Tick::Now();
-        Js::TickDelta elapsed = end - start;
-
-        FILETIME creationTime;
-        FILETIME exitTime;
-        FILETIME kernelTime2;
-        FILETIME userTime2;
-
-        GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime2, &userTime2);
-        uint64 kernelTime = DiffFileTimes(&kernelTime2 , &kernelTime1);
-        uint64 userTime = DiffFileTimes(&userTime2, &userTime1);
-
-        // userTime & kernelTime reported from GetProcessTimes is the number of 100-nanosecond ticks
-        // for consistency convert to microseconds.
-        kernelTime = kernelTime / 10;
-        userTime = userTime / 10;
-
-        this->telemetryStats.IncrementUserThreadBlockedCount(elapsed.ToMicroseconds(), caller);
-        this->telemetryStats.IncrementUserThreadBlockedCpuTimeUser(userTime, caller);
-        this->telemetryStats.IncrementUserThreadBlockedCpuTimeKernel(kernelTime, caller);
-    }
-#endif
 
     if (concurrentThread != NULL)
     {

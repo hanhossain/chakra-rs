@@ -874,10 +874,6 @@ public:
     void SetAbnormalExceptionCode(uint32 exceptionInfo) { this->exceptionCode = exceptionInfo; }
     uint32 GetAbnormalExceptionCode() const { return this->exceptionCode; }
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    GUID activityId;
-    LPFILETIME GetLastScriptExecutionEndTime() const;
-#endif
     void *tridentLoadAddress;
 
     void* GetTridentLoadAddress() const { return tridentLoadAddress;  }

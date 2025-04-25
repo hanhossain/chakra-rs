@@ -462,13 +462,8 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #endif
 
 #include "Base/Entropy.h"
-#ifdef ENABLE_BASIC_TELEMETRY
-#include "DirectCall.h"
-#include "ScriptContext/ScriptContextTelemetry.h"
-#else
 #define CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(builtin)
 #define CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(esVersion, feature, m_scriptContext)
-#endif
 
 //
 // .inl files

@@ -35,11 +35,6 @@
 #endif
 
 
-#ifdef ENABLE_BASIC_TELEMETRY
-#include "Telemetry.h"
-#include "Recycler/RecyclerTelemetryTransmitter.h"
-#endif // ENABLE_BASIC_TELEMETRY
-
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
 /*
@@ -565,19 +560,12 @@ ThreadContext::SetJSRTRuntime(void* runtime)
 {
     Assert(jsrtRuntime == nullptr);
     jsrtRuntime = runtime;
-#ifdef ENABLE_BASIC_TELEMETRY
-    Telemetry::EnsureInitializeForJSRT();
-#endif
 }
 
 void ThreadContext::CloseForJSRT()
 {
     // This is used for JSRT APIs only.
     Assert(this->jsrtRuntime);
-#ifdef ENABLE_BASIC_TELEMETRY
-    // log any relevant telemetry before disposing the current thread for cases which are properly shutdown
-    Telemetry::OnJSRTThreadContextClose();
-#endif
     ShutdownThreads();
 }
 

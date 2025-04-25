@@ -49,21 +49,8 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
     {
         AutoResetWaitingToEnterIdleDecommitFlag autoResetWaitingToEnterIdleDecommitFlag(this);
 
-#ifdef ENABLE_BASIC_TELEMETRY
-        AllocatorDecommitStats * decommitStats = this->GetDecommitStats();
-        decommitStats->lastEnterLeaveIdleDecommitTick = Js::Tick::Now();
-#endif
-
         cs.Enter();
 
-#ifdef ENABLE_BASIC_TELEMETRY
-        decommitStats->lastEnterLeaveIdleDecommitCSWaitTime = Js::Tick::Now() - decommitStats->lastEnterLeaveIdleDecommitTick;
-        decommitStats->totalEnterLeaveIdleDecommitCSWaitTime += decommitStats->lastEnterLeaveIdleDecommitCSWaitTime;
-        if (decommitStats->lastEnterLeaveIdleDecommitCSWaitTime > decommitStats->maxEnterLeaveIdleDecommitCSWaitTime)
-        {
-            decommitStats->maxEnterLeaveIdleDecommitCSWaitTime = decommitStats->lastEnterLeaveIdleDecommitCSWaitTime;
-        }
-#endif
     }
 
     this->isUsed = false;
@@ -99,11 +86,6 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
     Assert(this->idleDecommitEnterCount > 0);
     Assert(this->maxFreePageCount == maxIdleDecommitFreePageCount);
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    AllocatorDecommitStats * decommitStats = this->GetDecommitStats();
-    decommitStats->lastLeaveDecommitRegion = Js::Tick::Now();
-#endif
-
 #ifdef IDLE_DECOMMIT_ENABLED
     Assert(!hasDecommitTimer);
 #endif
@@ -121,20 +103,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
         {
             AutoResetWaitingToEnterIdleDecommitFlag autoResetWaitingToEnterIdleDecommitFlag(this);
 
-#ifdef ENABLE_BASIC_TELEMETRY
-            decommitStats->lastEnterLeaveIdleDecommitTick = Js::Tick::Now();
-#endif
-
             cs.Enter();
-
-#ifdef ENABLE_BASIC_TELEMETRY
-            decommitStats->lastEnterLeaveIdleDecommitCSWaitTime = Js::Tick::Now() - decommitStats->lastEnterLeaveIdleDecommitTick;
-            decommitStats->totalEnterLeaveIdleDecommitCSWaitTime += decommitStats->lastEnterLeaveIdleDecommitCSWaitTime;
-            if (decommitStats->lastEnterLeaveIdleDecommitCSWaitTime > decommitStats->maxEnterLeaveIdleDecommitCSWaitTime)
-            {
-                decommitStats->maxEnterLeaveIdleDecommitCSWaitTime = decommitStats->lastEnterLeaveIdleDecommitCSWaitTime;
-            }
-#endif
         }
 
         PAGE_ALLOC_VERBOSE_TRACE(_u("LeaveIdleDecommit"));
