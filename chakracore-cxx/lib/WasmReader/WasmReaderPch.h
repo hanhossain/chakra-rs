@@ -8,6 +8,7 @@
 // Parser Includes
 #include "Common/Common.h"
 #include "Runtime.h"
+#include "Language/AsmJsModule.h"
 #include "WasmReader.h"
 
 #ifdef ENABLE_WASM
