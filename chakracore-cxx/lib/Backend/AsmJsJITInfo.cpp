@@ -6,6 +6,8 @@
 #include "Backend.h"
 
 #ifdef ASMJS_PLAT
+#include "WasmReader.h"
+
 AsmJsJITInfo::AsmJsJITInfo(AsmJsDataIDL * data) :
     m_data(*data)
 {

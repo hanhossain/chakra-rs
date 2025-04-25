@@ -21,6 +21,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "Language/AsmJsTypes.h"
 
 #ifdef ASMJS_PLAT
 // Removed code from original location, if the expression is true, check if extra code needed

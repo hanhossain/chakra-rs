@@ -7,6 +7,23 @@
 #include "Parser.h"
 
 #include "Runtime.h"
+
+#if ENABLE_TTD
+#include "screrror.h"
+
+#include "Debug/TTRuntimeInfoTracker.h"
+#include "Debug/TTExecutionInfo.h"
+#include "Debug/TTInflateMap.h"
+#include "Debug/TTSnapTypes.h"
+#include "Debug/TTSnapValues.h"
+#include "Debug/TTSnapObjects.h"
+#include "Debug/TTSnapshot.h"
+#include "Debug/TTSnapshotExtractor.h"
+#include "Debug/TTEvents.h"
+#include "Debug/TTActionEvents.h"
+#include "Debug/TTEventLog.h"
+#endif
+
 #include "WasmReader.h"
 
 #include "Language/AsmJsUtils.h"
@@ -15,6 +32,9 @@
 #include "Language/AsmJsJitTemplate.h"
 #include "Language/AsmJsEncoder.h"
 #include "Language/AsmJsCodeGenerator.h"
+#include "Language/AsmJs.h"
+#include "Language/AsmJsModule.h"
+#include "Language/AsmJsTypes.h"
 #endif
 
 #include "Language/ProfilingHelpers.h"
@@ -34,9 +54,7 @@
 
 #include "Types/TypePropertyCache.h"
 #include "Library/JavascriptAsyncFromSyncIterator.h"
-#ifdef _CHAKRACOREBUILD
 #include "Library/CustomExternalWrapperObject.h"
-#endif
 #include "Library/JavascriptProxy.h"
 #include "Library/JavascriptSymbolObject.h"
 #include "Library/JavascriptGenerator.h"

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "JsrtPch.h"
+#include "Library/JavascriptProxy.h"
 #include "JsrtInternal.h"
 #include "JsrtExternalObject.h"
 #include "JsrtExternalArrayBuffer.h"
@@ -1485,7 +1486,6 @@ CHAKRA_API JsHasOwnProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propert
     });
 }
 
-#ifdef _CHAKRACOREBUILD
 static JsErrorCode InternalGetPropertyRecord(Js::ScriptContext * scriptContext,
     Js::RecyclableObject * key, _Out_ const Js::PropertyRecord ** propertyRecord)
 {
@@ -1531,7 +1531,6 @@ CHAKRA_API JsObjectHasOwnProperty(_In_ JsValueRef object, _In_ JsValueRef proper
         return JsHasOwnPropertyCommon(scriptContext, object, propertyRecord, hasOwnProperty, Js::VarIs<Js::PropertyString>(propertyId) ? (Js::PropertyString*)propertyId : nullptr);
     });
 }
-#endif
 
 static JsErrorCode JsGetPropertyCommon(Js::ScriptContext * scriptContext,
     _In_ Js::RecyclableObject * object,
@@ -1566,7 +1565,6 @@ CHAKRA_API JsGetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId
     });
 }
 
-#ifdef _CHAKRACOREBUILD
 CHAKRA_API JsObjectGetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *value)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1593,7 +1591,6 @@ CHAKRA_API JsObjectGetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyI
         return JsGetPropertyCommon(scriptContext, instance, propertyRecord, value);
     });
 }
-#endif
 
 static JsErrorCode JsGetOwnPropertyDescriptorCommon(Js::ScriptContext * scriptContext,
     _In_ JsValueRef object, _In_ const Js::PropertyRecord * propertyRecord, _Out_ JsValueRef *propertyDescriptor)
@@ -1634,7 +1631,6 @@ CHAKRA_API JsGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsPropertyIdR
     });
 }
 
-#ifdef _CHAKRACOREBUILD
 CHAKRA_API JsObjectGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ JsValueRef *propertyDescriptor)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1660,7 +1656,6 @@ CHAKRA_API JsObjectGetOwnPropertyDescriptor(_In_ JsValueRef object, _In_ JsValue
         return JsGetOwnPropertyDescriptorCommon(scriptContext, object, propertyRecord, propertyDescriptor);
     });
 }
-#endif
 
 static JsErrorCode JsSetPropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValueRef object,
     _In_ const Js::PropertyRecord * propertyRecord, _In_ JsValueRef value, _In_ bool useStrictRules)
@@ -1688,7 +1683,6 @@ CHAKRA_API JsSetProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId
     });
 }
 
-#ifdef _CHAKRACOREBUILD
 CHAKRA_API JsObjectSetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _In_ JsValueRef value, _In_ bool useStrictRules)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&] (Js::ScriptContext *scriptContext,
@@ -1713,7 +1707,6 @@ CHAKRA_API JsObjectSetProperty(_In_ JsValueRef object, _In_ JsValueRef propertyI
         return JsSetPropertyCommon(scriptContext, object, propertyRecord, value, useStrictRules);
     });
 }
-#endif
 
 CHAKRA_API JsHasProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId, _Out_ bool *hasProperty)
 {
@@ -1746,7 +1739,6 @@ CHAKRA_API JsHasProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId
     {
         return ContextAPIWrapper<JSRT_MAYBE_TRUE>(internalHasProperty);
     }
-#ifdef _CHAKRACOREBUILD
     else if (typeId == Js::TypeIds_Object)
     {
         // CEOs can also have traps so we would want the Enter/Leave semantics for those.
@@ -1756,12 +1748,10 @@ CHAKRA_API JsHasProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propertyId
             return ContextAPIWrapper<JSRT_MAYBE_TRUE>(internalHasProperty);
         }
     }
-#endif
 
     return ContextAPINoScriptWrapper(internalHasProperty);
 }
 
-#ifdef _CHAKRACOREBUILD
 CHAKRA_API JsObjectHasProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId, _Out_ bool *hasProperty)
 {
     VALIDATE_JSREF(object);
@@ -1813,7 +1803,6 @@ CHAKRA_API JsObjectHasProperty(_In_ JsValueRef object, _In_ JsValueRef propertyI
 
     return ContextAPINoScriptWrapper(internalHasProperty);
 }
-#endif
 
 static JsErrorCode JsDeletePropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValueRef object,
     _In_ const Js::PropertyRecord * propertyRecord, _In_ bool useStrictRules, _Out_ JsValueRef *result)
@@ -1850,7 +1839,6 @@ CHAKRA_API JsDeleteProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propert
     });
 }
 
-#ifdef _CHAKRACOREBUILD
 CHAKRA_API JsObjectDeleteProperty(_In_ JsValueRef object, _In_ JsValueRef propertyId,
     _In_ bool useStrictRules, _Out_ JsValueRef *result)
 {
@@ -1878,7 +1866,6 @@ CHAKRA_API JsObjectDeleteProperty(_In_ JsValueRef object, _In_ JsValueRef proper
             useStrictRules, result);
     });
 }
-#endif
 
 static JsErrorCode JsDefinePropertyCommon(Js::ScriptContext * scriptContext, _In_ JsValueRef object,
     _In_ const Js::PropertyRecord *propertyRecord, _In_ JsValueRef propertyDescriptor,
@@ -1916,8 +1903,6 @@ CHAKRA_API JsDefineProperty(_In_ JsValueRef object, _In_ JsPropertyIdRef propert
             propertyDescriptor, result);
     });
 }
-
-#ifdef _CHAKRACOREBUILD
 
 CHAKRA_API
 JsObjectDefinePropertyFull(
@@ -2008,7 +1993,6 @@ CHAKRA_API JsObjectDefineProperty(_In_ JsValueRef object, _In_ JsValueRef proper
         return JsDefinePropertyCommon(scriptContext, object, propertyRecord, propertyDescriptor, result);
     });
 }
-#endif
 
 CHAKRA_API JsGetOwnPropertyNames(_In_ JsValueRef object, _Out_ JsValueRef *propertyNames)
 {
@@ -2728,9 +2712,7 @@ CHAKRA_API JsHasExternalData(_In_ JsValueRef object, _Out_ bool *value)
             object = Js::UnsafeVarTo<Js::JavascriptProxy>(object);
         }
         *value = (Js::VarIs<JsrtExternalObject>(object)
-#ifdef _CHAKRACOREBUILD
             || Js::VarIs<Js::CustomExternalWrapperObject>(object)
-#endif
             );
     }
     END_JSRT_NO_EXCEPTION
@@ -2751,12 +2733,10 @@ CHAKRA_API JsGetExternalData(_In_ JsValueRef object, _Out_ void **data)
         {
             *data = Js::UnsafeVarTo<JsrtExternalObject>(object)->GetSlotData();
         }
-#ifdef _CHAKRACOREBUILD
         else if (Js::VarIs<Js::CustomExternalWrapperObject>(object))
         {
             *data = Js::UnsafeVarTo<Js::CustomExternalWrapperObject>(object)->GetSlotData();
         }
-#endif
         else
         {
             *data = nullptr;
@@ -2780,12 +2760,10 @@ CHAKRA_API JsSetExternalData(_In_ JsValueRef object, _In_opt_ void *data)
         {
             Js::UnsafeVarTo<JsrtExternalObject>(object)->SetSlotData(data);
         }
-#ifdef _CHAKRACOREBUILD
         else if (Js::VarIs<Js::CustomExternalWrapperObject>(object))
         {
             Js::UnsafeVarTo<Js::CustomExternalWrapperObject>(object)->SetSlotData(data);
         }
-#endif
         else
         {
             RETURN_NO_EXCEPTION(JsErrorInvalidArgument);
@@ -2897,17 +2875,6 @@ CHAKRA_API JsConstructObject(_In_ JsValueRef function, _In_reads_(cargs) JsValue
         return JsNoError;
     });
 }
-
-#ifndef _CHAKRACOREBUILD
-typedef struct JsNativeFunctionInfo
-{
-    JsValueRef thisArg;
-    JsValueRef newTargetArg;
-    bool isConstructCall;
-}JsNativeFunctionInfo;
-
-typedef _Ret_maybenull_ JsValueRef(* JsEnhancedNativeFunction)(_In_ JsValueRef callee, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_ JsNativeFunctionInfo *info, _In_opt_ void *callbackState);
-#endif
 
 typedef struct JsNativeFunctionWrapperHolder
 {
@@ -4766,9 +4733,6 @@ CHAKRA_API JsTTDDiagSetAutoTraceStatus(_In_ bool status)
 #endif
 }
 
-#ifdef _CHAKRACOREBUILD
-
-
 template <class CopyFunc>
 JsErrorCode WriteStringCopy(
     JsValueRef value,
@@ -5465,4 +5429,3 @@ JsExecuteBackgroundParse_Experimental(
         return JsErrorFatal;
     }
 }
-#endif

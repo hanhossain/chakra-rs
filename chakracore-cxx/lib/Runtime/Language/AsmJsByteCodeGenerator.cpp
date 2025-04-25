@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "RuntimeLanguagePch.h"
+#include "Language/AsmJs.h"
 
 #ifdef ASMJS_PLAT
 #include "ByteCode/Symbol.h"

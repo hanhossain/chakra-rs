@@ -41,7 +41,7 @@ namespace UnifiedRegex
 
 //========================
 
-#include "RuntimeCommon.h"
+#include "Library/RuntimeCommon.h"
 
 #include <intsafe.h>
 
@@ -99,9 +99,7 @@ namespace Js
     class JavascriptBooleanObject;
     class JavascriptSymbol;
     class JavascriptSymbolObject;
-#ifdef _CHAKRACOREBUILD
     class CustomExternalWrapperObject;
-#endif
     class JavascriptProxy;
     class JavascriptReflect;
     class JavascriptEnumeratorIterator;
@@ -507,7 +505,7 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/JavascriptSymbol.h"
 
 #include "Library/AtomicsObject.h"
-#include "DetachedStateBase.h"
+#include "Library/DetachedStateBase.h"
 #include "Library/ArrayBuffer.h"
 #include "Library/SharedArrayBuffer.h"
 #include "Library/TypedArray.h"
@@ -526,39 +524,7 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/ScriptFunction.h"
 #include "Library/StackScriptFunction.h"
 
-#ifdef _CHAKRACOREBUILD
 #include "Library/CustomExternalWrapperObject.h"
-#endif
-
-#include "Library/JavascriptProxy.h"
-
-#if ENABLE_TTD
-#include "screrror.h"
-
-#include "Debug/TTRuntimeInfoTracker.h"
-#include "Debug/TTExecutionInfo.h"
-#include "Debug/TTInflateMap.h"
-#include "Debug/TTSnapTypes.h"
-#include "Debug/TTSnapValues.h"
-#include "Debug/TTSnapObjects.h"
-#include "Debug/TTSnapshot.h"
-#include "Debug/TTSnapshotExtractor.h"
-#include "Debug/TTEvents.h"
-#include "Debug/TTActionEvents.h"
-#include "Debug/TTEventLog.h"
-#endif
-
-#include "Library/JavascriptGeneratorFunction.h"
-#include "Library/JavascriptAsyncFunction.h"
-#include "Library/JavascriptAsyncGeneratorFunction.h"
-
-#include "WasmReader.h"
-
-#include "Language/AsmJsTypes.h"
-#include "Language/AsmJsModule.h"
-#include "Language/AsmJs.h"
-
-#include "Core/JitHelperUtils.h"
 
 //
 // .inl files

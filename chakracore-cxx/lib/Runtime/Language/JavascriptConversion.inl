@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Core/JitHelperUtils.h"
+
 #if defined(_M_IX86) || defined(_M_X64)
 #endif
 

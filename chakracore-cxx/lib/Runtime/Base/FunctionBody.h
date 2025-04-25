@@ -1844,7 +1844,7 @@ namespace Js
 #define DEFINE_PARSEABLE_FUNCTION_INFO_FIELDS 1
 #define DECLARE_TAG_FIELD(type, name, serializableType) Field(type) name
 #define CURRENT_ACCESS_MODIFIER protected:
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
 
         FieldWithBarrier(uint) m_sourceIndex;             // index into the scriptContext's list of saved sources
 #if DYNAMIC_INTERPRETER_THUNK
@@ -2139,7 +2139,7 @@ namespace Js
 #define DEFINE_FUNCTION_BODY_FIELDS 1
 #define DECLARE_TAG_FIELD(type, name, serializableType) Field(type) name
 #define CURRENT_ACCESS_MODIFIER public:
-#include "SerializableFunctionFields.h"
+#include "Library/SerializableFunctionFields.h"
 
     private:
         FieldWithBarrier(uint) inactiveCount;

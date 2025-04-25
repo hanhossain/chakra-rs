@@ -17,15 +17,10 @@
 #ifndef _CHAKRACORE_H_
 #define _CHAKRACORE_H_
 
-#if !defined(_CHAKRACOREBUILD)
-#define _CHAKRACOREBUILD
-#endif
-
 #include "ChakraCommon.h"
 #include "ChakraDebug.h"
 
 // Begin ChakraCore only APIs
-#ifdef _CHAKRACOREBUILD
 
 /// <summary>
 ///     A reference to an ES module.
@@ -2013,5 +2008,4 @@ JsGetEmbedderData(_In_ JsValueRef instance, _Out_ JsValueRef* embedderData);
 CHAKRA_API
 JsSetEmbedderData(_In_ JsValueRef instance, _In_ JsValueRef embedderData);
 
-#endif // _CHAKRACOREBUILD
 #endif // _CHAKRACORE_H_
