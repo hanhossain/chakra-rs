@@ -19,6 +19,7 @@
 #include "Types/DynamicObjectPropertyEnumerator.h"
 #include "Types/JavascriptStaticEnumerator.h"
 #include "Library/ForInObjectEnumerator.h"
+#include "WasmReader.h"
 
 ///----------------------------------------------------------------------------
 ///

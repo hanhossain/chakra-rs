@@ -552,8 +552,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Library/JavascriptAsyncFunction.h"
 #include "Library/JavascriptAsyncGeneratorFunction.h"
 
-#include "WasmReader.h"
-
 //
 // .inl files
 //
