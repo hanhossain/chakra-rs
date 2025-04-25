@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "SparseArraySegment.h"
 #include "Common/LibraryValue.h"
 
 #define ARRAY_CROSSOVER_FOR_VALIDATE 0

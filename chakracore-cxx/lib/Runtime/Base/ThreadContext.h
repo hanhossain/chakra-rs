@@ -6,6 +6,7 @@
 #include "Core/FaultInjection.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
+#include "Library/DelayFreeArrayBufferHelper.h"
 
 namespace Js
 {

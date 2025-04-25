@@ -3,8 +3,13 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "ScriptContextBase.h"
+#include "ScriptContextInfo.h"
+#include "ScriptContextOptimizationOverrideInfo.h"
+#include "ThreadContext.h"
 #include "Memory/LeakReport.h"
 #include "Common/RejitReason.h"
+#include "Core/ProfileInstrument.h"
 
 #if DBG || ENABLE_REGEX_CONFIG_OPTIONS || defined(PROFILE_STRINGS)
 #define NEED_MISC_ALLOCATOR
