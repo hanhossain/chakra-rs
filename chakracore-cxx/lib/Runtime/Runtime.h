@@ -486,4 +486,3 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Language/InlineCache.inl"
 #include "Language/InlineCachePointerArray.inl"
 #include "Language/JavascriptOperators.inl"
-#include "Language/TaggedInt.inl"
