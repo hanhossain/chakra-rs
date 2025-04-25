@@ -1061,7 +1061,6 @@ using namespace Js;
     {
         RecyclableObject *object = ToObject(instance, scriptContext);
         AssertOrFailFast(VarIsCorrectType(object));
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Object_Constructor_getOwnPropertySymbols);
 
         JavascriptProxy* proxy = JavascriptOperators::TryFromVar<JavascriptProxy>(instance);
         if (proxy)

@@ -1467,12 +1467,10 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         bool forStringPrototypeLocaleCompare = UnsafeVarTo<JavascriptBoolean>(args[4])->GetValue();
         if (forStringPrototypeLocaleCompare)
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(String_Prototype_localeCompare);
             INTL_TRACE("Calling '%s'.localeCompare('%s', ...)", left->GetSz(), right->GetSz());
         }
         else
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Collator_Prototype_compare);
             INTL_TRACE("Calling Collator.prototype.compare('%s', '%s')", left->GetSz(), right->GetSz());
         }
 
@@ -1946,17 +1944,14 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         if (forNumberPrototypeToLocaleString)
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Number_Prototype_toLocaleString);
             INTL_TRACE("Calling %f.toLocaleString(...)", num);
         }
         else if (toParts)
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(NumberFormat_Prototype_formatToParts);
             INTL_TRACE("Calling NumberFormat.prototype.formatToParts(%f)", num);
         }
         else
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(NumberFormat_Prototype_format);
             INTL_TRACE("Calling NumberFormat.prototype.format(%f)", num);
         }
 
@@ -2096,17 +2091,14 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         bool forDatePrototypeToLocaleString = UnsafeVarTo<JavascriptBoolean>(args[4])->GetValue();
         if (forDatePrototypeToLocaleString)
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Date_Prototype_toLocaleString);
             INTL_TRACE("Calling new Date(%f).toLocaleString(...)", date);
         }
         else if (toParts)
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(DateTimeFormat_Prototype_formatToParts);
             INTL_TRACE("Calling DateTimeFormat.prototype.formatToParts(new Date(%f))", date);
         }
         else
         {
-            CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(DateTimeFormat_Prototype_format);
             INTL_TRACE("Calling DateTimeFormat.prototype.format(new Date(%f))", date);
         }
 
@@ -2501,7 +2493,6 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             n = JavascriptNumber::GetValue(args[2]);
         }
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(PluralRules_Prototype_select);
         INTL_TRACE("Calling PluralRules.prototype.select(%f)", n);
 
         UErrorCode status = U_ZERO_ERROR;

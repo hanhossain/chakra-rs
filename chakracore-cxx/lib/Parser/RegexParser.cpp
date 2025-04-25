@@ -2769,9 +2769,6 @@ namespace UnifiedRegex
                         Fail(JSERR_RegExpSyntax);
                     }
                     flags = (RegexFlags)(flags | UnicodeRegexFlag);
-                    // For telemetry
-                    CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, UnicodeRegexFlag, scriptContext);
-
                     break;
                 }
             case 'y':
@@ -2782,9 +2779,6 @@ namespace UnifiedRegex
                         Fail(JSERR_RegExpSyntax);
                     }
                     flags = (RegexFlags)(flags | StickyRegexFlag);
-                    // For telemetry
-                    CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, StickyRegexFlag, scriptContext);
-
                     break;
                 }
             default:
