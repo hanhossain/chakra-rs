@@ -22,6 +22,7 @@
 #ifdef ENABLE_JS_BUILTINS
 #include "Library/JsBuiltInEngineInterfaceExtensionObject.h"
 #endif
+#include "Language/SourceTextModuleRecord.h"
 #include "Library/ThrowErrorObject.h"
 #include "Library/StackScriptFunction.h"
 

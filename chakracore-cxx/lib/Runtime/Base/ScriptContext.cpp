@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
 #include "Library/JavascriptGeneratorFunction.h"
+#include "Language/SourceTextModuleRecord.h"
 
 // Parser Includes
 #include "RegexCommon.h"

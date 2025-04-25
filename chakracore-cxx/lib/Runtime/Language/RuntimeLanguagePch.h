@@ -8,6 +8,9 @@
 
 #include "Runtime.h"
 
+#include "Language/ModuleRecordBase.h"
+#include "Language/SourceTextModuleRecord.h"
+
 #if ENABLE_TTD
 #include "screrror.h"
 
