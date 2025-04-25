@@ -6,6 +6,8 @@
 
 #include "Runtime.h"
 
+#include "Library/ScriptFunction.h"
+
 #if ENABLE_TTD
 #include "screrror.h"
 

@@ -8,6 +8,9 @@
 
 #include "Runtime.h"
 
+#include "Library/ScriptFunction.h"
+#include "Library/StackScriptFunction.h"
+
 #if ENABLE_TTD
 #include "screrror.h"
 

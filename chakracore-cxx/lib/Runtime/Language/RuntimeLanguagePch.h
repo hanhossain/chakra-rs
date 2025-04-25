@@ -58,6 +58,7 @@
 #include "Library/JavascriptProxy.h"
 #include "Library/JavascriptSymbolObject.h"
 #include "Library/JavascriptGenerator.h"
+#include "Library/ScriptFunction.h"
 #include "Library/StackScriptFunction.h"
 #include "Library/HostObjectBase.h"
 
