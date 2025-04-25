@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeBasePch.h"
 #include "Library/JavascriptGeneratorFunction.h"
+#include "Language/SourceTextModuleRecord.h"
 
 // Parser Includes
 #include "RegexCommon.h"
@@ -32,10 +33,6 @@
 #include "Language/AsmJsEncoder.h"
 #include "Language/AsmJsCodeGenerator.h"
 #include "Language/AsmJsUtils.h"
-#endif
-
-#ifdef ENABLE_BASIC_TELEMETRY
-#include "ScriptContext/ScriptContextTelemetry.h"
 #endif
 
 #include "ByteCode/ByteCodeSerializer.h"
@@ -128,9 +125,6 @@ namespace Js
         asmJsCodeGenerator(nullptr),
 #endif
         generalAllocator(_u("SC-General"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-#ifdef ENABLE_BASIC_TELEMETRY
-        telemetryAllocator(_u("SC-Telemetry"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
-#endif
         dynamicProfileInfoAllocator(_u("SC-DynProfileInfo"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
 #ifdef SEPARATE_ARENA
         sourceCodeAllocator(_u("SC-Code"), threadContext->GetPageAllocator(), Throw::OutOfMemory),
@@ -181,9 +175,6 @@ namespace Js
         , bailoutReasonCountsCap(nullptr)
         , rejitReasonCounts(nullptr)
         , rejitReasonCountsCap(nullptr)
-#endif
-#ifdef ENABLE_BASIC_TELEMETRY
-        , telemetry()
 #endif
 #ifdef INLINE_CACHE_STATS
         , cacheDataMap(nullptr)
@@ -345,11 +336,6 @@ namespace Js
         rejitReasonCountsCap = AnewArrayZ(GeneralAllocator(), uint, NumRejitReasons);
         bailoutReasonCounts = Anew(GeneralAllocator(), BailoutStatsMap, GeneralAllocator());
         bailoutReasonCountsCap = Anew(GeneralAllocator(), BailoutStatsMap, GeneralAllocator());
-#endif
-
-#ifdef ENABLE_BASIC_TELEMETRY
-        // TODO - allocate this on the Heap instead of using a custom allocator?
-        this->telemetry = Anew(this->TelemetryAllocator(), Js::ScriptContextTelemetry, this);
 #endif
 
 #ifdef PROFILE_STRINGS
@@ -6184,14 +6170,6 @@ ScriptContext::GetJitFuncRangeCache()
         OUTPUT_STATS(Js::ParsePhase, _u("  Total ThreadContext source size %d\n"), this->GetThreadContext()->GetSourceSize());
 #endif
 
-#ifdef ENABLE_BASIC_TELEMETRY
-        if (this->telemetry != nullptr)
-        {
-            // If an exception (e.g. out-of-memory) happens during InitializeAllocations then `this->telemetry` will be null and the Close method will still be called, hence this guard expression.
-            this->telemetry->OutputPrint();
-        }
-#endif
-
         Output::Flush();
     }
     void ScriptContext::SetNextPendingClose(ScriptContext * nextPendingClose) {
@@ -6304,17 +6282,6 @@ ScriptContext::GetJitFuncRangeCache()
                 this->rejitReasonCountsCap[i] = 0;
             }
         }
-    }
-#endif
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    Js::ScriptContextTelemetry& ScriptContext::GetTelemetry()
-    {
-        return *this->telemetry;
-    }
-    bool ScriptContext::HasTelemetry()
-    {
-        return this->telemetry != nullptr;
     }
 #endif
 

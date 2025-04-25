@@ -242,28 +242,8 @@
 #define DELAYLOAD_SECTIONAPI 1
 #define DELAYLOAD_UNLOCKMEMORY 1
 
-// Telemetry flags
-#ifdef ENABLE_BASIC_TELEMETRY
-#define ENABLE_DIRECTCALL_TELEMETRY
-#endif
-
 // Telemetry features (non-DEBUG related)
-#ifdef ENABLE_BASIC_TELEMETRY
-
-//    #define TELEMETRY_PROFILED    // If telemetry should capture "Profiled*" operations
-
-//    #define TELEMETRY_JSO         // If telemetry should capture JavascriptOperators (expensive, as it happens during JITed code too, not just interpreted mode)
-    #define TELEMETRY_AddToCache    // If telemetry should capture property-gets only when the propertyId is added to the cache (generally this means only the first usage of any feature is logged)
-//    #define TELEMETRY_INTERPRETER // If telemetry should capture more interpreter events compared to just TELEMETRY_AddToCache
-
-     #define TELEMETRY_PROPERTY_OPCODE_FILTER(propertyId) (propertyId < Js::PropertyIds::_countJSOnlyProperty)
-
-    #define REJIT_STATS
-#else
-
-    #define TELEMETRY_OPCODE_FILTER(propertyId) false
-
-#endif
+#define TELEMETRY_OPCODE_FILTER(propertyId) false
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 #define ENABLE_DIRECTCALL_TELEMETRY_STATS

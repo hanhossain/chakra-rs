@@ -68,7 +68,6 @@ namespace Js
 
         Var newTarget = args.GetNewTarget();
         bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, WeakMap, scriptContext);
 
         JavascriptWeakMap* weakMapObject = nullptr;
 

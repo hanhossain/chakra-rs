@@ -710,9 +710,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     , numberOfSegments(0)
     , processHandle(processHandle)
     , enableWriteBarrier(enableWriteBarrier)
-#ifdef ENABLE_BASIC_TELEMETRY
-    ,decommitStats(nullptr)
-#endif
 {
     AssertMsg(Math::IsPow2(maxAllocPageCount + secondaryAllocPageCount), "Illegal maxAllocPageCount: Why is this not a power of 2 aligned?");
 
@@ -1944,21 +1941,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
 {
     Assert(!this->HasMultiThreadAccess());
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    if (this->decommitStats != nullptr)
-    {
-        this->decommitStats->numDecommitCalls++;
-        if (this->decommitStats->lastLeaveDecommitRegion.ToMicroseconds() > 0)
-        {
-            Js::TickDelta delta = Js::Tick::Now() - this->decommitStats->lastLeaveDecommitRegion;
-            if (delta > this->decommitStats->maxDeltaBetweenDecommitRegionLeaveAndDecommit)
-            {
-                this->decommitStats->maxDeltaBetweenDecommitRegionLeaveAndDecommit = delta;
-            }
-        }
-    }
-#endif
-
     size_t deleteCount = 0;
 
 #if ENABLE_BACKGROUND_PAGE_ZEROING
@@ -2184,14 +2166,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
 
     // If we had to back-off from decommiting then we may still have some free pages left to decommit.
     this->freePageCount = newFreePageCount + pageToDecommit;
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    if (this->decommitStats != nullptr)
-    {
-        this->decommitStats->numPagesDecommitted += decommitCount;
-        this->decommitStats->numFreePageCount += newFreePageCount + pageToDecommit;
-    }
-#endif
 
 #if DBG
     UpdateMinimum(this->debugMinFreePageCount, this->freePageCount);

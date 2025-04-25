@@ -11,10 +11,6 @@
 #include "DataStructures/BitVector.h"
 #include "Core/SysInfo.h"
 
-#ifdef ENABLE_BASIC_TELEMETRY
-#include "AllocatorTelemetryStats.h"
-#endif
-
 #ifdef PROFILE_MEM
 struct PageMemoryData;
 #endif
@@ -713,11 +709,6 @@ public:
     char16 const * debugName;
 #endif
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    AllocatorDecommitStats* GetDecommitStats() { return this->decommitStats; }
-    void SetDecommitStats(AllocatorDecommitStats* val) { this->decommitStats = val; }
-#endif
-
 protected:
     void InitVirtualAllocator(TVirtualAlloc * virtualAllocator);
 
@@ -881,10 +872,6 @@ private:
 
 #ifdef PROFILE_MEM
     PageMemoryData * memoryData;
-#endif
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    AllocatorDecommitStats* decommitStats;
 #endif
 
     size_t usedBytes;

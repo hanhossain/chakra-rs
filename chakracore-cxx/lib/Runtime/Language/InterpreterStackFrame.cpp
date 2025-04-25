@@ -6430,11 +6430,6 @@ skipThunk:
             newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
         }
 #endif
-#ifdef ENABLE_BASIC_TELEMETRY
-        {
-            this->scriptContext->GetTelemetry().GetOpcodeTelemetry().NewScriptObject(target, args, newVarInstance);
-        }
-#endif
         return newVarInstance;
     }
 
@@ -7211,12 +7206,6 @@ skipThunk:
         ScriptContext* scriptContext = GetScriptContext();
 
         Var result = JavascriptOperators::OP_IsInst(instance, function, scriptContext, inlineCache);
-
-#ifdef ENABLE_BASIC_TELEMETRY
-        {
-            this->scriptContext->GetTelemetry().GetOpcodeTelemetry().IsInstanceOf(instance, function, result);
-        }
-#endif
 
         SetReg(playout->R0, result);
     }

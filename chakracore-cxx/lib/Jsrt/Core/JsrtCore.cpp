@@ -18,6 +18,7 @@
 #include "Base/ThreadContextTlsEntry.h"
 #include "Library/JavascriptPromise.h"
 #include "Codex/Utf8Helper.h"
+#include "Language/SourceTextModuleRecord.h"
 
 CHAKRA_API
 JsInitializeModuleRecord(

@@ -4366,10 +4366,6 @@ ParseNodePtr Parser::ParseArgList(bool *pCallOfConstants, uint16 *pSpreadArgCoun
         }
     }
 
-    if (pSpreadArgCount != nullptr && (*pSpreadArgCount) > 0) {
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, SpreadFeature, m_scriptContext);
-    }
-
     *pCount = static_cast<uint16>(count);
     if (buildAST)
     {
@@ -4536,10 +4532,6 @@ ParseNodePtr Parser::ParseArrayList(bool *pArrayOfTaggedInts, bool *pArrayOfInts
         {
             break;
         }
-    }
-
-    if (spreadCount != nullptr && *spreadCount > 0) {
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, SpreadFeature, m_scriptContext);
     }
 
     if (buildAST)
@@ -5661,11 +5653,6 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
     bool fPreviousYieldIsKeyword = this->GetScanner()->SetYieldIsKeywordRegion(pnodeFnc->IsGenerator());
     bool fPreviousAwaitIsKeyword = this->GetScanner()->SetAwaitIsKeywordRegion(fAsync);
 
-    if (pnodeFnc->IsGenerator())
-    {
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Generator, m_scriptContext);
-    }
-
     if (fncExprScope && pnodeFnc->pnodeName == nullptr)
     {
         FinishParseBlock(pnodeFncExprScope);
@@ -5690,11 +5677,6 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
     this->GetScanner()->Capture(&beginFormals);
     BOOL fWasAlreadyStrictMode = IsStrictMode();
     BOOL oldStrictMode = this->m_fUseStrictMode;
-
-    if (fLambda)
-    {
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Lambda, m_scriptContext);
-    }
 
     uint uCanDeferSave = m_grfscr & fscrCanDeferFncParse;
     uint uDeferSave = m_grfscr & fscrWillDeferFncParse;
@@ -6091,7 +6073,6 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
             }
 
             this->m_fUseStrictMode = oldStrictMode;
-            CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, StrictModeFunction, m_scriptContext);
         }
 
         ProcessCapturedNames(pnodeFnc);
@@ -7085,10 +7066,6 @@ void Parser::ParseFncFormals(ParseNodeFnc * pnodeFnc, ParseNodeFnc * pnodeParent
 
                     if (buildAST)
                     {
-                        if (!m_currentNodeFunc->HasDefaultArguments())
-                        {
-                            CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, DefaultArgFunction, m_scriptContext);
-                        }
                         pnodeT->pnodeInit = pnodeInit;
                         pnodeT->ichLim = this->GetScanner()->IchLimTok();
                     }
@@ -7125,11 +7102,6 @@ void Parser::ParseFncFormals(ParseNodeFnc * pnodeFnc, ParseNodeFnc * pnodeParent
             {
                 break;
             }
-        }
-
-        if (seenRestParameter)
-        {
-            CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Rest, m_scriptContext);
         }
 
         if (m_token.tk != tkRParen)
@@ -7867,8 +7839,6 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
     {
         pnodeClass = CreateNodeForOpT<knopClassDecl>();
 
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Class, m_scriptContext);
-
         cbMinConstructor = this->GetScanner()->IecpMinTok();
     }
 
@@ -8283,7 +8253,6 @@ ParseNodePtr Parser::ParseStringTemplateDecl(ParseNodePtr pnodeTagFnc)
         }
 
     }
-    CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, StringTemplates, m_scriptContext);
 
     OUTPUT_TRACE_DEBUGONLY(
         Js::StringTemplateParsePhase,
@@ -9650,12 +9619,10 @@ ParseNodePtr Parser::ParseVariableDeclaration(
             else if (declarationType == tkCONST)
             {
                 pnodeThis = CreateBlockScopedDeclNode(pid, knopConstDecl);
-                CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Const, m_scriptContext);
             }
             else
             {
                 pnodeThis = CreateBlockScopedDeclNode(pid, knopLetDecl);
-                CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Let, m_scriptContext);
             }
 
             if (pid == wellKnownPropertyPids.arguments)
@@ -11493,8 +11460,6 @@ void Parser::ParseStmtList(ParseNodePtr *ppnodeList, ParseNodePtr **pppnodeLast,
                         m_currentNodeFunc->SetAsmjsMode();
                         m_currentNodeFunc->SetCanBeDeferred(false);
                         m_InAsmMode = true;
-
-                        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, AsmJSFunction, m_scriptContext);
                     }
                 }
                 else if (isOctalInString)
@@ -12964,7 +12929,6 @@ IdentPtr Parser::ParseSuper(bool fAllowCall)
     }
 
     currentNodeFunc->SetHasSuperReference(TRUE);
-    CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Super, m_scriptContext);
 
     // If we are defer parsing, we can skip verifying that the super reference is valid.
     // If it wasn't the parser would have thrown during upfront parsing and we wouldn't be defer parsing the function.

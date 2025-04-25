@@ -1252,7 +1252,6 @@ namespace Js
         ScriptContext* scriptContext = function->GetScriptContext();
 
         Assert(!(callInfo.Flags & CallFlags_New));
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Date_Prototype_toISOString);
 
         if (args.Info.Count == 0 || !VarIs<JavascriptDate>(args[0]))
         {

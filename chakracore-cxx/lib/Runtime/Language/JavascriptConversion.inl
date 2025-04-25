@@ -4,7 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "JavascriptConversion.h"
+#include "TaggedInt.h"
+#include "Base/ScriptContext.h"
+#include "Base/ThreadContext.h"
 #include "Core/JitHelperUtils.h"
+#include "Library/JavascriptBoolean.h"
 
 #if defined(_M_IX86) || defined(_M_X64)
 #endif

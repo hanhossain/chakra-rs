@@ -3,9 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Entropy.h"
 #include "Core/FaultInjection.h"
 #include "DataStructures/Stack.h"
 #include "DataStructures/Dictionary.h"
+#include "Library/DelayFreeArrayBufferHelper.h"
 
 namespace Js
 {
@@ -873,10 +875,6 @@ public:
     void SetAbnormalExceptionCode(uint32 exceptionInfo) { this->exceptionCode = exceptionInfo; }
     uint32 GetAbnormalExceptionCode() const { return this->exceptionCode; }
 
-#ifdef ENABLE_BASIC_TELEMETRY
-    GUID activityId;
-    LPFILETIME GetLastScriptExecutionEndTime() const;
-#endif
     void *tridentLoadAddress;
 
     void* GetTridentLoadAddress() const { return tridentLoadAddress;  }

@@ -28,8 +28,6 @@ namespace Js
         ScriptContext* scriptContext = function->GetScriptContext();
         JavascriptLibrary* library = scriptContext->GetLibrary();
 
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Promise, scriptContext);
-
         // SkipDefaultNewObject function flag should have prevented the default object from
         // being created, except when call true a host dispatch
         Var newTarget = args.GetNewTarget();

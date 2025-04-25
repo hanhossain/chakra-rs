@@ -5,6 +5,7 @@
 #include "RuntimeTypePch.h"
 #include "cmperr.h"
 #include "Language/JavascriptStackWalker.h"
+#include "Library/ScriptFunction.h"
 
 namespace Js
 {

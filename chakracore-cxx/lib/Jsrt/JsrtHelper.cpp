@@ -146,10 +146,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         ValueType::Initialize();
         ThreadContext::GlobalInitialize();
 
-    #ifdef ENABLE_BASIC_TELEMETRY
-        g_TraceLoggingClient = NoCheckHeapNewStruct(TraceLoggingClient);
-    #endif
-
     #ifdef DYNAMIC_PROFILE_STORAGE
         DynamicProfileStorage::Initialize();
     #endif

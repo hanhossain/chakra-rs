@@ -34,8 +34,6 @@ Var JavascriptMap::NewInstance(RecyclableObject* function, CallInfo callInfo, ..
 
     Var newTarget = args.GetNewTarget();
     bool isCtorSuperCall = JavascriptOperators::GetAndAssertIsConstructorSuperCall(args);
-    CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Map, scriptContext);
-
     JavascriptMap* mapObject = nullptr;
 
     if (callInfo.Flags & CallFlags_New)

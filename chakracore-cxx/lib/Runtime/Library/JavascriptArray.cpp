@@ -4045,7 +4045,6 @@ using namespace Js;
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_indexOf);
 
         JS_REENTRANT_UNLOCK(jsReentLock, Var returnValue =  IndexOfHelper<false>(args, scriptContext));
 
@@ -4067,7 +4066,6 @@ using namespace Js;
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_includes);
 
         JS_REENTRANT(jsReentLock, Var returnValue = IndexOfHelper<true>(args, scriptContext));
         Assert(returnValue == scriptContext->GetLibrary()->GetTrue() || returnValue == scriptContext->GetLibrary()->GetFalse());
@@ -4819,7 +4817,6 @@ Case0:
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, args[0]);
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_lastIndexOf);
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
@@ -8388,7 +8385,6 @@ Case0:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Constructor_isArray);
 
         if (args.Info.Count < 2)
         {
@@ -8802,7 +8798,6 @@ Case0:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_at);
 
         if (args.Info.Count == 0)
         {
@@ -8884,7 +8879,6 @@ Case0:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_every);
 
         if (args.Info.Count == 0)
         {
@@ -9030,7 +9024,6 @@ Case0:
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Array.prototype.some"));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_some);
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
@@ -9178,7 +9171,6 @@ Case0:
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Array.prototype.forEach"));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_forEach)
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
@@ -9599,7 +9591,6 @@ Case0:
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Array.prototype.map"));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_map);
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
@@ -9889,7 +9880,6 @@ Case0:
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Array.prototype.filter"));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_filter);
 
         Assert(!(callInfo.Flags & CallFlags_New));
         if (args.Info.Count == 0)
@@ -10030,7 +10020,6 @@ Case0:
         Assert(!scriptContext->IsJsBuiltInEnabled());
 #endif
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_reduce);
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
@@ -10220,7 +10209,6 @@ Case0:
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, _u("Array.prototype.reduceRight"));
 
-        CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(Array_Prototype_reduceRight);
 
         Assert(!(callInfo.Flags & CallFlags_New));
 

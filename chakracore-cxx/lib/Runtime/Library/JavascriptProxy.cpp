@@ -44,8 +44,6 @@ namespace Js
         ScriptContext* scriptContext = function->GetScriptContext();
 
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
-        CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(ES6, Proxy, scriptContext);
-
         if (!(args.Info.Flags & CallFlags_New))
         {
             JavascriptError::ThrowTypeError(scriptContext, JSERR_ErrorOnNew, _u("Proxy"));

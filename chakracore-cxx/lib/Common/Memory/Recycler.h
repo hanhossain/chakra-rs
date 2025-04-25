@@ -660,10 +660,6 @@ class Recycler
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     friend class AutoProtectPages;
 #endif
-#ifdef ENABLE_BASIC_TELEMETRY
-    friend class RecyclerTelemetryInfo;
-#endif
-
 
     template <typename T> friend class RecyclerWeakReference;
     template <typename T> friend class WeakReferenceHashTable;
@@ -764,22 +760,6 @@ private:
 
         virtual void ValueChanged(const CollectionState& newVal, const CollectionState& oldVal)
         {
-#ifdef ENABLE_BASIC_TELEMETRY
-            if (oldVal == CollectionState::CollectionStateNotCollecting && 
-                newVal != CollectionState::CollectionStateNotCollecting && 
-                newVal != CollectionState::Collection_PreCollection && 
-                newVal != CollectionState::CollectionStateExit)
-            {
-                this->recycler->GetRecyclerTelemetryInfo().StartPass(newVal);
-            }
-            else if (oldVal != CollectionState::CollectionStateNotCollecting && 
-                oldVal != CollectionState::Collection_PreCollection && 
-                oldVal != CollectionState::CollectionStateExit &&
-                newVal == CollectionState::CollectionStateNotCollecting)
-            {
-                this->recycler->GetRecyclerTelemetryInfo().EndPass(oldVal);
-            }
-#endif
         }
     };
 
@@ -1136,15 +1116,6 @@ private:
 #if DBG || defined(RECYCLER_STATS)
     bool isForceSweeping;
 #endif
-
-#ifdef ENABLE_BASIC_TELEMETRY
-private:
-    RecyclerTelemetryInfo telemetryStats;
-    GUID recyclerID;
-public:
-    GUID& GetRecyclerID() { return this->recyclerID; }
-#endif
-  
 
 public:
     bool GetIsInScript() { return this->isInScript; }
@@ -1898,10 +1869,6 @@ private:
     // in projection ExternalMark allowing allocating VarToDispEx. This is the common flag
     // while we have debug only flag for each of the two scenarios.
     bool isCollectionDisabled;
-
-#ifdef ENABLE_BASIC_TELEMETRY
-    RecyclerTelemetryInfo& GetRecyclerTelemetryInfo() { return this->telemetryStats; }
-#endif
 
 #ifdef TRACK_ALLOC
 public:

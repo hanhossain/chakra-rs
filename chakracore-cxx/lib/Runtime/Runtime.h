@@ -461,71 +461,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Language/amd64/StackFrame.h"
 #endif
 
-#include "Base/Entropy.h"
-#ifdef ENABLE_BASIC_TELEMETRY
-#include "DirectCall.h"
-#include "ScriptContext/ScriptContextTelemetry.h"
-#else
-#define CHAKRATEL_LANGSTATS_INC_BUILTINCOUNT(builtin)
-#define CHAKRATEL_LANGSTATS_INC_LANGFEATURECOUNT(esVersion, feature, m_scriptContext)
-#endif
-
-#include "Library/DelayFreeArrayBufferHelper.h"
-#include "Base/ThreadContext.h"
-
-#include "Base/StackProber.h"
-#include "Base/ScriptContextProfiler.h"
-
-#include "Language/JavascriptConversion.h"
-
-#include "Base/ScriptContextOptimizationOverrideInfo.h"
-#include "Base/ScriptContextBase.h"
-#include "Base/ScriptContextInfo.h"
-#include "Base/ScriptContext.h"
-#include "Base/LeaveScriptObject.h"
-#include "Base/PropertyRecord.h"
-
-#include "ByteCode/ByteCodeReader.h"
-#include "Language/TaggedInt.h"
-
-#include "Library/RootObjectBase.h"
-#include "Library/GlobalObject.h"
-
-#include "Library/LiteralString.h"
-#include "Library/ConcatString.h"
-#include "Library/CompoundString.h"
-#include "Library/PropertyRecordUsageCache.h"
-#include "Library/PropertyString.h"
-#include "Library/SingleCharString.h"
-
-#include "Library/JavascriptTypedNumber.h"
-#include "Library/SparseArraySegment.h"
-#include "Library/JavascriptError.h"
-#include "Library/JavascriptArray.h"
-#include "Library/JavascriptSymbol.h"
-
-#include "Library/AtomicsObject.h"
-#include "Library/DetachedStateBase.h"
-#include "Library/ArrayBuffer.h"
-#include "Library/SharedArrayBuffer.h"
-#include "Library/TypedArray.h"
-#include "Library/JavascriptBoolean.h"
-#include "Library/JavascriptBigInt.h"
-#include "Library/WebAssemblyEnvironment.h"
-#include "Library/WebAssemblyTable.h"
-#include "Library/WebAssemblyMemory.h"
-#include "Library/WebAssemblyModule.h"
-#include "Library/WebAssembly.h"
-
-#include "Language/ModuleRecordBase.h"
-#include "Language/SourceTextModuleRecord.h"
-//#include "Language/ModuleNamespace.h"
-#include "Types/ScriptFunctionType.h"
-#include "Library/ScriptFunction.h"
-#include "Library/StackScriptFunction.h"
-
-#include "Library/CustomExternalWrapperObject.h"
-
 //
 // .inl files
 //
@@ -551,4 +486,3 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #include "Language/InlineCache.inl"
 #include "Language/InlineCachePointerArray.inl"
 #include "Language/JavascriptOperators.inl"
-#include "Language/TaggedInt.inl"
