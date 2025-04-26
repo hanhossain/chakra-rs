@@ -6,14 +6,7 @@
 #pragma once
 
 #define __MAKE_WARNING__(X) "This compiler does not support '" ## X ## "'"
-// Define _ALWAYSINLINE for template that want to always inline, but doesn't allow inline linkage in clang
 #if defined(__GNUC__) || defined(__clang__)
-    #if __has_attribute(always_inline)
-        #define _ALWAYSINLINE __attribute__((always_inline))
-    #else // No always_inline support
-        #pragma message __MAKE_WARNING__("always_inline")
-        #define _ALWAYSINLINE inline
-    #endif
     #if __has_attribute(noinline)
         #ifdef CLANG_HAS_DISABLE_TAIL_CALLS
             #define _NOINLINE __attribute__((noinline, disable_tail_calls))
@@ -25,7 +18,6 @@
         #define _NOINLINE
     #endif
 #else // Windows
-    #define _ALWAYSINLINE __forceinline
     #define _NOINLINE __declspec(noinline)
 #endif
 
