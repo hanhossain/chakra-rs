@@ -396,7 +396,7 @@ HRESULT AutoSystemInfo::GetJscriptFileVersion(uint32_t* majorVersion, uint32_t* 
 //
 // Returns the major and minor version of the binary passed as argument.
 //
-HRESULT AutoSystemInfo::GetVersionInfo(__in LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
+HRESULT AutoSystemInfo::GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion)
 {
     // xplat-todo: how to handle version resource?
     *majorVersion = INVALID_VERSION;

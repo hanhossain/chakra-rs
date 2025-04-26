@@ -14,9 +14,9 @@ JITTimeProfileInfo::JITTimeProfileInfo(ProfileDataIDL * profileData) :
 /* static */
 void
 JITTimeProfileInfo::InitializeJITProfileData(
-    __in ArenaAllocator * alloc,
-    __in Js::DynamicProfileInfo * profileInfo,
-    __in Js::FunctionBody *functionBody,
+    ArenaAllocator * alloc,
+    Js::DynamicProfileInfo * profileInfo,
+    Js::FunctionBody *functionBody,
     __out ProfileDataIDL * data,
     bool isForegroundJIT)
 {

@@ -141,8 +141,8 @@ namespace Js
     }
 
     HRESULT DelayLoadWinRtFoundation::RoGetActivationFactory(
-        __in HSTRING activatableClassId,
-        __in REFIID iid,
+        HSTRING activatableClassId,
+        REFIID iid,
         __out IActivationFactory** factory)
     {
         if (m_hModule)
@@ -164,10 +164,10 @@ namespace Js
     }
 
     BOOL DelayLoadWinCoreProcessThreads::GetProcessInformation(
-        __in HANDLE hProcess,
-        __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
+        HANDLE hProcess,
+        PROCESS_INFORMATION_CLASS ProcessInformationClass,
         __out_bcount(nLength) void * lpBuffer,
-        __in SIZE_T nLength
+        SIZE_T nLength
     )
     {
 #if defined(DELAYLOAD_SET_CFG_TARGET) || defined(_M_ARM)

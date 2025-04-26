@@ -72,7 +72,7 @@ void ArenaMemoryTracking::Activate()
 {
 }
 
-void ArenaMemoryTracking::ArenaCreated(Allocator *arena, __in LPCWSTR name)
+void ArenaMemoryTracking::ArenaCreated(Allocator *arena, LPCWSTR name)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportArenaCreated(arena, ArenaTypeArena);
@@ -132,19 +132,19 @@ void RecyclerMemoryTracking::ReportRecyclerDestroy(Recycler * recycler)
     EtwMemoryEvents::ReportArenaDestroyed(recycler);
 }
 
-void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportAllocation(recycler, address, size);
 }
 
-void RecyclerMemoryTracking::ReportFree(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportFree(Recycler * recycler, void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportFree(recycler, address, size);
 }
 
-void RecyclerMemoryTracking::ReportUnallocated(Recycler * recycler, __in void* address, __in void *endAddress, size_t sizeCat)
+void RecyclerMemoryTracking::ReportUnallocated(Recycler * recycler, void* address, void *endAddress, size_t sizeCat)
 {
     byte * byteAddress = (byte *) address;
 

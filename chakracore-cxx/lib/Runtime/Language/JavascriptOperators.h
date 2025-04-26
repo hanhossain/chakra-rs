@@ -648,7 +648,7 @@ namespace Js
         static Var OP_LdFuncObj(Var scriptFunction, ScriptContext * scriptContext);
         static Var OP_LdHomeObjProto(Var aRight, ScriptContext* scriptContext);
         static Var OP_LdFuncObjProto(Var aRight, ScriptContext* scriptContext);
-        static Var OP_ImportCall(__in JavascriptFunction *function, __in Var specifier, __in ScriptContext* scriptContext);
+        static Var OP_ImportCall(JavascriptFunction *function, Var specifier, ScriptContext* scriptContext);
 
         static Var OP_NewAwaitObject(ScriptContext* scriptContext);
         static Var OP_NewAsyncFromSyncIterator(Var syncIterator, ScriptContext* scriptContext);
@@ -687,8 +687,8 @@ namespace Js
 
         static void VarToNativeArray(Var arrayObject,
             JsNativeValueType valueType,
-            __in uint32_t length,
-            __in uint32_t elementSize,
+            uint32_t length,
+            uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 
@@ -727,8 +727,8 @@ namespace Js
         template <typename ArrayType>
         static void ObjectToNativeArray(ArrayType* arrayObject,
             JsNativeValueType valueType,
-            __in uint32_t length,
-            __in uint32_t elementSize,
+            uint32_t length,
+            uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 

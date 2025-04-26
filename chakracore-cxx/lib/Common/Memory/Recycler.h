@@ -1801,7 +1801,7 @@ private:
 #endif // ENABLE_CONCURRENT_GC
 
     bool ForceSweepObject();
-    void NotifyFree(__in char * address, size_t size);
+    void NotifyFree(char * address, size_t size);
     template <typename T>
     void NotifyFree(T * heapBlock);
 
@@ -1810,7 +1810,7 @@ private:
 #ifdef ENABLE_JS_ETW
     uint32_t EventWriteFreeMemoryBlock(HeapBlock* heapBlock);
     void FlushFreeRecord();
-    void AppendFreeMemoryETWRecord(__in char *address, size_t size);
+    void AppendFreeMemoryETWRecord(char *address, size_t size);
     static const uint BulkFreeMemoryCount = 400;
     uint bulkFreeMemoryWrittenCount;
     struct ETWFreeRecord {
@@ -1880,7 +1880,7 @@ public:
 private:
     static bool DoProfileAllocTracker();
     void InitializeProfileAllocTracker();
-    void TrackUnallocated(__in  char* address, __in char *endAddress, size_t sizeCat);
+    void TrackUnallocated(char* address, char *endAddress, size_t sizeCat);
     void TrackAllocCore(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime = false);
     void* TrackAlloc(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime = false);
 

@@ -22,9 +22,9 @@ public:
         MemoryFailure = 2,
         MemoryMax = 2,
     };
-    typedef bool (* PageAllocatorMemoryAllocationCallback)(__in void * context,
-        __in AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
-        __in size_t allocationSize);
+    typedef bool (* PageAllocatorMemoryAllocationCallback)(void * context,
+        AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
+        size_t allocationSize);
 
 
 private:

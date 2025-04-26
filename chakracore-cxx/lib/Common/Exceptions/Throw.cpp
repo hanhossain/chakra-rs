@@ -274,7 +274,7 @@ namespace Js {
 #define CHAKRA_ASSERT_CAPTION _u("CHAKRA ASSERT")
 #endif
 
-    bool Throw::ReportAssert(__in LPCSTR fileName, uint lineNumber, __in LPCSTR error, __in LPCSTR message)
+    bool Throw::ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag))

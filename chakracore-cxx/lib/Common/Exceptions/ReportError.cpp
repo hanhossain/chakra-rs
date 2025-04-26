@@ -7,10 +7,10 @@
 
 // Disable inline so that _ReturnAddress() will get the address of the calling function.
 void ReportFatalException(
-    __in size_t context,
-    __in HRESULT exceptionCode,
-    __in ErrorReason reasonCode,
-    __in size_t scenario)
+    size_t context,
+    HRESULT exceptionCode,
+    ErrorReason reasonCode,
+    size_t scenario)
 {
     // avoid the error text methods to be optimized out.
     UNREFERENCED_PARAMETER(scenario);
@@ -40,14 +40,14 @@ void ReportFatalException(
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
 #pragma optimize("", off)
 void JavascriptDispatch_OOM_fatal_error(
-    __in size_t context)
+    size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_OUTOFMEMORY, JavascriptDispatch_OUTOFMEMORY, scenario);
 };
 
 void CustomHeap_BadPageState_unrecoverable_error(
-    __in size_t context)
+    size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, CustomHeap_MEMORYCORRUPTION, scenario);
@@ -60,14 +60,14 @@ void MarkStack_OOM_unrecoverable_error()
 };
 
 void Amd64StackWalkerOutOfContexts_unrecoverable_error(
-    __in size_t context)
+    size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, Fatal_Amd64StackWalkerOutOfContexts, scenario);
 }
 
 void FailedToBox_OOM_unrecoverable_error(
-    __in size_t context)
+    size_t context)
 {
     int scenario = 1;
     ReportFatalException(context, E_UNEXPECTED, Fatal_FailedToBox_OUTOFMEMORY, scenario);
@@ -101,7 +101,7 @@ void Version_Inconsistency_fatal_error()
 
 #ifdef LARGEHEAPBLOCK_ENCODING
 void LargeHeapBlock_Metadata_Corrupted(
-    __in size_t context, __in unsigned char calculatedChecksum)
+    size_t context, unsigned char calculatedChecksum)
 {
     int scenario = calculatedChecksum; /* For debugging purpose if checksum mismatch happen*/
     ReportFatalException(context, E_UNEXPECTED, LargeHeapBlock_Metadata_Corrupt, scenario);

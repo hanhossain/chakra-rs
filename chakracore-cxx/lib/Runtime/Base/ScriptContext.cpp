@@ -831,12 +831,12 @@ namespace Js
         threadContext->FindPropertyRecord(pstName, propertyRecord);
     }
 
-    void ScriptContext::FindPropertyRecord(__in LPCWSTR propertyName, __in int propertyNameLength, PropertyRecord const ** propertyRecord)
+    void ScriptContext::FindPropertyRecord(LPCWSTR propertyName, int propertyNameLength, PropertyRecord const ** propertyRecord)
     {
         threadContext->FindPropertyRecord(propertyName, propertyNameLength, propertyRecord);
     }
 
-    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* ScriptContext::FindPropertyIdNoCase(__in LPCWSTR propertyName, __in int propertyNameLength)
+    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* ScriptContext::FindPropertyIdNoCase(LPCWSTR propertyName, int propertyNameLength)
     {
         return threadContext->FindPropertyIdNoCase(this, propertyName, propertyNameLength);
     }
@@ -861,7 +861,7 @@ namespace Js
         threadContext->GetOrAddPropertyId(propertyName, propertyRecord);
     }
 
-    PropertyId ScriptContext::GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR propertyName, __in int propertyNameLength)
+    PropertyId ScriptContext::GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR propertyName, int propertyNameLength)
     {
         Js::PropertyRecord const * propertyRecord = nullptr;
         threadContext->GetOrAddPropertyId(propertyName, propertyNameLength, &propertyRecord);
@@ -2357,14 +2357,14 @@ ExitTempAllocator:
     }
 
     HRESULT ScriptContext::CompileUTF8Core(
-        __in Parser& ps,
-        __in Js::Utf8SourceInfo* utf8SourceInfo,
-        __in SRCINFO *srcInfo,
-        __in BOOL fOriginalUTF8Code,
+        Parser& ps,
+        Js::Utf8SourceInfo* utf8SourceInfo,
+        SRCINFO *srcInfo,
+        BOOL fOriginalUTF8Code,
         _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
-        __in size_t cbLength,
-        __in uint32_t grfscr,
-        __in CompileScriptException *pse,
+        size_t cbLength,
+        uint32_t grfscr,
+        CompileScriptException *pse,
         __inout charcount_t& cchLength,
         __out size_t& srcLength,
         __out uint& sourceIndex,
@@ -2597,7 +2597,7 @@ ExitTempAllocator:
         return rootFunction;
     }
 
-    BOOL ScriptContext::ReserveStaticTypeIds(__in int first, __in int last)
+    BOOL ScriptContext::ReserveStaticTypeIds(int first, int last)
     {
         return threadContext->ReserveStaticTypeIds(first, last);
     }
@@ -6500,7 +6500,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
 #ifdef ENABLE_JS_ETW
-    void ScriptContext::EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent)
+    void ScriptContext::EmitStackTraceEvent(UINT64 operationID, unsigned short maxFrameCount, bool emitV2AsyncStackEvent)
     {
         // If call root level is zero, there is no EntryExitRecord and the stack walk will fail.
         if (GetThreadContext()->GetCallRootLevel() == 0)

@@ -311,7 +311,7 @@ namespace Js
         return StringBracketHelper(args, scriptContext, tag, static_cast<charcount_t>(N1 - 1), prop, static_cast<charcount_t>(N2 - 1));
     }
 
-    BOOL JavascriptString::BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, __in charcount_t otherLength)
+    BOOL JavascriptString::BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength)
     {
         return otherLength == this->GetLength() &&
             JsUtil::CharacterBuffer<WCHAR>::StaticEquals(this->GetString(), otherBuffer, otherLength);
@@ -3665,7 +3665,7 @@ case_2:
         return SafeSzSize(GetLength());
     }
 
-    /*static*/ __ecount(length+1) char16* JavascriptString::AllocateLeafAndCopySz(__in Recycler* recycler, __in_ecount(length) const char16* content, charcount_t length)
+    /*static*/ __ecount(length+1) char16* JavascriptString::AllocateLeafAndCopySz(Recycler* recycler, __in_ecount(length) const char16* content, charcount_t length)
     {
         // Note: Intentionally not using SafeSzSize nor hoisting common
         // sub-expression "length + 1" into a local variable otherwise
@@ -3687,7 +3687,7 @@ case_2:
         return buffer;
     }
 
-    /*static*/ __ecount(length+1) char16* JavascriptString::AllocateAndCopySz(__in ArenaAllocator* arena, __in_ecount(length) const char16* content, charcount_t length)
+    /*static*/ __ecount(length+1) char16* JavascriptString::AllocateAndCopySz(ArenaAllocator* arena, __in_ecount(length) const char16* content, charcount_t length)
     {
         // Note: Intentionally not using SafeSzSize nor hoisting common
         // sub-expression "length + 1" into a local variable otherwise

@@ -309,7 +309,7 @@ PageSegmentBase<T>::Prime()
 
 template<typename T>
 bool
-PageSegmentBase<T>::IsAllocationPageAligned(__in char* address, size_t pageCount, uint *nextIndex)
+PageSegmentBase<T>::IsAllocationPageAligned(char* address, size_t pageCount, uint *nextIndex)
 {
     // Require that allocations are aligned at a boundary
     // corresponding to the page count
@@ -473,7 +473,7 @@ PageSegmentBase<TVirtualAlloc>::AllocDecommitPages(uint pageCount, T freePages, 
 
 template<typename T>
 void
-PageSegmentBase<T>::ReleasePages(__in void * address, uint pageCount)
+PageSegmentBase<T>::ReleasePages(void * address, uint pageCount)
 {
     Assert(address >= this->address);
     Assert(pageCount <= this->GetAllocator()->maxAllocPageCount);
@@ -550,7 +550,7 @@ PageSegmentBase<T>::ChangeSegmentProtection(uint32_t protectFlags, uint32_t expe
 template<typename T>
 template <bool onlyUpdateState>
 void
-PageSegmentBase<T>::DecommitPages(__in void * address, uint pageCount)
+PageSegmentBase<T>::DecommitPages(void * address, uint pageCount)
 {
     Assert(address >= this->address);
     Assert(pageCount <= this->GetAllocator()->maxAllocPageCount);
@@ -1033,7 +1033,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFreePages(uint
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(__in void * address, uint pageCount)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(void * address, uint pageCount)
 {
     const size_t bufferSize = AutoSystemInfo::PageSize * pageCount;
 
@@ -1075,7 +1075,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(__in vo
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillFreePages(__in void * address, uint pageCount)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillFreePages(void * address, uint pageCount)
 {
 #if DBG
     MemSetLocal(address, DbgMemFill, AutoSystemInfo::PageSize * pageCount);
@@ -1375,7 +1375,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AllocPagesInternal(uin
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::OnAllocFromNewSegment(uint pageCount, __in void* pages, TSegment* newSegment)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::OnAllocFromNewSegment(uint pageCount, void* pages, TSegment* newSegment)
 {
     DListBase<TPageSegment>* targetSegmentList = (pageCount == maxAllocPageCount) ? &fullSegments : &segments;
     LogAllocPages(pageCount);
@@ -1583,7 +1583,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddFreePageCount(uint 
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleasePages(__in void * address, uint pageCount, __in void * segmentParam)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleasePages(void * address, uint pageCount, void * segmentParam)
 {
     Assert(pageCount <= this->maxAllocPageCount);
     TPageSegment * segment = (TPageSegment*) segmentParam;
@@ -1726,7 +1726,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PopPendingZeroPage()
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddPageToZeroQueue(__in void * address, uint pageCount, __in TPageSegment * pageSegment)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddPageToZeroQueue(void * address, uint pageCount, TPageSegment * pageSegment)
 {
     Assert(HasZeroPageQueue());
     Assert(pageSegment->GetAllocator() == this);
@@ -2545,7 +2545,7 @@ HeapPageAllocator<T>::HeapPageAllocator(AllocationPolicyManager * policyManager,
 
 template<typename T>
 void
-HeapPageAllocator<T>::ReleaseDecommitted(void * address, size_t pageCount, __in void *  segmentParam)
+HeapPageAllocator<T>::ReleaseDecommitted(void * address, size_t pageCount, void *  segmentParam)
 {
     SegmentBase<T> * segment = (SegmentBase<T>*) segmentParam;
     if (pageCount > this->maxAllocPageCount)
@@ -2563,7 +2563,7 @@ HeapPageAllocator<T>::ReleaseDecommitted(void * address, size_t pageCount, __in 
 
 template<typename T>
 void
-HeapPageAllocator<T>::ReleaseDecommittedSegment(__in SegmentBase<T>* segment)
+HeapPageAllocator<T>::ReleaseDecommittedSegment(SegmentBase<T>* segment)
 {
     ASSERT_THREAD();
 
@@ -2574,7 +2574,7 @@ HeapPageAllocator<T>::ReleaseDecommittedSegment(__in SegmentBase<T>* segment)
 // decommit the page but don't release it
 template<typename T>
 void
-HeapPageAllocator<T>::DecommitPages(__in char* address, size_t pageCount /* = 1 */)
+HeapPageAllocator<T>::DecommitPages(char* address, size_t pageCount /* = 1 */)
 {
     Assert(pageCount <= MAXUINT32);
 #pragma prefast(suppress:__WARNING_WIN32UNRELEASEDVADS, "The remainder of the clean-up is done later.");
@@ -2592,7 +2592,7 @@ void PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleaseSegmentLis
 
 template<typename T>
 BOOL
-HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in void* segmentParam, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
+HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmentParam, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
 {
     SegmentBase<T> * segment = (SegmentBase<T>*)segmentParam;
 #if DBG
@@ -2668,7 +2668,7 @@ HeapPageAllocator<T>::ProtectPages(__in char* address, size_t pageCount, __in vo
 
 template<typename T>
 void
-HeapPageAllocator<T>::TrackDecommittedPages(void * address, uint pageCount, __in void* segmentParam)
+HeapPageAllocator<T>::TrackDecommittedPages(void * address, uint pageCount, void* segmentParam)
 {
     PageSegmentBase<T> * segment = (PageSegmentBase<T>*)segmentParam;
     ASSERT_THREAD();
@@ -2763,7 +2763,7 @@ bool HeapPageAllocator<T>::ReleaseSecondary(const SecondaryAllocation& allocatio
 
 template<typename T>
 bool
-HeapPageAllocator<T>::IsAddressFromAllocator(__in void* address)
+HeapPageAllocator<T>::IsAddressFromAllocator(void* address)
 {
     typename DListBase<PageSegmentBase<T>>::Iterator segmentsIterator(&this->segments);
     while (segmentsIterator.Next())
@@ -2806,7 +2806,7 @@ HeapPageAllocator<T>::IsAddressFromAllocator(__in void* address)
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 bool
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::IsAddressInSegment(__in void* address, const TPageSegment& segment)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::IsAddressInSegment(void* address, const TPageSegment& segment)
 {
     bool inSegment = this->IsAddressInSegment(address, static_cast<const TSegment&>(segment));
 
@@ -2820,7 +2820,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::IsAddressInSegment(__i
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 bool
-PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::IsAddressInSegment(__in void* address, const TSegment& segment)
+PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::IsAddressInSegment(void* address, const TSegment& segment)
 {
     return segment.IsInSegment(address);
 }

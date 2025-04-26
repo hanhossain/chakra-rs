@@ -162,7 +162,7 @@ LargeHeapBlock::GetAllocPlusSize(uint objectCount)
 }
 
 LargeHeapBlock *
-LargeHeapBlock::New(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
+LargeHeapBlock::New(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
 {
     return NoMemProtectHeapNewNoThrowPlusZ(GetAllocPlusSize(objectCount), LargeHeapBlock, address, pageCount, segment, objectCount, bucket);
 }
@@ -173,7 +173,7 @@ LargeHeapBlock::Delete(LargeHeapBlock * heapBlock)
     NoMemProtectHeapDeletePlus(GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
 
-LargeHeapBlock::LargeHeapBlock(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
+LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
     : HeapBlock(LargeBlockType), pageCount(pageCount), allocAddressEnd(address), objectCount(objectCount), bucket(bucket), freeList(this)
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
     ,wbVerifyBits(&HeapAllocator::Instance)

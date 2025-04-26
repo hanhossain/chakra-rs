@@ -10053,7 +10053,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(LdFuncObjProto);
     }
 
-    Var JavascriptOperators::OP_ImportCall(__in JavascriptFunction *function, __in Var specifier, __in ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_ImportCall(JavascriptFunction *function, Var specifier, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(ImportCall);
         ModuleRecordBase *moduleRecordBase = nullptr;
@@ -10301,8 +10301,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     template<typename T>
     void JavascriptOperators::ObjectToNativeArray(T* arrayObject,
         JsNativeValueType valueType,
-        __in uint32_t length,
-        __in uint32_t elementSize,
+        uint32_t length,
+        uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {
@@ -10422,8 +10422,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::VarToNativeArray(Var arrayObject,
         JsNativeValueType valueType,
-        __in uint32_t length,
-        __in uint32_t elementSize,
+        uint32_t length,
+        uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {

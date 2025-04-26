@@ -14,8 +14,8 @@ JITTimeFunctionBody::JITTimeFunctionBody(FunctionBodyDataIDL * bodyData) :
 /* static */
 void
 JITTimeFunctionBody::InitializeJITFunctionData(
-    __in ArenaAllocator * arena,
-    __in Js::FunctionBody *functionBody,
+    ArenaAllocator * arena,
+    Js::FunctionBody *functionBody,
     __out FunctionBodyDataIDL * jitBody)
 {
     Assert(functionBody != nullptr);

@@ -804,7 +804,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
 }
 
 void
-ThreadContext::FindPropertyRecord(__in LPCWCH propertyName, __in int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
+ThreadContext::FindPropertyRecord(LPCWCH propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
 {
     EnterPinnedScope((volatile void **)propertyRecord);
     *propertyRecord = FindPropertyRecord(propertyName, propertyNameLength);
@@ -846,7 +846,7 @@ ThreadContext::FindPropertyRecord(const char16 * propertyName, int propertyNameL
 }
 
 Js::PropertyRecord const *
-ThreadContext::UncheckedAddPropertyId(__in LPCWSTR propertyName, __in int propertyNameLength, bool bind, bool isSymbol)
+ThreadContext::UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind, bool isSymbol)
 {
     return UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR>(propertyName, propertyNameLength), bind, isSymbol);
 }
@@ -2157,7 +2157,7 @@ void ThreadContext::PopEntryExitRecord(Js::ScriptEntryExitRecord * record)
     this->entryExitRecord = next;
 }
 
-BOOL ThreadContext::ReserveStaticTypeIds(__in int first, __in int last)
+BOOL ThreadContext::ReserveStaticTypeIds(int first, int last)
 {
     if ( nextTypeId <= first )
     {

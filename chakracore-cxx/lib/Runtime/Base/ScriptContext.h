@@ -161,11 +161,11 @@ public:
 
     virtual HRESULT SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev) = 0;
     virtual HRESULT GetDispatchExCaller(__deref_out void** dispatchExCaller) = 0;
-    virtual void ReleaseDispatchExCaller(__in void* dispatchExCaler) = 0;
+    virtual void ReleaseDispatchExCaller(void* dispatchExCaler) = 0;
     virtual Js::ModuleRoot * GetModuleRoot(int moduleID) = 0;
-    virtual HRESULT CheckCrossDomainScriptContext(__in Js::ScriptContext* scriptContext) = 0;
+    virtual HRESULT CheckCrossDomainScriptContext(Js::ScriptContext* scriptContext) = 0;
 
-    virtual HRESULT GetHostContextUrl(__in DWORD_PTR hostSourceContext, __out BSTR& pUrl) = 0;
+    virtual HRESULT GetHostContextUrl(DWORD_PTR hostSourceContext, __out BSTR& pUrl) = 0;
     virtual BOOL HasCaller() = 0;
     virtual void CleanDynamicCodeCache() = 0;
     virtual HRESULT VerifyDOMSecurity(Js::ScriptContext* targetContext, Js::Var obj) = 0;
@@ -452,7 +452,7 @@ namespace Js
 #endif
 
 #ifdef ENABLE_JS_ETW
-        void EmitStackTraceEvent(__in UINT64 operationID, __in unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
+        void EmitStackTraceEvent(UINT64 operationID, unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
         static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
 #endif
 
@@ -1182,8 +1182,8 @@ private:
         PropertyString* AddPropertyString2(const Js::PropertyRecord* propertyRecord);
         PropertyString* CachePropertyString2(const Js::PropertyRecord* propertyRecord);
         PropertyString* GetPropertyString2(char16 ch1, char16 ch2);
-        void FindPropertyRecord(__in LPCWSTR pszPropertyName, __in int propertyNameLength, PropertyRecord const** propertyRecord);
-        JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(__in LPCWSTR pszPropertyName, __in int propertyNameLength);
+        void FindPropertyRecord(LPCWSTR pszPropertyName, int propertyNameLength, PropertyRecord const** propertyRecord);
+        JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(LPCWSTR pszPropertyName, int propertyNameLength);
 
         void FindPropertyRecord(JavascriptString* pstName, PropertyRecord const** propertyRecord);
         PropertyRecord const * GetPropertyName(PropertyId propertyId);
@@ -1199,14 +1199,14 @@ private:
         {
             return GetOrAddPropertyIdTracked(propertyName, N - 1);
         }
-        PropertyId GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR pszPropertyName, __in int propertyNameLength);
+        PropertyId GetOrAddPropertyIdTracked(__in_ecount(propertyNameLength) LPCWSTR pszPropertyName, int propertyNameLength);
         void GetOrAddPropertyRecord(__in_ecount(propertyNameLength) LPCWSTR pszPropertyName, _In_ int propertyNameLength, _Out_ PropertyRecord const** propertyRecord);
         BOOL IsNumericPropertyId(PropertyId propertyId, uint32* value);
 
         void RegisterWeakReferenceDictionary(JsUtil::IWeakReferenceDictionary* weakReferenceDictionary);
         void ResetWeakReferenceDictionaryList() { weakReferenceDictionaryList.Reset(); }
 
-        BOOL ReserveStaticTypeIds(__in int first, __in int last);
+        BOOL ReserveStaticTypeIds(int first, int last);
         TypeId ReserveTypeIds(int count);
         TypeId CreateTypeId();
 
@@ -1258,14 +1258,14 @@ private:
             _In_ Js::SimpleDataCacheWrapper* pDataCache);
 
         HRESULT CompileUTF8Core(
-            __in Parser& ps,
-            __in Js::Utf8SourceInfo* utf8SourceInfo,
-            __in SRCINFO *srcInfo,
-            __in BOOL fOriginalUTF8Code,
+            Parser& ps,
+            Js::Utf8SourceInfo* utf8SourceInfo,
+            SRCINFO *srcInfo,
+            BOOL fOriginalUTF8Code,
             _In_reads_bytes_(cbLength) LPCUTF8 pszSrc,
-            __in size_t cbLength,
-            __in uint32_t grfscr,
-            __in CompileScriptException *pse,
+            size_t cbLength,
+            uint32_t grfscr,
+            CompileScriptException *pse,
             __inout charcount_t& cchLength,
             __out size_t& srcLength,
             __out uint& sourceIndex,

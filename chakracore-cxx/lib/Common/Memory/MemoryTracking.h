@@ -17,7 +17,7 @@ class ArenaMemoryTracking
 {
 public:
     static void Activate();
-    static void ArenaCreated(Allocator *arena,  __in LPCWSTR name);
+    static void ArenaCreated(Allocator *arena,  LPCWSTR name);
     static void ArenaDestroyed(Allocator *arena);
     static void ReportAllocation(Allocator *arena, void *address, size_t size);
     static void ReportReallocation(Allocator *arena, void *address, size_t existingSize, size_t newSize);
@@ -34,9 +34,9 @@ public:
     static void Activate();
     static void ReportRecyclerCreate(Recycler * recycler);
     static void ReportRecyclerDestroy(Recycler * recycler);
-    static void ReportAllocation(Recycler * recycler, __in void *address, size_t size);
-    static void ReportFree(Recycler * recycler, __in void *address, size_t size);
-    static void ReportUnallocated(Recycler * recycler, __in void* address, __in void *endAddress, size_t sizeCat);
+    static void ReportAllocation(Recycler * recycler, void *address, size_t size);
+    static void ReportFree(Recycler * recycler, void *address, size_t size);
+    static void ReportUnallocated(Recycler * recycler, void* address, void *endAddress, size_t sizeCat);
 };
 
 class PageTracking
@@ -45,7 +45,7 @@ public:
     static void Activate();
     static void PageAllocatorCreated(PageAllocator *pageAllocator);
     static void PageAllocatorDestroyed(PageAllocator *pageAllocator);
-    static void ReportAllocation(PageAllocator *pageAllocator, __in void *address, size_t size);
-    static void ReportFree(PageAllocator *pageAllocator, __in void *address, size_t size);
+    static void ReportAllocation(PageAllocator *pageAllocator, void *address, size_t size);
+    static void ReportFree(PageAllocator *pageAllocator, void *address, size_t size);
 };
 }

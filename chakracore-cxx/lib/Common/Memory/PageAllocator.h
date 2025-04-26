@@ -268,7 +268,7 @@ public:
     uint GetFreePageCount() const { return freePageCount; }
     uint GetDecommitPageCount() const { return decommitPageCount; }
 
-    static bool IsAllocationPageAligned(__in char* address, size_t pageCount, uint *nextIndex = nullptr);
+    static bool IsAllocationPageAligned(char* address, size_t pageCount, uint *nextIndex = nullptr);
 
     template <typename T, bool notPageAligned>
     char * AllocDecommitPages(uint pageCount, T freePages, T decommitPages);
@@ -276,9 +276,9 @@ public:
     template <bool notPageAligned>
     char * AllocPages(uint pageCount);
 
-    void ReleasePages(__in void * address, uint pageCount);
+    void ReleasePages(void * address, uint pageCount);
     template <bool onlyUpdateState>
-    void DecommitPages(__in void * address, uint pageCount);
+    void DecommitPages(void * address, uint pageCount);
 
     uint GetCountOfFreePages() const;
     uint GetNextBitInFreePagesBitVector(uint index) const;
@@ -643,7 +643,7 @@ public:
     char * AllocPages(uint pageCount, TPageSegment ** pageSegment);
     char * AllocPagesPageAligned(uint pageCount, TPageSegment ** pageSegment);
 
-    void ReleasePages(__in void * address, uint pageCount, __in void * pageSegment);
+    void ReleasePages(void * address, uint pageCount, void * pageSegment);
 #if ENABLE_BACKGROUND_PAGE_FREEING
     void BackgroundReleasePages(void * address, uint pageCount, TPageSegment * pageSegment);
 #endif
@@ -720,7 +720,7 @@ protected:
 
     template <bool notPageAligned>
     char * SnailAllocPages(uint pageCount, TPageSegment ** pageSegment);
-    void OnAllocFromNewSegment(uint pageCount, __in void* pages, TSegment* segment);
+    void OnAllocFromNewSegment(uint pageCount, void* pages, TSegment* segment);
 
     template <bool notPageAligned>
     char * TryAllocFreePages(uint pageCount, TPageSegment ** pageSegment);
@@ -735,8 +735,8 @@ protected:
     DListBase<TPageSegment> * GetSegmentList(TPageSegment * segment);
     void TransferSegment(TPageSegment * segment, DListBase<TPageSegment> * fromSegmentList);
 
-    void FillAllocPages(__in void * address, uint pageCount);
-    void FillFreePages(__in void * address, uint pageCount);
+    void FillAllocPages(void * address, uint pageCount);
+    void FillFreePages(void * address, uint pageCount);
 
     bool IsPageSegment(TSegment* segment)
     {
@@ -758,7 +758,7 @@ protected:
 
     // Zero Pages
 #if ENABLE_BACKGROUND_PAGE_ZEROING
-    void AddPageToZeroQueue(__in void * address, uint pageCount, __in TPageSegment * pageSegment);
+    void AddPageToZeroQueue(void * address, uint pageCount, TPageSegment * pageSegment);
     bool HasZeroPageQueue() const;
 #endif
 
@@ -856,8 +856,8 @@ protected:
         return true;
     }
 
-    bool IsAddressInSegment(__in void* address, const TPageSegment& segment);
-    bool IsAddressInSegment(__in void* address, const TSegment& segment);
+    bool IsAddressInSegment(void* address, const TPageSegment& segment);
+    bool IsAddressInSegment(void* address, const TSegment& segment);
 
     HANDLE processHandle;
 private:
@@ -995,20 +995,20 @@ class HeapPageAllocator : public PageAllocatorBase<TVirtualAlloc>
 public:
     HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, TVirtualAlloc * virtualAllocator, HANDLE processHandle = nullptr);
 
-    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag);
+    BOOL ProtectPages(char* address, size_t pageCount, void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag);
     bool AllocSecondary(void* segment, size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
     bool ReleaseSecondary(const SecondaryAllocation& allocation, void* segment);
-    void TrackDecommittedPages(void * address, uint pageCount, __in void* segment);
-    void DecommitPages(__in char* address, size_t pageCount = 1);
+    void TrackDecommittedPages(void * address, uint pageCount, void* segment);
+    void DecommitPages(char* address, size_t pageCount = 1);
 
     // Release pages that has already been decommitted
-    void    ReleaseDecommitted(void * address, size_t pageCount, __in void * segment);
-    bool IsAddressFromAllocator(__in void* address);
+    void    ReleaseDecommitted(void * address, size_t pageCount, void * segment);
+    bool IsAddressFromAllocator(void* address);
     bool    AllocXdata() { return allocXdata; }
 
 private:
     bool         allocXdata;
-    void         ReleaseDecommittedSegment(__in SegmentBase<TVirtualAlloc>* segment);
+    void         ReleaseDecommittedSegment(SegmentBase<TVirtualAlloc>* segment);
 #if PDATA_ENABLED
     virtual bool CreateSecondaryAllocator(SegmentBase<TVirtualAlloc>* segment, bool committed, SecondaryAllocator** allocator) override;
 #endif

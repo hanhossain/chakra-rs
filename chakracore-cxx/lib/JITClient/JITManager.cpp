@@ -67,9 +67,9 @@ typedef struct _CHAKRA_RPC_SECURITY_QOS_V5 {
 // This routine creates a binding with the server.
 HRESULT
 JITManager::CreateBinding(
-    __in HANDLE serverProcessHandle,
+    HANDLE serverProcessHandle,
     __in_opt void * serverSecurityDescriptor,
-    __in UUID * connectionUuid,
+    UUID * connectionUuid,
     __out RPC_BINDING_HANDLE * bindingHandle)
 {
     Assert(IsOOPJITEnabled());
@@ -232,7 +232,7 @@ JITManager::IsOOPJITEnabled() const
 #pragma prefast(disable:__WARNING_RELEASING_UNHELD_LOCK_MEDIUM_CONFIDENCE, "Lock is correctly acquired and released by RAII class AutoCriticalSection")
 #pragma prefast(disable:__WARNING_CALLER_FAILING_TO_HOLD, "Lock is correctly acquired and released by RAII class AutoCriticalSection")
 HRESULT
-JITManager::ConnectRpcServer(__in HANDLE jitProcessHandle, __in_opt void* serverSecurityDescriptor, __in UUID connectionUuid)
+JITManager::ConnectRpcServer(HANDLE jitProcessHandle, __in_opt void* serverSecurityDescriptor, UUID connectionUuid)
 {
     // We might be trying to connect from multiple threads simultaneously
     AutoCriticalSection cs(&m_cs);
@@ -352,7 +352,7 @@ JITManager::ConnectProcess(RPC_BINDING_HANDLE rpcBindingHandle)
 
 HRESULT
 JITManager::InitializeThreadContext(
-    __in ThreadContextDataIDL * data,
+    ThreadContextDataIDL * data,
     __out PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
     __out intptr_t * prereservedRegionAddr,
     __out intptr_t * jitThunkAddr)
@@ -400,8 +400,8 @@ JITManager::CleanupThreadContext(
 
 HRESULT
 JITManager::SetIsPRNGSeeded(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __in boolean value)
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    boolean value)
 {
     HRESULT hr = E_FAIL;
     RpcTryExcept
@@ -420,8 +420,8 @@ JITManager::SetIsPRNGSeeded(
 
 HRESULT
 JITManager::DecommitInterpreterBufferManager(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __in boolean asmJsThunk)
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    boolean asmJsThunk)
 {
     Assert(IsOOPJITEnabled());
 
@@ -441,8 +441,8 @@ JITManager::DecommitInterpreterBufferManager(
 
 HRESULT
 JITManager::NewInterpreterThunkBlock(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __in InterpreterThunkInputIDL * thunkInput,
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    InterpreterThunkInputIDL * thunkInput,
     __out InterpreterThunkOutputIDL * thunkOutput)
 {
     Assert(IsOOPJITEnabled());
@@ -486,8 +486,8 @@ JITManager::AddModuleRecordInfo(
 
 HRESULT
 JITManager::SetWellKnownHostTypeId(
-    __in  PTHREADCONTEXT_HANDLE threadContextRoot,
-    __in  int typeId)
+    PTHREADCONTEXT_HANDLE threadContextRoot,
+    int typeId)
 {
 
     Assert(IsOOPJITEnabled());
@@ -509,7 +509,7 @@ JITManager::SetWellKnownHostTypeId(
 
 HRESULT
 JITManager::UpdatePropertyRecordMap(
-    __in PTHREADCONTEXT_HANDLE threadContextInfoAddress,
+    PTHREADCONTEXT_HANDLE threadContextInfoAddress,
     __in_opt BVSparseNodeIDL * updatedPropsBVHead)
 {
     Assert(IsOOPJITEnabled());
@@ -530,8 +530,8 @@ JITManager::UpdatePropertyRecordMap(
 
 HRESULT
 JITManager::InitializeScriptContext(
-    __in ScriptContextDataIDL * data,
-    __in PTHREADCONTEXT_HANDLE threadContextInfoAddress,
+    ScriptContextDataIDL * data,
+    PTHREADCONTEXT_HANDLE threadContextInfoAddress,
     __out PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
 {
     Assert(IsOOPJITEnabled());
@@ -572,7 +572,7 @@ JITManager::CleanupScriptContext(
 
 HRESULT
 JITManager::CloseScriptContext(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
 {
     Assert(IsOOPJITEnabled());
 
@@ -592,8 +592,8 @@ JITManager::CloseScriptContext(
 
 HRESULT
 JITManager::FreeAllocation(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __in intptr_t codeAddress)
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    intptr_t codeAddress)
 {
     Assert(IsOOPJITEnabled());
 
@@ -613,8 +613,8 @@ JITManager::FreeAllocation(
 
 HRESULT
 JITManager::IsNativeAddr(
-    __in PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-    __in intptr_t address,
+    PTHREADCONTEXT_HANDLE threadContextInfoAddress,
+    intptr_t address,
     __out boolean * result)
 {
     Assert(IsOOPJITEnabled());
@@ -635,8 +635,8 @@ JITManager::IsNativeAddr(
 
 HRESULT
 JITManager::RemoteCodeGenCall(
-    __in CodeGenWorkItemIDL *workItemData,
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    CodeGenWorkItemIDL *workItemData,
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
     __out JITOutputIDL *jitData)
 {
     Assert(IsOOPJITEnabled());
@@ -658,9 +658,9 @@ JITManager::RemoteCodeGenCall(
 #if DBG
 HRESULT
 JITManager::IsInterpreterThunkAddr(
-    __in PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __in intptr_t address,
-    __in boolean asmjsThunk,
+    PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
+    intptr_t address,
+    boolean asmjsThunk,
     __out boolean * result)
 {
     Assert(IsOOPJITEnabled());

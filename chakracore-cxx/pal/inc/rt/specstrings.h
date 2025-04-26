@@ -67,7 +67,7 @@ extern "C" {
 #define __failureDefault(x)
 
 #define __xcount(size)                                          __notnull __inexpressible_writableTo(size)
-#define __in_xcount(size)                                       __in _Pre_ __inexpressible_readableTo(size)
+#define __in_xcount(size)                                       _Pre_ __inexpressible_readableTo(size)
 #define __out_xcount(size)                                      __xcount(size) _Post_ __valid __refparam
 #define __out_xcount_part(size,length)                          __out_xcount(size) _Post_ __inexpressible_readableTo(length)
 #define __out_xcount_full(size)                                 __out_xcount_part(size,size)
@@ -83,7 +83,7 @@ extern "C" {
 #define __inout_xcount_part_opt(size,length)                    __inout_xcount_part(size,length)            __exceptthat __maybenull
 #define __inout_xcount_full_opt(size)                           __inout_xcount_full(size)                   __exceptthat __maybenull
 #define __deref_xcount(size)                                    __ecount(1) _Post_ __elem_readableTo(1) _Post_ __deref __notnull _Post_ __deref __inexpressible_writableTo(size)
-#define __deref_in                                              __in _Pre_ __deref __deref __readonly
+#define __deref_in                                              _Pre_ __deref __deref __readonly
 #define __deref_in_ecount(size)                                 __deref_in _Pre_ __deref __elem_readableTo(size)
 #define __deref_in_bcount(size)                                 __deref_in _Pre_ __deref __byte_readableTo(size)
 #define __deref_in_xcount(size)                                 __deref_in _Pre_ __deref __inexpressible_readableTo(size)
@@ -95,7 +95,7 @@ extern "C" {
 #define __inout_xcount_part_opt(size,length)                    __inout_xcount_part(size,length)            __exceptthat __maybenull
 #define __inout_xcount_full_opt(size)                           __inout_xcount_full(size)                   __exceptthat __maybenull
 #define __deref_xcount(size)                                    __ecount(1) _Post_ __elem_readableTo(1) _Post_ __deref __notnull _Post_ __deref __inexpressible_writableTo(size)
-#define __deref_in                                              __in _Pre_ __deref __deref __readonly
+#define __deref_in                                              _Pre_ __deref __deref __readonly
 #define __deref_in_ecount(size)                                 __deref_in _Pre_ __deref __elem_readableTo(size)
 #define __deref_in_bcount(size)                                 __deref_in _Pre_ __deref __byte_readableTo(size)
 #define __deref_in_xcount(size)                                 __deref_in _Pre_ __deref __inexpressible_readableTo(size)

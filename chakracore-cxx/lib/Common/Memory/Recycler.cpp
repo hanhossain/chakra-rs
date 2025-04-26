@@ -8218,7 +8218,7 @@ Recycler::SetTrackerData(void * address, TrackerData * data)
 }
 
 void
-Recycler::TrackUnallocated(__in char* address, __in  char *endAddress, size_t sizeCat)
+Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
 {
     if (!CONFIG_FLAG(KeepRecyclerTrackData))
     {
@@ -8801,7 +8801,7 @@ void Recycler::FlushFreeRecord()
     bulkFreeMemoryWrittenCount = 0;
 }
 
-void Recycler::AppendFreeMemoryETWRecord(__in char *address, size_t size)
+void Recycler::AppendFreeMemoryETWRecord(char *address, size_t size)
 {
     Assert(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     __analysis_assume(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
@@ -8998,7 +8998,7 @@ void Recycler::SetCheckFn(BOOL(*checkFn)(char* addr, size_t size))
 #endif
 
 void
-Recycler::NotifyFree(__in char *address, size_t size)
+Recycler::NotifyFree(char *address, size_t size)
 {
     RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Sweeping object %p\n"), address);
 

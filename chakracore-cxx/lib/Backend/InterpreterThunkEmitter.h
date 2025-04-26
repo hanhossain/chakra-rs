@@ -92,10 +92,10 @@ private:
 
     static void EncodeInterpreterThunk(
         __in_bcount(InterpreterThunkSize) uint8_t* thunkBuffer,
-        __in const intptr_t thunkBufferStartAddress,
-        __in const intptr_t epilogStart,
-        __in const uint32_t epilogSize,
-        __in const intptr_t interpreterThunk);
+        const intptr_t thunkBufferStartAddress,
+        const intptr_t epilogStart,
+        const uint32_t epilogSize,
+        const intptr_t interpreterThunk);
 #if defined(_M_ARM32_OR_ARM64)
     static uint32_t EncodeMove(uint32_t opCode, int reg, uint32_t imm16);
     static void GeneratePdata(_In_ const uint8_t* entryPoint, _In_ const uint32_t functionSize, _Out_ RUNTIME_FUNCTION* function);
@@ -105,7 +105,7 @@ private:
     inline static uint32_t FillDebugBreak(_Out_writes_bytes_all_(count) uint8_t* dest, _In_ uint32_t count);
     inline static uint32_t CopyWithAlignment(_Out_writes_bytes_all_(sizeInBytes) uint8_t* dest, _In_ const uint32_t sizeInBytes, _In_reads_bytes_(srcSize) const uint8_t* src, _In_ const uint32_t srcSize, _In_ const uint32_t alignment);
     template<class T>
-    inline static void Emit(__in_bcount(sizeof(T) + offset) uint8_t* dest, __in const uint32_t offset, __in const T value)
+    inline static void Emit(__in_bcount(sizeof(T) + offset) uint8_t* dest, const uint32_t offset, const T value)
     {
         AssertMsg(*(T*) (dest + offset) == 0, "Overwriting an already existing opcode?");
         *(T*)(dest + offset) = value;

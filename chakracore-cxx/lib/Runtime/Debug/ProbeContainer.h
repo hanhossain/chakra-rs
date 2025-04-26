@@ -163,7 +163,7 @@ namespace Js
 
         Var GetExceptionObject() { return jsExceptionObject; }
 
-        bool HasAllowedForException(__in JavascriptExceptionObject* exceptionObject);
+        bool HasAllowedForException(JavascriptExceptionObject* exceptionObject);
 
         void SetThrowIsInternal(bool set) { isThrowInternal = set; }
 
