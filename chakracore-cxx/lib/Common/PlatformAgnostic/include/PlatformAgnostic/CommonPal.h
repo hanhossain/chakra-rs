@@ -6,7 +6,6 @@
 #pragma once
 
 #define USING_PAL_STDLIB 1
-#define STRSAFE_INLINE   1
 
 #ifdef PAL_STDCPP_COMPAT
 #include <wchar.h>
@@ -435,7 +434,6 @@ extern "C" void * _AddressOfReturnAddress(void);
 #define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
 #define STRSAFEAPI  inline HRESULT
-#define STRSAFE_INLINE
 #endif
 
 STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, ...);
