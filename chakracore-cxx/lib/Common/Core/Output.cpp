@@ -31,16 +31,16 @@ Js::IStackTraceHelper* Output::s_stackTraceHelper = nullptr;
 unsigned int Output::s_traceEntryId = 0;
 #endif
 
-THREAD_ST FILE*    Output::s_file = nullptr;
-THREAD_ST size_t   Output::s_Column  = 0;
-THREAD_ST uint16_t     Output::s_color = 0;
-THREAD_ST bool     Output::s_hasColor = false;
-THREAD_ST bool     Output::s_capture = false;
+thread_local FILE*    Output::s_file = nullptr;
+thread_local size_t   Output::s_Column  = 0;
+thread_local uint16_t     Output::s_color = 0;
+thread_local bool     Output::s_hasColor = false;
+thread_local bool     Output::s_capture = false;
 
-THREAD_ST bool     Output::hasDoneAlignPrefixForThisLine = false;
-THREAD_ST bool     Output::usingCustomAlignAndPrefix = false;
-THREAD_ST size_t   Output::align = 0;
-THREAD_ST const char16* Output::prefix = nullptr;
+thread_local bool     Output::hasDoneAlignPrefixForThisLine = false;
+thread_local bool     Output::usingCustomAlignAndPrefix = false;
+thread_local size_t   Output::align = 0;
+thread_local const char16* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
 

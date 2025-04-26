@@ -136,16 +136,14 @@ private:
     static size_t VTrace(const char16* shortPrefixFormat, const char16* prefix, const char16 *form, va_list argptr);
 #endif // ENABLE_TRACE
 
-#define THREAD_ST thread_local
+    thread_local static bool hasDoneAlignPrefixForThisLine;
+    thread_local static bool usingCustomAlignAndPrefix;
+    thread_local static const char16* prefix;
+    thread_local static size_t align;
 
-    THREAD_ST static bool hasDoneAlignPrefixForThisLine;
-    THREAD_ST static bool usingCustomAlignAndPrefix;
-    THREAD_ST static const char16* prefix;
-    THREAD_ST static size_t align;
-
-    THREAD_ST static bool s_capture;
-    THREAD_ST static FILE * s_file;
-    THREAD_ST static size_t s_Column;
-    THREAD_ST static uint16_t s_color;
-    THREAD_ST static bool s_hasColor;
+    thread_local static bool s_capture;
+    thread_local static FILE * s_file;
+    thread_local static size_t s_Column;
+    thread_local static uint16_t s_color;
+    thread_local static bool s_hasColor;
 };
