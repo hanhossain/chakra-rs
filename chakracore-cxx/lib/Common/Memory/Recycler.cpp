@@ -6566,7 +6566,7 @@ Recycler::SetCollectionWrapper(RecyclerCollectionWrapper * wrapper)
 
 // TODO: (leish) remove following function? seems not make sense to re-allocate in recycler
 char *
-Recycler::Realloc(void* buffer, DECLSPEC_GUARD_OVERFLOW size_t existingBytes, DECLSPEC_GUARD_OVERFLOW size_t requestedBytes, bool truncate)
+Recycler::Realloc(void* buffer, size_t existingBytes, size_t requestedBytes, bool truncate)
 {
     Assert(requestedBytes > 0);
 

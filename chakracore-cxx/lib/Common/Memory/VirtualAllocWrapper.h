@@ -24,9 +24,9 @@ class PreReservedSectionAllocWrapper;
 class VirtualAllocWrapper
 {
 public:
-    void *  AllocPages(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
+    void *  AllocPages(void * lpAddress, size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
     BOOL    Free(void * lpAddress, size_t dwSize, uint32_t dwFreeType);
-    void *  AllocLocal(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
+    void *  AllocLocal(void * lpAddress, size_t dwSize) { return lpAddress; }
     BOOL    FreeLocal(void * lpAddress) { return true; }
     bool    GetFileInfo(void * address, HANDLE* fileHandle, void ** baseAddress) { return true; }
 
@@ -55,9 +55,9 @@ public:
 public:
     PreReservedVirtualAllocWrapper();
     ~PreReservedVirtualAllocWrapper();
-    void *      AllocPages(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
+    void *      AllocPages(void * lpAddress, size_t pageCount, uint32_t allocationType, uint32_t protectFlags, bool isCustomHeapAllocation);
     BOOL        Free(void * lpAddress,  size_t dwSize, uint32_t dwFreeType);
-    void *  AllocLocal(void * lpAddress, DECLSPEC_GUARD_OVERFLOW size_t dwSize) { return lpAddress; }
+    void *  AllocLocal(void * lpAddress, size_t dwSize) { return lpAddress; }
     BOOL    FreeLocal(void * lpAddress) { return true; }
     bool    GetFileInfo(void * address, HANDLE* fileHandle, void ** baseAddress) { return true; }
 

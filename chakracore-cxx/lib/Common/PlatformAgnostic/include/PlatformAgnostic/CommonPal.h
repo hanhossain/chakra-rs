@@ -5,13 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-// Only VC compiler support overflow guard
-#if defined(__GNUC__) || defined(__clang__)
-#define DECLSPEC_GUARD_OVERFLOW
-#else // Windows
-#define DECLSPEC_GUARD_OVERFLOW __declspec(guard(overflow))
-#endif
-
 #define OPT_CONSTEXPR constexpr
 
 #ifdef __clang__

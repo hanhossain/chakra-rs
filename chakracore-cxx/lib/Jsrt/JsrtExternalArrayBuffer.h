@@ -14,7 +14,7 @@ namespace Js {
 
         JsrtExternalArrayBuffer(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
         JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength) override;
 
     public:
         static JsrtExternalArrayBuffer* New(byte *buffer, uint32 length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);

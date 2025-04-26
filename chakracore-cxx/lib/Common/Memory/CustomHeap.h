@@ -35,7 +35,7 @@ enum BucketId
     NumBuckets
 };
 
-BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
+BucketId GetBucketForSize(size_t bytes);
 
 struct Page
 {
@@ -184,7 +184,7 @@ public:
     char * AllocLocal(char * remoteAddr, size_t size, void * segment);
     void FreeLocal(char * addr, void * segment);
 
-    char * AllocPages(DECLSPEC_GUARD_OVERFLOW uint pages, void ** pageSegment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
+    char * AllocPages(uint pages, void ** pageSegment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
     {
         Assert(this->cs.IsLocked());
         char * address = nullptr;
@@ -393,7 +393,7 @@ class Heap
 public:
     Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc>  * codePageAllocators, HANDLE processHandle);
 
-    Allocation* Alloc(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
+    Allocation* Alloc(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
     void Free(__in Allocation* allocation);
     void DecommitAll();
     void FreeAll();
@@ -425,12 +425,12 @@ private:
     /**
      * Inline methods
      */
-    inline unsigned int GetChunkSizeForBytes(DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline unsigned int GetChunkSizeForBytes(size_t bytes)
     {
         return (bytes > Page::Alignment ? static_cast<unsigned int>(bytes) / Page::Alignment : 1);
     }
 
-    inline size_t GetNumPagesForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline size_t GetNumPagesForSize(size_t bytes)
     {
         size_t allocSize = AllocSizeMath::Add(bytes, AutoSystemInfo::PageSize);
 
@@ -442,7 +442,7 @@ private:
         return ((allocSize - 1)/ AutoSystemInfo::PageSize);
     }
 
-    inline BVIndex GetFreeIndexForPage(Page* page, DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline BVIndex GetFreeIndexForPage(Page* page, size_t bytes)
     {
         unsigned int length = GetChunkSizeForBytes(bytes);
         BVIndex index = page->freeBitVector.FirstStringOfOnes(length);
@@ -453,7 +453,7 @@ private:
     /**
      * Large object methods
      */
-    Allocation* AllocLargeObject(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
+    Allocation* AllocLargeObject(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
 
     void FreeLargeObject(Allocation* header);
 
@@ -511,7 +511,7 @@ private:
      * Page methods
      */
     Page*       AddPageToBucket(Page* page, BucketId bucket, bool wasFull = false);
-    bool        AllocInPage(Page* page, DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, Allocation ** allocation);
+    bool        AllocInPage(Page* page, size_t bytes, ushort pdataCount, ushort xdataSize, Allocation ** allocation);
     Page*       AllocNewPage(BucketId bucket, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
     Page*       FindPageToSplit(BucketId targetBucket, bool findPreReservedHeapPages = false);
 
@@ -559,7 +559,7 @@ private:
 typedef Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcHeap;
 // Helpers
 unsigned int log2(size_t number);
-BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
+BucketId GetBucketForSize(size_t bytes);
 void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount);
 } // namespace CustomHeap
 } // namespace Memory

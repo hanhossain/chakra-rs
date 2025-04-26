@@ -711,7 +711,7 @@ namespace JsUtil
             return index;
         }
 
-        __ecount(bucketCount) int *AllocateBuckets(DECLSPEC_GUARD_OVERFLOW const uint bucketCount)
+        __ecount(bucketCount) int *AllocateBuckets(const uint bucketCount)
         {
             return
                 AllocateArray<AllocType, int, false>(
@@ -720,7 +720,7 @@ namespace JsUtil
                     bucketCount);
         }
 
-        __ecount(size) EntryType * AllocateEntries(DECLSPEC_GUARD_OVERFLOW int size, const bool zeroAllocate = true)
+        __ecount(size) EntryType * AllocateEntries(int size, const bool zeroAllocate = true)
         {
             // Note that the choice of leaf/non-leaf node is decided for the EntryType on the basis of TValue. By default, if
             // TValue is a pointer, a non-leaf allocation is done. This behavior can be overridden by specializing
@@ -732,13 +732,13 @@ namespace JsUtil
                     size);
         }
 
-        __ecount(size) WeakType * AllocateWeakRefs(DECLSPEC_GUARD_OVERFLOW int size)
+        __ecount(size) WeakType * AllocateWeakRefs(int size)
         {
             return alloc->CreateWeakReferenceRegion<TWeak>(size);
         }
 
 
-        void Allocate(__deref_out_ecount(bucketCount) int** ppBuckets, __deref_out_ecount(size) EntryType** ppEntries, __deref_out_ecount(size) WeakType** ppWeakRefs, DECLSPEC_GUARD_OVERFLOW uint bucketCount, DECLSPEC_GUARD_OVERFLOW int size)
+        void Allocate(__deref_out_ecount(bucketCount) int** ppBuckets, __deref_out_ecount(size) EntryType** ppEntries, __deref_out_ecount(size) WeakType** ppWeakRefs, uint bucketCount, int size)
         {
             int *const newBuckets = AllocateBuckets(bucketCount);
             Assert(newBuckets); // no-throw allocators are currently not supported

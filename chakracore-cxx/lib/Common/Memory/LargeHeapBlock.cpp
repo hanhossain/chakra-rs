@@ -145,7 +145,7 @@ LargeObjectHeader::GetAttributes(uint cookie)
 }
 
 size_t
-LargeHeapBlock::GetAllocPlusSize(DECLSPEC_GUARD_OVERFLOW uint objectCount)
+LargeHeapBlock::GetAllocPlusSize(uint objectCount)
 {
     // Large Heap Block Layout:
     //      LargeHeapBlock
@@ -162,7 +162,7 @@ LargeHeapBlock::GetAllocPlusSize(DECLSPEC_GUARD_OVERFLOW uint objectCount)
 }
 
 LargeHeapBlock *
-LargeHeapBlock::New(__in char * address, DECLSPEC_GUARD_OVERFLOW size_t pageCount, Segment * segment, DECLSPEC_GUARD_OVERFLOW uint objectCount, LargeHeapBucket* bucket)
+LargeHeapBlock::New(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
 {
     return NoMemProtectHeapNewNoThrowPlusZ(GetAllocPlusSize(objectCount), LargeHeapBlock, address, pageCount, segment, objectCount, bucket);
 }
@@ -454,7 +454,7 @@ LargeHeapBlock::TryGetAttributes(LargeObjectHeader * header, unsigned char * pAt
 }
 
 size_t
-LargeHeapBlock::GetPagesNeeded(DECLSPEC_GUARD_OVERFLOW size_t size, bool multiplyRequest)
+LargeHeapBlock::GetPagesNeeded(size_t size, bool multiplyRequest)
 {
     if (multiplyRequest)
     {
@@ -472,7 +472,7 @@ LargeHeapBlock::GetPagesNeeded(DECLSPEC_GUARD_OVERFLOW size_t size, bool multipl
 }
 
 char*
-LargeHeapBlock::TryAllocFromFreeList(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes)
+LargeHeapBlock::TryAllocFromFreeList(size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
@@ -511,7 +511,7 @@ LargeHeapBlock::TryAllocFromFreeList(DECLSPEC_GUARD_OVERFLOW size_t size, Object
 }
 
 char*
-LargeHeapBlock::AllocFreeListEntry(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry)
+LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
     Assert(HeapInfo::IsAlignedSize(size));
@@ -596,7 +596,7 @@ LargeHeapBlock::AllocFreeListEntry(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectIn
 }
 
 char*
-LargeHeapBlock::Alloc(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes)
+LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 {
     Assert(HeapInfo::IsAlignedSize(size) || InPageHeapMode());
     Assert((attributes & InternalObjectInfoBitMask) == attributes);

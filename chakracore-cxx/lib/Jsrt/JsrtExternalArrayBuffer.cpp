@@ -39,7 +39,7 @@ namespace Js
         }
     }
 
-    ArrayBufferDetachedStateBase* JsrtExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength)
+    ArrayBufferDetachedStateBase* JsrtExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
     {
         return HeapNew(JsrtExternalArrayBufferDetachedState, buffer, bufferLength, finalizeCallback, callbackState);
     };

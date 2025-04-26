@@ -226,7 +226,7 @@ NativeCodeData::Allocator::~Allocator()
 }
 
 char *
-NativeCodeData::Allocator::Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestSize)
+NativeCodeData::Allocator::Alloc(size_t requestSize)
 {
     Assert(!finalized);
     char * data = nullptr;
@@ -292,13 +292,13 @@ NativeCodeData::Allocator::Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestSize)
 }
 
 char *
-NativeCodeData::Allocator::AllocLeaf(DECLSPEC_GUARD_OVERFLOW size_t requestSize)
+NativeCodeData::Allocator::AllocLeaf(size_t requestSize)
 {
     return Alloc(requestSize);
 }
 
 char *
-NativeCodeData::Allocator::AllocZero(DECLSPEC_GUARD_OVERFLOW size_t requestSize)
+NativeCodeData::Allocator::AllocZero(size_t requestSize)
 {
     char * data = Alloc(requestSize);
 #if !DBG

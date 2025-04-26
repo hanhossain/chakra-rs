@@ -148,7 +148,7 @@ public:
     LargeHeapBlock * GetNextBlock() { return next; }
     void SetNextBlock(LargeHeapBlock * next) { this->next = next; }
     size_t GetFreeSize() const { return addressEnd - allocAddressEnd; }
-    static LargeHeapBlock * New(__in char * address, DECLSPEC_GUARD_OVERFLOW size_t pageCount, Segment * segment, DECLSPEC_GUARD_OVERFLOW uint objectCount, LargeHeapBucket* bucket);
+    static LargeHeapBlock * New(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket);
     static void Delete(LargeHeapBlock * heapBlock);
     bool IsInPendingDisposeList() { return isInPendingDisposeList; }
     void SetIsInPendingDisposeList(bool isInPendingDisposeList) { this->isInPendingDisposeList = isInPendingDisposeList; }
@@ -186,10 +186,10 @@ public:
     bool TryGetAttributes(void* objectAddress, unsigned char * pAttr);
     bool TryGetAttributes(LargeObjectHeader *objectHeader, unsigned char * pAttr);
 
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes);
-    char * TryAllocFromFreeList(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes);
+    char * Alloc(size_t size, ObjectInfoBits attributes);
+    char * TryAllocFromFreeList(size_t size, ObjectInfoBits attributes);
 
-    static size_t GetPagesNeeded(DECLSPEC_GUARD_OVERFLOW size_t size, bool multiplyRequest);
+    static size_t GetPagesNeeded(size_t size, bool multiplyRequest);
     static uint GetMaxLargeObjectCount(size_t pageCount, size_t firstAllocationSize);
 
     void EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(void * address, size_t size));
@@ -221,7 +221,7 @@ private:
     friend class Recycler;
 #endif
 
-    LargeHeapBlock(__in char * address, DECLSPEC_GUARD_OVERFLOW size_t pageCount, Segment * segment, DECLSPEC_GUARD_OVERFLOW uint objectCount, LargeHeapBucket* bucket);
+    LargeHeapBlock(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket);
     static LargeObjectHeader * GetHeaderFromAddress(void * address);
     LargeObjectHeader * GetHeader(void * address) const;
     LargeObjectHeader ** HeaderList() const;
@@ -241,8 +241,8 @@ private:
     uint GetMarkCount();
     bool GetObjectHeader(void* objectAddress, LargeObjectHeader** ppHeader);
     BOOL IsNewHeapBlock() const { return lastCollectAllocCount == 0; }
-    static size_t GetAllocPlusSize(DECLSPEC_GUARD_OVERFLOW uint objectCount);
-    char * AllocFreeListEntry(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry);
+    static size_t GetAllocPlusSize(uint objectCount);
+    char * AllocFreeListEntry(size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry);
 
 #if ENABLE_CONCURRENT_GC
     bool IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier);

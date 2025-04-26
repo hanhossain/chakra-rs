@@ -42,7 +42,7 @@ public:
     void Decommit();
     void Clear();
 
-    TEmitBufferAllocation* AllocateBuffer(DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount = 0, ushort xdataSize = 0, bool canAllocInPreReservedHeapPageSegment = false, bool isAnyJittedCode = false);
+    TEmitBufferAllocation* AllocateBuffer(__in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount = 0, ushort xdataSize = 0, bool canAllocInPreReservedHeapPageSegment = false, bool isAnyJittedCode = false);
     bool CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in uint32_t alignPad = 0);
     bool ProtectBufferWithExecuteReadWriteForInterpreter(TEmitBufferAllocation* allocation);
     bool CommitBufferForInterpreter(TEmitBufferAllocation* allocation, _In_reads_bytes_(bufferSize) uint8_t* pBuffer, _In_ size_t bufferSize);
@@ -79,8 +79,8 @@ private:
     Js::ScriptContext * scriptContext;
     ThreadContextInfo * threadContext;
 
-    TEmitBufferAllocation * NewAllocation(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode);
-    TEmitBufferAllocation* GetBuffer(TEmitBufferAllocation *allocation, DECLSPEC_GUARD_OVERFLOW __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer);
+    TEmitBufferAllocation * NewAllocation(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode);
+    TEmitBufferAllocation* GetBuffer(TEmitBufferAllocation *allocation, __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer);
 
     bool FinalizeAllocation(TEmitBufferAllocation *allocation, uint8_t* dstBuffer);
     CustomHeap::Heap<TAlloc, TPreReservedAlloc> allocationHeap;

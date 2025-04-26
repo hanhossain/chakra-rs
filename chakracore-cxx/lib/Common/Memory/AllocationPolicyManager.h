@@ -70,7 +70,7 @@ public:
         memoryLimit = newLimit;
     }
 
-    bool RequestAlloc(DECLSPEC_GUARD_OVERFLOW size_t byteCount, bool externalAlloc = false)
+    bool RequestAlloc(size_t byteCount, bool externalAlloc = false)
     {
         if (supportConcurrency)
         {
