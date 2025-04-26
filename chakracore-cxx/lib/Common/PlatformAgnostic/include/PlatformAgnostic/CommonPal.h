@@ -10,11 +10,9 @@
 #if defined(__GNUC__) || defined(__clang__)
     #if __has_attribute(always_inline)
         #define _ALWAYSINLINE __attribute__((always_inline))
-        #define __forceinline inline _ALWAYSINLINE
     #else // No always_inline support
         #pragma message __MAKE_WARNING__("always_inline")
         #define _ALWAYSINLINE inline
-        #define __forceinline _ALWAYSINLINE
     #endif
     #if __has_attribute(noinline)
         #ifdef CLANG_HAS_DISABLE_TAIL_CALLS
