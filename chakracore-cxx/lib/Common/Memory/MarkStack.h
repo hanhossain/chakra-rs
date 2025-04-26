@@ -56,7 +56,7 @@ namespace MarkStack
     class MarkStack
     {
     public:
-        __forceinline MarkCandidate* Push(void** obj, size_t byteCount) throw()
+        MarkCandidate* Push(void** obj, size_t byteCount) throw()
         {
             // We first cache the current stack locally
             // We then increment the stack pointer- at this point it could be pointing to an address that is past the guard page
@@ -97,7 +97,7 @@ namespace MarkStack
             return (stack == start && chunkTail == preAllocatedChunk);
         }
 
-        __forceinline MarkCandidate* Pop() throw()
+        MarkCandidate* Pop() throw()
         {
             // TODO: Can we make this faster?
             // One option (at the expense of wasting another 4K/Chunk) is to use a guard page at the start of the chunk too
@@ -149,13 +149,13 @@ namespace MarkStack
         void FreeNonPreAllocatedChunks() throw();
         void CreatePreallocatedChunk() throw();
         void ResetPreAllocatedChunk() throw();
-        __forceinline MarkCandidate* SlowPop() throw();
+        MarkCandidate* SlowPop() throw();
 
         // Chunk manipulation
         Chunk* ReserveMemoryForNewChunk() throw();
         void FreeChunk(Chunk* chunk) throw();
         char* CommitAndPushChunk(Chunk* chunk) throw();
-        __forceinline Chunk* PopChunk() throw();
+        Chunk* PopChunk() throw();
         char* CommitNextPage() throw();
 
         // Memory wrappers

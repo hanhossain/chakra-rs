@@ -1301,7 +1301,7 @@ public:
     { \
         return AllocWithAttributesFunc<attributes, /* nothrow = */ false>(size); \
     } \
-    __forceinline char * AllocFunc##Inlined(DECLSPEC_GUARD_OVERFLOW size_t size) \
+    inline char * AllocFunc##Inlined(DECLSPEC_GUARD_OVERFLOW size_t size) \
     { \
         return AllocWithAttributesFunc##Inlined<attributes, /* nothrow = */ false>(size);  \
     } \

@@ -585,7 +585,7 @@ SmallHeapBlockT<TBlockAttributes>::GetObjectBitDelta()
 // Map any object address to it's bit index in the heap block bit vectors.
 // static
 template <class TBlockAttributes>
-__forceinline ushort
+ushort
 SmallHeapBlockT<TBlockAttributes>::GetAddressBitIndex(void * objectAddress)
 {
     Assert(HeapInfo::IsAlignedAddress(objectAddress));
@@ -601,7 +601,7 @@ SmallHeapBlockT<TBlockAttributes>::GetAddressBitIndex(void * objectAddress)
 }
 
 template <class TBlockAttributes>
-__forceinline ushort
+ushort
 SmallHeapBlockT<TBlockAttributes>::GetObjectIndexFromBitIndex(ushort bitIndex)
 {
     Assert(bitIndex <= TBlockAttributes::MaxAddressBit);
@@ -613,7 +613,7 @@ SmallHeapBlockT<TBlockAttributes>::GetObjectIndexFromBitIndex(ushort bitIndex)
 }
 
 template <class TBlockAttributes>
-__forceinline void *
+void *
 SmallHeapBlockT<TBlockAttributes>::GetRealAddressFromInterior(void * interiorAddress, uint objectSize, byte bucketIndex)
 {
     const ValidPointers<TBlockAttributes> validPointers = HeapInfo::GetValidPointersMapForBucket<TBlockAttributes>(bucketIndex);

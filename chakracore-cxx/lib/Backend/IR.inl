@@ -102,7 +102,7 @@ Instr::AsBranchInstr()
 ///
 ///----------------------------------------------------------------------------
 
-__forceinline bool
+inline bool
 Instr::IsLabelInstr() const
 {
     return this->GetKind() == InstrKindLabel || this->IsProfiledLabelInstr();
@@ -130,7 +130,7 @@ Instr::AsLabelInstr()
 ///
 ///----------------------------------------------------------------------------
 
-__forceinline bool
+inline bool
 Instr::IsGeneratorBailInInstr() const
 {
     return this->m_opcode == Js::OpCode::GeneratorBailInLabel;

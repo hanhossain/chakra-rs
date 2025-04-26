@@ -349,7 +349,7 @@ struct DefaultComparer<ValueType> : public ValueTypeComparer
 {
 };
 
-__forceinline ValueType ValueType::Merge(const ValueType other) const
+inline ValueType ValueType::Merge(const ValueType other) const
 {
     Verify(*this);
     Verify(other);

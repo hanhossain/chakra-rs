@@ -117,7 +117,6 @@ public:
         }
 
         // forceinline only needed for SListBase<FlowEdge *, RealCount>::Iterator::Next()
-        __forceinline
         bool Next()
         {
             Assert(current != nullptr);
@@ -290,7 +289,6 @@ public:
         this->SetCount(0);
     }
 
-    __forceinline
     void Clear(TAllocator * allocator)
     {
         NodeBase * current = this->Next();

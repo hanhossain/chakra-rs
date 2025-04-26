@@ -263,7 +263,7 @@ public:
 
 protected:
     char * RealAlloc(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
-    __forceinline char * RealAllocInlined(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
+    char * RealAllocInlined(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
 private:
 #ifdef PROFILE_MEM
     void LogBegin();
@@ -409,7 +409,6 @@ public:
     {
     }
 
-    __forceinline
     char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
     {
         return AllocInternal(requestedBytes);
@@ -513,7 +512,7 @@ public:
         return FreeInline(buffer, byteSize);
     }
 
-    __forceinline void FreeInline(void * buffer, size_t byteSize)
+    void FreeInline(void * buffer, size_t byteSize)
     {
         if (sizeof(BVSparseNode) == byteSize)
         {

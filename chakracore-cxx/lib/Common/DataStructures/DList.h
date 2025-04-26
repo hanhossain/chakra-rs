@@ -96,7 +96,6 @@ public:
         }
 
         // TODO: only need inline for DListBase<Segment, FakeCount>::Iterator::Next
-        __forceinline
         bool Next()
         {
             Assert(current != nullptr);

@@ -249,12 +249,12 @@ namespace Js
         static TypeId GetTypeId(_In_ RecyclableObject* instance);
         static TypeId GetTypeIdNoCheck(Var instance);
         template <typename T, typename U>
-        __forceinline static T* TryFromVar(_In_ U* value)
+        inline static T* TryFromVar(_In_ U* value)
         {
             return VarIs<T>(value) ? UnsafeVarTo<T>(value) : nullptr;
         }
         template <typename T, typename U>
-        __forceinline static T* TryFromVar(WriteBarrierPtr<U> value)
+        inline static T* TryFromVar(WriteBarrierPtr<U> value)
         {
             return VarIs<T>(value) ? UnsafeVarTo<T>(value) : nullptr;
         }

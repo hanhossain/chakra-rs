@@ -664,7 +664,7 @@ HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat, size_t size)
 
 #else
 template <ObjectInfoBits attributes, bool nothrow>
-__forceinline char *
+char *
 HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat)
 {
     Assert(HeapInfo::IsAlignedMediumObjectSize(sizeCat));
@@ -674,7 +674,7 @@ HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat)
 #endif
 
 template <ObjectInfoBits attributes>
-inline void
+void
 HeapInfo::FreeSmallObject(void* object, size_t sizeCat)
 {
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
