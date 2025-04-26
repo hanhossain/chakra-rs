@@ -918,7 +918,7 @@ namespace Js
         ~InterpreterThunkStackCountTracker() { --s_count; }
         static int GetCount() { return s_count; }
     private:
-        THREAD_LOCAL static int s_count;
+        thread_local static int s_count;
     };
 #endif
 

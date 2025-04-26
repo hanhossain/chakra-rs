@@ -54,7 +54,7 @@ CriticalSection ThreadContext::s_csThreadContext;
 size_t ThreadContext::processNativeCodeSize = 0;
 ThreadContext * ThreadContext::globalListFirst = nullptr;
 ThreadContext * ThreadContext::globalListLast = nullptr;
-THREAD_LOCAL uint ThreadContext::activeScriptSiteCount = 0;
+thread_local uint ThreadContext::activeScriptSiteCount = 0;
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
 {

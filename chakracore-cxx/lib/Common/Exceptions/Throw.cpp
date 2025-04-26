@@ -58,7 +58,7 @@ extern "C"{
 
 namespace Js {
 #if defined(GENERATE_DUMP) && defined(STACK_BACK_TRACE)
-    THREAD_LOCAL StackBackTrace * Throw::stackBackTrace = nullptr;
+    thread_local StackBackTrace * Throw::stackBackTrace = nullptr;
 #endif
     void Throw::FatalInternalError(HRESULT hr)
     {

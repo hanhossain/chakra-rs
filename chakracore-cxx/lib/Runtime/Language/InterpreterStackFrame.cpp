@@ -1791,7 +1791,7 @@ skipThunk:
     }
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    THREAD_LOCAL int InterpreterThunkStackCountTracker::s_count = 0;
+    thread_local int InterpreterThunkStackCountTracker::s_count = 0;
 #endif
 
 #if DYNAMIC_INTERPRETER_THUNK

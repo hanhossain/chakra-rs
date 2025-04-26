@@ -439,7 +439,7 @@ public:
     }
 #if ENABLE_OOP_NATIVE_CODEGEN
 private:
-    THREAD_LOCAL static HRESULT MemOpLastError;
+    thread_local static HRESULT MemOpLastError;
 #endif
 };
 

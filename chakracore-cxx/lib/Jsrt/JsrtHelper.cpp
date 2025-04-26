@@ -89,7 +89,7 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
     }
 
     static pthread_key_t s_threadLocalDummy;
-    static THREAD_LOCAL bool s_threadWasEntered = false;
+    static thread_local bool s_threadWasEntered = false;
 
     void DISPOSE_CHAKRA_CORE_THREAD(void *_)
     {

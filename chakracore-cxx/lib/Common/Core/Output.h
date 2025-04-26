@@ -136,7 +136,7 @@ private:
     static size_t VTrace(const char16* shortPrefixFormat, const char16* prefix, const char16 *form, va_list argptr);
 #endif // ENABLE_TRACE
 
-#define THREAD_ST THREAD_LOCAL
+#define THREAD_ST thread_local
 
     THREAD_ST static bool hasDoneAlignPrefixForThisLine;
     THREAD_ST static bool usingCustomAlignAndPrefix;

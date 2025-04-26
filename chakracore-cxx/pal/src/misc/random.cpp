@@ -41,7 +41,7 @@ public:
 
 pthread_mutex_t Lock::random_generator_mutex;
 
-// not needed to be a THREAD_LOCAL. GetRandom acquires a mutex lock
+// not needed to be a thread_local. GetRandom acquires a mutex lock
 unsigned int WEAK_RANDOM_SEED = 12345;
 
 static void GetRandom(unsigned int *result) noexcept

@@ -217,7 +217,7 @@ public:
 
     static bool CheckLeaks();
 
-    THREAD_LOCAL static TrackAllocData nextAllocData;
+    thread_local static TrackAllocData nextAllocData;
     HeapAllocatorData data;
     static CriticalSection cs;
 #endif // HEAP_TRACK_ALLOC

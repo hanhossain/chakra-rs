@@ -789,7 +789,7 @@ private:
 
     Js::ImplicitCallFlags implicitCallFlags;
 
-    THREAD_LOCAL static uint activeScriptSiteCount;
+    thread_local static uint activeScriptSiteCount;
     bool isScriptActive;
 
     // When ETW rundown in background thread which needs to walk scriptContext/functionBody/entryPoint lists,

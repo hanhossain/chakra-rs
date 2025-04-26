@@ -6,7 +6,7 @@
 #include "JsrtRuntime.h"
 #include "Base/ThreadContextTlsEntry.h"
 
-static THREAD_LOCAL JsrtContext* s_tlvSlot = nullptr;
+static thread_local JsrtContext* s_tlvSlot = nullptr;
 
 JsrtContext::JsrtContext(JsrtRuntime * runtime) :
     runtime(runtime), javascriptLibrary(nullptr)

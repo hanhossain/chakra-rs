@@ -347,7 +347,7 @@ namespace Js
     const auto& globalFlags = Js::Configuration::Global.flags;
     void * FaultInjection::vectoredExceptionHandler = nullptr;
     uint32_t FaultInjection::exceptionFilterRemovalLastError = 0;
-    THREAD_LOCAL int(*Js::FaultInjection::pfnHandleAV)(int, PEXCEPTION_POINTERS) = nullptr;
+    thread_local int(*Js::FaultInjection::pfnHandleAV)(int, PEXCEPTION_POINTERS) = nullptr;
     static SymbolInfoPackage sip;
     static ModuleInfo mi;
 
@@ -1219,8 +1219,8 @@ namespace Js
         uintptr_t offset = 0;       
 
         // static to not use local stack space since stack space might be low at this point
-        THREAD_LOCAL static char16 modulePath[MAX_PATH + 1];
-        THREAD_LOCAL static WCHAR filename[MAX_PATH + 1];
+        thread_local static char16 modulePath[MAX_PATH + 1];
+        thread_local static WCHAR filename[MAX_PATH + 1];
 
         HMODULE mod = nullptr;
         GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, reinterpret_cast<LPCTSTR>(ip), &mod);
@@ -1304,7 +1304,7 @@ namespace Js
         // create dump for this crash
         if (needDump)
         {
-            THREAD_LOCAL static char16 dumpName[MAX_PATH + 1];
+            thread_local static char16 dumpName[MAX_PATH + 1];
             wcscpy_s(filename, globalFlags.Filename);
             char16* jsFile = filename;
             char16 *pch = jsFile;
@@ -1380,7 +1380,7 @@ namespace Js
                 // It contains windbg debugging instructions on how to figure out the injected faults,
                 // And the message will be showing in windbg while loading the minidump.
                 // If you need to add more instructions please increase the buffer capacity accordingly
-                THREAD_LOCAL static char16 dbgTip[1024];
+                thread_local static char16 dbgTip[1024];
                 if (InjectionFirstRecord == nullptr)
                 {
                     wcsncpy_s(dbgTip,

@@ -189,7 +189,7 @@ HANDLE HeapAllocator::GetPrivateHeap()
 
 #ifdef TRACK_ALLOC
 #ifdef HEAP_TRACK_ALLOC
-THREAD_LOCAL TrackAllocData HeapAllocator::nextAllocData;
+thread_local TrackAllocData HeapAllocator::nextAllocData;
 #endif
 
 HeapAllocator * HeapAllocator::TrackAllocInfo(TrackAllocData const& data)

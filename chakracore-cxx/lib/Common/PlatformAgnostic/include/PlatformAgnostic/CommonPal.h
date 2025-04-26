@@ -12,18 +12,6 @@
 #define DECLSPEC_GUARD_OVERFLOW __declspec(guard(overflow))
 #endif
 
-#ifndef THREAD_LOCAL
-#ifndef __APPLE__
-#define THREAD_LOCAL thread_local
-#else // __APPLE__
-#ifndef __IOS__
-#define THREAD_LOCAL _Thread_local
-#else
-#define THREAD_LOCAL
-#endif
-#endif // __APPLE__
-#endif // THREAD_LOCAL
-
 #define OPT_CONSTEXPR constexpr
 
 #ifdef __clang__
