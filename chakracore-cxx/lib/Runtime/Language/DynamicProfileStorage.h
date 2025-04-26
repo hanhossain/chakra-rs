@@ -18,7 +18,7 @@ public:
     static Js::SourceDynamicProfileManager * Load(__in_z char16 const * filename, Fn loadFn);
     static void SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record);
 
-    static char * AllocRecord(DECLSPEC_GUARD_OVERFLOW uint32_t bufferSize);
+    static char * AllocRecord(uint32_t bufferSize);
     static void DeleteRecord(__in_ecount(sizeof(uint32_t) + *record) char const * record);
     static char const * GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *record) char const * record);
     static char * GetRecordBuffer(__in_ecount(sizeof(uint32_t) + *record) char * record);

@@ -43,7 +43,7 @@ static uint modLAST(const uint k, const uint p) { return k % p; }
 // TODO: (obastemur) MOVE THIS UNDER .h file!!
 // We could have this on header file and inline the proxy function for good.
 // However, not every target we support comes with constexpr... and we need this done during compile time.
-static OPT_CONSTEXPR uint (* const mod_func[])(const uint, const uint) =
+static constexpr uint (* const mod_func[])(const uint, const uint) =
 {
     MOD_FNC(3, 7, 11, 17, 23, 29, 37, 47, 59, 71)
     MOD_FNC(89, 107, 131, 163, 197, 239, 293, 353, 431, 521)

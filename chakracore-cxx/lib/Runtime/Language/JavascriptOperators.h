@@ -249,12 +249,12 @@ namespace Js
         static TypeId GetTypeId(_In_ RecyclableObject* instance);
         static TypeId GetTypeIdNoCheck(Var instance);
         template <typename T, typename U>
-        __forceinline static T* TryFromVar(_In_ U* value)
+        inline static T* TryFromVar(_In_ U* value)
         {
             return VarIs<T>(value) ? UnsafeVarTo<T>(value) : nullptr;
         }
         template <typename T, typename U>
-        __forceinline static T* TryFromVar(WriteBarrierPtr<U> value)
+        inline static T* TryFromVar(WriteBarrierPtr<U> value)
         {
             return VarIs<T>(value) ? UnsafeVarTo<T>(value) : nullptr;
         }
@@ -544,7 +544,7 @@ namespace Js
         static void OP_LoadUndefinedToElementScoped(FrameDisplay *pScope, PropertyId propertyId, Var defaultInstance, ScriptContext* scriptContext);
         static Var OP_IsInst(Var instance, Var aClass, ScriptContext* scriptContext, IsInstInlineCache *inlineCache);
         static Var IsIn(Var argProperty, Var instance, ScriptContext* scriptContext);
-        static BOOL GetRemoteTypeId(Var instance, __out TypeId* typeId);
+        static BOOL GetRemoteTypeId(Var instance, TypeId* typeId);
         static FunctionProxy* GetDeferredDeserializedFunctionProxy(JavascriptFunction* func);
 
         template <bool IsFromFullJit, class TInlineCache> static Var PatchGetValue(FunctionBody *const functionBody, TInlineCache *const inlineCache, const InlineCacheIndex inlineCacheIndex, Var instance, PropertyId propertyId);
@@ -648,19 +648,19 @@ namespace Js
         static Var OP_LdFuncObj(Var scriptFunction, ScriptContext * scriptContext);
         static Var OP_LdHomeObjProto(Var aRight, ScriptContext* scriptContext);
         static Var OP_LdFuncObjProto(Var aRight, ScriptContext* scriptContext);
-        static Var OP_ImportCall(__in JavascriptFunction *function, __in Var specifier, __in ScriptContext* scriptContext);
+        static Var OP_ImportCall(JavascriptFunction *function, Var specifier, ScriptContext* scriptContext);
 
         static Var OP_NewAwaitObject(ScriptContext* scriptContext);
         static Var OP_NewAsyncFromSyncIterator(Var syncIterator, ScriptContext* scriptContext);
 
         template <typename T>
-        static void * JitRecyclerAlloc(DECLSPEC_GUARD_OVERFLOW size_t size, Recycler* recycler)
+        static void * JitRecyclerAlloc(size_t size, Recycler* recycler)
         {
             TRACK_ALLOC_INFO(recycler, T, Recycler, size - sizeof(T), (size_t)-1);
             return recycler->AllocZero(size);
         }
 
-        static void * AllocMemForVarArray(DECLSPEC_GUARD_OVERFLOW size_t size, Recycler* recycler);
+        static void * AllocMemForVarArray(size_t size, Recycler* recycler);
         static void * AllocUninitializedNumber(RecyclerJavascriptNumberAllocator * allocator);
 
         static void ScriptAbort();
@@ -687,8 +687,8 @@ namespace Js
 
         static void VarToNativeArray(Var arrayObject,
             JsNativeValueType valueType,
-            __in uint32_t length,
-            __in uint32_t elementSize,
+            uint32_t length,
+            uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 
@@ -727,8 +727,8 @@ namespace Js
         template <typename ArrayType>
         static void ObjectToNativeArray(ArrayType* arrayObject,
             JsNativeValueType valueType,
-            __in uint32_t length,
-            __in uint32_t elementSize,
+            uint32_t length,
+            uint32_t elementSize,
             __out_bcount(length*elementSize) byte* contentBuffer,
             Js::ScriptContext* scriptContext);
 

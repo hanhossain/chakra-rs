@@ -25,7 +25,7 @@ namespace Js
 #else
 #define AsmJsVirtualAllocator Js::ArrayBuffer::BadAllocCall
 #define WasmVirtualAllocator Js::ArrayBuffer::BadAllocCall
-        static void* BadAllocCall(DECLSPEC_GUARD_OVERFLOW size_t length)
+        static void* BadAllocCall(size_t length)
         {
             // This allocator should never be used
             Js::Throw::FatalInternalError();
@@ -138,11 +138,11 @@ namespace Js
         };
 
         template <typename Allocator>
-        ArrayBuffer(DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type, Allocator allocator);
+        ArrayBuffer(uint32 length, DynamicType * type, Allocator allocator);
 
-        ArrayBuffer(byte* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type, bool isExternal = false);
+        ArrayBuffer(byte* buffer, uint32 length, DynamicType * type, bool isExternal = false);
 
-        ArrayBuffer(RefCountedBuffer* buffContent, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        ArrayBuffer(RefCountedBuffer* buffContent, uint32 length, DynamicType * type);
 
         class EntryInfo
         {
@@ -197,14 +197,14 @@ namespace Js
         virtual bool IsSharedArrayBuffer() override { return false; }
         virtual ArrayBuffer * GetAsArrayBuffer() override;
 
-        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength);
+        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength);
 
         static uint32 ToIndex(Var value, int32 errorCode, ScriptContext *scriptContext, uint32 MaxAllowedLength, bool checkSameValueZero = true);
 
     protected:
         virtual void ReportExternalMemoryFree();
 
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) = 0;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) = 0;
 
         // This function will be called from External buffer and projection buffer as they pass the buffer
         virtual void ReleaseBufferContent();
@@ -271,9 +271,9 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptArrayBuffer);
 
     public:
-        static JavascriptArrayBuffer* Create(DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
-        static JavascriptArrayBuffer* Create(byte* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
-        static JavascriptArrayBuffer* Create(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(uint32 length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
+        static JavascriptArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
         virtual void Dispose(bool isShutdown) override;
         virtual void Finalize(bool isShutdown) override;
 
@@ -285,7 +285,7 @@ namespace Js
 
        protected:
         JavascriptArrayBuffer(DynamicType * type);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override;
 
         template<typename Allocator>
         JavascriptArrayBuffer(uint32 length, DynamicType * type, Allocator allocator): ArrayBuffer(length, type, allocator){}
@@ -311,14 +311,14 @@ namespace Js
         DEFINE_VTABLE_CTOR(WebAssemblyArrayBuffer, JavascriptArrayBuffer);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblyArrayBuffer);
     public:
-        static WebAssemblyArrayBuffer* Create(byte* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        static WebAssemblyArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
         WebAssemblyArrayBuffer* GrowMemory(uint32 newBufferLength);
 
         virtual bool IsValidVirtualBufferLength(uint length) const override;
         virtual bool IsWebAssemblyArrayBuffer() override { return true; }
 
     protected:
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override;
     };
 #endif
 
@@ -330,19 +330,19 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ProjectionArrayBuffer);
 
         typedef void (*FreeFn)(void * ptr);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32 bufferLength) override
         {
             return HeapNew(ArrayBufferDetachedState<FreeFn>, content, bufferLength, CoTaskMemFree, GetScriptContext()->GetRecycler(), ArrayBufferAllocationType::CoTask);
         }
 
     public:
         // Create constructor. script engine creates a buffer allocated via CoTaskMemAlloc.
-        static ProjectionArrayBuffer* Create(DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(uint32 length, DynamicType * type);
         // take over ownership. a CoTaskMemAlloc'ed buffer passed in via projection.
-        static ProjectionArrayBuffer* Create(byte* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
-        static ProjectionArrayBuffer* Create(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(byte* buffer, uint32 length, DynamicType * type);
+        static ProjectionArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
 
-        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override;
+        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength) override;
 
         virtual void Dispose(bool isShutdown) override;
         virtual void Finalize(bool isShutdown) override;
@@ -360,11 +360,11 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ExternalArrayBuffer);
 
     public:
-        ExternalArrayBuffer(byte *buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType *type);
-        ExternalArrayBuffer(RefCountedBuffer *buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType *type);
-        static ExternalArrayBuffer* Create(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 length, DynamicType * type);
+        ExternalArrayBuffer(byte *buffer, uint32 length, DynamicType *type);
+        ExternalArrayBuffer(RefCountedBuffer *buffer, uint32 length, DynamicType *type);
+        static ExternalArrayBuffer* Create(RefCountedBuffer* buffer, uint32 length, DynamicType * type);
     protected:
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength) override;
+        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength) override;
         virtual void ReportExternalMemoryFree() override;
 
 #if ENABLE_TTD

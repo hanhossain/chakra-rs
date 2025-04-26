@@ -94,9 +94,9 @@ DefaultRecyclerCollectionWrapper::DisposeObjects(Recycler * recycler)
 
 static void* GetStackBase();
 
-template _ALWAYSINLINE char * Recycler::AllocWithAttributesInlined<NoBit, false>(size_t size);
-template _ALWAYSINLINE char* Recycler::RealAlloc<NoBit, false>(HeapInfo* heap, size_t size);
-template _ALWAYSINLINE _Ret_notnull_ void * operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
+template char * Recycler::AllocWithAttributesInlined<NoBit, false>(size_t size);
+template char* Recycler::RealAlloc<NoBit, false>(HeapInfo* heap, size_t size);
+template _Ret_notnull_ void * operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
 
 Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllocator * pageAllocator, void (*outOfMemoryFunc)(), Js::ConfigFlagsTable& configFlagsTable, RecyclerTelemetryHostInterface* hostInterface) :
     collectionStateChangedObserver(this),
@@ -6566,7 +6566,7 @@ Recycler::SetCollectionWrapper(RecyclerCollectionWrapper * wrapper)
 
 // TODO: (leish) remove following function? seems not make sense to re-allocate in recycler
 char *
-Recycler::Realloc(void* buffer, DECLSPEC_GUARD_OVERFLOW size_t existingBytes, DECLSPEC_GUARD_OVERFLOW size_t requestedBytes, bool truncate)
+Recycler::Realloc(void* buffer, size_t existingBytes, size_t requestedBytes, bool truncate)
 {
     Assert(requestedBytes > 0);
 
@@ -8218,7 +8218,7 @@ Recycler::SetTrackerData(void * address, TrackerData * data)
 }
 
 void
-Recycler::TrackUnallocated(__in char* address, __in  char *endAddress, size_t sizeCat)
+Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
 {
     if (!CONFIG_FLAG(KeepRecyclerTrackData))
     {
@@ -8801,7 +8801,7 @@ void Recycler::FlushFreeRecord()
     bulkFreeMemoryWrittenCount = 0;
 }
 
-void Recycler::AppendFreeMemoryETWRecord(__in char *address, size_t size)
+void Recycler::AppendFreeMemoryETWRecord(char *address, size_t size)
 {
     Assert(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     __analysis_assume(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
@@ -8998,7 +8998,7 @@ void Recycler::SetCheckFn(BOOL(*checkFn)(char* addr, size_t size))
 #endif
 
 void
-Recycler::NotifyFree(__in char *address, size_t size)
+Recycler::NotifyFree(char *address, size_t size)
 {
     RecyclerVerboseTrace(GetRecyclerFlagsTable(), _u("Sweeping object %p\n"), address);
 

@@ -997,7 +997,7 @@ namespace Js
         });
     }
 
-    bool ProbeContainer::HasAllowedForException(__in JavascriptExceptionObject* exceptionObject)
+    bool ProbeContainer::HasAllowedForException(JavascriptExceptionObject* exceptionObject)
     {
         // We do not want to break on internal exception.
         if (isThrowInternal)

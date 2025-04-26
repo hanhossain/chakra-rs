@@ -80,9 +80,9 @@ namespace Js
         LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-winrt-l1-1-0.dll"); }
 
         HRESULT RoGetActivationFactory(
-            __in HSTRING activatibleClassId,
-            __in REFIID iid,
-            __out IActivationFactory** factory);
+            HSTRING activatibleClassId,
+            REFIID iid,
+            IActivationFactory** factory);
     };
 
     class DelayLoadWinCoreProcessThreads sealed : public DelayLoadLibrary
@@ -104,10 +104,10 @@ namespace Js
         LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-processthreads-l1-1-3.dll"); }
 
         BOOL GetProcessInformation(
-            __in HANDLE hProcess,
-            __in PROCESS_INFORMATION_CLASS ProcessInformationClass,
+            HANDLE hProcess,
+            PROCESS_INFORMATION_CLASS ProcessInformationClass,
             __out_bcount(nLength) void * lpBuffer,
-            __in SIZE_T nLength
+            SIZE_T nLength
         );
     };
  }

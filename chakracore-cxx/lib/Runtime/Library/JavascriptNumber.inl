@@ -30,7 +30,7 @@ namespace Js
     }
 #endif
 
-    __forceinline Var JavascriptNumber::ToVar(int32 nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVar(int32 nValue, ScriptContext* scriptContext)
     {
         if (!TaggedInt::IsOverflow(nValue))
         {
@@ -43,7 +43,7 @@ namespace Js
     }
 
 #ifdef ENABLE_TEST_HOOKS
-    __forceinline Var JavascriptNumber::ToVarFor32BitBytecode(int32 nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVarFor32BitBytecode(int32 nValue, ScriptContext* scriptContext)
     {
         if ((1073741824 > nValue) && (nValue > -1073741824))
         {
@@ -54,7 +54,7 @@ namespace Js
 #endif
 
 #if defined(__clang__) && defined(_M_IX86)
-    __forceinline Var JavascriptNumber::ToVar(intptr_t nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVar(intptr_t nValue, ScriptContext* scriptContext)
     {
         if (!TaggedInt::IsOverflow(nValue))
         {

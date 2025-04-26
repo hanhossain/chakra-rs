@@ -23,12 +23,12 @@
 #include "Base/ThreadBoundThreadContextManager.h"
 
 #ifdef CHAKRA_STATIC_LIBRARY
-bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) LPWSTR buffer, size_t cchBufferSize, __in LPWSTR moduleName)
+bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) LPWSTR buffer, size_t cchBufferSize, LPWSTR moduleName)
 {
     return false;
 }
 
-void ConfigParserAPI::DisplayInitialOutput(__in LPWSTR moduleName)
+void ConfigParserAPI::DisplayInitialOutput(LPWSTR moduleName)
 {
 }
 
@@ -89,15 +89,15 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
     }
 
     static pthread_key_t s_threadLocalDummy;
-    static THREAD_LOCAL bool s_threadWasEntered = false;
+    static thread_local bool s_threadWasEntered = false;
 
-    _NOINLINE void DISPOSE_CHAKRA_CORE_THREAD(void *_)
+    void DISPOSE_CHAKRA_CORE_THREAD(void *_)
     {
         free(_);
         ThreadBoundThreadContextManager::DestroyContextAndEntryForCurrentThread();
     }
 
-    _NOINLINE bool InitializeProcess()
+    bool InitializeProcess()
     {
         pthread_key_create(&s_threadLocalDummy, DISPOSE_CHAKRA_CORE_THREAD);
 
@@ -153,7 +153,7 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         return true;
     }
 
-    _NOINLINE void VALIDATE_ENTER_CURRENT_THREAD()
+    void VALIDATE_ENTER_CURRENT_THREAD()
     {
         // We do also initialize the process part here
         // This is thread safe by the standard

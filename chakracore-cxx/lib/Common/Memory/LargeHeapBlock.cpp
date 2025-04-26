@@ -145,7 +145,7 @@ LargeObjectHeader::GetAttributes(uint cookie)
 }
 
 size_t
-LargeHeapBlock::GetAllocPlusSize(DECLSPEC_GUARD_OVERFLOW uint objectCount)
+LargeHeapBlock::GetAllocPlusSize(uint objectCount)
 {
     // Large Heap Block Layout:
     //      LargeHeapBlock
@@ -162,7 +162,7 @@ LargeHeapBlock::GetAllocPlusSize(DECLSPEC_GUARD_OVERFLOW uint objectCount)
 }
 
 LargeHeapBlock *
-LargeHeapBlock::New(__in char * address, DECLSPEC_GUARD_OVERFLOW size_t pageCount, Segment * segment, DECLSPEC_GUARD_OVERFLOW uint objectCount, LargeHeapBucket* bucket)
+LargeHeapBlock::New(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
 {
     return NoMemProtectHeapNewNoThrowPlusZ(GetAllocPlusSize(objectCount), LargeHeapBlock, address, pageCount, segment, objectCount, bucket);
 }
@@ -173,7 +173,7 @@ LargeHeapBlock::Delete(LargeHeapBlock * heapBlock)
     NoMemProtectHeapDeletePlus(GetAllocPlusSize(heapBlock->objectCount), heapBlock);
 }
 
-LargeHeapBlock::LargeHeapBlock(__in char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
+LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segment, uint objectCount, LargeHeapBucket* bucket)
     : HeapBlock(LargeBlockType), pageCount(pageCount), allocAddressEnd(address), objectCount(objectCount), bucket(bucket), freeList(this)
 #if DBG && GLOBAL_ENABLE_WRITE_BARRIER
     ,wbVerifyBits(&HeapAllocator::Instance)
@@ -322,7 +322,6 @@ LargeHeapBlock::ReleasePagesSweep(Recycler * recycler)
 }
 
 #ifdef RECYCLER_PAGE_HEAP
-_NOINLINE
 void LargeHeapBlock::VerifyPageHeapPattern()
 {
     if (!IsAll((byte*)pageHeapData->objectPageAddr, pageHeapData->paddingBytes, PageHeapMemFill))
@@ -455,7 +454,7 @@ LargeHeapBlock::TryGetAttributes(LargeObjectHeader * header, unsigned char * pAt
 }
 
 size_t
-LargeHeapBlock::GetPagesNeeded(DECLSPEC_GUARD_OVERFLOW size_t size, bool multiplyRequest)
+LargeHeapBlock::GetPagesNeeded(size_t size, bool multiplyRequest)
 {
     if (multiplyRequest)
     {
@@ -473,7 +472,7 @@ LargeHeapBlock::GetPagesNeeded(DECLSPEC_GUARD_OVERFLOW size_t size, bool multipl
 }
 
 char*
-LargeHeapBlock::TryAllocFromFreeList(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes)
+LargeHeapBlock::TryAllocFromFreeList(size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
@@ -512,7 +511,7 @@ LargeHeapBlock::TryAllocFromFreeList(DECLSPEC_GUARD_OVERFLOW size_t size, Object
 }
 
 char*
-LargeHeapBlock::AllocFreeListEntry(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry)
+LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, LargeHeapBlockFreeListEntry* entry)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
     Assert(HeapInfo::IsAlignedSize(size));
@@ -597,7 +596,7 @@ LargeHeapBlock::AllocFreeListEntry(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectIn
 }
 
 char*
-LargeHeapBlock::Alloc(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attributes)
+LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 {
     Assert(HeapInfo::IsAlignedSize(size) || InPageHeapMode());
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
@@ -666,7 +665,6 @@ LargeHeapBlock::Alloc(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attrib
 }
 
 template <bool doSpecialMark>
-_NOINLINE
 void
 LargeHeapBlock::Mark(void* objectAddress, MarkContext * markContext)
 {

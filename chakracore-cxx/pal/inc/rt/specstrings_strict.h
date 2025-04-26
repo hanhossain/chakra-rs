@@ -23,7 +23,7 @@
 *      macros such as __fallthrough (default)
 *  2 - Deprecated some old macros that should not be used
 *  3 - Use VS 2005 Source Annotation to make sure every macro 
-*      is used in the right context. For example placing __in on a return 
+*      is used in the right context. For example placing on a return
 *      parameter will result in an error.
 *
 
@@ -152,11 +152,11 @@
 *  LWSTDAPI_(BOOL) StrToIntExA(
 *      LPCSTR pszString,  //  No annotation required, const implies __in.
 *      uint32_t dwFlags,
-*      __out int *piRet   // A pointer whose dereference will be filled in.
+*      int *piRet   // A pointer whose dereference will be filled in.
 *  );
 * 
 *  void MyPaintingFunction(
-*      __in HWND hwndControl,     //  An initialized read-only parameter.
+*      HWND hwndControl,     //  An initialized read-only parameter.
 *      __in_opt HDC hdcOptional,  //  An initialized read-only parameter that 
 *                                 //  might be NULL.
 *      __inout IPropertyStore *ppsStore // An initialized parameter that 

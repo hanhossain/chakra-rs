@@ -9,7 +9,7 @@ const uint Memory::HeapBlockMap32::L1Count;
 const uint Memory::HeapBlockMap32::L2Count;
 
 #if defined(TARGET_64)
-HeapBlockMap32::HeapBlockMap32(__in char * startAddress) :
+HeapBlockMap32::HeapBlockMap32(char * startAddress) :
     startAddress(startAddress),
 #else
 HeapBlockMap32::HeapBlockMap32() :

@@ -48,7 +48,7 @@ public:
 
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
-Recycler::AllocWithAttributesInlined(DECLSPEC_GUARD_OVERFLOW size_t size)
+Recycler::AllocWithAttributesInlined(size_t size)
 {
     // All tracked objects are client tracked or recycler host visited objects
 #ifndef RECYCLER_VISITED_HOST
@@ -226,7 +226,7 @@ Recycler::AllocWithAttributesInlined(DECLSPEC_GUARD_OVERFLOW size_t size)
 
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
-Recycler::AllocZeroWithAttributesInlined(DECLSPEC_GUARD_OVERFLOW size_t size)
+Recycler::AllocZeroWithAttributesInlined(size_t size)
 {
     char* obj = AllocWithAttributesInlined<attributes, nothrow>(size);
 
@@ -585,7 +585,7 @@ SmallHeapBlockT<TBlockAttributes>::GetObjectBitDelta()
 // Map any object address to it's bit index in the heap block bit vectors.
 // static
 template <class TBlockAttributes>
-__forceinline ushort
+ushort
 SmallHeapBlockT<TBlockAttributes>::GetAddressBitIndex(void * objectAddress)
 {
     Assert(HeapInfo::IsAlignedAddress(objectAddress));
@@ -601,7 +601,7 @@ SmallHeapBlockT<TBlockAttributes>::GetAddressBitIndex(void * objectAddress)
 }
 
 template <class TBlockAttributes>
-__forceinline ushort
+ushort
 SmallHeapBlockT<TBlockAttributes>::GetObjectIndexFromBitIndex(ushort bitIndex)
 {
     Assert(bitIndex <= TBlockAttributes::MaxAddressBit);
@@ -613,7 +613,7 @@ SmallHeapBlockT<TBlockAttributes>::GetObjectIndexFromBitIndex(ushort bitIndex)
 }
 
 template <class TBlockAttributes>
-__forceinline void *
+void *
 SmallHeapBlockT<TBlockAttributes>::GetRealAddressFromInterior(void * interiorAddress, uint objectSize, byte bucketIndex)
 {
     const ValidPointers<TBlockAttributes> validPointers = HeapInfo::GetValidPointersMapForBucket<TBlockAttributes>(bucketIndex);

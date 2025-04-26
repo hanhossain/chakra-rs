@@ -38,7 +38,7 @@ public:
     static ExceptionCheck::Data GetData();
 private:
     static BOOL IsEmpty();
-    THREAD_LOCAL static Data data;
+    thread_local static Data data;
 };
 
 class AutoHandledExceptionType

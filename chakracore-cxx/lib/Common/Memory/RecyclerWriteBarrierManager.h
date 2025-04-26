@@ -78,7 +78,7 @@ public:
     bool OnThreadInit();
 
     // Called when a page allocator segment is allocated
-    bool OnSegmentAlloc(_In_ char* segmentAddress, DECLSPEC_GUARD_OVERFLOW size_t numPages);
+    bool OnSegmentAlloc(_In_ char* segmentAddress, size_t numPages);
 
     // Called when a page allocator segment is freed
     bool OnSegmentFree(_In_ char* segmentAddress, size_t numPages);
@@ -201,7 +201,7 @@ public:
     // For GC
 #ifdef TARGET_64
     static bool OnThreadInit();
-    static bool OnSegmentAlloc(_In_ char* segment, DECLSPEC_GUARD_OVERFLOW size_t pageCount);
+    static bool OnSegmentAlloc(_In_ char* segment, size_t pageCount);
     static bool OnSegmentFree(_In_ char* segment, size_t pageCount);
 #endif
 

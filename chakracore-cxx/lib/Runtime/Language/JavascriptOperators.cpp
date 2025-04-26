@@ -5338,7 +5338,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
     }
 
-    BOOL JavascriptOperators::GetRemoteTypeId(Var aValue, __out TypeId* typeId)
+    BOOL JavascriptOperators::GetRemoteTypeId(Var aValue, TypeId* typeId)
     {
         *typeId = TypeIds_Limit;
         if (GetTypeId(aValue) != TypeIds_HostDispatch)
@@ -7749,7 +7749,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     JIT_HELPER_TEMPLATE(Op_PatchGetValue, Op_PatchGetValuePolymorphic)
 
     template <bool IsFromFullJit, class TInlineCache>
-    __forceinline Var JavascriptOperators::PatchGetValueWithThisPtr(FunctionBody *const functionBody, TInlineCache *const inlineCache, const InlineCacheIndex inlineCacheIndex, Var instance, PropertyId propertyId, Var thisInstance)
+    inline Var JavascriptOperators::PatchGetValueWithThisPtr(FunctionBody *const functionBody, TInlineCache *const inlineCache, const InlineCacheIndex inlineCacheIndex, Var instance, PropertyId propertyId, Var thisInstance)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_PatchGetValueWithThisPtr);
         ScriptContext *const scriptContext = functionBody->GetScriptContext();
@@ -10053,7 +10053,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_END(LdFuncObjProto);
     }
 
-    Var JavascriptOperators::OP_ImportCall(__in JavascriptFunction *function, __in Var specifier, __in ScriptContext* scriptContext)
+    Var JavascriptOperators::OP_ImportCall(JavascriptFunction *function, Var specifier, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(ImportCall);
         ModuleRecordBase *moduleRecordBase = nullptr;
@@ -10301,8 +10301,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     template<typename T>
     void JavascriptOperators::ObjectToNativeArray(T* arrayObject,
         JsNativeValueType valueType,
-        __in uint32_t length,
-        __in uint32_t elementSize,
+        uint32_t length,
+        uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {
@@ -10422,8 +10422,8 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::VarToNativeArray(Var arrayObject,
         JsNativeValueType valueType,
-        __in uint32_t length,
-        __in uint32_t elementSize,
+        uint32_t length,
+        uint32_t elementSize,
         __out_bcount(length*elementSize) byte* buffer,
         Js::ScriptContext* scriptContext)
     {

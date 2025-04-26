@@ -103,7 +103,7 @@ namespace Js
             return newChunk;
         }
 
-        _NOINLINE void ExtendBuffer(charcount_t newLength)
+        void ExtendBuffer(charcount_t newLength)
         {
             Data *newChunk;
 
@@ -217,7 +217,7 @@ namespace Js
             }
         }
 
-        void UnChain(__out __ecount(bufLen) char16 *pBuf, charcount_t bufLen)
+        void UnChain(__ecount(bufLen) char16 *pBuf, charcount_t bufLen)
         {
             charcount_t lastChunkCount = this->count;
 
@@ -268,7 +268,7 @@ namespace Js
             this->appendPtr = newChunk->u.single.buffer + this->count;
         }
 
-        void Copy(__out __ecount(bufLen) char16 *pBuf, charcount_t bufLen)
+        void Copy(__ecount(bufLen) char16 *pBuf, charcount_t bufLen)
         {
             if (this->IsChained())
             {

@@ -134,7 +134,7 @@ namespace Js
         int InjectionRecordsCount;
         void dumpCurrentStackData(LPCWSTR name = nullptr, size_t size = 0);
 
-        static THREAD_LOCAL int(*pfnHandleAV)(int, PEXCEPTION_POINTERS);
+        static thread_local int(*pfnHandleAV)(int, PEXCEPTION_POINTERS);
 
     private:
         bool symInitialized;

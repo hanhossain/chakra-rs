@@ -15,10 +15,10 @@ class StackBackTrace
 public:
     static const uint32_t DefaultFramesToCapture = 30;
     static StackBackTrace * Capture(char* buffer, size_t bufSize, uint32_t framesToSkip = 0);
-    template <typename TAllocator> _NOINLINE
+    template <typename TAllocator>
         static StackBackTrace * Capture(TAllocator * alloc, uint32_t framesToSkip = 0, uint32_t framesToCapture = DefaultFramesToCapture);
 
-    template <typename TAllocator> _NOINLINE
+    template <typename TAllocator>
         static StackBackTrace * Create(TAllocator * alloc, uint32_t framesToCaptureLater = DefaultFramesToCapture);
     size_t Print();
     template<typename Fn>void Map(Fn fn);   // The Fn is expected to be: void Fn(void*).
@@ -30,8 +30,8 @@ private:
     // We want to skip at lease the StackBackTrace::Capture and the constructor frames
     static const uint32_t BaseFramesToSkip = 2;
 
-    _NOINLINE StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture);
-    _NOINLINE StackBackTrace(uint32_t framesToCapture);
+    StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture);
+    StackBackTrace(uint32_t framesToCapture);
 
     uint32_t requestedFramesToCapture;
     uint32_t framesCount;

@@ -1992,9 +1992,9 @@ bool ByteCodeGenerator::DoJitLoopBodies(FuncInfo *funcInfo) const
     return functionBody->ForceJITLoopBody() || funcInfo->byteCodeFunction->IsJitLoopBodyPhaseEnabled();
 }
 
-void ByteCodeGenerator::Generate(__in ParseNodeProg *pnodeProg, uint32 grfscr, __in ByteCodeGenerator* byteCodeGenerator,
-    __inout Js::ParseableFunctionInfo ** ppRootFunc, __in uint sourceIndex,
-    __in bool forceNoNative, __in Parser* parser, Js::ScriptFunction **functionRef)
+void ByteCodeGenerator::Generate(ParseNodeProg *pnodeProg, uint32 grfscr, ByteCodeGenerator* byteCodeGenerator,
+    __inout Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex,
+    bool forceNoNative, Parser* parser, Js::ScriptFunction **functionRef)
 {
 #if DBG
     struct WalkerPolicyTest : public WalkerPolicyBase<bool, ParseNodeWalker<WalkerPolicyTest>*>
@@ -2180,9 +2180,9 @@ void ByteCodeGenerator::CheckDeferParseHasMaybeEscapedNestedFunc()
 }
 
 void ByteCodeGenerator::Begin(
-    __in ArenaAllocator *alloc,
-    __in uint32 grfscr,
-    __in Js::ParseableFunctionInfo* pRootFunc)
+    ArenaAllocator *alloc,
+    uint32 grfscr,
+    Js::ParseableFunctionInfo* pRootFunc)
 {
     this->alloc = alloc;
     this->flags = grfscr;
@@ -2210,8 +2210,8 @@ void ByteCodeGenerator::Begin(
     this->jumpCleanupList = Anew(alloc, JumpCleanupList, alloc);
 }
 
-HRESULT GenerateByteCode(__in ParseNodeProg *pnode, __in uint32 grfscr, __in Js::ScriptContext* scriptContext, __inout Js::ParseableFunctionInfo ** ppRootFunc,
-                         __in uint sourceIndex, __in bool forceNoNative, __in Parser* parser, __in CompileScriptException *pse, Js::ScopeInfo* parentScopeInfo,
+HRESULT GenerateByteCode(ParseNodeProg *pnode, uint32 grfscr, Js::ScriptContext* scriptContext, __inout Js::ParseableFunctionInfo ** ppRootFunc,
+                         uint sourceIndex, bool forceNoNative, Parser* parser, CompileScriptException *pse, Js::ScopeInfo* parentScopeInfo,
                         Js::ScriptFunction ** functionRef)
 {
     HRESULT hr = S_OK;

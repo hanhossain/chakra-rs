@@ -2461,8 +2461,8 @@ static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *l
 #endif
 
 #ifndef __IOS__
-static THREAD_LOCAL size_t s_cachedHighLimit = 0;
-static THREAD_LOCAL size_t s_cachedLowLimit = 0;
+static thread_local size_t s_cachedHighLimit = 0;
+static thread_local size_t s_cachedLowLimit = 0;
 #endif
 
 void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)

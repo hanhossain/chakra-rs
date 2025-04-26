@@ -51,7 +51,7 @@ namespace Js
 
     private:
          // noinline, we want to use own stack frame.
-        _NOINLINE JavascriptFunction* FindCaller(BOOL* foundThis, JavascriptFunction* nullValue, ScriptContext* requestContext);
+        JavascriptFunction* FindCaller(BOOL* foundThis, JavascriptFunction* nullValue, ScriptContext* requestContext);
 
         BOOL GetCallerProperty(Var originalInstance, Var* value, ScriptContext* requestContext);
         BOOL GetArgumentsProperty(Var originalInstance, Var* value, ScriptContext* requestContext);

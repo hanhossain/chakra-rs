@@ -2591,38 +2591,38 @@ namespace Js
 #endif
 
     template<>
-    inline BOOL Int8Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int8Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt8);
     }
 
     template<>
-    inline BOOL Int8VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int8VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt8);
     }
 
     template<>
-    inline BOOL Int8Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int8Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt8);
     }
 
     template<>
-    inline BOOL Int8VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int8VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt8);
     }
 
     template<>
-    inline Var Int8Array::DirectGetItem(__in uint32 index)
+    inline Var Int8Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
 
 #define DIRECT_SET_NO_DETACH_CHECK(TypedArrayName, convertFn) \
     template<> \
-    inline BOOL TypedArrayName##::DirectSetItemNoDetachCheck(__in uint32 index, __in Var value) \
+    inline BOOL TypedArrayName##::DirectSetItemNoDetachCheck(uint32 index, Var value) \
     { \
         return BaseTypedDirectSetItemNoDetachCheck(index, value, convertFn); \
     }
@@ -2651,14 +2651,14 @@ namespace Js
 
 #define DIRECT_GET_NO_DETACH_CHECK(TypedArrayName) \
     template<> \
-    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(__in uint32 index) \
+    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(uint32 index) \
     { \
         return BaseTypedDirectGetItemNoDetachCheck(index); \
     }
 
 #define DIRECT_GET_VAR_CHECK_NO_DETACH_CHECK(TypedArrayName) \
     template<> \
-    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(__in uint32 index) \
+    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(uint32 index) \
     { \
         return DirectGetItemVarCheckNoDetachCheck(index); \
     }
@@ -2693,7 +2693,7 @@ namespace Js
 
 #define TypedArrayStore(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex, __in Var value) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         double retVal = JavascriptConversion::ToInteger(value, scriptContext); \
@@ -2703,7 +2703,7 @@ namespace Js
 
 #define TypedArrayOp1(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer); \
@@ -2712,7 +2712,7 @@ namespace Js
 
 #define TypedArrayOp2(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex, __in Var value) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer, convertFn(value, scriptContext)); \
@@ -2721,7 +2721,7 @@ namespace Js
 
 #define TypedArrayOp3(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex, __in Var first, __in Var value) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex, Var first, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer, convertFn(first, scriptContext), convertFn(value, scriptContext)); \
@@ -2730,21 +2730,21 @@ namespace Js
 
 #define GenerateNotSupportedStub1(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }
 
 #define GenerateNotSupportedStub2(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex, __in Var value) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex, Var value) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }
 
 #define GenerateNotSupportedStub3(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(__in uint32 accessIndex, __in Var first, __in Var value) \
+    Var TypedArrayName##::Typed##fnName(uint32 accessIndex, Var first, Var value) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }
@@ -2790,7 +2790,7 @@ namespace Js
     }
 
     template<>
-    inline Var Int8VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Int8VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2802,19 +2802,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint8Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt8);
     }
 
     template<>
-    inline BOOL Uint8Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt8);
     }
 
     template<>
-    inline Var Uint8Array::DirectGetItem(__in uint32 index)
+    inline Var Uint8Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2826,19 +2826,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint8VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt8);
     }
 
     template<>
-    inline BOOL Uint8VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt8);
     }
 
     template<>
-    inline Var Uint8VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Uint8VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2850,19 +2850,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint8ClampedArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8ClampedArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt8Clamped);
     }
 
     template<>
-    inline BOOL Uint8ClampedArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8ClampedArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt8Clamped);
     }
 
     template<>
-    inline Var Uint8ClampedArray::DirectGetItem(__in uint32 index)
+    inline Var Uint8ClampedArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2874,19 +2874,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint8ClampedVirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8ClampedVirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt8Clamped);
     }
 
     template<>
-    inline BOOL Uint8ClampedVirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint8ClampedVirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt8Clamped);
     }
 
     template<>
-    inline Var Uint8ClampedVirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Uint8ClampedVirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2898,19 +2898,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Int16Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int16Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt16);
     }
 
     template<>
-    inline BOOL Int16Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int16Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt16);
     }
 
     template<>
-    inline Var Int16Array::DirectGetItem(__in uint32 index)
+    inline Var Int16Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2922,19 +2922,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Int16VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int16VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt16);
     }
 
     template<>
-    inline BOOL Int16VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int16VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt16);
     }
 
     template<>
-    inline Var Int16VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Int16VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2946,19 +2946,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint16Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint16Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt16);
     }
 
     template<>
-    inline BOOL Uint16Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint16Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt16);
     }
 
     template<>
-    inline Var Uint16Array::DirectGetItem(__in uint32 index)
+    inline Var Uint16Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2970,19 +2970,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint16VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint16VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt16);
     }
 
     template<>
-    inline BOOL Uint16VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint16VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt16);
     }
 
     template<>
-    inline Var Uint16VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Uint16VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -2994,19 +2994,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Int32Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int32Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt32);
     }
 
     template<>
-    inline BOOL Int32Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int32Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt32);
     }
 
     template<>
-    inline Var Int32Array::DirectGetItem(__in uint32 index)
+    inline Var Int32Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3018,19 +3018,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Int32VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int32VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt32);
     }
 
     template<>
-    inline BOOL Int32VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int32VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt32);
     }
 
     template<>
-    inline Var Int32VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Int32VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3042,19 +3042,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint32Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint32Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt32);
     }
 
     template<>
-    inline BOOL Uint32Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint32Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt32);
     }
 
     template<>
-    inline Var Uint32Array::DirectGetItem(__in uint32 index)
+    inline Var Uint32Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3066,19 +3066,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint32VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint32VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt32);
     }
 
     template<>
-    inline BOOL Uint32VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint32VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt32);
     }
 
     template<>
-    inline Var Uint32VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Uint32VirtualArray::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3090,19 +3090,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Float32Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Float32Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToFloat);
     }
 
     template<>
-    inline BOOL Float32Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Float32Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToFloat);
     }
 
     template<>
-    Var Float32Array::DirectGetItem(__in uint32 index)
+    Var Float32Array::DirectGetItem(uint32 index)
     {
         return TypedDirectGetItemWithCheck(index);
     }
@@ -3114,19 +3114,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Float32VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Float32VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToFloat);
     }
 
     template<>
-    inline BOOL Float32VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Float32VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToFloat);
     }
 
     template<>
-    Var Float32VirtualArray::DirectGetItem(__in uint32 index)
+    Var Float32VirtualArray::DirectGetItem(uint32 index)
     {
         return TypedDirectGetItemWithCheck(index);
     }
@@ -3138,19 +3138,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Float64Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Float64Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToNumber);
     }
 
     template<>
-    inline BOOL Float64Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Float64Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToNumber);
     }
 
     template<>
-    inline Var Float64Array::DirectGetItem(__in uint32 index)
+    inline Var Float64Array::DirectGetItem(uint32 index)
     {
         return TypedDirectGetItemWithCheck(index);
     }
@@ -3162,19 +3162,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Float64VirtualArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Float64VirtualArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToNumber);
     }
 
     template<>
-    inline BOOL Float64VirtualArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Float64VirtualArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToNumber);
     }
 
     template<>
-    inline Var Float64VirtualArray::DirectGetItem(__in uint32 index)
+    inline Var Float64VirtualArray::DirectGetItem(uint32 index)
     {
         return TypedDirectGetItemWithCheck(index);
     }
@@ -3186,19 +3186,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Int64Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Int64Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToInt64);
     }
 
     template<>
-    inline BOOL Int64Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Int64Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToInt64);
     }
 
     template<>
-    inline Var Int64Array::DirectGetItem(__in uint32 index)
+    inline Var Int64Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3210,19 +3210,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL Uint64Array::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint64Array::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToUInt64);
     }
 
     template<>
-    inline BOOL Uint64Array::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL Uint64Array::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToUInt64);
     }
 
     template<>
-    inline Var Uint64Array::DirectGetItem(__in uint32 index)
+    inline Var Uint64Array::DirectGetItem(uint32 index)
     {
         return BaseTypedDirectGetItem(index);
     }
@@ -3234,19 +3234,19 @@ namespace Js
     }
 
     template<>
-    inline BOOL BoolArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL BoolArray::DirectSetItem(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItem(index, value, JavascriptConversion::ToBool);
     }
 
     template<>
-    inline BOOL BoolArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL BoolArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         return BaseTypedDirectSetItemNoSet(index, value, JavascriptConversion::ToBool);
     }
 
     template<>
-    inline Var BoolArray::DirectGetItem(__in uint32 index)
+    inline Var BoolArray::DirectGetItem(uint32 index)
     {
         if (index < GetLength())
         {
@@ -3258,7 +3258,7 @@ namespace Js
     }
 
     template<>
-    inline Var BoolArray::DirectGetItemNoDetachCheck(__in uint32 index)
+    inline Var BoolArray::DirectGetItemNoDetachCheck(uint32 index)
     {
         Assert((index + 1)* sizeof(bool) + GetByteOffset() <= GetArrayBuffer()->GetByteLength());
         bool* typedBuffer = (bool*)buffer;
@@ -3309,7 +3309,7 @@ namespace Js
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_This_NeedTypedArray);
     }
 
-    inline BOOL CharArray::DirectSetItem(__in uint32 index, __in Js::Var value)
+    inline BOOL CharArray::DirectSetItem(uint32 index, Js::Var value)
     {
         ScriptContext* scriptContext = GetScriptContext();
         // A typed array is Integer Indexed Exotic object, so doing a get translates to 9.4.5.9 IntegerIndexedElementSet
@@ -3341,7 +3341,7 @@ namespace Js
         return TRUE;
     }
 
-    inline BOOL CharArray::DirectSetItemNoSet(__in uint32 index, __in Js::Var value)
+    inline BOOL CharArray::DirectSetItemNoSet(uint32 index, Js::Var value)
     {
         ScriptContext* scriptContext = GetScriptContext();
         // A typed array is Integer Indexed Exotic object, so doing a get translates to 9.4.5.9 IntegerIndexedElementSet
@@ -3355,62 +3355,62 @@ namespace Js
         return FALSE;
     }
 
-    inline BOOL CharArray::DirectSetItemNoDetachCheck(__in uint32 index, __in Js::Var value)
+    inline BOOL CharArray::DirectSetItemNoDetachCheck(uint32 index, Js::Var value)
     {
         return DirectSetItem(index, value);
     }
 
-    inline Var CharArray::DirectGetItemNoDetachCheck(__in uint32 index)
+    inline Var CharArray::DirectGetItemNoDetachCheck(uint32 index)
     {
         return DirectGetItem(index);
     }
 
-    Var CharArray::TypedAdd(__in uint32 index, __in Var second)
+    Var CharArray::TypedAdd(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedAnd(__in uint32 index, __in Var second)
+    Var CharArray::TypedAnd(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedCompareExchange(__in uint32 index, __in Var comparand, __in Var replacementValue)
+    Var CharArray::TypedCompareExchange(uint32 index, Var comparand, Var replacementValue)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedExchange(__in uint32 index, __in Var second)
+    Var CharArray::TypedExchange(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedLoad(__in uint32 index)
+    Var CharArray::TypedLoad(uint32 index)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedOr(__in uint32 index, __in Var second)
+    Var CharArray::TypedOr(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedStore(__in uint32 index, __in Var second)
+    Var CharArray::TypedStore(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedSub(__in uint32 index, __in Var second)
+    Var CharArray::TypedSub(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    Var CharArray::TypedXor(__in uint32 index, __in Var second)
+    Var CharArray::TypedXor(uint32 index, Var second)
     {
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray);
     }
 
-    inline Var CharArray::DirectGetItem(__in uint32 index)
+    inline Var CharArray::DirectGetItem(uint32 index)
     {
         // A typed array is Integer Indexed Exotic object, so doing a get translates to 9.4.5.8 IntegerIndexedElementGet
         if (this->IsDetachedBuffer())

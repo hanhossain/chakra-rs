@@ -5,72 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#define __MAKE_WARNING__(X) "This compiler does not support '" ## X ## "'"
-// Define _ALWAYSINLINE for template that want to always inline, but doesn't allow inline linkage in clang
-#if defined(__GNUC__) || defined(__clang__)
-    #if __has_attribute(always_inline)
-        #define _ALWAYSINLINE __attribute__((always_inline))
-        #define __forceinline inline _ALWAYSINLINE
-    #else // No always_inline support
-        #pragma message __MAKE_WARNING__("always_inline")
-        #define _ALWAYSINLINE inline
-        #define __forceinline _ALWAYSINLINE
-    #endif
-    #if __has_attribute(noinline)
-        #ifdef CLANG_HAS_DISABLE_TAIL_CALLS
-            #define _NOINLINE __attribute__((noinline, disable_tail_calls))
-        #else
-            #define _NOINLINE __attribute__((noinline))
-        #endif
-    #else // No noinline support
-        #pragma message __MAKE_WARNING__("noinline")
-        #define _NOINLINE
-    #endif
-#else // Windows
-    #define _ALWAYSINLINE __forceinline
-    #define _NOINLINE __declspec(noinline)
-#endif
-
-// Only VC compiler support overflow guard
-#if defined(__GNUC__) || defined(__clang__)
-#define DECLSPEC_GUARD_OVERFLOW
-#else // Windows
-#define DECLSPEC_GUARD_OVERFLOW __declspec(guard(overflow))
-#endif
-
-#ifndef THREAD_LOCAL
-#ifndef __APPLE__
-#define THREAD_LOCAL thread_local
-#else // __APPLE__
-#ifndef __IOS__
-#define THREAD_LOCAL _Thread_local
-#else
-#define THREAD_LOCAL
-#endif
-#endif // __APPLE__
-#endif // THREAD_LOCAL
-
-#define OPT_CONSTEXPR constexpr
-
-#ifdef __clang__
-#define CLANG_WNO_BEGIN_(x) \
-    _Pragma("clang diagnostic push")\
-    _Pragma(#x)
-
-#define CLANG_WNO_BEGIN(x) CLANG_WNO_BEGIN_(clang diagnostic ignored x)
-#define CLANG_WNO_END
-    _Pragma("clang diagnostic pop")
-#else
-#define CLANG_WNO_BEGIN(x)
-#define CLANG_WNO_END
-#endif
-
-#ifndef __has_builtin
-#define __has_builtin(x) 0
-#endif
-
 #define USING_PAL_STDLIB 1
-#define STRSAFE_INLINE   1
 
 #ifdef PAL_STDCPP_COMPAT
 #include <wchar.h>
@@ -93,8 +28,6 @@ typedef GUID UUID;
 #define INIT_PRIORITY(x) __attribute__((init_priority(x)))
 
 #ifdef PAL_STDCPP_COMPAT
-#define __in
-#define __out
 #define FILE PAL_FILE
 #endif
 
@@ -124,7 +57,6 @@ inline void DebugBreak()
     __builtin_trap();
 }
 
-#define EXIT_FAILURE 1
 #define _BitScanForward BitScanForward
 #define _BitScanForward64 BitScanForward64
 #define _BitScanReverse BitScanReverse
@@ -470,7 +402,7 @@ uint32_t CharUpperBuffW(const char16* lpsz, uint32_t  cchLength);
 #if defined(__GNUC__) || defined(__clang__)
 #define _ReturnAddress() __builtin_return_address(0)
 #if !__has_builtin(_AddressOfReturnAddress)
-__forceinline void * _AddressOfReturnAddress()
+inline void * _AddressOfReturnAddress()
 {
     return (void*)((char*) __builtin_frame_address(0) + sizeof(void*));
 }
@@ -499,7 +431,6 @@ extern "C" void * _AddressOfReturnAddress(void);
 #define STRSAFEAPI  _STRSAFE_EXTERN_C HRESULT
 #else
 #define STRSAFEAPI  inline HRESULT
-#define STRSAFE_INLINE
 #endif
 
 STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, ...);
@@ -614,7 +545,7 @@ void TryFinally(const TryFunc& tryFunc, const FinallyFunc& finallyFunc)
 
 namespace PlatformAgnostic
 {
-    __forceinline unsigned char _BitTestAndSet(int32_t *_BitBase, int _BitPos)
+    inline unsigned char _BitTestAndSet(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittestandset intrinic to bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -632,7 +563,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _BitTest(int32_t *_BitBase, int _BitPos)
+    inline unsigned char _BitTest(int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _bittest intrinic to bt, and it's implemention also doesn't work for _BitPos >= 32
@@ -650,7 +581,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndSet(volatile int32_t *_BitBase, int _BitPos)
+    inline unsigned char _InterlockedBitTestAndSet(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock bts, and it's implemention also doesn't work for _BitPos >= 32
@@ -668,7 +599,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    __forceinline unsigned char _InterlockedBitTestAndReset(volatile int32_t *_BitBase, int _BitPos)
+    inline unsigned char _InterlockedBitTestAndReset(volatile int32_t *_BitBase, int _BitPos)
     {
 #if defined(__clang__) && !defined(_ARM_) && !defined(_ARM64_)
         // Clang doesn't expand _interlockedbittestandset intrinic to lock btr, and it's implemention also doesn't work for _BitPos >= 32

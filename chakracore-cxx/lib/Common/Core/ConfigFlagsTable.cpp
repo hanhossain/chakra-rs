@@ -838,7 +838,7 @@ namespace Js
     ///----------------------------------------------------------------------------
 
     Flag
-    ConfigFlagsTable::GetFlag(__in LPCWSTR str)
+    ConfigFlagsTable::GetFlag(LPCWSTR str)
     {
         for(int i=0; i < FlagCount; i++)
         {
@@ -860,7 +860,7 @@ namespace Js
     ///----------------------------------------------------------------------------
 
     Phase
-    ConfigFlagsTable::GetPhase(__in LPCWSTR str)
+    ConfigFlagsTable::GetPhase(LPCWSTR str)
     {
         for(int i=0; i < PhaseCount; i++)
         {

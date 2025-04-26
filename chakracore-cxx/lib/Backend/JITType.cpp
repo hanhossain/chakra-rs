@@ -17,7 +17,7 @@ JITType::JITType(TypeIDL * data) :
 
 /* static */
 void
-JITType::BuildFromJsType(__in Js::Type * jsType, __out JITType * jitType)
+JITType::BuildFromJsType(Js::Type * jsType, JITType * jitType)
 {
     TypeIDL * data = jitType->GetData();
     data->exists = true;

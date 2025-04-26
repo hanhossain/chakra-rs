@@ -126,7 +126,7 @@ private:
 
     void PrintArena(bool liveOnly);
 
-    static THREAD_LOCAL MemoryProfiler * Instance;
+    static thread_local MemoryProfiler * Instance;
 
     static CriticalSection s_cs;
     static AutoPtr<MemoryProfiler, NoCheckHeapAllocator> profilers;

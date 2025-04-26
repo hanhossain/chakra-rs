@@ -97,7 +97,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool r
 }
 
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
-bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsInHeap(__in void* address)
+bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsInHeap(void* address)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autocs(&this->criticalSection);
     return this->allocationHeap.IsInHeap(address);
@@ -297,7 +297,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FinalizeAllocatio
 
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferAllocation *allocation, __in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferAllocation *allocation, size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer)
 {
     Assert(this->criticalSection.IsLocked());
 
@@ -323,7 +323,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::GetBuffer(TEmitBufferA
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 EmitBufferAllocation<TAlloc, TPreReservedAlloc>*
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(__in size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount /*=0*/, ushort xdataSize  /*=0*/, bool canAllocInPreReservedHeapPageSegment /*=false*/,
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(size_t bytes, __deref_bcount(bytes) uint8_t** ppBuffer, ushort pdataCount /*=0*/, ushort xdataSize  /*=0*/, bool canAllocInPreReservedHeapPageSegment /*=false*/,
     bool isAnyJittedCode /* = false*/)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
@@ -434,7 +434,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, __in const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, __in size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, __in uint32_t alignPad)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBufferAllocation* allocation, const size_t destBufferBytes, __out_bcount(destBufferBytes) uint8_t* destBuffer, size_t bytes, __in_bcount(bytes) const uint8_t* sourceBuffer, uint32_t alignPad)
 {
     AutoRealOrFakeCriticalSection<SyncObject> autoCs(&this->criticalSection);
 

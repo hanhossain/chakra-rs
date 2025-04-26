@@ -7,7 +7,7 @@
 
 __declspec(dllexport)
 HRESULT JsInitializeJITServer(
-    __in UUID* connectionUuid,
+    UUID* connectionUuid,
     __in_opt void* securityDescriptor,
     __in_opt void* alpcSecurityDescriptor)
 {

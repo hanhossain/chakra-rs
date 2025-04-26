@@ -16,7 +16,7 @@ public:
 
     virtual LPCTSTR GetLibraryName() const = 0;
 
-    FARPROC GetFunction(__in LPCSTR lpFunctionName);
+    FARPROC GetFunction(LPCSTR lpFunctionName);
 
     void EnsureFromSystemDirOnly();
     bool IsAvailable();

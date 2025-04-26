@@ -1584,7 +1584,7 @@ class ListOpnd : public Opnd
     };
 public:
     ~ListOpnd();
-    static ListOpnd* New(Func *func, __in_ecount(count) ListOpndType** opnds, DECLSPEC_GUARD_OVERFLOW int count);
+    static ListOpnd* New(Func *func, __in_ecount(count) ListOpndType** opnds, int count);
     template<typename... T>
     static ListOpnd* New(Func *func, T... opnds)
     {
@@ -1646,7 +1646,7 @@ public:
     }
 
 private:
-    ListOpnd(Func* func, __in_ecount(count) ListOpndType** opnds, DECLSPEC_GUARD_OVERFLOW int count);
+    ListOpnd(Func* func, __in_ecount(count) ListOpndType** opnds, int count);
 
 private:
     int count;

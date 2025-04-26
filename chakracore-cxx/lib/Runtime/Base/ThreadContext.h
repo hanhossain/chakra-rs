@@ -789,7 +789,7 @@ private:
 
     Js::ImplicitCallFlags implicitCallFlags;
 
-    THREAD_LOCAL static uint activeScriptSiteCount;
+    thread_local static uint activeScriptSiteCount;
     bool isScriptActive;
 
     // When ETW rundown in background thread which needs to walk scriptContext/functionBody/entryPoint lists,
@@ -1002,7 +1002,7 @@ public:
         TTD::TTDCreateJsRTContextCallback createJsRTContextCallbackfp, TTD::TTDReleaseJsRTContextCallback releaseJsRTContextCallbackfp, TTD::TTDSetActiveJsRTContext fpSetActiveJsRTContext);
 #endif
 
-    BOOL ReserveStaticTypeIds(__in int first, __in int last);
+    BOOL ReserveStaticTypeIds(int first, int last);
     Js::TypeId ReserveTypeIds(int count);
     Js::TypeId CreateTypeId();
     Js::TypeId GetNextTypeId() { return nextTypeId; }
@@ -1091,7 +1091,7 @@ private:
     template <bool locked> Js::PropertyRecord const * GetPropertyNameImpl(Js::PropertyId propertyId);
 public:
     void FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRecord const ** propertyRecord);
-    void FindPropertyRecord(__in LPCWCH propertyName, __in int propertyNameLength, Js::PropertyRecord const ** propertyRecord);
+    void FindPropertyRecord(LPCWCH propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord);
     const Js::PropertyRecord * FindPropertyRecord(const char16 * propertyName, int propertyNameLength);
 
     JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength);
@@ -1113,7 +1113,7 @@ public:
     void GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const** propertyRecord);
     void GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<WCHAR> const& propertyName, _Out_ Js::PropertyRecord const** propertyRecord);
     Js::PropertyRecord const * UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR> const& propertyName, bool bind, bool isSymbol = false);
-    Js::PropertyRecord const * UncheckedAddPropertyId(__in LPCWSTR propertyName, __in int propertyNameLength, bool bind = false, bool isSymbol = false);
+    Js::PropertyRecord const * UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind = false, bool isSymbol = false);
 
 #ifdef ENABLE_JS_ETW
     void EtwLogPropertyIdList();
@@ -1417,8 +1417,8 @@ public:
     }
 
     static bool IsOnStack(void const *ptr);
-    _NOINLINE bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
-    _NOINLINE bool IsStackAvailableNoThrow(size_t size = Js::Constants::MinStackDefault);
+    bool IsStackAvailable(size_t size, bool* isInterrupt = nullptr);
+    bool IsStackAvailableNoThrow(size_t size = Js::Constants::MinStackDefault);
     static bool IsCurrentStackAvailable(size_t size);
     void ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);
     void ProbeStack(size_t size, Js::ScriptContext *scriptContext, void * returnAddress = nullptr);

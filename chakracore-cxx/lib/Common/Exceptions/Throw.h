@@ -34,7 +34,7 @@ namespace Js {
         static void __declspec(noreturn) FatalJsBuiltInError();
 #endif
 
-        static bool ReportAssert(__in LPCSTR fileName, uint lineNumber, __in LPCSTR error, __in LPCSTR message);
+        static bool ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message);
         static void LogAssert();
 #ifdef GENERATE_DUMP
         static int GenerateDump(PEXCEPTION_POINTERS exceptInfo, LPCWSTR filePath, int ret = EXCEPTION_CONTINUE_SEARCH, bool needLock = false);
@@ -43,7 +43,7 @@ namespace Js {
     private:
         static CriticalSection csGenerateDump;
 #ifdef STACK_BACK_TRACE
-        THREAD_LOCAL static  StackBackTrace * stackBackTrace;
+        thread_local static  StackBackTrace * stackBackTrace;
 
         static const int StackToSkip = 2;
         static const int StackTraceDepth = 40;
@@ -53,7 +53,7 @@ namespace Js {
 
     // Info:        Verify the result or throw catastrophic
     // Parameters:  HRESULT
-    inline void VerifyOkCatastrophic(__in HRESULT hr)
+    inline void VerifyOkCatastrophic(HRESULT hr)
     {
         if (hr == E_OUTOFMEMORY)
         {
@@ -68,7 +68,7 @@ namespace Js {
     // Info:        Verify the result or throw catastrophic
     // Parameters:  bool
     template<typename TCheck>
-    inline void VerifyCatastrophic(__in TCheck result)
+    inline void VerifyCatastrophic(TCheck result)
     {
         if (!result)
         {

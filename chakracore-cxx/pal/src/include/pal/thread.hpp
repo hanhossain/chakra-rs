@@ -793,18 +793,12 @@ Abstract:
   linux we need to use gettid().
 
 --*/
-#ifndef __APPLE__
-#define THREAD_LOCAL thread_local
-#else
-#define THREAD_LOCAL _Thread_local
-#endif
-
 #if defined(__LINUX__)
 #define THREADSilentGetCurrentThreadId() (SIZE_T)syscall(SYS_gettid)
 #elif defined(__APPLE__)
 inline SIZE_T THREADSilentGetCurrentThreadId() {
 #ifndef __IOS__
-    static THREAD_LOCAL SIZE_T threadIdSelf = -1;
+    static thread_local SIZE_T threadIdSelf = -1;
     if (threadIdSelf != -1) return threadIdSelf;
 #endif
     uint64_t tid;

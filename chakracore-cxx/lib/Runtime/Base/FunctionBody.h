@@ -1532,7 +1532,7 @@ namespace Js
         DEFINE_VTABLE_CTOR_NO_REGISTER(ParseableFunctionInfo, FunctionProxy);
         FunctionBody* Parse(ScriptFunction ** functionRef = nullptr, bool isByteCodeDeserialization = false);
 #ifdef ASMJS_PLAT
-        FunctionBody* ParseAsmJs(Parser * p, __out CompileScriptException * se, __out ParseNodeProg ** ptree);
+        FunctionBody* ParseAsmJs(Parser * p, CompileScriptException * se, ParseNodeProg ** ptree);
 #endif
 
         FunctionBodyFlags GetFlags() const { return flags; }
@@ -3330,7 +3330,7 @@ namespace Js
             return sourceSpan->begin == 0 && sourceSpan->end == 0;
         }
 
-        static void GetShortNameFromUrl(__in LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) LPWSTR pchShortName, __in size_t cchBuffer);
+        static void GetShortNameFromUrl(LPCWSTR pchUrl, _Out_writes_z_(cchBuffer) LPWSTR pchShortName, size_t cchBuffer);
 
         template<class Fn>
         void MapLoopHeaders(Fn fn) const
@@ -3774,7 +3774,7 @@ namespace Js
 
         // Helper methods
         void Insert(RegSlot reg, PropertyId propId);
-        void FetchItemAt(uint index, FunctionBody *pFuncBody, __out PropertyId *pPropId, __out RegSlot *pRegSlot);
+        void FetchItemAt(uint index, FunctionBody *pFuncBody, PropertyId *pPropId, RegSlot *pRegSlot);
         // Whether reg belongs to non-temp locals
         bool IsRegSlotFormal(RegSlot reg);
     };

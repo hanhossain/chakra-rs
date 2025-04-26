@@ -35,7 +35,7 @@ enum BucketId
     NumBuckets
 };
 
-BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
+BucketId GetBucketForSize(size_t bytes);
 
 struct Page
 {
@@ -61,7 +61,7 @@ struct Page
         return freeBitVector.FirstStringOfOnes(1 << targetBucket) != BVInvalidIndex;
     }
 
-    Page(__in char* address, void* segment, BucketId bucket):
+    Page(char* address, void* segment, BucketId bucket):
       address(address),
       segment(segment),
       currentBucket(bucket),
@@ -155,7 +155,7 @@ public:
         return reinterpret_cast<SegmentBaseCommon*>(segment)->IsInPreReservedHeapPageAllocator();
     }
 
-    bool IsInNonPreReservedPageAllocator(__in void *address)
+    bool IsInNonPreReservedPageAllocator(void *address)
     {
         Assert(this->cs.IsLocked());
         return this->pageAllocator.IsAddressFromAllocator(address);
@@ -184,7 +184,7 @@ public:
     char * AllocLocal(char * remoteAddr, size_t size, void * segment);
     void FreeLocal(char * addr, void * segment);
 
-    char * AllocPages(DECLSPEC_GUARD_OVERFLOW uint pages, void ** pageSegment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
+    char * AllocPages(uint pages, void ** pageSegment, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, bool * isAllJITCodeInPreReservedRegion)
     {
         Assert(this->cs.IsLocked());
         char * address = nullptr;
@@ -214,7 +214,7 @@ public:
         return address;
     }
 
-    void ReleasePages(void* pageAddress, uint pageCount, __in void* segment)
+    void ReleasePages(void* pageAddress, uint pageCount, void* segment)
     {
         Assert(this->cs.IsLocked());
         Assert(segment);
@@ -228,7 +228,7 @@ public:
         }
     }
 
-    BOOL ProtectPages(__in char* address, size_t pageCount, __in void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
+    BOOL ProtectPages(char* address, size_t pageCount, void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag)
     {
         // This is merely a wrapper for VirtualProtect, no need to synchornize, and doesn't touch any data.
         // No need to assert locked.
@@ -243,7 +243,7 @@ public:
         }
     }
 
-    void TrackDecommittedPages(void * address, uint pageCount, __in void* segment)
+    void TrackDecommittedPages(void * address, uint pageCount, void* segment)
     {
         Assert(this->cs.IsLocked());
         Assert(segment);
@@ -281,7 +281,7 @@ public:
         return false;
     }
 
-    void DecommitPages(__in char* address, size_t pageCount, void* segment)
+    void DecommitPages(char* address, size_t pageCount, void* segment)
     {
         // This is merely a wrapper for VirtualFree, no need to synchornize, and doesn't touch any data.
         // No need to assert locked.
@@ -326,7 +326,7 @@ public:
         }
     }
 
-    void ReleaseDecommitted(void * address, size_t pageCount, __in void *  segment)
+    void ReleaseDecommitted(void * address, size_t pageCount, void *  segment)
     {
         Assert(this->cs.IsLocked());
         Assert(segment);
@@ -393,11 +393,11 @@ class Heap
 public:
     Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc>  * codePageAllocators, HANDLE processHandle);
 
-    Allocation* Alloc(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
-    void Free(__in Allocation* allocation);
+    Allocation* Alloc(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
+    void Free(Allocation* allocation);
     void DecommitAll();
     void FreeAll();
-    bool IsInHeap(__in void* address);
+    bool IsInHeap(void* address);
 
     // A page should be in full list if:
     // 1. It does not have any space
@@ -407,9 +407,9 @@ public:
         return page->HasNoSpace() || (codePageAllocators->AllocXdata() && !((Segment*)(page->segment))->CanAllocSecondary());
     }
 
-    BOOL ProtectAllocation(__in Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage = nullptr);
+    BOOL ProtectAllocation(Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage = nullptr);
     BOOL ProtectAllocationWithExecuteReadWrite(Allocation *allocation, __in_opt char* addressInPage = nullptr);
-    BOOL ProtectAllocationWithExecuteReadOnly(__in Allocation *allocation, __in_opt char* addressInPage = nullptr);
+    BOOL ProtectAllocationWithExecuteReadOnly(Allocation *allocation, __in_opt char* addressInPage = nullptr);
 
     ~Heap();
 
@@ -425,12 +425,12 @@ private:
     /**
      * Inline methods
      */
-    inline unsigned int GetChunkSizeForBytes(DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline unsigned int GetChunkSizeForBytes(size_t bytes)
     {
         return (bytes > Page::Alignment ? static_cast<unsigned int>(bytes) / Page::Alignment : 1);
     }
 
-    inline size_t GetNumPagesForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline size_t GetNumPagesForSize(size_t bytes)
     {
         size_t allocSize = AllocSizeMath::Add(bytes, AutoSystemInfo::PageSize);
 
@@ -442,7 +442,7 @@ private:
         return ((allocSize - 1)/ AutoSystemInfo::PageSize);
     }
 
-    inline BVIndex GetFreeIndexForPage(Page* page, DECLSPEC_GUARD_OVERFLOW size_t bytes)
+    inline BVIndex GetFreeIndexForPage(Page* page, size_t bytes)
     {
         unsigned int length = GetChunkSizeForBytes(bytes);
         BVIndex index = page->freeBitVector.FirstStringOfOnes(length);
@@ -453,7 +453,7 @@ private:
     /**
      * Large object methods
      */
-    Allocation* AllocLargeObject(DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
+    Allocation* AllocLargeObject(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
 
     void FreeLargeObject(Allocation* header);
 
@@ -511,17 +511,17 @@ private:
      * Page methods
      */
     Page*       AddPageToBucket(Page* page, BucketId bucket, bool wasFull = false);
-    bool        AllocInPage(Page* page, DECLSPEC_GUARD_OVERFLOW size_t bytes, ushort pdataCount, ushort xdataSize, Allocation ** allocation);
+    bool        AllocInPage(Page* page, size_t bytes, ushort pdataCount, ushort xdataSize, Allocation ** allocation);
     Page*       AllocNewPage(BucketId bucket, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
     Page*       FindPageToSplit(BucketId targetBucket, bool findPreReservedHeapPages = false);
 
     bool        UpdateFullPages();
     Page *      GetExistingPage(BucketId bucket, bool canAllocInPreReservedHeapPageSegment);
 
-    BVIndex     GetIndexInPage(__in Page* page, __in char* address);
-    bool        IsInHeap(DListBase<Page> const buckets[NumBuckets], __in void *address);
-    bool        IsInHeap(DListBase<Page> const& buckets, __in void *address);
-    bool        IsInHeap(DListBase<Allocation> const& allocations, __in void *address);
+    BVIndex     GetIndexInPage(Page* page, char* address);
+    bool        IsInHeap(DListBase<Page> const buckets[NumBuckets], void *address);
+    bool        IsInHeap(DListBase<Page> const& buckets, void *address);
+    bool        IsInHeap(DListBase<Allocation> const& allocations, void *address);
 
     /**
      * Stats
@@ -559,7 +559,7 @@ private:
 typedef Heap<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> InProcHeap;
 // Helpers
 unsigned int log2(size_t number);
-BucketId GetBucketForSize(DECLSPEC_GUARD_OVERFLOW size_t bytes);
+BucketId GetBucketForSize(size_t bytes);
 void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size_t byteCount);
 } // namespace CustomHeap
 } // namespace Memory

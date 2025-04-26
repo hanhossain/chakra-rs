@@ -627,7 +627,7 @@ namespace Js
         return args[0];
     }
 
-    ArrayBufferContentForDelayedFreeBase* ArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength)
+    ArrayBufferContentForDelayedFreeBase* ArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength)
     {
         Assert(content != nullptr);
         FreeFn freeFn = nullptr;
@@ -1234,7 +1234,7 @@ namespace Js
         /* See ProjectionArrayBuffer::Finalize */
     }
 
-    ArrayBufferContentForDelayedFreeBase* ProjectionArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength)
+    ArrayBufferContentForDelayedFreeBase* ProjectionArrayBuffer::CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32 bufferLength)
     {
         // This heap object will be deleted when the Recycler::DelayedFreeArrayBuffer determines to remove this item
         return HeapNew(ArrayBufferContentForDelayedFree<FreeFn>, content, bufferLength, GetRecycler(), CoTaskMemFree);
@@ -1261,7 +1261,7 @@ namespace Js
         return RecyclerNewFinalized(type->GetScriptContext()->GetRecycler(), ExternalArrayBuffer, buffer, length, type);
     }
 
-    ArrayBufferDetachedStateBase* ExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, DECLSPEC_GUARD_OVERFLOW uint32 bufferLength)
+    ArrayBufferDetachedStateBase* ExternalArrayBuffer::CreateDetachedState(RefCountedBuffer* buffer, uint32 bufferLength)
     {
         return HeapNew(ExternalArrayBufferDetachedState, buffer, bufferLength);
     };

@@ -7,9 +7,9 @@
 
 // entry doesn't need a special initialization
 #define ASSERT_ENTRY_INITIALIZED() Assert(true)
-static THREAD_LOCAL ThreadContextTLSEntry* s_tlsSlot = nullptr;
+static thread_local ThreadContextTLSEntry* s_tlsSlot = nullptr;
 #define TlsSetValue(a,b) a = b
-// clang may not optimize the access to THREAD_LOCAL from a sub function
+// clang may not optimize the access to thread_local from a sub function
 #define ENTRY_FOR_CURRENT_THREAD() s_tlsSlot
 
 bool ThreadContextTLSEntry::InitializeProcess()

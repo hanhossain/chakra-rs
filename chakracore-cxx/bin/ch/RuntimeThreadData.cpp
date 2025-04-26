@@ -13,7 +13,7 @@ void RuntimeThreadLocalData::Uninitialize()
 {
 }
 
-THREAD_LOCAL RuntimeThreadLocalData threadLocalData;
+thread_local RuntimeThreadLocalData threadLocalData;
 
 RuntimeThreadLocalData& GetRuntimeThreadLocalData()
 {

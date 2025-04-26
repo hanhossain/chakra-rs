@@ -66,7 +66,7 @@ namespace JsUtil
         }
 
         template<class UAllocator>
-        static ReadOnlyList * New(UAllocator* alloc, __in_ecount(count) T* buffer, DECLSPEC_GUARD_OVERFLOW int count)
+        static ReadOnlyList * New(UAllocator* alloc, __in_ecount(count) T* buffer, int count)
         {
             return AllocatorNew(UAllocator, alloc, ReadOnlyList, buffer, count, alloc);
         }
@@ -217,7 +217,7 @@ namespace JsUtil
         Field(int) increment;
         Field(TRemovePolicyType) removePolicy;
 
-        Field(T, TAllocator) * AllocArray(DECLSPEC_GUARD_OVERFLOW int size)
+        Field(T, TAllocator) * AllocArray(int size)
         {
             typedef Field(T, TAllocator) TField;
             return AllocatorNewArrayBaseFuncPtr(TAllocator, this->alloc, AllocatorInfo::GetAllocFunc(), TField, size);
@@ -246,7 +246,7 @@ namespace JsUtil
             EnsureArray(0);
         }
 
-        void EnsureArray(DECLSPEC_GUARD_OVERFLOW int32 requiredCapacity)
+        void EnsureArray(int32 requiredCapacity)
         {
             if (this->buffer == nullptr)
             {

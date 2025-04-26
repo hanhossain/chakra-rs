@@ -15,7 +15,7 @@ void ArenaMemoryTracking::Activate()
 }
 
 // ArenaMemoryTracking stubs
-void ArenaMemoryTracking::ArenaCreated(Allocator *arena,  __in LPCWSTR name)
+void ArenaMemoryTracking::ArenaCreated(Allocator *arena,  LPCWSTR name)
 {
     // Called when arena is created.
 }
@@ -77,17 +77,17 @@ void RecyclerMemoryTracking::ReportRecyclerDestroy(Recycler * recycler)
     // Called when a recycler is freed.
 }
 
-void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, void *address, size_t size)
 {
     // Called when size bytes at address are allocated from the recycler.
 }
 
-void RecyclerMemoryTracking::ReportFree(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportFree(Recycler * recycler, void *address, size_t size)
 {
     // Called when size bytes at address are freed.
 }
 
-void RecyclerMemoryTracking::ReportUnallocated(Recycler * recycler, __in void* address, __in void *endAddress, size_t sizeCat)
+void RecyclerMemoryTracking::ReportUnallocated(Recycler * recycler, void* address, void *endAddress, size_t sizeCat)
 {
     // Even though the memory is not really allocated between address and endAddress,
     // the recycler initially treats it as allocated and a ReportFree() will be called on it even
@@ -121,12 +121,12 @@ void PageTracking::PageAllocatorDestroyed(PageAllocator *pageAllocator)
     // Called when a page allocator is destroyed.
 }
 
-void PageTracking::ReportAllocation(PageAllocator *pageAllocator, __in void *address, size_t size)
+void PageTracking::ReportAllocation(PageAllocator *pageAllocator, void *address, size_t size)
 {
     // Called when size bytes are allocated at address.
 }
 
-void PageTracking::ReportFree(PageAllocator *pageAllocator, __in void *address, size_t size)
+void PageTracking::ReportFree(PageAllocator *pageAllocator, void *address, size_t size)
 {
     // Called when size bytes are freed at address.
 }

@@ -36,10 +36,10 @@ public:
     static  BVFixed *       New(TAllocator* alloc, BVFixed * initBv);
 
     template <typename TAllocator>
-    static  BVFixed *       New(DECLSPEC_GUARD_OVERFLOW BVIndex length, TAllocator* alloc, bool initialSet = false);
+    static  BVFixed *       New(BVIndex length, TAllocator* alloc, bool initialSet = false);
 
     template <typename TAllocator>
-    static  BVFixed *       NewNoThrow(DECLSPEC_GUARD_OVERFLOW BVIndex length, TAllocator* alloc, bool initialSet = false);
+    static  BVFixed *       NewNoThrow(BVIndex length, TAllocator* alloc, bool initialSet = false);
 
     template <typename TAllocator>
     void                    Delete(TAllocator * alloc);
@@ -153,14 +153,14 @@ BVFixed * BVFixed::New(TAllocator * alloc, BVFixed * initBv)
 }
 
 template <typename TAllocator>
-BVFixed * BVFixed::New(DECLSPEC_GUARD_OVERFLOW BVIndex length, TAllocator * alloc, bool initialSet)
+BVFixed * BVFixed::New(BVIndex length, TAllocator * alloc, bool initialSet)
 {
     BVFixed *result = AllocatorNewPlusLeaf(TAllocator, alloc, sizeof(BVUnit) * BVFixed::WordCount(length), BVFixed, length, initialSet);
     return result;
 }
 
 template <typename TAllocator>
-BVFixed * BVFixed::NewNoThrow(DECLSPEC_GUARD_OVERFLOW BVIndex length, TAllocator * alloc, bool initialSet)
+BVFixed * BVFixed::NewNoThrow(BVIndex length, TAllocator * alloc, bool initialSet)
 {
     BVFixed *result = AllocatorNewNoThrowNoRecoveryPlus(TAllocator, alloc, sizeof(BVUnit) * BVFixed::WordCount(length), BVFixed, length, initialSet);
     return result;
@@ -298,9 +298,7 @@ void BVFixed::SetRange(Container* value, BVIndex start, BVIndex len)
         // Default case. We need to process everything 1 at a time
         {
             // First set the first bits
-CLANG_WNO_BEGIN("-Wtautological-compare")
             const BVUnit::BVUnitTContainer mask = MAKE_MASK(oStart, BVUnit::BitsPerWord);
-CLANG_WNO_END
             SET_RANGE(iStart, *bits << oStart, mask);
         }
         // Set the bits in the middle

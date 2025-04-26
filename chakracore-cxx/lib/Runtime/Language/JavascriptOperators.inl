@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    __forceinline TypeId JavascriptOperators::GetTypeId(_In_ RecyclableObject* obj)
+    inline TypeId JavascriptOperators::GetTypeId(_In_ RecyclableObject* obj)
     {
         AssertMsg(obj != nullptr, "GetTypeId aValue is null");
 
@@ -15,7 +15,7 @@ namespace Js
         return typeId;
     }
 
-    __forceinline TypeId JavascriptOperators::GetTypeId(_In_ const Var aValue)
+    inline TypeId JavascriptOperators::GetTypeId(_In_ const Var aValue)
     {
         AssertMsg(aValue != nullptr, "GetTypeId aValue is null");
 
@@ -35,7 +35,7 @@ namespace Js
         }
     }
 
-    __forceinline TypeId JavascriptOperators::GetTypeIdNoCheck(const Var aValue)
+    inline TypeId JavascriptOperators::GetTypeIdNoCheck(const Var aValue)
     {
         AssertMsg(aValue != nullptr, "GetTypeId aValue is null");
 

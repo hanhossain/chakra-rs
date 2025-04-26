@@ -11,9 +11,9 @@ public:
     JITTimePolymorphicInlineCacheInfo();
 
     static void InitializeEntryPointPolymorphicInlineCacheInfo(
-        __in Recycler * recycler,
-        __in Js::EntryPointPolymorphicInlineCacheInfo * runtimeInfo,
-        __out CodeGenWorkItemIDL * jitInfo);
+        Recycler * recycler,
+        Js::EntryPointPolymorphicInlineCacheInfo * runtimeInfo,
+        CodeGenWorkItemIDL * jitInfo);
 
     JITTimePolymorphicInlineCache * GetInlineCache(uint index) const;
     bool HasInlineCaches() const;
@@ -22,9 +22,9 @@ public:
 private:
 
     static void InitializePolymorphicInlineCacheInfo(
-        __in Recycler * recycler,
-        __in Js::PolymorphicInlineCacheInfo * runtimeInfo,
-        __out PolymorphicInlineCacheInfoIDL * jitInfo);
+        Recycler * recycler,
+        Js::PolymorphicInlineCacheInfo * runtimeInfo,
+        PolymorphicInlineCacheInfoIDL * jitInfo);
 
     PolymorphicInlineCacheInfoIDL m_data;
 };

@@ -174,7 +174,7 @@ public:
     static const bool FakeZeroLengthArray = true;
     static const size_t MaxSmallObjectSize = 1024;
 
-    ArenaAllocatorBase(__in char16 const* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory);
+    ArenaAllocatorBase(char16 const* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory);
     ~ArenaAllocatorBase();
 
     void Reset()
@@ -240,9 +240,9 @@ public:
 
     static size_t GetAlignedSize(size_t size) { return AllocSizeMath::Align(size, ArenaAllocatorBase::ObjectAlignment); }
 
-    char * AllocInternal(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes);
+    char * AllocInternal(size_t requestedBytes);
 
-    char* Realloc(void* buffer, DECLSPEC_GUARD_OVERFLOW size_t existingBytes, DECLSPEC_GUARD_OVERFLOW size_t requestedBytes);
+    char* Realloc(void* buffer, size_t existingBytes, size_t requestedBytes);
     void Free(void * buffer, size_t byteSize);
 #if DBG
     bool HasDelayFreeList() const
@@ -262,8 +262,8 @@ public:
 #endif
 
 protected:
-    char * RealAlloc(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
-    __forceinline char * RealAllocInlined(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
+    char * RealAlloc(size_t nbytes);
+    char * RealAllocInlined(size_t nbytes);
 private:
 #ifdef PROFILE_MEM
     void LogBegin();
@@ -277,11 +277,11 @@ private:
     static size_t Size(BigBlock * blockList);
     void FullReset();
     void SetCacheBlock(BigBlock * cacheBlock);
-    template <bool DoRecoverMemory> char * AllocFromHeap(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
+    template <bool DoRecoverMemory> char * AllocFromHeap(size_t nbytes);
     void ReleaseMemory();
     void ReleasePageMemory();
     void ReleaseHeapMemory();
-    char * SnailAlloc(DECLSPEC_GUARD_OVERFLOW size_t nbytes);
+    char * SnailAlloc(size_t nbytes);
     BigBlock * AddBigBlock(size_t pages);
 
 #ifdef ARENA_ALLOCATOR_FREE_LIST_SIZE
@@ -316,7 +316,7 @@ public:
     static const unsigned char DbgFreeMemFill = DbgMemFill;
 #endif
     static void * New(ArenaAllocatorBase<InPlaceFreeListPolicy> * allocator);
-    static void * Allocate(void * policy, DECLSPEC_GUARD_OVERFLOW size_t size);
+    static void * Allocate(void * policy, size_t size);
     static void * Free(void * policy, void * object, size_t size);
     static void * Reset(void * policy);
 #if DBG
@@ -371,7 +371,7 @@ public:
     static const char DbgFreeMemFill = 0x0;
 #endif
     static void * New(ArenaAllocatorBase<StandAloneFreeListPolicy> * allocator);
-    static void * Allocate(void * policy, DECLSPEC_GUARD_OVERFLOW size_t size);
+    static void * Allocate(void * policy, size_t size);
     static void * Free(void * policy, void * object, size_t size);
     static void * Reset(void * policy);
     static void PrepareFreeObject(_Out_writes_bytes_all_(size) void * object, _In_ size_t size)
@@ -404,18 +404,17 @@ public:
 class ArenaAllocator : public ArenaAllocatorBase<InPlaceFreeListPolicy>
 {
 public:
-    ArenaAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    ArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         ArenaAllocatorBase<InPlaceFreeListPolicy>(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc)
     {
     }
 
-    __forceinline
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * Alloc(size_t requestedBytes)
     {
         return AllocInternal(requestedBytes);
     }
 
-    char * AllocZero(DECLSPEC_GUARD_OVERFLOW size_t nbytes)
+    char * AllocZero(size_t nbytes)
     {
         char * buffer = Alloc(nbytes);
         memset(buffer, 0, nbytes);
@@ -426,13 +425,13 @@ public:
         return buffer;
     }
 
-    char * AllocLeaf(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * AllocLeaf(size_t requestedBytes)
     {
         // Leaf allocation is not meaningful here, but needed by Allocator-templatized classes that may call one of the Leaf versions of AllocatorNew
         return Alloc(requestedBytes);
     }
 
-    char * NoThrowAlloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowAlloc(size_t requestedBytes)
     {
         void (*tempOutOfMemoryFunc)() = outOfMemoryFunc;
         outOfMemoryFunc = nullptr;
@@ -441,7 +440,7 @@ public:
         return buffer;
     }
 
-    char * NoThrowAllocZero(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowAllocZero(size_t requestedBytes)
     {
         char * buffer = NoThrowAlloc(requestedBytes);
         if (buffer != nullptr)
@@ -451,7 +450,7 @@ public:
         return buffer;
     }
 
-    char * NoThrowNoRecoveryAlloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowNoRecoveryAlloc(size_t requestedBytes)
     {
         void (*tempRecoverMemoryFunc)() = recoverMemoryFunc;
         recoverMemoryFunc = nullptr;
@@ -460,7 +459,7 @@ public:
         return buffer;
     }
 
-    char * NoThrowNoRecoveryAllocZero(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowNoRecoveryAllocZero(size_t requestedBytes)
     {
         char * buffer = NoThrowNoRecoveryAlloc(requestedBytes);
         if (buffer != nullptr)
@@ -482,12 +481,12 @@ private:
 
 public:
 
-    JitArenaAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    JitArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         bvFreeList(nullptr), ArenaAllocator(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc)
     {
     }
 
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * Alloc(size_t requestedBytes)
     {
         // Fast path
         if (sizeof(BVSparseNode) == requestedBytes)
@@ -513,7 +512,7 @@ public:
         return FreeInline(buffer, byteSize);
     }
 
-    __forceinline void FreeInline(void * buffer, size_t byteSize)
+    void FreeInline(void * buffer, size_t byteSize)
     {
         if (sizeof(BVSparseNode) == byteSize)
         {
@@ -525,22 +524,22 @@ public:
         return ArenaAllocator::Free(buffer, byteSize);
     }
 
-    char * AllocZero(DECLSPEC_GUARD_OVERFLOW size_t nbytes)
+    char * AllocZero(size_t nbytes)
     {
         return ArenaAllocator::AllocZero(nbytes);
     }
 
-    char * AllocLeaf(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * AllocLeaf(size_t requestedBytes)
     {
         return ArenaAllocator::AllocLeaf(requestedBytes);
     }
 
-    char * NoThrowAlloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowAlloc(size_t requestedBytes)
     {
         return ArenaAllocator::NoThrowAlloc(requestedBytes);
     }
 
-    char * NoThrowAllocZero(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * NoThrowAllocZero(size_t requestedBytes)
     {
         return ArenaAllocator::NoThrowAllocZero(requestedBytes);
     }
@@ -562,7 +561,7 @@ public:
 class NoRecoverMemoryJitArenaAllocator : public JitArenaAllocator
 {
 public:
-    NoRecoverMemoryJitArenaAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    NoRecoverMemoryJitArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         JitArenaAllocator(name, pageAllocator, outOfMemoryFunc, NULL)
     {
     }
@@ -573,7 +572,7 @@ public:
 class NoRecoverMemoryArenaAllocator : public ArenaAllocator
 {
 public:
-    NoRecoverMemoryArenaAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
+    NoRecoverMemoryArenaAllocator(LPCWSTR name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)()) :
         ArenaAllocator(name, pageAllocator, outOfMemoryFunc, NULL)
     {
     }
@@ -627,7 +626,7 @@ public:
     static const unsigned char DbgFreeMemFill = DbgMemFill;
 #endif
     static void * New(ArenaAllocatorBase<InlineCacheAllocatorTraits> * allocator);
-    static void * Allocate(void * policy, DECLSPEC_GUARD_OVERFLOW size_t size);
+    static void * Allocate(void * policy, size_t size);
     static void * Free(void * policy, void * object, size_t size);
     static void * Reset(void * policy);
     static void Release(void * policy);
@@ -684,7 +683,7 @@ public:
     // Zeroing and freeing w/o leaking is not implemented for large objects
     CompileAssert(MaxObjectSize <= MaxSmallObjectSize);
 
-    InlineCacheAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
+    InlineCacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)(), void(*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory) :
         ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc, recoverMemoryFunc), hasUsedInlineCache(false), hasProtoOrStoreFieldInlineCache(false)
 #ifdef POLY_INLINE_CACHE_SIZE_STATS
         , polyCacheAllocSize(0)
@@ -708,13 +707,13 @@ public:
     void SetHasProtoOrStoreFieldInlineCache(bool value) { hasProtoOrStoreFieldInlineCache = value; }
     bool GetHasProtoOrStoreFieldInlineCache() { return hasProtoOrStoreFieldInlineCache; }
 
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * Alloc(size_t requestedBytes)
     {
         DebugOnly(Unlock());
         return AllocInternal(requestedBytes);
     }
 
-    char * AllocZero(DECLSPEC_GUARD_OVERFLOW size_t nbytes)
+    char * AllocZero(size_t nbytes)
     {
         char * buffer = Alloc(nbytes);
         memset(buffer, 0, nbytes);
@@ -770,15 +769,15 @@ private:
 #endif
 
 public:
-    InlineCacheAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    InlineCacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc) {}
 
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * Alloc(size_t requestedBytes)
     {
         return AllocInternal(requestedBytes);
     }
 
-    char * AllocZero(DECLSPEC_GUARD_OVERFLOW size_t nbytes)
+    char * AllocZero(size_t nbytes)
     {
         char * buffer = Alloc(nbytes);
         memset(buffer, 0, nbytes);
@@ -809,20 +808,20 @@ public:
 class CacheAllocator : public ArenaAllocatorBase<CacheAllocatorTraits>
 {
 public:
-    CacheAllocator(__in LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
+    CacheAllocator(LPCWSTR name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
         ArenaAllocatorBase<CacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc)
 #if DBG
         , verifiedAllZeroAndLockedDown(false)
 #endif
     {}
 
-    char * Alloc(DECLSPEC_GUARD_OVERFLOW size_t requestedBytes)
+    char * Alloc(size_t requestedBytes)
     {
         DebugOnly(Unlock());
         return AllocInternal(requestedBytes);
     }
 
-    char * AllocZero(DECLSPEC_GUARD_OVERFLOW size_t nbytes)
+    char * AllocZero(size_t nbytes)
     {
         char * buffer = Alloc(nbytes);
         memset(buffer, 0, nbytes);

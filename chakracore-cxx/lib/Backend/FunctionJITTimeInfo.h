@@ -10,10 +10,10 @@ class FunctionJITTimeInfo
 public:
     FunctionJITTimeInfo(FunctionJITTimeDataIDL * data);
     static void BuildJITTimeData(
-        __in ArenaAllocator * alloc,
-        __in const Js::FunctionCodeGenJitTimeData * codeGenData,
+        ArenaAllocator * alloc,
+        const Js::FunctionCodeGenJitTimeData * codeGenData,
         __in_opt const Js::FunctionCodeGenRuntimeData * runtimeData,
-        __out FunctionJITTimeDataIDL * jitData,
+        FunctionJITTimeDataIDL * jitData,
         bool isInlinee,
         bool isForegroundJIT);
 

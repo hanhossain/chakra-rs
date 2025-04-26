@@ -115,7 +115,7 @@ private:
     uint32_t minorVersion;
     uint32_t buildDateHash;
     uint32_t buildTimeHash;
-    static HRESULT GetVersionInfo(__in LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
+    static HRESULT GetVersionInfo(LPCWSTR pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
 
     static const uint32_t INVALID_VERSION = (uint32_t)-1;
 

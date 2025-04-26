@@ -54,7 +54,7 @@ CriticalSection ThreadContext::s_csThreadContext;
 size_t ThreadContext::processNativeCodeSize = 0;
 ThreadContext * ThreadContext::globalListFirst = nullptr;
 ThreadContext * ThreadContext::globalListLast = nullptr;
-THREAD_LOCAL uint ThreadContext::activeScriptSiteCount = 0;
+thread_local uint ThreadContext::activeScriptSiteCount = 0;
 
 const Js::PropertyRecord * const ThreadContext::builtInPropertyRecords[] =
 {
@@ -804,7 +804,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
 }
 
 void
-ThreadContext::FindPropertyRecord(__in LPCWCH propertyName, __in int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
+ThreadContext::FindPropertyRecord(LPCWCH propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
 {
     EnterPinnedScope((volatile void **)propertyRecord);
     *propertyRecord = FindPropertyRecord(propertyName, propertyNameLength);
@@ -846,7 +846,7 @@ ThreadContext::FindPropertyRecord(const char16 * propertyName, int propertyNameL
 }
 
 Js::PropertyRecord const *
-ThreadContext::UncheckedAddPropertyId(__in LPCWSTR propertyName, __in int propertyNameLength, bool bind, bool isSymbol)
+ThreadContext::UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind, bool isSymbol)
 {
     return UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR>(propertyName, propertyNameLength), bind, isSymbol);
 }
@@ -1533,7 +1533,7 @@ ThreadContext::SetStackLimitForCurrentThread(size_t limit)
     this->stackLimitForCurrentThread = limit;
 }
 
-_NOINLINE //Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
+//Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
 bool
 ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
 {
@@ -1574,7 +1574,7 @@ ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
     return false;
 }
 
-_NOINLINE //Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
+//Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
 bool
 ThreadContext::IsStackAvailableNoThrow(size_t size)
 {
@@ -2157,7 +2157,7 @@ void ThreadContext::PopEntryExitRecord(Js::ScriptEntryExitRecord * record)
     this->entryExitRecord = next;
 }
 
-BOOL ThreadContext::ReserveStaticTypeIds(__in int first, __in int last)
+BOOL ThreadContext::ReserveStaticTypeIds(int first, int last)
 {
     if ( nextTypeId <= first )
     {

@@ -65,12 +65,12 @@ typedef _SIMDValue SIMDValue;
 template <>
 struct DefaultComparer<_SIMDValue>
 {
-    __forceinline static bool Equals(_SIMDValue x, _SIMDValue y)
+    inline static bool Equals(_SIMDValue x, _SIMDValue y)
     {
         return x == y;
     }
 
-    __forceinline static hash_t GetHashCode(_SIMDValue d)
+    inline static hash_t GetHashCode(_SIMDValue d)
     {
         return (hash_t)(d.i32[SIMD_X] ^ d.i32[SIMD_Y] ^ d.i32[SIMD_Z] ^ d.i32[SIMD_W]);
     }

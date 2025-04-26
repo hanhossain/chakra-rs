@@ -17,9 +17,9 @@ public:
     JITTimeFunctionBody(FunctionBodyDataIDL * bodyData);
 
     static void InitializeJITFunctionData(
-        __in ArenaAllocator * arena,
-        __in Js::FunctionBody * functionBody,
-        __out FunctionBodyDataIDL * jitBody);
+        ArenaAllocator * arena,
+        Js::FunctionBody * functionBody,
+        FunctionBodyDataIDL * jitBody);
 
     intptr_t GetAddr() const;
 

@@ -22,9 +22,9 @@ public:
         MemoryFailure = 2,
         MemoryMax = 2,
     };
-    typedef bool (* PageAllocatorMemoryAllocationCallback)(__in void * context,
-        __in AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
-        __in size_t allocationSize);
+    typedef bool (* PageAllocatorMemoryAllocationCallback)(void * context,
+        AllocationPolicyManager::MemoryAllocateEvent allocationEvent,
+        size_t allocationSize);
 
 
 private:
@@ -70,7 +70,7 @@ public:
         memoryLimit = newLimit;
     }
 
-    bool RequestAlloc(DECLSPEC_GUARD_OVERFLOW size_t byteCount, bool externalAlloc = false)
+    bool RequestAlloc(size_t byteCount, bool externalAlloc = false)
     {
         if (supportConcurrency)
         {

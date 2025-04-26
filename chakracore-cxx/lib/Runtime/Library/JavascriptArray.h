@@ -896,7 +896,7 @@ namespace Js
         static void ThrowErrorOnFailure(BOOL succeeded, ScriptContext* scriptContext, BigIndex index);
 
         template<typename T>
-        static void TryGetArrayAndLength(Var arg, ScriptContext *scriptContext, PCWSTR methodName, __out JavascriptArray** array, __out RecyclableObject** obj, __out T * length);
+        static void TryGetArrayAndLength(Var arg, ScriptContext *scriptContext, PCWSTR methodName, JavascriptArray** array, RecyclableObject** obj, T * length);
         static uint64 OP_GetLength(Var obj, ScriptContext *scriptContext);
 
     public:

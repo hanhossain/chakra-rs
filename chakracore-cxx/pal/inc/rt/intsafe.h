@@ -154,7 +154,7 @@ LongToUChar(
 //
 // INT -> char conversion
 //
-__forceinline
+inline
 HRESULT
 IntToChar(
      int32_t iOperand,
@@ -305,7 +305,7 @@ UIntToUChar(
 //
 // uint32_t -> char conversion
 //
-__forceinline
+inline
 HRESULT
 UIntToChar(
      uint32_t uOperand,
@@ -423,7 +423,7 @@ ULongToUChar(
 //
 // uint32_t -> char conversion
 //
-__forceinline
+inline
 HRESULT
 ULongToChar(
      uint32_t ulOperand,

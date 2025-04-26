@@ -58,7 +58,7 @@ extern "C"{
 
 namespace Js {
 #if defined(GENERATE_DUMP) && defined(STACK_BACK_TRACE)
-    THREAD_LOCAL StackBackTrace * Throw::stackBackTrace = nullptr;
+    thread_local StackBackTrace * Throw::stackBackTrace = nullptr;
 #endif
     void Throw::FatalInternalError(HRESULT hr)
     {
@@ -274,7 +274,7 @@ namespace Js {
 #define CHAKRA_ASSERT_CAPTION _u("CHAKRA ASSERT")
 #endif
 
-    bool Throw::ReportAssert(__in LPCSTR fileName, uint lineNumber, __in LPCSTR error, __in LPCSTR message)
+    bool Throw::ReportAssert(LPCSTR fileName, uint lineNumber, LPCSTR error, LPCSTR message)
     {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag))
