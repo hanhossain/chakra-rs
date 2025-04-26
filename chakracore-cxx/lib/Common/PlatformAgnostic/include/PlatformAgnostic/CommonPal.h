@@ -5,8 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#define OPT_CONSTEXPR constexpr
-
 #ifdef __clang__
 #define CLANG_WNO_BEGIN_(x) \
     _Pragma("clang diagnostic push")\
