@@ -5,10 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifndef __has_builtin
-#define __has_builtin(x) 0
-#endif
-
 #define USING_PAL_STDLIB 1
 #define STRSAFE_INLINE   1
 
