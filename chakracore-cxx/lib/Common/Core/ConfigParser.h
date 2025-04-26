@@ -34,10 +34,8 @@ private:
     static const LPWSTR featureKeyName ;
     bool _hasReadConfig;
 
-    CLANG_WNO_BEGIN("-Wunused-private-field")
     Js::ConfigFlagsTable& _flags;
     const LPCWSTR _configFileName;
-    CLANG_WNO_END
 
     void ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser);
 

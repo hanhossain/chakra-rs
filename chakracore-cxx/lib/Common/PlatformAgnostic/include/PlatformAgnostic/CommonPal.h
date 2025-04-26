@@ -5,19 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef __clang__
-#define CLANG_WNO_BEGIN_(x) \
-    _Pragma("clang diagnostic push")\
-    _Pragma(#x)
-
-#define CLANG_WNO_BEGIN(x) CLANG_WNO_BEGIN_(clang diagnostic ignored x)
-#define CLANG_WNO_END
-    _Pragma("clang diagnostic pop")
-#else
-#define CLANG_WNO_BEGIN(x)
-#define CLANG_WNO_END
-#endif
-
 #ifndef __has_builtin
 #define __has_builtin(x) 0
 #endif
