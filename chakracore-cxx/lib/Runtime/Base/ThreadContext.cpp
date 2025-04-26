@@ -1533,7 +1533,7 @@ ThreadContext::SetStackLimitForCurrentThread(size_t limit)
     this->stackLimitForCurrentThread = limit;
 }
 
-_NOINLINE //Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
+//Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
 bool
 ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
 {
@@ -1574,7 +1574,7 @@ ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
     return false;
 }
 
-_NOINLINE //Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
+//Win8 947081: might use wrong _AddressOfReturnAddress() if this and caller are inlined
 bool
 ThreadContext::IsStackAvailableNoThrow(size_t size)
 {

@@ -5,22 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#define __MAKE_WARNING__(X) "This compiler does not support '" ## X ## "'"
-#if defined(__GNUC__) || defined(__clang__)
-    #if __has_attribute(noinline)
-        #ifdef CLANG_HAS_DISABLE_TAIL_CALLS
-            #define _NOINLINE __attribute__((noinline, disable_tail_calls))
-        #else
-            #define _NOINLINE __attribute__((noinline))
-        #endif
-    #else // No noinline support
-        #pragma message __MAKE_WARNING__("noinline")
-        #define _NOINLINE
-    #endif
-#else // Windows
-    #define _NOINLINE __declspec(noinline)
-#endif
-
 // Only VC compiler support overflow guard
 #if defined(__GNUC__) || defined(__clang__)
 #define DECLSPEC_GUARD_OVERFLOW

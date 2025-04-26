@@ -322,7 +322,6 @@ LargeHeapBlock::ReleasePagesSweep(Recycler * recycler)
 }
 
 #ifdef RECYCLER_PAGE_HEAP
-_NOINLINE
 void LargeHeapBlock::VerifyPageHeapPattern()
 {
     if (!IsAll((byte*)pageHeapData->objectPageAddr, pageHeapData->paddingBytes, PageHeapMemFill))
@@ -666,7 +665,6 @@ LargeHeapBlock::Alloc(DECLSPEC_GUARD_OVERFLOW size_t size, ObjectInfoBits attrib
 }
 
 template <bool doSpecialMark>
-_NOINLINE
 void
 LargeHeapBlock::Mark(void* objectAddress, MarkContext * markContext)
 {

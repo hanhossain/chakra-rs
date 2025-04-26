@@ -7,11 +7,7 @@
 namespace Js
 {
     // These implementations need to be compiled with /arch:sse2
-#if _M_IX86
-#define DB_NOINLINE _NOINLINE
-#else
 #define DB_NOINLINE
-#endif
 #pragma prefast(push)
 #pragma prefast(disable:26450) // PREfast takes issue with how INT_MIN is defined
 

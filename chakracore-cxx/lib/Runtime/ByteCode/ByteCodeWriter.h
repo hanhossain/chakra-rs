@@ -75,7 +75,7 @@ namespace Js
             bool fixedGrowthPolicy;
 
             void Write(__in_bcount(byteSize) const void* data, __in uint byteSize);
-            _NOINLINE void SlowWrite(__in_bcount(byteSize) const void* data, __in uint byteSize);
+            void SlowWrite(__in_bcount(byteSize) const void* data, __in uint byteSize);
             void AddChunk(uint byteSize);
 
         public:

@@ -20,14 +20,14 @@ namespace Js
     }
 
     // Explicitly marking noinline and stdcall since this is called from inline asm
-    _NOINLINE Var TaggedInt::OverflowHelper(int overflowValue, ScriptContext* scriptContext)
+    Var TaggedInt::OverflowHelper(int overflowValue, ScriptContext* scriptContext)
     {
         Assert( IsOverflow(overflowValue) );
         return JavascriptNumber::NewInlined(static_cast<double>(overflowValue), scriptContext);
     }
 
     // noinline since it's a rare edge case and we don't want to bloat mainline code
-    _NOINLINE Var TaggedInt::DivideByZero(int nLeft, ScriptContext* scriptContext)
+    Var TaggedInt::DivideByZero(int nLeft, ScriptContext* scriptContext)
     {
         if (nLeft == 0)
         {
@@ -537,7 +537,7 @@ LblDone:
     }
 
     // Explicitly marking noinline and stdcall since this is called from inline asm
-    _NOINLINE Var TaggedInt::IncrementOverflowHelper(ScriptContext* scriptContext)
+    Var TaggedInt::IncrementOverflowHelper(ScriptContext* scriptContext)
     {
         return JavascriptNumber::New( k_nMaxValue + 1.0, scriptContext );
     }
@@ -581,7 +581,7 @@ LblDone:
     }
 
     // Explicitly marking noinline and stdcall since this is called from inline asm
-    _NOINLINE Var TaggedInt::DecrementUnderflowHelper(ScriptContext* scriptContext)
+    Var TaggedInt::DecrementUnderflowHelper(ScriptContext* scriptContext)
     {
         return JavascriptNumber::New( k_nMinValue - 1.0, scriptContext );
     }

@@ -174,7 +174,6 @@ SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes>::SetAttributes(void * addre
 
 template <class TBlockAttributes>
 template <bool doSpecialMark>
-_NOINLINE
 void SmallRecyclerVisitedHostHeapBlockT<TBlockAttributes>::ProcessMarkedObject(void* objectAddress, MarkContext * markContext)
 {
     unsigned char * attributes = nullptr;
@@ -321,7 +320,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::TryGetAddressOfAttributes(void* ob
 
 template <class TBlockAttributes>
 template <bool doSpecialMark>
-_NOINLINE
 void
 SmallFinalizableHeapBlockT<TBlockAttributes>::ProcessMarkedObject(void* objectAddress, MarkContext * markContext)
 {

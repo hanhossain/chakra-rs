@@ -345,7 +345,7 @@ namespace Js
         static int GetRetType(JavascriptFunction* func);
         static int GetAsmJsArgSize(AsmJsCallStackLayout * stack);
         static int GetDynamicRetType(AsmJsCallStackLayout * stack);
-        _NOINLINE static void AsmJsInterpreter(AsmJsCallStackLayout * stack, byte* retDst);
+        static void AsmJsInterpreter(AsmJsCallStackLayout * stack, byte* retDst);
 #elif _M_X64
         template <typename T>
         static T AsmJsInterpreter(AsmJsCallStackLayout* layout);
@@ -361,10 +361,10 @@ namespace Js
 #if DYNAMIC_INTERPRETER_THUNK
         static Var AsmJsDelayDynamicInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static Var DelayDynamicInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
-        _NOINLINE static Var InterpreterThunk(JavascriptCallStackLayout* layout);
-        _NOINLINE static Var StaticInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
+        static Var InterpreterThunk(JavascriptCallStackLayout* layout);
+        static Var StaticInterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
 #else
-        _NOINLINE static Var InterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
+        static Var InterpreterThunk(RecyclableObject* function, CallInfo callInfo, ...);
 #endif
         static Var InterpreterHelper(ScriptFunction* function, ArgumentReader args, void* returnAddress, void* addressOfReturnAddress, AsmJsReturnStruct* asmReturn = nullptr);
         static bool ShouldDoProfile(FunctionBody* executeFunction);
@@ -397,8 +397,8 @@ namespace Js
         void operator delete(void* allocationToFree, void* previousAllocation) throw();
 
 
-        _NOINLINE Var ProcessThunk(void* returnAddress, void* addressOfReturnAddress);
-        _NOINLINE Var DebugProcessThunk(void* returnAddress, void* addressOfReturnAddress);
+        Var ProcessThunk(void* returnAddress, void* addressOfReturnAddress);
+        Var DebugProcessThunk(void* returnAddress, void* addressOfReturnAddress);
 
         void AlignMemoryForAsmJs();
 

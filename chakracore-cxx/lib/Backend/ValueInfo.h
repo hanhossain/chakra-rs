@@ -305,7 +305,7 @@ public:
     Value *     Copy(JitArenaAllocator * allocator, ValueNumber newValueNumber) const { return Value::New(allocator, newValueNumber, this->ShareValueInfo()); }
     bool        IsEqualTo(Value * other) { return this->valueNumber == other->valueNumber; }
 #if DBG_DUMP
-    _NOINLINE void Dump() const { Output::Print(_u("0x%X  ValueNumber: %3d,  -> "), this, this->valueNumber);  this->valueInfo->Dump(); }
+    void Dump() const { Output::Print(_u("0x%X  ValueNumber: %3d,  -> "), this, this->valueNumber);  this->valueInfo->Dump(); }
 #endif
 };
 

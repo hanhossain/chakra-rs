@@ -18,7 +18,7 @@ enum ArenaType: unsigned short
 class EtwMemoryEvents
 {
 public:
-    _NOINLINE static void ReportAllocation(void *arena, void *address, size_t size)
+    static void ReportAllocation(void *arena, void *address, size_t size)
     {
         allocCount++;
         if (allocCount == 7500)
@@ -30,28 +30,28 @@ public:
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_ALLOC(arena, address, size);
     }
 
-    _NOINLINE static void ReportFree(void *arena, void *address, size_t size)
+    static void ReportFree(void *arena, void *address, size_t size)
     {
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_FREE(arena, address, size);
     }
 
-    _NOINLINE static void ReportReallocation(void *arena, void *address, size_t existingSize, size_t newSize)
+    static void ReportReallocation(void *arena, void *address, size_t existingSize, size_t newSize)
     {
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_FREE(arena, address, existingSize);
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_ALLOC(arena, address, newSize);
     }
 
-    _NOINLINE static void ReportArenaCreated(void *arena, ArenaType arenaType)
+    static void ReportArenaCreated(void *arena, ArenaType arenaType)
     {
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_CREATE(arena, arenaType);
     }
 
-    _NOINLINE static void ReportArenaDestroyed(void *arena)
+    static void ReportArenaDestroyed(void *arena)
     {
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_DESTROY(arena);
     }
 
-    _NOINLINE static void ReportFreeAll(void *arena, ArenaType arenaType)
+    static void ReportFreeAll(void *arena, ArenaType arenaType)
     {
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_DESTROY(arena);
         EventWriteJSCRIPT_INTERNAL_ALLOCATOR_CREATE(arena, arenaType);
@@ -72,37 +72,37 @@ void ArenaMemoryTracking::Activate()
 {
 }
 
-_NOINLINE void ArenaMemoryTracking::ArenaCreated(Allocator *arena, __in LPCWSTR name)
+void ArenaMemoryTracking::ArenaCreated(Allocator *arena, __in LPCWSTR name)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportArenaCreated(arena, ArenaTypeArena);
 }
 
-_NOINLINE void ArenaMemoryTracking::ArenaDestroyed(Allocator *arena)
+void ArenaMemoryTracking::ArenaDestroyed(Allocator *arena)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportArenaDestroyed(arena);
 }
 
-_NOINLINE void ArenaMemoryTracking::ReportAllocation(Allocator *arena, void *address, size_t size)
+void ArenaMemoryTracking::ReportAllocation(Allocator *arena, void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportAllocation(arena, address, size);
 }
 
-_NOINLINE void ArenaMemoryTracking::ReportReallocation(Allocator *arena, void *address, size_t existingSize, size_t newSize)
+void ArenaMemoryTracking::ReportReallocation(Allocator *arena, void *address, size_t existingSize, size_t newSize)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportReallocation(arena, address, existingSize, newSize);
 }
 
-_NOINLINE void ArenaMemoryTracking::ReportFree(Allocator *arena, void *address, size_t size)
+void ArenaMemoryTracking::ReportFree(Allocator *arena, void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportFree(arena, address, size);
 }
 
-_NOINLINE void ArenaMemoryTracking::ReportFreeAll(Allocator *arena)
+void ArenaMemoryTracking::ReportFreeAll(Allocator *arena)
 {
     DISTINGUISH_FUNCTION(Arena);
     EtwMemoryEvents::ReportFreeAll(arena, ArenaTypeArena);
@@ -120,25 +120,25 @@ bool RecyclerMemoryTracking::IsActive()
 }
 
 // The external reporting for the recycler uses the MemspectMemoryTracker
-_NOINLINE void RecyclerMemoryTracking::ReportRecyclerCreate(Recycler * recycler)
+void RecyclerMemoryTracking::ReportRecyclerCreate(Recycler * recycler)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportArenaCreated(recycler, ArenaTypeRecycler);
 }
 
-_NOINLINE void RecyclerMemoryTracking::ReportRecyclerDestroy(Recycler * recycler)
+void RecyclerMemoryTracking::ReportRecyclerDestroy(Recycler * recycler)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportArenaDestroyed(recycler);
 }
 
-_NOINLINE void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportAllocation(Recycler * recycler, __in void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportAllocation(recycler, address, size);
 }
 
-_NOINLINE void RecyclerMemoryTracking::ReportFree(Recycler * recycler, __in void *address, size_t size)
+void RecyclerMemoryTracking::ReportFree(Recycler * recycler, __in void *address, size_t size)
 {
     DISTINGUISH_FUNCTION(Recycler);
     EtwMemoryEvents::ReportFree(recycler, address, size);

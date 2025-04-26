@@ -15,4 +15,4 @@ private:
     JsrtContext* originalJsrtContext;
 };
 
-_NOINLINE void VALIDATE_ENTER_CURRENT_THREAD();
+void VALIDATE_ENTER_CURRENT_THREAD();
