@@ -94,9 +94,9 @@ DefaultRecyclerCollectionWrapper::DisposeObjects(Recycler * recycler)
 
 static void* GetStackBase();
 
-template _ALWAYSINLINE char * Recycler::AllocWithAttributesInlined<NoBit, false>(size_t size);
-template _ALWAYSINLINE char* Recycler::RealAlloc<NoBit, false>(HeapInfo* heap, size_t size);
-template _ALWAYSINLINE _Ret_notnull_ void * operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
+template char * Recycler::AllocWithAttributesInlined<NoBit, false>(size_t size);
+template char* Recycler::RealAlloc<NoBit, false>(HeapInfo* heap, size_t size);
+template _Ret_notnull_ void * operator new<Recycler>(size_t byteSize, Recycler * alloc, char * (Recycler::*AllocFunc)(size_t));
 
 Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllocator * pageAllocator, void (*outOfMemoryFunc)(), Js::ConfigFlagsTable& configFlagsTable, RecyclerTelemetryHostInterface* hostInterface) :
     collectionStateChangedObserver(this),

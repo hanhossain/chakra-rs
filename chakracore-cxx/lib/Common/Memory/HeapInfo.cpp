@@ -14,7 +14,7 @@
 #error "Platform is not handled"
 #endif
 
-template _ALWAYSINLINE char* HeapInfo::RealAlloc<NoBit, false>(Recycler * recycler, size_t sizeCat, size_t size);
+template char* HeapInfo::RealAlloc<NoBit, false>(Recycler * recycler, size_t sizeCat, size_t size);
 
 const uint SmallAllocationBlockAttributes::MaxSmallObjectCount;
 const uint MediumAllocationBlockAttributes::MaxSmallObjectCount;

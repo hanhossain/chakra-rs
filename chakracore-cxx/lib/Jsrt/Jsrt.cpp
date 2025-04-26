@@ -4826,7 +4826,7 @@ CHAKRA_API JsCopyString(
     return JsNoError;
 }
 
-_ALWAYSINLINE JsErrorCode CompileRun(
+inline JsErrorCode CompileRun(
     JsValueRef scriptVal,
     JsSourceContext sourceContext,
     JsValueRef sourceUrl,

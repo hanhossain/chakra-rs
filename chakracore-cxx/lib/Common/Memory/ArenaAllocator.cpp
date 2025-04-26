@@ -13,7 +13,7 @@
 const uint Memory::StandAloneFreeListPolicy::MaxEntriesGrowth;
 
 // We need this function to be inlined for perf
-template _ALWAYSINLINE BVSparseNode<JitArenaAllocator> * BVSparse<JitArenaAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, JitArenaAllocator)** prevNextFieldOut, bool create);
+template BVSparseNode<JitArenaAllocator> * BVSparse<JitArenaAllocator>::NodeFromIndex(BVIndex i, Field(BVSparseNode*, JitArenaAllocator)** prevNextFieldOut, bool create);
 
 ArenaData::ArenaData(PageAllocator * pageAllocator) :
     pageAllocator(pageAllocator),
@@ -457,11 +457,11 @@ ReleaseHeapMemory()
     }
 }
 
-template _ALWAYSINLINE char *ArenaAllocatorBase<InPlaceFreeListPolicy, 0, 0, 0>::AllocInternal(size_t requestedBytes);
+template char *ArenaAllocatorBase<InPlaceFreeListPolicy, 0, 0, 0>::AllocInternal(size_t requestedBytes);
 
 #if !(defined(__clang__) && defined(TARGET_32))
 // otherwise duplicate instantination of AllocInternal Error
-template _ALWAYSINLINE char *ArenaAllocatorBase<InPlaceFreeListPolicy, 3, 0, 0>::AllocInternal(size_t requestedBytes);
+template char *ArenaAllocatorBase<InPlaceFreeListPolicy, 3, 0, 0>::AllocInternal(size_t requestedBytes);
 #endif
 
 template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
