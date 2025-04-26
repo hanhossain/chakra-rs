@@ -57,7 +57,6 @@ inline void DebugBreak()
     __builtin_trap();
 }
 
-#define EXIT_FAILURE 1
 #define _BitScanForward BitScanForward
 #define _BitScanForward64 BitScanForward64
 #define _BitScanReverse BitScanReverse
