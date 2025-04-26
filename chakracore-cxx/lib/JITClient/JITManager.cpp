@@ -70,7 +70,7 @@ JITManager::CreateBinding(
     HANDLE serverProcessHandle,
     __in_opt void * serverSecurityDescriptor,
     UUID * connectionUuid,
-    __out RPC_BINDING_HANDLE * bindingHandle)
+    RPC_BINDING_HANDLE * bindingHandle)
 {
     Assert(IsOOPJITEnabled());
 
@@ -353,9 +353,9 @@ JITManager::ConnectProcess(RPC_BINDING_HANDLE rpcBindingHandle)
 HRESULT
 JITManager::InitializeThreadContext(
     ThreadContextDataIDL * data,
-    __out PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
-    __out intptr_t * prereservedRegionAddr,
-    __out intptr_t * jitThunkAddr)
+    PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
+    intptr_t * prereservedRegionAddr,
+    intptr_t * jitThunkAddr)
 {
     Assert(IsOOPJITEnabled());
 
@@ -443,7 +443,7 @@ HRESULT
 JITManager::NewInterpreterThunkBlock(
     PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
     InterpreterThunkInputIDL * thunkInput,
-    __out InterpreterThunkOutputIDL * thunkOutput)
+    InterpreterThunkOutputIDL * thunkOutput)
 {
     Assert(IsOOPJITEnabled());
 
@@ -532,7 +532,7 @@ HRESULT
 JITManager::InitializeScriptContext(
     ScriptContextDataIDL * data,
     PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-    __out PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
+    PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
 {
     Assert(IsOOPJITEnabled());
 
@@ -615,7 +615,7 @@ HRESULT
 JITManager::IsNativeAddr(
     PTHREADCONTEXT_HANDLE threadContextInfoAddress,
     intptr_t address,
-    __out boolean * result)
+    boolean * result)
 {
     Assert(IsOOPJITEnabled());
 
@@ -637,7 +637,7 @@ HRESULT
 JITManager::RemoteCodeGenCall(
     CodeGenWorkItemIDL *workItemData,
     PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-    __out JITOutputIDL *jitData)
+    JITOutputIDL *jitData)
 {
     Assert(IsOOPJITEnabled());
 
@@ -661,7 +661,7 @@ JITManager::IsInterpreterThunkAddr(
     PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
     intptr_t address,
     boolean asmjsThunk,
-    __out boolean * result)
+    boolean * result)
 {
     Assert(IsOOPJITEnabled());
 

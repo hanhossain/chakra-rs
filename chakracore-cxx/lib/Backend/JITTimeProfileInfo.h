@@ -14,7 +14,7 @@ public:
         ArenaAllocator * alloc,
         Js::DynamicProfileInfo * profileInfo,
         Js::FunctionBody *functionBody,
-        __out ProfileDataIDL * data,
+        ProfileDataIDL * data,
         bool isForegroundJIT);
 
     const Js::LdLenInfo * GetLdLenInfo(Js::ProfileId ldLenId) const;

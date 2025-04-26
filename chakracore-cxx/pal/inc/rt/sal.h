@@ -2072,7 +2072,7 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  LWSTDAPI_(BOOL) StrToIntExA(
      LPCSTR pszString,
      uint32_t dwFlags,
-     __out int *piRet                     -- A pointer whose dereference will be filled in.
+     int *piRet                     -- A pointer whose dereference will be filled in.
  );
 
  void MyPaintingFunction(
@@ -2464,10 +2464,6 @@ buffer, use the table in the buffer annotations section.
 */
 
 // These macros conflict with c++ headers.
-#ifndef PAL_STDCPP_COMPAT
-#define __out                                                    _SAL1_Source_(__out, (), _Out_)
-#endif // !PAL_STDCPP_COMPAT
-
 #define __ecount(size)                                           _SAL1_Source_(__ecount, (size), __notnull __elem_writableTo(size))
 #define __bcount(size)                                           _SAL1_Source_(__bcount, (size), __notnull __byte_writableTo(size))
 #define __in_ecount(size)                                        _SAL1_Source_(__in_ecount, (size), _In_reads_(size))

@@ -33,9 +33,9 @@ public:
 
     HRESULT InitializeThreadContext(
         ThreadContextDataIDL * data,
-        __out PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        __out intptr_t * prereservedRegionAddr,
-        __out intptr_t * jitThunkAddr);
+        PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
+        intptr_t * prereservedRegionAddr,
+        intptr_t * jitThunkAddr);
 
     HRESULT CleanupThreadContext(
         __inout PPTHREADCONTEXT_HANDLE threadContextInfoAddress);
@@ -51,7 +51,7 @@ public:
     HRESULT NewInterpreterThunkBlock(
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         InterpreterThunkInputIDL * thunkInput,
-        __out InterpreterThunkOutputIDL * thunkOutput);
+        InterpreterThunkOutputIDL * thunkOutput);
 
     HRESULT AddModuleRecordInfo(
             /* [in] */ PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
@@ -65,7 +65,7 @@ public:
     HRESULT InitializeScriptContext(
         ScriptContextDataIDL * data,
         PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        __out PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
+        PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
 
     HRESULT CleanupScriptContext(
         __inout PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress);
@@ -84,19 +84,19 @@ public:
     HRESULT IsNativeAddr(
         PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         intptr_t address,
-        __out boolean * result);
+        boolean * result);
 
     HRESULT RemoteCodeGenCall(
         CodeGenWorkItemIDL *workItemData,
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-        __out JITOutputIDL *jitData);
+        JITOutputIDL *jitData);
 
 #if DBG
     HRESULT IsInterpreterThunkAddr(
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         intptr_t address,
         boolean asmjsThunk,
-        __out boolean * result);
+        boolean * result);
 #endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
@@ -126,7 +126,7 @@ private:
         HANDLE serverProcessHandle,
         __in_opt void* serverSecurityDescriptor,
         UUID* connectionUuid,
-        __out RPC_BINDING_HANDLE* bindingHandle);
+        RPC_BINDING_HANDLE* bindingHandle);
 
     HRESULT ConnectProcess(RPC_BINDING_HANDLE rpcBindingHandle);
 
@@ -157,9 +157,9 @@ public:
 
     HRESULT InitializeThreadContext(
         ThreadContextDataIDL * data,
-        __out PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        __out intptr_t *prereservedRegionAddr,
-        __out intptr_t * jitThunkAddr)
+        PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
+        intptr_t *prereservedRegionAddr,
+        intptr_t * jitThunkAddr)
         { Assert(false); return E_FAIL; }
 
     HRESULT DecommitInterpreterBufferManager(
@@ -190,7 +190,7 @@ public:
     HRESULT InitializeScriptContext(
         ScriptContextDataIDL * data,
         PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        __out PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
+        PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
         { Assert(false); return E_FAIL; }
 
     HRESULT CleanupScriptContext(
@@ -214,13 +214,13 @@ public:
     HRESULT IsNativeAddr(
         PTHREADCONTEXT_HANDLE threadContextInfoAddress,
         intptr_t address,
-        __out boolean * result)
+        boolean * result)
         { Assert(false); return E_FAIL; }
 
     HRESULT RemoteCodeGenCall(
         CodeGenWorkItemIDL *workItemData,
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-        __out JITOutputIDL *jitData)
+        JITOutputIDL *jitData)
         { Assert(false); return E_FAIL; }
 
 #if DBG
@@ -228,7 +228,7 @@ public:
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         intptr_t address,
         boolean asmjsThunk,
-        __out boolean * result)
+        boolean * result)
         { Assert(false); return E_FAIL; }
 #endif
 

@@ -23,7 +23,7 @@ public:
 
     TypeIDL * GetData();
 
-    static void BuildFromJsType(Js::Type * jsType, __out JITType * jitType);
+    static void BuildFromJsType(Js::Type * jsType, JITType * jitType);
 
 private:
     Field(TypeIDL) m_data;

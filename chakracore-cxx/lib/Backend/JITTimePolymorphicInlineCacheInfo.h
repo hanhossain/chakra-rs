@@ -13,7 +13,7 @@ public:
     static void InitializeEntryPointPolymorphicInlineCacheInfo(
         Recycler * recycler,
         Js::EntryPointPolymorphicInlineCacheInfo * runtimeInfo,
-        __out CodeGenWorkItemIDL * jitInfo);
+        CodeGenWorkItemIDL * jitInfo);
 
     JITTimePolymorphicInlineCache * GetInlineCache(uint index) const;
     bool HasInlineCaches() const;
@@ -24,7 +24,7 @@ private:
     static void InitializePolymorphicInlineCacheInfo(
         Recycler * recycler,
         Js::PolymorphicInlineCacheInfo * runtimeInfo,
-        __out PolymorphicInlineCacheInfoIDL * jitInfo);
+        PolymorphicInlineCacheInfoIDL * jitInfo);
 
     PolymorphicInlineCacheInfoIDL m_data;
 };

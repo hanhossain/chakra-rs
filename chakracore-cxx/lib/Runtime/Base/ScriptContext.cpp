@@ -2366,8 +2366,8 @@ ExitTempAllocator:
         uint32_t grfscr,
         CompileScriptException *pse,
         __inout charcount_t& cchLength,
-        __out size_t& srcLength,
-        __out uint& sourceIndex,
+        size_t& srcLength,
+        uint& sourceIndex,
         __deref_out Js::ParseableFunctionInfo ** func,
         __in_opt Js::SimpleDataCacheWrapper* pDataCache
     )

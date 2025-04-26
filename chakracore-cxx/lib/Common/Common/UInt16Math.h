@@ -41,7 +41,7 @@ public:
     }
 
     // Convenience function which returns a bool indicating overflow
-    static bool Add(uint16 lhs, uint16 rhs, __out uint16* result)
+    static bool Add(uint16 lhs, uint16 rhs, uint16* result)
     {
         ::Math::RecordOverflowPolicy overflowGuard;
         *result = Add(lhs, rhs, overflowGuard);
@@ -74,7 +74,7 @@ public:
         return Mul(lhs, rhs, ::Math::DefaultOverflowPolicy);
     }
 
-    static bool Mul(uint16 lhs, uint16 rhs, __out uint16* result)
+    static bool Mul(uint16 lhs, uint16 rhs, uint16* result)
     {
         ::Math::RecordOverflowPolicy overflowGuard;
         *result = Mul(lhs, rhs, overflowGuard);

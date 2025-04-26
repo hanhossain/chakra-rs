@@ -143,7 +143,7 @@ namespace Js
     HRESULT DelayLoadWinRtFoundation::RoGetActivationFactory(
         HSTRING activatableClassId,
         REFIID iid,
-        __out IActivationFactory** factory)
+        IActivationFactory** factory)
     {
         if (m_hModule)
         {

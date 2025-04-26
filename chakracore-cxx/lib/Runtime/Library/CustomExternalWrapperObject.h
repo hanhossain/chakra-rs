@@ -102,8 +102,8 @@ namespace Js
         virtual BOOL SetItem(uint32 index, Var value, PropertyOperationFlags flags) override;
         virtual BOOL DeleteItem(uint32 index, PropertyOperationFlags flags) override;
         virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext * requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
-        virtual BOOL Equals(Var other, __out BOOL* value, ScriptContext* requestContext) override;
-        virtual BOOL StrictEquals(Var other, __out BOOL* value, ScriptContext* requestContext) override;
+        virtual BOOL Equals(Var other, BOOL* value, ScriptContext* requestContext) override;
+        virtual BOOL StrictEquals(Var other, BOOL* value, ScriptContext* requestContext) override;
 
         virtual DynamicType* DuplicateType() override;
         virtual void SetPrototype(RecyclableObject* newPrototype) override;

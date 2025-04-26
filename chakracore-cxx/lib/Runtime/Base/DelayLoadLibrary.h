@@ -82,7 +82,7 @@ namespace Js
         HRESULT RoGetActivationFactory(
             HSTRING activatibleClassId,
             REFIID iid,
-            __out IActivationFactory** factory);
+            IActivationFactory** factory);
     };
 
     class DelayLoadWinCoreProcessThreads sealed : public DelayLoadLibrary

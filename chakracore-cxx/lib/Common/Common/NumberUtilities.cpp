@@ -186,7 +186,7 @@ using namespace Js;
         return cbit;
     }
 
-    charcount_t NumberUtilities::UInt16ToString(uint16 integer, __out __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
+    charcount_t NumberUtilities::UInt16ToString(uint16 integer, __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
     {
         // inlined here
         uint16_t digit;

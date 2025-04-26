@@ -19,7 +19,7 @@ public:
     static void InitializeJITFunctionData(
         ArenaAllocator * arena,
         Js::FunctionBody * functionBody,
-        __out FunctionBodyDataIDL * jitBody);
+        FunctionBodyDataIDL * jitBody);
 
     intptr_t GetAddr() const;
 

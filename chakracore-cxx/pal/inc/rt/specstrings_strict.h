@@ -152,7 +152,7 @@
 *  LWSTDAPI_(BOOL) StrToIntExA(
 *      LPCSTR pszString,  //  No annotation required, const implies __in.
 *      uint32_t dwFlags,
-*      __out int *piRet   // A pointer whose dereference will be filled in.
+*      int *piRet   // A pointer whose dereference will be filled in.
 *  );
 * 
 *  void MyPaintingFunction(

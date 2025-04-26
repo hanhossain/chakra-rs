@@ -168,7 +168,7 @@ public:
         return S_OK;
     }
 
-    HRESULT GetHostContextUrl(DWORD_PTR hostSourceContext, __out BSTR& pUrl) override
+    HRESULT GetHostContextUrl(DWORD_PTR hostSourceContext, BSTR& pUrl) override
     {
         Assert(false);
         return E_NOTIMPL;

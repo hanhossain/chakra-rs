@@ -502,7 +502,7 @@ namespace Js
         return false;
     }
 
-    BOOL RecyclableObject::StrictEquals(Var aRight, __out BOOL* value, ScriptContext * requestContext)
+    BOOL RecyclableObject::StrictEquals(Var aRight, BOOL* value, ScriptContext * requestContext)
     {
         *value = false;
         //StrictEquals is handled in JavascriptOperators::StrictEqual
@@ -510,7 +510,7 @@ namespace Js
     }
 
 #pragma fenv_access (on)
-    BOOL RecyclableObject::Equals(Var aRight, __out BOOL* value, ScriptContext * requestContext)
+    BOOL RecyclableObject::Equals(Var aRight, BOOL* value, ScriptContext * requestContext)
     {
         Var aLeft = this;
         if (aLeft == aRight)

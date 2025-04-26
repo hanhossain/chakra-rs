@@ -458,7 +458,7 @@ HRESULT Parser::ValidateSyntax(LPCUTF8 pszSrc, size_t encodedCharCount, bool isG
 }
 
 HRESULT Parser::ParseSourceInternal(
-    __out ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes, size_t encodedCharCount, charcount_t offsetInChars,
+    ParseNodeProg ** parseTree, LPCUTF8 pszSrc, size_t offsetInBytes, size_t encodedCharCount, charcount_t offsetInChars,
     bool isUtf8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo)
 {
     Assert(parseTree);
@@ -12312,7 +12312,7 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
 #endif
 }
 
-HRESULT Parser::ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+HRESULT Parser::ParseUtf8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12320,7 +12320,7 @@ HRESULT Parser::ParseUtf8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, 
     return ParseSourceInternal(parseTree, pSrc, 0, length, 0, true, grfsrc, pse, nextFunctionId, 0, sourceContextInfo);
 }
 
-HRESULT Parser::ParseCesu8Source(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
+HRESULT Parser::ParseCesu8Source(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t length, uint32_t grfsrc, CompileScriptException *pse,
     Js::LocalFunctionId * nextFunctionId, SourceContextInfo * sourceContextInfo)
 {
     m_functionBody = nullptr;
@@ -12479,7 +12479,7 @@ HRESULT Parser::ParseFunctionInBackground(ParseNodeFnc * pnodeFnc, ParseContext 
 
 #endif
 
-HRESULT Parser::ParseSourceWithOffset(__out ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
+HRESULT Parser::ParseSourceWithOffset(ParseNodeProg ** parseTree, LPCUTF8 pSrc, size_t offset, size_t cbLength, charcount_t cchOffset,
     bool isCesu8, uint32_t grfscr, CompileScriptException *pse, Js::LocalFunctionId * nextFunctionId, uint32_t lineNumber, SourceContextInfo * sourceContextInfo,
     Js::ParseableFunctionInfo* functionInfo)
 {
