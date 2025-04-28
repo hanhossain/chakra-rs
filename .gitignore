@@ -9,6 +9,9 @@ cmake-build*
 # clangd
 .cache/
 
+# cmake
+CMakeUserPresets.json
+
 # Added by cargo
 
 /target
