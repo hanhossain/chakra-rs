@@ -1,0 +1,50 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "default",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_C_COMPILER": "clang"
+            }
+        },
+        {
+            "name": "linux-debug",
+            "inherits": [
+                "default"
+            ]
+        },
+        {
+            "name": "linux-test",
+            "inherits": [
+                "linux-debug"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "macos-debug",
+            "inherits": [
+                "default"
+            ],
+            "cacheVariables": {
+                "ICU_INCLUDE_PATH": "/opt/homebrew/opt/icu4c/include",
+                "DISABLE_JIT": "ON"
+            }
+        },
+        {
+            "name": "macos-test",
+            "inherits": [
+                "macos-debug"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        }
+    ]
+}

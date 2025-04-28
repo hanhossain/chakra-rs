@@ -61,9 +61,6 @@ jobs:
     name: cmake / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/chakracore-cxx/cmake-build
     strategy:
       # TODO (hanhossain): do not fail fast
       fail-fast: true
@@ -78,25 +75,18 @@ jobs:
           - os: macos
             os-image: macos-latest
             deps: brew install ninja icu4c --quiet
-            cmake-flags: -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON
           - os: ubuntu
             os-image: ubuntu-latest
             deps: sudo apt-get install -y ninja-build libc++-dev libc++abi-dev
-          - build-type: debug
-            cmake-build-type: Debug
-          - build-type: test
-            cmake-build-type: RelWithDebInfo
+            cmake-preset-prefix: linux
     env:
       CXX: clang++
       CC: clang
     steps:
       - uses: actions/checkout@v4
-      - name: Create build directory
-        working-directory: ${{ github.workspace }}/chakracore-cxx
-        run: mkdir -p cmake-build
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Configure CMake
-        run: cmake -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} ${{ matrix.cmake-flags }} -GNinja ..
+        run: cmake --preset ${{ matrix.cmake-preset-prefix || matrix.os }}-${{ matrix.build-type }}
       - name: Build
-        run: ninja
+        run: cmake --build build

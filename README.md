@@ -1,19 +1,22 @@
 # Migrates chakracore to rust
 
-## Testing
-
-Configure cmake
+## Build and test rust (and c++)
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DICU_INCLUDE_PATH=/opt/homebrew/opt/icu4c/include -DDISABLE_JIT=ON -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
+cargo build --features compile-cpp
+cargo test --features compile-cpp
 ```
 
-Build and test
+## Build C++
+
+Configure and build
 
 ```sh
-ninja
-ninja check
+cmake --preset linux-debug
+cmake --build build
 ```
+
+> NOTE: You can also build with ninja i.e. `cd build && ninja`
 
 ## Dependency Graph
 
