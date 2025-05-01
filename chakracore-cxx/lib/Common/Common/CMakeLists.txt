@@ -20,12 +20,16 @@ add_library (Chakra.Common.Common OBJECT
 )
 
 # TODO (hanhossain): cleanup includes
-target_include_directories (Chakra.Common.Common PUBLIC
+target_include_directories (Chakra.Common.Common
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Common
+    PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
     ${CHAKRACORE_SOURCE_DIR}/pal/inc/rt
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Codex/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Common/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
@@ -36,4 +40,4 @@ target_compile_definitions(Chakra.Common.Common PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)
 
-target_precompile_headers(Chakra.Common.Common PUBLIC CommonCommonPch.h)
+target_precompile_headers(Chakra.Common.Common PUBLIC include/Common/CommonCommonPch.h)

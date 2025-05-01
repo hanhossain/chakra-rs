@@ -39,6 +39,7 @@ target_include_directories (Chakra.Runtime.Types PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Codex/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Common/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
