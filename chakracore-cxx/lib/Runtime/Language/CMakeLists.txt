@@ -94,6 +94,7 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/JITClient
     ${CHAKRACORE_SOURCE_DIR}/lib/JITIDL
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/Codex/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
