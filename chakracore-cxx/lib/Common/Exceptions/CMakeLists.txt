@@ -14,6 +14,7 @@ target_include_directories (Chakra.Common.Exceptions PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Common/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Core/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/DataStructures/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
 )

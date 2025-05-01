@@ -123,6 +123,7 @@ target_include_directories (Chakra.Backend PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Codex/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Common/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Core/include
+    ${CHAKRACORE_SOURCE_DIR}/lib/Common/DataStructures/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/Interface/include
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlaceHolder
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
