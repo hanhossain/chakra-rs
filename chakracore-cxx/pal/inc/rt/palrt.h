@@ -794,8 +794,6 @@ Remember to fix the errcode defintion in safecrt.h.
 
 extern "C++" {
 
-#include <safemath.h>
-
 inline errno_t _wcslwr_unsafe(WCHAR *str, size_t sz)
 {
     if (sz >= INT_MAX / sizeof(WCHAR))

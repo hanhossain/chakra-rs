@@ -65,11 +65,6 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(LOADER);
 
-// In safemath.h, Template SafeInt uses macro _ASSERTE, which need to use variable
-// defdbgchan defined by SET_DEFAULT_DEBUG_CHANNEL. Therefore, the include statement
-// should be placed after the SET_DEFAULT_DEBUG_CHANNEL(LOADER)
-#include <safemath.h>
-
 /* macro definitions **********************************************************/
 
 /* get the full name of a module if available, and the short name otherwise*/

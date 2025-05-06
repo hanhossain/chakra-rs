@@ -30,11 +30,6 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(MEM);
 
-// In safemath.h, Template SafeInt uses macro _ASSERTE, which need to use variable
-// defdbgchan defined by SET_DEFAULT_DEBUG_CHANNEL. Therefore, the include statement
-// should be placed after the SET_DEFAULT_DEBUG_CHANNEL(MEM)
-#include <safemath.h>
-
 #ifndef __APPLE__
 #define DUMMY_HEAP 0x01020304
 #endif // __APPLE__
