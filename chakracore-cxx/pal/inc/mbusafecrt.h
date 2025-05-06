@@ -22,6 +22,8 @@
 #define MBUSAFECRT_H
 
 //#include <wchar.h>
+#include <stdarg.h>
+#include <stddef.h>
 
 /* MacOS does not define a specifc type for errnos, but SafeCRT does */
 typedef int errno_t;
