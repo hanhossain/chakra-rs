@@ -133,6 +133,11 @@ target_include_directories (Chakra.Backend PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 )
 
+target_link_libraries(Chakra.Backend
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Backend PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

@@ -67,6 +67,11 @@ target_include_directories (Chakra.Common.Memory PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Parser
 )
 
+target_link_libraries(Chakra.Common.Memory
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Common.Memory PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

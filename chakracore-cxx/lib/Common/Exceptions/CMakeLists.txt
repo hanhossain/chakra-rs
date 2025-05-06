@@ -16,6 +16,11 @@ target_include_directories (Chakra.Common.Exceptions PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
 )
 
+target_link_libraries(Chakra.Common.Exceptions
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Common.Exceptions PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

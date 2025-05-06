@@ -23,6 +23,11 @@ target_include_directories (Chakra.Common.DataStructures PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Common/PlatformAgnostic/include
 )
 
+target_link_libraries(Chakra.Common.DataStructures
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Common.DataStructures PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

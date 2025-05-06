@@ -38,6 +38,11 @@ target_include_directories (Chakra.Jsrt PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Debug
 )
 
+target_link_libraries(Chakra.Jsrt
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Jsrt PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

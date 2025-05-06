@@ -162,3 +162,7 @@ target_include_directories(Chakra.Pal PUBLIC
   ${CHAKRACORE_SOURCE_DIR}/pal/inc
   ${CHAKRACORE_SOURCE_DIR}/pal/src/include
   )
+
+target_link_libraries(Chakra.Pal PUBLIC
+  Chakra.CorePlatform
+)

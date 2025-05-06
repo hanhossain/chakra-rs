@@ -39,6 +39,11 @@ target_include_directories (Chakra.Runtime.ByteCode PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/WasmReader
 )
 
+target_link_libraries(Chakra.Runtime.ByteCode
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Runtime.ByteCode PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

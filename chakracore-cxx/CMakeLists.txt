@@ -288,6 +288,7 @@ endif()
 include_directories(SYSTEM /usr/local/include)
 include(pal/src/configure.cmake)
 
+add_subdirectory(CorePlatform)
 add_subdirectory (pal)
 
 add_subdirectory (lib)

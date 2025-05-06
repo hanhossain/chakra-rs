@@ -56,6 +56,11 @@ target_include_directories (Chakra.Runtime.Base PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/ByteCode
 )
 
+target_link_libraries(Chakra.Runtime.Base
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Runtime.Base PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

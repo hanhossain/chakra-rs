@@ -91,6 +91,7 @@ endif()
 
 target_link_libraries (ch
   ${lib_target}
+  Chakra.Pal
   )
 
 target_compile_definitions(ch PUBLIC

@@ -31,6 +31,11 @@ target_include_directories (Chakra.Common.Common PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Backend
 )
 
+target_link_libraries(Chakra.Common.Common
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Common.Common PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)

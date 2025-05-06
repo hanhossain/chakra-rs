@@ -32,6 +32,7 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
+#include "CorePlatform/CorePlatformCommon.h"
 #ifdef RC_INVOKED
 #define _HRESULT_TYPEDEF_(_sc) _sc
 #else // RC_INVOKED
@@ -195,8 +196,6 @@ typedef enum tagEFaultRepRetVal
 #ifndef COM_NO_WINDOWS_H
 #define COM_NO_WINDOWS_H
 #endif
-
-#define interface struct
 
 #define STDMETHODCALLTYPE
 

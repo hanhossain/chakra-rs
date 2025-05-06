@@ -103,6 +103,11 @@ target_include_directories (Chakra.Runtime.Language PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/lib/Runtime/Math
 )
 
+target_link_libraries(Chakra.Runtime.Language
+  PUBLIC
+  Chakra.Pal
+)
+
 target_compile_definitions(Chakra.Runtime.Language PUBLIC
     PAL_STDCPP_COMPAT
     NO_PAL_MINMAX)
