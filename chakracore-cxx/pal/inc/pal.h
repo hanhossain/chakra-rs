@@ -5472,7 +5472,6 @@ CoCreateGuid( GUID * pguid);
 #define fgetc         PAL_getc // not a typo
 #define ungetc        PAL_ungetc
 #define setvbuf       PAL_setvbuf
-#define atol          PAL_atol
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -5526,7 +5525,6 @@ int sprintf(char *, const char *, ...);
 int vsprintf(char *, const char *, va_list);
 int sscanf(const char *, const char *, ...);
 int atoi(const char *);
-int32_t atol(const char *);
 //long long int atoll(const char *) __THROW;
 uint32_t strtoul(const char *, char **, int);
 double atof(const char *);

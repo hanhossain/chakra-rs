@@ -385,7 +385,6 @@ function_name() to call the system's implementation
 #undef isalpha
 #undef isalnum
 #undef atoi
-#undef atol
 #undef atof
 #undef malloc
 #undef realloc
