@@ -5404,7 +5404,6 @@ CoCreateGuid( GUID * pguid);
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
-#define atexit        PAL_atexit
 #define printf        PAL_printf
 #define vprintf       PAL_vprintf
 #define wprintf       PAL_wprintf
@@ -5749,7 +5748,6 @@ char * _strdup(const char *);
 #endif // !PAL_STDCPP_COMPAT
 
 __attribute__((noreturn)) void exit(int);
-int atexit(void (*function)(void));
 
 void * bsearch(const void *, const void *, size_t, size_t,
 int (*)(const void *, const void *));

@@ -343,7 +343,6 @@ function_name() to call the system's implementation
    native OS */
 #undef exit
 #undef alloca
-#undef atexit
 #undef div
 #undef div_t
 #undef memcpy
