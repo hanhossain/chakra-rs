@@ -278,22 +278,6 @@ Return value:
 size_t PAL_fwrite(const void *pvBuffer, size_t nSize, size_t nCount, PAL_FILE *pf);
 
 /*++
-PAL__open
-
-Wrapper function for InternalOpen.
-
-Input parameters:
-
-szPath = pointer to a pathname of a file to be opened
-nFlags = arguments that control how the file should be accessed
-mode = file permission settings that are used only when a file is created
-
-Return value:
-    File descriptor on success, -1 on failure
---*/
-int PAL__open(const char *szPath, int nFlags, ...);
-
-/*++
 PAL_fseek
 
 Wrapper function for fseek
