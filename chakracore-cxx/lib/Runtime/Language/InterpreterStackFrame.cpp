@@ -3039,7 +3039,7 @@ skipThunk:
                 Assert(::Math::Align<intptr_t>((intptr_t)destination, (intptr_t)WAsmJs::GetTypeByteSize(type)) == (intptr_t)destination);
                 Assert(typeInfo->constSrcByteOffset != Js::Constants::InvalidOffset);
                 uint constByteSize = typeInfo->constCount * WAsmJs::GetTypeByteSize(type);
-                memmove_s(destination, constByteSize, source, constByteSize);
+                memmove(destination, source, constByteSize);
             }
         }
 

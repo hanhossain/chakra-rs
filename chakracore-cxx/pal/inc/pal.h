@@ -5473,7 +5473,6 @@ CoCreateGuid( GUID * pguid);
 #define ungetc        PAL_ungetc
 #define setvbuf       PAL_setvbuf
 #define atol          PAL_atol
-#define memmove       memmove_xplat
 #define mkstemp       PAL_mkstemp
 #define rename        PAL_rename
 #define unlink        PAL_unlink
@@ -5554,8 +5553,6 @@ int toupper(int);
 #endif // PAL_STDCPP_COMPAT
 
 errno_t memcpy_s(void *, size_t, const void *, size_t);
-errno_t memmove_s(void *, size_t, const void *, size_t);
-void * memmove_xplat(void *, const void *, size_t);
 char * _strlwr(char *);
 int _stricmp(const char *, const char *);
 int _snprintf(char *, size_t, const char *, ...);

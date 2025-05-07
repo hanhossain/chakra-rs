@@ -112,7 +112,6 @@ extern int _snscanf_s( const char *string, size_t count, const char *format, ...
 extern int _snwscanf_s( const WCHAR *string, size_t count, const WCHAR *format, ... );
 
 extern errno_t memcpy_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
-extern errno_t memmove_s( void * dst, size_t sizeInBytes, const void * src, size_t count );
 
 #ifdef __cplusplus
     }
