@@ -5474,7 +5474,6 @@ CoCreateGuid( GUID * pguid);
 #define rename        PAL_rename
 #define unlink        PAL_unlink
 #define _strdup       PAL__strdup
-#define _getcwd       PAL__getcwd
 #define _open         PAL__open
 #define _close        PAL__close
 #define _wcstoui64    PAL__wcstoui64
