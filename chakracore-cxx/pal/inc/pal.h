@@ -5471,7 +5471,6 @@ CoCreateGuid( GUID * pguid);
 #define getc          PAL_getc
 #define fgetc         PAL_getc // not a typo
 #define ungetc        PAL_ungetc
-#define setvbuf       PAL_setvbuf
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -5816,7 +5815,6 @@ char * PAL_strtok(char *, const char *);
 int PAL_getc(PAL_FILE *stream);
 int PAL_fgetc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
-int PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
 WCHAR * PAL_fgetws(WCHAR *, int, PAL_FILE *);
 int PAL_fwprintf(PAL_FILE *, const WCHAR *, ...);
 int PAL_vfwprintf(PAL_FILE *, const WCHAR *, va_list);

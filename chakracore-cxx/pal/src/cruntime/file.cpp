@@ -891,29 +891,3 @@ PAL_ungetc(int c, PAL_FILE * f)
     PERF_EXIT(ungetc);
     return nRetVal;
 }
-
-
-
-/*++
-Function :
-
-    setvbuf
-
-    See MSDN for more details.
---*/
-int
-PAL_setvbuf(PAL_FILE *f, char *buf, int type, size_t size)
-{
-    int32_t nRetVal = 0;
-
-    PERF_ENTRY(setvbuf);
-    ENTRY( "setvbuf( %p, %p, %d, %ul )\n", f, buf, type, size);
-
-    _ASSERTE(f != NULL);
-
-    nRetVal = setvbuf(f->bsdFilePtr, buf, type, size);
-
-    LOGEXIT( "setvbuf returning %d\n", nRetVal );
-    PERF_EXIT(setvbuf);
-    return nRetVal;
-}

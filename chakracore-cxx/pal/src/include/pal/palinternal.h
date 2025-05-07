@@ -415,7 +415,6 @@ function_name() to call the system's implementation
 #undef getc
 #undef fgetc
 #undef ungetc
-#undef setvbuf
 #undef size_t
 #undef time_t
 #undef stdin
