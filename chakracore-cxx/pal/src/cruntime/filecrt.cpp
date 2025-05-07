@@ -160,24 +160,6 @@ PAL_fflush( PAL_FILE *stream )
 }
 
 /*++
-PAL_mkstemp
-
-Wrapper function for InternalMkstemp.
-
-Input parameters:
-
-szNameTemplate = template to follow when naming the created file
-
-Return value:
-    Open file descriptor on success, -1 if file could not be created
---*/
-int
-PAL_mkstemp(char *szNameTemplate)
-{
-    return InternalMkstemp(szNameTemplate);
-}
-
-/*++
 InternalMkstemp
 
 Wrapper for mkstemp.
