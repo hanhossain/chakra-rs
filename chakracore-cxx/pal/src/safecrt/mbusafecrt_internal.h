@@ -71,7 +71,4 @@ int _output( miniFILE *outfile, const char* _Format, va_list _ArgList);
 int _soutput_s( char *_Dst, size_t _Size, const char *_Format, va_list _ArgList );
 int _swoutput_s( char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _ArgList );
 
-int __tinput_s( miniFILE* inFile, const unsigned char * inFormat, va_list inArgList );
-int __twinput_s( miniFILE* inFile, const char16_t * inFormat, va_list inArgList );
-
 #endif  /* MBUSAFECRT_INTERNAL_H */
