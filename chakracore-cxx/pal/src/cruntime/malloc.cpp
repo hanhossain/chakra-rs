@@ -113,14 +113,6 @@ CorUnix::InternalMalloc(
 }
 
 char *
-PAL__strdup(
-    const char *c_szStr
-    )
-{
-    return InternalStrdup(c_szStr);
-}
-
-char *
 CorUnix::InternalStrdup(
     const char *c_szStr
     )

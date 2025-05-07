@@ -174,7 +174,7 @@ BOOL DBG_init_channels(void)
     }
     else
     {
-        env_pcache = env_workstring = PAL__strdup(env_string);
+        env_pcache = env_workstring = strdup(env_string);
 
         if (env_workstring == NULL)
         {

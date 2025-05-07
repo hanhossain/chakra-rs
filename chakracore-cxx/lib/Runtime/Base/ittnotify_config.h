@@ -198,7 +198,6 @@ typedef pthread_mutex_t   mutex_t;
 #define __itt_fstrcmp(s1, s2)     lstrcmpA(s1, s2)
 #define __itt_fstrnlen(s, l)      strnlen_s(s, l)
 #define __itt_fstrcpyn(s1, b, s2, l) strncpy_s(s1, b, s2, l)
-#define __itt_fstrdup(s)          _strdup(s)
 #define __itt_thread_id()         GetCurrentThreadId()
 #define __itt_thread_yield()      SwitchToThread()
 #ifndef ITT_SIMPLE_INIT
