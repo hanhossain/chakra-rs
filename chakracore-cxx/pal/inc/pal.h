@@ -5479,7 +5479,6 @@ CoCreateGuid( GUID * pguid);
 #define _strdup       PAL__strdup
 #define _getcwd       PAL__getcwd
 #define _open         PAL__open
-#define _close        PAL__close
 #define _wcstoui64    PAL__wcstoui64
 
 #endif // !PAL_STDCPP_COMPAT
@@ -5774,7 +5773,6 @@ char * ctime(const time_t *);
 #endif // !PAL_STDCPP_COMPAT
 
 int _open_osfhandle(INT_PTR, int);
-int _close(int);
 
 #ifdef PAL_STDCPP_COMPAT
 

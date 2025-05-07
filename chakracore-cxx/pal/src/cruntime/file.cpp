@@ -449,28 +449,6 @@ PAL_FILE * PAL_get_stderr(int caller)
 }
 
 
-/*++
-
-Function:
-
-    _close
-
-See msdn for more details.
---*/
-int PAL__close(int handle)
-{
-    int32_t nRetVal = 0;
-
-    PERF_ENTRY(_close);
-    ENTRY( "_close( handle=%d )\n", handle );
-
-    nRetVal = close( handle );
-
-    LOGEXIT( "_close returning %d.\n", nRetVal );
-    PERF_EXIT(_close);
-    return nRetVal;
-}
-
 char16_t *
 PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
 {
