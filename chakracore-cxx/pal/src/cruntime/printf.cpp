@@ -1191,16 +1191,16 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
 
                     if (typeLen > 0)
                     {
-                        ret = sscanf_s(Buff, TempBuff, voidPtr, typeLen, &n);
+                        ret = sscanf(Buff, TempBuff, voidPtr, typeLen, &n);
                     }
                     else
                     {
-                        ret = sscanf_s(Buff, TempBuff, voidPtr, &n);
+                        ret = sscanf(Buff, TempBuff, voidPtr, &n);
                     }
                 }
                 else
                 {
-                    ret = sscanf_s(Buff, TempBuff, &n);
+                    ret = sscanf(Buff, TempBuff, &n);
                 }
 
 #if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
@@ -1388,7 +1388,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                            to determine success. Set n to 0 before the call; if
                            it's still 0 afterwards, we know the call failed */
                         n = 0;
-                        sscanf_s(newBuff, TempBuff, &n);
+                        sscanf(newBuff, TempBuff, &n);
                         if(0 == n)
                         {
                             /* sscanf failed, nothing matched. set ret to 0,
@@ -1430,15 +1430,15 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
 
                         if (typeLen > 0)
                         {
-                            ret = sscanf_s(newBuff, TempBuff, voidPtr, typeLen, &n);
+                            ret = sscanf(newBuff, TempBuff, voidPtr, typeLen, &n);
                         }
                         else
-                            ret = sscanf_s(newBuff, TempBuff, voidPtr, &n);
+                            ret = sscanf(newBuff, TempBuff, voidPtr, &n);
                     }
                 }
                 else
                 {
-                    ret = sscanf_s(newBuff, TempBuff, &n);
+                    ret = sscanf(newBuff, TempBuff, &n);
                 }
 
 #if SSCANF_CANNOT_HANDLE_MISSING_EXPONENT
@@ -1776,9 +1776,9 @@ static int SscanfFloatCheckExponent(LPCSTR buff, LPCSTR floatFmt,
             memcpy(pLocBuf, buff, (pos-buff)*sizeof(char));
             pLocBuf[pos-buff] = 0;
             if (voidPtr)
-                ret = sscanf_s(pLocBuf, floatFmt, voidPtr, pn);
+                ret = sscanf(pLocBuf, floatFmt, voidPtr, pn);
             else
-                ret = sscanf_s(pLocBuf, floatFmt, pn);
+                ret = sscanf(pLocBuf, floatFmt, pn);
             PAL_free (pLocBuf);
         }
     }

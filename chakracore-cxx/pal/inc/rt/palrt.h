@@ -780,7 +780,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define _vsnwprintf_s _vsnwprintf_unsafe
 #define _snprintf_s _snprintf_unsafe
 #define _vsnprintf_s _vsnprintf_unsafe
-#define sscanf_s sscanf
 
 #define _wfopen_s _wfopen_unsafe
 #define fopen_s _fopen_unsafe

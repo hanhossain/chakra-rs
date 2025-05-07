@@ -177,29 +177,3 @@ static int vnwscan_fn (
 
         return(retval);
 }
-
-
-/***
-*int sscanf_s(string, format, ...)
-*   Same as sscanf above except that it calls _input_s to do the real work.
-*
-*int snscanf_s(string, size, format, ...)
-*   Same as snscanf above except that it calls _input_s to do the real work.
-*
-*   _input_s has a size check for array parameters.
-*
-*******************************************************************************/
-
-int sscanf_s (
-        const char *string,
-        const char *format,
-        ...
-        )
-{
-        int ret;
-        va_list arglist;
-        va_start(arglist, format);
-        ret = vscan_fn(__tinput_s, string, format, arglist);
-        va_end(arglist);
-        return ret;
-}

@@ -3308,14 +3308,6 @@ int wscanf_s(const WCHAR *_Format, ...);
 
 /* no inline version of wscanf_s */
 
-/* sscanf_s */
-_SAFECRT__EXTERN_C
-int sscanf_s(const char *_String, const char *_Format, ...);
-
-/* no C++ overload for sscanf_s */
-
-/* no inline version of sscanf_s */
-
 /* _swnscanf_s */
 _SAFECRT__EXTERN_C
 int _swnscanf_s(const WCHAR *_String, size_t _Count, const WCHAR *_Format, ...);
