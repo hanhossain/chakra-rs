@@ -93,7 +93,7 @@ JITManager::CreateBinding(
     bindingTemplate.Version = 1;
     bindingTemplate.ProtocolSequence = RPC_PROTSEQ_LRPC;
     bindingTemplate.StringEndpoint = NULL;
-    memcpy_s(&bindingTemplate.ObjectUuid, sizeof(UUID), connectionUuid, sizeof(UUID));
+    memcpy(&bindingTemplate.ObjectUuid, connectionUuid, sizeof(UUID));
     bindingTemplate.Flags |= RPC_BHT_OBJECT_UUID_VALID;
 
     ZeroMemory(&bindingSecurity, sizeof(bindingSecurity));

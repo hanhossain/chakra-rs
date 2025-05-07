@@ -507,7 +507,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
             // Use <= here instead of < to allow this memcopy to fill up the rest of destBuffer.  If we do, then FinalizeAllocation,
             // called below, determines that no additional padding is necessary based on the values in `allocation'.
             AnalysisAssert(currentDestBuffer + bufferBytesFree <= destBuffer + destBufferBytes);
-            memcpy_s(currentDestBuffer, bufferBytesFree, sourceBuffer, bytesToChange);
+            memcpy(currentDestBuffer, sourceBuffer, bytesToChange);
 
             currentDestBuffer += bytesToChange;
             sourceBuffer += bytesToChange;

@@ -592,7 +592,7 @@ Encoder::Encode()
     {
         size_t allocSize = XDataAllocator::GetAllocSize(allocation->xdata.pdataCount, allocation->xdata.xdataSize);
         uint8_t * xprocXdata = NativeCodeDataNewArrayNoFixup(m_func->GetNativeCodeDataAllocator(), uint8_t, allocSize);
-        memcpy_s(xprocXdata, allocSize, allocation->xdata.address, allocSize);
+        memcpy(xprocXdata, allocation->xdata.address, allocSize);
         m_func->GetJITOutput()->RecordXData(xprocXdata);
     }
     else
@@ -1393,7 +1393,7 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
             src_size = to - from + 1;
             AnalysisAssert(dst_size >= src_size);
 
-            memcpy_s(dst_p, dst_size, from, src_size);
+            memcpy(dst_p, from, src_size);
 
             srcBufferCrc = CalculateCRC(srcBufferCrc, (uint8_t*)reloc.m_origPtr - from + 4, from);
             *pShortenedBufferCRC = CalculateCRC(*pShortenedBufferCRC, src_size, dst_p);
@@ -1492,7 +1492,7 @@ void Encoder::CopyPartialBufferAndCalculateCRC(uint8_t ** ptrDstBuffer, size_t &
 
     size_t srcSize = srcEnd - srcStart + 1;
     Assert(dstSize >= srcSize);
-    memcpy_s(destBuffer, dstSize, srcStart, srcSize);
+    memcpy(destBuffer, srcStart, srcSize);
 
     Assert(srcSize >= jumpTableSize);
 

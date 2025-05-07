@@ -974,7 +974,7 @@ namespace Js
                 AssertOrFailFast(false);
                 return false;
             }
-            memcpy_s(data, size, current, size);
+            memcpy(data, current, size);
             current += size;
             lengthLeft -= size;
             return true;
@@ -1038,7 +1038,7 @@ namespace Js
             {
                 return false;
             }
-            memcpy_s(current, size, data, size);
+            memcpy(current, data, size);
             current += size;
             lengthLeft -= size;
             return true;

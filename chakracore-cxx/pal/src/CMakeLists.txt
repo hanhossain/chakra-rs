@@ -87,7 +87,6 @@ set(SOURCES
   safecrt/safecrt_output_s.c
   safecrt/safecrt_winput_s.c
   safecrt/safecrt_woutput_s.c
-  safecrt/memcpy_s.c
   safecrt/sprintf.c
   safecrt/sscanf.c
   safecrt/strcat_s.c

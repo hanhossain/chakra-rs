@@ -1975,7 +1975,7 @@ namespace Js
 
         int ApplyCustomTemplate( uint8_t*& buffer, const uint8_t* src, const int size )
         {
-            memcpy_s( buffer, size, src, size );
+            memcpy( buffer, src, size );
             buffer += size;
             DumpAsmCode<InstrParamsEmpty>( buffer, size, _u("Custom"),nullptr);
             return size;

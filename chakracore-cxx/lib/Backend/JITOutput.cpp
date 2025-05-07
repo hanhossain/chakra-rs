@@ -231,7 +231,7 @@ void
 JITOutput::RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr, uint8_t* localXdataAddr)
 {
     Assert(XDATA_SIZE >= size);
-    memcpy_s(localXdataAddr, XDATA_SIZE, unwindInfo, size);
+    memcpy(localXdataAddr, unwindInfo, size);
     m_outputData->xdataAddr = (intptr_t)xdataAddr;
 }
 
@@ -243,7 +243,7 @@ JITOutput::RecordUnwindInfo(size_t offset, const uint8_t *unwindInfo, size_t siz
 
     Assert(xdataFinal);
     Assert(((size_t)xdataFinal & 0x3) == 0); // 4 byte aligned
-    memcpy_s(xdataFinal, size, unwindInfo, size);
+    memcpy(xdataFinal, unwindInfo, size);
 
     return (size_t)xdataFinal;
 }

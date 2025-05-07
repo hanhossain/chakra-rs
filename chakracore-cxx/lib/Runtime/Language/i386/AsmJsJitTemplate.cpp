@@ -589,15 +589,15 @@ namespace Js
             m_localSlots[AsmJsFunctionMemory::ArraySizeRegister] = (Var)arraySize;
             m_localSlots[AsmJsFunctionMemory::ScriptContextBufferRegister] = body->GetScriptContext();
             m_localIntSlots = ((int*)m_localSlots) + intOffsets;
-            memcpy_s(m_localIntSlots, intConstCount*sizeof(int), constTable, intConstCount*sizeof(int));
+            memcpy(m_localIntSlots, constTable, intConstCount*sizeof(int));
             constTable = (void*)(((int*)constTable) + intConstCount);
 
             m_localFloatSlots = ((float*)m_localSlots) + floatOffset;
-            memcpy_s(m_localFloatSlots, floatConstCount*sizeof(float), constTable, floatConstCount*sizeof(float));
+            memcpy(m_localFloatSlots, constTable, floatConstCount*sizeof(float));
             constTable = (void*)(((float*)constTable) + floatConstCount);
 
             m_localDoubleSlots = ((double*)m_localSlots) + doubleOffsets;
-            memcpy_s(m_localDoubleSlots, doubleConstCount*sizeof(double), constTable, doubleConstCount*sizeof(double));
+            memcpy(m_localDoubleSlots, constTable, doubleConstCount*sizeof(double));
 
             intArg = m_localIntSlots + intConstCount;
             doubleArg = m_localDoubleSlots + doubleConstCount;

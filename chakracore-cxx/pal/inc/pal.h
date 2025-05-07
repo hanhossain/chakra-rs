@@ -5552,7 +5552,6 @@ int toupper(int);
 
 #endif // PAL_STDCPP_COMPAT
 
-errno_t memcpy_s(void *, size_t, const void *, size_t);
 char * _strlwr(char *);
 int _stricmp(const char *, const char *);
 int _snprintf(char *, size_t, const char *, ...);

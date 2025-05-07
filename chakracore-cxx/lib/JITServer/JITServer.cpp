@@ -706,7 +706,7 @@ ServerRemoteCodeGen(
             }
             __analysis_assume(jitData->numberPageSegments);
 
-            memcpy_s(jitData->numberPageSegments, sizeof(XProcNumberPageSegment), jitWorkItem->GetWorkItemData()->xProcNumberPageSegment, sizeof(XProcNumberPageSegment));
+            memcpy(jitData->numberPageSegments, jitWorkItem->GetWorkItemData()->xProcNumberPageSegment, sizeof(XProcNumberPageSegment));
         }
 #endif
 

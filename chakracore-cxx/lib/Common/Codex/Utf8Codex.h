@@ -402,7 +402,7 @@ namespace utf8
         _In_reads_(cbSource) const utf8char_t *source,
         size_t cbSource)
     {
-        memcpy_s(dest, cbDest * sizeof(utf8char_t), source, cbSource * sizeof(utf8char_t));
+        memcpy(dest, source, cbSource * sizeof(utf8char_t));
         return cbDest;
     }
 
