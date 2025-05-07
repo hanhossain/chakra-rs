@@ -370,7 +370,6 @@ void _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const
 #define _sntprintf_s    _snprintf_s
 #define _vsntprintf_s   _vsnprintf_s
 #define _tscanf_s       scanf_s
-#define _tsscanf_s      sscanf_s
 
 #elif defined(_UNICODE) || defined(UNICODE)
 
@@ -388,7 +387,6 @@ void _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const
 #define _sntprintf_s    _snwprintf_s
 #define _vsntprintf_s   _vsnwprintf_s
 #define _tscanf_s       wscanf_s
-#define _tsscanf_s      swscanf_s
 
 #elif defined(_MBCS)
 
@@ -406,7 +404,6 @@ void _invalid_parameter(const WCHAR *_Message, const WCHAR *_FunctionName, const
 #define _sntprintf_s    _snprintf_s
 #define _vsntprintf_s   _vsnprintf_s
 #define _tscanf_s       scanf_s
-#define _tsscanf_s      sscanf_s
 
 #else
 
@@ -3318,14 +3315,6 @@ int sscanf_s(const char *_String, const char *_Format, ...);
 /* no C++ overload for sscanf_s */
 
 /* no inline version of sscanf_s */
-
-/* swscanf_s */
-_SAFECRT__EXTERN_C
-int swscanf_s(const WCHAR *_String, const WCHAR *_Format, ...);
-
-/* no C++ overload for swscanf_s */
-
-/* no inline version of swscanf_s */
 
 /* _swnscanf_s */
 _SAFECRT__EXTERN_C
