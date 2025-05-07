@@ -199,20 +199,6 @@ Return value:
 int PAL_mkstemp(char *szNameTemplate);
 
 /*++
-PAL_unlink
-
-Calls unlink.
-
-Input parameters:
-
-szPath = a symbolic link or a hard link to a file
-
-Return value:
-    Returns 0 on success and -1 on failure
---*/
-int PAL_unlink(const char *szPath);
-
-/*++
 PAL_rename
 
 Calls rename

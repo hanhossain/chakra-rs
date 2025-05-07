@@ -419,7 +419,6 @@ function_name() to call the system's implementation
 #undef setvbuf
 #undef mkstemp
 #undef rename
-#undef unlink
 #undef size_t
 #undef time_t
 #undef stdin
