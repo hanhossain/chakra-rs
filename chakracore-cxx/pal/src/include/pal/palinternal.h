@@ -343,7 +343,6 @@ function_name() to call the system's implementation
    native OS */
 #undef exit
 #undef alloca
-#undef atexit
 #undef div
 #undef div_t
 #undef memcpy
@@ -465,14 +464,11 @@ function_name() to call the system's implementation
 #undef fpos_t
 
 
-#undef printf
 #undef fprintf
 #undef fwprintf
 #undef vfprintf
 #undef vfwprintf
-#undef vprintf
 #undef wprintf
-#undef sprintf
 #undef swprintf
 #undef _snprintf
 #if HAVE__SNWPRINTF

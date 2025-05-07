@@ -326,7 +326,7 @@ GetCurrentDirectoryA(
     ENTRY("GetCurrentDirectoryA(nBufferLength=%u, lpBuffer=%p)\n", nBufferLength, lpBuffer);
 
     /* NULL first arg means getcwd will allocate the string */
-    current_dir = PAL__getcwd( NULL, MAX_LONGPATH + 1 );
+    current_dir = getcwd( NULL, MAX_LONGPATH + 1 );
 
     if ( !current_dir )
     {
@@ -384,7 +384,7 @@ GetCurrentDirectoryW(
     ENTRY("GetCurrentDirectoryW(nBufferLength=%u, lpBuffer=%p)\n",
           nBufferLength, lpBuffer);
 
-    current_dir = PAL__getcwd( NULL, MAX_LONGPATH + 1 );
+    current_dir = getcwd( NULL, MAX_LONGPATH + 1 );
 
     if ( !current_dir )
     {
@@ -580,7 +580,7 @@ CreateDirectoryA(
     }
     else
     {
-        const char *cwd = PAL__getcwd(NULL, MAX_LONGPATH);        
+        const char *cwd = getcwd(NULL, MAX_LONGPATH);
         if (NULL == cwd)
         {
             WARN("Getcwd failed with errno=%d [%s]\n", errno, strerror(errno));

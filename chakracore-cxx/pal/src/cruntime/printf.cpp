@@ -174,33 +174,6 @@ void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32
 
 /*++
 Function:
-  PAL_printf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_printf(
-      const char *format,
-      ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    PERF_ENTRY(printf);
-    ENTRY("PAL_printf (format=%p (%s))\n", format, format);
-
-    va_start(ap, format);
-    Length = PAL_vprintf(format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_printf returns int %d\n", Length);
-    PERF_EXIT(printf);
-    return Length;
-}
-
-/*++
-Function:
   PAL_fprintf
 
 See MSDN doc.
@@ -250,33 +223,6 @@ PAL_wprintf(
     PERF_EXIT(wprintf);
     return Length;
 }
-
-
-
-/*++
-Function:
-  PAL_vprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_vprintf(
-      const char *format,
-      va_list ap)
-{
-    int32_t Length;
-
-    PERF_ENTRY(vprintf);
-    ENTRY("PAL_vprintf (format=%p (%s))\n", format, format);
-
-    Length = PAL_vfprintf( PAL_get_stdout(PAL_get_caller), format, ap);
-
-    LOGEXIT("PAL_vprintf returns int %d\n", Length);
-    PERF_EXIT(vprintf);
-    return Length;
-}
-
 
 /*++
 Function:
@@ -1507,35 +1453,6 @@ PAL_sscanf(
     PERF_EXIT(sscanf);
     return Length;
 }
-
-/*++
-Function:
-  PAL_sprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_sprintf(
-          char *buffer,
-          const char *format,
-          ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    PERF_ENTRY(sprintf);
-    ENTRY("PAL_sprintf (buffer=%p, format=%p (%s))\n", buffer, format, format);
-
-    va_start(ap, format);
-    Length = PAL__vsnprintf(buffer, 0x7fffffff, format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_sprintf returns int %d\n", Length);
-    PERF_EXIT(sprintf);
-    return Length;
-}
-
 
 /*++
 Function:

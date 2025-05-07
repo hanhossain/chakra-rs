@@ -5404,11 +5404,7 @@ CoCreateGuid( GUID * pguid);
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
-#define atexit        PAL_atexit
-#define printf        PAL_printf
-#define vprintf       PAL_vprintf
 #define wprintf       PAL_wprintf
-#define sprintf       PAL_sprintf
 #define swprintf      PAL_swprintf
 #define sscanf        PAL_sscanf
 #define wcsspn        PAL_wcsspn
@@ -5478,7 +5474,6 @@ CoCreateGuid( GUID * pguid);
 #define rename        PAL_rename
 #define unlink        PAL_unlink
 #define _strdup       PAL__strdup
-#define _getcwd       PAL__getcwd
 #define _open         PAL__open
 #define _close        PAL__close
 #define _wcstoui64    PAL__wcstoui64
@@ -5531,7 +5526,6 @@ char * strstr(const char *, const char *);
 char * strtok(char *, const char *);
 size_t strspn(const char *, const char *);
 size_t  strcspn(const char *, const char *);
-int sprintf(char *, const char *, ...);
 int vsprintf(char *, const char *, va_list);
 int sscanf(const char *, const char *, ...);
 int atoi(const char *);
@@ -5749,7 +5743,6 @@ char * _strdup(const char *);
 #endif // !PAL_STDCPP_COMPAT
 
 __attribute__((noreturn)) void exit(int);
-int atexit(void (*function)(void));
 
 void * bsearch(const void *, const void *, size_t, size_t,
 int (*)(const void *, const void *));
@@ -5854,8 +5847,6 @@ PAL_FILE * _wfsopen(const WCHAR *, const WCHAR *, int);
 int rand(void);
 void srand(unsigned int);
 errno_t rand_s(unsigned int*);
-int printf(const char *, ...);
-int vprintf(const char *, va_list);
 
 #define PAL_get_caller 0
 
