@@ -5404,7 +5404,6 @@ CoCreateGuid( GUID * pguid);
    defines */
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
-#define vprintf       PAL_vprintf
 #define wprintf       PAL_wprintf
 #define sprintf       PAL_sprintf
 #define swprintf      PAL_swprintf
@@ -5851,7 +5850,6 @@ PAL_FILE * _wfsopen(const WCHAR *, const WCHAR *, int);
 int rand(void);
 void srand(unsigned int);
 errno_t rand_s(unsigned int*);
-int vprintf(const char *, va_list);
 
 #define PAL_get_caller 0
 

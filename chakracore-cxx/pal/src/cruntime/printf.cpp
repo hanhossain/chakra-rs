@@ -224,33 +224,6 @@ PAL_wprintf(
     return Length;
 }
 
-
-
-/*++
-Function:
-  PAL_vprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_vprintf(
-      const char *format,
-      va_list ap)
-{
-    int32_t Length;
-
-    PERF_ENTRY(vprintf);
-    ENTRY("PAL_vprintf (format=%p (%s))\n", format, format);
-
-    Length = PAL_vfprintf( PAL_get_stdout(PAL_get_caller), format, ap);
-
-    LOGEXIT("PAL_vprintf returns int %d\n", Length);
-    PERF_EXIT(vprintf);
-    return Length;
-}
-
-
 /*++
 Function:
   wsprintfA

@@ -468,7 +468,6 @@ function_name() to call the system's implementation
 #undef fwprintf
 #undef vfprintf
 #undef vfwprintf
-#undef vprintf
 #undef wprintf
 #undef sprintf
 #undef swprintf
