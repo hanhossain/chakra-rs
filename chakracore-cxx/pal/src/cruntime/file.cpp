@@ -471,11 +471,6 @@ int PAL__close(int handle)
     return nRetVal;
 }
 
- int PAL__flushall()
- {
-    return fflush(NULL);
- }
-
 char16_t *
 PAL_fgetws(char16_t *s, int n, PAL_FILE *f)
 {

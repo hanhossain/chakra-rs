@@ -405,7 +405,7 @@ void Output::Flush()
     {
         fflush(s_outputFile);
     }
-    _flushall();
+    fflush(NULL);
 }
 
 void Output::DirectPrint(char16 const * string)
