@@ -96,7 +96,6 @@ extern errno_t _wsplitpath_s( const WCHAR* inPath, WCHAR* outDrive, size_t inDri
 extern int sprintf_s( char *string, size_t sizeInBytes, const char *format, ... );
 extern int swprintf_s( WCHAR *string, size_t sizeInWords, const WCHAR *format, ... );
 
-extern int _snprintf_s( char *string, size_t sizeInBytes, size_t count, const char *format, ... );
 extern int _snwprintf_s( WCHAR *string, size_t sizeInWords, size_t count, const WCHAR *format, ... );
 
 extern int _vsprintf_s( char* string, size_t sizeInBytes, const char* format, va_list arglist );

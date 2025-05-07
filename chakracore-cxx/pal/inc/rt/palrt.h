@@ -778,7 +778,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define _wcslwr_s _wcslwr_unsafe
 #define _snwprintf_s _snwprintf_unsafe
 #define _vsnwprintf_s _vsnwprintf_unsafe
-#define _snprintf_s _snprintf_unsafe
 #define _vsnprintf_s _vsnprintf_unsafe
 
 #define _wfopen_s _wfopen_unsafe
@@ -917,16 +916,6 @@ inline int _vsnprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, con
     {
         errno = ERANGE;
     }
-    return ret;
-}
-
-inline int _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, const char *_Format, ...)
-{
-    int ret;
-    va_list _ArgList;
-    va_start(_ArgList, _Format);
-    ret = _vsnprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
-    va_end(_ArgList);
     return ret;
 }
 

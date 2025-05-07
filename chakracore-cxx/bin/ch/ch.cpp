@@ -520,7 +520,7 @@ HRESULT CreateParserState(LPCSTR fileContents, size_t fileLength, JsFinalizeCall
         uint32_t written = 0;
         char scratch[3];
         auto scratchLen = sizeof(scratch);
-        int num = _snprintf_s(scratch, scratchLen, _countof(scratch), "%02X", buffer[i]);
+        int num = snprintf(scratch, scratchLen, "%02X", buffer[i]);
         Assert(num == 2);
         IfFalseGo(WriteFile(fileHandle, scratch, (uint32_t)(scratchLen - 1), &written, nullptr));
 
