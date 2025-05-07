@@ -5405,7 +5405,6 @@ CoCreateGuid( GUID * pguid);
 #if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
 #define exit          PAL_exit
 #define wprintf       PAL_wprintf
-#define sprintf       PAL_sprintf
 #define swprintf      PAL_swprintf
 #define sscanf        PAL_sscanf
 #define wcsspn        PAL_wcsspn
@@ -5528,7 +5527,6 @@ char * strstr(const char *, const char *);
 char * strtok(char *, const char *);
 size_t strspn(const char *, const char *);
 size_t  strcspn(const char *, const char *);
-int sprintf(char *, const char *, ...);
 int vsprintf(char *, const char *, va_list);
 int sscanf(const char *, const char *, ...);
 int atoi(const char *);

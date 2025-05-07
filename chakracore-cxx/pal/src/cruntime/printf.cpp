@@ -1456,35 +1456,6 @@ PAL_sscanf(
 
 /*++
 Function:
-  PAL_sprintf
-
-See MSDN doc.
---*/
-__attribute__((no_instrument_function))
-int
-PAL_sprintf(
-          char *buffer,
-          const char *format,
-          ...)
-{
-    int32_t Length;
-    va_list ap;
-
-    PERF_ENTRY(sprintf);
-    ENTRY("PAL_sprintf (buffer=%p, format=%p (%s))\n", buffer, format, format);
-
-    va_start(ap, format);
-    Length = PAL__vsnprintf(buffer, 0x7fffffff, format, ap);
-    va_end(ap);
-
-    LOGEXIT("PAL_sprintf returns int %d\n", Length);
-    PERF_EXIT(sprintf);
-    return Length;
-}
-
-
-/*++
-Function:
   PAL_swprintf
 
 See MSDN doc.
