@@ -204,21 +204,6 @@ int sscanf_s (
         return ret;
 }
 
-int _snscanf_s (
-        const char *string,
-        size_t count,
-        const char *format,
-        ...
-        )
-{
-        int ret;
-        va_list arglist;
-        va_start(arglist, format);
-        ret = vnscan_fn(__tinput_s, string, count, format, arglist);
-        va_end(arglist);
-        return ret;
-}
-
 int swscanf_s (
         const char16_t *string,
         const char16_t *format,
@@ -232,19 +217,3 @@ int swscanf_s (
         va_end(arglist);
         return ret;
 }
-
-int _snwscanf_s (
-        const char16_t *string,
-        size_t count,
-        const char16_t *format,
-        ...
-        )
-{
-        int ret;
-        va_list arglist;
-        va_start(arglist, format);
-        ret = vnwscan_fn(__twinput_s, string, count, format, arglist);
-        va_end(arglist);
-        return ret;
-}
-

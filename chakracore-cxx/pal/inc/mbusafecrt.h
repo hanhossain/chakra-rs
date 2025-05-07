@@ -108,9 +108,6 @@ extern int _vsnwprintf_s( WCHAR* string, size_t sizeInWords, size_t count, const
 extern int sscanf_s( const char *string, const char *format, ... );
 extern int swscanf_s( const WCHAR *string, const WCHAR *format, ... );
 
-extern int _snscanf_s( const char *string, size_t count, const char *format, ... );
-extern int _snwscanf_s( const WCHAR *string, size_t count, const WCHAR *format, ... );
-
 #ifdef __cplusplus
     }
 #endif
