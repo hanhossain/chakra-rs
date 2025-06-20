@@ -2582,9 +2582,18 @@ fn block_scope_function_declaration_global_shadowing_test_bug305562_js(#[case] v
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js",
-        compile_flags: vec!["-debuglaunch","-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js.dbg.baseline","-Intl-"],
-        tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
-..Default::default()
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug305562.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
@@ -2597,9 +2606,19 @@ fn block_scope_function_declaration_global_shadowing_test_bug308191_js(#[case] v
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js",
-        compile_flags: vec!["-debuglaunch","-InspectMaxStringLength:33","-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js.dbg.baseline","-Intl-"],
-        tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
-..Default::default()
+        compile_flags: vec![
+            "-debuglaunch",
+            "-InspectMaxStringLength:33",
+            "-dbgbaseline:blockScopeFunctionDeclarationGlobalShadowingTest.bug308191.js.dbg.baseline",
+            "-Intl-",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
 }
