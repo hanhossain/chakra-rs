@@ -216,8 +216,8 @@ pub fn run_test_variant<const N: usize>(
                     let lower = line.to_lowercase();
                     if lower != "pass" && lower != "passed" && !lower.is_empty() {
                         panic!(
-                        "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
-                    );
+                            "Test can only print 'pass' or 'passed'. Index: {index}, output: {line}"
+                        );
                     } else {
                         passed = true;
                     }

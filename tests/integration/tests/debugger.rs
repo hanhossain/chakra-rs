@@ -152,8 +152,16 @@ fn js_diag_exceptions_in_async_functions_break_on_uncaught_exceptions_js(#[case]
         directory: DIRECTORY,
         source_path: "JsDiagExceptionsInAsyncFunctions_BreakOnUncaughtExceptions.js",
         baseline_path: Some("JsDiagExceptionsInAsyncFunctions_BreakOnUncaughtExceptions.baseline"),
-        compile_flags: vec!["-debuglaunch","-dbgbaseline:JsDiagExceptionsInAsyncFunctions_BreakOnUncaughtExceptions.js.dbg.baseline"],
-        tags: HashSet::from(["exclude_serialized","exclude_snap","require_debugger","exclude_sanitize_address"]),
+        compile_flags: vec![
+            "-debuglaunch",
+            "-dbgbaseline:JsDiagExceptionsInAsyncFunctions_BreakOnUncaughtExceptions.js.dbg.baseline",
+        ],
+        tags: HashSet::from([
+            "exclude_serialized",
+            "exclude_snap",
+            "require_debugger",
+            "exclude_sanitize_address",
+        ]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
