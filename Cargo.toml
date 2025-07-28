@@ -11,7 +11,7 @@ cmake = "0.1.54"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-rstest = "0.25.0"
+rstest = "0.26.1"
 
 [features]
 compile-cpp = []
