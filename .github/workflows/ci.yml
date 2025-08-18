@@ -40,7 +40,7 @@ jobs:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
@@ -83,7 +83,7 @@ jobs:
       CXX: clang++
       CC: clang
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - name: Configure CMake
