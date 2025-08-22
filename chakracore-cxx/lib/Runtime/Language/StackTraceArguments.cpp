@@ -6,7 +6,7 @@
 
 namespace Js {
 
-    uint64 StackTraceArguments::ObjectToTypeCode(Js::Var object)
+    unsigned long StackTraceArguments::ObjectToTypeCode(Js::Var object)
     {
         switch(JavascriptOperators::GetTypeId(object))
         {
@@ -69,9 +69,9 @@ namespace Js {
         if (!walker.IsCallerGlobalFunction())
         {
             const CallInfo callInfo = walker.GetCallInfo();
-            int64 numberOfArguments = callInfo.Count;
+            long numberOfArguments = callInfo.Count;
             if (numberOfArguments > 0) numberOfArguments --; // Don't consider 'this'
-            for (int64 j = 0; j < numberOfArguments && j < MaxNumberOfDisplayedArgumentsInStack; j ++)
+            for (long j = 0; j < numberOfArguments && j < MaxNumberOfDisplayedArgumentsInStack; j ++)
             {
                 // Since the Args are only used to get the type, no need to box the Vars to
                 // move them to the heap from the stack
@@ -91,7 +91,7 @@ namespace Js {
     HRESULT StackTraceArguments::ToString(LPCWSTR functionName, Js::ScriptContext *scriptContext, _In_ LPCWSTR *outResult) const
     {
         HRESULT hr = S_OK;
-        uint64 argumentsTypes = types;
+        unsigned long argumentsTypes = types;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             CompoundString *const stringBuilder = CompoundString::NewWithCharCapacity(40, scriptContext->GetLibrary());
@@ -104,7 +104,7 @@ namespace Js {
             {
                 stringBuilder->AppendChars(_u('('));
             }
-            for (uint64 i = 0; i < MaxNumberOfDisplayedArgumentsInStack && argumentsTypes != 0; i ++)
+            for (unsigned long i = 0; i < MaxNumberOfDisplayedArgumentsInStack && argumentsTypes != 0; i ++)
             {
                 if (i > 0)
                 {

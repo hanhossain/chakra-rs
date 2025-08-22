@@ -156,7 +156,7 @@ ifdef _ENABLE_DYNAMIC_THUNKS
 extrn ?GetStackSizeForAsmJsUnboxing@Js@@YAHPEAVScriptFunction@1@@Z: PROC
 extrn ?GetArgsSizesArray@Js@@YAPEAIPEAVScriptFunction@1@@Z : PROC
 
-; int64 JavascriptFunction::CallAsmJsFunction<int64>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
+; long JavascriptFunction::CallAsmJsFunction<long>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
 align 16
 ??$CallAsmJsFunction@_J@JavascriptFunction@Js@@SA_JPEAVRecyclableObject@1@P6APEAX0UCallInfo@1@ZZPEAPEAXIPEAE@Z PROC FRAME
     .setframe rbp, 0

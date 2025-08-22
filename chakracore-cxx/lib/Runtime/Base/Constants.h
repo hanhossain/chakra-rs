@@ -54,8 +54,8 @@ namespace Js
         // We add extra args during bytecode phase, so account for those and few extra slots for padding.
         static const uint16             MaxAllowedArgs              = UShortMaxValue - 6;
 
-        static const uint64 ExponentMask;
-        static const uint64 MantissaMask;
+        static const unsigned long ExponentMask;
+        static const unsigned long MantissaMask;
 
         static const int ReservedTypeIds = 2048;
 

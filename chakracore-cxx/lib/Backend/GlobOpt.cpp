@@ -3772,7 +3772,7 @@ GlobOpt::CopyProp(IR::Opnd *opnd, IR::Instr *instr, Value *val, IR::IndirOpnd *p
 
     // Constant prop?
     int32 intConstantValue;
-    int64 int64ConstantValue;
+    long int64ConstantValue;
     if (valueInfo->TryGetIntConstantValue(&intConstantValue))
     {
         if (PHASE_OFF(Js::ConstPropPhase, this->func))
@@ -3812,7 +3812,7 @@ GlobOpt::CopyProp(IR::Opnd *opnd, IR::Instr *instr, Value *val, IR::IndirOpnd *p
                 }
 
                 const auto indir = src->AsIndirOpnd();
-                if ((int64)indir->GetOffset() + intConstantValue > INT32_MAX)
+                if ((long)indir->GetOffset() + intConstantValue > INT32_MAX)
                 {
                     continue;
                 }
@@ -4257,7 +4257,7 @@ GlobOpt::GetIntConstantValue(const int32 intConst, IR::Instr * instr, IR::Opnd *
 }
 
 Value *
-GlobOpt::GetIntConstantValue(const int64 intConst, IR::Instr * instr, IR::Opnd *const opnd)
+GlobOpt::GetIntConstantValue(const long intConst, IR::Instr * instr, IR::Opnd *const opnd)
 {
     Assert(instr->m_func->GetJITFunctionBody()->IsWasmFunction());
 
@@ -4277,7 +4277,7 @@ GlobOpt::GetIntConstantValue(const int64 intConst, IR::Instr * instr, IR::Opnd *
         {
 
             Value *const symStoreValue = this->currentBlock->globOptData.FindValue(symStore);
-            int64 symStoreIntConstantValue;
+            long symStoreIntConstantValue;
             if (symStoreValue &&
                 symStoreValue->GetValueNumber() == cachedValue->GetValueNumber() &&
                 symStoreValue->GetValueInfo()->TryGetInt64ConstantValue(&symStoreIntConstantValue, false) &&
@@ -4297,7 +4297,7 @@ GlobOpt::GetIntConstantValue(const int64 intConst, IR::Instr * instr, IR::Opnd *
 }
 
 Value *
-GlobOpt::NewInt64ConstantValue(const int64 intConst, IR::Instr* instr)
+GlobOpt::NewInt64ConstantValue(const long intConst, IR::Instr* instr)
 {
     Value * value = NewValue(Int64ConstantValueInfo::New(this->alloc, intConst));
     this->int64ConstantToValueMap->Item(intConst, value);
@@ -6352,7 +6352,7 @@ GlobOpt::TypeSpecialization(
                 if (CONFIG_FLAG(WasmFold))
                 {
                     bool success = instr->GetSrc1()->IsInt64() ?
-                        this->OptConstFoldBinaryWasm<int64>(&instr, src1Val, src2Val, pDstVal) :
+                        this->OptConstFoldBinaryWasm<long>(&instr, src1Val, src2Val, pDstVal) :
                         this->OptConstFoldBinaryWasm<int>(&instr, src1Val, src2Val, pDstVal);
 
                     if (success)
@@ -6812,7 +6812,7 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
     //Assert(!src1Var || !Js::JavascriptOperators::IsObject(src1Var));
     //Assert(!src2Var || !Js::JavascriptOperators::IsObject(src2Var));
 
-    int64 left64, right64;
+    long left64, right64;
     int32 left, right;
     int32 constVal;
 
@@ -6847,16 +6847,16 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
         } \
         break;
 
-        BRANCHSIGNED(BrEq_I4, == , int64, false, true)
-        BRANCHSIGNED(BrGe_I4, >= , int64, false, false)
-        BRANCHSIGNED(BrGt_I4, > , int64, false, false)
-        BRANCHSIGNED(BrLt_I4, < , int64, false, false)
-        BRANCHSIGNED(BrLe_I4, <= , int64, false, false)
-        BRANCHSIGNED(BrNeq_I4, != , int64, false, false)
-        BRANCHSIGNED(BrUnGe_I4, >= , uint64, true, false)
-        BRANCHSIGNED(BrUnGt_I4, > , uint64, true, false)
-        BRANCHSIGNED(BrUnLt_I4, < , uint64, true, false)
-        BRANCHSIGNED(BrUnLe_I4, <= , uint64, true, false)
+        BRANCHSIGNED(BrEq_I4, == , long, false, true)
+        BRANCHSIGNED(BrGe_I4, >= , long, false, false)
+        BRANCHSIGNED(BrGt_I4, > , long, false, false)
+        BRANCHSIGNED(BrLt_I4, < , long, false, false)
+        BRANCHSIGNED(BrLe_I4, <= , long, false, false)
+        BRANCHSIGNED(BrNeq_I4, != , long, false, false)
+        BRANCHSIGNED(BrUnGe_I4, >= , unsigned long, true, false)
+        BRANCHSIGNED(BrUnGt_I4, > , unsigned long, true, false)
+        BRANCHSIGNED(BrUnLt_I4, < , unsigned long, true, false)
+        BRANCHSIGNED(BrUnLe_I4, <= , unsigned long, true, false)
 #undef BRANCHSIGNED
 #define BRANCH(OPCODE,CMP,VARCMPFUNC,UNDEFINEDCMP) \
     case Js::OpCode::##OPCODE: \
@@ -12413,7 +12413,7 @@ GlobOpt::ToFloat64Dst(IR::Instr *instr, IR::RegOpnd *dst, BasicBlock *block)
     block->globOptData.liveLossyInt32Syms->Clear(varSym->m_id);
 }
 
-static void SetIsConstFlag(StackSym* dstSym, int64 value)
+static void SetIsConstFlag(StackSym* dstSym, long value)
 {
     Assert(dstSym);
     dstSym->SetIsInt64Const();
@@ -12425,7 +12425,7 @@ static void SetIsConstFlag(StackSym* dstSym, int value)
     dstSym->SetIsIntConst(value);
 }
 
-static IR::Opnd* CreateIntConstOpnd(IR::Instr* instr, int64 value)
+static IR::Opnd* CreateIntConstOpnd(IR::Instr* instr, long value)
 {
     return (IR::Opnd*)IR::Int64ConstOpnd::New(value, instr->GetDst()->GetType(), instr->m_func);
 }
@@ -12484,13 +12484,13 @@ bool GlobOpt::OptConstFoldBinaryWasm(
 
     T src1IntConstantValue, src2IntConstantValue;
     if (!src1 || !src1->GetValueInfo()->TryGetIntConstantValue(&src1IntConstantValue, false) || //a bit sketchy: false for int32 means likelyInt = false
-        !src2 || !src2->GetValueInfo()->TryGetIntConstantValue(&src2IntConstantValue, false)    //and unsigned = false for int64
+        !src2 || !src2->GetValueInfo()->TryGetIntConstantValue(&src2IntConstantValue, false)    //and unsigned = false for long
         )
     {
         return false;
     }
 
-    int64 tmpValueOut;
+    long tmpValueOut;
     if (!instr->BinaryCalculatorT<T>(src1IntConstantValue, src2IntConstantValue, &tmpValueOut, func->GetJITFunctionBody()->IsWasmFunction()))
     {
         return false;
@@ -12498,7 +12498,7 @@ bool GlobOpt::OptConstFoldBinaryWasm(
 
     this->CaptureByteCodeSymUses(instr);
 
-    IR::Opnd *dst = (instr->GetDst()->IsInt64()) ? //dst can be int32 for int64 comparison operators
+    IR::Opnd *dst = (instr->GetDst()->IsInt64()) ? //dst can be int32 for long comparison operators
         ReplaceWConst(pInstr, tmpValueOut, pDstVal) :
         ReplaceWConst(pInstr, (int)tmpValueOut, pDstVal);
 

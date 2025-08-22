@@ -158,7 +158,7 @@ namespace TTD
 
         struct PathEntry
         {
-            int64 IndexOrPID;
+            long IndexOrPID;
             const char16_t* OptName;
         };
 
@@ -200,9 +200,9 @@ namespace TTD
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::SlotArrayInfo*, HeapAllocator> H1SlotArrayMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::ScriptFunctionScopeInfo*, HeapAllocator> H1FunctionScopeInfoMap;
 
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H1FunctionTopLevelLoadMap;
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H1FunctionTopLevelNewMap;
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H1FunctionTopLevelEvalMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H1FunctionTopLevelLoadMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H1FunctionTopLevelNewMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H1FunctionTopLevelEvalMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::FunctionBodyResolveInfo*, HeapAllocator> H1FunctionBodyMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapObjects::SnapObject*, HeapAllocator> H1ObjectMap;
 
@@ -214,9 +214,9 @@ namespace TTD
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::SlotArrayInfo*, HeapAllocator> H2SlotArrayMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::ScriptFunctionScopeInfo*, HeapAllocator> H2FunctionScopeInfoMap;
 
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H2FunctionTopLevelLoadMap;
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H2FunctionTopLevelNewMap;
-        JsUtil::BaseDictionary<TTD_PTR_ID, uint64, HeapAllocator> H2FunctionTopLevelEvalMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H2FunctionTopLevelLoadMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H2FunctionTopLevelNewMap;
+        JsUtil::BaseDictionary<TTD_PTR_ID, unsigned long, HeapAllocator> H2FunctionTopLevelEvalMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapValues::FunctionBodyResolveInfo*, HeapAllocator> H2FunctionBodyMap;
         JsUtil::BaseDictionary<TTD_PTR_ID, const NSSnapObjects::SnapObject*, HeapAllocator> H2ObjectMap;
 
@@ -247,7 +247,7 @@ namespace TTD
         void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, const NSSnapValues::SlotArrayInfo** val1, TTD_PTR_ID h2PtrId, const NSSnapValues::SlotArrayInfo** val2);
         void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, const NSSnapValues::ScriptFunctionScopeInfo** val1, TTD_PTR_ID h2PtrId, const NSSnapValues::ScriptFunctionScopeInfo** val2);
 
-        void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, uint64* val1, TTD_PTR_ID h2PtrId, uint64* val2);
+        void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, unsigned long* val1, TTD_PTR_ID h2PtrId, unsigned long* val2);
         void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, const NSSnapValues::FunctionBodyResolveInfo** val1, TTD_PTR_ID h2PtrId, const NSSnapValues::FunctionBodyResolveInfo** val2);
         void GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, const NSSnapObjects::SnapObject** val1, TTD_PTR_ID h2PtrId, const NSSnapObjects::SnapObject** val2);
     };

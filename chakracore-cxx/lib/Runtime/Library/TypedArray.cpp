@@ -2023,7 +2023,7 @@ namespace Js
         uint32 length = typedArrayBase->GetLength();
 
         Var search = nullptr;
-        int64 fromIndex;
+        long fromIndex;
         if (!JavascriptArray::GetParamForLastIndexOf(length, args, search, fromIndex, scriptContext))
         {
             return TaggedInt::ToVarUnchecked(-1);

@@ -266,7 +266,7 @@ private:
 #define Float_Type Js::RegSlot
 #define Double_Type Js::RegSlot
 #define IntConst_Type int
-#define LongConst_Type int64
+#define LongConst_Type long
 #define FloatConst_Type float
 #define DoubleConst_Type double
 #define Float32x4_Type Js::RegSlot

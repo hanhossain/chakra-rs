@@ -161,7 +161,7 @@ namespace Js
     }
 
 #if ENABLE_TTD
-    BreakpointProbe* DebugDocument::SetBreakPoint_TTDWbpId(int64 bpId, StatementLocation statement)
+    BreakpointProbe* DebugDocument::SetBreakPoint_TTDWbpId(long bpId, StatementLocation statement)
     {
         ScriptContext* scriptContext = this->utf8SourceInfo->GetScriptContext();
         BreakpointProbe* pProbe = Anew(scriptContext->AllocatorForDiagnostics(), BreakpointProbe, this, statement, (uint32)bpId);

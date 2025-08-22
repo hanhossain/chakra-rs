@@ -5687,9 +5687,9 @@ Recycler::FinishConcurrentCollectWrapped(CollectionFlags flags)
 
 
  /**
-  *  Compute ft1 - ft2, return result as a uint64
+  *  Compute ft1 - ft2, return result as a unsigned long
   */
-uint64 DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
+unsigned long DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
 {
     ULARGE_INTEGER ul1;
     ULARGE_INTEGER ul2;
@@ -8279,10 +8279,10 @@ Recycler::PrintAllocStats()
     }
     size_t itemCount = 0;
     int allocCount = 0;
-    int64 reqSize = 0;
-    int64 allocSize = 0;
+    long reqSize = 0;
+    long allocSize = 0;
     int freeCount = 0;
-    int64 freeSize = 0;
+    long freeSize = 0;
     Output::Print(_u("=================================================================================================================\n"));
     Output::Print(_u("Recycler Allocations\n"));
     Output::Print(_u("=================================================================================================================\n"));
@@ -8806,7 +8806,7 @@ void Recycler::AppendFreeMemoryETWRecord(char *address, size_t size)
     Assert(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     __analysis_assume(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     etwFreeRecords[bulkFreeMemoryWrittenCount].memoryAddress = address;
-    // TODO: change to size_t or uint64?
+    // TODO: change to size_t or unsigned long?
     etwFreeRecords[bulkFreeMemoryWrittenCount].objectSize = (uint)size;
     bulkFreeMemoryWrittenCount++;
     if (bulkFreeMemoryWrittenCount == Recycler::BulkFreeMemoryCount)

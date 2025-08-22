@@ -10,7 +10,7 @@ bool ValueInfo::HasIntConstantValue(const bool includeLikelyInt) const
     return TryGetIntConstantValue(&constantValue, includeLikelyInt);
 }
 
-bool ValueInfo::TryGetInt64ConstantValue(int64 *const intValueRef, const bool isUnsigned) const
+bool ValueInfo::TryGetInt64ConstantValue(long *const intValueRef, const bool isUnsigned) const
 {
     Assert(intValueRef);
     if (TryGetIntConstantValue(intValueRef, isUnsigned))
@@ -36,7 +36,7 @@ bool ValueInfo::TryGetInt64ConstantValue(int64 *const intValueRef, const bool is
     return false;
 }
 
-bool ValueInfo::TryGetIntConstantValue(int64 *const intValueRef, const bool isUnsigned) const
+bool ValueInfo::TryGetIntConstantValue(long *const intValueRef, const bool isUnsigned) const
 {
     Assert(intValueRef);
     if (structureKind == ValueStructureKind::Int64Constant)

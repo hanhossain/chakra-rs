@@ -16,8 +16,8 @@ namespace TTD
         writer->WriteRecordStart();
         writer->AdjustIndent(1);
 
-        uint64 usedSpace = 0;
-        uint64 reservedSpace = 0;
+        unsigned long usedSpace = 0;
+        unsigned long reservedSpace = 0;
         this->ComputeSnapshotMemory(&usedSpace, &reservedSpace);
 
         writer->WriteDouble(NSTokens::Key::timeTotal, this->GCTime + this->MarkTime + this->ExtractTime);
@@ -278,7 +278,7 @@ namespace TTD
         reader->ReadRecordEnd();
     }
 
-    void SnapShot::ComputeSnapshotMemory(uint64* usedSpace, uint64* reservedSpace) const
+    void SnapShot::ComputeSnapshotMemory(unsigned long* usedSpace, unsigned long* reservedSpace) const
     {
         return this->m_slabAllocator.ComputeMemoryUsed(usedSpace, reservedSpace);
     }
@@ -632,7 +632,7 @@ namespace TTD
         }
     }
 
-    void SnapShot::EmitSnapshot(int64 snapId, ThreadContext* threadContext) const
+    void SnapShot::EmitSnapshot(long snapId, ThreadContext* threadContext) const
     {
         char asciiResourceName[64];
         sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);
@@ -647,7 +647,7 @@ namespace TTD
         snapwriter.FlushAndClose();
     }
 
-    SnapShot* SnapShot::Parse(int64 snapId, ThreadContext* threadContext)
+    SnapShot* SnapShot::Parse(long snapId, ThreadContext* threadContext)
     {
         char asciiResourceName[64];
         sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);
@@ -857,22 +857,22 @@ namespace TTD
             }
             else if(ctag == TTDCompareTag::TopLevelLoadFunction)
             {
-                uint64 fload1 = 0;
-                uint64 fload2 = 0;
+                unsigned long fload1 = 0;
+                unsigned long fload2 = 0;
                 compareMap.GetCompareValues(ctag, ptrId1, &fload1, ptrId2, &fload2);
                 compareMap.DiagnosticAssert(fload1 == fload2);
             }
             else if(ctag == TTDCompareTag::TopLevelNewFunction)
             {
-                uint64 fnew1 = 0;
-                uint64 fnew2 = 0;
+                unsigned long fnew1 = 0;
+                unsigned long fnew2 = 0;
                 compareMap.GetCompareValues(ctag, ptrId1, &fnew1, ptrId2, &fnew2);
                 compareMap.DiagnosticAssert(fnew1 == fnew2);
             }
             else if(ctag == TTDCompareTag::TopLevelEvalFunction)
             {
-                uint64 feval1 = 0;
-                uint64 feval2 = 0;
+                unsigned long feval1 = 0;
+                unsigned long feval2 = 0;
                 compareMap.GetCompareValues(ctag, ptrId1, &feval1, ptrId2, &feval2);
                 compareMap.DiagnosticAssert(feval1 == feval2);
             }

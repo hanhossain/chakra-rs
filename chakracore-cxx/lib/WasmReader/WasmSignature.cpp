@@ -144,8 +144,8 @@ Js::ArgSlot WasmSignature::GetParamSize(Js::ArgSlot index) const
         break;
     case WasmTypes::F64:
     case WasmTypes::I64:
-        CompileAssert(sizeof(double) == sizeof(int64));
-        return sizeof(int64);
+        CompileAssert(sizeof(double) == sizeof(long));
+        return sizeof(long);
         break;
 #ifdef ENABLE_WASM_SIMD
     case WasmTypes::V128:

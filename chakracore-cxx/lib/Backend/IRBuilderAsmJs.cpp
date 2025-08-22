@@ -860,7 +860,7 @@ IRBuilderAsmJs::BuildConstantLoads()
             break;
 #if TARGET_64
         case WAsmJs::INT64:
-            CreateLoadConstInstrForType<int64, IR::Int64ConstOpnd>(
+            CreateLoadConstInstrForType<long, IR::Int64ConstOpnd>(
                 table,
                 regAllocated,
                 info.constCount,
@@ -868,7 +868,7 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TyInt64,
                 ValueType::GetInt(false),
                 Js::OpCode::Ld_I4,
-                [&](IR::Instr* instr, int64 val) {}
+                [&](IR::Instr* instr, long val) {}
             );
             break;
 #endif
@@ -3079,7 +3079,7 @@ IRBuilderAsmJs::BuildReg1Long1(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::Reg
 }
 
 void
-IRBuilderAsmJs::BuildLong1Const1(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot dstRegSlot, int64 constInt64)
+IRBuilderAsmJs::BuildLong1Const1(Js::OpCodeAsmJs newOpcode, uint32 offset, Js::RegSlot dstRegSlot, long constInt64)
 {
     Assert(newOpcode == Js::OpCodeAsmJs::Ld_LongConst);
 

@@ -75,7 +75,7 @@ namespace Js
     template<>
     inline double AsmJsMath::Abs<double>(double aLeft)
     {
-        uint64 x = (*(uint64*)(&aLeft) & 0x7FFFFFFFFFFFFFFF);
+        unsigned long x = (*(unsigned long*)(&aLeft) & 0x7FFFFFFFFFFFFFFF);
         return *(double*)(&x);
     }
 

@@ -20,30 +20,30 @@ namespace Js
     public:
         // Our float tagging scheme relies on NaNs to be of this value - changing the NaN value
         // will break float tagging for x64.
-        static const uint64     k_PosInf    = 0x7FF0000000000000ull;
-        static const uint64     k_NegInf    = 0xFFF0000000000000ull;
-        static const uint64     k_PosMin    = 0x0000000000000001ull;
-        static const uint64     k_PosMax    = 0x7FEFFFFFFFFFFFFFull;
-        static const uint64     k_NegZero   = 0x8000000000000000ull;
-        static const uint64     k_Zero      = 0x0000000000000000ull;
-        static const uint64     k_PointFive = 0x3FE0000000000000ull;
-        static const uint64     k_NegPointFive = 0xBFE0000000000000ull;
-        static const uint64     k_NegOne    = 0xBFF0000000000000ull;
-        static const uint64     k_OnePointZero = 0x3FF0000000000000ull;
+        static const unsigned long     k_PosInf    = 0x7FF0000000000000ull;
+        static const unsigned long     k_NegInf    = 0xFFF0000000000000ull;
+        static const unsigned long     k_PosMin    = 0x0000000000000001ull;
+        static const unsigned long     k_PosMax    = 0x7FEFFFFFFFFFFFFFull;
+        static const unsigned long     k_NegZero   = 0x8000000000000000ull;
+        static const unsigned long     k_Zero      = 0x0000000000000000ull;
+        static const unsigned long     k_PointFive = 0x3FE0000000000000ull;
+        static const unsigned long     k_NegPointFive = 0xBFE0000000000000ull;
+        static const unsigned long     k_NegOne    = 0xBFF0000000000000ull;
+        static const unsigned long     k_OnePointZero = 0x3FF0000000000000ull;
         // 2^52
-        static const uint64     k_TwoToFraction = 0x4330000000000000ull;
+        static const unsigned long     k_TwoToFraction = 0x4330000000000000ull;
         // -2^52
-        static const uint64     k_NegTwoToFraction = 0xC330000000000000ull;
+        static const unsigned long     k_NegTwoToFraction = 0xC330000000000000ull;
 
-        static const uint64     k_TwoTo63 = 0x43e0000000000000ull;
-        static const uint64     k_NegTwoTo63 = 0xc3e0000000000000ull;
-        static const uint64     k_TwoTo64 = 0x43f0000000000000ull;
-        static const uint64     k_TwoTo31 = 0x41dfffffffc00000ull;
-        static const uint64     k_NegTwoTo31 = 0xc1e0000000000000ull;
-        static const uint64     k_TwoTo32 = 0x41efffffffe00000ull;
-        static const uint64     k_MinIntMinusOne = 0xc1e0000000200000ull;
-        static const uint64     k_UintMaxPlusOne = 0x41f0000000000000ull;
-        static const uint64     k_IntMaxPlusOne = 0x41e0000000000000ull;
+        static const unsigned long     k_TwoTo63 = 0x43e0000000000000ull;
+        static const unsigned long     k_NegTwoTo63 = 0xc3e0000000000000ull;
+        static const unsigned long     k_TwoTo64 = 0x43f0000000000000ull;
+        static const unsigned long     k_TwoTo31 = 0x41dfffffffc00000ull;
+        static const unsigned long     k_NegTwoTo31 = 0xc1e0000000000000ull;
+        static const unsigned long     k_TwoTo32 = 0x41efffffffe00000ull;
+        static const unsigned long     k_MinIntMinusOne = 0xc1e0000000200000ull;
+        static const unsigned long     k_UintMaxPlusOne = 0x41f0000000000000ull;
+        static const unsigned long     k_IntMaxPlusOne = 0x41e0000000000000ull;
 
         static const uint32     k_Float32Zero      = 0x00000000ul;
         static const uint32     k_Float32PointFive = 0x3F000000ul;
@@ -103,11 +103,11 @@ namespace Js
         static bool IsNan(double value);
         static bool IsNegative(double value);
         static bool IsFloat32NegZero(float value);
-        static bool IsSpecial(double value, uint64 nSpecial);
-        static uint64 ToSpecial(double value);
+        static bool IsSpecial(double value, unsigned long nSpecial);
+        static unsigned long ToSpecial(double value);
         static uint32 ToSpecial(float value);
         static float VECTORCALL ReinterpretBits(int value);
-        static double VECTORCALL ReinterpretBits(int64 value);
+        static double VECTORCALL ReinterpretBits(long value);
 
         // Convert a given uint16_t into its corresponding string.
         // outBufferSize is in char16_t elements (and used only for ASSERTs)

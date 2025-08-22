@@ -296,19 +296,19 @@ namespace Js
 
         static BOOL HasOwnItem(RecyclableObject* instance, uint32 index);
         static BOOL HasItem(RecyclableObject* instance, uint32 index);
-        static BOOL HasItem(RecyclableObject* instance, uint64 index);
+        static BOOL HasItem(RecyclableObject* instance, unsigned long index);
         static BOOL GetOwnItem(RecyclableObject* instance, uint32 index, Var* value, ScriptContext* requestContext);
-        static Var GetItem(RecyclableObject* instance, uint64 index, ScriptContext* requestContext);
+        static Var GetItem(RecyclableObject* instance, unsigned long index, ScriptContext* requestContext);
         static Var GetItem(RecyclableObject* instance, uint32 index, ScriptContext* requestContext);
-        static BOOL GetItem(RecyclableObject* instance, uint64 index, Var* value, ScriptContext* requestContext);
+        static BOOL GetItem(RecyclableObject* instance, unsigned long index, Var* value, ScriptContext* requestContext);
         static BOOL GetItem(RecyclableObject* instance, uint32 index, Var* value, ScriptContext* requestContext);
         static BOOL GetItem(Var instance, RecyclableObject* propertyObject, uint32 index, Var* value, ScriptContext* requestContext);
         static BOOL GetItemReference(RecyclableObject* instance, uint32 index, Var* value, ScriptContext* requestContext);
         static BOOL GetItemReference(Var instance, RecyclableObject* propertyObject, uint32 index, Var* value, ScriptContext* requestContext);
-        static BOOL SetItem(Var instance, RecyclableObject* object, uint64 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags = PropertyOperation_None);
+        static BOOL SetItem(Var instance, RecyclableObject* object, unsigned long index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags = PropertyOperation_None);
         static BOOL SetItem(Var instance, RecyclableObject* object, uint32 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags flags = PropertyOperation_None, BOOL skipPrototypeCheck = FALSE);
         static BOOL DeleteItem(RecyclableObject* instance, uint32 index, PropertyOperationFlags propertyOperationFlags = PropertyOperation_None);
-        static BOOL DeleteItem(RecyclableObject* instance, uint64 index, PropertyOperationFlags propertyOperationFlags = PropertyOperation_None);
+        static BOOL DeleteItem(RecyclableObject* instance, unsigned long index, PropertyOperationFlags propertyOperationFlags = PropertyOperation_None);
 
         static RecyclableObject* CreateFromConstructor(RecyclableObject* constructor, ScriptContext* scriptContext);
         static RecyclableObject* OrdinaryCreateFromConstructor(RecyclableObject* constructor, RecyclableObject* obj, DynamicObject* intrinsicProto, ScriptContext* scriptContext);
@@ -601,7 +601,7 @@ namespace Js
 
         static Var PatchGetMethodFromObject(Var instance, RecyclableObject * propertyObject, PropertyId propertyId, PropertyValueInfo * info, ScriptContext * scriptContext, bool isRootLd);
 
-        static void GetPropertyIdForInt(uint64 value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord);
+        static void GetPropertyIdForInt(unsigned long value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord);
         static void GetPropertyIdForInt(uint32 value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord);
         static BOOL TryConvertToUInt32(const char16_t* str, int length, uint32* value);
 

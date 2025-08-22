@@ -23,10 +23,10 @@ struct SignedTypeTraits<int32>
     static const int32 MinValue = INT32_MIN;
 };
 template <>
-struct SignedTypeTraits<int64>
+struct SignedTypeTraits<long>
 {
-    typedef uint64 UnsignedType;
-    static const int64 MinValue = INT64_MIN;
+    typedef unsigned long UnsignedType;
+    static const long MinValue = INT64_MIN;
 };
 
 template <class T>

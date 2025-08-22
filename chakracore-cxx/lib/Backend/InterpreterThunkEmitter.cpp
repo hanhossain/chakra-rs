@@ -461,7 +461,7 @@ void InterpreterThunkEmitter::FillBuffer(
         uint32_t encodedBranch = /*opcode=*/ 0x9000F000 | encodedOffset;
         Emit(currentBuffer, JmpOffset, encodedBranch);
 #elif _M_ARM64
-        int64 offset = (epilogStart - (currentBuffer + JmpOffset));
+        long offset = (epilogStart - (currentBuffer + JmpOffset));
         Assert(offset >= 0);
         uint32_t encodedOffset = EncoderMD::BranchOffset_26(offset);
         uint32_t encodedBranch = /*opcode=*/ 0x14000000 | encodedOffset;
@@ -595,27 +595,27 @@ void InterpreterThunkEmitter::EncodeInterpreterThunk(
     // Following 4 MOV Instrs are to move the 64-bit address of the InterpreterThunk address into register x1.
 
     // Encode MOVZ (movz        x1, #<interpreterThunk 16-0 bits>)
-    uint32_t lowerThunkBits = (uint64)interpreterThunk & 0x0000FFFF;
+    uint32_t lowerThunkBits = (unsigned long)interpreterThunk & 0x0000FFFF;
     uint32_t movZ = EncodeMove(/*Opcode*/ 0xD2800000, /*register x1*/1, lowerThunkBits); // no shift; hw = 00
     Emit(thunkBuffer,addrOffset, movZ);
     static_assert(sizeof(movZ) == 4, "movZ has to be 32-bit encoded");
     addrOffset+= sizeof(movZ);
 
     // Encode MOVK (movk        x1, #<interpreterThunk 32-16 bits>, lsl #16)
-    uint32_t higherThunkBits = ((uint64)interpreterThunk & 0xFFFF0000) >> 16;
+    uint32_t higherThunkBits = ((unsigned long)interpreterThunk & 0xFFFF0000) >> 16;
     uint32_t movK = EncodeMove(/*Opcode*/ 0xF2A00000, /*register x1*/1, higherThunkBits); // left shift 16 bits; hw = 01
     Emit(thunkBuffer, addrOffset, movK);
     static_assert(sizeof(movK) == 4, "movK has to be 32-bit encoded");
     addrOffset+= sizeof(movK);
 
     // Encode MOVK (movk        x1, #<interpreterThunk 48-32 bits>, lsl #16)
-    higherThunkBits = ((uint64)interpreterThunk & 0xFFFF00000000) >> 32;
+    higherThunkBits = ((unsigned long)interpreterThunk & 0xFFFF00000000) >> 32;
     movK = EncodeMove(/*Opcode*/ 0xF2C00000, /*register x1*/1, higherThunkBits); // left shift 32 bits; hw = 02
     Emit(thunkBuffer, addrOffset, movK);
     addrOffset += sizeof(movK);
 
     // Encode MOVK (movk        x1, #<interpreterThunk 64-48 bits>, lsl #16)
-    higherThunkBits = ((uint64)interpreterThunk & 0xFFFF000000000000) >> 48;
+    higherThunkBits = ((unsigned long)interpreterThunk & 0xFFFF000000000000) >> 48;
     movK = EncodeMove(/*Opcode*/ 0xF2E00000, /*register x1*/1, higherThunkBits); // left shift 48 bits; hw = 03
     Emit(thunkBuffer, addrOffset, movK);
 

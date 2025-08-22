@@ -95,7 +95,7 @@ uint32 GetTypeByteSize(WasmType type)
     {
     case Void: return sizeof(Js::Var);
     case I32: return sizeof(int32);
-    case I64: return sizeof(int64);
+    case I64: return sizeof(long);
     case F32: return sizeof(float);
     case F64: return sizeof(double);
 #ifdef ENABLE_WASM_SIMD

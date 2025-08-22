@@ -40,19 +40,19 @@ namespace UnifiedRegex
         // Time spent on regex
         Ticks phaseTicks[NumPhases];
         // How is regex used?
-        uint64 useCounts[NumUses];
+        unsigned long useCounts[NumUses];
         // Total input length
-        uint64 inputLength;
+        unsigned long inputLength;
         // Total chars looked at (may be > length if backtrack, < length if using Boyer-Moore)
-        uint64 numCompares;
+        unsigned long numCompares;
         // Number of continuation stack pushes
-        uint64 numPushes;
+        unsigned long numPushes;
         // Number of continuation stack pops
-        uint64 numPops;
+        unsigned long numPops;
         // Continuation stack high-water-mark
-        uint64 stackHWM;
+        unsigned long stackHWM;
         // Number of instructions executed
-        uint64 numInsts;
+        unsigned long numInsts;
 
         RegexStats(RegexPattern* pattern);
 

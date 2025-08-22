@@ -759,7 +759,7 @@ LowererMDArch::LowerInt64CallDst(IR::Instr * callInstr)
     movInstr->UnlinkDst();
     movInstr->SetDst(dstPair.low);
 
-    // Make ecx alive as it contains the high bits for the int64 return value
+    // Make ecx alive as it contains the high bits for the long return value
     IR::RegOpnd* highReg = IR::RegOpnd::New(TyInt32, this->m_func);
     highReg->SetReg(highReturnReg);
     // todo:: Remove the NOP in peeps
@@ -881,7 +881,7 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     IR::RegOpnd * indexOpnd = indirOpnd->GetIndexOpnd();
     uint32 offset = indirOpnd->GetOffset();
     IR::Opnd *arrayLenOpnd = instr->GetSrc2();
-    int64 constOffset = (int64)addrOpnd->GetSize() + (int64)offset;
+    long constOffset = (long)addrOpnd->GetSize() + (long)offset;
 
     CompileAssert(Js::ArrayBuffer::MaxArrayBufferLength <= UINT32_MAX);
     IR::IntConstOpnd * constOffsetOpnd = IR::IntConstOpnd::New((uint32)constOffset, TyUint32, m_func);
@@ -1907,7 +1907,7 @@ LowererMDArch::ChangeToAssignInt64(IR::Instr * instr)
 
         instr->SetSrc1(src1Pair.low);
         instr->SetDst(dstPair.low);
-        LowererMD::ChangeToAssignNoBarrierCheck(instr);  // No WriteBarrier for assigning int64 on x86
+        LowererMD::ChangeToAssignNoBarrierCheck(instr);  // No WriteBarrier for assigning long on x86
         IR::Instr * insertBeforeInstr = instr->m_next;
 
         // Do not store to memory if we wanted less than 8 bytes

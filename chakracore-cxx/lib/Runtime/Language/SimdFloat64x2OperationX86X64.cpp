@@ -325,8 +325,8 @@ namespace Js
         dst->f64[1] = (double) (T)src->i64[1];
     }
 
-    template void SIMDFloat64x2Operation::OpConv<int64>(SIMDValue* dst, SIMDValue* src);
-    template void SIMDFloat64x2Operation::OpConv<uint64>(SIMDValue* dst, SIMDValue* src);
+    template void SIMDFloat64x2Operation::OpConv<long>(SIMDValue* dst, SIMDValue* src);
+    template void SIMDFloat64x2Operation::OpConv<unsigned long>(SIMDValue* dst, SIMDValue* src);
 
 }
 

@@ -380,7 +380,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
     case Js::OpCode::TrapIfZero:
         if (src1 && src1->IsImmediateOpnd())
         {
-            int64 val = src1->GetImmediateValue(func);
+            long val = src1->GetImmediateValue(func);
             if (val != 0)
             {
                 instr->m_opcode = Js::OpCode::Ld_I4;
@@ -398,7 +398,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         int checksLeft = 2;
         if (src1 && src1->IsImmediateOpnd())
         {
-            int64 val = src1->GetImmediateValue(func);
+            long val = src1->GetImmediateValue(func);
             bool isMintInt = src1->GetSize() == 8 ? val == LONGLONG_MIN : (int32)val == INT_MIN;
             if (!isMintInt)
             {
@@ -411,7 +411,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
         }
         if (src2 && src2->IsImmediateOpnd())
         {
-            int64 val = src2->GetImmediateValue(func);
+            long val = src2->GetImmediateValue(func);
             bool isNegOne = src2->GetSize() == 8 ? val == -1 : (int32)val == -1;
             if (!isNegOne)
             {
@@ -439,7 +439,7 @@ GlobOpt::OptimizeChecks(IR::Instr * const instr)
     case Js::OpCode::TrapIfUnalignedAccess:
         if (src1 && src1->IsImmediateOpnd())
         {
-            int64 val = src1->GetImmediateValue(func);
+            long val = src1->GetImmediateValue(func);
             Assert(src2->IsImmediateOpnd());
             uint32 cmpValue = (uint32)src2->GetImmediateValue(func);
             uint32 mask = src2->GetSize() - 1;

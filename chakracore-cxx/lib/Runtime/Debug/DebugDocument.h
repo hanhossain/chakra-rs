@@ -28,7 +28,7 @@ namespace Js
         void ClearAllBreakPoints(void);
 
 #if ENABLE_TTD
-        BreakpointProbe* SetBreakPoint_TTDWbpId(int64 bpId, StatementLocation statement);
+        BreakpointProbe* SetBreakPoint_TTDWbpId(long bpId, StatementLocation statement);
 #endif
 
         BreakpointProbe* FindBreakpoint(StatementLocation statement);

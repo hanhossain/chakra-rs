@@ -34,7 +34,7 @@ inline int WasmMath::Ctz(int value)
 }
 
 template<> 
-inline int64 WasmMath::Ctz(int64 value)
+inline long WasmMath::Ctz(long value)
 {
     uint32_t index;
 #if TARGET_64
@@ -56,7 +56,7 @@ inline int64 WasmMath::Ctz(int64 value)
 }
 
 template<> 
-inline int64 WasmMath::Clz(int64 value)
+inline long WasmMath::Clz(long value)
 {
     uint32_t index;
 #if TARGET_64
@@ -84,15 +84,15 @@ inline int WasmMath::PopCnt(int value)
 }
 
 template<> 
-inline int64 WasmMath::PopCnt(int64 value)
+inline long WasmMath::PopCnt(long value)
 {
-    uint64 v = (uint64)value;
+    unsigned long v = (unsigned long)value;
     // https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
     v = v - ((v >> 1) & 0x5555555555555555LL);
     v = (v & 0x3333333333333333LL) + ((v >> 2) & 0x3333333333333333LL);
     v = (v + (v >> 4)) & 0x0f0f0f0f0f0f0f0f;
-    v = (uint64)(v * 0x0101010101010101LL) >> (sizeof(uint64) - 1) * CHAR_BIT;
-    return (int64)v;
+    v = (unsigned long)(v * 0x0101010101010101LL) >> (sizeof(unsigned long) - 1) * CHAR_BIT;
+    return (long)v;
 }
 
 
@@ -105,9 +105,9 @@ inline int WasmMath::Eqz(T value)
 template<>
 inline double WasmMath::Copysign(double aLeft, double aRight)
 {
-    uint64 aLeftI64 = *(uint64*)(&aLeft);
-    uint64 aRightI64 = *(uint64*)(&aRight);
-    uint64 res = ((aLeftI64 & 0x7fffffffffffffffull) | (aRightI64 & 0x8000000000000000ull));
+    unsigned long aLeftI64 = *(unsigned long*)(&aLeft);
+    unsigned long aRightI64 = *(unsigned long*)(&aRight);
+    unsigned long res = ((aLeftI64 & 0x7fffffffffffffffull) | (aRightI64 & 0x8000000000000000ull));
     return *(double*)(&res);
 }
 
@@ -231,7 +231,7 @@ inline int WasmMath::Rol(int aLeft, int aRight)
 }
 
 template<>
-inline int64 WasmMath::Rol(int64 aLeft, int64 aRight)
+inline long WasmMath::Rol(long aLeft, long aRight)
 {
     return _rotl64(aLeft, (int)aRight);
 }
@@ -243,7 +243,7 @@ inline int WasmMath::Ror(int aLeft, int aRight)
 }
 
 template<>
-inline int64 WasmMath::Ror(int64 aLeft, int64 aRight)
+inline long WasmMath::Ror(long aLeft, long aRight)
 {
     return _rotr64(aLeft, (int)aRight);
 }
@@ -298,12 +298,12 @@ int32 WasmMath::F64ToI32(double src, _In_ Js::ScriptContext* scriptContext)
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
         int32, // DstType
-        uint64, // ReinterpretType
+        unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo31,
         Js::NumberConstants::k_NegZero,
         Js::NumberConstants::k_NegTwoTo31,
-        &WasmMath::LessOrEqual<uint64>,
-        &WasmMath::LessOrEqual<uint64>,
+        &WasmMath::LessOrEqual<unsigned long>,
+        &WasmMath::LessOrEqual<unsigned long>,
         Saturate,
         INT32_MIN,
         INT32_MAX>(
@@ -317,12 +317,12 @@ uint32 WasmMath::F64ToU32(double src, _In_ Js::ScriptContext* scriptContext)
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
         uint32, // DstType
-        uint64, // ReinterpretType
+        unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo32,
         Js::NumberConstants::k_NegZero,
         Js::NumberConstants::k_NegOne,
-        &WasmMath::LessOrEqual<uint64>,
-        &WasmMath::LessThan<uint64>,
+        &WasmMath::LessOrEqual<unsigned long>,
+        &WasmMath::LessThan<unsigned long>,
         Saturate,
         0,
         UINT32_MAX>(
@@ -331,11 +331,11 @@ uint32 WasmMath::F64ToU32(double src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-int64 WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
+long WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
-        int64, // DstType
+        long, // DstType
         uint32, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo63,
         Js::NumberConstants::k_Float32NegZero,
@@ -350,11 +350,11 @@ int64 WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-uint64 WasmMath::F32ToU64(float src, _In_ Js::ScriptContext* scriptContext)
+unsigned long WasmMath::F32ToU64(float src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
-        uint64, // DstType
+        unsigned long, // DstType
         uint32, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo64,
         Js::NumberConstants::k_Float32NegZero,
@@ -369,17 +369,17 @@ uint64 WasmMath::F32ToU64(float src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-int64 WasmMath::F64ToI64(double src, _In_ Js::ScriptContext* scriptContext)
+long WasmMath::F64ToI64(double src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
-        int64, // DstType
-        uint64, // ReinterpretType
+        long, // DstType
+        unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo63,
         Js::NumberConstants::k_NegZero,
         Js::NumberConstants::k_NegTwoTo63,
-        &WasmMath::LessThan<uint64>,
-        &WasmMath::LessOrEqual<uint64>,
+        &WasmMath::LessThan<unsigned long>,
+        &WasmMath::LessOrEqual<unsigned long>,
         Saturate,
         INT64_MIN,
         INT64_MAX>(
@@ -388,17 +388,17 @@ int64 WasmMath::F64ToI64(double src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-uint64 WasmMath::F64ToU64(double src, _In_ Js::ScriptContext* scriptContext)
+unsigned long WasmMath::F64ToU64(double src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
-        uint64, // DstType
-        uint64, // ReinterpretType
+        unsigned long, // DstType
+        unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo64,
         Js::NumberConstants::k_NegZero,
         Js::NumberConstants::k_NegOne,
-        &WasmMath::LessThan<uint64>,
-        &WasmMath::LessThan<uint64>,
+        &WasmMath::LessThan<unsigned long>,
+        &WasmMath::LessThan<unsigned long>,
         Saturate,
         0,
         UINT64_MAX>(

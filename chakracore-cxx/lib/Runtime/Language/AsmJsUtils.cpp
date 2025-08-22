@@ -153,7 +153,7 @@ namespace Js
     }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-    int64 ConvertStringToInt64(Var string, ScriptContext* scriptContext)
+    long ConvertStringToInt64(Var string, ScriptContext* scriptContext)
     {
         JavascriptString* str = VarTo<JavascriptString>(string);
         charcount_t length = str->GetLength();
@@ -163,10 +163,10 @@ namespace Js
         {
             radix = 16;
         }
-        return (int64)_wcstoui64(buf, nullptr, radix);
+        return (long)_wcstoui64(buf, nullptr, radix);
     }
 
-    Var CreateI64ReturnObject(int64 val, ScriptContext* scriptContext)
+    Var CreateI64ReturnObject(long val, ScriptContext* scriptContext)
     {
         Js::Var i64Object = JavascriptOperators::NewJavascriptObjectNoArg(scriptContext);
         Var low = JavascriptNumber::ToVar((uint)val, scriptContext);
@@ -214,7 +214,7 @@ namespace Js
                 }
 
 #if TARGET_64
-                *(int64*)(argDst) = 0;
+                *(long*)(argDst) = 0;
 #endif
                 *(int32*)argDst = intVal;
                 argDst = argDst + MachPtr;
@@ -229,7 +229,7 @@ namespace Js
                 }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-                int64 val;
+                long val;
                 if (i < actualArgCount)
                 {
                     if (VarIs<JavascriptString>(*origArgs))
@@ -246,14 +246,14 @@ namespace Js
                         Var low = JavascriptOperators::OP_GetProperty(object, lowPropRecord->GetPropertyId(), scriptContext);
                         Var high = JavascriptOperators::OP_GetProperty(object, highPropRecord->GetPropertyId(), scriptContext);
 
-                        uint64 lowVal = JavascriptMath::ToInt32(low, scriptContext);
-                        uint64 highVal = JavascriptMath::ToInt32(high, scriptContext);
+                        unsigned long lowVal = JavascriptMath::ToInt32(low, scriptContext);
+                        unsigned long highVal = JavascriptMath::ToInt32(high, scriptContext);
                         val = (highVal << 32) | (lowVal & 0xFFFFFFFF);
                     }
                     else
                     {
                         int32 intVal = JavascriptMath::ToInt32(*origArgs, scriptContext);
-                        val = (int64)intVal;
+                        val = (long)intVal;
                     }
                 }
                 else
@@ -261,8 +261,8 @@ namespace Js
                     val = 0;
                 }
 
-                *(int64*)(argDst) = val;
-                argDst += sizeof(int64);
+                *(long*)(argDst) = val;
+                argDst += sizeof(long);
 #endif
             }
             else if (info->GetArgType(i).isFloat())
@@ -285,7 +285,7 @@ namespace Js
                     floatVal = (float)(JavascriptNumber::NaN);
                 }
 #if TARGET_64
-                *(int64*)(argDst) = 0;
+                *(long*)(argDst) = 0;
 #endif
                 *(float*)argDst = floatVal;
                 argDst = argDst + MachPtr;
@@ -298,7 +298,7 @@ namespace Js
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (allowTestInputs && VarIs<JavascriptString>(*origArgs))
                     {
-                        int64 val = ConvertStringToInt64(*origArgs, scriptContext);
+                        long val = ConvertStringToInt64(*origArgs, scriptContext);
                         doubleVal = *(double*)&val;
                     }
                     else
@@ -356,7 +356,7 @@ namespace Js
         return argSize;
     }
 
-    Var BoxAsmJsReturnValue(ScriptFunction* func, int64 intRetVal, double doubleRetVal, float floatRetVal, __m128 simdRetVal)
+    Var BoxAsmJsReturnValue(ScriptFunction* func, long intRetVal, double doubleRetVal, float floatRetVal, __m128 simdRetVal)
     {
         // ExternalEntryPoint doesn't know the return value, so it will send garbage for everything except actual return type
         Var returnValue = nullptr;
@@ -407,7 +407,7 @@ namespace Js
         case AsmJsRetType::Uint32x4:
         case AsmJsRetType::Uint16x8:
         case AsmJsRetType::Uint8x16:
-            // Todo:: support test return object (like int64) for wasm.simd
+            // Todo:: support test return object (like long) for wasm.simd
             JavascriptError::ThrowTypeError(scriptContext, WASMERR_InvalidTypeConversion);
 #endif
         default:
@@ -474,9 +474,9 @@ namespace Js
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(WasmI64))
             {
-                uint64 lHigh = ((uint64)iHigh) << 32;
-                uint64 lLow = (uint64)(uint32)iLow;
-                returnValue = CreateI64ReturnObject((int64)(lHigh | lLow), func->GetScriptContext());
+                unsigned long lHigh = ((unsigned long)iHigh) << 32;
+                unsigned long lLow = (unsigned long)(uint32)iLow;
+                returnValue = CreateI64ReturnObject((long)(lHigh | lLow), func->GetScriptContext());
                 break;
             }
 #endif
@@ -528,7 +528,7 @@ namespace Js
                 call ecx
                 movups simdVal, xmm0
             }
-            // Todo:: support test return object (like int64) for wasm.simd
+            // Todo:: support test return object (like long) for wasm.simd
             JavascriptError::ThrowTypeError(func->GetScriptContext(), WASMERR_InvalidTypeConversion);
             break;
 #endif

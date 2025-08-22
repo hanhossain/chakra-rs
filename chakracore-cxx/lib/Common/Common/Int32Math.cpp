@@ -12,9 +12,9 @@ Int32Math::Add(int32 left, int32 right, int32 *pResult)
 #else
 
     Assert(sizeof(void *) == 8);
-    int64 result64 = (int64)left + (int64)right;
+    long result64 = (long)left + (long)right;
     *pResult = (int32)result64;
-    return result64 != (int64)(*pResult);
+    return result64 != (long)(*pResult);
 
 #endif
 }
@@ -37,11 +37,11 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult)
         mov[ecx], eax
     }
 #else
-    int64 result64 = (int64)left * (int64)right;
+    long result64 = (long)left * (long)right;
 
     *pResult = (int32)result64;
 
-    fOverflow = (result64 != (int64)(*pResult));
+    fOverflow = (result64 != (long)(*pResult));
 #endif
 
     return fOverflow;
@@ -65,12 +65,12 @@ Int32Math::Mul(int32 left, int32 right, int32 *pResult, int32* pOverflowValue)
         mov[ecx], edx
     }
 #else
-    int64 result64 = (int64)left * (int64)right;
+    long result64 = (long)left * (long)right;
 
     *pResult = (int32)result64;
     *pOverflowValue = (int32)(result64 >> 32);
 
-    fOverflow = (result64 != (int64)(*pResult));
+    fOverflow = (result64 != (long)(*pResult));
 #endif
 
     return fOverflow;

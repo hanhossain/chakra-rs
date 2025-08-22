@@ -117,13 +117,13 @@ namespace TTD
         this->WriteNakedUInt32(val);
     }
 
-    void FileWriter::WriteInt64(NSTokens::Key key, int64 val, NSTokens::Separator separator)
+    void FileWriter::WriteInt64(NSTokens::Key key, long val, NSTokens::Separator separator)
     {
         this->WriteKey(key, separator);
         this->WriteNakedInt64(val);
     }
 
-    void FileWriter::WriteUInt64(NSTokens::Key key, uint64 val, NSTokens::Separator separator)
+    void FileWriter::WriteUInt64(NSTokens::Key key, unsigned long val, NSTokens::Separator separator)
     {
         this->WriteKey(key, separator);
         this->WriteNakedUInt64(val);
@@ -297,13 +297,13 @@ namespace TTD
         this->WriteFormattedCharData(_u("%I32u"), val);
     }
 
-    void TextFormatWriter::WriteNakedInt64(int64 val, NSTokens::Separator separator)
+    void TextFormatWriter::WriteNakedInt64(long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
         this->WriteFormattedCharData(_u("%I64i"), val);
     }
 
-    void TextFormatWriter::WriteNakedUInt64(uint64 val, NSTokens::Separator separator)
+    void TextFormatWriter::WriteNakedUInt64(unsigned long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
         this->WriteFormattedCharData(_u("%I64u"), val);
@@ -341,7 +341,7 @@ namespace TTD
         {
             if(INT32_MAX <= val && val <= INT32_MAX && floor(val) == val)
             {
-                this->WriteFormattedCharData(_u("%I64i"), (int64)val);
+                this->WriteFormattedCharData(_u("%I64i"), (long)val);
             }
             else
             {
@@ -513,16 +513,16 @@ namespace TTD
         this->WriteRawByteBuff_Fixed<uint32>(val);
     }
 
-    void BinaryFormatWriter::WriteNakedInt64(int64 val, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteNakedInt64(long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawByteBuff_Fixed<int64>(val);
+        this->WriteRawByteBuff_Fixed<long>(val);
     }
 
-    void BinaryFormatWriter::WriteNakedUInt64(uint64 val, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteNakedUInt64(unsigned long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawByteBuff_Fixed<uint64>(val);
+        this->WriteRawByteBuff_Fixed<unsigned long>(val);
     }
 
     void BinaryFormatWriter::WriteNakedDouble(double val, NSTokens::Separator separator)
@@ -658,13 +658,13 @@ namespace TTD
         return this->ReadNakedUInt32();
     }
 
-    int64 FileReader::ReadInt64(NSTokens::Key keyCheck, bool readSeparator)
+    long FileReader::ReadInt64(NSTokens::Key keyCheck, bool readSeparator)
     {
         this->ReadKey(keyCheck, readSeparator);
         return this->ReadNakedInt64();
     }
 
-    uint64 FileReader::ReadUInt64(NSTokens::Key keyCheck, bool readSeparator)
+    unsigned long FileReader::ReadUInt64(NSTokens::Key keyCheck, bool readSeparator)
     {
         this->ReadKey(keyCheck, readSeparator);
         return this->ReadNakedUInt64();
@@ -1106,12 +1106,12 @@ namespace TTD
         }
     }
 
-    int64 TextFormatReader::ReadIntFromCharArray(const char16_t* buff)
+    long TextFormatReader::ReadIntFromCharArray(const char16_t* buff)
     {
-        int64 value = 0;
-        int64 multiplier = 1;
+        long value = 0;
+        long multiplier = 1;
 
-        int64 sign = 1;
+        long sign = 1;
         int32 lastIdx = 0;
         if(buff[0] == _u('-'))
         {
@@ -1132,10 +1132,10 @@ namespace TTD
         return value * sign;
     }
 
-    uint64 TextFormatReader::ReadUIntFromCharArray(const char16_t* buff)
+    unsigned long TextFormatReader::ReadUIntFromCharArray(const char16_t* buff)
     {
-        uint64 value = 0;
-        uint64 multiplier = 1;
+        unsigned long value = 0;
+        unsigned long multiplier = 1;
 
         int32 digitCount = (int32)wcslen(buff);
         for(int32 i = digitCount - 1; i >= 0; --i)
@@ -1248,7 +1248,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::Number, "Error in parse.");
 
-        uint64 uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(uval <= BYTE_MAX, "Error in parse.");
 
         return (byte)uval;
@@ -1271,7 +1271,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::Number, "Error in parse.");
 
-        int64 ival = this->ReadIntFromCharArray(this->m_charListOpt.GetBuffer());
+        long ival = this->ReadIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(INT32_MIN <= ival && ival <= INT32_MAX, "Error in parse.");
 
         return (int32)ival;
@@ -1284,13 +1284,13 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::Number, "Error in parse.");
 
-        uint64 uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(uval <= UINT32_MAX, "Error in parse.");
 
         return (uint32)uval;
     }
 
-    int64 TextFormatReader::ReadNakedInt64(bool readSeparator)
+    long TextFormatReader::ReadNakedInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1300,7 +1300,7 @@ namespace TTD
         return this->ReadIntFromCharArray(this->m_charListOpt.GetBuffer());
     }
 
-    uint64 TextFormatReader::ReadNakedUInt64(bool readSeparator)
+    unsigned long TextFormatReader::ReadNakedUInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1377,7 +1377,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::EnumTag, "Error in parse.");
 
-        uint64 tval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long tval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(tval <= UINT32_MAX, "Error in parse.");
 
         return (uint32)tval;
@@ -1569,22 +1569,22 @@ namespace TTD
         return i;
     }
 
-    int64 BinaryFormatReader::ReadNakedInt64(bool readSeparator)
+    long BinaryFormatReader::ReadNakedInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
-        int64 i = 0;
-        this->ReadBytesInto_Fixed<int64>(i);
+        long i = 0;
+        this->ReadBytesInto_Fixed<long>(i);
 
         return i;
     }
 
-    uint64 BinaryFormatReader::ReadNakedUInt64(bool readSeparator)
+    unsigned long BinaryFormatReader::ReadNakedUInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
-        uint64 i = 0;
-        this->ReadBytesInto_Fixed<uint64>(i);
+        unsigned long i = 0;
+        this->ReadBytesInto_Fixed<unsigned long>(i);
 
         return i;
     }
@@ -1726,7 +1726,7 @@ namespace TTD
         infoInto.TimeHash = infoFrom.TimeHash;
     }
 
-    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, uint64 eTime, uint64 fTime, uint64 lTime)
+    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, unsigned long eTime, unsigned long fTime, unsigned long lTime)
     {
         info.SourceLine = sourceLine;
         info.EventTime = (uint32)eTime;
@@ -1798,19 +1798,19 @@ namespace TTD
         }
     }
 
-    void TraceLogger::AppendInteger(int64 ival)
+    void TraceLogger::AppendInteger(long ival)
     {
         this->EnsureSpace(64);
         this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", ival);
     }
 
-    void TraceLogger::AppendUnsignedInteger(uint64 ival)
+    void TraceLogger::AppendUnsignedInteger(unsigned long ival)
     {
         this->EnsureSpace(64);
         this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64u", ival);
     }
 
-    void TraceLogger::AppendIntegerHex(int64 ival)
+    void TraceLogger::AppendIntegerHex(long ival)
     {
         this->EnsureSpace(64);
         this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "0x%I64x", ival);
@@ -1822,7 +1822,7 @@ namespace TTD
 
         if(INT32_MIN <= dval && dval <= INT32_MAX &&  floor(dval) == dval)
         {
-            this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", (int64)dval);
+            this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", (long)dval);
         }
         else
         {
@@ -1868,7 +1868,7 @@ namespace TTD
         fflush(this->m_outfile);
     }
 
-    void TraceLogger::WriteEnumAction(int64 eTime, BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attrib, Js::JavascriptString* pname)
+    void TraceLogger::WriteEnumAction(long eTime, BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attrib, Js::JavascriptString* pname)
     {
         this->AppendLiteral("EnumAction(time: ");
         this->AppendInteger(eTime);
@@ -1956,11 +1956,11 @@ namespace TTD
                     else
                     {
                         this->AppendLiteral("obj(");
-                        this->AppendInteger((int64)dynObj->TTDDiagOriginInfo.SourceLine);
+                        this->AppendInteger((long)dynObj->TTDDiagOriginInfo.SourceLine);
                         this->AppendLiteral(", ");
-                        this->AppendInteger((int64)dynObj->TTDDiagOriginInfo.EventTime);
+                        this->AppendInteger((long)dynObj->TTDDiagOriginInfo.EventTime);
                         this->AppendLiteral(", ");
-                        this->AppendInteger((int64)dynObj->TTDDiagOriginInfo.TimeHash);
+                        this->AppendInteger((long)dynObj->TTDDiagOriginInfo.TimeHash);
                         this->AppendLiteral(")");
                     }
                 }
@@ -1968,7 +1968,7 @@ namespace TTD
                 {
 #endif
                     this->AppendLiteral("Unspecialized object kind: ");
-                    this->AppendInteger((int64)tid);
+                    this->AppendInteger((long)tid);
 #if ENABLE_OBJECT_SOURCE_TRACKING
                 }
 #endif
@@ -1978,7 +1978,7 @@ namespace TTD
         }
     }
 
-    void TraceLogger::WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32 argc, Js::Var* argv, int64 etime)
+    void TraceLogger::WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32 argc, Js::Var* argv, long etime)
     {
         Js::JavascriptString* displayName = function->GetDisplayName();
 
@@ -2016,7 +2016,7 @@ namespace TTD
         this->m_indentSize++;
     }
 
-    void TraceLogger::WriteReturn(Js::JavascriptFunction* function, Js::Var res, int64 etime)
+    void TraceLogger::WriteReturn(Js::JavascriptFunction* function, Js::Var res, long etime)
     {
         this->m_indentSize--;
 
@@ -2034,7 +2034,7 @@ namespace TTD
         this->AppendLiteral("\n");
     }
 
-    void TraceLogger::WriteReturnException(Js::JavascriptFunction* function, int64 etime)
+    void TraceLogger::WriteReturnException(Js::JavascriptFunction* function, long etime)
     {
         this->m_indentSize--;
 

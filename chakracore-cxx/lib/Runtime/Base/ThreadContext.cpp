@@ -3031,7 +3031,7 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
     if (PHASE_TRACE1(Js::InlineCachePhase))
     {
         Output::Print(_u("Inline cache arena: total = %5I64u KB, free list = %5I64u KB, poly caches = %5I64u KB, script contexts = %u\n"),
-            static_cast<uint64>(allocatedSize / 1024), static_cast<uint64>(freeListSize / 1024), static_cast<uint64>(polyInlineCacheSize / 1024), scriptContextCount);
+            static_cast<unsigned long>(allocatedSize / 1024), static_cast<unsigned long>(freeListSize / 1024), static_cast<unsigned long>(polyInlineCacheSize / 1024), scriptContextCount);
     }
 #endif
 }
@@ -3092,7 +3092,7 @@ ThreadContext::ClearInlineCaches()
 #endif
         };
         Output::Print(_u("Inline cache arena: total = %5I64u KB, free list = %5I64u KB, poly caches = %5I64u KB, script contexts = %u\n"),
-            static_cast<uint64>(size / 1024), static_cast<uint64>(freeListSize / 1024), static_cast<uint64>(polyInlineCacheSize / 1024), scriptContextCount);
+            static_cast<unsigned long>(size / 1024), static_cast<unsigned long>(freeListSize / 1024), static_cast<unsigned long>(polyInlineCacheSize / 1024), scriptContextCount);
     }
 
     Js::ScriptContext *scriptContext = this->scriptContextList;

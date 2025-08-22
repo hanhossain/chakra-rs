@@ -96,7 +96,7 @@ T* TTD_MEM_ALLOC_CHECK(T* alloc)
 #define TTD_CONVERT_TTDVAR_TO_JSVAR(X) ((Js::Var)(X))
 
 //The ids for objects in a snapshot
-typedef uint64 TTD_PTR_ID;
+typedef unsigned long TTD_PTR_ID;
 #define TTD_INVALID_PTR_ID 0ul
 
 #define TTD_CONVERT_VAR_TO_PTR_ID(X) reinterpret_cast<TTD_PTR_ID>(PointerValue(X))
@@ -115,7 +115,7 @@ typedef uint64 TTD_PTR_ID;
 #define TTD_COERCE_PTR_ID_TO_FUNCTIONBODY(X) (reinterpret_cast<Js::FunctionBody*>(X))
 
 //The representation of LOG ids (based on object pointers)
-typedef uint64 TTD_LOG_PTR_ID;
+typedef unsigned long TTD_LOG_PTR_ID;
 #define TTD_INVALID_LOG_PTR_ID 0ul
 
 #define TTD_CONVERT_OBJ_TO_LOG_PTR_ID(X) reinterpret_cast<TTD_LOG_PTR_ID>(X)
@@ -323,7 +323,7 @@ namespace TTD
         class TTAutoString
         {
         private:
-            int64 m_allocSize;
+            long m_allocSize;
             char16_t* m_contents;
             char16_t* m_optFormatBuff;
 
@@ -346,7 +346,7 @@ namespace TTD
             void Append(const char16_t* str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
             void Append(const TTAutoString& str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
 
-            void Append(uint64 val);
+            void Append(unsigned long val);
 
             void Append(LPCUTF8 strBegin, LPCUTF8 strEnd);
 
@@ -435,14 +435,14 @@ namespace TTD
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
         //The amount of allocated memory with useful data
-        uint64 m_totalAllocatedSize;
+        unsigned long m_totalAllocatedSize;
 #endif
 
         //Get a new block in the slab
         void AddNewBlock()
         {
             byte* allocBlock = TT_HEAP_ALLOC_ARRAY(byte, this->m_slabBlockSize);
-            TTDAssert((reinterpret_cast<uint64>(allocBlock) & 0x3) == 0, "We have non-word aligned allocations so all our later work is not so useful");
+            TTDAssert((reinterpret_cast<unsigned long>(allocBlock) & 0x3) == 0, "We have non-word aligned allocations so all our later work is not so useful");
 
             SlabBlock* newBlock = (SlabBlock*)allocBlock;
             byte* dataArray = (allocBlock + TTD_SLAB_BLOCK_SIZE);
@@ -614,7 +614,7 @@ namespace TTD
             : m_largeBlockList(nullptr), m_slabBlockSize(slabBlockSize)
         {
             byte* allocBlock = TT_HEAP_ALLOC_ARRAY(byte, this->m_slabBlockSize);
-            TTDAssert((reinterpret_cast<uint64>(allocBlock) & 0x3) == 0, "We have non-word aligned allocations so all our later work is not so useful");
+            TTDAssert((reinterpret_cast<unsigned long>(allocBlock) & 0x3) == 0, "We have non-word aligned allocations so all our later work is not so useful");
 
             this->m_headBlock = (SlabBlock*)allocBlock;
             byte* dataArray = (allocBlock + TTD_SLAB_BLOCK_SIZE);
@@ -723,18 +723,18 @@ namespace TTD
         }
 
         //Return the memory that contains useful data in this slab & the same as the reserved space
-        void ComputeMemoryUsed(uint64* usedSpace, uint64* reservedSpace) const
+        void ComputeMemoryUsed(unsigned long* usedSpace, unsigned long* reservedSpace) const
         {
-            uint64 memreserved = 0;
+            unsigned long memreserved = 0;
 
             for (SlabBlock* currBlock = this->m_headBlock; currBlock != nullptr; currBlock = currBlock->Previous)
             {
-                memreserved += (uint64)this->m_slabBlockSize;
+                memreserved += (unsigned long)this->m_slabBlockSize;
             }
 
             for (LargeSlabBlock* currLargeBlock = this->m_largeBlockList; currLargeBlock != nullptr; currLargeBlock = currLargeBlock->Previous)
             {
-                memreserved += (uint64)(currLargeBlock->TotalBlockSize);
+                memreserved += (unsigned long)(currLargeBlock->TotalBlockSize);
             }
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
@@ -1342,7 +1342,7 @@ namespace TTD
     {
     private:
         //The addresses and their marks
-        uint64 * m_addrArray;
+        unsigned long * m_addrArray;
         MarkTableTag* m_markArray;
 
         //Capcity and count of the table (we use capcity for fast & hashing instead of %);
@@ -1356,14 +1356,14 @@ namespace TTD
         //Counts of how many handlers/types/... we have marked
         uint32 m_handlerCounts[(uint32)MarkTableTag::KindTagCount];
 
-        int32 FindIndexForKey(uint64 addr) const
+        int32 FindIndexForKey(unsigned long addr) const
         {
             TTDAssert(this->m_addrArray != nullptr, "Not valid!!");
 
             uint32 primaryMask = this->m_capcity - 1;
 
             uint32 primaryIndex = TTD_MARK_TABLE_HASH1(addr, this->m_capcity);
-            uint64 primaryAddr = this->m_addrArray[primaryIndex];
+            unsigned long primaryAddr = this->m_addrArray[primaryIndex];
             if ((primaryAddr == addr) | (primaryAddr == 0))
             {
                 return (int32)primaryIndex;
@@ -1374,7 +1374,7 @@ namespace TTD
             uint32 probeIndex = TTD_MARK_TABLE_INDEX(primaryIndex + offset, this->m_capcity);
             while (true)
             {
-                uint64 currAddr = this->m_addrArray[probeIndex];
+                unsigned long currAddr = this->m_addrArray[probeIndex];
                 if ((currAddr == addr) | (currAddr == 0))
                 {
                     return (int32)probeIndex;
@@ -1388,7 +1388,7 @@ namespace TTD
         void Grow()
         {
             uint32 oldCapacity = this->m_capcity;
-            uint64* oldAddrArray = this->m_addrArray;
+            unsigned long* oldAddrArray = this->m_addrArray;
             MarkTableTag* oldMarkArray = this->m_markArray;
 
             this->m_capcity = this->m_capcity << 1; //double capacity
@@ -1397,7 +1397,7 @@ namespace TTD
             uint32 dummyNearPrime = 0;
             LoadValuesForHashTables(this->m_capcity, &dummyPowerOf2, &dummyNearPrime, &(this->m_h2Prime));
 
-            this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(uint64, this->m_capcity);
+            this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(unsigned long, this->m_capcity);
             this->m_markArray = TT_HEAP_ALLOC_ARRAY_ZERO(MarkTableTag, this->m_capcity);
 
             for (uint32 i = 0; i < oldCapacity; ++i)
@@ -1407,7 +1407,7 @@ namespace TTD
                 this->m_markArray[idx] = oldMarkArray[i];
             }
 
-            TT_HEAP_FREE_ARRAY(uint64, oldAddrArray, oldCapacity);
+            TT_HEAP_FREE_ARRAY(unsigned long, oldAddrArray, oldCapacity);
             TT_HEAP_FREE_ARRAY(MarkTableTag, oldMarkArray, oldCapacity);
         }
 
@@ -1419,7 +1419,7 @@ namespace TTD
                 this->Grow();
             }
 
-            return this->FindIndexForKey(reinterpret_cast<uint64>(addr));
+            return this->FindIndexForKey(reinterpret_cast<unsigned long>(addr));
         }
 
     public:
@@ -1439,7 +1439,7 @@ namespace TTD
 
             if (notMarked)
             {
-                this->m_addrArray[idx] = reinterpret_cast<uint64>(vaddr);
+                this->m_addrArray[idx] = reinterpret_cast<unsigned long>(vaddr);
                 this->m_markArray[idx] = kindtag;
 
                 this->m_count++;
@@ -1454,7 +1454,7 @@ namespace TTD
         template <MarkTableTag specialtag>
         void MarkAddrWithSpecialInfo(const void* vaddr)
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<uint64>(vaddr));
+            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             if (this->m_markArray[idx] != MarkTableTag::Clear)
             {
@@ -1465,7 +1465,7 @@ namespace TTD
         //Return true if the location is marked
         bool IsMarked(const void* vaddr) const
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<uint64>(vaddr));
+            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             return this->m_markArray[idx] != MarkTableTag::Clear;
         }
@@ -1473,7 +1473,7 @@ namespace TTD
         //Return true if the location is tagged as well-known
         bool IsTaggedAsWellKnown(const void* vaddr) const
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<uint64>(vaddr));
+            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             return (this->m_markArray[idx] & MarkTableTag::JsWellKnownObj) != MarkTableTag::Clear;
         }
@@ -1505,7 +1505,7 @@ namespace TTD
         //Clear the mark at the given address
         void ClearMark(const void* vaddr)
         {
-            int32 idx = this->FindIndexForKey(reinterpret_cast<uint64>(vaddr));
+            int32 idx = this->FindIndexForKey(reinterpret_cast<unsigned long>(vaddr));
 
             //DON'T CLEAR THE ADDR JUST CLEAR THE MARK
             this->m_markArray[idx] = MarkTableTag::Clear;

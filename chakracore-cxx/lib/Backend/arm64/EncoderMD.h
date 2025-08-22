@@ -197,7 +197,7 @@ public:
         return SETS_SBIT(instr->m_opcode);
     }
 
-    static uint32_t BranchOffset_26(int64 x);
+    static uint32_t BranchOffset_26(long x);
     
     void            AddLabelReloc(uint8_t* relocAddress);
 

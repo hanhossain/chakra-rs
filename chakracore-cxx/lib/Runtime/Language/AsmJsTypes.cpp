@@ -703,7 +703,7 @@ namespace Js
         case WAsmJs::FLOAT32: return Anew(alloc, AsmJsRegisterSpace<float>, alloc);
         case WAsmJs::FLOAT64: return Anew(alloc, AsmJsRegisterSpace<double>, alloc);
 #if TARGET_64
-        case WAsmJs::INT64: return Anew(alloc, AsmJsRegisterSpace<int64>, alloc);
+        case WAsmJs::INT64: return Anew(alloc, AsmJsRegisterSpace<long>, alloc);
 #endif
         default:
             AssertMsg(false, "Invalid native asm.js type");
@@ -890,7 +890,7 @@ namespace Js
         }
         else if (type.isInt64())
         {
-            argSize = sizeof(int64);
+            argSize = sizeof(long);
         }
         else
         {

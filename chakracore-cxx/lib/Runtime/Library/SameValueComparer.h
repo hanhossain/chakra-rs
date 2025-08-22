@@ -67,9 +67,9 @@ namespace Js
                     double d = (double) v;
                     if (v != (long) d)
                     {
-                        // this int64 is too large to represent in a double
+                        // this long is too large to represent in a double
                         // and thus will never be equal to a double so hash it
-                        // as an int64
+                        // as an long
                         return (uint)v ^ (uint)(v >> 32);
                     }
 

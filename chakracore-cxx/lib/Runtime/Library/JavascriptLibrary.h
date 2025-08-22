@@ -490,7 +490,7 @@ namespace Js
         Field(OnlyWritablePropertyProtoChainCache) typesWithOnlyWritablePropertyProtoChain;
         Field(NoSpecialPropertyProtoChainCache) typesWithNoSpecialPropertyProtoChain;
 
-        Field(uint64) randSeed0, randSeed1;
+        Field(unsigned long) randSeed0, randSeed1;
         Field(bool) isPRNGSeeded;
         Field(bool) inProfileMode;
         Field(bool) inDispatchProfileMode;
@@ -879,8 +879,8 @@ namespace Js
         template<> inline DynamicType* GetTypedArrayType<uint32,false>(uint32) { return uint32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<float,false>(float) { return float32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<double,false>(double) { return float64ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<int64,false>(int64) { return int64ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<uint64,false>(uint64) { return uint64ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<long,false>(long) { return int64ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<unsigned long,false>(unsigned long) { return uint64ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<bool,false>(bool) { return boolArrayType; };
 
         DynamicType* GetCharArrayType() { return charArrayType; };
@@ -1096,11 +1096,11 @@ namespace Js
         void SetCrossSiteForLockedNonBuiltInFunctionType(JavascriptFunction * function);
 
         bool IsPRNGSeeded() { return isPRNGSeeded; }
-        uint64 GetRandSeed0() { return randSeed0; }
-        uint64 GetRandSeed1() { return randSeed1; }
+        unsigned long GetRandSeed0() { return randSeed0; }
+        unsigned long GetRandSeed1() { return randSeed1; }
         void SetIsPRNGSeeded(bool val);
-        void SetRandSeed0(uint64 rs) { randSeed0 = rs;}
-        void SetRandSeed1(uint64 rs) { randSeed1 = rs; }
+        void SetRandSeed0(unsigned long rs) { randSeed0 = rs;}
+        void SetRandSeed1(unsigned long rs) { randSeed1 = rs; }
 
         void SetProfileMode(bool fSet);
         void SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);

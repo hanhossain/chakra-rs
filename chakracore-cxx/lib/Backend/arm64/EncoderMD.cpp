@@ -15,7 +15,7 @@ static const uint32 Opdope[] =
 };
 
 uint32_t
-EncoderMD::BranchOffset_26(int64 x)
+EncoderMD::BranchOffset_26(long x)
 {
     Assert(IS_CONST_INT26(x >> 1));
     Assert((x & 0x3) == 0);
@@ -291,7 +291,7 @@ int EncoderMD::EmitOp3Immediate(Arm64CodeEmitter &Emitter, IR::Instr* instr, _Im
     Assert(size == 4 || size == 8);
     Assert(size == src1->GetSize());
 
-    int64 immediate = src2->GetImmediateValue(instr->m_func);
+    long immediate = src2->GetImmediateValue(instr->m_func);
     if (size == 8)
     {
         return imm64(Emitter, this->GetRegEncode(dst->AsRegOpnd()), this->GetRegEncode(src1->AsRegOpnd()), ULONG64(immediate));
@@ -518,7 +518,7 @@ int EncoderMD::EmitTestAndBranch(Arm64CodeEmitter &Emitter, IR::Instr* instr, _E
     EncodeReloc::New(&m_relocList, RelocTypeBranch14, m_pc, instr->AsBranchInstr()->GetTarget(), m_encoder->m_tempAlloc);
     Linker.SetTarget(Emitter);
 
-    int64 immediate = src2->GetImmediateValue(instr->m_func);
+    long immediate = src2->GetImmediateValue(instr->m_func);
     Assert(immediate >= 0 && immediate < 64);
     return emitter(Emitter, this->GetRegEncode(src1->AsRegOpnd()), uint32_t(immediate), Linker);
 }

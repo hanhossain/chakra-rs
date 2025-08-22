@@ -968,7 +968,7 @@ namespace regex
 
         void AppendInt32(int32 value);
 
-        void AppendUInt64(uint64 value);
+        void AppendUInt64(unsigned long value);
 
         void AppendWithCopy(_In_z_ LPCWSTR str);
 

@@ -35,14 +35,14 @@ namespace Js {
     public:
                                 Tick();
     private:
-                                Tick(uint64 luTick);
+                                Tick(unsigned long luTick);
 
     // Properties
     public:
-                uint64          ToMicroseconds() const;
+                unsigned long          ToMicroseconds() const;
                 double          ToMilliseconds() const;
-        static  Tick            FromMicroseconds(uint64 luTick);
-        static  Tick            FromQPC(uint64 luQPCTick);
+        static  Tick            FromMicroseconds(unsigned long luTick);
+        static  Tick            FromQPC(unsigned long luQPCTick);
 
         static  Tick            Now();
 
@@ -56,18 +56,18 @@ namespace Js {
                 bool            operator >(Tick timeOther) const;
                 bool            operator >=(Tick timeOther) const;
 
-                uint64          ToQPC();
+                unsigned long          ToQPC();
 
     // Data
     private:
-        static  uint64          s_luFreq;           // Frequency
-        static  uint64          s_luBegin;          // Beginning time
+        static  unsigned long          s_luFreq;           // Frequency
+        static  unsigned long          s_luBegin;          // Beginning time
     #if DBG
-        static  uint64          s_DEBUG_luStart;    // Tick start offset for debugging
-        static  uint64          s_DEBUG_luSkip;     // Tick skip offset for debugging
+        static  unsigned long          s_DEBUG_luStart;    // Tick start offset for debugging
+        static  unsigned long          s_DEBUG_luSkip;     // Tick skip offset for debugging
     #endif
 
-                uint64          m_luTick;           // Current time sample
+                unsigned long          m_luTick;           // Current time sample
 
         friend TickDelta;
     
@@ -109,14 +109,14 @@ namespace Js {
     // Construction
     public:
                 TickDelta();
-                TickDelta(int64 lnDelta);
+                TickDelta(long lnDelta);
 
     // Properties
     public:
-                int64           ToMicroseconds() const;
+                long           ToMicroseconds() const;
                 int             ToMilliseconds() const;
         static  TickDelta       FromMicroseconds(int nTickDelta);
-        static  TickDelta       FromMicroseconds(int64 lnTickDelta);
+        static  TickDelta       FromMicroseconds(long lnTickDelta);
         static  TickDelta       FromMilliseconds(int nTickDelta);
                 bool            IsForward() const;
                 bool            IsBackward() const;
@@ -126,7 +126,7 @@ namespace Js {
                 TickDelta       operator +(TickDelta tdOther) const;
                 TickDelta       operator -(TickDelta tdOther) const;
                 TickDelta       operator %(TickDelta tdOther) const;
-                int64           operator /(TickDelta tdOther) const;
+                long           operator /(TickDelta tdOther) const;
                 TickDelta       operator *(int nScale) const;
                 TickDelta       operator *(float flScale) const;
                 TickDelta       operator /(int nScale) const;
@@ -144,7 +144,7 @@ namespace Js {
 
     // Data
     private:
-                int64           m_lnDelta;          // Tick delta
+                long           m_lnDelta;          // Tick delta
 
         friend Tick;
     };

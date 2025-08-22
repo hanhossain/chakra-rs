@@ -157,7 +157,7 @@ Wasm::WasmConstLitNode WebAssemblyEnvironment::GetGlobalValue(Wasm::WasmGlobal* 
     switch (global->GetType())
     {
     case Wasm::WasmTypes::I32: cnst.i32 = GetGlobalInternal<int>(offset); break;
-    case Wasm::WasmTypes::I64: cnst.i64 = GetGlobalInternal<int64>(offset); break;
+    case Wasm::WasmTypes::I64: cnst.i64 = GetGlobalInternal<long>(offset); break;
     case Wasm::WasmTypes::F32: cnst.f32 = GetGlobalInternal<float>(offset); break;
     case Wasm::WasmTypes::F64: cnst.f64 = GetGlobalInternal<double>(offset); break;
 #ifdef ENABLE_WASM_SIMD
@@ -177,7 +177,7 @@ void WebAssemblyEnvironment::SetGlobalValue(Wasm::WasmGlobal* global, Wasm::Wasm
     switch (global->GetType())
     {
     case Wasm::WasmTypes::I32: SetGlobalInternal<int>(offset, cnst.i32); break;
-    case Wasm::WasmTypes::I64: SetGlobalInternal<int64>(offset, cnst.i64); break;
+    case Wasm::WasmTypes::I64: SetGlobalInternal<long>(offset, cnst.i64); break;
     case Wasm::WasmTypes::F32: SetGlobalInternal<float>(offset, cnst.f32); break;
     case Wasm::WasmTypes::F64: SetGlobalInternal<double>(offset, cnst.f64); break;
 #ifdef ENABLE_WASM_SIMD

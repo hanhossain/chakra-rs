@@ -29,7 +29,7 @@ namespace Js
         IMP_IWASM void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1);
         IMP_IWASM void AsmInt1Const1(OpCodeAsmJs op, RegSlot R0, int C1);
         IMP_IWASM void AsmReg1IntConst1(OpCodeAsmJs op, RegSlot R0, int C1);
-        IMP_IWASM void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, int64 C1);
+        IMP_IWASM void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1);
         IMP_IWASM void AsmFloat1Const1(OpCodeAsmJs op, RegSlot R0, float C1);
         IMP_IWASM void AsmDouble1Const1(OpCodeAsmJs op, RegSlot R0, double C1);
         IMP_IWASM void AsmReg1(OpCodeAsmJs op, RegSlot R0);
@@ -94,7 +94,7 @@ namespace Js
 
         template <typename SizePolicy> bool TryWriteInt1Const1(OpCodeAsmJs op, RegSlot R0, int C1);
         template <typename SizePolicy> bool TryWriteReg1IntConst1(OpCodeAsmJs op, RegSlot R0, int C1);
-        template <typename SizePolicy> bool TryWriteLong1Const1(OpCodeAsmJs op, RegSlot R0, int64 C1);
+        template <typename SizePolicy> bool TryWriteLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1);
         template <typename SizePolicy> bool TryWriteFloat1Const1(OpCodeAsmJs op, RegSlot R0, float C1);
         template <typename SizePolicy> bool TryWriteDouble1Const1(OpCodeAsmJs op, RegSlot R0, double C1);
         template <typename SizePolicy> bool TryWriteAsmBrReg1(OpCodeAsmJs op, ByteCodeLabel labelID, RegSlot R1);

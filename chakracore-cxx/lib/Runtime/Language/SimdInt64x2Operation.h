@@ -8,7 +8,7 @@ namespace Js {
 
     struct SIMDInt64x2Operation
     {
-        static SIMDValue OpSplat(int64 x);
+        static SIMDValue OpSplat(long x);
         static SIMDValue OpAdd(const SIMDValue& a, const SIMDValue& b);
         static SIMDValue OpSub(const SIMDValue& a, const SIMDValue& b);
         static SIMDValue OpNeg(const SIMDValue& a);
@@ -20,7 +20,7 @@ namespace Js {
         static void OpShiftLeftByScalar(SIMDValue* dst, SIMDValue* src, int count);
         static void OpShiftRightByScalar(SIMDValue* dst, SIMDValue* src, int count);
         static void OpShiftRightByScalarU(SIMDValue* dst, SIMDValue* src, int count);
-        static void OpReplaceLane(SIMDValue* dst, SIMDValue* src, int64 val, uint index);
+        static void OpReplaceLane(SIMDValue* dst, SIMDValue* src, long val, uint index);
     };
 
 } // namespace Js

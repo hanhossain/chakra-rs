@@ -9574,8 +9574,8 @@ Lowerer::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     // don't encode offset for wasm memory reads/writes
     addrOpnd->AsIndirOpnd()->m_dontEncode = true;
 
-    // if offset/size overflow the max length, throw (this also saves us from having to do int64 math)
-    int64 constOffset = (int64)addrOpnd->GetSize() + (int64)offset;
+    // if offset/size overflow the max length, throw (this also saves us from having to do long math)
+    long constOffset = (long)addrOpnd->GetSize() + (long)offset;
     if (constOffset >= Js::ArrayBuffer::MaxArrayBufferLength)
     {
         GenerateRuntimeError(instr, WASMERR_ArrayIndexOutOfRange, IR::HelperOp_WebAssemblyRuntimeError);
@@ -10652,7 +10652,7 @@ Lowerer::LowerStrictBrOrCm(IR::Instr * instr, IR::JnHelperMethod helperMethod, b
             Lowerer::InsertMove(src1TypeIdReg, IR::IndirOpnd::New(src1TypeReg, Js::Type::GetOffsetOfTypeId(), TyInt32, this->m_func), instr);
 #endif
             // CMP src1TypeIdReg, TypeIds_HostDispatch
-            // JLE $helper (le condition covers string, int64, uint64, hostdispatch, as well as undefined, null, boolean)
+            // JLE $helper (le condition covers string, long, unsigned long, hostdispatch, as well as undefined, null, boolean)
             IR::IntConstOpnd *hostDispatchTypeId = IR::IntConstOpnd::New(Js::TypeIds_HostDispatch, TyInt32, this->m_func, true);
             InsertCompareBranch(src1TypeIdReg, hostDispatchTypeId, Js::OpCode::BrLe_A, labelHelper, instr);
 
@@ -12190,12 +12190,12 @@ Lowerer::GenerateFastInlineBuiltInMathRandom(IR::Instr* instr)
 #if defined(_M_X64)
     if (m_func->GetScriptContextInfo()->IsPRNGSeeded())
     {
-        const uint64 mExp = 0x3FF0000000000000;
-        const uint64 mMant = 0x000FFFFFFFFFFFFF;
+        const unsigned long mExp = 0x3FF0000000000000;
+        const unsigned long mMant = 0x000FFFFFFFFFFFFF;
 
         IR::RegOpnd* r0 = IR::RegOpnd::New(TyUint64, m_func);  // s0
         IR::RegOpnd* r1 = IR::RegOpnd::New(TyUint64, m_func);  // s1
-        IR::RegOpnd* r3 = IR::RegOpnd::New(TyUint64, m_func);  // helper uint64 reg
+        IR::RegOpnd* r3 = IR::RegOpnd::New(TyUint64, m_func);  // helper unsigned long reg
         IR::RegOpnd* r4 = IR::RegOpnd::New(TyFloat64, m_func); // helper float64 reg
 
         // ===========================================================
@@ -15139,8 +15139,8 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::Uint32MixedArray         */ 2, // log2(sizeof(uint32))
     /* ObjectType::Float32MixedArray        */ 2, // log2(sizeof(float))
     /* ObjectType::Float64MixedArray        */ 3, // log2(sizeof(double))
-    /* ObjectType::Int64Array               */ 3, // log2(sizeof(int64))
-    /* ObjectType::Uint64Array              */ 3, // log2(sizeof(uint64))
+    /* ObjectType::Int64Array               */ 3, // log2(sizeof(long))
+    /* ObjectType::Uint64Array              */ 3, // log2(sizeof(unsigned long))
     /* ObjectType::BoolArray                */ 0, // log2(sizeof(bool))
     /* ObjectType::CharArray                */ 1  // log2(sizeof(char16_t))
 };
@@ -15669,7 +15669,7 @@ IR::Instr *Lowerer::InsertMove(IR::Opnd *dst, IR::Opnd *src, IR::Instr *const in
 #if _M_IX86
         if (IRType_IsInt64(src->GetType()))
         {
-            // On x86, if we are trying to move an int64 to a smaller type
+            // On x86, if we are trying to move an long to a smaller type
             // Insert a move of the low bits into dst
             return InsertMove(dst, func->FindOrCreateInt64Pair(src).low, insertBeforeInstr, generateWriteBarrier);
         }
@@ -16971,7 +16971,7 @@ Lowerer::GenerateFastElemIIntIndexCommon(
         indirType = GetArrayIndirType(baseValueType);
     }
 
-    if (checkIndexConstOverflowed && (static_cast<uint64>(value) << indirScale) > INT32_MAX &&
+    if (checkIndexConstOverflowed && (static_cast<unsigned long>(value) << indirScale) > INT32_MAX &&
         indirOpndOverflowed != nullptr)
     {
         *indirOpndOverflowed = true;
@@ -27125,7 +27125,7 @@ Lowerer::LowerDivI4Common(IR::Instr * instr)
     {
         IR::LabelInstr * minIntLabel = nullptr;
         // we need to check for INT_MIN/-1 if divisor is either -1 or variable, and dividend is either INT_MIN or variable
-        int64 intMin = IRType_IsInt64(src1->GetType()) ? LONGLONG_MIN : INT_MIN;
+        long intMin = IRType_IsInt64(src1->GetType()) ? LONGLONG_MIN : INT_MIN;
         bool needsMinOverNeg1Check = !(src2->IsImmediateOpnd() && src2->GetImmediateValue(m_func) != -1);
         if (src1->IsImmediateOpnd())
         {
@@ -27256,7 +27256,7 @@ Lowerer::LowerTrapIfMinIntOverNegOne(IR::Instr * const instr)
     IR::Opnd * src1 = instr->GetSrc1();
     IR::Opnd * src2 = instr->UnlinkSrc2();
 
-    int64 intMin = src1->IsInt64() ? LONGLONG_MIN : INT_MIN;
+    long intMin = src1->IsInt64() ? LONGLONG_MIN : INT_MIN;
     if (src1->IsImmediateOpnd())
     {
         if (src1->GetImmediateValue(m_func) != intMin)

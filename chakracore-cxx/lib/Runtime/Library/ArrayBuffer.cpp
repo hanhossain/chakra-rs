@@ -348,8 +348,8 @@ namespace Js
 
         if (TaggedInt::Is(value))
         {
-            int64 index = TaggedInt::ToInt64(value);
-            if (index < 0 || index >(int64)MaxAllowedLength)
+            long index = TaggedInt::ToInt64(value);
+            if (index < 0 || index >(long)MaxAllowedLength)
             {
                 JavascriptError::ThrowRangeError(scriptContext, errorCode);
             }
@@ -530,9 +530,9 @@ namespace Js
             JavascriptError::ThrowTypeError(scriptContext, JSERR_DetachedTypedArray, _u("ArrayBuffer.prototype.slice"));
         }
 
-        int64 len = arrayBuffer->bufferLength;
-        int64 start = 0, end = 0;
-        int64 newLen;
+        long len = arrayBuffer->bufferLength;
+        long start = 0, end = 0;
+        long newLen;
 
         // If no start or end arguments, use the entire length
         if (args.Info.Count < 2)

@@ -39,7 +39,7 @@ namespace Js
 #endif
             if (!PreReservedVirtualAllocWrapper::IsInRange((void*)mScriptContext->GetThreadContext()->GetPreReservedRegionAddr(), (void*)address))
             {
-                Assert(entrypointInfo->GetCodeSize() < (uint64)((uint64)1 << 32));
+                Assert(entrypointInfo->GetCodeSize() < (unsigned long)((unsigned long)1 << 32));
                 mScriptContext->GetJitFuncRangeCache()->AddFuncRange((void*)address, (uint)entrypointInfo->GetCodeSize());
             }
         }

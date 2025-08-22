@@ -23,7 +23,7 @@ void regex::ImmutableStringBuilder<chunkSize>::AppendInt32(int32 value)
 }
 
 template<int chunkSize>
-void regex::ImmutableStringBuilder<chunkSize>::AppendUInt64(uint64 value)
+void regex::ImmutableStringBuilder<chunkSize>::AppendUInt64(unsigned long value)
 {
     char16_t buffer[21]; // 18,446,744,073,709,551,615 w.o ',' + \0
     HRESULT hr = S_OK;
@@ -67,4 +67,4 @@ void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ LPCWSTR str
 
 // template instantiation
 template void regex::ImmutableStringBuilder<8>::AppendInt32(int32 value);
-template void regex::ImmutableStringBuilder<8>::AppendUInt64(uint64 value);
+template void regex::ImmutableStringBuilder<8>::AppendUInt64(unsigned long value);

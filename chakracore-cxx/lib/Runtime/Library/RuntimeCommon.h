@@ -178,12 +178,12 @@ namespace Js
 #endif
 
 #if FLOATVAR
-    const uint64 FloatTag_Value       = 0xFFFCull << 48;
-    const uint64 VarMissingItemPattern = 0x00040002FFF80002; // Float-tagged representation of FloatMissingItemPattern
+    const unsigned long FloatTag_Value       = 0xFFFCull << 48;
+    const unsigned long VarMissingItemPattern = 0x00040002FFF80002; // Float-tagged representation of FloatMissingItemPattern
 #else
     const int32 VarMissingItemPattern = 0xFFF80002;
 #endif
-    const uint64 FloatMissingItemPattern = 0xFFF80002FFF80002;
+    const unsigned long FloatMissingItemPattern = 0xFFF80002FFF80002;
     const int32 IntMissingItemPattern = 0xFFF80002;
     template <bool IsPrototypeTemplate> class NullTypeHandler;
 

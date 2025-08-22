@@ -107,8 +107,8 @@ namespace TTD
             union
             {
                 BOOL u_boolValue;
-                int64 u_int64Value;
-                uint64 u_uint64Value;
+                long u_int64Value;
+                unsigned long u_uint64Value;
                 double u_doubleValue;
                 TTString* u_stringValue;
                 Js::PropertyId u_propertyIdValue;
@@ -276,7 +276,7 @@ namespace TTD
 
             //The module id and source context
             Js::ModuleID ModuleId;
-            uint64 SourceContextId;
+            unsigned long SourceContextId;
 
             //Src URI may be null
             TTString SourceUri;
@@ -295,7 +295,7 @@ namespace TTD
         };
 
         //Extract WITHOUT COPYING the info needed for this top level function -- use in script context when function is parsed to keep all the info together and then we do the copying later when doing snapshots
-        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, uint64 sourceContextId, bool isUtf8source, const byte* source, uint32 sourceLen, SlabAllocator& alloc);
+        void ExtractTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8source, const byte* source, uint32 sourceLen, SlabAllocator& alloc);
         void EmitTopLevelCommonBodyResolveInfo(const TopLevelCommonBodyResolveInfo* fbInfo, bool emitInline, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
         void ParseTopLevelCommonBodyResolveInfo(TopLevelCommonBodyResolveInfo* fbInfo, bool readSeparator, bool parseInline, ThreadContext* threadContext, FileReader* reader, SlabAllocator& alloc);
 
@@ -313,7 +313,7 @@ namespace TTD
             LoadScriptFlag LoadFlag;
         };
 
-        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, uint64 sourceContextId, bool isUtf8, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc);
+        void ExtractTopLevelLoadedFunctionBodyInfo(TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::FunctionBody* fb, uint32 topLevelCtr, Js::ModuleID moduleId, unsigned long sourceContextId, bool isUtf8, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag, SlabAllocator& alloc);
         Js::FunctionBody* InflateTopLevelLoadedFunctionBodyInfo(const TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, Js::ScriptContext* ctx);
 
         void EmitTopLevelLoadedFunctionBodyInfo(const TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo, ThreadContext* threadContext, FileWriter* writer, NSTokens::Separator separator);
@@ -347,7 +347,7 @@ namespace TTD
             TopLevelCommonBodyResolveInfo TopLevelBase;
 
             //Additional data for handling the eval
-            uint64 EvalFlags;
+            unsigned long EvalFlags;
             bool RegisterDocument;
             bool IsIndirect;
             bool IsStrictMode;
@@ -382,10 +382,10 @@ namespace TTD
             TTD_PTR_ID OptParentBodyId;
 
             //The line number the function is def starts on
-            int64 OptLine;
+            long OptLine;
 
             //The column number the function is def starts on
-            int64 OptColumn;
+            long OptColumn;
 
             //The (possibly empty) scope chain info
             SnapFunctionBodyScopeChain ScopeChainInfo;
@@ -432,8 +432,8 @@ namespace TTD
 
             //The random seed for the context
             bool IsPNRGSeeded;
-            uint64 RandomSeed0;
-            uint64 RandomSeed1;
+            unsigned long RandomSeed0;
+            unsigned long RandomSeed1;
 
             //The main URI of the context
             TTString ContextSRC;
@@ -456,9 +456,9 @@ namespace TTD
         void ExtractScriptContext(SnapContext* snapCtx, Js::ScriptContext* ctx, const JsUtil::BaseDictionary<Js::RecyclableObject*, TTD_LOG_PTR_ID, HeapAllocator>& objToLogIdMap, const JsUtil::BaseHashSet<Js::FunctionBody*, HeapAllocator>& liveTopLevelBodies, SlabAllocator& alloc);
 
         void InflateScriptContext(const SnapContext* snpCtx, Js::ScriptContext* intoCtx, InflateMap* inflator,
-            const TTDIdentifierDictionary<uint64, TopLevelScriptLoadFunctionBodyResolveInfo*>& topLevelLoadScriptMap,
-            const TTDIdentifierDictionary<uint64, TopLevelNewFunctionBodyResolveInfo*>& topLevelNewScriptMap,
-            const TTDIdentifierDictionary<uint64, TopLevelEvalFunctionBodyResolveInfo*>& topLevelEvalScriptMap);
+            const TTDIdentifierDictionary<unsigned long, TopLevelScriptLoadFunctionBodyResolveInfo*>& topLevelLoadScriptMap,
+            const TTDIdentifierDictionary<unsigned long, TopLevelNewFunctionBodyResolveInfo*>& topLevelNewScriptMap,
+            const TTDIdentifierDictionary<unsigned long, TopLevelEvalFunctionBodyResolveInfo*>& topLevelEvalScriptMap);
 
         void ResetPendingAsyncBufferModInfo(const SnapContext* snpCtx, Js::ScriptContext* intoCtx, InflateMap* inflator);
 

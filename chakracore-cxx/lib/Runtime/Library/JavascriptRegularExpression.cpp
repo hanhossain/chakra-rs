@@ -96,7 +96,7 @@ using namespace Js;
 
     CharCount JavascriptRegExp::GetLastIndexProperty(RecyclableObject* instance, ScriptContext* scriptContext)
     {
-        int64 lastIndex = JavascriptConversion::ToLength(
+        long lastIndex = JavascriptConversion::ToLength(
             JavascriptOperators::GetProperty(instance, PropertyIds::lastIndex, scriptContext),
             scriptContext);
         return GetIndexOrMax(lastIndex);
@@ -142,7 +142,7 @@ using namespace Js;
             : base + offset;
     }
 
-    CharCount JavascriptRegExp::GetIndexOrMax(int64 index)
+    CharCount JavascriptRegExp::GetIndexOrMax(long index)
     {
         return (index > SIZE_MAX || IsValidCharCount((size_t) index))
             ? (CharCount) index

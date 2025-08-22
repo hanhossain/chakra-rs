@@ -1571,7 +1571,7 @@ case_2:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("String.raw"));
         }
 
-        int64 length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(raw, scriptContext), scriptContext);
+        long length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(raw, scriptContext), scriptContext);
 
         // If there are no raw strings (somehow), return empty string
         if (length <= 0)
@@ -1623,7 +1623,7 @@ case_2:
         }
 
         // Length can be greater than uint32 max (unlikely in practice)
-        for (int64 j = (int64)i; j < length; ++j)
+        for (long j = (long)i; j < length; ++j)
         {
             // Append whatever is left in the array/object
             append(JavascriptOperators::OP_GetElementI(raw, JavascriptNumber::ToVar(j, scriptContext), scriptContext));
@@ -2128,7 +2128,7 @@ case_2:
             return mainString;
         }
 
-        int64 maxLength = JavascriptConversion::ToLength(args[1], scriptContext);
+        long maxLength = JavascriptConversion::ToLength(args[1], scriptContext);
         charcount_t currentLength = mainString->GetLength();
         if (maxLength <= currentLength)
         {

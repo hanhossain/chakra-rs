@@ -572,7 +572,7 @@ ULONG64 Arm64UnwindCodeGenerator::FindRegisterImmediate(int regNum, uint32_t * r
             foundImmediate = true;
 
             // MOVN (opc == 0) sign-extends
-            int64 val = (opcode >> 5) & 0xffff;
+            long val = (opcode >> 5) & 0xffff;
             if (opc == 0)
             {
                 val = int16(val);

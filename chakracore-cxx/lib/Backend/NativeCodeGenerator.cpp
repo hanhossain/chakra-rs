@@ -1004,7 +1004,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 
     LARGE_INTEGER start_time = { 0 };
     NativeCodeGenerator::LogCodeGenStart(workItem, &start_time);
-    workItem->GetJITData()->startTime = (int64)start_time.QuadPart;
+    workItem->GetJITData()->startTime = (long)start_time.QuadPart;
     CodeGen(pageAllocator, workItem->GetJITData(), jitWriteData, foreground, epInfo);
 
     if (JITManager::GetJITManager()->IsOOPJITEnabled() && PHASE_VERBOSE_TRACE(Js::BackEndPhase, workItem->GetFunctionBody()))

@@ -997,12 +997,12 @@ CommonNumber:
             return UnsafeVarTo<JavascriptBoolean>(aValue)->GetValue() ? 1 : +0;
 
         case TypeIds_Int64Number:
-            // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+            // we won't lose precision if the long is within 32bit boundary; otherwise we need to
             // treat it as double anyhow.
             return JavascriptMath::ToInt32Core((double)UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue());
 
         case TypeIds_UInt64Number:
-            // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+            // we won't lose precision if the long is within 32bit boundary; otherwise we need to
             // treat it as double anyhow.
             return JavascriptMath::ToInt32Core((double)UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue());
 
@@ -1041,12 +1041,12 @@ CommonNumber:
             return ToInt32(JavascriptNumber::GetValue(aValue));
 
         case TypeIds_Int64Number:
-            // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+            // we won't lose precision if the long is within 32bit boundary; otherwise we need to
             // treat it as double anyhow.
             return JavascriptMath::ToInt32Core((double)UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue());
 
         case TypeIds_UInt64Number:
-            // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+            // we won't lose precision if the long is within 32bit boundary; otherwise we need to
             // treat it as double anyhow.
             return JavascriptMath::ToInt32Core((double)UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue());
 
@@ -1100,12 +1100,12 @@ CommonNumber:
                 return ToInt32Finite(JavascriptNumber::GetValue(aValue), result);
 
             case TypeIds_Int64Number:
-                // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 32bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return ToInt32Finite((double)UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue(), result);
 
             case TypeIds_UInt64Number:
-                // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 32bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return ToInt32Finite((double)UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue(), result);
 
@@ -1226,12 +1226,12 @@ CommonNumber:
                 return JavascriptMath::ToUInt32(JavascriptNumber::GetValue(aValue));
 
             case TypeIds_Int64Number:
-                // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 32bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return JavascriptMath::ToUInt32((double)UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue());
 
             case TypeIds_UInt64Number:
-                // we won't lose precision if the int64 is within 32bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 32bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return JavascriptMath::ToUInt32((double)UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue());
 
@@ -1304,12 +1304,12 @@ CommonNumber:
                 return ToUInt16(JavascriptNumber::GetValue(aValue));
 
             case TypeIds_Int64Number:
-                // we won't lose precision if the int64 is within 16bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 16bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return ToUInt16((double)UnsafeVarTo<JavascriptInt64Number>(aValue)->GetValue());
 
             case TypeIds_UInt64Number:
-                // we won't lose precision if the int64 is within 16bit boundary; otherwise we need to
+                // we won't lose precision if the long is within 16bit boundary; otherwise we need to
                 // treat it as double anyhow.
                 return ToUInt16((double)UnsafeVarTo<JavascriptUInt64Number>(aValue)->GetValue());
 
@@ -1394,11 +1394,11 @@ CommonNumber:
         return static_cast<float>(aValue);
     }
 
-    int64 JavascriptConversion::ToLength(Var aValue, ScriptContext* scriptContext)
+    long JavascriptConversion::ToLength(Var aValue, ScriptContext* scriptContext)
     {
         if (TaggedInt::Is(aValue))
         {
-            int64 length = TaggedInt::ToInt64(aValue);
+            long length = TaggedInt::ToInt64(aValue);
             return (length < 0) ? 0 : length;
         }
 

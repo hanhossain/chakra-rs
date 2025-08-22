@@ -154,13 +154,13 @@ WebAssemblyMemory::EntryGrow(RecyclableObject* function, CallInfo callInfo, ...)
 int32
 WebAssemblyMemory::GrowInternal(uint32 deltaPages)
 {
-    const uint64 deltaBytes = (uint64)deltaPages * WebAssembly::PageSize;
+    const unsigned long deltaBytes = (unsigned long)deltaPages * WebAssembly::PageSize;
     if (deltaBytes > ArrayBuffer::MaxArrayBufferLength)
     {
         return -1;
     }
     const uint32 oldBytes = m_buffer->GetByteLength();
-    const uint64 newBytesLong = deltaBytes + oldBytes;
+    const unsigned long newBytesLong = deltaBytes + oldBytes;
     if (newBytesLong > ArrayBuffer::MaxArrayBufferLength)
     {
         return -1;
@@ -227,7 +227,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     // Must call after the write
     Assert(mem);
     Output::Print(_u("#%04x "), bytecodeOffset);
-    uint64 bigIndex = (uint64)index + (uint64)offset;
+    unsigned long bigIndex = (unsigned long)index + (unsigned long)offset;
     if (index >= mem->m_buffer->GetByteLength())
     {
         Output::Print(_u("WasmMemoryTrace:: Writing out of bounds. %llu >= %u\n"), bigIndex, mem->m_buffer->GetByteLength());
@@ -257,7 +257,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(_u(".uint32 = %u\n"), *(uint32*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(_u(".f32 = %.4f\n"), *(float*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(_u(".f64 = %.8f\n"), *(double*)(buffer + bigIndex)); break;
-    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(_u(".int64 = %lld\n"), *(int64*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(_u(".long = %lld\n"), *(long*)(buffer + bigIndex)); break;
     default:
         CompileAssert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
         Assert(UNREACHED);

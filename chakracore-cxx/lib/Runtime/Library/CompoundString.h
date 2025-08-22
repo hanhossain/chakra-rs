@@ -1253,7 +1253,7 @@ namespace Js
         String *const toString,
         const bool appendChars)
     {
-        const CharCount AbsoluteMaximumAppendCharLength = 20; // maximum length of uint64 converted to base-10 string
+        const CharCount AbsoluteMaximumAppendCharLength = 20; // maximum length of unsigned long converted to base-10 string
 
         Assert(maximumAppendCharLength != 0);
         Assert(maximumAppendCharLength <= AbsoluteMaximumAppendCharLength);

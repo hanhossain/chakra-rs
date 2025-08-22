@@ -543,7 +543,7 @@ void WasmBinaryReader::CallIndirectNode()
 void WasmBinaryReader::BlockNode()
 {
     uint32 len = 0;
-    int64 blocktype = SLEB128<int64, 33>(len);
+    long blocktype = SLEB128<long, 33>(len);
     m_funcState.count += len;
 
     // Negative values means it's a value type or Void
@@ -667,7 +667,7 @@ void WasmBinaryReader::ConstNode()
         m_funcState.count += len;
         break;
     case WasmTypes::I64:
-        m_currentNode.cnst.i64 = SLEB128<int64>(len);
+        m_currentNode.cnst.i64 = SLEB128<long>(len);
         m_funcState.count += len;
         break;
     case WasmTypes::F32:
@@ -678,8 +678,8 @@ void WasmBinaryReader::ConstNode()
         break;
     }
     case WasmTypes::F64:
-        m_currentNode.cnst.i64 = ReadConst<int64>();
-        CompileAssert(sizeof(int64) == sizeof(double));
+        m_currentNode.cnst.i64 = ReadConst<long>();
+        CompileAssert(sizeof(long) == sizeof(double));
         m_funcState.count += sizeof(double);
         break;
 #ifdef ENABLE_WASM_SIMD

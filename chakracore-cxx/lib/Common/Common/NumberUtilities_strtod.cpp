@@ -2736,7 +2736,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
 }
 
 
-static const int64 ci64_2to64 = 0x43F0000000000000;
+static const long ci64_2to64 = 0x43F0000000000000;
 static const double cdbl_2to64 = *(double*)&ci64_2to64;
 double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
 {

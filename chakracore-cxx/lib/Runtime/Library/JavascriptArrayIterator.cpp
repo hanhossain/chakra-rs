@@ -49,7 +49,7 @@ namespace Js
             return library->CreateIteratorResultObjectDone();
         }
 
-        int64 length;
+        long length;
         JavascriptArray* pArr = nullptr;
         TypedArrayBase *typedArrayBase = nullptr;
         if (JavascriptArray::IsNonES5Array(iterable) && !VarTo<JavascriptArray>(iterable)->IsCrossSiteObject())
@@ -75,7 +75,7 @@ namespace Js
             length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(iterable, scriptContext), scriptContext);
         }
 
-        int64 index = iterator->m_nextIndex;
+        long index = iterator->m_nextIndex;
 
         if (index >= length)
         {

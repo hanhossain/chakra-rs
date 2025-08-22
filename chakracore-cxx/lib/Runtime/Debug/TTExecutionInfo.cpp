@@ -8,7 +8,7 @@
 
 namespace TTD
 {
-    TTDebuggerAbortException::TTDebuggerAbortException(uint32 abortCode, int64 optEventTime, int64 optMoveMode, const char16_t* staticAbortMessage)
+    TTDebuggerAbortException::TTDebuggerAbortException(uint32 abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage)
         : m_abortCode(abortCode), m_optEventTime(optEventTime), m_optMoveMode(optMoveMode), m_staticAbortMessage(staticAbortMessage)
     {
         ;
@@ -24,12 +24,12 @@ namespace TTD
         return TTDebuggerAbortException(1, -1, 0, staticMessage);
     }
 
-    TTDebuggerAbortException TTDebuggerAbortException::CreateTopLevelAbortRequest(int64 targetEventTime, int64 moveMode, const char16_t* staticMessage)
+    TTDebuggerAbortException TTDebuggerAbortException::CreateTopLevelAbortRequest(long targetEventTime, long moveMode, const char16_t* staticMessage)
     {
         return TTDebuggerAbortException(2, targetEventTime, moveMode, staticMessage);
     }
 
-    TTDebuggerAbortException TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(int64 targetEventTime, const char16_t* staticMessage)
+    TTDebuggerAbortException TTDebuggerAbortException::CreateUncaughtExceptionAbortRequest(long targetEventTime, const char16_t* staticMessage)
     {
         return TTDebuggerAbortException(3, targetEventTime, 0, staticMessage);
     }
@@ -49,12 +49,12 @@ namespace TTD
         return this->m_abortCode == 3;
     }
 
-    int64 TTDebuggerAbortException::GetTargetEventTime() const
+    long TTDebuggerAbortException::GetTargetEventTime() const
     {
         return this->m_optEventTime;
     }
 
-    int64 TTDebuggerAbortException::GetMoveMode() const
+    long TTDebuggerAbortException::GetMoveMode() const
     {
         return this->m_optMoveMode;
     }
@@ -200,7 +200,7 @@ namespace TTD
         this->m_column = other.m_column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationFromFrame(int64 topLevelETime, const SingleCallCounter& callFrame)
+    void TTDebuggerSourceLocation::SetLocationFromFrame(long topLevelETime, const SingleCallCounter& callFrame)
     {
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
@@ -210,7 +210,7 @@ namespace TTD
         this->SetLocationFull(topLevelETime, callFrame.FunctionTime, callFrame.LoopTime, callFrame.Function, (uint32)srcLine, (uint32)srcColumn);
     }
 
-    void TTDebuggerSourceLocation::SetLocationFromFunctionEntryAnyTime(int64 topLevelETime, Js::FunctionBody* body)
+    void TTDebuggerSourceLocation::SetLocationFromFunctionEntryAnyTime(long topLevelETime, Js::FunctionBody* body)
     {
         uint32_t srcLine = 0;
         int32_t srcColumn = -1;
@@ -220,7 +220,7 @@ namespace TTD
         this->SetLocationFull(topLevelETime, -1, -1, body, (uint32)srcLine, (uint32)srcColumn);
     }
 
-    void TTDebuggerSourceLocation::SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, uint32_t line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationFull(long etime, long ftime, long ltime, Js::FunctionBody* body, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = body->GetScriptContext()->ScriptContextLogTag;
         this->m_bpId = -1;
@@ -238,7 +238,7 @@ namespace TTD
         this->m_column = (uint32)column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = sourceScriptLogId;
         this->m_bpId = -1;
@@ -256,7 +256,7 @@ namespace TTD
         this->m_column = (uint32)column;
     }
 
-    void TTDebuggerSourceLocation::SetLocationWithBP(int64 bpId, Js::FunctionBody* body, uint32_t line, int32_t column)
+    void TTDebuggerSourceLocation::SetLocationWithBP(long bpId, Js::FunctionBody* body, uint32_t line, int32_t column)
     {
         this->m_sourceScriptLogId = body->GetScriptContext()->ScriptContextLogTag;
         this->m_bpId = bpId;
@@ -274,17 +274,17 @@ namespace TTD
         this->m_column = (uint32)column;
     }
 
-    int64 TTDebuggerSourceLocation::GetRootEventTime() const
+    long TTDebuggerSourceLocation::GetRootEventTime() const
     {
         return this->m_etime;
     }
 
-    int64 TTDebuggerSourceLocation::GetFunctionTime() const
+    long TTDebuggerSourceLocation::GetFunctionTime() const
     {
         return this->m_ftime;
     }
 
-    int64 TTDebuggerSourceLocation::GetLoopTime() const
+    long TTDebuggerSourceLocation::GetLoopTime() const
     {
         return this->m_ltime;
     }
@@ -312,7 +312,7 @@ namespace TTD
         }
     }
 
-    int64 TTDebuggerSourceLocation::GetBPId() const
+    long TTDebuggerSourceLocation::GetBPId() const
     {
         return this->m_bpId;
     }
@@ -446,7 +446,7 @@ namespace TTD
         return this->m_eventTime != -1;
     }
 
-    void TTInnerLoopLastStatementInfo::SetLastLine(int64 etime, int64 ftime, int64 ltime, uint32 line, uint32 column)
+    void TTInnerLoopLastStatementInfo::SetLastLine(long etime, long ftime, long ltime, uint32 line, uint32 column)
     {
         this->m_eventTime = etime;
         this->m_functionTime = ftime;
@@ -456,7 +456,7 @@ namespace TTD
         this->m_column = column;
     }
 
-    bool TTInnerLoopLastStatementInfo::CheckLastTimeMatch(int64 etime, int64 ftime, int64 ltime) const
+    bool TTInnerLoopLastStatementInfo::CheckLastTimeMatch(long etime, long ftime, long ltime) const
     {
         return (this->m_eventTime == etime) & (this->m_functionTime == ftime) & (this->m_loopTime == ltime);
     }
@@ -657,7 +657,7 @@ namespace TTD
         this->m_pendingTTDMoveMode = 0;
     }
 
-    void ExecutionInfoManager::SetPendingTTDReverseContinueMove(uint64 moveflag)
+    void ExecutionInfoManager::SetPendingTTDReverseContinueMove(unsigned long moveflag)
     {
         this->m_continueBreakPoint.Clear();
         this->GetTimeAndPositionForDebugger(this->m_pendingTTDBP);
@@ -714,8 +714,8 @@ namespace TTD
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
         bool locationOk = ((uint32)srcLine == this->m_activeTTDBP.GetSourceLine()) & ((uint32)srcColumn == this->m_activeTTDBP.GetSourceColumn());
-        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((uint64)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
-        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((uint64)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
+        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
+        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
 
         return locationOk & ftimeOk & ltimeOk;
     }
@@ -753,7 +753,7 @@ namespace TTD
         return TTDebuggerSourceLocation::AreSameLocations_PlaceOnly(this->m_activeTTDBP, current);
     }
 
-    void ExecutionInfoManager::AddCurrentLocationDuringScan(int64 topLevelEventTime)
+    void ExecutionInfoManager::AddCurrentLocationDuringScan(long topLevelEventTime)
     {
         TTDebuggerSourceLocation current;
         current.SetLocationFromFrame(topLevelEventTime, this->m_callStack.Last());
@@ -785,7 +785,7 @@ namespace TTD
     }
 
     //Get the target event time for the pending TTD breakpoint
-    int64 ExecutionInfoManager::GetPendingTTDBPTargetEventTime() const
+    long ExecutionInfoManager::GetPendingTTDBPTargetEventTime() const
     {
         TTDAssert(this->m_pendingTTDBP.HasValue(), "We did not set the pending TTD breakpoint value?");
 
@@ -809,7 +809,7 @@ namespace TTD
             probeContainer->MapProbes([&](int j, Js::Probe* pProbe)
             {
                 Js::BreakpointProbe* bp = (Js::BreakpointProbe*)pProbe;
-                if((int64)bp->GetId() != this->m_activeBPId)
+                if((long)bp->GetId() != this->m_activeBPId)
                 {
                     Js::FunctionBody* body = bp->GetFunctionBody();
                     int32 bpIndex = body->GetEnclosingStatementIndexFromByteCode(bp->GetBytecodeOffset());
@@ -996,8 +996,8 @@ namespace TTD
         //if we are at the first statement in the function then we want the parents current
         Js::FunctionBody* fbody = nullptr;
         int32 statementIndex = -1;
-        uint64 ftime = 0;
-        uint64 ltime = 0;
+        unsigned long ftime = 0;
+        unsigned long ltime = 0;
         if(cfinfo.LastStatementIndex == -1)
         {
             SingleCallCounter cfinfoCaller = { 0 };
@@ -1067,7 +1067,7 @@ namespace TTD
         sourceLocation.SetLocationCopy(this->m_lastExceptionLocation);
     }
 
-    void ExecutionInfoManager::ResetCallStackForTopLevelCall(int64 topLevelCallbackEventTime)
+    void ExecutionInfoManager::ResetCallStackForTopLevelCall(long topLevelCallbackEventTime)
     {
         TTDAssert(this->m_callStack.Count() == 0, "We should be at the top-level entry!!!");
 

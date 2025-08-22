@@ -402,7 +402,7 @@ namespace TTD
 
         //////////////////
 
-        int64 ExternalCbRegisterCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt)
+        long ExternalCbRegisterCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt)
         {
             const ExternalCbRegisterCallEventLogEntry* cbrEvt = GetInlineEventDataAs<ExternalCbRegisterCallEventLogEntry, EventKind::ExternalCbRegisterCall>(evt);
 
@@ -437,7 +437,7 @@ namespace TTD
         }
 #endif
 
-        int64 ExternalCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt)
+        long ExternalCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt)
         {
             const ExternalCallEventLogEntry* callEvt = GetInlineEventDataAs<ExternalCallEventLogEntry, EventKind::ExternalCallTag>(evt);
 
@@ -472,7 +472,7 @@ namespace TTD
             callEvt->CheckExceptionStatus = checkExceptions;
         }
 
-        void ExternalCallEventLogEntry_ProcessReturn(EventLogEntry* evt, Js::Var res, int64 lastNestedEvent)
+        void ExternalCallEventLogEntry_ProcessReturn(EventLogEntry* evt, Js::Var res, long lastNestedEvent)
         {
             ExternalCallEventLogEntry* callEvt = GetInlineEventDataAs<ExternalCallEventLogEntry, EventKind::ExternalCallTag>(evt);
 

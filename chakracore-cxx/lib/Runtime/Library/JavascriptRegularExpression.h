@@ -71,7 +71,7 @@ namespace Js
         static bool GetUnicodeProperty(RecyclableObject* instance, ScriptContext* scriptContext);
 
         static CharCount AddIndex(CharCount base, CharCount offset);
-        static CharCount GetIndexOrMax(int64 index);
+        static CharCount GetIndexOrMax(long index);
 
         static bool HasOriginalRegExType(RecyclableObject* instance);
         static bool HasObservableConstructor(DynamicObject* regexPrototype);

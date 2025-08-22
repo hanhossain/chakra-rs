@@ -53,7 +53,7 @@ namespace WAsmJs
             return val;
         }
 
-        int64 PrintI64(int64 val)
+        long PrintI64(long val)
         {
             Output::Print(_u("%lld"), val);
             return val;
@@ -119,10 +119,10 @@ namespace WAsmJs
         {
             return offset;
         }
-        uint64 tmp = (uint64)offset * (uint64)fromSize;
-        tmp = Math::Align<uint64>(tmp, toSize);
-        tmp /= (uint64)toSize;
-        if (tmp > (uint64)UINT32_MAX)
+        unsigned long tmp = (unsigned long)offset * (unsigned long)fromSize;
+        tmp = Math::Align<unsigned long>(tmp, toSize);
+        tmp /= (unsigned long)toSize;
+        if (tmp > (unsigned long)UINT32_MAX)
         {
             Math::DefaultOverflowPolicy();
         }
@@ -180,7 +180,7 @@ namespace WAsmJs
     }
 
     template<> Types FromPrimitiveType<int32>() { return WAsmJs::INT32; }
-    template<> Types FromPrimitiveType<int64>() { return WAsmJs::INT64; }
+    template<> Types FromPrimitiveType<long>() { return WAsmJs::INT64; }
     template<> Types FromPrimitiveType<float>() { return WAsmJs::FLOAT32; }
     template<> Types FromPrimitiveType<double>() { return WAsmJs::FLOAT64; }
     template<> Types FromPrimitiveType<AsmJsSIMDValue>() { return WAsmJs::SIMD; }

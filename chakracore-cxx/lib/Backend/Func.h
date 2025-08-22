@@ -1047,7 +1047,7 @@ private:
 #endif
 #if LOWER_SPLIT_INT64
     struct Int64SymPair {StackSym* high = nullptr; StackSym* low = nullptr;};
-    // Key is an int64 symId, value is a pair of int32 StackSym
+    // Key is an long symId, value is a pair of int32 StackSym
     typedef JsUtil::BaseDictionary<SymID, Int64SymPair, JitArenaAllocator> Int64SymPairMap;
     Int64SymPairMap* m_int64SymPairMap;
 #endif

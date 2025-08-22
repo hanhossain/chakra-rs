@@ -223,7 +223,7 @@ namespace TTD
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
             //The event time for this event
-            int64 EventTimeStamp;
+            long EventTimeStamp;
 #endif
         };
 
@@ -244,14 +244,14 @@ namespace TTD
         }
 
         template<EventKind tag>
-        void EventLogEntry_Initialize(EventLogEntry* evt, int64 etime)
+        void EventLogEntry_Initialize(EventLogEntry* evt, long etime)
         {
             evt->EventKind = tag;
             evt->ResultStatus = -1;
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
             static_assert(TTD_EVENT_BASE_SIZE % 4 == 0, "This should always be word aligned.");
-            AssertMsg(((uint64)evt) % 4 == 0, "We want this word aligned for performance so who messed it up.");
+            AssertMsg(((unsigned long)evt) % 4 == 0, "We want this word aligned for performance so who messed it up.");
 
             evt->EventTimeStamp = etime;
 #endif
@@ -273,7 +273,7 @@ namespace TTD
         struct SnapshotEventLogEntry
         {
             //The timestamp we should restore to
-            int64 RestoreTimestamp;
+            long RestoreTimestamp;
 
             //The snapshot (we many persist this to disk and inflate back in later)
             SnapShot* Snap;
@@ -298,7 +298,7 @@ namespace TTD
         struct EventLoopYieldPointEntry
         {
             //The timestamp of this yieldpoint
-            int64 EventTimeStamp;
+            long EventTimeStamp;
 
             //The wall clock time when this point is reached
             double EventWallTime;
@@ -339,8 +339,8 @@ namespace TTD
         struct RandomSeedEventLogEntry
         {
             //The values associated with the event
-            uint64 Seed0;
-            uint64 Seed1;
+            unsigned long Seed0;
+            unsigned long Seed1;
         };
 
         void RandomSeedEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);
@@ -418,10 +418,10 @@ namespace TTD
             TTDVar CallbackFunction;
 
             //The last event time that is nested in this external call
-            int64 LastNestedEventTime;
+            long LastNestedEventTime;
         };
 
-        int64 ExternalCbRegisterCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt);
+        long ExternalCbRegisterCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt);
 
         void ExternalCbRegisterCallEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);
         void ExternalCbRegisterCallEventLogEntry_Parse(EventLogEntry* evt, ThreadContext* threadContext, FileReader* reader, UnlinkableSlabAllocator& alloc);
@@ -445,7 +445,7 @@ namespace TTD
             TTDVar ReturnValue;
 
             //The last event time that is nested in this external call
-            int64 LastNestedEventTime;
+            long LastNestedEventTime;
 
             //if we need to check exception information
             bool CheckExceptionStatus;
@@ -460,10 +460,10 @@ namespace TTD
         void ExternalCallEventLogEntry_ProcessDiagInfoPre(EventLogEntry* evt, Js::JavascriptFunction* function, UnlinkableSlabAllocator& alloc);
 #endif
 
-        int64 ExternalCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt);
+        long ExternalCallEventLogEntry_GetLastNestedEventTime(const EventLogEntry* evt);
 
         void ExternalCallEventLogEntry_ProcessArgs(EventLogEntry* evt, int32 rootDepth, Js::JavascriptFunction* function, const Js::Arguments& args, bool checkExceptions, UnlinkableSlabAllocator& alloc);
-        void ExternalCallEventLogEntry_ProcessReturn(EventLogEntry* evt, Js::Var res, int64 lastNestedEvent);
+        void ExternalCallEventLogEntry_ProcessReturn(EventLogEntry* evt, Js::Var res, long lastNestedEvent);
 
         void ExternalCallEventLogEntry_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);
         void ExternalCallEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);
@@ -485,9 +485,9 @@ namespace TTD
         {
             //copies the data for a TTDebuggerSourceLocation that we can set when we start the replay session (and track the end of the execution)
             TTD_LOG_PTR_ID SourceScriptLogId;
-            int64 EventTime;  //-1 indicates an INVALID location
-            int64 FunctionTime;  //-1 indicates any ftime is OK
-            int64 LoopTime;  //-1 indicates any ltime is OK
+            long EventTime;  //-1 indicates an INVALID location
+            long FunctionTime;  //-1 indicates any ftime is OK
+            long LoopTime;  //-1 indicates any ltime is OK
 
             uint32 TopLevelBodyId;
             uint32 FunctionLine; //line containing function starts at

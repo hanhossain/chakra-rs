@@ -37,7 +37,7 @@ public:
     static uint32 Mul(uint32 lhs, uint32 rhs, __inout Func& overflowFn)
     {
         // Do the multiplication using 64-bit unsigned math.
-        uint64 result = static_cast<uint64>(lhs) * static_cast<uint64>(rhs);
+        unsigned long result = static_cast<unsigned long>(lhs) * static_cast<unsigned long>(rhs);
 
         // Does the result fit in 32-bits?
         if(result >= (1ui64 << 32))

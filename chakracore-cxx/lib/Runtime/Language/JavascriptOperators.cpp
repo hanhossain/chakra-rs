@@ -713,9 +713,9 @@ using namespace Js;
             }
             break;
 
-        // we cannot do double conversion between 2 int64 numbers as we can get wrong result after conversion
+        // we cannot do double conversion between 2 long numbers as we can get wrong result after conversion
         // i.e., two different numbers become the same after losing precision. We'll continue dbl comparison
-        // if either number is not an int64 number.
+        // if either number is not an long number.
         case TypeIds_UInt64Number:
             {
                 switch (rightType)
@@ -846,7 +846,7 @@ using namespace Js;
             {
             case TypeIds_Integer:
                 return aLeft == aRight;
-                // we don't need to worry about int64: it cannot equal as we create
+                // we don't need to worry about long: it cannot equal as we create
                 // JavascriptInt64Number only in overflow scenarios.
             case TypeIds_Number:
                 dblLeft = TaggedInt::ToDouble(aLeft);
@@ -3210,7 +3210,7 @@ using namespace Js;
         return object->HasOwnItem(index);
     }
 
-    BOOL JavascriptOperators::HasItem(RecyclableObject* object, uint64 index)
+    BOOL JavascriptOperators::HasItem(RecyclableObject* object, unsigned long index)
     {
         PropertyRecord const * propertyRecord = nullptr;
         ScriptContext* scriptContext = object->GetScriptContext();
@@ -3282,7 +3282,7 @@ using namespace Js;
         return false;
     }
 
-    BOOL JavascriptOperators::SetItem(Var receiver, RecyclableObject* object, uint64 index, Var value, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
+    BOOL JavascriptOperators::SetItem(Var receiver, RecyclableObject* object, unsigned long index, Var value, ScriptContext* scriptContext, PropertyOperationFlags propertyOperationFlags)
     {
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptOperators::GetPropertyIdForInt(index, scriptContext, &propertyRecord);
@@ -3345,7 +3345,7 @@ using namespace Js;
     {
         return object->DeleteItem(index, propertyOperationFlags);
     }
-    BOOL JavascriptOperators::DeleteItem(RecyclableObject* object, uint64 index, PropertyOperationFlags propertyOperationFlags)
+    BOOL JavascriptOperators::DeleteItem(RecyclableObject* object, unsigned long index, PropertyOperationFlags propertyOperationFlags)
     {
         PropertyRecord const * propertyRecord = nullptr;
         JavascriptOperators::GetPropertyIdForInt(index, object->GetScriptContext(), &propertyRecord);
@@ -8871,7 +8871,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
     }
 
-    void JavascriptOperators::GetPropertyIdForInt(uint64 value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord)
+    void JavascriptOperators::GetPropertyIdForInt(unsigned long value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord)
     {
         char16_t buffer[20];
         ::_ui64tow_s(value, buffer, sizeof(buffer)/sizeof(char16_t), 10);
@@ -8880,7 +8880,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     void JavascriptOperators::GetPropertyIdForInt(uint32 value, ScriptContext* scriptContext, PropertyRecord const ** propertyRecord)
     {
-        GetPropertyIdForInt(static_cast<uint64>(value), scriptContext, propertyRecord);
+        GetPropertyIdForInt(static_cast<unsigned long>(value), scriptContext, propertyRecord);
     }
 
     Var JavascriptOperators::FromPropertyDescriptor(const PropertyDescriptor& descriptor, ScriptContext* scriptContext)
@@ -10307,7 +10307,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         Js::ScriptContext* scriptContext)
     {
         Var element;
-        uint64 allocSize = UInt32Math::Mul(length, elementSize);
+        unsigned long allocSize = UInt32Math::Mul(length, elementSize);
 
         // TODO:further fast path the call for things like IntArray convert to int, floatarray convert to float etc.
         // such that we don't need boxing.
@@ -10369,21 +10369,21 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             break;
         case JsInt64Type:
-            AnalysisAssert(elementSize == sizeof(int64));
+            AnalysisAssert(elementSize == sizeof(long));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(int64) <= allocSize);
-                ((int64*)buffer)[i] = Js::JavascriptConversion::ToInt64(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(long) <= allocSize);
+                ((long*)buffer)[i] = Js::JavascriptConversion::ToInt64(element, scriptContext);
             }
             break;
         case JsUint64Type:
-            AnalysisAssert(elementSize == sizeof(uint64));
+            AnalysisAssert(elementSize == sizeof(unsigned long));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(uint64) <= allocSize);
-                ((uint64*)buffer)[i] = Js::JavascriptConversion::ToUInt64(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(unsigned long) <= allocSize);
+                ((unsigned long*)buffer)[i] = Js::JavascriptConversion::ToUInt64(element, scriptContext);
             }
             break;
         case JsFloatType:
@@ -11159,7 +11159,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return requestContext->GetMissingItemResult();
     }
 
-    Var JavascriptOperators::GetItem(RecyclableObject* instance, uint64 index, ScriptContext* requestContext)
+    Var JavascriptOperators::GetItem(RecyclableObject* instance, unsigned long index, ScriptContext* requestContext)
     {
         Var value;
         if (GetItem(instance, index, &value, requestContext))
@@ -11170,7 +11170,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         return requestContext->GetMissingItemResult();
     }
 
-    BOOL JavascriptOperators::GetItem(RecyclableObject* instance, uint64 index, Var* value, ScriptContext* requestContext)
+    BOOL JavascriptOperators::GetItem(RecyclableObject* instance, unsigned long index, Var* value, ScriptContext* requestContext)
     {
         if (index < JavascriptArray::InvalidIndex)
         {

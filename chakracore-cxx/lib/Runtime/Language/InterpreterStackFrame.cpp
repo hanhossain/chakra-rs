@@ -1693,7 +1693,7 @@ namespace Js
             mov edx, [esp + 0x0 + 0x8];
             mov[eax - 0x8], edx; // move the return location
 
-            pop edx; // restore possible int64 return value
+            pop edx; // restore possible long return value
             pop eax; // restore return value
             add esp, ecx; // cleanup arguments
 
@@ -2232,7 +2232,7 @@ skipThunk:
             *(int*)retDst = asmJsReturn.i;
             break;
         case AsmJsRetType::Int64:
-            *(int64*)retDst = asmJsReturn.l;
+            *(long*)retDst = asmJsReturn.l;
             break;
         default:
             Assume(false);
@@ -2243,7 +2243,7 @@ skipThunk:
     typedef double(*AsmJsInterpreterDoubleEP)(AsmJsCallStackLayout*, void *);
     typedef float(*AsmJsInterpreterFloatEP)(AsmJsCallStackLayout*, void *);
     typedef int(*AsmJsInterpreterIntEP)(AsmJsCallStackLayout*, void *);
-    typedef int64(*AsmJsInterpreterInt64EP)(AsmJsCallStackLayout*, void *);
+    typedef long(*AsmJsInterpreterInt64EP)(AsmJsCallStackLayout*, void *);
 
     void * InterpreterStackFrame::GetAsmJsInterpreterEntryPoint(AsmJsCallStackLayout* stack)
     {
@@ -2269,7 +2269,7 @@ skipThunk:
         }
         case Js::AsmJsRetType::Int64:
         {
-            entryPoint = (void*)(AsmJsInterpreterInt64EP)Js::InterpreterStackFrame::AsmJsInterpreter < int64 >;
+            entryPoint = (void*)(AsmJsInterpreterInt64EP)Js::InterpreterStackFrame::AsmJsInterpreter < long >;
             break;
         }
 #ifdef ENABLE_WASM_SIMD
@@ -2377,10 +2377,10 @@ skipThunk:
         *(float*)(&(m_outParams[outRegisterID])) = val;
     }
 
-    inline void InterpreterStackFrame::OP_I_SetOutAsmLong(RegSlot outRegisterID, int64 val)
+    inline void InterpreterStackFrame::OP_I_SetOutAsmLong(RegSlot outRegisterID, long val)
     {
         Assert(m_outParams + outRegisterID < m_outSp);
-        *(int64*)(&(m_outParams[outRegisterID])) = val;
+        *(long*)(&(m_outParams[outRegisterID])) = val;
     }
 
     inline void InterpreterStackFrame::OP_I_SetOutAsmInt(RegSlot outRegisterID, int val)
@@ -3022,7 +3022,7 @@ skipThunk:
             switch (type)
             {
             case WAsmJs::INT32:   m_localIntSlots = (int*)destination; break;
-            case WAsmJs::INT64:   m_localInt64Slots = (int64*)destination; break;
+            case WAsmJs::INT64:   m_localInt64Slots = (long*)destination; break;
             case WAsmJs::FLOAT32: m_localFloatSlots = (float*)destination; break;
             case WAsmJs::FLOAT64: m_localDoubleSlots = (double*)destination; break;
             case WAsmJs::SIMD:    m_localSimdSlots = (AsmJsSIMDValue*)destination; break;
@@ -3064,7 +3064,7 @@ skipThunk:
         m_localSlots[AsmJsFunctionMemory::ScriptContextBufferRegister] = functionBody->GetScriptContext();
 
         int* intArg = m_localIntSlots + info->GetTypedSlotInfo(WAsmJs::INT32)->constCount;
-        int64* int64Arg = m_localInt64Slots + info->GetTypedSlotInfo(WAsmJs::INT64)->constCount;
+        long* int64Arg = m_localInt64Slots + info->GetTypedSlotInfo(WAsmJs::INT64)->constCount;
         double* doubleArg = m_localDoubleSlots + info->GetTypedSlotInfo(WAsmJs::FLOAT64)->constCount;
         float* floatArg = m_localFloatSlots + info->GetTypedSlotInfo(WAsmJs::FLOAT32)->constCount;
 #ifdef ENABLE_WASM_SIMD
@@ -3102,7 +3102,7 @@ skipThunk:
                 }
                 else if (info->GetArgType(i).isInt64())
                 {
-                    *int64Arg = *(int64*)argAddress;
+                    *int64Arg = *(long*)argAddress;
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (tracingFunc)
                     {
@@ -3110,7 +3110,7 @@ skipThunk:
                     }
 #endif
                     ++int64Arg;
-                    argAddress += sizeof(int64);
+                    argAddress += sizeof(long);
                 }
                 else if (info->GetArgType(i).isFloat())
                 {
@@ -3717,7 +3717,7 @@ skipThunk:
             m_localIntSlots[returnReg] = JavascriptFunction::CallAsmJsFunction<int>(function, jsMethod, m_outParams, alignedArgsSize, reg);
             break;
         case AsmJsRetType::Int64:
-            m_localInt64Slots[returnReg] = JavascriptFunction::CallAsmJsFunction<int64>(function, jsMethod, m_outParams, alignedArgsSize, reg);
+            m_localInt64Slots[returnReg] = JavascriptFunction::CallAsmJsFunction<long>(function, jsMethod, m_outParams, alignedArgsSize, reg);
             break;
         case AsmJsRetType::Double:
             m_localDoubleSlots[returnReg] = JavascriptFunction::CallAsmJsFunction<double>(function, jsMethod, m_outParams, alignedArgsSize, reg);
@@ -7822,7 +7822,7 @@ skipThunk:
     }
 
     template <>
-    int64 InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
+    long InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
     {
         return m_localInt64Slots[localRegisterID];
     }
@@ -7846,7 +7846,7 @@ skipThunk:
     }
 
     template <>
-    void InterpreterStackFrame::SetRegRaw(RegSlot localRegisterID, int64 bValue)
+    void InterpreterStackFrame::SetRegRaw(RegSlot localRegisterID, long bValue)
     {
         m_localInt64Slots[localRegisterID] = bValue;
     }
@@ -7875,7 +7875,7 @@ skipThunk:
     }
 
     template <typename RegSlotType>
-    int64 InterpreterStackFrame::GetRegRawInt64(RegSlotType localRegisterID) const
+    long InterpreterStackFrame::GetRegRawInt64(RegSlotType localRegisterID) const
     {
         return m_localInt64Slots[localRegisterID];
     }
@@ -7896,12 +7896,12 @@ skipThunk:
 #if TARGET_32
         m_localIntSlots[localRegisterID] = (int32)val;
 #elif TARGET_64
-        m_localInt64Slots[localRegisterID] = (int64)val;
+        m_localInt64Slots[localRegisterID] = (long)val;
 #endif
     }
 
     template <typename RegSlotType>
-    void InterpreterStackFrame::SetRegRawInt64(RegSlotType localRegisterID, int64 bValue)
+    void InterpreterStackFrame::SetRegRawInt64(RegSlotType localRegisterID, long bValue)
     {
         m_localInt64Slots[localRegisterID] = bValue;
     }
@@ -8076,7 +8076,7 @@ skipThunk:
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
         }
 
-        const uint64 index = (uint64)GetRegRawInt(playout->SlotIndex) + playout->Offset;
+        const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
 
         ArrayBufferBase* arr =
 #ifdef ENABLE_WASM_SIMD
@@ -8103,7 +8103,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdLdArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8129,7 +8129,7 @@ skipThunk:
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
         }
-        const uint64 index = (uint64)GetRegRawInt(playout->SlotIndex) + playout->Offset;
+        const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
 
         ArrayBufferBase* arr =
 #ifdef ENABLE_WASM_SIMD
@@ -8155,7 +8155,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdStArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8833,7 +8833,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    void InterpreterStackFrame::WasmArrayBoundsCheck(uint64 index, uint32 byteLength)
+    void InterpreterStackFrame::WasmArrayBoundsCheck(unsigned long index, uint32 byteLength)
     {
         if (index + sizeof(MemType) > byteLength)
         {
@@ -8842,7 +8842,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, uint64 index, uint32 byteLength)
+    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32 byteLength)
     {
         MemType* readBuffer = (MemType*)(buffer + index);
         // Do alignment check to be coherent with the order the jit does the checks
@@ -8859,7 +8859,7 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8885,7 +8885,7 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8913,7 +8913,7 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8968,7 +8968,7 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();

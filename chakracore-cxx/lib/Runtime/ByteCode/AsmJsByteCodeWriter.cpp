@@ -290,7 +290,7 @@ namespace Js
     }
 
     template <typename SizePolicy>
-    bool AsmJsByteCodeWriter::TryWriteLong1Const1(OpCodeAsmJs op, RegSlot R0, int64 C1)
+    bool AsmJsByteCodeWriter::TryWriteLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1)
     {
         OpLayoutT_Long1Const1<SizePolicy> layout;
         if (SizePolicy::Assign(layout.L0, R0) && SizePolicy::Assign(layout.C1, C1))
@@ -456,7 +456,7 @@ namespace Js
         MULTISIZE_LAYOUT_WRITE(Reg1IntConst1, op, R0, C1);
     }
 
-    void AsmJsByteCodeWriter::AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, int64 C1)
+    void AsmJsByteCodeWriter::AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1)
     {
         MULTISIZE_LAYOUT_WRITE(Long1Const1, op, R0, C1);
     }

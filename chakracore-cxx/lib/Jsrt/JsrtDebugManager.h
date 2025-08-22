@@ -45,7 +45,7 @@ public:
     void GetBreakpoints(Js::JavascriptArray** bpsArray, Js::ScriptContext* scriptContext);
 
 #if ENABLE_TTD
-    Js::BreakpointProbe* SetBreakpointHelper_TTD(int64 desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber, BOOL* isNewBP);
+    Js::BreakpointProbe* SetBreakpointHelper_TTD(long desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber, BOOL* isNewBP);
 #endif
 
     JsrtDebuggerObjectsManager* GetDebuggerObjectsManager();

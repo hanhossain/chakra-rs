@@ -14,7 +14,7 @@ public:
     virtual void WriteMethodEvent(const char16_t* eventName,
         void* scriptContextId,
         void* methodStartAddress,
-        uint64 methodSize,
+        unsigned long methodSize,
         uint methodID,
         uint16 methodFlags,
         uint16 methodAddressRangeID,
@@ -23,7 +23,7 @@ public:
         uint column,
         const char16_t* methodName) = 0;
 
-    virtual void WriteSourceEvent(const char16_t* eventName, uint64 sourceContext, void* scriptContextId, uint sourceFlags, const char16_t* url) = 0;
+    virtual void WriteSourceEvent(const char16_t* eventName, unsigned long sourceContext, void* scriptContextId, uint sourceFlags, const char16_t* url) = 0;
 
     virtual void UnloadInstance() = 0;
 

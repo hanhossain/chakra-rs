@@ -257,9 +257,9 @@ namespace Js {
            {
                return nullptr;
            }
-           int64 int64Val = UnsafeVarTo<JavascriptInt64Number>(value)->GetValue();
+           long int64Val = UnsafeVarTo<JavascriptInt64Number>(value)->GetValue();
 
-           return TryCanonicalizeIntHelper<int64, allowNegOne>(int64Val);
+           return TryCanonicalizeIntHelper<long, allowNegOne>(int64Val);
 
        }
        case TypeIds_UInt64Number:
@@ -268,9 +268,9 @@ namespace Js {
            {
                return nullptr;
            }
-           uint64 uint64Val = UnsafeVarTo<JavascriptUInt64Number>(value)->GetValue();
+           unsigned long uint64Val = UnsafeVarTo<JavascriptUInt64Number>(value)->GetValue();
 
-           return TryCanonicalizeIntHelper<uint64, allowNegOne>(uint64Val);
+           return TryCanonicalizeIntHelper<unsigned long, allowNegOne>(uint64Val);
        }
        default:
            return nullptr;

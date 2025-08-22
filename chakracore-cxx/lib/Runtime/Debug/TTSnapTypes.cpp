@@ -198,31 +198,31 @@ namespace TTD
         }
 
 #if ENABLE_SNAPSHOT_COMPARE
-        int64 ComputeLocationTagForAssertCompare(const SnapHandlerPropertyEntry& handlerEntry)
+        long ComputeLocationTagForAssertCompare(const SnapHandlerPropertyEntry& handlerEntry)
         {
-            return (((int64)handlerEntry.PropertyRecordId) << 8) | ((int64)handlerEntry.DataKind);
+            return (((long)handlerEntry.PropertyRecordId) << 8) | ((long)handlerEntry.DataKind);
         }
 
         void AssertSnapEquiv(const SnapHandler* h1, const SnapHandler* h2, TTDCompareMap& compareMap)
         {
             compareMap.DiagnosticAssert(h1->IsExtensibleFlag == h2->IsExtensibleFlag);
 
-            JsUtil::BaseDictionary<int64, uint32, HeapAllocator> h1Dict(&HeapAllocator::Instance);
+            JsUtil::BaseDictionary<long, uint32, HeapAllocator> h1Dict(&HeapAllocator::Instance);
             for(uint32 i = 0; i < h1->MaxPropertyIndex; ++i)
             {
                 if(h1->PropertyInfoArray[i].DataKind != SnapEntryDataKindTag::Clear)
                 {
-                    int64 locationTag = ComputeLocationTagForAssertCompare(h1->PropertyInfoArray[i]);
+                    long locationTag = ComputeLocationTagForAssertCompare(h1->PropertyInfoArray[i]);
                     h1Dict.AddNew(locationTag, i);
                 }
             }
 
-            JsUtil::BaseDictionary<int64, uint32, HeapAllocator> h2Dict(&HeapAllocator::Instance);
+            JsUtil::BaseDictionary<long, uint32, HeapAllocator> h2Dict(&HeapAllocator::Instance);
             for(uint32 i = 0; i < h2->MaxPropertyIndex; ++i)
             {
                 if(h2->PropertyInfoArray[i].DataKind != SnapEntryDataKindTag::Clear)
                 {
-                    int64 locationTag = ComputeLocationTagForAssertCompare(h2->PropertyInfoArray[i]);
+                    long locationTag = ComputeLocationTagForAssertCompare(h2->PropertyInfoArray[i]);
                     h2Dict.AddNew(locationTag, i);
                 }
             }
@@ -231,7 +231,7 @@ namespace TTD
 
             for(auto iter = h1Dict.GetIterator(); iter.IsValid(); iter.MoveNext())
             {
-                int64 locationTag = iter.CurrentKey();
+                long locationTag = iter.CurrentKey();
                 compareMap.DiagnosticAssert(h2Dict.ContainsKey(locationTag));
 
                 uint32 h1Idx = h1Dict.Item(locationTag);

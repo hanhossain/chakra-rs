@@ -7,9 +7,9 @@
 
 #if defined(_M_X64)
 #if !(__has_builtin(__builtin_mul_overflow) && !(defined(_ARM_) && defined(__clang__))) // _ARM_ && __clang__ linker fails
-    static int64 _mul128(const int64 left, const int64 right, int64 *high) noexcept
+    static long _mul128(const long left, const long right, long *high) noexcept
     {
-        int64 low;
+        long low;
         __asm__
         (
             "imulq %[right]\n"
@@ -25,14 +25,14 @@
 
 // Returns true if we overflowed, false if we didn't
 bool
-Int64Math::Mul(int64 left, int64 right, int64 *pResult)
+Int64Math::Mul(long left, long right, long *pResult)
 {
 #if __has_builtin(__builtin_mul_overflow) && !(defined(_ARM_) && defined(__clang__))
-    return IntMathCommon<int64>::Mul(left, right, pResult);
+    return IntMathCommon<long>::Mul(left, right, pResult);
 #else
 
 #if defined(_M_X64)
-    int64 high;
+    long high;
     *pResult = _mul128(left, right, &high);
     return ((*pResult > 0) && high != 0) || ((*pResult < 0) && (high != -1));
 #else
@@ -44,23 +44,23 @@ Int64Math::Mul(int64 left, int64 right, int64 *pResult)
 }
 
 bool
-Int64Math::Shl(int64 left, int64 right, int64 *pResult)
+Int64Math::Shl(long left, long right, long *pResult)
 {
     *pResult = left << (right & 63);
-    return (left != (int64)((uint64)*pResult >> right));
+    return (left != (long)((unsigned long)*pResult >> right));
 }
 
 bool
-Int64Math::Shr(int64 left, int64 right, int64 *pResult)
+Int64Math::Shr(long left, long right, long *pResult)
 {
     *pResult = left >> (right & 63);
     return false;
 }
 
 bool
-Int64Math::ShrU(int64 left, int64 right, int64 *pResult)
+Int64Math::ShrU(long left, long right, long *pResult)
 {
-    uint64 uResult = ((uint64)left) >> (right & 63);
+    unsigned long uResult = ((unsigned long)left) >> (right & 63);
     *pResult = uResult;
     return false;
 }

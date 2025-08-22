@@ -413,7 +413,7 @@ namespace Js
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         Assert(callInfo.Count == 2);
 
-        int64 length;
+        long length;
         Var iterable = args.Values[1];
 
         TypedArrayBase *typedArrayBase = nullptr;
@@ -469,7 +469,7 @@ namespace Js
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         AssertOrFailFast(args.Info.Count == 3);
 
-        int64 length64 = JavascriptConversion::ToLength(args.Values[2], scriptContext);
+        long length64 = JavascriptConversion::ToLength(args.Values[2], scriptContext);
         if (length64 > UINT_MAX)
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArrayLengthConstructIncorrect);
@@ -503,7 +503,7 @@ namespace Js
         RecyclableObject * obj = VarTo<RecyclableObject>(args.Values[1]);
         double index = JavascriptConversion::ToInteger(args.Values[2], scriptContext);
         AssertOrFailFast(index >= 0);
-        JavascriptArray::BigIndex bigIndex(static_cast<uint64>(index));
+        JavascriptArray::BigIndex bigIndex(static_cast<unsigned long>(index));
         Var item = args.Values[3];
 
         JavascriptArray::CreateDataPropertyOrThrow(obj, bigIndex, item, scriptContext);

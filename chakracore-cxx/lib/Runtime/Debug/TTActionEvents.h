@@ -14,9 +14,9 @@ namespace TTD
         bool IsJsRTActionRootCall(const EventLogEntry* evt);
 
         //We have a number of loops where we look for a snapshot or root with a given time value -- this encapsulates the access logic
-        int64 AccessTimeInRootCallOrSnapshot(const EventLogEntry* evt, bool& isSnap, bool& isRoot, bool& hasRtrSnap);
-        bool TryGetTimeFromRootCallOrSnapshot(const EventLogEntry* evt, int64& res);
-        int64 GetTimeFromRootCallOrSnapshot(const EventLogEntry* evt);
+        long AccessTimeInRootCallOrSnapshot(const EventLogEntry* evt, bool& isSnap, bool& isRoot, bool& hasRtrSnap);
+        bool TryGetTimeFromRootCallOrSnapshot(const EventLogEntry* evt, long& res);
+        long GetTimeFromRootCallOrSnapshot(const EventLogEntry* evt);
 
         //Handle the replay of the result of an action for the the given action type and tag
         template <typename T, EventKind tag>
@@ -56,7 +56,7 @@ namespace TTD
         struct JsRTIntegralArgumentAction
         {
             TTDVar Result;
-            int64 Scalar;
+            long Scalar;
         };
 
         template <EventKind tag>
@@ -173,7 +173,7 @@ namespace TTD
         {
             TTDVar Result;
             TTDVar VarArray[vcount];
-            int64 ScalarArray[icount];
+            long ScalarArray[icount];
         };
 
         template <EventKind tag, size_t vcount, size_t icount>
@@ -237,22 +237,22 @@ namespace TTD
         template <size_t vcount, size_t icount> void SetVarItem_1(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, TTDVar value) { return SetVarItem_InternalUse<vcount, icount, 1>(argAction, value); }
 
         template <size_t vcount, size_t icount, size_t index>
-        int64 GetScalarItem_InternalUse(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction)
+        long GetScalarItem_InternalUse(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction)
         {
             static_assert(index < icount, "Index out of bounds in JsRTVarAndIntegralArgumentsAction.");
             return argAction->ScalarArray[index];
         }
-        template <size_t vcount, size_t icount> int64 GetScalarItem_0(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction) { return GetScalarItem_InternalUse<vcount, icount, 0>(argAction); }
-        template <size_t vcount, size_t icount> int64 GetScalarItem_1(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction) { return GetScalarItem_InternalUse<vcount, icount, 1>(argAction); }
+        template <size_t vcount, size_t icount> long GetScalarItem_0(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction) { return GetScalarItem_InternalUse<vcount, icount, 0>(argAction); }
+        template <size_t vcount, size_t icount> long GetScalarItem_1(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction) { return GetScalarItem_InternalUse<vcount, icount, 1>(argAction); }
 
         template <size_t vcount, size_t icount, size_t index>
-        void SetScalarItem_InternalUse(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, int64 value)
+        void SetScalarItem_InternalUse(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, long value)
         {
             static_assert(index < icount, "Index out of bounds in JsRTVarAndIntegralArgumentsAction.");
             argAction->ScalarArray[index] = value;
         }
-        template <size_t vcount, size_t icount> void SetScalarItem_0(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, int64 value) { return SetScalarItem_InternalUse<vcount, icount, 0>(argAction, value); }
-        template <size_t vcount, size_t icount> void SetScalarItem_1(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, int64 value) { return SetScalarItem_InternalUse<vcount, icount, 1>(argAction, value); }
+        template <size_t vcount, size_t icount> void SetScalarItem_0(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, long value) { return SetScalarItem_InternalUse<vcount, icount, 0>(argAction, value); }
+        template <size_t vcount, size_t icount> void SetScalarItem_1(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, long value) { return SetScalarItem_InternalUse<vcount, icount, 1>(argAction, value); }
 
         template <size_t vcount, size_t icount>
         Js::PropertyId GetPropertyIdItem(const JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction)
@@ -265,7 +265,7 @@ namespace TTD
         void SetPropertyIdItem(JsRTVarAndIntegralArgumentsAction_InternalUse<vcount, icount>* argAction, Js::PropertyId value)
         {
             AssertMsg(0 < icount, "Index out of bounds in JsRTVarAndIntegralArgumentsAction.");
-            argAction->ScalarArray[0] = (int64)value;
+            argAction->ScalarArray[0] = (long)value;
         }
 
         typedef JsRTVarAndIntegralArgumentsAction_InternalUse<1, 1> JsRTSingleVarScalarArgumentAction;
@@ -629,7 +629,7 @@ namespace TTD
 
             //The URI the souce code was loaded from and the source context id
             TTString SourceUri;
-            uint64 SourceContextId;
+            unsigned long SourceContextId;
 
             //The flags for loading this script
             LoadScriptFlag LoadFlag;
@@ -668,17 +668,17 @@ namespace TTD
             TTDVar* ArgArray;
 
             //The actual event time associated with this call (is >= the TopLevelCallbackEventTime)
-            int64 CallEventTime;
+            long CallEventTime;
 
             //The event time that corresponds to the top-level event time around this call
-            int64 TopLevelCallbackEventTime;
+            long TopLevelCallbackEventTime;
 
             //The additional info assocated with this action that we use in replay/debug but doesn't matter for record
             JsRTCallFunctionAction_ReplayAdditionalInfo* AdditionalReplayInfo;
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
             //The last event time that is nested in this call
-            int64 LastNestedEvent;
+            long LastNestedEvent;
 
             //The name of the function
             TTString FunctionName;
@@ -686,13 +686,13 @@ namespace TTD
         };
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-        int64 JsRTCallFunctionAction_GetLastNestedEventTime(const EventLogEntry* evt);
+        long JsRTCallFunctionAction_GetLastNestedEventTime(const EventLogEntry* evt);
 
         void JsRTCallFunctionAction_ProcessDiagInfoPre(EventLogEntry* evt, Js::Var funcVar, UnlinkableSlabAllocator& alloc);
-        void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, int64 lastNestedEvent);
+        void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, long lastNestedEvent);
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, int64 callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, int64 topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc);
 
         void JsRTCallFunctionAction_Execute(const EventLogEntry* evt, ThreadContextTTD* executeContext);
         void JsRTCallFunctionAction_UnloadEventMemory(EventLogEntry* evt, UnlinkableSlabAllocator& alloc);

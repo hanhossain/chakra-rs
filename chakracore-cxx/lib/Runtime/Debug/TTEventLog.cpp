@@ -760,7 +760,7 @@ namespace TTD
         this->m_propertyRecordPinSet->AddNew(const_cast<Js::PropertyRecord*>(record));
     }
 
-    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, uint64 sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag)
+    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag)
     {
         NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo = this->m_loadedTopLevelScripts.NextOpenEntry();
         uint32 fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
@@ -920,14 +920,14 @@ namespace TTD
         *result = Js::JavascriptString::NewCopyBuffer(str.Contents, str.Length, ctx);
     }
 
-    void EventLog::RecordExternalEntropyRandomEvent(uint64 seed0, uint64 seed1)
+    void EventLog::RecordExternalEntropyRandomEvent(unsigned long seed0, unsigned long seed1)
     {
         NSLogEvents::RandomSeedEventLogEntry* rsEvent = this->RecordGetInitializedEvent_DataOnly<NSLogEvents::RandomSeedEventLogEntry, NSLogEvents::EventKind::RandomSeedTag>();
         rsEvent->Seed0 = seed0;
         rsEvent->Seed1 = seed1;
     }
 
-    void EventLog::ReplayExternalEntropyRandomEvent(uint64* seed0, uint64* seed1)
+    void EventLog::ReplayExternalEntropyRandomEvent(unsigned long* seed0, unsigned long* seed1)
     {
         const NSLogEvents::RandomSeedEventLogEntry* rsEvent = this->ReplayGetReplayEvent_Helper<NSLogEvents::RandomSeedEventLogEntry, NSLogEvents::EventKind::RandomSeedTag>();
         *seed0 = rsEvent->Seed0;
@@ -1180,12 +1180,12 @@ namespace TTD
         END_LEAVE_SCRIPT(ctx);
     }
 
-    int64 EventLog::GetCurrentTopLevelEventTime() const
+    long EventLog::GetCurrentTopLevelEventTime() const
     {
         return this->m_topLevelCallbackEventTime;
     }
 
-    int64 EventLog::GetFirstEventTimeInLog() const
+    long EventLog::GetFirstEventTimeInLog() const
     {
         for(auto iter = this->m_eventList.GetIteratorAtFirst(); iter.IsValid(); iter.MoveNext())
         {
@@ -1198,7 +1198,7 @@ namespace TTD
         return -1;
     }
 
-    int64 EventLog::GetLastEventTimeInLog() const
+    long EventLog::GetLastEventTimeInLog() const
     {
         for(auto iter = this->m_eventList.GetIteratorAtLast_ReplayOnly(); iter.IsValid(); iter.MovePrevious_ReplayOnly())
         {
@@ -1211,7 +1211,7 @@ namespace TTD
         return -1;
     }
 
-    int64 EventLog::GetKthEventTimeInLog(uint32 k) const
+    long EventLog::GetKthEventTimeInLog(uint32 k) const
     {
         uint32 topLevelCount = 0;
         for(auto iter = this->m_eventList.GetIteratorAtFirst(); iter.IsValid(); iter.MoveNext())
@@ -1230,7 +1230,7 @@ namespace TTD
         return -1;
     }
 
-    void EventLog::ResetCallStackForTopLevelCall(int64 topLevelCallbackEventTime)
+    void EventLog::ResetCallStackForTopLevelCall(long topLevelCallbackEventTime)
     {
         this->m_topLevelCallbackEventTime = topLevelCallbackEventTime;
     }
@@ -1384,9 +1384,9 @@ namespace TTD
         this->SetSnapshotOrInflateInProgress(false);
     }
 
-    int64 EventLog::FindSnapTimeForEventTime(int64 targetTime, int64* optEndSnapTime)
+    long EventLog::FindSnapTimeForEventTime(long targetTime, long* optEndSnapTime)
     {
-        int64 snapTime = -1;
+        long snapTime = -1;
         if(optEndSnapTime != nullptr)
         {
             *optEndSnapTime = -1;
@@ -1397,7 +1397,7 @@ namespace TTD
             bool isSnap = false;
             bool isRoot = false;
             bool hasRtrSnap = false;
-            int64 time = NSLogEvents::AccessTimeInRootCallOrSnapshot(iter.Current(), isSnap, isRoot, hasRtrSnap);
+            long time = NSLogEvents::AccessTimeInRootCallOrSnapshot(iter.Current(), isSnap, isRoot, hasRtrSnap);
 
             bool validSnap =  isSnap | (isRoot & hasRtrSnap);
             if(validSnap && time <= targetTime)
@@ -1426,7 +1426,7 @@ namespace TTD
         return snapTime;
     }
 
-    void EventLog::GetSnapShotBoundInterval(int64 targetTime, int64* snapIntervalStart, int64* snapIntervalEnd) const
+    void EventLog::GetSnapShotBoundInterval(long targetTime, long* snapIntervalStart, long* snapIntervalEnd) const
     {
         *snapIntervalStart = -1;
         *snapIntervalEnd = -1;
@@ -1467,7 +1467,7 @@ namespace TTD
         }
     }
 
-    int64 EventLog::GetPreviousSnapshotInterval(int64 currentSnapTime) const
+    long EventLog::GetPreviousSnapshotInterval(long currentSnapTime) const
     {
         //move the iterator to the current snapshot just before the event
         for(auto iter = this->m_eventList.GetIteratorAtLast_ReplayOnly(); iter.IsValid(); iter.MovePrevious_ReplayOnly())
@@ -1486,12 +1486,12 @@ namespace TTD
         return -1;
     }
 
-    void EventLog::DoSnapshotInflate(int64 etime)
+    void EventLog::DoSnapshotInflate(long etime)
     {
         this->PushMode(TTDMode::ExcludedExecutionTTAction);
 
         const SnapShot* snap = nullptr;
-        int64 restoreEventTime = -1;
+        long restoreEventTime = -1;
 
         for(auto iter = this->m_eventList.GetIteratorAtLast_ReplayOnly(); iter.IsValid(); iter.MovePrevious_ReplayOnly())
         {
@@ -1525,7 +1525,7 @@ namespace TTD
 
         uint32 dbgScopeCount = snap->GetDbgScopeCountNonTopLevel();
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo*> topLevelLoadScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo*> topLevelLoadScriptMap;
         topLevelLoadScriptMap.Initialize(this->m_loadedTopLevelScripts.Count());
         for(auto iter = this->m_loadedTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -1533,7 +1533,7 @@ namespace TTD
             dbgScopeCount += iter.Current()->TopLevelBase.ScopeChainInfo.ScopeCount;
         }
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelNewFunctionBodyResolveInfo*> topLevelNewScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelNewFunctionBodyResolveInfo*> topLevelNewScriptMap;
         topLevelNewScriptMap.Initialize(this->m_newFunctionTopLevelScripts.Count());
         for(auto iter = this->m_newFunctionTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -1541,7 +1541,7 @@ namespace TTD
             dbgScopeCount += iter.Current()->TopLevelBase.ScopeChainInfo.ScopeCount;
         }
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelEvalFunctionBodyResolveInfo*> topLevelEvalScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelEvalFunctionBodyResolveInfo*> topLevelEvalScriptMap;
         topLevelEvalScriptMap.Initialize(this->m_evalTopLevelScripts.Count());
         for(auto iter = this->m_evalTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -1637,7 +1637,7 @@ namespace TTD
                 bool isSnap = false;
                 bool isRoot = false;
                 bool hasRtrSnap = false;
-                int64 time = NSLogEvents::AccessTimeInRootCallOrSnapshot(iter.Current(), isSnap, isRoot, hasRtrSnap);
+                long time = NSLogEvents::AccessTimeInRootCallOrSnapshot(iter.Current(), isSnap, isRoot, hasRtrSnap);
 
                 bool hasSnap = isSnap | (isRoot & hasRtrSnap);
                 if(hasSnap && time != etime)
@@ -1671,7 +1671,7 @@ namespace TTD
                 bool isSnap = false;
                 bool isRoot = false;
                 bool hasRtrSnap = false;
-                int64 time = NSLogEvents::AccessTimeInRootCallOrSnapshot(this->m_currentReplayEventIterator.Current(), isSnap, isRoot, hasRtrSnap);
+                long time = NSLogEvents::AccessTimeInRootCallOrSnapshot(this->m_currentReplayEventIterator.Current(), isSnap, isRoot, hasRtrSnap);
 
                 if((isSnap | isRoot) && time == this->m_eventTimeCtr)
                 {
@@ -1696,7 +1696,7 @@ namespace TTD
 #endif
     }
 
-    void EventLog::ReplayRootEventsToTime(int64 eventTime)
+    void EventLog::ReplayRootEventsToTime(long eventTime)
     {
         while(this->m_eventTimeCtr < eventTime)
         {
@@ -1732,7 +1732,7 @@ namespace TTD
 #endif
     }
 
-    void EventLog::ReplayActionEventSequenceThroughTime(int64 eventTime)
+    void EventLog::ReplayActionEventSequenceThroughTime(long eventTime)
     {
         while(this->m_eventTimeCtr <= eventTime)
         {
@@ -1884,7 +1884,7 @@ namespace TTD
         return this->m_timer.Now();
     }
 
-    int64 EventLog::GetLastEventTime() const
+    long EventLog::GetLastEventTime() const
     {
         return this->m_eventTimeCtr - 1;
     }
@@ -2498,7 +2498,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(ccAction->Result));
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, uint64 sourceContextId, const char16_t* sourceUri)
+    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri)
     {
         NSLogEvents::JsRTCodeParseAction* cpAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCodeParseAction, NSLogEvents::EventKind::CodeParseActionTag>(&cpAction);
@@ -2526,8 +2526,8 @@ namespace TTD
         NSLogEvents::JsRTCallFunctionAction* cAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCallFunctionAction, NSLogEvents::EventKind::CallExistingFunctionActionTag>(&cAction);
 
-        int64 evtTime = this->GetLastEventTime();
-        int64 topLevelCallTime = (rootDepth == 0) ? evtTime : this->m_topLevelCallbackEventTime;
+        long evtTime = this->GetLastEventTime();
+        long topLevelCallTime = (rootDepth == 0) ? evtTime : this->m_topLevelCallbackEventTime;
         NSLogEvents::JsRTCallFunctionAction_ProcessArgs(evt, rootDepth, evtTime, funcVar, argCount, args, topLevelCallTime, this->m_eventSlabAllocator);
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
@@ -2634,8 +2634,8 @@ namespace TTD
 
         writer.WriteBool(NSTokens::Key::diagEnabled, diagEnabled, NSTokens::Separator::CommaSeparator);
 
-        uint64 usedSpace = 0;
-        uint64 reservedSpace = 0;
+        unsigned long usedSpace = 0;
+        unsigned long reservedSpace = 0;
         this->m_eventSlabAllocator.ComputeMemoryUsed(&usedSpace, &reservedSpace);
 
         writer.WriteUInt64(NSTokens::Key::usedMemory, usedSpace, NSTokens::Separator::CommaSeparator);
@@ -2645,7 +2645,7 @@ namespace TTD
         writer.WriteLengthValue(ecount, NSTokens::Separator::CommaAndBigSpaceSeparator);
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-        JsUtil::Stack<int64, HeapAllocator> callNestingStack(&HeapAllocator::Instance);
+        JsUtil::Stack<long, HeapAllocator> callNestingStack(&HeapAllocator::Instance);
 #endif
 
         bool firstElem = true;
@@ -2669,7 +2669,7 @@ namespace TTD
             {
                 writer.WriteSequenceStart(NSTokens::Separator::BigSpaceSeparator);
 
-                int64 lastNestedTime = -1;
+                long lastNestedTime = -1;
                 if(isJsRTCall)
                 {
                     lastNestedTime = NSLogEvents::JsRTCallFunctionAction_GetLastNestedEventTime(evt);
@@ -2695,7 +2695,7 @@ namespace TTD
 
             if(!callNestingStack.Empty() && evt->EventTimeStamp == callNestingStack.Peek())
             {
-                int64 eTime = callNestingStack.Pop();
+                long eTime = callNestingStack.Pop();
 
                 if(!isJsRTCall & !isExternalCall & !isRegisterCall)
                 {
@@ -2839,7 +2839,7 @@ namespace TTD
         reader.ReadUInt64(NSTokens::Key::reservedMemory, true);
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-        JsUtil::Stack<int64, HeapAllocator> callNestingStack(&HeapAllocator::Instance);
+        JsUtil::Stack<long, HeapAllocator> callNestingStack(&HeapAllocator::Instance);
 
         bool doSep = false;
 #endif
@@ -2863,7 +2863,7 @@ namespace TTD
             {
                 reader.ReadSequenceStart(false);
 
-                int64 lastNestedTime = -1;
+                long lastNestedTime = -1;
                 if(isJsRTCall)
                 {
                     lastNestedTime = NSLogEvents::JsRTCallFunctionAction_GetLastNestedEventTime(evt);

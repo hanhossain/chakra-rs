@@ -38,7 +38,7 @@ namespace Js {
 
         static void DumpRegReg(RegSlot reg) { DumpReg(reg); }
         static void DumpIntConstReg(int val) { DumpI4(val); }
-        static void DumpLongConstReg(int64 val) { DumpI8(val); }
+        static void DumpLongConstReg(long val) { DumpI8(val); }
         static void DumpFloatConstReg(float val) { DumpR4(val); }
         static void DumpDoubleConstReg(double val) { DumpR8(val); }
 

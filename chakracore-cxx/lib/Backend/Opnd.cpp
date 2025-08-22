@@ -446,7 +446,7 @@ Opnd::GetSym() const
     }
 }
 
-int64
+long
 Opnd::GetImmediateValue(Func* func)
 {
     switch (this->GetKind())
@@ -1452,13 +1452,13 @@ IntConstOpnd::New(IntConstType value, IRType type, Func *func, bool dontEncode)
 ///
 ///----------------------------------------------------------------------------
 
-IR::Opnd* IntConstOpnd::NewFromType(int64 value, IRType type, Func* func)
+IR::Opnd* IntConstOpnd::NewFromType(long value, IRType type, Func* func)
 {
     if (IRType_IsInt64(type))
     {
         return Int64ConstOpnd::New(value, type, func);
     }
-    Assert(value < (int64)UINT_MAX);
+    Assert(value < (long)UINT_MAX);
     return IntConstOpnd::New((IntConstType)value, type, func);
 }
 
@@ -1594,12 +1594,12 @@ IntConstOpnd::AsUint32()
 /// Int64ConstOpnd Methods
 ///
 ///----------------------------------------------------------------------------
-IR::Int64ConstOpnd* Int64ConstOpnd::New(int64 value, IRType type, Func *func)
+IR::Int64ConstOpnd* Int64ConstOpnd::New(long value, IRType type, Func *func)
 {
-    AssertMsg(func->GetJITFunctionBody()->IsWasmFunction(), "Only WebAssembly functions should have int64 const operands. Use IntConstOpnd for size_t type");
+    AssertMsg(func->GetJITFunctionBody()->IsWasmFunction(), "Only WebAssembly functions should have long const operands. Use IntConstOpnd for size_t type");
     Int64ConstOpnd * intConstOpnd;
 
-    Assert(TySize[type] == sizeof(int64));
+    Assert(TySize[type] == sizeof(long));
 
     intConstOpnd = JitAnew(func->m_alloc, IR::Int64ConstOpnd);
 
@@ -2174,7 +2174,7 @@ AddrOpnd::NewFromNumber(int32 value, Func *func, bool dontEncode /* = false */)
 }
 
 AddrOpnd *
-AddrOpnd::NewFromNumber(int64 value, Func *func, bool dontEncode /* = false */)
+AddrOpnd::NewFromNumber(long value, Func *func, bool dontEncode /* = false */)
 {
     if (!Js::TaggedInt::IsOverflow(value))
     {
@@ -3105,7 +3105,7 @@ void EncodableOpnd<int32>::DumpEncodable() const
 }
 
 template<>
-void EncodableOpnd<int64>::DumpEncodable() const
+void EncodableOpnd<long>::DumpEncodable() const
 {
     if (name != nullptr)
     {

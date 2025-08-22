@@ -25,8 +25,8 @@ namespace Js
     class JavascriptExceptionOperators  /* All static */
     {
     public:
-        static const uint64 DefaultStackTraceLimit = 10;
-        static const uint64 MaxStackTraceLimit = _UI64_MAX;
+        static const unsigned long DefaultStackTraceLimit = 10;
+        static const unsigned long MaxStackTraceLimit = _UI64_MAX;
 
         // AutoCatchHandlerExists tracks where an exception will be caught and not propagated out.
         // It should be included wherever an exception is caught and swallowed.
@@ -108,15 +108,15 @@ namespace Js
         static void __declspec(noreturn) ThrowOutOfMemory(ScriptContext* scriptContext);
         static void __declspec(noreturn) ThrowStackOverflow(ScriptContext* scriptContext, void * returnAddress);
 
-        static uint64 GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext);
+        static unsigned long GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext);
         static Var ThrowTypeErrorRestrictedPropertyAccessor(RecyclableObject* function, CallInfo callInfo, ...);
         static Var StackTraceAccessor(RecyclableObject* function, CallInfo callInfo, ...);
-        static void WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException = true, bool resetSatck = false);
+        static void WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException = true, bool resetSatck = false);
 #if ENABLE_NATIVE_CODEGEN
         static void WalkStackForCleaningUpInlineeInfo(ScriptContext *scriptContext, void * returnAddress, void * tryCatchFrameAddr);
 #endif
         static void AddStackTraceToObject(Var obj, JavascriptExceptionContext::StackTrace* stackTrace, ScriptContext& scriptContext, bool isThrownException = true, bool resetSatck = false);
-        static uint64 StackCrawlLimitOnThrow(Var thrownObject, ScriptContext& scriptContext);
+        static unsigned long StackCrawlLimitOnThrow(Var thrownObject, ScriptContext& scriptContext);
 
         class EntryInfo
         {
@@ -129,7 +129,7 @@ namespace Js
 
       private:
         static JavascriptFunction * WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint32& callerByteCodeOffset,
-            uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack = false);
+            unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack = false);
 
         static void ThrowExceptionObjectInternal(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool fillExceptionContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack);
         static BOOL GetCaller(JavascriptStackWalker& walker, _Out_opt_ JavascriptFunction*& jsFunc);

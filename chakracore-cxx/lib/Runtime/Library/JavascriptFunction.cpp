@@ -488,7 +488,7 @@ using namespace Js;
                 JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Function.prototype.apply"));
             }
 
-            int64 len;
+            long len;
             JavascriptArray* arr = NULL;
             RecyclableObject* dynamicObject = VarTo<RecyclableObject>(argArray);
 
@@ -1171,7 +1171,7 @@ using namespace Js;
     {
         return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i32;
     }
-    template <> int64 JavascriptFunction::CallAsmJsFunction<int64>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
+    template <> long JavascriptFunction::CallAsmJsFunction<long>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
     {
         return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i64;
     }
@@ -1192,7 +1192,7 @@ using namespace Js;
     {
         void* savedEsp;
         _declspec(align(16)) PossibleAsmJsReturnValues retVals;
-        CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(int64) + sizeof(AsmJsSIMDValue));
+        CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(long) + sizeof(AsmJsSIMDValue));
         CompileAssert(offsetof(PossibleAsmJsReturnValues, low) == offsetof(PossibleAsmJsReturnValues, i32));
         CompileAssert(offsetof(PossibleAsmJsReturnValues, high) == offsetof(PossibleAsmJsReturnValues, i32) + sizeof(int32));
 
@@ -2387,27 +2387,27 @@ LABEL1:
         if (instrData.isLoad)
         {
             Var exceptionInfoReg = exceptionInfo->ContextRecord;
-            Var* exceptionInfoIntReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
-            Var* exceptionInfoFloatReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
+            Var* exceptionInfoIntReg = (Var*)((unsigned long)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
+            Var* exceptionInfoFloatReg = (Var*)((unsigned long)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
             Assert((unsigned long)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
-            Assert((uint64)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
+            Assert((unsigned long)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
 
             if (instrData.isLoad)
             {
                 double nanVal = JavascriptNumber::NaN;
                 if (instrData.isFloat64)
                 {
-                    double* destRegLocation = (double*)((uint64)exceptionInfoFloatReg + 16 * (instrData.dstReg));
+                    double* destRegLocation = (double*)((unsigned long)exceptionInfoFloatReg + 16 * (instrData.dstReg));
                     *destRegLocation = nanVal;
                 }
                 else if (instrData.isFloat32)
                 {
-                    float* destRegLocation = (float*)((uint64)exceptionInfoFloatReg + 16 * (instrData.dstReg));
+                    float* destRegLocation = (float*)((unsigned long)exceptionInfoFloatReg + 16 * (instrData.dstReg));
                     *destRegLocation = (float)nanVal;
                 }
                 else
                 {
-                    uint64* destRegLocation = (uint64*)((uint64)exceptionInfoIntReg + 8 * (instrData.dstReg));
+                    unsigned long* destRegLocation = (unsigned long*)((unsigned long)exceptionInfoIntReg + 8 * (instrData.dstReg));
                     *destRegLocation = 0;
                 }
             }

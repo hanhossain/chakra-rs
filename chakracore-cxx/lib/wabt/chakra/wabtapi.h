@@ -12,7 +12,6 @@ namespace Js
 }
 typedef unsigned int uint;
 typedef int32_t int32;
-typedef long int64;
 typedef int32 PropertyId;
 
 namespace ChakraWabt
@@ -46,7 +45,7 @@ namespace ChakraWabt
 
     typedef bool(*SetPropertyFn)(Js::Var obj, PropertyId, Js::Var value, void* user_data);
     typedef Js::Var(*Int32ToVarFn)(int32, void* user_data);
-    typedef Js::Var(*Int64ToVarFn)(int64, void* user_data);
+    typedef Js::Var(*Int64ToVarFn)(long, void* user_data);
     typedef Js::Var(*StringToVarFn)(const char*, uint length, void* user_data);
     typedef Js::Var(*CreateObjectFn)(void* user_data);
     typedef Js::Var(*CreateArrayFn)(void* user_data);

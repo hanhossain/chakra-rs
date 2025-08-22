@@ -281,7 +281,7 @@ namespace Js
             if ((i32 != 0x80000000) && (i32 != 0x7fffffff))
                 return i32;     //No overflow so just return i32
 
-            int64 T4_64 = TryToInt64(T1);
+            long T4_64 = TryToInt64(T1);
             if (!NumberUtilities::IsValidTryToInt64(T4_64)) // overflow
             {
                 T4_64 = ToInt32ES5OverflowHelper(T1);
@@ -308,7 +308,7 @@ namespace Js
                 return T4_32;
             }
 
-            int64 T4_64 = TryToInt64(T1);
+            long T4_64 = TryToInt64(T1);
             if (T4_64 == 0x8000000000000000) // overflow && ES5
             {
                 T4_64 = ToInt32ES5OverflowHelper(T1);
@@ -343,7 +343,7 @@ namespace Js
             return JavascriptNumber::IsNan(v) || JavascriptNumber::IsZero(v) || JavascriptNumber::IsPosInf(v) || JavascriptNumber::IsNegInf(v);
         }
 
-        inline int64 JavascriptMath::TryToInt64(double T1)
+        inline long JavascriptMath::TryToInt64(double T1)
         {
             return Js::NumberUtilities::TryToInt64(T1);
         }

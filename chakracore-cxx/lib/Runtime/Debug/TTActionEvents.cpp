@@ -25,7 +25,7 @@ namespace TTD
             return cfAction->CallbackDepth == 0;
         }
 
-        int64 AccessTimeInRootCallOrSnapshot(const EventLogEntry* evt, bool& isSnap, bool& isRoot, bool& hasRtrSnap)
+        long AccessTimeInRootCallOrSnapshot(const EventLogEntry* evt, bool& isSnap, bool& isRoot, bool& hasRtrSnap)
         {
             isSnap = false;
             isRoot = false;
@@ -52,7 +52,7 @@ namespace TTD
             }
         }
 
-        bool TryGetTimeFromRootCallOrSnapshot(const EventLogEntry* evt, int64& res)
+        bool TryGetTimeFromRootCallOrSnapshot(const EventLogEntry* evt, long& res)
         {
             bool isSnap = false;
             bool isRoot = false;
@@ -62,9 +62,9 @@ namespace TTD
             return (isSnap | isRoot);
         }
 
-        int64 GetTimeFromRootCallOrSnapshot(const EventLogEntry* evt)
+        long GetTimeFromRootCallOrSnapshot(const EventLogEntry* evt)
         {
-            int64 res = -1;
+            long res = -1;
             bool success = TryGetTimeFromRootCallOrSnapshot(evt, res);
 
             TTDAssert(success, "Not a root or snapshot!!!");
@@ -1053,7 +1053,7 @@ namespace TTD
         }
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-        int64 JsRTCallFunctionAction_GetLastNestedEventTime(const EventLogEntry* evt)
+        long JsRTCallFunctionAction_GetLastNestedEventTime(const EventLogEntry* evt)
         {
             const JsRTCallFunctionAction* cfAction = GetInlineEventDataAs<JsRTCallFunctionAction, EventKind::CallExistingFunctionActionTag>(evt);
 
@@ -1078,7 +1078,7 @@ namespace TTD
             cfAction->LastNestedEvent = TTD_EVENT_MAXTIME;
         }
 
-        void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, int64 lastNestedEvent)
+        void JsRTCallFunctionAction_ProcessDiagInfoPost(EventLogEntry* evt, long lastNestedEvent)
         {
             JsRTCallFunctionAction* cfAction = GetInlineEventDataAs<JsRTCallFunctionAction, EventKind::CallExistingFunctionActionTag>(evt);
 
@@ -1086,7 +1086,7 @@ namespace TTD
         }
 #endif
 
-        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, int64 callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, int64 topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
+        void JsRTCallFunctionAction_ProcessArgs(EventLogEntry* evt, int32 rootDepth, long callEventTime, Js::Var funcVar, uint32 argc, Js::Var* argv, long topLevelCallbackEventTime, UnlinkableSlabAllocator& alloc)
         {
             JsRTCallFunctionAction* cfAction = GetInlineEventDataAs<JsRTCallFunctionAction, EventKind::CallExistingFunctionActionTag>(evt);
 
