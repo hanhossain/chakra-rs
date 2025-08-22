@@ -73,27 +73,11 @@ namespace std {
 #endif
 #endif // __APPLE__ ?
 
-#ifdef __ANDROID__
-#define S_IREAD   0000400
-#define S_IWRITE  0000200
-#define S_IEXEC   0000100
-
-#ifndef CC_AND_TAG
-#define CC_AND_TAG "chakracore-log"
-#endif
-#include <android/log.h>
-#include <stdarg.h>
-#define PRINT_LOG(...) \
-    __android_log_print(ANDROID_LOG_INFO, CC_AND_TAG, __VA_ARGS__)
-#define PRINT_ERROR(...) \
-    __android_log_print(ANDROID_LOG_ERROR, CC_AND_TAG, __VA_ARGS__)
-#else
 typedef __builtin_va_list va_list;
 #define PRINT_LOG(...) \
     fprintf(stdout, __VA_ARGS__)
 #define PRINT_ERROR(...) \
     fprintf(stderr, __VA_ARGS__)
-#endif
 
 #ifdef  __cplusplus
 extern "C" {
@@ -2922,8 +2906,6 @@ BOOL PAL_VirtualUnwindOutOfProc(CONTEXT *context,
 #define PAL_CS_NATIVE_DATA_SIZE 56
 #elif defined(__LINUX__) && defined(__x86_64__)
 #define PAL_CS_NATIVE_DATA_SIZE 96
-#elif defined(__ANDROID__) && defined(_ARM_)
-#define PAL_CS_NATIVE_DATA_SIZE 12
 #elif defined(__LINUX__) && defined(_ARM_)
 #define PAL_CS_NATIVE_DATA_SIZE 80
 #elif defined(__LINUX__) && defined(_ARM64_)

@@ -38,7 +38,7 @@ Revision History:
 
 #include <pthread.h>
 #include <locale.h>
-#if !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(__APPLE__)
 #include <libintl.h>
 #endif // __APPLE__
 #include <errno.h>
@@ -958,7 +958,7 @@ PAL_GetResourceString(
          int cchWideChar
       )
 {
-#if !defined(__APPLE__) && !defined(__ANDROID__)
+#if !defined(__APPLE__)
     // NOTE: dgettext returns the key if it fails to locate the appropriate
     // resource. In our case, that will be the English string.
     LPCSTR resourceString = dgettext(lpDomain, lpResourceStr);

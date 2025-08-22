@@ -30,7 +30,7 @@ Revision History:
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
-#if HAVE_SYSCONF || defined(__ANDROID__)
+#if HAVE_SYSCONF
 // <unistd.h> already included
 #elif HAVE_SYSCTL
 #include <sys/sysctl.h>
@@ -87,7 +87,7 @@ SET_DEFAULT_DEBUG_CHANNEL(MISC);
 #define SYSCONF_PAGES _SC_AVPHYS_PAGES
 #elif HAVE_SYSCONF && HAVE__SC_PHYS_PAGES
 #define SYSCONF_PAGES _SC_PHYS_PAGES
-#elif !defined(__ANDROID__)
+#else
 #error Dont know how to get page-size on this architecture!
 #endif
 #endif // __APPLE__
@@ -279,11 +279,7 @@ GlobalMemoryStatusEx(
     // We do this only when we have the total physical memory available.
     if (lpBuffer->ullTotalPhys > 0)
     {
-#if defined(__ANDROID__)
-        lpBuffer->ullAvailPhys = sysconf(_SC_AVPHYS_PAGES) * sysconf( _SC_PAGE_SIZE );
-        int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
-#elif defined(__LINUX__)
+#if defined(__LINUX__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
         lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
@@ -355,7 +351,7 @@ PAL_GetLogicalProcessorCacheSizeFromOS()
 {
     size_t cacheSize = 0;
 
-#if HAVE_SYSCONF && defined(__LINUX__) && !defined(__ANDROID__)
+#if HAVE_SYSCONF && defined(__LINUX__)
     cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_DCACHE_SIZE));
     cacheSize = max(cacheSize, sysconf(_SC_LEVEL1_ICACHE_SIZE));
     cacheSize = max(cacheSize, sysconf(_SC_LEVEL2_CACHE_SIZE));

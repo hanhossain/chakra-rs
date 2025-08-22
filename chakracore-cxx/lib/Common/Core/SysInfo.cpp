@@ -107,7 +107,7 @@ AutoSystemInfo::Initialize()
     }
 
     this->supportsOnlyMultiThreadedCOM = false;
-#if defined(__ANDROID__) || defined(__IOS__)
+#if defined(__IOS__)
     this->isLowMemoryDevice = true;
     this->shouldQCMoreFrequently = true;
 #else

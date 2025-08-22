@@ -668,18 +668,6 @@ inline T* InterlockedCompareExchangePointerT(
 
 #define StackOverflowMessage "Process is terminated due to StackOverflowException.\n"
 
-#ifdef __ANDROID__
-#ifndef CC_AND_TAG
-#define CC_AND_TAG "chakracore-log"
-#endif
-#include <android/log.h>
-#include <stdarg.h>
-#define PRINT_LOG(...) \
-    __android_log_print(ANDROID_LOG_INFO, CC_AND_TAG, __VA_ARGS__)
-#define PRINT_ERROR(...) \
-    __android_log_print(ANDROID_LOG_ERROR, CC_AND_TAG, __VA_ARGS__)
-#endif
-
 // do not change the location of the definitions below.
 // these defs should be always at the end
 #ifndef max

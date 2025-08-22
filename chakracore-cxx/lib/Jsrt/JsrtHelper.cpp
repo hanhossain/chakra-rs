@@ -6,9 +6,7 @@
 
 #include "JsrtPch.h"
 
-#if !defined(__ANDROID__)
 #include <pthread.h>
-#endif
 
 #include "jsrtHelper.h"
 #include "Base/ThreadContextTlsEntry.h"

@@ -11,11 +11,6 @@
 #define RtlUlongByteSwap(_x)     OSSwapInt32((_x))
 #define RtlUlonglongByteSwap(_x) OSSwapInt64((_x))
 
-#elif defined(__ANDROID__)
-#define RtlUshortByteSwap(_x)    __builtin_bswap16((_x))
-#define RtlUlongByteSwap(_x)     __builtin_bswap32((_x))
-#define RtlUlonglongByteSwap(_x) __builtin_bswap64((_x))
-
 #elif defined(__linux__)
 #include <byteswap.h>
 
