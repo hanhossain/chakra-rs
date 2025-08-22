@@ -42,13 +42,13 @@ extern "C" {
     || defined(_M_IA64) || defined(_M_AMD64) || defined(__ARM_ARCH)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) ((unsigned __int64)((uint32_t)(a)) * (unsigned __int64)((uint32_t)(b)))
+#define UInt32x32To64(a, b) ((unsigned long)((uint32_t)(a)) * (unsigned long)((uint32_t)(b)))
 #endif
 
 #elif defined(_M_IX86)
 
 #ifndef UInt32x32To64
-#define UInt32x32To64(a, b) (unsigned __int64)((unsigned __int64)(uint32_t)(a) * (uint32_t)(b))
+#define UInt32x32To64(a, b) (unsigned long)((unsigned long)(uint32_t)(a) * (uint32_t)(b))
 #endif
 
 #else

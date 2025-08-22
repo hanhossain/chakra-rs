@@ -79,7 +79,7 @@ void Entropy::AddThreadCycleTime()
 }
 
 
-unsigned __int64 Entropy::GetRand() const
+unsigned long Entropy::GetRand() const
 {
-    return (((unsigned __int64)previousValue) << 32) | u.value;
+    return (((unsigned long)previousValue) << 32) | u.value;
 }

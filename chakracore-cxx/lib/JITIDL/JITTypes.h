@@ -23,11 +23,11 @@ import "wtypes.idl";
 #define BV_SHIFT 5
 #elif defined(TARGET_64)
 #ifdef __midl
-#define CHAKRA_WB_PTR __int64
+#define CHAKRA_WB_PTR long
 #else
 #define CHAKRA_WB_PTR void*
 #endif
-#define CHAKRA_PTR __int64
+#define CHAKRA_PTR long
 #define BV_SHIFT 6
 #endif
 
@@ -202,7 +202,7 @@ typedef struct BVSparseNodeIDL
     struct BVSparseNodeIDL * next;
     unsigned int startIndex;
     X64_PAD4(0)
-    __int64 data;
+    long data;
 } BVSparseNodeIDL;
 
 typedef struct CallbackInfoIDL
@@ -337,7 +337,7 @@ typedef struct ProfileDataIDL
 
     CHAKRA_PTR arrayCallSiteDataAddr;
     CHAKRA_PTR fldDataAddr;
-    __int64 flags;
+    long flags;
 } ProfileDataIDL;
 
 typedef struct ThreadContextDataIDL
@@ -756,7 +756,7 @@ typedef struct CodeGenWorkItemIDL
     CHAKRA_PTR functionBodyAddr;
     CHAKRA_PTR globalThisAddr;
     CHAKRA_PTR nativeDataAddr;
-    __int64 startTime;
+    long startTime;
 } CodeGenWorkItemIDL;
 
 typedef struct NativeDataFixupEntry
@@ -898,7 +898,7 @@ typedef struct JITOutputIDL
 #if !FLOATVAR
     XProcNumberPageSegment* numberPageSegments;
 #endif
-    __int64 startTime;
+    long startTime;
 } JITOutputIDL;
 
 typedef struct InterpreterThunkInputIDL

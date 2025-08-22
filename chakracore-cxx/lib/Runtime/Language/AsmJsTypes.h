@@ -543,7 +543,7 @@ namespace Js
 
         inline static hash_t GetHashCode(double d)
         {
-            __int64 i64 = *(__int64*)&d;
+            long i64 = *(long*)&d;
             return (uint)((i64 >> 32) ^ (uint)i64);
         }
     };

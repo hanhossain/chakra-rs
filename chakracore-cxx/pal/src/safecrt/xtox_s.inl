@@ -289,7 +289,7 @@ TCHAR * _ultox (
 #ifdef _SECURE_ITOA
 errno_t x64tox_s
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
-        unsigned __int64 val,
+        unsigned long val,
         TCHAR *buf,
         size_t sizeInTChars,
         unsigned radix,
@@ -298,7 +298,7 @@ errno_t x64tox_s
 #else  /* _SECURE_ITOA */
 void x64tox
         (/* stdcall is faster and smaller... Might as well use it for the helper. */
-        unsigned __int64 val,
+        unsigned long val,
         TCHAR *buf,
         unsigned radix,
         int is_neg
@@ -328,7 +328,7 @@ void x64tox
 #ifdef _SECURE_ITOA
             length++;
 #endif  /* _SECURE_ITOA */
-            val = (unsigned __int64)(-(__int64)val);
+            val = (unsigned long)(-(long)val);
         }
 
         firstdig = p;           /* save pointer to first digit */
@@ -386,7 +386,7 @@ errno_t _i64tox_s (
         int radix
         )
 {
-        return x64tox_s((unsigned __int64)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
+        return x64tox_s((unsigned long)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
 }
 
 errno_t _ui64tox_s (
@@ -427,17 +427,17 @@ errno_t _ui64tox_s (
    and return pointer to buffer. */
 
 TCHAR * _i64tox (
-        __int64 val,
+        long val,
         TCHAR *buf,
         int radix
         )
 {
-        x64tox((unsigned __int64)val, buf, radix, (radix == 10 && val < 0));
+        x64tox((unsigned long)val, buf, radix, (radix == 10 && val < 0));
         return buf;
 }
 
 TCHAR * _ui64tox (
-        unsigned __int64 val,
+        unsigned long val,
         TCHAR *buf,
         int radix
         )

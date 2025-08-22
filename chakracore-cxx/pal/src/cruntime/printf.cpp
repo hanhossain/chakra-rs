@@ -472,7 +472,7 @@ static BOOL Internal_ScanfExtractFormatA(LPCSTR *Fmt, LPSTR Out, int iOutSize, L
     {
         *Prefix = SCANF_PREFIX_LONGLONG;
     }
-    /* grab prefix of 'I64' for __int64 */
+    /* grab prefix of 'I64' for long */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
         /* convert to 'q'/'ll' so Unix sscanf can handle it */
@@ -785,7 +785,7 @@ static BOOL Internal_ScanfExtractFormatW(LPCWSTR *Fmt, LPSTR Out, int iOutSize, 
     {
         *Prefix = SCANF_PREFIX_LONGLONG;
     }
-    /* grab prefix of 'I64' for __int64 */
+    /* grab prefix of 'I64' for long */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
         /* convert to 'q'/'ll' so that Unix sscanf can handle it */

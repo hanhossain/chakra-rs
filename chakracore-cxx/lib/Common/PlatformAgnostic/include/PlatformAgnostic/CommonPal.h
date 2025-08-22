@@ -333,7 +333,7 @@ inline T InterlockedDecrement(
     return __sync_sub_and_fetch(Addend, T(1));
 }
 
-inline __int64 _abs64(__int64 n)
+inline long _abs64(long n)
 {
     return n < 0 ? -n : n;
 }

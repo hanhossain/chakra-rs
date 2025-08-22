@@ -1014,12 +1014,12 @@ errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 
 /* _i64tow_s */
 _SAFECRT__EXTERN_C
-errno_t _i64tow_s(__int64 _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t _i64tow_s(__int64 _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
+errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _i64tow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1028,7 +1028,7 @@ errno_t _i64tow_s(__int64 _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t _i64tow_s(__int64 _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);

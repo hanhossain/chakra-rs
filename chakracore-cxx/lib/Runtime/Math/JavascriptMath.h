@@ -128,7 +128,7 @@ namespace Js
             static int32 Or_Helper(Var aLeft, Var aRight,ScriptContext* scriptContext);
 
             static BOOL IsNanInfZero(double v);
-            static __int64 ToInt32ES5OverflowHelper(double d);
+            static long ToInt32ES5OverflowHelper(double d);
 
         };
 #ifdef SSE2MATH

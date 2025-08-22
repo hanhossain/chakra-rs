@@ -21,7 +21,7 @@
 
 #include "mbusafecrt_internal.h"
 
-//#define __int64 long long
+//#define long long long
 
 #define _SECURE_ITOA
 

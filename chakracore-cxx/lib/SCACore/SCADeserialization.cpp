@@ -69,7 +69,7 @@ namespace Js
 
         case SCA_Int64Value:
             {
-                __int64 n;
+                long n;
                 m_reader->Read(&n);
                 *dst = JavascriptInt64Number::ToVar(n, scriptContext);
             }
@@ -77,7 +77,7 @@ namespace Js
 
         case SCA_Uint64Value:
             {
-                unsigned __int64 n;
+                unsigned long n;
                 m_reader->Read(&n);
                 *dst = JavascriptUInt64Number::ToVar(n, scriptContext);
             }

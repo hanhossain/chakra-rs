@@ -392,7 +392,7 @@ ServerScriptContext::SetIsPRNGSeeded(bool value)
 }
 
 void
-ServerScriptContext::AddModuleRecordInfo(unsigned int moduleId, __int64 localExportSlotsAddr)
+ServerScriptContext::AddModuleRecordInfo(unsigned int moduleId, long localExportSlotsAddr)
 {
     AutoCriticalSection cs(&m_cs);
     Js::ServerSourceTextModuleRecord* record = HeapNewStructZ(Js::ServerSourceTextModuleRecord);

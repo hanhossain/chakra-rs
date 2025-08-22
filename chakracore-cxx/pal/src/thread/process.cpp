@@ -1342,9 +1342,9 @@ GetProcessTimes(
 {
     BOOL retval = FALSE;
     struct rusage resUsage;
-    __int64 calcTime;
-    const __int64 SECS_TO_NS = 1000000000; /* 10^9 */
-    const __int64 USECS_TO_NS = 1000;      /* 10^3 */
+    long calcTime;
+    const long SECS_TO_NS = 1000000000; /* 10^9 */
+    const long USECS_TO_NS = 1000;      /* 10^3 */
 
 
     PERF_ENTRY(GetProcessTimes);
@@ -1380,8 +1380,8 @@ GetProcessTimes(
     if (lpUserTime)
     {
         /* Get the time of user mode execution, in 100s of nanoseconds */
-        calcTime = (__int64)resUsage.ru_utime.tv_sec * SECS_TO_NS;
-        calcTime += (__int64)resUsage.ru_utime.tv_usec * USECS_TO_NS;
+        calcTime = (long)resUsage.ru_utime.tv_sec * SECS_TO_NS;
+        calcTime += (long)resUsage.ru_utime.tv_usec * USECS_TO_NS;
         calcTime /= 100; /* Produce the time in 100s of ns */
         /* Assign the time into lpUserTime */
         lpUserTime->dwLowDateTime = (uint32_t)calcTime;
@@ -1391,8 +1391,8 @@ GetProcessTimes(
     if (lpKernelTime)
     {
         /* Get the time of kernel mode execution, in 100s of nanoseconds */
-        calcTime = (__int64)resUsage.ru_stime.tv_sec * SECS_TO_NS;
-        calcTime += (__int64)resUsage.ru_stime.tv_usec * USECS_TO_NS;
+        calcTime = (long)resUsage.ru_stime.tv_sec * SECS_TO_NS;
+        calcTime += (long)resUsage.ru_stime.tv_usec * USECS_TO_NS;
         calcTime /= 100; /* Produce the time in 100s of ns */
         /* Assign the time into lpUserTime */
         lpKernelTime->dwLowDateTime = (uint32_t)calcTime;

@@ -623,9 +623,9 @@ public:
 
 
 #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        __int64 bailOutRecordBytes;
-        __int64 bailOutOffsetBytes;
-        __int64 codeSize;
+        long bailOutRecordBytes;
+        long bailOutOffsetBytes;
+        long codeSize;
 #endif
 
 #ifdef  PROFILE_OBJECT_LITERALS

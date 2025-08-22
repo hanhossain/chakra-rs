@@ -76,7 +76,7 @@ public:
     virtual Field(Js::Var)* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
 
     void SetIsPRNGSeeded(bool value);
-    void AddModuleRecordInfo(unsigned int moduleId, __int64 localExportSlotsAddr);
+    void AddModuleRecordInfo(unsigned int moduleId, long localExportSlotsAddr);
     void UpdateGlobalObjectThisAddr(intptr_t globalThis);
     OOPEmitBufferManagerWithLock * GetEmitBufferManager(bool asmJsManager);
     void DecommitEmitBufferManager(bool asmJsManager);

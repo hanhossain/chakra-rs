@@ -2685,8 +2685,8 @@ InternalSetFilePointerForUnixFd(
 {
     PAL_ERROR palError = NO_ERROR;
     int     seek_whence = 0;
-    __int64 seek_offset = 0LL;
-    __int64 seek_res = 0LL;
+    long seek_offset = 0LL;
+    long seek_res = 0LL;
     off_t old_offset;
 
     switch( dwMoveMethod )
@@ -2715,7 +2715,7 @@ InternalSetFilePointerForUnixFd(
     if ( lpDistanceToMoveHigh )
     {
         /* set the high 32 bits of the offset */
-        seek_offset = ((__int64)*lpDistanceToMoveHigh << 32);
+        seek_offset = ((long)*lpDistanceToMoveHigh << 32);
         
         /* set the low 32 bits */
         /* cast to unsigned long to avoid sign extension */
@@ -2772,7 +2772,7 @@ InternalSetFilePointerForUnixFd(
         }
     }
 
-    seek_res = (__int64)lseek( iUnixFd,
+    seek_res = (long)lseek( iUnixFd,
                                seek_offset,
                                seek_whence );
     if ( seek_res < 0 )

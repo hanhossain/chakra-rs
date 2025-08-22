@@ -969,7 +969,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsOOPJITEnabled())
     {
-        workItem->GetJITData()->nativeDataAddr = (__int64)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
+        workItem->GetJITData()->nativeDataAddr = (long)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
     }
 #endif
 
