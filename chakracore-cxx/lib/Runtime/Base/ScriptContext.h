@@ -453,7 +453,7 @@ namespace Js
 
 #ifdef ENABLE_JS_ETW
         void EmitStackTraceEvent(UINT64 operationID, unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
-        static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
+        static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const char16_t* name);
 #endif
 
         void SetPrivilegeLevel(ScriptContextPrivilegeLevel level) { this->scriptContextPrivilegeLevel = level; }
@@ -777,12 +777,12 @@ private:
         DateTime::Utility dateTimeUtility;
 
 public:
-        inline const WCHAR *GetStandardName(size_t *nameLength, DateTime::YMD *ymd = NULL)
+        inline const char16_t *GetStandardName(size_t *nameLength, DateTime::YMD *ymd = NULL)
         {
             return dateTimeUtility.GetStandardName(nameLength, ymd);
         }
 
-        inline const WCHAR *GetDaylightName(size_t *nameLength, DateTime::YMD *ymd = NULL)
+        inline const char16_t *GetDaylightName(size_t *nameLength, DateTime::YMD *ymd = NULL)
         {
             return dateTimeUtility.GetDaylightName(nameLength, ymd);
         }
@@ -1188,13 +1188,13 @@ private:
         void FindPropertyRecord(JavascriptString* pstName, PropertyRecord const** propertyRecord);
         PropertyRecord const * GetPropertyName(PropertyId propertyId);
         PropertyRecord const * GetPropertyNameLocked(PropertyId propertyId);
-        void GetOrAddPropertyRecord(JsUtil::CharacterBuffer<WCHAR> const& propName, PropertyRecord const** propertyRecord);
+        void GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> const& propName, PropertyRecord const** propertyRecord);
         template <size_t N> void GetOrAddPropertyRecord(const char16_t(&propertyName)[N], PropertyRecord const** propertyRecord)
         {
             GetOrAddPropertyRecord(propertyName, N - 1, propertyRecord);
         }
         void GetOrAddPropertyRecord(_In_ Js::JavascriptString * propertyString, _Out_ PropertyRecord const** propertyRecord);
-        PropertyId GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<WCHAR> const& propName);
+        PropertyId GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<char16_t> const& propName);
         template <size_t N> PropertyId GetOrAddPropertyIdTracked(const char16_t(&propertyName)[N])
         {
             return GetOrAddPropertyIdTracked(propertyName, N - 1);
@@ -1648,7 +1648,7 @@ private:
         static const char16_t* CopyString(const char16_t* str, size_t charCount, ArenaAllocator* alloc);
 
 #ifdef ENABLE_JS_ETW
-        static charcount_t AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const WCHAR* sourceString, charcount_t sourceStringLen, WCHAR escapeChar, WCHAR charToEscape);
+        static charcount_t AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const char16_t* sourceString, charcount_t sourceStringLen, char16_t escapeChar, char16_t charToEscape);
 #endif
 
     public:
@@ -1686,8 +1686,8 @@ private:
         HRESULT OnFunctionCompiled(
             PROFILER_TOKEN functionId,
             PROFILER_TOKEN scriptId,
-            const WCHAR *pwszFunctionName,
-            const WCHAR *pwszFunctionNameHint,
+            const char16_t *pwszFunctionName,
+            const char16_t *pwszFunctionNameHint,
             IUnknown *pIDebugDocumentContext);
         HRESULT OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
         HRESULT OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
@@ -1696,8 +1696,8 @@ private:
         static HRESULT FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext);
 
         bool SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
-        HRESULT OnDispatchFunctionEnter(const WCHAR *pwszFunctionName);
-        HRESULT OnDispatchFunctionExit(const WCHAR *pwszFunctionName);
+        HRESULT OnDispatchFunctionEnter(const char16_t *pwszFunctionName);
+        HRESULT OnDispatchFunctionExit(const char16_t *pwszFunctionName);
 
 #endif // ENABLE_SCRIPT_PROFILING
 

@@ -51,7 +51,7 @@ namespace PlatformAgnostic
         template<bool toUpper, bool useInvariant>
         charcount_t ChangeStringLinguisticCase(const char16_t* sourceString, charcount_t sourceLength, char16_t* destString, charcount_t destLength, ApiError* pErrorOut)
         {
-            typedef WCHAR(*CaseConversionFunc)(WCHAR);
+            typedef char16_t(*CaseConversionFunc)(char16_t);
             *pErrorOut = ApiError::NoError;
             if (destString == nullptr)
             {

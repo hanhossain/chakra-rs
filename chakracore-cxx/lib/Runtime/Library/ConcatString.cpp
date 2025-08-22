@@ -50,7 +50,7 @@ namespace Js
 
         Recycler * recycler = library->GetRecycler();
         ScriptContext * scriptContext = library->GetScriptContext();
-        char16_t* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
+        char16_t* destString = RecyclerNewArrayLeaf(recycler, char16_t, charCount + 1);
 
         if (destString == nullptr)
         {
@@ -105,7 +105,7 @@ namespace Js
         }
 
         Recycler * recycler = library->GetRecycler();
-        char16_t* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
+        char16_t* destString = RecyclerNewArrayLeaf(recycler, char16_t, charCount + 1);
         if (destString == nullptr)
         {
             Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);

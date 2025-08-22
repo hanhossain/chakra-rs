@@ -123,8 +123,8 @@ namespace utf8
                     && InRange(c2, 0x80, 0xBF)
                 )
             {
-                ch |= WCHAR(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
-                ch |= WCHAR(c2 & 0x3f);
+                ch |= char16_t(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
+                ch |= char16_t(c2 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & doAllowInvalidWCHARs) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -189,9 +189,9 @@ namespace utf8
                     )
                 )
             {
-                ch  = WCHAR(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
-                ch |= WCHAR(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
-                ch |= WCHAR(c3 & 0x3f);
+                ch  = char16_t(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
+                ch |= char16_t(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
+                ch |= char16_t(c3 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & (doAllowThreeByteSurrogates | doAllowInvalidWCHARs)) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -266,11 +266,11 @@ LFourByte:
             if ((options & doSecondSurrogatePair) == 0)
             {
                 // Decode high 10 bits of utf-8 20 bit char
-                ch  = WCHAR(c1 & 0x07) << 2;
-                ch |= WCHAR(c2 & 0x30) >> 4;
+                ch  = char16_t(c1 & 0x07) << 2;
+                ch |= char16_t(c2 & 0x30) >> 4;
                 ch  = (ch - 1) << 6;             // ch == 0000 00ww ww00 0000
-                ch |= WCHAR(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
-                ch |= WCHAR(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
+                ch |= char16_t(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
+                ch |= char16_t(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
                 // Encode first word of utf-16 surrogate pair
                 ch += 0xD800;
                 // Remember next call must return second word
@@ -285,8 +285,8 @@ LFourByte:
             else
             {
                 // Decode low 10 bits of utf-8 20 bit char
-                ch = WCHAR(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
-                ch |= WCHAR(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
+                ch = char16_t(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
+                ch |= char16_t(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
                 // Encode second word of utf-16 surrogate pair
                 ch += 0xDC00;
                 // We're done with this char

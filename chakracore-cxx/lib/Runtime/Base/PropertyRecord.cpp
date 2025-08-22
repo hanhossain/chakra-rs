@@ -21,18 +21,18 @@ namespace Js
     {
     }
 
-    PropertyRecord::PropertyRecord(const WCHAR* buffer, const int length, uint32_t bytelength, bool isSymbol)
+    PropertyRecord::PropertyRecord(const char16_t* buffer, const int length, uint32_t bytelength, bool isSymbol)
         : pid(Js::Constants::NoProperty), isSymbol(isSymbol), byteCount(bytelength)
     {
         Assert(length >= 0 && buffer != nullptr);
 
-        WCHAR* target = (WCHAR*)((PropertyRecord*)this + 1);
+        char16_t* target = (char16_t*)((PropertyRecord*)this + 1);
         isNumeric = (isSymbol || length > 10 || length <= 0) ? false : true;
         hash = CC_HASH_OFFSET_VALUE;
 
         for (int i = 0; i < length; i++)
         {
-            const WCHAR byte = buffer[i];
+            const char16_t byte = buffer[i];
             if (isNumeric)
             {
                 if (byte < _u('0') || byte > _u('9'))
@@ -42,7 +42,7 @@ namespace Js
             CC_HASH_LOGIC(hash, byte);
             target[i] = byte;
         }
-        target[length] = WCHAR(0);
+        target[length] = char16_t(0);
 
         if (isNumeric)
         {
@@ -176,7 +176,7 @@ namespace Js
 
 namespace JsUtil
 {
-    bool NoCaseComparer<Js::CaseInvariantPropertyListWithHashCode*>::Equals(_In_ Js::CaseInvariantPropertyListWithHashCode* list1, JsUtil::CharacterBuffer<WCHAR> const& str)
+    bool NoCaseComparer<Js::CaseInvariantPropertyListWithHashCode*>::Equals(_In_ Js::CaseInvariantPropertyListWithHashCode* list1, JsUtil::CharacterBuffer<char16_t> const& str)
     {
         Assert(list1 != nullptr);
 
@@ -190,9 +190,9 @@ namespace JsUtil
             // Since compaction returned this pointer, their strong refs should not be null
             Assert(prop);
 
-            JsUtil::CharacterBuffer<WCHAR> string(prop->GetBuffer(), prop->GetLength());
+            JsUtil::CharacterBuffer<char16_t> string(prop->GetBuffer(), prop->GetLength());
 
-            return NoCaseComparer<JsUtil::CharacterBuffer<WCHAR> >::Equals(string, str);
+            return NoCaseComparer<JsUtil::CharacterBuffer<char16_t> >::Equals(string, str);
         }
 
         // If either of the property strings contains no entries, the two lists are not equivalent
@@ -226,7 +226,7 @@ namespace JsUtil
             // Since compaction returned this pointer, their strong refs should not be null
             Assert(prop);
 
-            JsUtil::CharacterBuffer<WCHAR> string(prop->GetBuffer(), prop->GetLength());
+            JsUtil::CharacterBuffer<char16_t> string(prop->GetBuffer(), prop->GetLength());
 
             return NoCaseComparer<Js::CaseInvariantPropertyListWithHashCode*>::Equals(list1, string);
         }
@@ -248,9 +248,9 @@ namespace JsUtil
 
                 Assert(prop);
 
-                JsUtil::CharacterBuffer<WCHAR> string(prop->GetBuffer(), prop->GetLength());
+                JsUtil::CharacterBuffer<char16_t> string(prop->GetBuffer(), prop->GetLength());
 
-                list->caseInvariantHashCode = NoCaseComparer<JsUtil::CharacterBuffer<WCHAR> >::GetHashCode(string);
+                list->caseInvariantHashCode = NoCaseComparer<JsUtil::CharacterBuffer<char16_t> >::GetHashCode(string);
             }
         }
 

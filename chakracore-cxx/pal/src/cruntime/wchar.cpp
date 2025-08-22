@@ -94,7 +94,7 @@ LPWSTR Internal_i64tow(int64_t value, LPWSTR string, int radix, BOOL isI64)
     LPWSTR stringPtr = string;
     int start = 0;
     int end;
-    WCHAR tempCh;
+    char16_t tempCh;
 
     if (radix < 2 || radix > 36)
     {
@@ -1591,7 +1591,7 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     return start;
 }
 
-static BOOL MISC_CRT_WCSTOD_IsValidCharacter( WCHAR c )
+static BOOL MISC_CRT_WCSTOD_IsValidCharacter( char16_t c )
 {
     if ( c == '+' || c == '-' || c == '.' || ( c >= '0' && c <= '9' ) ||
          c == 'e' || c == 'E' || c == 'd' || c == 'D' )
@@ -1714,7 +1714,7 @@ char16_t *
 _ui64tow( unsigned __int64 value , char16_t * string , int radix )
 {
     uint32_t ReversedIndex = 0;
-    WCHAR ReversedString[ 65 ];
+    char16_t ReversedString[ 65 ];
     LPWSTR lpString = string;
     uint32_t Index = 0;
 

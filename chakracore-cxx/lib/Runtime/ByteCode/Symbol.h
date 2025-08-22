@@ -12,7 +12,7 @@ enum SymbolType : byte
     STUnknown
 };
 
-typedef JsUtil::CharacterBuffer<WCHAR> SymbolName;
+typedef JsUtil::CharacterBuffer<char16_t> SymbolName;
 class Symbol
 {
 private:
@@ -472,7 +472,7 @@ public:
     const char16_t *GetSymbolTypeName();
 #endif
 
-    const JsUtil::CharacterBuffer<WCHAR>& GetName() const
+    const JsUtil::CharacterBuffer<char16_t>& GetName() const
     {
         return this->name;
     }

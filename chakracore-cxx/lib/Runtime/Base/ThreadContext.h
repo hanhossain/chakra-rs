@@ -524,7 +524,7 @@ private:
         Field(uint) refCount;              // For every script context using this cache, there is a ref count added.
     };
 
-    typedef JsUtil::BaseDictionary<const WCHAR*, SourceDynamicProfileManagerCache*, Recycler, PowerOf2SizePolicy> SourceProfileManagersByUrlMap;
+    typedef JsUtil::BaseDictionary<const char16_t*, SourceDynamicProfileManagerCache*, Recycler, PowerOf2SizePolicy> SourceProfileManagersByUrlMap;
 
     struct RecyclableData
     {
@@ -1095,8 +1095,8 @@ public:
     const Js::PropertyRecord * FindPropertyRecord(const char16_t * propertyName, int propertyNameLength);
 
     JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength);
-    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::CharacterBuffer<WCHAR> const& propertyName);
-    bool FindExistingPropertyRecord(_In_ JsUtil::CharacterBuffer<WCHAR> const& propertyName, Js::CaseInvariantPropertyListWithHashCode** propertyRecord);
+    JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::CharacterBuffer<char16_t> const& propertyName);
+    bool FindExistingPropertyRecord(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, Js::CaseInvariantPropertyListWithHashCode** propertyRecord);
     void CleanNoCasePropertyMap();
     void ForceCleanPropertyMap();
 
@@ -1111,8 +1111,8 @@ public:
     void AddBuiltInPropertyRecord(const Js::PropertyRecord *propertyRecord);
 
     void GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const** propertyRecord);
-    void GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<WCHAR> const& propertyName, _Out_ Js::PropertyRecord const** propertyRecord);
-    Js::PropertyRecord const * UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR> const& propertyName, bool bind, bool isSymbol = false);
+    void GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, _Out_ Js::PropertyRecord const** propertyRecord);
+    Js::PropertyRecord const * UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& propertyName, bool bind, bool isSymbol = false);
     Js::PropertyRecord const * UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind = false, bool isSymbol = false);
 
 #ifdef ENABLE_JS_ETW
@@ -1433,8 +1433,8 @@ public:
 
 #if ENABLE_PROFILE_INFO
     void EnsureSourceProfileManagersByUrlMap();
-    Js::SourceDynamicProfileManager* GetSourceDynamicProfileManager(_In_z_ const WCHAR* url, _In_ uint hash, _Inout_ bool* addref);
-    uint ReleaseSourceDynamicProfileManagers(const WCHAR* url);
+    Js::SourceDynamicProfileManager* GetSourceDynamicProfileManager(_In_z_ const char16_t* url, _In_ uint hash, _Inout_ bool* addref);
+    uint ReleaseSourceDynamicProfileManagers(const char16_t* url);
 #endif
 
     void EnsureSymbolRegistrationMap();

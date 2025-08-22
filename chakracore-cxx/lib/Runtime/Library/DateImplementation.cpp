@@ -420,8 +420,8 @@ namespace Js {
         int cch;
         int count = 0;
         const int kcchMax = 256;
-        WCHAR wszBuf[kcchMax];
-        WCHAR *pwszBuf, *pToBeFreed = NULL, *p;
+        char16_t wszBuf[kcchMax];
+        char16_t *pwszBuf, *pToBeFreed = NULL, *p;
         JavascriptString *bs = nullptr;
 
          // the caller of this function should ensure that the range of pymd->year is such that the following conversion works.
@@ -476,7 +476,7 @@ namespace Js {
 
         if( cch > kcchMax )
         {
-            pwszBuf = pToBeFreed = (WCHAR *)malloc( cch * sizeof(WCHAR) );
+            pwszBuf = pToBeFreed = (char16_t *)malloc( cch * sizeof(char16_t) );
             if(!pwszBuf)
             {
                 Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);

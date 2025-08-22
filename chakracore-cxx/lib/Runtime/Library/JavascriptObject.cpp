@@ -482,8 +482,8 @@ JavascriptString* JavascriptObject::ToStringTagHelper(Var thisArg, ScriptContext
     // 17. Return the String that is the result of concatenating "[object ", tag, and "]".
     auto buildToString = [&scriptContext](Var tag) {
         JavascriptString *tagStr = VarTo<JavascriptString>(tag);
-        const WCHAR objectStartString[9] = _u("[object ");
-        const WCHAR objectEndString[1] = { _u(']') };
+        const char16_t objectStartString[9] = _u("[object ");
+        const char16_t objectEndString[1] = { _u(']') };
         CompoundString *const cs = CompoundString::NewWithCharCapacity(_countof(objectStartString)
             + _countof(objectEndString) + tagStr->GetLength(), scriptContext->GetLibrary());
 

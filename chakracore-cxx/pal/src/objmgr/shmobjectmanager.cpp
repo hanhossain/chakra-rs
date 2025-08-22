@@ -606,7 +606,7 @@ CSharedMemoryObjectManager::LocateObject(
         {
             if (psmod->dwNameLength == psObjectToLocate->GetStringLength())
             {
-                pwsz = SHMPTR_TO_TYPED_PTR(WCHAR, psmod->shmObjName);
+                pwsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
                 if (NULL != pwsz)
                 {
                     if (0 == PAL_wcscmp(pwsz, psObjectToLocate->GetString()))

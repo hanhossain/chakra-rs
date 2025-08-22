@@ -89,7 +89,7 @@ private:
     Var ReconstructVar(_In_ JSONProperty* content) const;
 
 
-    static const WCHAR escapeMap[128];
+    static const char16_t escapeMap[128];
 public:
     static const uint8_t escapeMapCount[128];
 

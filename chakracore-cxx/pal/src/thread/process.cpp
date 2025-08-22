@@ -221,8 +221,8 @@ static_assert(CLR_SEM_MAX_NAMELEN <= MAX_PATH, "CLR_SEM_MAX_NAMELEN > MAX_PATH")
 //
 pthread_key_t CorUnix::thObjKey;
 
-static WCHAR W16_WHITESPACE[]= {0x0020, 0x0009, 0x000D, 0};
-static WCHAR W16_WHITESPACE_DQUOTE[]= {0x0020, 0x0009, 0x000D, '"', 0};
+static char16_t W16_WHITESPACE[]= {0x0020, 0x0009, 0x000D, 0};
+static char16_t W16_WHITESPACE_DQUOTE[]= {0x0020, 0x0009, 0x000D, '"', 0};
 
 enum FILETYPE
 {
@@ -1676,7 +1676,7 @@ CorUnix::InitializeProcessCommandLine(
         size_t n = PAL_wcslen(lpwstrFullPath) + 1;
 
         size_t iLen = n;
-        initial_dir = reinterpret_cast<LPWSTR>(InternalMalloc(iLen*sizeof(WCHAR)));
+        initial_dir = reinterpret_cast<LPWSTR>(InternalMalloc(iLen*sizeof(char16_t)));
         if (NULL == initial_dir)
         {
             ERROR("malloc() failed! (initial_dir) \n");
@@ -2357,7 +2357,7 @@ getFileName(
        char *lpPathFileName)
 {
     LPWSTR lpEnd;
-    WCHAR wcEnd;
+    char16_t wcEnd;
     char * lpFileName;
     PathCharString lpFileNamePS;
     char *lpTemp;
@@ -2442,7 +2442,7 @@ getFileName(
 
         /* Convert to ASCII */
         int size = 0;
-        int length = (PAL_wcslen(lpCommandLine)+1) * sizeof(WCHAR);
+        int length = (PAL_wcslen(lpCommandLine)+1) * sizeof(char16_t);
         lpFileName = lpFileNamePS.OpenStringBuffer(length);
         if (NULL == lpFileName)
         {

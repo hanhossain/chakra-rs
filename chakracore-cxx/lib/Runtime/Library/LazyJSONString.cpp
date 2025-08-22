@@ -33,7 +33,7 @@ namespace Js
     createEscapeMap(false);
     createEscapeMap(true);
     */
-    const WCHAR LazyJSONString::escapeMap[] = {
+    const char16_t LazyJSONString::escapeMap[] = {
         _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('b'), _u('t'), _u('n'), _u('u'), _u('f'),
         _u('r'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'),
         _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('\0'), _u('\0'), _u('"'), _u('\0'), _u('\0'), _u('\0'),

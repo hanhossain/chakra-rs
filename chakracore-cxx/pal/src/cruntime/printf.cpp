@@ -1055,7 +1055,7 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
             {
                 int len = 0;
                 int res;
-                WCHAR *charPtr = 0;
+                char16_t *charPtr = 0;
 
                 /* a single character */
                 if (Type == SCANF_TYPE_CHAR && Width == -1)
@@ -1075,7 +1075,7 @@ int PAL_vsscanf(LPCSTR Buffer, LPCSTR Format, va_list ap)
 
                 if (Store)
                 {
-                    charPtr = va_arg(ap, WCHAR *);
+                    charPtr = va_arg(ap, char16_t *);
 
                     res = MultiByteToWideChar(CP_ACP, 0, Buff, len,
                                             charPtr, len);
@@ -1229,7 +1229,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 (Type == SCANF_TYPE_STRING || Type == SCANF_TYPE_CHAR))
             {
                 int len = 0;
-                WCHAR *charPtr = 0;
+                char16_t *charPtr = 0;
 
                 /* a single character */
                 if (Type == SCANF_TYPE_CHAR && Width == -1)
@@ -1250,7 +1250,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 if (Store)
                 {
                     int i;
-                    charPtr = va_arg(ap, WCHAR *);
+                    charPtr = va_arg(ap, char16_t *);
 
                     for (i = 0; i < len; i++)
                     {
@@ -1314,7 +1314,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                 {
                     if (Type == SCANF_TYPE_BRACKETS)
                     {
-                        WCHAR *strPtr;
+                        char16_t *strPtr;
                         int i;
 
                         /* add a '*' to %[] --> %*[]  */
@@ -1343,7 +1343,7 @@ int PAL_wvsscanf(LPCWSTR Buffer, LPCWSTR Format, va_list ap)
                         }
                         else
                         {
-                            strPtr = va_arg(ap, WCHAR *);
+                            strPtr = va_arg(ap, char16_t *);
                             for (i = 0; i < n; i++)
                             {
                                 strPtr[i] = Buff[i];

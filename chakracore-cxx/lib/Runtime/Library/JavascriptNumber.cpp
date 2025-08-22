@@ -1074,9 +1074,9 @@ namespace Js
 
     JavascriptString* JavascriptNumber::ToLocaleString(double value, ScriptContext* scriptContext)
     {
-        WCHAR   szRes[bufSize];
-        WCHAR * pszRes = NULL;
-        WCHAR * pszToBeFreed = NULL;
+        char16_t   szRes[bufSize];
+        char16_t * pszRes = NULL;
+        char16_t * pszToBeFreed = NULL;
         size_t  count;
 
         if (!Js::NumberUtilities::IsFinite(value))

@@ -360,7 +360,7 @@ LPWSTR
 GetEnvironmentStringsW(
                void)
 {
-    WCHAR *wenviron = NULL, *tempEnviron;
+    char16_t *wenviron = NULL, *tempEnviron;
     int i, len, envNum;
 
     PERF_ENTRY(GetEnvironmentStringsW);
@@ -378,7 +378,7 @@ GetEnvironmentStringsW(
         envNum += len;
     }
 
-    wenviron = (WCHAR *)PAL_malloc(sizeof(WCHAR)* (envNum + 1));
+    wenviron = (char16_t *)PAL_malloc(sizeof(char16_t)* (envNum + 1));
     if (wenviron == NULL) 
     {
         ERROR("malloc failed\n");

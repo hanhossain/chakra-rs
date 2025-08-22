@@ -8508,7 +8508,7 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR r
     {
         totalLength++; //1 for ']';
     }
-    WCHAR * finalName = AllocateStringOfLength(totalLength);
+    char16_t * finalName = AllocateStringOfLength(totalLength);
 
     if (leftStr != nullptr && leftLen != 0)
     {
@@ -8546,7 +8546,7 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR r
     return finalName;
 }
 
-WCHAR * Parser::AllocateStringOfLength(uint32_t length)
+char16_t * Parser::AllocateStringOfLength(uint32_t length)
 {
     Assert(length > 0);
     uint32_t totalBytes;
@@ -8554,7 +8554,7 @@ WCHAR * Parser::AllocateStringOfLength(uint32_t length)
     {
         Error(ERRnoMemory);
     }
-    WCHAR* finalName = (WCHAR*)this->GetHashTbl()->GetAllocator()->Alloc(totalBytes);
+    char16_t* finalName = (char16_t*)this->GetHashTbl()->GetAllocator()->Alloc(totalBytes);
     if (finalName == nullptr)
     {
         Error(ERRnoMemory);
@@ -11303,7 +11303,7 @@ LNeedTerminator:
             pCatch->pnodeNext = nullptr;
 
             // create a fake name for the catch var.
-            const WCHAR *uniqueNameStr = _u("__ehobj");
+            const char16_t *uniqueNameStr = _u("__ehobj");
             IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32>(wcslen(uniqueNameStr)));
 
             pCatch->SetParam(CreateNameNode(uniqueName));

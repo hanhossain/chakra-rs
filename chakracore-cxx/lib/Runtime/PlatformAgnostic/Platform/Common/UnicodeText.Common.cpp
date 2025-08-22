@@ -202,7 +202,7 @@ namespace PlatformAgnostic
 
 // Unnamespaced test code
 #if ENABLE_TEST_PLATFORM_AGNOSTIC
-void LogicalStringCompareTest(const WCHAR* str1, const WCHAR* str2, int expected)
+void LogicalStringCompareTest(const char16_t* str1, const char16_t* str2, int expected)
 {
     int compareStringResult = CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE | SORT_DIGITSASNUMBERS, str1, -1, str2, -1);
 

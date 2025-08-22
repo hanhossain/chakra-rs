@@ -440,8 +440,8 @@ CharNextExA(
 extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
 
 typedef int errno_t;
-extern errno_t _ultow_s(unsigned long inValue, WCHAR* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ui64tow_s(unsigned long long inValue, WCHAR* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
 int
 wsprintfA(
@@ -726,8 +726,8 @@ typedef struct _WIN32_FIND_DATAW {
     uint32_t nFileSizeLow;
     uint32_t dwReserved0;
     uint32_t dwReserved1;
-    WCHAR cFileName[ MAX_PATH_FNAME ];
-    WCHAR cAlternateFileName[ 14 ];
+    char16_t cFileName[ MAX_PATH_FNAME ];
+    char16_t cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
 #ifdef UNICODE
@@ -4054,8 +4054,8 @@ int
 PAL_LCMapCharW(
      LPCWSTR    lpLocaleName,
      uint32_t   dwMapFlags,
-     WCHAR   srcChar,
-     WCHAR  *destChar,
+     char16_t   srcChar,
+     char16_t  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
     void * lpReserved,
     LPARAM lParam );
@@ -5200,7 +5200,7 @@ typedef struct _OSVERSIONINFOW {
     uint32_t dwMinorVersion;
     uint32_t dwBuildNumber;
     uint32_t dwPlatformId;
-    WCHAR szCSDVersion[ 128 ];
+    char16_t szCSDVersion[ 128 ];
 } OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW;
 
 #ifdef UNICODE
@@ -5233,7 +5233,7 @@ typedef struct _OSVERSIONINFOEXW {
     uint32_t dwMinorVersion;
     uint32_t dwBuildNumber;
     uint32_t dwPlatformId;
-    WCHAR szCSDVersion[ 128 ];
+    char16_t szCSDVersion[ 128 ];
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
     uint16_t  wSuiteMask;
@@ -5533,61 +5533,61 @@ size_t _mbslen(const unsigned char *);
 unsigned char * _mbsinc(const unsigned char *);
 unsigned char * _mbsninc(const unsigned char *, size_t);
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
-int _wcsicmp(const WCHAR *, const WCHAR*);
-int _wcsnicmp(const WCHAR *, const WCHAR *, size_t);
+int _wcsicmp(const char16_t *, const char16_t*);
+int _wcsnicmp(const char16_t *, const char16_t *, size_t);
 int _vsnprintf(char *, size_t, const char *, va_list);
-int _vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
-WCHAR * _itow(int, WCHAR *, int);
-WCHAR * _ltow(long, WCHAR *, int);
+int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
+char16_t * _itow(int, char16_t *, int);
+char16_t * _ltow(long, char16_t *, int);
 
-size_t PAL_wcslen(const WCHAR *);
-int PAL_wcscmp(const WCHAR*, const WCHAR*);
-int PAL_wmemcmp(const WCHAR *, const WCHAR *, size_t);
-int PAL_wcsncmp(const WCHAR *, const WCHAR *, size_t);
-WCHAR * PAL_wcscat(WCHAR *, const WCHAR *);
-WCHAR * PAL_wcsncat(WCHAR *, const WCHAR *, size_t);
-WCHAR * PAL_wcscpy(WCHAR *, const WCHAR *);
-WCHAR * PAL_wcsncpy(WCHAR *, const WCHAR *, size_t);
-const WCHAR * PAL_wcschr(const WCHAR *, WCHAR);
-const WCHAR * PAL_wcsrchr(const WCHAR *, WCHAR);
-WCHAR _WConst_return * PAL_wcspbrk(const WCHAR *, const WCHAR *);
-WCHAR _WConst_return * PAL_wcsstr(const WCHAR *, const WCHAR *);
-WCHAR * PAL_wcstok(WCHAR *, const WCHAR *);
-size_t PAL_wcscspn(const WCHAR *, const WCHAR *);
-int PAL_swprintf(WCHAR *, const WCHAR *, ...);
-int PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
-int _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
-int PAL_swscanf(const WCHAR *, const WCHAR *, ...);
-int32_t PAL_wcstol(const WCHAR *, WCHAR **, int);
-uint32_t PAL_wcstoul(const WCHAR *, WCHAR **, int);
-LONGLONG PAL_wcstoll(const WCHAR *, WCHAR **, int);
-size_t PAL_wcsspn (const WCHAR *, const WCHAR *);
-double PAL_wcstod(const WCHAR *, WCHAR **);
-int PAL_iswalpha(WCHAR);
-int PAL_iswprint(WCHAR);
-int PAL_iswupper(WCHAR);
-int PAL_iswspace(WCHAR);
-int PAL_iswdigit(WCHAR);
-int PAL_iswxdigit(WCHAR);
-WCHAR PAL_towlower(WCHAR);
-WCHAR PAL_towupper(WCHAR);
+size_t PAL_wcslen(const char16_t *);
+int PAL_wcscmp(const char16_t*, const char16_t*);
+int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
+int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
+char16_t * PAL_wcscat(char16_t *, const char16_t *);
+char16_t * PAL_wcsncat(char16_t *, const char16_t *, size_t);
+char16_t * PAL_wcscpy(char16_t *, const char16_t *);
+char16_t * PAL_wcsncpy(char16_t *, const char16_t *, size_t);
+const char16_t * PAL_wcschr(const char16_t *, char16_t);
+const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
+char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
+char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
+char16_t * PAL_wcstok(char16_t *, const char16_t *);
+size_t PAL_wcscspn(const char16_t *, const char16_t *);
+int PAL_swprintf(char16_t *, const char16_t *, ...);
+int PAL_vswprintf(char16_t *, const char16_t *, va_list);
+int _snwprintf(char16_t *, size_t, const char16_t *, ...);
+int PAL_swscanf(const char16_t *, const char16_t *, ...);
+int32_t PAL_wcstol(const char16_t *, char16_t **, int);
+uint32_t PAL_wcstoul(const char16_t *, char16_t **, int);
+LONGLONG PAL_wcstoll(const char16_t *, char16_t **, int);
+size_t PAL_wcsspn (const char16_t *, const char16_t *);
+double PAL_wcstod(const char16_t *, char16_t **);
+int PAL_iswalpha(char16_t);
+int PAL_iswprint(char16_t);
+int PAL_iswupper(char16_t);
+int PAL_iswspace(char16_t);
+int PAL_iswdigit(char16_t);
+int PAL_iswxdigit(char16_t);
+char16_t PAL_towlower(char16_t);
+char16_t PAL_towupper(char16_t);
 
-WCHAR * _wcslwr(WCHAR *);
-ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-WCHAR * _i64tow(__int64, WCHAR *, int);
-WCHAR * _ui64tow(unsigned __int64, WCHAR *, int);
-int _wtoi(const WCHAR *);
+char16_t * _wcslwr(char16_t *);
+ULONGLONG _wcstoui64(const char16_t *, char16_t **, int);
+char16_t * _i64tow(__int64, char16_t *, int);
+char16_t * _ui64tow(unsigned __int64, char16_t *, int);
+int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {
-inline WCHAR *PAL_wcschr(WCHAR *_S, WCHAR _C)
-        {return ((WCHAR *)PAL_wcschr((const WCHAR *)_S, _C)); }
-inline WCHAR *PAL_wcsrchr(WCHAR *_S, WCHAR _C)
-        {return ((WCHAR *)PAL_wcsrchr((const WCHAR *)_S, _C)); }
-inline WCHAR *PAL_wcspbrk(WCHAR *_S, const WCHAR *_P)
-        {return ((WCHAR *)PAL_wcspbrk((const WCHAR *)_S, _P)); }
-inline WCHAR *PAL_wcsstr(WCHAR *_S, const WCHAR *_P)
-        {return ((WCHAR *)PAL_wcsstr((const WCHAR *)_S, _P)); }
+inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
+        {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
+inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
+        {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
+inline char16_t *PAL_wcspbrk(char16_t *_S, const char16_t *_P)
+        {return ((char16_t *)PAL_wcspbrk((const char16_t *)_S, _P)); }
+inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
+        {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
 #endif
 
@@ -5721,9 +5721,9 @@ void * bsearch(const void *, const void *, size_t, size_t,
 int (*)(const void *, const void *));
 
 void _splitpath(const char *, char *, char *, char *, char *);
-void _wsplitpath(const WCHAR *, WCHAR *, WCHAR *, WCHAR *, WCHAR *);
+void _wsplitpath(const char16_t *, char16_t *, char16_t *, char16_t *, char16_t *);
 void _makepath(char *, const char *, const char *, const char *, const char *);
-void _wmakepath(WCHAR *, const WCHAR *, const WCHAR *, const WCHAR *, const WCHAR *);
+void _wmakepath(char16_t *, const char16_t *, const char16_t *, const char16_t *, const char16_t *);
 char * _fullpath(char *, const char *, size_t);
 
 #ifndef PAL_STDCPP_COMPAT
@@ -5800,16 +5800,16 @@ int PAL_getc(PAL_FILE *stream);
 int PAL_fgetc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
 int PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
-WCHAR * PAL_fgetws(WCHAR *, int, PAL_FILE *);
-int PAL_fwprintf(PAL_FILE *, const WCHAR *, ...);
-int PAL_vfwprintf(PAL_FILE *, const WCHAR *, va_list);
-int PAL_wprintf(const WCHAR*, ...);
+char16_t * PAL_fgetws(char16_t *, int, PAL_FILE *);
+int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
+int PAL_vfwprintf(PAL_FILE *, const char16_t *, va_list);
+int PAL_wprintf(const char16_t*, ...);
 
 int _getw(PAL_FILE *);
 int _putw(int, PAL_FILE *);
 PAL_FILE * _fdopen(int, const char *);
-PAL_FILE * _wfopen(const WCHAR *, const WCHAR *);
-PAL_FILE * _wfsopen(const WCHAR *, const WCHAR *, int);
+PAL_FILE * _wfopen(const char16_t *, const char16_t *);
+PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 
 /* Maximum value that can be returned by the rand function. */
 

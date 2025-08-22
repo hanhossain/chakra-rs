@@ -13,25 +13,25 @@ namespace Numbers
 #ifndef ENABLE_GLOBALIZATION
         class NumbersLocale
         {
-            WCHAR localeThousands;
-            WCHAR localeDecimal;
-            WCHAR localeNegativeSign;
+            char16_t localeThousands;
+            char16_t localeDecimal;
+            char16_t localeNegativeSign;
 
             int maxDigitsAfterDecimals;
-            WCHAR defaultDecimalDot;
-            WCHAR defaultDecimalComma;
+            char16_t defaultDecimalDot;
+            char16_t defaultDecimalComma;
 
         public:
 
             NumbersLocale();
 
             inline int   GetMaxDigitsAfterDecimals() { return maxDigitsAfterDecimals; }
-            inline WCHAR GetLocaleThousands()        { return localeThousands; }
+            inline char16_t GetLocaleThousands()        { return localeThousands; }
             inline bool  HasLocaleThousands()        { return localeThousands != 0; }
-            inline WCHAR GetLocaleDecimal()          { return localeDecimal; }
-            inline WCHAR GetLocaleNegativeSign()     { return localeNegativeSign; }
+            inline char16_t GetLocaleDecimal()          { return localeDecimal; }
+            inline char16_t GetLocaleNegativeSign()     { return localeNegativeSign; }
 
-            inline bool  IsDecimalPoint(const WCHAR wc)
+            inline bool  IsDecimalPoint(const char16_t wc)
                                                      { return wc == defaultDecimalDot
                                                            || wc == defaultDecimalComma; }
         };
@@ -42,9 +42,9 @@ namespace Numbers
 #endif
     public:
 
-        static size_t NumberToDefaultLocaleString(const WCHAR *number_string,
+        static size_t NumberToDefaultLocaleString(const char16_t *number_string,
                                                   const size_t length,
-                                                  WCHAR *buffer,
+                                                  char16_t *buffer,
                                                   const size_t pre_allocated_buffer_size);
     };
 } // namespace Numbers

@@ -110,9 +110,9 @@ namespace Js
         static double VECTORCALL ReinterpretBits(int64 value);
 
         // Convert a given uint16_t into its corresponding string.
-        // outBufferSize is in WCHAR elements (and used only for ASSERTs)
+        // outBufferSize is in char16_t elements (and used only for ASSERTs)
         // Returns the number of characters written to outBuffer (not including the \0)
-        static charcount_t UInt16ToString(uint16 integer, __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces);
+        static charcount_t UInt16ToString(uint16 integer, __ecount(outBufferSize) char16_t* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces);
 
         // Try to parse an integer string to find out if the string contains an index property name.
         static BOOL TryConvertToUInt32(const char16_t* str, int length, uint32* intVal);
@@ -233,8 +233,8 @@ namespace Js
         static BOOL FDblToStr(double dbl, __out_ecount(nDstBufSize) char16_t *psz, int nDstBufSize);
         static int FDblToStr(double dbl, NumberUtilities::FormatType ft, int nDigits, __out_ecount(cchDst) char16_t *pchDst, int cchDst);
 
-        static BOOL FNonZeroFiniteDblToStr(double dbl, _Out_writes_(nDstBufSize) WCHAR* psz, int nDstBufSize);
-        _Success_(return) static BOOL FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) int radix, _Out_writes_(nDstBufSize) WCHAR* psz, int nDstBufSize);
+        static BOOL FNonZeroFiniteDblToStr(double dbl, _Out_writes_(nDstBufSize) char16_t* psz, int nDstBufSize);
+        _Success_(return) static BOOL FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) int radix, _Out_writes_(nDstBufSize) char16_t* psz, int nDstBufSize);
 
         static double DblFromDecimal(DECIMAL * pdecIn);
 

@@ -1318,7 +1318,7 @@ SHMPTR SHMWStrDup( LPCWSTR string )
 
     if ( string )
     {
-        length = ( PAL_wcslen( string ) + 1 ) * sizeof( WCHAR );
+        length = ( PAL_wcslen( string ) + 1 ) * sizeof( char16_t );
 
         retVal = SHMalloc( length );
 

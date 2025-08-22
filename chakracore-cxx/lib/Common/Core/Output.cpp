@@ -104,7 +104,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t
     {
         va_list argptr;
         va_start(argptr, form);
-        WCHAR prefixValue[512];
+        char16_t prefixValue[512];
         _snwprintf_s(prefixValue, _countof(prefixValue), _TRUNCATE, _u("%s: %s: "), Js::PhaseNames[static_cast<int>(phase)], prefix);
         retValue += Output::VTrace(_u("%s"), prefixValue, form, argptr);
         va_end(argptr);

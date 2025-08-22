@@ -179,8 +179,8 @@ namespace Js {
 
     int Throw::GenerateDump(PEXCEPTION_POINTERS exceptInfo, LPCWSTR filePath, int ret, bool needLock)
     {
-        WCHAR tempFilePath[MAX_PATH];
-        WCHAR tempFileName[MAX_PATH];
+        char16_t tempFilePath[MAX_PATH];
+        char16_t tempFileName[MAX_PATH];
         HANDLE hTempFile;
         uint32_t retVal;
 

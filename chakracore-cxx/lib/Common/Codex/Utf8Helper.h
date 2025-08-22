@@ -114,7 +114,7 @@ namespace utf8
 
         if (sourceCount >= MAXUINT32)
         {
-            destString[0] = WCHAR(0);
+            destString[0] = char16_t(0);
             return E_OUTOFMEMORY;
         }
 
@@ -125,7 +125,7 @@ namespace utf8
 
         if (sourceCount >= destBufferCount)
         {
-            destString[0] = WCHAR(0);
+            destString[0] = char16_t(0);
             return E_INVALIDARG;
         }
 
@@ -138,18 +138,18 @@ namespace utf8
                 sourceStart -= fallback;
                 break;
             }
-            destString[sourceStart] = (WCHAR) ch;
+            destString[sourceStart] = (char16_t) ch;
         }
 
         if (sourceStart == sourceCount)
         {
             *destCount = static_cast<charcount_t>(sourceCount);
-            destString[sourceCount] = WCHAR(0);
+            destString[sourceCount] = char16_t(0);
         }
         else
         {
             LPCUTF8 remSourceString = (LPCUTF8)sourceString + sourceStart;
-            WCHAR *remDestString = destString + sourceStart;
+            char16_t *remDestString = destString + sourceStart;
 
             charcount_t cchDestString = utf8::ByteIndexIntoCharacterIndex(remSourceString, cbSourceString - sourceStart);
             cchDestString += (charcount_t)sourceStart;
@@ -182,13 +182,13 @@ namespace utf8
     HRESULT NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ LPCSTR sourceString,
         size_t sourceCount, _Out_ LPWSTR* destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
     {
-        size_t cbDestString = (sourceCount + 1) * sizeof(WCHAR);
+        size_t cbDestString = (sourceCount + 1) * sizeof(char16_t);
         if (cbDestString < sourceCount) // overflow ?
         {
             return E_OUTOFMEMORY;
         }
 
-        WCHAR* destString = (WCHAR*)allocator(cbDestString);
+        char16_t* destString = (char16_t*)allocator(cbDestString);
         if (destString == nullptr)
         {
             return E_OUTOFMEMORY;
@@ -279,7 +279,7 @@ namespace utf8
     class NarrowWideStringConverter<Allocator, LPCWSTR, LPSTR, size_t>
     {
     public:
-        // Note: Typically caller should pass in WCHAR string length. Following
+        // Note: Typically caller should pass in char16_t string length. Following
         // is used as fallback.
         static size_t Length(LPCWSTR src)
         {

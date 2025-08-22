@@ -909,7 +909,7 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
 
     struct WrapperOwnKeysEnumerator : public JavascriptEnumerator
     {
-        typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<WCHAR>, Recycler> VisitedNamesHashSet;
+        typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<char16_t>, Recycler> VisitedNamesHashSet;
         Field(VisitedNamesHashSet*) visited;
         Field(JavascriptArray*) trapResult;
         Field(CustomExternalWrapperObject*) wrapper;
@@ -953,7 +953,7 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
                             // let desc = Reflect.getOwnPropertyDescriptor(obj, key);
                             Js::PropertyDescriptor desc;
                             BOOL ret = JavascriptOperators::GetOwnPropertyDescriptor(wrapper, propertyName, scriptContext, &desc);
-                            const JsUtil::CharacterBuffer<WCHAR> propertyString(propertyName->GetString(), propertyName->GetLength());
+                            const JsUtil::CharacterBuffer<char16_t> propertyString(propertyName->GetString(), propertyName->GetLength());
                             // if (desc && !visited.has(key)) {
                             if (ret && !visited->Contains(propertyString))
                             {

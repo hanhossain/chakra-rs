@@ -1220,7 +1220,7 @@ namespace Js
 
         // static to not use local stack space since stack space might be low at this point
         thread_local static char16_t modulePath[MAX_PATH + 1];
-        thread_local static WCHAR filename[MAX_PATH + 1];
+        thread_local static char16_t filename[MAX_PATH + 1];
 
         HMODULE mod = nullptr;
         GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, reinterpret_cast<LPCTSTR>(ip), &mod);

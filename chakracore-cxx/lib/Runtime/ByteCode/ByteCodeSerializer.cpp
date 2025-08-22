@@ -2604,7 +2604,7 @@ public:
                     // We have to convert them to indices into our string table to effectively
                     // serialize the names.
                     const IdentPtr& pid = iter.CurrentValueReference();
-                    int capturedNameSerializedId = this->GetIdOfString(pid->Psz(), (pid->Cch() + 1) * sizeof(WCHAR));
+                    int capturedNameSerializedId = this->GetIdOfString(pid->Psz(), (pid->Cch() + 1) * sizeof(char16_t));
 
                     if (cache != nullptr)
                     {

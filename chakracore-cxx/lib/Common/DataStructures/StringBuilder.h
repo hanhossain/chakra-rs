@@ -368,7 +368,7 @@ namespace Js
         {
             const int max_length = 20; // maximum length of 64-bit value converted to base 10 string
             const int radix = 10;
-            WCHAR buf[max_length+1];
+            char16_t buf[max_length+1];
             errno_t result = _ui64tow_s(value, buf, max_length+1, radix);
             AssertMsg(result==0, "Failed to translate value to string");
             if (result == 0)

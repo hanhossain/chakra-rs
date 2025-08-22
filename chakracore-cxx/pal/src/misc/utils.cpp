@@ -236,15 +236,15 @@ LPWSTR UTIL_MBToWC_Alloc(LPCSTR lpMultiByteStr, int cbMultiByte)
         return NULL;
     }
 
-    if (length >= (INT_MAX / sizeof(WCHAR)))
+    if (length >= (INT_MAX / sizeof(char16_t)))
     {
-        ERROR("integer overflow! length = %d , sizeof(WCHAR) = (%d)\n", length,sizeof(WCHAR) );
+        ERROR("integer overflow! length = %d , sizeof(char16_t) = (%d)\n", length,sizeof(char16_t) );
         SetLastError(ERROR_ARITHMETIC_OVERFLOW);
         return NULL;
     }
 
     /* allocate required buffer */
-    size_t fullsize = length * sizeof(WCHAR);
+    size_t fullsize = length * sizeof(char16_t);
     lpWideCharStr = (LPWSTR)PAL_malloc(fullsize);
     if(NULL == lpWideCharStr)
     {

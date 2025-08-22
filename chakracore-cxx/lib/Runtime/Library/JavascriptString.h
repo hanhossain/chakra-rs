@@ -376,31 +376,31 @@ namespace Js
             };
 
             return (str1->GetLength() == str2->GetLength() &&
-                JsUtil::CharacterBuffer<WCHAR>::StaticEquals(str1->GetString(), str2->GetString(), str1->GetLength()));
+                JsUtil::CharacterBuffer<char16_t>::StaticEquals(str1->GetString(), str2->GetString(), str1->GetLength()));
         }
 
-        inline static bool Equals(JavascriptString * str1, JsUtil::CharacterBuffer<WCHAR> const & str2)
+        inline static bool Equals(JavascriptString * str1, JsUtil::CharacterBuffer<char16_t> const & str2)
         {
             return (str1->GetLength() == str2.GetLength() &&
-                JsUtil::CharacterBuffer<WCHAR>::StaticEquals(str1->GetString(), str2.GetBuffer(), str1->GetLength()));
+                JsUtil::CharacterBuffer<char16_t>::StaticEquals(str1->GetString(), str2.GetBuffer(), str1->GetLength()));
         }
 
         inline static bool Equals(JavascriptString * str1, PropertyRecord const * str2)
         {
             return (str1->GetLength() == str2->GetLength() && !Js::IsInternalPropertyId(str2->GetPropertyId()) &&
-                JsUtil::CharacterBuffer<WCHAR>::StaticEquals(str1->GetString(), str2->GetBuffer(), str1->GetLength()));
+                JsUtil::CharacterBuffer<char16_t>::StaticEquals(str1->GetString(), str2->GetBuffer(), str1->GetLength()));
         }
 
         inline static hash_t GetHashCode(JavascriptString * str)
         {
-            return JsUtil::CharacterBuffer<WCHAR>::StaticGetHashCode(str->GetString(), str->GetLength());
+            return JsUtil::CharacterBuffer<char16_t>::StaticGetHashCode(str->GetString(), str->GetLength());
         }
     };
 
     inline bool PropertyRecordStringHashComparer<PropertyRecord const *>::Equals(PropertyRecord const * str1, JavascriptString * str2)
     {
         return (str1->GetLength() == str2->GetLength() && !Js::IsInternalPropertyId(str1->GetPropertyId()) &&
-            JsUtil::CharacterBuffer<WCHAR>::StaticEquals(str1->GetBuffer(), str2->GetString(), str1->GetLength()));
+            JsUtil::CharacterBuffer<char16_t>::StaticEquals(str1->GetBuffer(), str2->GetString(), str1->GetLength()));
     }
 
     template <typename T>

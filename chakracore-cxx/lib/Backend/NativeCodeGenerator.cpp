@@ -1278,12 +1278,12 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
     {
         if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_START()))
         {
-            WCHAR displayNameBuffer[256];
-            WCHAR* displayName = displayNameBuffer;
+            char16_t displayNameBuffer[256];
+            char16_t* displayName = displayNameBuffer;
             size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
             if (sizeInChars > 256)
             {
-                displayName = HeapNewArray(WCHAR, sizeInChars);
+                displayName = HeapNewArray(char16_t, sizeInChars);
                 workItem->GetDisplayName(displayName, 256);
             }
             JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_START(
@@ -1395,12 +1395,12 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
     {
         if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_STOP()))
         {
-            WCHAR displayNameBuffer[256];
-            WCHAR* displayName = displayNameBuffer;
+            char16_t displayNameBuffer[256];
+            char16_t* displayName = displayNameBuffer;
             size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
             if (sizeInChars > 256)
             {
-                displayName = HeapNewArray(WCHAR, sizeInChars);
+                displayName = HeapNewArray(char16_t, sizeInChars);
                 workItem->GetDisplayName(displayName, 256);
             }
             void* entryPoint;

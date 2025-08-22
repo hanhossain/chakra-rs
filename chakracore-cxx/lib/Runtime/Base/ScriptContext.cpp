@@ -841,7 +841,7 @@ namespace Js
         return threadContext->FindPropertyIdNoCase(this, propertyName, propertyNameLength);
     }
 
-    PropertyId ScriptContext::GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<WCHAR> const& propName)
+    PropertyId ScriptContext::GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<char16_t> const& propName)
     {
         Js::PropertyRecord const * propertyRecord = nullptr;
         threadContext->GetOrAddPropertyId(propName, &propertyRecord);
@@ -856,7 +856,7 @@ namespace Js
         propertyString->GetPropertyRecord(propertyRecord);
     }
 
-    void ScriptContext::GetOrAddPropertyRecord(JsUtil::CharacterBuffer<WCHAR> const& propertyName, PropertyRecord const ** propertyRecord)
+    void ScriptContext::GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> const& propertyName, PropertyRecord const ** propertyRecord)
     {
         threadContext->GetOrAddPropertyId(propertyName, propertyRecord);
     }
@@ -4669,8 +4669,8 @@ ExitTempAllocator:
     HRESULT ScriptContext::OnFunctionCompiled(
         PROFILER_TOKEN functionId,
         PROFILER_TOKEN scriptId,
-        const WCHAR *pwszFunctionName,
-        const WCHAR *pwszFunctionNameHint,
+        const char16_t *pwszFunctionName,
+        const char16_t *pwszFunctionNameHint,
         IUnknown *pIDebugDocumentContext)
     {
         Assert(m_pProfileCallback != NULL);
@@ -5146,7 +5146,7 @@ ScriptContext::GetJitFuncRangeCache()
         return false;
     }
 
-    HRESULT ScriptContext::OnDispatchFunctionEnter(const WCHAR *pwszFunctionName)
+    HRESULT ScriptContext::OnDispatchFunctionEnter(const char16_t *pwszFunctionName)
     {
         if (m_pProfileCallback2 == NULL)
         {
@@ -5164,7 +5164,7 @@ ScriptContext::GetJitFuncRangeCache()
         return hr;
     }
 
-    HRESULT ScriptContext::OnDispatchFunctionExit(const WCHAR *pwszFunctionName)
+    HRESULT ScriptContext::OnDispatchFunctionExit(const char16_t *pwszFunctionName)
     {
         if (m_pProfileCallback2 == NULL)
         {
@@ -5995,13 +5995,13 @@ ScriptContext::GetJitFuncRangeCache()
         {
             uint totalBailouts = 0;
             uint totalRejits = 0;
-            WCHAR buf[256];
+            char16_t buf[256];
 
             // Dump bailout data.
             Output::Print(_u("%-40s %6s\n"), _u("Bailout Reason,"), _u("Count"));
 
             bailoutReasonCounts->Map([&totalBailouts](uint kind, uint val) {
-                WCHAR buf[256];
+                char16_t buf[256];
                 totalBailouts += val;
                 if (val != 0)
                 {
@@ -6042,7 +6042,7 @@ ScriptContext::GetJitFuncRangeCache()
                         stats->m_totalBailouts += val;
                     });
 
-                    WCHAR buf[256];
+                    char16_t buf[256];
 
                     swprintf_s(buf, _u("%s (%s),"), body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
                     Output::Print(_u("%-30s %14d, %14d\n"), buf, stats->m_totalBailouts, stats->m_totalRejits);
@@ -6053,7 +6053,7 @@ ScriptContext::GetJitFuncRangeCache()
                 // Per FunctionBody data
                 rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const *) {
                     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    WCHAR buf[256];
+                    char16_t buf[256];
 
                     swprintf_s(buf, _u("%s (%s),"), body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
                     Output::Print(_u("%-30s\n\n"), buf);
@@ -6066,7 +6066,7 @@ ScriptContext::GetJitFuncRangeCache()
                         stats->m_bailoutReasonCounts->Map([](uint kind, uint val) {
                             if (val != 0)
                             {
-                                WCHAR buf[256];
+                                char16_t buf[256];
                                 swprintf_s(buf, _u("%S,"), GetBailOutKindName((IR::BailOutKind)kind));
                                 Output::Print(_u("%10s%-40s %6d\n"), _u(""), buf, val);
                             }
@@ -6525,7 +6525,7 @@ ScriptContext::GetJitFuncRangeCache()
                 int32_t columnNumber = 0;
                 uint32_t methodIdOrNameId = 0;
                 uint8_t isFrameIndex = 0; // FALSE
-                const WCHAR* name = nullptr;
+                const char16_t* name = nullptr;
                 if (function->IsScriptFunction() && !function->IsLibraryCode())
                 {
                     Js::FunctionBody * functionBody = function->GetFunctionBody();
@@ -6602,9 +6602,9 @@ ScriptContext::GetJitFuncRangeCache()
     //              escapeChar - Char to use for escaping.
     //              charToEscape - The char which we should escape with escapeChar.
     // Returns:     Count of chars written to stringBuilder.
-    charcount_t ScriptContext::AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const WCHAR* sourceString, charcount_t sourceStringLen, WCHAR escapeChar, WCHAR charToEscape)
+    charcount_t ScriptContext::AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const char16_t* sourceString, charcount_t sourceStringLen, char16_t escapeChar, char16_t charToEscape)
     {
-        const WCHAR* charToEscapePtr = wcschr(sourceString, charToEscape);
+        const char16_t* charToEscapePtr = wcschr(sourceString, charToEscape);
         charcount_t charsPadding = 0;
 
         // Only escape characters if sourceString contains one.
@@ -6648,7 +6648,7 @@ ScriptContext::GetJitFuncRangeCache()
     }
 
     /*static*/
-    ushort ScriptContext::ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name)
+    ushort ScriptContext::ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const char16_t* name)
     {
         Assert(nameBuffer);
         Assert(name);

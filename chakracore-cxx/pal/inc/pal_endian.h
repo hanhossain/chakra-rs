@@ -52,7 +52,7 @@ inline UINT64 VAL64(UINT64 x)
     return ((UINT64)VAL32(x) << 32) | VAL32(x >> 32);
 }
 
-inline void SwapString(WCHAR *szString)
+inline void SwapString(char16_t *szString)
 {
     unsigned i;
     for (i = 0; szString[i] != L'\0'; i++)
@@ -61,7 +61,7 @@ inline void SwapString(WCHAR *szString)
     }
 }
 
-inline void SwapStringLength(WCHAR *szString, uint32_t StringLength)
+inline void SwapStringLength(char16_t *szString, uint32_t StringLength)
 {
     unsigned i;
     for (i = 0; i < StringLength; i++)

@@ -101,7 +101,7 @@ Return value:
 --*/
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
-    WCHAR uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
+    char16_t uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
     uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
 
     if (*((int32_t*)pnKey) < uValue)

@@ -501,7 +501,7 @@ namespace Js
     }
 #endif
 
-    bool JavascriptStackWalker::GetSourcePosition(const WCHAR** sourceFileName, uint32_t* line, int32_t* column)
+    bool JavascriptStackWalker::GetSourcePosition(const char16_t** sourceFileName, uint32_t* line, int32_t* column)
     {
         uint byteCodeoffset = this->GetByteCodeOffset();
         if(byteCodeoffset)

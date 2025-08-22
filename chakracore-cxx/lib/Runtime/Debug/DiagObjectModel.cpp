@@ -213,7 +213,7 @@ namespace Js
     void VariableWalkerBase::GetReturnedValueResolvedObject(ReturnedValue * returnValue, DiagStackFrame* frame, ResolvedObject* pResolvedObject)
     {
         DBGPROP_ATTRIB_FLAGS defaultAttributes = DBGPROP_ATTRIB_VALUE_IS_RETURN_VALUE | DBGPROP_ATTRIB_VALUE_IS_FAKE;
-        WCHAR * finalName = AnewArray(GetArenaFromContext(pResolvedObject->scriptContext), WCHAR, RETURN_VALUE_MAX_NAME);
+        char16_t * finalName = AnewArray(GetArenaFromContext(pResolvedObject->scriptContext), char16_t, RETURN_VALUE_MAX_NAME);
         if (returnValue->isValueOfReturnStatement)
         {
             swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[Return value]"));
@@ -1900,8 +1900,8 @@ namespace Js
         if (this->propertyId != Constants::NoProperty)
         {
             Js::PropertyRecord const * propertyRecord = this->scriptContext->GetThreadContext()->GetPropertyName(this->propertyId);
-            const WCHAR* startOfPropertyName = propertyRecord->GetBuffer();
-            const WCHAR* endOfIdentifier = this->scriptContext->GetCharClassifier()->SkipIdentifier((LPCOLESTR)propertyRecord->GetBuffer());
+            const char16_t* startOfPropertyName = propertyRecord->GetBuffer();
+            const char16_t* endOfIdentifier = this->scriptContext->GetCharClassifier()->SkipIdentifier((LPCOLESTR)propertyRecord->GetBuffer());
             return (charcount_t)(endOfIdentifier - startOfPropertyName) == propertyRecord->GetLength();
         }
         else
@@ -4161,7 +4161,7 @@ namespace Js
                 // <Property Name> [Adding] : New Value
                 // <Property Name> [Changing] : Old Value
                 // <Property Name> [Deleting] : Old Value
-                WCHAR * displayName = AnewArray(GetArenaFromContext(scriptContext), WCHAR, PENDING_MUTATION_VALUE_MAX_NAME);
+                char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
                 swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("%s [%s]"), mutationBreakpoint->GetBreakPropertyName(), Js::MutationBreakpoint::GetBreakMutationTypeName(mutationType));
                 pResolvedObject->name = displayName;
                 if (mutationType == MutationTypeUpdate || mutationType == MutationTypeDelete)
@@ -4186,7 +4186,7 @@ namespace Js
             }
             else if (((i == 1) && (mutationType != MutationTypeUpdate)) || (i == 2))
             {
-                WCHAR * displayName = AnewArray(GetArenaFromContext(scriptContext), WCHAR, PENDING_MUTATION_VALUE_MAX_NAME);
+                char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
                 swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("[Property container %s]"), mutationBreakpoint->GetParentPropertyName());
                 pResolvedObject->name = displayName;
                 pResolvedObject->obj = mutationBreakpoint->GetMutationObjectVar();

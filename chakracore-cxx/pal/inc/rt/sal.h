@@ -504,7 +504,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 //
 // describing conditions that hold for return values after the call
 
-// e.g. _Ret_z_ CString::operator const WCHAR*() const throw();
+// e.g. _Ret_z_ CString::operator const char16_t*() const throw();
 #define _Ret_z_                             _SAL2_Source_(_Ret_z_, (), _Ret2_impl_(__notnull_impl,  __zterm_impl) _Ret_valid_impl_)
 #define _Ret_maybenull_z_                   _SAL2_Source_(_Ret_maybenull_z_, (), _Ret2_impl_(__maybenull_impl,__zterm_impl) _Ret_valid_impl_)
 
@@ -541,7 +541,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Check_return_           _SAL2_Source_(_Check_return_, (), _Check_return_impl_)
 #define _Must_inspect_result_    _SAL2_Source_(_Must_inspect_result_, (), _Must_inspect_impl_ _Check_return_impl_)
 
-// e.g. MyPrintF( _Printf_format_string_ const WCHAR* wzFormat, ... );
+// e.g. MyPrintF( _Printf_format_string_ const char16_t* wzFormat, ... );
 #define _Printf_format_string_  _SAL2_Source_(_Printf_format_string_, (), _Printf_format_string_impl_)
 #define _Scanf_format_string_   _SAL2_Source_(_Scanf_format_string_, (), _Scanf_format_string_impl_)
 #define _Scanf_s_format_string_  _SAL2_Source_(_Scanf_s_format_string_, (), _Scanf_s_format_string_impl_)
@@ -998,7 +998,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 #define _Deref_opt_out_         _SAL1_1_Source_(_Deref_opt_out_, (), _Out_opt_ _Deref_post_valid_)
 #define _Deref_opt_out_opt_     _SAL1_1_Source_(_Deref_opt_out_opt_, (), _Out_opt_ _Deref_post_opt_valid_)
 
-// e.g.  void CloneString( _In_z_ const WCHAR* wzFrom, _Deref_out_z_ WCHAR** pWzTo );
+// e.g.  void CloneString( _In_z_ const char16_t* wzFrom, _Deref_out_z_ char16_t** pWzTo );
 #define _Deref_out_z_           _SAL1_1_Source_(_Deref_out_z_, (), _Out_ _Deref_post_z_)
 #define _Deref_out_opt_z_       _SAL1_1_Source_(_Deref_out_opt_z_, (), _Out_ _Deref_post_opt_z_)
 #define _Deref_opt_out_z_       _SAL1_1_Source_(_Deref_opt_out_z_, (), _Out_opt_ _Deref_post_z_)
@@ -1009,11 +1009,11 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 //
 // describing conditions for array elements of dereferenced pointer parameters that must be met before the call
 
-// e.g. void SaveStringArray( _In_count_(cStrings) _Deref_pre_z_ const WCHAR* const rgpwch[] );
+// e.g. void SaveStringArray( _In_count_(cStrings) _Deref_pre_z_ const char16_t* const rgpwch[] );
 #define _Deref_pre_z_                           _SAL1_1_Source_(_Deref_pre_z_, (), _Deref_pre1_impl_(__notnull_impl_notref) _Deref_pre1_impl_(__zterm_impl) _Pre_valid_impl_)
 #define _Deref_pre_opt_z_                       _SAL1_1_Source_(_Deref_pre_opt_z_, (), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__zterm_impl) _Pre_valid_impl_)
 
-// e.g. void FillInArrayOfStr32( _In_count_(cStrings) _Deref_pre_cap_c_(32) _Deref_post_z_ WCHAR* const rgpwch[] );
+// e.g. void FillInArrayOfStr32( _In_count_(cStrings) _Deref_pre_cap_c_(32) _Deref_post_z_ char16_t* const rgpwch[] );
 // buffer capacity is described by another parameter
 #define _Deref_pre_cap_(size)                   _SAL1_1_Source_(_Deref_pre_cap_, (size), _Deref_pre1_impl_(__notnull_impl_notref)   _Deref_pre1_impl_(__cap_impl(size)))
 #define _Deref_pre_opt_cap_(size)               _SAL1_1_Source_(_Deref_pre_opt_cap_, (size), _Deref_pre1_impl_(__maybenull_impl_notref) _Deref_pre1_impl_(__cap_impl(size)))
@@ -1101,7 +1101,7 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 //
 // describing conditions for array elements or dereferenced pointer parameters that hold after the call
 
-// e.g. void CloneString( _In_z_ const Wchar_t* wzIn _Out_ _Deref_post_z_ WCHAR** pWzOut );
+// e.g. void CloneString( _In_z_ const Wchar_t* wzIn _Out_ _Deref_post_z_ char16_t** pWzOut );
 #define _Deref_post_z_                           _SAL1_1_Source_(_Deref_post_z_, (), _Deref_post1_impl_(__notnull_impl_notref) _Deref_post1_impl_(__zterm_impl) _Post_valid_impl_)
 #define _Deref_post_opt_z_                       _SAL1_1_Source_(_Deref_post_opt_z_, (), _Deref_post1_impl_(__maybenull_impl_notref) _Deref_post1_impl_(__zterm_impl) _Post_valid_impl_)
 
@@ -2161,10 +2161,10 @@ __PRIMOP(char *, _Strstr_(__In_impl_ char *, __In_impl_ char *));
  PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
 
- typedef __nullterminated WCHAR* LPWSTR : Initialized LPWSTRs are NULL-terminated strings.
+ typedef __nullterminated char16_t* LPWSTR : Initialized LPWSTRs are NULL-terminated strings.
 
  __out_ecount(cch) __typefix(LPWSTR) void *psz : psz is a buffer parameter which will be
-     a NULL-terminated WCHAR string at exit, and which initially contains cch WCHARs.
+     a NULL-terminated char16_t string at exit, and which initially contains cch WCHARs.
 
  -------------------------------------------------------------------------------
 */

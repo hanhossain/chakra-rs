@@ -810,7 +810,7 @@ CHAKRA_API JsDiagEvaluate(
             return JsErrorInvalidArgument;
         }
 
-        const WCHAR* expression;
+        const char16_t* expression;
         utf8::NarrowToWide wide_expression;
         if (isArrayBuffer && isUtf8)
         {
@@ -827,7 +827,7 @@ CHAKRA_API JsDiagEvaluate(
             expression = !isArrayBuffer ?
                 Js::VarTo<Js::JavascriptString>(expressionVal)->GetSz() // String
                 :
-                (const WCHAR*)Js::VarTo<Js::ArrayBuffer>(expressionVal)->GetBuffer(); // ArrayBuffer;
+                (const char16_t*)Js::VarTo<Js::ArrayBuffer>(expressionVal)->GetBuffer(); // ArrayBuffer;
         }
 
         *evalResult = JS_INVALID_REFERENCE;

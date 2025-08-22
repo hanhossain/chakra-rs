@@ -1120,7 +1120,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
         PCWSTR passedLocale = argString->GetSz();
         // REVIEW should we zero the whole array for safety?
-        WCHAR resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
+        char16_t resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
         resolvedLocaleName[0] = '\0';
 
         ResolveLocaleName(passedLocale, resolvedLocaleName, _countof(resolvedLocaleName));

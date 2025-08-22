@@ -647,7 +647,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fi
         nullptr, (void*)fileContents, &scriptSource));
 
     // What's the preferred way of doing this?
-    WCHAR fileNameWide[MAX_PATH] = { 0 };
+    char16_t fileNameWide[MAX_PATH] = { 0 };
     size_t fileNameLength = strlen(fileName);
     for (size_t i = 0; i < fileNameLength; i++)
     {
@@ -670,7 +670,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fi
         cookie,
         scriptSource,
         WScriptJsrt::GetNextSourceContext(),
-        (WCHAR*)scriptContents.fullPath,
+        (char16_t*)scriptContents.fullPath,
         JsParseScriptAttributes::JsParseScriptAttributeNone,
         nullptr,//_In_ JsValueRef parserState,
         &bgResult

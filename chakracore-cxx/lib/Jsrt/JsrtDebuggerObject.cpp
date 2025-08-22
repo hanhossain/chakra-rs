@@ -513,11 +513,11 @@ bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const ch
             resolvedObject.scriptContext = frameScriptContext;
 
             charcount_t len = Js::JavascriptString::GetBufferLength(source);
-            resolvedObject.name = AnewNoThrowArray(this->debuggerObjectsManager->GetDebugObjectArena(), WCHAR, len + 1);
+            resolvedObject.name = AnewNoThrowArray(this->debuggerObjectsManager->GetDebugObjectArena(), char16_t, len + 1);
 
             if (resolvedObject.name != nullptr)
             {
-                wcscpy_s((WCHAR*)resolvedObject.name, len + 1, source);
+                wcscpy_s((char16_t*)resolvedObject.name, len + 1, source);
             }
             else
             {

@@ -349,7 +349,7 @@ void ThreadContext::GlobalInitialize()
 {
     for (int i = 0; i < _countof(builtInPropertyRecords); i++)
     {
-        builtInPropertyRecords[i]->SetHash(JsUtil::CharacterBuffer<WCHAR>::StaticGetHashCode(builtInPropertyRecords[i]->GetBuffer(), builtInPropertyRecords[i]->GetLength()));
+        builtInPropertyRecords[i]->SetHash(JsUtil::CharacterBuffer<char16_t>::StaticGetHashCode(builtInPropertyRecords[i]->GetBuffer(), builtInPropertyRecords[i]->GetLength()));
     }
 }
 
@@ -848,7 +848,7 @@ ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNam
 Js::PropertyRecord const *
 ThreadContext::UncheckedAddPropertyId(LPCWSTR propertyName, int propertyNameLength, bool bind, bool isSymbol)
 {
-    return UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR>(propertyName, propertyNameLength), bind, isSymbol);
+    return UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), bind, isSymbol);
 }
 
 void ThreadContext::InitializePropertyMaps()
@@ -920,7 +920,7 @@ ThreadContext::CreatePropertyRecordWeakRef(const Js::PropertyRecord * propertyRe
 }
 
 Js::PropertyRecord const *
-ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR> const& propertyName, bool bind, bool isSymbol)
+ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& propertyName, bool bind, bool isSymbol)
 {
 #if ENABLE_TTD
     if(isSymbol & this->IsRuntimeInTTDMode())
@@ -1070,7 +1070,7 @@ ThreadContext::AddCaseInvariantPropertyRecord(const Js::PropertyRecord * propert
     // Create a weak reference to the property record here (since we no longer use weak refs in the property map)
     RecyclerWeakReference<const Js::PropertyRecord> * propertyRecordWeakRef = CreatePropertyRecordWeakRef(propertyRecord);
 
-    JsUtil::CharacterBuffer<WCHAR> newPropertyName(propertyRecord->GetBuffer(), propertyRecord->GetLength());
+    JsUtil::CharacterBuffer<char16_t> newPropertyName(propertyRecord->GetBuffer(), propertyRecord->GetLength());
     Js::CaseInvariantPropertyListWithHashCode* list;
     if (!FindExistingPropertyRecord(newPropertyName, &list))
     {
@@ -1105,10 +1105,10 @@ ThreadContext::BindPropertyRecord(const Js::PropertyRecord * propertyRecord)
 
 void ThreadContext::GetOrAddPropertyId(_In_ LPCWSTR propertyName, _In_ int propertyNameLength, _Out_ Js::PropertyRecord const ** propertyRecord)
 {
-    GetOrAddPropertyId(JsUtil::CharacterBuffer<WCHAR>(propertyName, propertyNameLength), propertyRecord);
+    GetOrAddPropertyId(JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength), propertyRecord);
 }
 
-void ThreadContext::GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<WCHAR> const& propertyName, _Out_ Js::PropertyRecord const ** propRecord)
+void ThreadContext::GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, _Out_ Js::PropertyRecord const ** propRecord)
 {
     EnterPinnedScope((volatile void **)propRecord);
     *propRecord = GetOrAddPropertyRecord(propertyName);
@@ -1238,11 +1238,11 @@ void ThreadContext::CreateNoCasePropertyMap()
 JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>*
 ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, LPCWSTR propertyName, int propertyNameLength)
 {
-    return ThreadContext::FindPropertyIdNoCase(scriptContext, JsUtil::CharacterBuffer<WCHAR>(propertyName,  propertyNameLength));
+    return ThreadContext::FindPropertyIdNoCase(scriptContext, JsUtil::CharacterBuffer<char16_t>(propertyName,  propertyNameLength));
 }
 
 JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>*
-ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::CharacterBuffer<WCHAR> const& propertyName)
+ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::CharacterBuffer<char16_t> const& propertyName)
 {
     if (caseInvariantPropertySet == nullptr)
     {
@@ -1257,7 +1257,7 @@ ThreadContext::FindPropertyIdNoCase(Js::ScriptContext * scriptContext, JsUtil::C
 }
 
 bool
-ThreadContext::FindExistingPropertyRecord(_In_ JsUtil::CharacterBuffer<WCHAR> const& propertyName, Js::CaseInvariantPropertyListWithHashCode** list)
+ThreadContext::FindExistingPropertyRecord(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, Js::CaseInvariantPropertyListWithHashCode** list)
 {
     Js::CaseInvariantPropertyListWithHashCode* l = this->caseInvariantPropertySet->LookupWithKey(propertyName);
 
@@ -4126,7 +4126,7 @@ void ThreadContext::EnsureSourceProfileManagersByUrlMap()
 // Returns the cache profile manager for the URL and hash combination for a particular dynamic script. There is a ref count added for every script context
 // that references the shared profile manager info.
 //
-Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_In_z_ const WCHAR* url, _In_ uint hash, _Inout_ bool* addRef)
+Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_In_z_ const char16_t* url, _In_ uint hash, _Inout_ bool* addRef)
 {
       EnsureSourceProfileManagersByUrlMap();
       Js::SourceDynamicProfileManager* profileManager = nullptr;
@@ -4175,8 +4175,8 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
       {
           // Let's make a copy of the URL because there is no guarantee this URL will remain alive in the future.
           size_t lengthInChars = wcslen(url) + 1;
-          WCHAR* urlCopy = RecyclerNewArrayLeaf(GetRecycler(), WCHAR, lengthInChars);
-          js_memcpy_s(urlCopy, lengthInChars * sizeof(WCHAR), url, lengthInChars * sizeof(WCHAR));
+          char16_t* urlCopy = RecyclerNewArrayLeaf(GetRecycler(), char16_t, lengthInChars);
+          js_memcpy_s(urlCopy, lengthInChars * sizeof(char16_t), url, lengthInChars * sizeof(char16_t));
           this->recyclableData->sourceProfileManagersByUrl->Add(urlCopy, managerCache);
       }
       return profileManager;
@@ -4185,7 +4185,7 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
 //
 // Decrement the ref count for this URL and cleanup the corresponding record if there are no other references to it.
 //
-uint ThreadContext::ReleaseSourceDynamicProfileManagers(const WCHAR* url)
+uint ThreadContext::ReleaseSourceDynamicProfileManagers(const char16_t* url)
 {
     // If we've already freed the recyclable data, we're shutting down the thread context so skip clean up
     if (this->recyclableData == nullptr) return 0;

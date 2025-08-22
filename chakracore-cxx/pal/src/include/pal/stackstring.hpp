@@ -151,9 +151,9 @@ public:
 
 #if _DEBUG
 typedef StackString<32, char> PathCharString;
-typedef StackString<32, WCHAR> PathWCharString; 
+typedef StackString<32, char16_t> PathWCharString; 
 #else
 typedef StackString<260, char> PathCharString;
-typedef StackString<260, WCHAR> PathWCharString; 
+typedef StackString<260, char16_t> PathWCharString; 
 #endif
 #endif

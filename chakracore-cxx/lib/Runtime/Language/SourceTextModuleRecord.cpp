@@ -185,7 +185,7 @@ namespace Js
         {
             if (*exceptionVar == nullptr)
             {
-                const WCHAR * sourceUrl = this->GetSpecifierSz();
+                const char16_t * sourceUrl = this->GetSpecifierSz();
 
                 *exceptionVar = JavascriptError::CreateFromCompileScriptException(scriptContext, &se, sourceUrl);
             }
@@ -953,7 +953,7 @@ namespace Js
 
         if (rootFunction == nullptr)
         {
-            const WCHAR * sourceUrl = this->GetSpecifierSz();
+            const char16_t * sourceUrl = this->GetSpecifierSz();
 
             this->errorObject = JavascriptError::CreateFromCompileScriptException(scriptContext, &se, sourceUrl);
             OUTPUT_TRACE_DEBUGONLY(Js::ModulePhase, _u("\t>NotifyParentAsNeeded rootFunction == nullptr\n"));

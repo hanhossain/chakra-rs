@@ -820,7 +820,7 @@ static LPWSTR INIT_FormatCommandLine (int argc, const char * const *argv)
         return NULL;
     }
 
-    retval = reinterpret_cast<LPWSTR>(InternalMalloc((sizeof(WCHAR)*i)));
+    retval = reinterpret_cast<LPWSTR>(InternalMalloc((sizeof(char16_t)*i)));
     if(retval == NULL)
     {
         ERROR("can't allocate memory for Unicode command line!\n");
@@ -900,7 +900,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                 return NULL;
             }
 
-            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(WCHAR))));
+            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
             if ( NULL == return_value )
             {
                 ERROR("Not enough memory to create full path\n");
@@ -1037,7 +1037,7 @@ static LPWSTR INIT_FindEXEPath(LPCSTR exe_name)
                     return NULL;
                 }
 
-                return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(WCHAR))));
+                return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
                 if ( NULL == return_value )
                 {
                     ERROR("Not enough memory to create full path\n");
@@ -1090,7 +1090,7 @@ last_resort:
                 return NULL;
             }
 
-            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(WCHAR))));
+            return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
             if (NULL == return_value)
             {
                 ERROR("Not enough memory to create full path\n");
@@ -1146,7 +1146,7 @@ last_resort:
         return NULL;
     }
 
-    return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(WCHAR))));
+    return_value = reinterpret_cast<LPWSTR>(InternalMalloc((return_size*sizeof(char16_t))));
     if (NULL == return_value)
     {
         ERROR("Not enough memory to create full path\n");

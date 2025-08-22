@@ -169,12 +169,12 @@ enum MethodType : uint16
 #define LogLoopBodyEvent(Function, Body, entryPoint, loopNumber)                                           \
     Assert(entryPoint->GetNativeAddress() != NULL);                                                        \
     Assert(entryPoint->GetCodeSize() > 0);                                                                 \
-    WCHAR loopBodyNameArray[NameBufferLength];                                                             \
-    WCHAR* loopBodyName = loopBodyNameArray;                                                               \
+    char16_t loopBodyNameArray[NameBufferLength];                                                             \
+    char16_t* loopBodyName = loopBodyNameArray;                                                               \
     size_t bufferSize = Body->GetLoopBodyName(loopNumber, loopBodyName, NameBufferLength);                 \
     if(bufferSize > NameBufferLength) /* insufficient buffer space*/                                       \
     {                                                                                                      \
-        loopBodyName = HeapNewNoThrowArray(WCHAR, bufferSize);                                             \
+        loopBodyName = HeapNewNoThrowArray(char16_t, bufferSize);                                             \
         if(loopBodyName)                                                                                   \
         {                                                                                                  \
             Body->GetLoopBodyName(loopNumber, loopBodyName, NameBufferLength);                             \

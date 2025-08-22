@@ -61,6 +61,6 @@ public:
     void ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ParseRegistry(CmdLineArgsParser &parser);
     void ProcessConfiguration(HANDLE mod);
-    HRESULT SetOutputFile(const WCHAR* outputFile, const WCHAR* openMode);
+    HRESULT SetOutputFile(const char16_t* outputFile, const char16_t* openMode);
     bool HasReadConfig() { return _hasReadConfig; }
 };

@@ -433,8 +433,8 @@ extern "C" void * _AddressOfReturnAddress(void);
 #define STRSAFEAPI  inline HRESULT
 #endif
 
-STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, ...);
-STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList);
+STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...);
+STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, va_list argList);
 
 #define STRSAFE_MAX_CCH  2147483647 // max # of characters we support (same as INT_MAX)
 
@@ -446,7 +446,7 @@ STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* psz
 // ----- END: Define strsafe related types and defines for non-VC++ compilers -----
 
 // Provide the definitions for non-windows platforms
-STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, va_list argList)
+STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, va_list argList)
 {
     HRESULT hr = S_OK;
 
@@ -486,7 +486,7 @@ STRSAFEAPI StringVPrintfWorkerW(WCHAR* pszDest, size_t cchDest, const WCHAR* psz
     return hr;
 }
 
-STRSAFEAPI StringCchPrintfW(WCHAR* pszDest, size_t cchDest, const WCHAR* pszFormat, ...)
+STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...)
 {
     HRESULT hr;
 

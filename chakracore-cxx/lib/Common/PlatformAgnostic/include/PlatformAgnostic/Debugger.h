@@ -85,7 +85,7 @@ public:
   }
 
   HRESULT FunctionCompiled(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId,
-      const WCHAR* pwszFunctionName, const WCHAR* pwszFunctionNameHint, IUnknown *ctx)
+      const char16_t* pwszFunctionName, const char16_t* pwszFunctionNameHint, IUnknown *ctx)
   {
       return S_OK;
   }
@@ -101,12 +101,12 @@ public:
   }
 
   // IActiveScriptProfilerCallback2
-  HRESULT OnFunctionEnterByName(const WCHAR *functionName, PROFILER_SCRIPT_TYPE _)
+  HRESULT OnFunctionEnterByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
   {
       return S_OK;
   }
 
-  HRESULT OnFunctionExitByName(const WCHAR *functionName, PROFILER_SCRIPT_TYPE _)
+  HRESULT OnFunctionExitByName(const char16_t *functionName, PROFILER_SCRIPT_TYPE _)
   {
       return S_OK;
   }

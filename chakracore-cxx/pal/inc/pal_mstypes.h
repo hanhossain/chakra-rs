@@ -156,8 +156,6 @@ typedef ptrdiff_t LPARAM;
 typedef unsigned short char16_t;
 #endif // __cplusplus
 
-typedef char16_t WCHAR;
-
 // TODO (hanhossain): can probably remove this
 #define _INTPTR_T_DEFINED
 // TODO (hanhossain): can probably remove this
@@ -168,18 +166,18 @@ typedef uint16_t LANGID;
 
 typedef uint32_t LCTYPE;
 
-typedef const WCHAR *LPCWCH;
-typedef WCHAR *LPWSTR, *PWSTR;
+typedef const char16_t *LPCWCH;
+typedef char16_t *LPWSTR, *PWSTR;
 
-typedef const WCHAR *LPCWSTR, *PCWSTR;
+typedef const char16_t *LPCWSTR, *PCWSTR;
 
 typedef char *PCHAR;
 typedef char *LPSTR;
 typedef const char *LPCSTR;
 
 #ifdef UNICODE
-typedef WCHAR TCHAR;
-typedef WCHAR _TCHAR;
+typedef char16_t TCHAR;
+typedef char16_t _TCHAR;
 #else
 typedef char TCHAR;
 typedef char _TCHAR;

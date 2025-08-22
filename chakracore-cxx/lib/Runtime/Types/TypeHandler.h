@@ -636,7 +636,7 @@ namespace Js
         static PropertyId TMapKey_GetPropertyId(ScriptContext* scriptContext, JavascriptString* key);
     protected:
         void SetPropertyUpdateSideEffect(DynamicObject* instance, PropertyId propertyId, Var value, SideEffects possibleSideEffects);
-        void SetPropertyUpdateSideEffect(DynamicObject* instance, JsUtil::CharacterBuffer<WCHAR> const& propertyName, Var value, SideEffects possibleSideEffects);
+        void SetPropertyUpdateSideEffect(DynamicObject* instance, JsUtil::CharacterBuffer<char16_t> const& propertyName, Var value, SideEffects possibleSideEffects);
         bool VerifyIsExtensible(ScriptContext* scriptContext, bool alwaysThrow);
 
         void SetOffsetOfInlineSlots(const uint16 offsetOfInlineSlots) { this->offsetOfInlineSlots = offsetOfInlineSlots; }

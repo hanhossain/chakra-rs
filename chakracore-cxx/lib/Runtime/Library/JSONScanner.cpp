@@ -304,25 +304,25 @@ namespace JSON
                            ThrowSyntaxError(JSERR_JsonNoStrEnd);
 
                         }
-                        if (!Js::NumberUtilities::FHexDigit((WCHAR)ReadNextChar(), &tempHex))
+                        if (!Js::NumberUtilities::FHexDigit((char16_t)ReadNextChar(), &tempHex))
                         {
                            ThrowSyntaxError(JSERR_JsonBadHexDigit);
                         }
                         chcode = tempHex * 0x1000;
 
-                        if (!Js::NumberUtilities::FHexDigit((WCHAR)ReadNextChar(), &tempHex))
+                        if (!Js::NumberUtilities::FHexDigit((char16_t)ReadNextChar(), &tempHex))
                         {
                            ThrowSyntaxError(JSERR_JsonBadHexDigit);
                         }
                         chcode += tempHex * 0x0100;
 
-                        if (!Js::NumberUtilities::FHexDigit((WCHAR)ReadNextChar(), &tempHex))
+                        if (!Js::NumberUtilities::FHexDigit((char16_t)ReadNextChar(), &tempHex))
                         {
                            ThrowSyntaxError(JSERR_JsonBadHexDigit);
                         }
                         chcode += tempHex * 0x0010;
 
-                        if (!Js::NumberUtilities::FHexDigit((WCHAR)ReadNextChar(), &tempHex))
+                        if (!Js::NumberUtilities::FHexDigit((char16_t)ReadNextChar(), &tempHex))
                         {
                            ThrowSyntaxError(JSERR_JsonBadHexDigit);
                         }

@@ -54,8 +54,8 @@ CPalString::CopyString(
     {
         _ASSERTE(psSource->GetMaxLength() > psSource->GetStringLength());
         
-        WCHAR *pwsz = reinterpret_cast<WCHAR*>(
-            InternalMalloc(psSource->GetMaxLength() * sizeof(WCHAR))
+        char16_t *pwsz = reinterpret_cast<char16_t*>(
+            InternalMalloc(psSource->GetMaxLength() * sizeof(char16_t))
             );
 
         if (NULL != pwsz)
@@ -65,7 +65,7 @@ CPalString::CopyString(
             CopyMemory(
                 pwsz,
                 psSource->GetString(),
-                psSource->GetMaxLength() * sizeof(WCHAR)
+                psSource->GetMaxLength() * sizeof(char16_t)
                 );
 
             m_pwsz = pwsz;
@@ -93,5 +93,5 @@ void
 CPalString::FreeBuffer()
 {
     _ASSERTE(NULL != m_pwsz);
-    InternalFree(const_cast<WCHAR*>(m_pwsz));
+    InternalFree(const_cast<char16_t*>(m_pwsz));
 }

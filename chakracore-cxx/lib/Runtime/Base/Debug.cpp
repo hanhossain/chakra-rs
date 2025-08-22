@@ -7,14 +7,14 @@
 #if DBG_DUMP
 #include "Language/JavascriptStackWalker.h"
 
-WCHAR* DumpCallStack(uint frameCount) { return DumpCallStackFull(frameCount, /*print*/ true); }
+char16_t* DumpCallStack(uint frameCount) { return DumpCallStackFull(frameCount, /*print*/ true); }
 
-WCHAR* DumpCallStackFull(uint frameCount, bool print)
+char16_t* DumpCallStackFull(uint frameCount, bool print)
 {
     Js::ScriptContext* scriptContext = ThreadContext::GetContextForCurrentThread()->GetScriptContextList();
     Js::JavascriptStackWalker walker(scriptContext);
 
-    WCHAR buffer[512];
+    char16_t buffer[512];
     Js::StringBuilder<ArenaAllocator> sb(scriptContext->GeneralAllocator());
     uint fc = 0;
     while (walker.Walk())
@@ -30,7 +30,7 @@ WCHAR* DumpCallStackFull(uint frameCount, bool print)
 
             Js::FunctionBody * jsBody = jsFunc->GetFunctionBody();
             const Js::CallInfo callInfo = walker.GetCallInfo();
-            const WCHAR* sourceFileName = _u("NULL");
+            const char16_t* sourceFileName = _u("NULL");
             uint32_t line = 0; int32_t column = 0;
             walker.GetSourcePosition(&sourceFileName, &line, &column);
 
@@ -53,7 +53,7 @@ WCHAR* DumpCallStackFull(uint frameCount, bool print)
        }
     }
     sb.AppendCppLiteral(_u("----------------------------------------------------------------------\n"));
-    WCHAR* stack = sb.Detach();
+    char16_t* stack = sb.Detach();
     if(print)
     {
         Output::Print(stack);

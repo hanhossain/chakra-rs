@@ -215,7 +215,7 @@ HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
 
 // Returns the data provided when the parse was queued
 // Note: runs on any thread, but the buffer lifetimes are not guaranteed after parse results are returned
-HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl)
+HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl)
 {
     HRESULT hr = E_FAIL;
 

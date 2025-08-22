@@ -86,7 +86,7 @@ namespace Js
             case TypeIds_String:
                 {
                     JavascriptString* v = UnsafeVarTo<JavascriptString>(i);
-                    return JsUtil::CharacterBuffer<WCHAR>::StaticGetHashCode(v->GetString(), v->GetLength());
+                    return JsUtil::CharacterBuffer<char16_t>::StaticGetHashCode(v->GetString(), v->GetLength());
                 }
 
             default:

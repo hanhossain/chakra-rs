@@ -124,7 +124,7 @@ namespace Js
             void* StackData;
             size_t StackDataLength;
             CONTEXT Context;
-            WCHAR name[32];
+            char16_t name[32];
             size_t allocSize;
             InjectionRecord* next;
         };

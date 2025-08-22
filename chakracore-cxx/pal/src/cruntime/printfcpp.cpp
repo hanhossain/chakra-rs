@@ -973,7 +973,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, PAL_FILE *s
     }
 
     int iLen = (Length+1);
-    Out = (LPWSTR) InternalMalloc(iLen * sizeof(WCHAR));
+    Out = (LPWSTR) InternalMalloc(iLen * sizeof(char16_t));
     if (!Out)
     {
         ERROR("InternalMalloc failed\n");
@@ -1136,7 +1136,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
     LPCWSTR Fmt = format;
     LPWSTR TempWStr = NULL;
     LPWSTR WorkingWStr = NULL;
-    WCHAR TempWChar[2];
+    char16_t TempWChar[2];
     int32_t Flags;
     int32_t Width;
     int32_t Precision;
@@ -1206,7 +1206,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     if ( Length != 0 )
                     {
                         TempWStr =
-                            (LPWSTR)InternalMalloc( (Length) * sizeof( WCHAR ) );
+                            (LPWSTR)InternalMalloc( (Length) * sizeof( char16_t ) );
                         if ( TempWStr )
                         {
                             WStrWasMalloced = TRUE;
@@ -1234,7 +1234,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                 }
 
                 int32_t Length = PAL_wcslen(TempWStr);
-                WorkingWStr = (LPWSTR) InternalMalloc((sizeof(WCHAR) * (Length + 1)));
+                WorkingWStr = (LPWSTR) InternalMalloc((sizeof(char16_t) * (Length + 1)));
                 if (!WorkingWStr)
                 {
                     ERROR("InternalMalloc failed\n");
@@ -1485,7 +1485,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char16_t *for
                     return -1;
                 }
 
-                TempWideBuffer = (LPWSTR) InternalMalloc(mbtowcResult*sizeof(WCHAR));
+                TempWideBuffer = (LPWSTR) InternalMalloc(mbtowcResult*sizeof(char16_t));
                 if (!TempWideBuffer)
                 {
                     ERROR("InternalMalloc failed\n");
@@ -1567,7 +1567,7 @@ int CoreVsnprintf(CPalThread *pthrCurrent, LPSTR Buffer, size_t Count, LPCSTR Fo
     LPCSTR Fmt = Format;
     LPWSTR TempWStr;
     LPSTR TempStr;
-    WCHAR TempWChar;
+    char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
     int32_t Precision;
@@ -1862,7 +1862,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
     LPCWSTR Fmt = Format;
     LPWSTR TempWStr = NULL;
     LPWSTR WorkingWStr = NULL;
-    WCHAR TempWChar[2];
+    char16_t TempWChar[2];
     int32_t Flags;
     int32_t Width;
     int32_t Precision;
@@ -1934,7 +1934,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                     if ( Length != 0 )
                     {
                         TempWStr =
-                            (LPWSTR)InternalMalloc((Length + 1 ) * sizeof( WCHAR ) );
+                            (LPWSTR)InternalMalloc((Length + 1 ) * sizeof( char16_t ) );
                         if ( TempWStr )
                         {
                             needToFree = TRUE;
@@ -1967,7 +1967,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, LPWSTR Buffer, size_t Count, LPCWSTR
                     Length = PAL_wcslen(TempWStr);
                 }
 
-                WorkingWStr = (LPWSTR) InternalMalloc(sizeof(WCHAR) * (Length + 1));
+                WorkingWStr = (LPWSTR) InternalMalloc(sizeof(char16_t) * (Length + 1));
                 if (!WorkingWStr)
                 {
                     ERROR("InternalMalloc failed\n");
@@ -2232,7 +2232,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, PAL_FILE *stream, const char *format, 
     LPCSTR Fmt = format;
     LPWSTR TempWStr;
     LPSTR TempStr;
-    WCHAR TempWChar;
+    char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
     int32_t Precision;

@@ -2571,7 +2571,7 @@ static const int g_rgcchSig[] =
 // with given radix. (Moved from JavascriptNumber.cpp, back compat port of FDblToStrRadix()).
 //
 _Success_(return)
-BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) int radix, _Out_writes_(nDstBufSize) WCHAR* psz, int nDstBufSize)
+BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) int radix, _Out_writes_(nDstBufSize) char16_t* psz, int nDstBufSize)
 {
     Assert(!Js::NumberUtilities::IsNan(dbl));
     Assert(dbl != 0);

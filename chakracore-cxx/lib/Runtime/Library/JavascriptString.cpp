@@ -314,7 +314,7 @@ namespace Js
     BOOL JavascriptString::BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength)
     {
         return otherLength == this->GetLength() &&
-            JsUtil::CharacterBuffer<WCHAR>::StaticEquals(this->GetString(), otherBuffer, otherLength);
+            JsUtil::CharacterBuffer<char16_t>::StaticEquals(this->GetString(), otherBuffer, otherLength);
     }
 
     BOOL JavascriptString::HasItemAt(charcount_t index)
@@ -2842,7 +2842,7 @@ case_2:
         {
             return 0;
         }
-        return this->m_charLength * sizeof(WCHAR);
+        return this->m_charLength * sizeof(char16_t);
     }
 
     bool JavascriptString::IsSubstring() const
@@ -3434,7 +3434,7 @@ case_2:
         }
 
         char16_t const * p = inputStr + position + searchLen-1;
-        WCHAR c;
+        char16_t c;
         while(p < inputStr + len)
         {
             // first character match, keep checking
@@ -3477,7 +3477,7 @@ case_2:
         {
             lMatchedJump = jmpTable[searchFirst].shift;
         }
-        WCHAR c;
+        char16_t c;
         char16_t const * p = inputStr + min(len - searchLen, position);
 
         while (true)
@@ -3527,7 +3527,7 @@ case_2:
         // Determine if we can do a partial ASCII Boyer-Moore
         while (p2 >= begin)
         {
-            WCHAR c = *p2;
+            char16_t c = *p2;
             if ( 0 == ( c & ~0x7f ))
             {
                 if ( jmpTable[c].shift == 0 )
@@ -3556,7 +3556,7 @@ case_2:
         // Determine if we can do a partial ASCII Boyer-Moore
         while (p2 < end)
         {
-            WCHAR c = *p2;
+            char16_t c = *p2;
             if ( 0 == ( c & ~0x7f ))
             {
                 if ( jmpTable[c].shift == 0 )

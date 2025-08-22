@@ -94,7 +94,7 @@ namespace Js
     void CacheOperators::CachePropertyReadForGetter(
         PropertyValueInfo *info,
         Var originalInstance,
-        JsUtil::CharacterBuffer<WCHAR> const& propertyName,
+        JsUtil::CharacterBuffer<char16_t> const& propertyName,
         ScriptContext* requestContext)
     {
         PropertyRecord const* propertyRecord;
@@ -372,7 +372,7 @@ namespace Js
         if(object)
         {
             JavascriptFunction* caller;
-            const WCHAR* callerName = NULL;
+            const char16_t* callerName = NULL;
             uint lineNumber = 0;
             uint columnNumber = 0;
             if(JavascriptStackWalker::GetCaller(&caller, requestContext))

@@ -1421,7 +1421,7 @@ namespace Js
 #endif
 
     PropertyId
-    ParseableFunctionInfo::GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<WCHAR> const& propName)
+    ParseableFunctionInfo::GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<char16_t> const& propName)
     {
         const Js::PropertyRecord* propRecord = nullptr;
         ScriptContext * scriptContext = this->m_scriptContext;
@@ -4880,7 +4880,7 @@ namespace Js
         });
     }
 
-    void FunctionBody::InsertSymbolToRegSlotList(JsUtil::CharacterBuffer<WCHAR> const& propName, RegSlot reg, RegSlot totalRegsCount)
+    void FunctionBody::InsertSymbolToRegSlotList(JsUtil::CharacterBuffer<char16_t> const& propName, RegSlot reg, RegSlot totalRegsCount)
     {
         if (totalRegsCount > 0)
         {
@@ -9588,7 +9588,7 @@ namespace Js
 
 
     static const char16_t LoopWStr[] = _u("Loop");
-    size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) WCHAR* displayName, _In_ size_t sizeInChars)
+    size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars)
     {
         const char16_t* functionName = this->GetExternalDisplayName();
         size_t length = wcslen(functionName) + /*length of largest int32*/ 10 + _countof(LoopWStr) + /*null*/ 1;

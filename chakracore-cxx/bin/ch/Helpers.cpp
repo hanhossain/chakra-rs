@@ -247,7 +247,7 @@ HRESULT Helpers::LoadScriptFromFile(LPCSTR filenameToLoad, LPCSTR& contents, uin
         // suppressing prefast warning that "readable size is bufferLength
         // bytes but 2 may be read" as bufferLength is clearly > 2 in the code that follows
 #pragma warning(disable:6385)
-        C_ASSERT(sizeof(WCHAR) == 2);
+        C_ASSERT(sizeof(char16_t) == 2);
         if (bufferLength > 2)
         {
             __analysis_assume(bufferLength > 2);

@@ -99,14 +99,14 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     // a config file there that we can use
     if (_wfopen_s(&configFile, filename, _u("r")) != 0 || configFile == nullptr)
     {
-        WCHAR homeDir[MAX_PATH];
+        char16_t homeDir[MAX_PATH];
 
         if (GetEnvironmentVariable(_u("HOME"), homeDir, MAX_PATH) == 0)
         {
             return;
         }
         
-        WCHAR configFileFullName[MAX_PATH];
+        char16_t configFileFullName[MAX_PATH];
 
         StringCchPrintf(configFileFullName, MAX_PATH, _u("%s/%s%s"), homeDir, configFileName, configFileExt);
         if (_wfopen_s(&configFile, configFileFullName, _u("r")) != 0 || configFile == nullptr)
@@ -266,16 +266,16 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 #endif
 }
 
-HRESULT ConfigParser::SetOutputFile(const WCHAR* outputFile, const WCHAR* openMode)
+HRESULT ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* openMode)
 {
     // If present, replace the {PID} token with the process ID
-    const WCHAR* pidStr = nullptr;
-    WCHAR buffer[_MAX_PATH];
+    const char16_t* pidStr = nullptr;
+    char16_t buffer[_MAX_PATH];
     if ((pidStr = wcsstr(outputFile, _u("{PID}"))) != nullptr)
     {
         size_t pidStartPosition = pidStr - outputFile;
 
-        WCHAR* pDest = buffer;
+        char16_t* pDest = buffer;
         size_t bufferLen = _MAX_PATH;
 
         // Copy the filename before the {PID} token
