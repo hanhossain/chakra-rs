@@ -797,15 +797,11 @@ Abstract:
 #define THREADSilentGetCurrentThreadId() (SIZE_T)syscall(SYS_gettid)
 #elif defined(__APPLE__)
 inline SIZE_T THREADSilentGetCurrentThreadId() {
-#ifndef __IOS__
     static thread_local SIZE_T threadIdSelf = -1;
     if (threadIdSelf != -1) return threadIdSelf;
-#endif
     uint64_t tid;
     pthread_threadid_np(pthread_self(), &tid);
-#ifndef __IOS__
     threadIdSelf = (SIZE_T)tid;
-#endif
     return (SIZE_T)tid;
 }
 #else

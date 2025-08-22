@@ -38,11 +38,7 @@
 // do not change the order below
 // otherwise, i.e. android system can be marked as posix? etc..
 #if defined(__APPLE__)
-#ifdef __IOS__
-#define DEST_PLATFORM_TEXT "ios"
-#else // ! iOS
 #define DEST_PLATFORM_TEXT "darwin"
-#endif // iOS ?
 #elif defined(__linux__)
 #define DEST_PLATFORM_TEXT "posix"
 #elif defined(__FreeBSD__) || defined(__unix__)

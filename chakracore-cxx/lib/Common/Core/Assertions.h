@@ -13,12 +13,7 @@
 extern int AssertCount;
 extern int AssertsToConsole;
 
-#if !defined(__IOS__)
 extern __declspec(thread) int IsInAssert;
-#else
- // todo: implement thread local variable for iOS ??
-extern int IsInAssert;
-#endif
 
 #if !defined(USED_IN_STATIC_LIB)
 #define REPORT_ASSERT(f, comment) Js::Throw::ReportAssert(__FILE__, __LINE__, STRINGIZE((f)), comment)

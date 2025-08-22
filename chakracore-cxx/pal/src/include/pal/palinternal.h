@@ -161,16 +161,7 @@ function_name() to call the system's implementation
 #endif
 
 #if defined(__APPLE__)
-#ifndef __IOS__
 #include "TargetConditionals.h"
-#if TARGET_IPHONE_SIMULATOR
-#define __IOS__
-#elif TARGET_OS_IPHONE
-#define __IOS__
-#elif TARGET_OS_MAC
-// macOS
-#endif
-#endif // __IOS__ ?
 #endif // __APPLE__ ?
 
 // TODO (hanhossain): remove all defines and undefs
@@ -554,11 +545,7 @@ function_name() to call the system's implementation
 #ifdef __APPLE__
 
 #undef GetCurrentThread
-#ifndef __IOS__
 #include <CoreServices/CoreServices.h>
-#else
-#include <CFNetwork/CFNetwork.h>
-#endif
 
 #include <malloc/malloc.h>
 

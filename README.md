@@ -39,8 +39,6 @@ open graph.svg
 ## TODO
 
 Preprocessor directives to remove:
-- ios
-  - `__IOS__`
 - any arch that's not x64 or arm64
   - `_M_IX86`
   - `_ARM32`

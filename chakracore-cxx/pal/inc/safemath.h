@@ -28,7 +28,7 @@
 #endif
 #endif
 
-#if !defined(__IOS__) && !defined(OSX_SDK_TR1) && defined(__APPLE__)
+#if !defined(OSX_SDK_TR1) && defined(__APPLE__)
 #include <AvailabilityMacros.h>
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < MAC_OS_X_VERSION_10_9
 #define OSX_SDK_TR1

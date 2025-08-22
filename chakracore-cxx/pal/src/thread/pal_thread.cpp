@@ -2440,16 +2440,8 @@ static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *l
     // osx 10.9(+ ?) pthread_get_stacksize_np bug
     if (pthread_main_np())
     {
-#ifndef __IOS__
         // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html
         stack = max(8 * 1024 * 1024, stack);
-#else
-        pthread_attr_t pat;
-        pthread_attr_init(&pat);
-        size_t gs = 0;
-        pthread_attr_getguardsize(&pat, &gs);
-        stack = max((1024 * 1024) - gs, stack);
-#endif
     }
 
     *highLimit = (size_t)pthread_get_stackaddr_np(thread);
@@ -2460,21 +2452,17 @@ static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *l
 #undef EXPECTED_ALIGNMENT
 #endif
 
-#ifndef __IOS__
 static thread_local size_t s_cachedHighLimit = 0;
 static thread_local size_t s_cachedLowLimit = 0;
-#endif
 
 void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
 {
-#ifndef __IOS__
     if (s_cachedLowLimit)
     {
         *lowLimit = s_cachedLowLimit;
         *highLimit = s_cachedHighLimit;
         return;
     }
-#endif
     pthread_t currentThreadHandle = pthread_self();
 
 #ifdef __APPLE__
@@ -2506,10 +2494,8 @@ void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
     *highLimit = (size_t) stackbase;
 #endif
 
-#ifndef __IOS__
     s_cachedLowLimit = *lowLimit;
     s_cachedHighLimit = *highLimit;
-#endif
 }
 
 #ifndef _ARM64_
