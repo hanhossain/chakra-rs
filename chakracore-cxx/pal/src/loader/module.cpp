@@ -57,7 +57,7 @@ Abstract:
 #include <sys/types.h>
 #include <sys/mman.h>
 
-#if defined(__LINUX__) && !defined(__ANDROID__)
+#if defined(__LINUX__)
 #include <gnu/lib-names.h>
 #endif
 

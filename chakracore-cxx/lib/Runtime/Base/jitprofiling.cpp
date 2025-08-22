@@ -202,7 +202,7 @@ static int loadiJIT_Funcs()
     dllName = getenv(NEW_DLL_ENVIRONMENT_VAR);
     if (!dllName)
         dllName = getenv(DLL_ENVIRONMENT_VAR);
-#if defined(__ANDROID__) || defined(ANDROID)
+#if defined(ANDROID)
     if (!dllName)
         dllName = ANDROID_JIT_AGENT_PATH;
 #endif

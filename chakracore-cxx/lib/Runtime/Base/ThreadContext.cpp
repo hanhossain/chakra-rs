@@ -1621,7 +1621,7 @@ ThreadContext::ProbeStackNoDispose(size_t size, Js::ScriptContext *scriptContext
         Js::Throw::StackOverflow(scriptContext, returnAddress);
     }
 
-#if defined(__IOS__) || defined(__ANDROID__)
+#if defined(__IOS__)
     // Use every Nth stack probe as a QC trigger.
     if (AutoSystemInfo::ShouldQCMoreFrequently() && this->HasInterruptPoller() && this->IsScriptActive())
     {

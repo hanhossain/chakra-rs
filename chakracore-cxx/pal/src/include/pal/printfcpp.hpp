@@ -27,11 +27,7 @@ Abstract:
 
 #include <stdarg.h>
 
-#ifndef __ANDROID__
 typedef __builtin_va_list va_list;
-#else
-typedef __va_list va_list;
-#endif
 
 #ifdef __cplusplus
 

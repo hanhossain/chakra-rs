@@ -43,8 +43,6 @@
 #else // ! iOS
 #define DEST_PLATFORM_TEXT "darwin"
 #endif // iOS ?
-#elif defined(__ANDROID__)
-#define DEST_PLATFORM_TEXT "android"
 #elif defined(__linux__)
 #define DEST_PLATFORM_TEXT "posix"
 #elif defined(__FreeBSD__) || defined(__unix__)

@@ -4,10 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#if defined(__ANDROID__)
-#include <pthread.h>
-#endif
-
 #include "Runtime.h"
 
 #include "Library/DelayFreeArrayBufferHelper.h"

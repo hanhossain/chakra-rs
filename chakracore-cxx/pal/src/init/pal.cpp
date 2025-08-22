@@ -133,7 +133,7 @@ Initialize()
     SetLastError(ERROR_GEN_FAILURE);
 
     // prevent un-reasonable stack limits. (otherwise affects mmap calls later)
-#if !defined(__IOS__) && !defined(__ANDROID__)
+#if !defined(__IOS__)
 #if defined (_AMD64_) || defined (_M_ARM64)
     const rlim_t maxStackSize = 8 * 1024 * 1024;   // CC Max stack size
 #else
@@ -151,7 +151,7 @@ Initialize()
               and setrlimit call failed to fix that");
         }
     }
-#endif // !__IOS__ && !__ANDROID__
+#endif // !__IOS__
     CriticalSectionSubSysInitialize();
 
     if(NULL == init_critsec)
