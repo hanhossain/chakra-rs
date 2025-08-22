@@ -154,7 +154,7 @@ namespace Js
         bool isVarAsmJsType() const;
         bool isSubType( AsmJsType type ) const;
         bool isSuperType( AsmJsType type ) const;
-        const char16 *toChars() const;
+        const char16_t *toChars() const;
         bool isSIMDType() const;
         bool isSIMDInt32x4() const;
         bool isSIMDBool32x4() const;
@@ -543,7 +543,7 @@ namespace Js
 
         inline static hash_t GetHashCode(double d)
         {
-            __int64 i64 = *(__int64*)&d;
+            long i64 = *(long*)&d;
             return (uint)((i64 >> 32) ^ (uint)i64);
         }
     };

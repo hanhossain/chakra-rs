@@ -16,7 +16,7 @@ struct TestHooks
     typedef HRESULT(*SetAssertToConsoleFlagPtr)(bool flag);
     typedef HRESULT(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
     typedef void(* NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
-    typedef int(*LogicalStringCompareImpl)(const char16* p1, int p1size, const char16* p2, int p2size);
+    typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
     SetConfigFlagsPtr pfSetConfigFlags;
     SetConfigFilePtr  pfSetConfigFile;

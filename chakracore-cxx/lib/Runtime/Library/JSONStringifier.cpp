@@ -27,7 +27,7 @@ JSONStringifier::SetStringGap(_In_ JavascriptString* spaceString)
     this->gapLength = min(MaxGapLength, spaceString->GetLength());
     if (this->gapLength != 0)
     {
-        this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16, this->gapLength);
+        this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16_t, this->gapLength);
         wmemcpy_s(gap, this->gapLength, spaceString->GetString(), this->gapLength);
     }
 }
@@ -38,7 +38,7 @@ JSONStringifier::SetNumericGap(charcount_t spaceCount)
     this->gapLength = spaceCount;
     if (this->gapLength != 0)
     {
-        this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16, this->gapLength);
+        this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16_t, this->gapLength);
         wmemset(gap, _u(' '), this->gapLength);
     }
 }
@@ -679,10 +679,10 @@ JSONStringifier::CalculateStringElementLength(_In_ JavascriptString* str)
     //
     // All JSON strings are enclosed in double quotes, so add 2 to the length to account for them
     uint64 escapedStrLength = strLength + 2;
-    const char16* bufferStart = str->GetString();
-    for (const char16* index = str->GetString(); index < bufferStart + strLength; ++index)
+    const char16_t* bufferStart = str->GetString();
+    for (const char16_t* index = str->GetString(); index < bufferStart + strLength; ++index)
     {
-        char16 currentCharacter = *index;
+        char16_t currentCharacter = *index;
 
         // Some characters may require an escape sequence. We can use the escapeMapCount table
         // to determine how many extra characters are needed

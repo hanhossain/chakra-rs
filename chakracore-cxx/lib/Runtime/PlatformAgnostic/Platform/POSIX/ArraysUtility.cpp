@@ -12,8 +12,8 @@ namespace PlatformAgnostic
 namespace Arrays
 {
 
-    static char16 commaSeparator = _u(',');
-    static char16 semicolonSeparator = _u(';');
+    static char16_t commaSeparator = _u(',');
+    static char16_t semicolonSeparator = _u(';');
 
     ArrayLocalization::ArrayLocalization()
     {
@@ -48,7 +48,7 @@ namespace Arrays
         }
     }
 
-    bool GetLocaleSeparator(char16* szSeparator, uint32* sepOutSize, uint32 sepBufSize)
+    bool GetLocaleSeparator(char16_t* szSeparator, uint32* sepOutSize, uint32 sepBufSize)
     {
         ArrayLocalization arrayLocalization;
         szSeparator[*sepOutSize] = arrayLocalization.GetLocaleSeparator();

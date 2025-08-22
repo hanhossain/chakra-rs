@@ -112,7 +112,7 @@ public:
         }
     }
 
-    static bool HasSymbolName(Scope * scope, const JsUtil::CharacterBuffer<WCHAR>& name)
+    static bool HasSymbolName(Scope * scope, const JsUtil::CharacterBuffer<char16_t>& name)
     {
         for (Symbol *sym = scope->m_symList; sym; sym = sym->GetNext())
         {

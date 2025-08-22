@@ -52,15 +52,15 @@ public:
     static void ParseOnModuleLoad(CmdLineArgsParser& parser, HANDLE hMod);
 
 #ifdef ENABLE_TEST_HOOKS
-    static void ParseCustomConfigFile(CmdLineArgsParser& parser, const char16* strConfigFile)
+    static void ParseCustomConfigFile(CmdLineArgsParser& parser, const char16_t* strConfigFile)
     {
         s_moduleConfigParser.ParseConfig(NULL /* hMod */, parser, strConfigFile);
     }
 #endif
 
-    void ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16* strCustomConfigFile = nullptr);
+    void ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ParseRegistry(CmdLineArgsParser &parser);
     void ProcessConfiguration(HANDLE mod);
-    HRESULT SetOutputFile(const WCHAR* outputFile, const WCHAR* openMode);
+    HRESULT SetOutputFile(const char16_t* outputFile, const char16_t* openMode);
     bool HasReadConfig() { return _hasReadConfig; }
 };

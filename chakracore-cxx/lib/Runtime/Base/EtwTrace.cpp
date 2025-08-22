@@ -332,7 +332,7 @@ void EtwTrace::LogScriptContextLoadEvent(ScriptContext* scriptContext)
 //
 // Logs the runtime source module load event.
 //
-void EtwTrace::LogSourceModuleLoadEvent(ScriptContext* scriptContext, DWORD_PTR sourceContext, _In_z_ const char16* url)
+void EtwTrace::LogSourceModuleLoadEvent(ScriptContext* scriptContext, DWORD_PTR sourceContext, _In_z_ const char16_t* url)
 {
     AssertMsg(sourceContext != Constants::NoHostSourceContext, "We should not be logged this if there is no source code available");
 
@@ -346,12 +346,12 @@ void EtwTrace::LogSourceModuleLoadEvent(ScriptContext* scriptContext, DWORD_PTR 
 //
 // This emulates the logic used by the F12 profiler to give names to functions
 //
-const char16* EtwTrace::GetFunctionName(FunctionBody* body)
+const char16_t* EtwTrace::GetFunctionName(FunctionBody* body)
 {
     return body->GetExternalDisplayName();
 }
 
-size_t EtwTrace::GetLoopBodyName(_In_ FunctionBody* body, _In_ LoopHeader* loopHeader, _Out_writes_opt_z_(size) char16* nameBuffer, _In_ size_t size)
+size_t EtwTrace::GetLoopBodyName(_In_ FunctionBody* body, _In_ LoopHeader* loopHeader, _Out_writes_opt_z_(size) char16_t* nameBuffer, _In_ size_t size)
 {
     return body->GetLoopBodyName(body->GetLoopNumber(loopHeader), nameBuffer, size);
 }
@@ -359,17 +359,17 @@ size_t EtwTrace::GetLoopBodyName(_In_ FunctionBody* body, _In_ LoopHeader* loopH
 _Success_(return == 0)
 size_t EtwTrace::GetSimpleJitFunctionName(
     Js::FunctionBody *const body,
-    _Out_writes_opt_z_(nameCharCapacity) char16 *const name,
+    _Out_writes_opt_z_(nameCharCapacity) char16_t *const name,
     const size_t nameCharCapacity)
 {
     Assert(body);
     Assert(name);
     Assert(nameCharCapacity != 0);
 
-    const char16 *const suffix = _u("Simple");
+    const char16_t *const suffix = _u("Simple");
     const size_t suffixCharLength = _countof(_u("Simple")) - 1;
 
-    const char16 *const functionName = GetFunctionName(body);
+    const char16_t *const functionName = GetFunctionName(body);
     const size_t functionNameCharLength = body->GetDisplayNameLength();
     const size_t requiredCharCapacity = functionNameCharLength + suffixCharLength + 1;
     if(requiredCharCapacity > nameCharCapacity || name == NULL)

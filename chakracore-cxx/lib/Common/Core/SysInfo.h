@@ -110,7 +110,7 @@ private:
 
     bool InitPhysicalProcessorCount();
 
-    WCHAR binaryName[MAX_PATH + 1];
+    char16_t binaryName[MAX_PATH + 1];
     uint32_t majorVersion;
     uint32_t minorVersion;
     uint32_t buildDateHash;

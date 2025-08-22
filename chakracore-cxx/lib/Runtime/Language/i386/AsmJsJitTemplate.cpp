@@ -18,7 +18,7 @@ static const uint8_t RegEncode[] =
 };
 
 #if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
-extern char16 const * const RegNamesW[];
+extern char16_t const * const RegNamesW[];
 #endif
 
 #include "AsmJsInstructionTemplate.h"

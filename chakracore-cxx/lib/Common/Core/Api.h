@@ -6,7 +6,7 @@
 
 #pragma intrinsic(memcpy)
 extern void js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count);
-extern void js_wmemcpy_s(__ecount(sizeInWords) char16 *dst, size_t sizeInWords, __in_ecount(count) const char16 *src, size_t count);
+extern void js_wmemcpy_s(__ecount(sizeInWords) char16_t *dst, size_t sizeInWords, __in_ecount(count) const char16_t *src, size_t count);
 
 #if defined(_M_IX86) || defined(_M_X64)
 extern void js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBytes);

@@ -2406,8 +2406,8 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         CompileAssert(type < Wasm::WasmTypes::Limit);
-        const char16* fromType = toJs ? Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type)) : _u("Javascript Variable");
-        const char16* toType = toJs ? _u("Javascript Variable") : Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type));
+        const char16_t* fromType = toJs ? Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type)) : _u("Javascript Variable");
+        const char16_t* toType = toJs ? _u("Javascript Variable") : Wasm::WasmTypes::GetTypeName(static_cast<Wasm::WasmTypes::WasmType>(type));
         JavascriptError::ThrowTypeErrorVar(scriptContext, WASMERR_InvalidTypeConversion, fromType, toType);
 #else
         Assert(UNREACHED); //shouldn't get there
@@ -3390,7 +3390,7 @@ skipThunk:
 
             if (PHASE_TRACE(InterpreterAutoProfilePhase, functionBody))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 Output::Print(_u("InterpreterAutoProfile - Func %s - Started profiling\n"), functionBody->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
             }
@@ -3412,7 +3412,7 @@ skipThunk:
 #if DBG_DUMP
             if (PHASE_TRACE(InterpreterAutoProfilePhase, functionBody))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 Output::Print(_u("InterpreterAutoProfile - Func %s - Stopped profiling\n"), functionBody->GetDebugNumberSet(debugStringBuffer));
                 Output::Flush();
             }
@@ -6155,7 +6155,7 @@ skipThunk:
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
             if (PHASE_TRACE(Js::JITLoopBodyPhase, fn))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
                 Output::Print(
                     _u("Speculate Jit set for this function with loopbody: function: %s (%s)\n"),

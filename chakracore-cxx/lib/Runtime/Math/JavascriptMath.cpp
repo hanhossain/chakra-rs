@@ -275,7 +275,7 @@ using namespace Js;
                 }
                 else if (typeLeft == TypeIds_Integer)
                 {
-                    __int64 sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
+                    long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
                     return JavascriptNumber::ToVar(sum, scriptContext);
                 }
                 else if (typeLeft == TypeIds_String)

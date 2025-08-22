@@ -88,54 +88,21 @@ extern "C" {
 // Misc. types
 ////////////////////////////////////////////////////////////////////////
 
-// A bunch of source files (e.g. most of the ndp tree) include pal.h
-// but are written to be LLP64, not LP64.  (LP64 => long = 64 bits
-// LLP64 => longs = 32 bits, long long = 64 bits)
-//
-// To handle this difference, we #define long to be int (and thus 32 bits) when
-// compiling those files.  (See the bottom of this file or search for
-// #define long to see where we do this.)
-//
-// But this fix is more complicated than it seems, because we also use the
-// preprocessor to #define __int64 to long for LP64 architectures (__int64
-// isn't a builtin in gcc).   We don't want __int64 to be an int (by cascading
-// macro rules).  So we play this little trick below where we add
-// __cppmungestrip before "long", which is what we're really #defining __int64
-// to.  The preprocessor sees __cppmungestriplong as something different than
-// long, so it doesn't replace it with int.  The during the cppmunge phase, we
-// remove the __cppmungestrip part, leaving long for the compiler to see.
-//
-// Note that we can't just use a typedef to define __int64 as long before
-// #defining long because typedefed types can't be signedness-agnostic (i.e.
-// they must be either signed or unsigned) and we want to be able to use
-// __int64 as though it were intrinsic
-
-#define __int64     long
-
-typedef __int64 LONGLONG;
-typedef unsigned __int64 ULONGLONG;
-typedef ULONGLONG DWORD64;
-typedef DWORD64 *PDWORD64;
-typedef LONGLONG *PLONG64;
-typedef ULONGLONG *PULONG64;
-typedef ULONGLONG *PULONGLONG;
-typedef ULONGLONG DWORDLONG;
-
 typedef int BOOL, *LPBOOL;
 typedef uint8_t BOOLEAN;
 
-typedef unsigned __int64 UINT64;
+typedef unsigned long UINT64;
 
-typedef unsigned __int64 ULONG64;
-typedef signed __int64 LONG64;
+typedef unsigned long ULONG64;
+typedef signed long LONG64;
 
 #define _W64
 
-#define _atoi64 (__int64)atoll
+#define _atoi64 (long)atoll
 
-typedef __int64 INT_PTR;
-typedef unsigned __int64 UINT_PTR;
-typedef unsigned __int64 DWORD_PTR;
+typedef long INT_PTR;
+typedef unsigned long UINT_PTR;
+typedef unsigned long DWORD_PTR;
 
 /* maximum signed 64 bit value */
 #define LONG_PTR_MAX      I64(9223372036854775807)
@@ -156,9 +123,6 @@ typedef ptrdiff_t LPARAM;
 typedef unsigned short char16_t;
 #endif // __cplusplus
 
-typedef char16_t char16;
-typedef char16_t WCHAR;
-
 // TODO (hanhossain): can probably remove this
 #define _INTPTR_T_DEFINED
 // TODO (hanhossain): can probably remove this
@@ -169,18 +133,18 @@ typedef uint16_t LANGID;
 
 typedef uint32_t LCTYPE;
 
-typedef const WCHAR *LPCWCH;
-typedef WCHAR *LPWSTR, *PWSTR;
+typedef const char16_t *LPCWCH;
+typedef char16_t *LPWSTR, *PWSTR;
 
-typedef const WCHAR *LPCWSTR, *PCWSTR;
+typedef const char16_t *LPCWSTR, *PCWSTR;
 
 typedef char *PCHAR;
 typedef char *LPSTR;
 typedef const char *LPCSTR;
 
 #ifdef UNICODE
-typedef WCHAR TCHAR;
-typedef WCHAR _TCHAR;
+typedef char16_t TCHAR;
+typedef char16_t _TCHAR;
 #else
 typedef char TCHAR;
 typedef char _TCHAR;
@@ -231,7 +195,7 @@ typedef union _LARGE_INTEGER {
         int32_t HighPart;
 #endif
     } u;
-    LONGLONG QuadPart;
+    long QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
 
 #ifndef GUID_DEFINED

@@ -242,7 +242,7 @@ namespace WAsmJs
 #if DBG_DUMP
         // Used for debugging
         Types mType;
-        static void GetTypeDebugName(Types type, char16* buf, uint bufsize, bool shortName = false);
+        static void GetTypeDebugName(Types type, char16_t* buf, uint bufsize, bool shortName = false);
         void PrintTmpRegisterAllocation(RegSlot loc, bool deallocation = false);
 #endif
     };

@@ -26,7 +26,7 @@ namespace DateTime
     struct UtilityPlatformData
     {
         // cache always the last date's zone
-        WCHAR standardName[__CC_PA_TIMEZONE_ABVR_NAME_LENGTH];
+        char16_t standardName[__CC_PA_TIMEZONE_ABVR_NAME_LENGTH];
         size_t standardNameLength;
     };
 
@@ -34,8 +34,8 @@ namespace DateTime
     {
     public:
         double    cacheSysTime;
-        ULONGLONG cacheTick;
-        ULONGLONG previousDifference;
+        unsigned long cacheTick;
+        unsigned long previousDifference;
 
         HiresTimerPlatformData():cacheSysTime(0), cacheTick(-1), previousDifference(0) { }
         void Reset() { /* dummy method for interface compatiblity */ }

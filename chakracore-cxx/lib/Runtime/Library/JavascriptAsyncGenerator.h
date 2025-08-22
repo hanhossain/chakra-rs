@@ -105,7 +105,7 @@ public:
         ScriptContext* scriptContext,
         Var input,
         ResumeYieldKind resumeKind,
-        const char16* apiNameForErrorMessage);
+        const char16_t* apiNameForErrorMessage);
 };
 
 template<>

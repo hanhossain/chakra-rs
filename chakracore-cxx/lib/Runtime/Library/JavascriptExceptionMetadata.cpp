@@ -131,7 +131,7 @@ namespace Js {
             {
                 utf8::DecodeOptions options = utf8::doAllowThreeByteSurrogates;
                 LPCUTF8 potentialNewlineStart = functionSource + endByteOffset - 3;
-                char16 decodedCharacter = utf8::Decode(potentialNewlineStart, functionSource + endByteOffset, options);
+                char16_t decodedCharacter = utf8::Decode(potentialNewlineStart, functionSource + endByteOffset, options);
                 if (decodedCharacter == 0x2028 || decodedCharacter == 0x2029)
                 {
                     endCharOffset--;

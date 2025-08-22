@@ -39,7 +39,7 @@ void WasmBinaryReader::InitializeReader()
     m_readerState = READER_STATE_UNKNOWN;
 }
 
-void WasmBinaryReader::ThrowDecodingError(const char16* msg, ...) const
+void WasmBinaryReader::ThrowDecodingError(const char16_t* msg, ...) const
 {
     va_list argptr;
     va_start(argptr, msg);
@@ -339,7 +339,7 @@ uint32 WasmBinaryReader::EstimateCurrentFunctionBytecodeSize() const
     return m_funcState.size;
 }
 
-WasmOp WasmBinaryReader::ReadPrefixedOpCode(WasmOp prefix, bool isSupported, const char16* notSupportedMsg)
+WasmOp WasmBinaryReader::ReadPrefixedOpCode(WasmOp prefix, bool isSupported, const char16_t* notSupportedMsg)
 {
     CompileAssert(sizeof(WasmOp) >= 2);
     if (!isSupported)
@@ -829,19 +829,19 @@ void WasmBinaryReader::ReadExportSection()
     m_module->AllocateFunctionExports(numExports);
 
     ArenaAllocator tmpAlloc(_u("ExportDupCheck"), m_module->GetScriptContext()->GetThreadContext()->GetPageAllocator(), Js::Throw::OutOfMemory);
-    typedef SList<const char16*> NameList;
+    typedef SList<const char16_t*> NameList;
     JsUtil::BaseDictionary<uint32, NameList*, ArenaAllocator> exportsNameDict(&tmpAlloc);
 
     for (uint32 iExport = 0; iExport < numExports; iExport++)
     {
         uint32 nameLength;
-        const char16* exportName = ReadInlineName(length, nameLength);
+        const char16_t* exportName = ReadInlineName(length, nameLength);
 
         // Check if the name is already used
         NameList* list = nullptr;
         if (exportsNameDict.TryGetValue(nameLength, &list))
         {
-            const char16** found = list->Find([exportName, nameLength](const char16* existing) { 
+            const char16_t** found = list->Find([exportName, nameLength](const char16_t* existing) { 
                 return wcsncmp(exportName, existing, nameLength) == 0;
             });
             if (found)
@@ -1038,7 +1038,7 @@ void WasmBinaryReader::ReadNameSection()
     {
         uint32 fnNameLen = 0;
         WasmFunctionInfo* funsig = m_module->GetWasmFunctionInfo(i);
-        const char16* name = ReadInlineName(len, fnNameLen);
+        const char16_t* name = ReadInlineName(len, fnNameLen);
         funsig->SetName(name, fnNameLen);
         uint32 numLocals = LEB128(len);
         if (numLocals != funsig->GetLocalCount())
@@ -1128,7 +1128,7 @@ void WasmBinaryReader::ReadCustomSection()
     m_pc = m_currentSection.end;
 }
 
-const char16* WasmBinaryReader::ReadInlineName(uint32& length, uint32& nameLength)
+const char16_t* WasmBinaryReader::ReadInlineName(uint32& length, uint32& nameLength)
 {
     uint32 rawNameLength = LEB128(length);
     if (rawNameLength > Limits::GetMaxStringSize())
@@ -1146,7 +1146,7 @@ const char16* WasmBinaryReader::ReadInlineName(uint32& length, uint32& nameLengt
     try
     {
         nameLength = (uint32)utf8::ByteIndexIntoCharacterIndex(rawName, rawNameLength, decodeOptions);
-        char16* contents = AnewArray(m_alloc, char16, nameLength + 1);
+        char16_t* contents = AnewArray(m_alloc, char16_t, nameLength + 1);
         size_t decodedLength = utf8::DecodeUnitsIntoAndNullTerminate(contents, rawName, rawName + rawNameLength, decodeOptions);
         if (decodedLength != nameLength)
         {
@@ -1174,8 +1174,8 @@ void WasmBinaryReader::ReadImportSection()
     for (uint32 i = 0; i < numImports; ++i)
     {
         uint32 modNameLen = 0, fnNameLen = 0;
-        const char16* modName = ReadInlineName(len, modNameLen);
-        const char16* fnName = ReadInlineName(len, fnNameLen);
+        const char16_t* modName = ReadInlineName(len, modNameLen);
+        const char16_t* fnName = ReadInlineName(len, fnNameLen);
 
         ExternalKinds kind = ReadExternalKind();
         TRACE_WASM_DECODER(_u("Import #%u: \"%s\".\"%s\", kind: %d"), i, modName, fnName, kind);
@@ -1357,7 +1357,7 @@ WasmNode WasmBinaryReader::ReadInitExpr(bool isOffset)
 }
 
 template<typename SectionLimitType>
-SectionLimitType WasmBinaryReader::ReadSectionLimitsBase(uint32 maxInitial, uint32 maxMaximum, const char16* errorMsg)
+SectionLimitType WasmBinaryReader::ReadSectionLimitsBase(uint32 maxInitial, uint32 maxMaximum, const char16_t* errorMsg)
 {
     SectionLimitType limits;
     uint32 length = 0;

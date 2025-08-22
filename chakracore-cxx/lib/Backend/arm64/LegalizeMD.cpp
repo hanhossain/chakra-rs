@@ -1094,7 +1094,7 @@ bool LegalizeMD::LegalizeDataAdr(IR::Instr *instr, uintptr_t dataOffset)
 
 #ifdef DBG
 
-void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16 * msg, ...)
+void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16_t * msg, ...)
 {
     va_list argptr;
     va_start(argptr, msg);

@@ -157,7 +157,7 @@ namespace Js
 
         JavascriptSymbol* sym = VarTo<JavascriptSymbol>(args[1]);
         const Js::PropertyRecord* symPropertyRecord = sym->GetValue();
-        const char16* key = symPropertyRecord->GetBuffer();
+        const char16_t* key = symPropertyRecord->GetBuffer();
         const charcount_t keyLength = symPropertyRecord->GetLength();
 
         // Search the global symbol registration map for a key equal to the description of the symbol passed into Symbol.keyFor.
@@ -329,7 +329,7 @@ namespace Js
 
     JavascriptString* JavascriptSymbol::ToString(const PropertyRecord* propertyRecord, ScriptContext * requestContext)
     {
-        const char16* description = propertyRecord->GetBuffer();
+        const char16_t* description = propertyRecord->GetBuffer();
         uint len = propertyRecord->GetLength();
         CompoundString* str = CompoundString::NewWithCharCapacity(len + _countof(_u("Symbol()")), requestContext->GetLibrary());
 

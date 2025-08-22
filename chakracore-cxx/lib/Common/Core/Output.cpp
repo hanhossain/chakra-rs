@@ -40,12 +40,12 @@ thread_local bool     Output::s_capture = false;
 thread_local bool     Output::hasDoneAlignPrefixForThisLine = false;
 thread_local bool     Output::usingCustomAlignAndPrefix = false;
 thread_local size_t   Output::align = 0;
-thread_local const char16* Output::prefix = nullptr;
+thread_local const char16_t* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
 
 size_t
-Output::VerboseNote(const char16 * format, ...)
+Output::VerboseNote(const char16_t * format, ...)
 {
 #ifdef ENABLE_TRACE
     if (Js::Configuration::Global.flags.Verbose)
@@ -64,7 +64,7 @@ Output::VerboseNote(const char16 * format, ...)
 
 #ifdef ENABLE_TRACE
 size_t
-Output::Trace(Js::Phase phase, const char16 *form, ...)
+Output::Trace(Js::Phase phase, const char16_t *form, ...)
 {
     size_t retValue = 0;
 
@@ -80,7 +80,7 @@ Output::Trace(Js::Phase phase, const char16 *form, ...)
 }
 
 size_t
-Output::Trace2(Js::Phase phase, const char16 *form, ...)
+Output::Trace2(Js::Phase phase, const char16_t *form, ...)
 {
     size_t retValue = 0;
 
@@ -96,7 +96,7 @@ Output::Trace2(Js::Phase phase, const char16 *form, ...)
 }
 
 size_t
-Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...)
+Output::TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t *form, ...)
 {
     size_t retValue = 0;
 
@@ -104,7 +104,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *fo
     {
         va_list argptr;
         va_start(argptr, form);
-        WCHAR prefixValue[512];
+        char16_t prefixValue[512];
         _snwprintf_s(prefixValue, _countof(prefixValue), _TRUNCATE, _u("%s: %s: "), Js::PhaseNames[static_cast<int>(phase)], prefix);
         retValue += Output::VTrace(_u("%s"), prefixValue, form, argptr);
         va_end(argptr);
@@ -114,7 +114,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *fo
 }
 
 size_t
-Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
+Output::TraceWithFlush(Js::Phase phase, const char16_t *form, ...)
 {
     size_t retValue = 0;
 
@@ -131,7 +131,7 @@ Output::TraceWithFlush(Js::Phase phase, const char16 *form, ...)
 }
 
 size_t
-Output::TraceWithFlush(Js::Flag flag, const char16 *form, ...)
+Output::TraceWithFlush(Js::Flag flag, const char16_t *form, ...)
 {
     size_t retValue = 0;
 
@@ -148,7 +148,7 @@ Output::TraceWithFlush(Js::Flag flag, const char16 *form, ...)
 }
 
 size_t
-Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char16 *form, va_list argptr)
+Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const char16_t *form, va_list argptr)
 {
     size_t retValue = 0;
 
@@ -161,13 +161,13 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
     {
         const uint32_t c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
         const uint32_t c_frameCount = 10;  // TODO: make it configurable.
-        const char16 callStackPrefix[] = _u("call stack:");
+        const char16_t callStackPrefix[] = _u("call stack:");
         if (s_inMemoryLogger)
         {
             // Trace just addresses of functions, avoid symbol info as it takes too much memory.
             // One line for whole stack trace for easier parsing on the jd side.
             const size_t c_msgCharCount = _countof(callStackPrefix) + (1 + sizeof(void*) * 2) * c_frameCount; // 2 hexadecimal digits per byte + 1 for space.
-            char16 callStackMsg[c_msgCharCount];
+            char16_t callStackMsg[c_msgCharCount];
             void* frames[c_frameCount];
             size_t start = 0;
             size_t temp;
@@ -202,7 +202,7 @@ Output::VTrace(const char16* shortPrefixFormat, const char16* prefix, const char
 
 #ifdef BGJIT_STATS
 size_t
-Output::TraceStats(Js::Phase phase, const char16 *form, ...)
+Output::TraceStats(Js::Phase phase, const char16_t *form, ...)
 {
     if(PHASE_STATS1(phase))
     {
@@ -227,7 +227,7 @@ Output::TraceStats(Js::Phase phase, const char16 *form, ...)
 ///----------------------------------------------------------------------------
 
 size_t
-Output::Print(const char16 *form, ...)
+Output::Print(const char16_t *form, ...)
 {
     va_list argptr;
     va_start(argptr, form);
@@ -237,7 +237,7 @@ Output::Print(const char16 *form, ...)
 }
 
 size_t
-Output::Print(int column, const char16 *form, ...)
+Output::Print(int column, const char16_t *form, ...)
 {
     Output::SkipToColumn(column);
     va_list argptr;
@@ -248,9 +248,9 @@ Output::Print(int column, const char16 *form, ...)
 }
 
 size_t
-Output::VPrint(const char16 *form, va_list argptr)
+Output::VPrint(const char16_t *form, va_list argptr)
 {
-    char16 buf[2048];
+    char16_t buf[2048];
     size_t size;
 
     size = _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, form, argptr);
@@ -266,7 +266,7 @@ Output::VPrint(const char16 *form, va_list argptr)
 // size: characters in buf, excluding the terminating null ==> wcslen(buf)
 //
 size_t
-Output::PrintBuffer(const char16 * buf, size_t size)
+Output::PrintBuffer(const char16_t * buf, size_t size)
 {
     // Handle custom line prefixing
     bool internallyAllocatedBuffer = false;
@@ -279,18 +279,18 @@ Output::PrintBuffer(const char16 * buf, size_t size)
         else
         {
             size_t newbufsize = size + align;
-            char16* newbuf = (char16*)calloc(newbufsize, sizeof(char16));
+            char16_t* newbuf = (char16_t*)calloc(newbufsize, sizeof(char16_t));
             AssertOrFailFastMsg(newbuf != nullptr, "Ran out of memory while printing output");
             internallyAllocatedBuffer = true;
-            const char16* currentReadIndex = buf;
-            char16* currentWriteIndex = newbuf;
+            const char16_t* currentReadIndex = buf;
+            char16_t* currentWriteIndex = newbuf;
             auto ensureSpace = [&currentWriteIndex, &newbuf, &newbufsize](size_t numCharsWantToWrite)
             {
                 size_t charsWritten = (currentWriteIndex - newbuf); // pointer subtraction is number of elements of pointed type between pointers
                 size_t remaining = newbufsize - charsWritten;
                 if (numCharsWantToWrite + 1 > remaining)
                 {
-                    char16* tempbuf = (char16*)realloc(newbuf, newbufsize * sizeof(char16) * 2);
+                    char16_t* tempbuf = (char16_t*)realloc(newbuf, newbufsize * sizeof(char16_t) * 2);
                     AssertOrFailFastMsg(tempbuf != nullptr, "Ran out of memory while printing output");
                     newbuf = tempbuf;
                     newbufsize = newbufsize * 2;
@@ -323,7 +323,7 @@ Output::PrintBuffer(const char16 * buf, size_t size)
                     oldS_Column = align + prefixlength;
                     hasDoneAlignPrefixForThisLine = true;
                 }
-                const char16* endOfLine = wcschr(currentReadIndex, '\n');
+                const char16_t* endOfLine = wcschr(currentReadIndex, '\n');
                 size_t charsToCopy = 0;
                 if (endOfLine != nullptr)
                 {
@@ -349,7 +349,7 @@ Output::PrintBuffer(const char16 * buf, size_t size)
         }
     }
     Output::s_Column += size;
-    const char16 * endbuf = wcschr(buf, '\n');
+    const char16_t * endbuf = wcschr(buf, '\n');
     while (endbuf != nullptr)
     {
         Output::s_Column = size - (endbuf - buf) - 1;
@@ -408,7 +408,7 @@ void Output::Flush()
     _flushall();
 }
 
-void Output::DirectPrint(char16 const * string)
+void Output::DirectPrint(char16_t const * string)
 {
     AutoCriticalSection autocs(&s_critsect);
 
@@ -527,17 +527,17 @@ Output::CaptureStart()
     s_capture = true;
 }
 
-char16 *
+char16_t *
 Output::CaptureEnd()
 {
     Assert(s_capture);
     s_capture = false;
-    char16 * returnBuffer = nullptr;
+    char16_t * returnBuffer = nullptr;
     return returnBuffer;
 }
 
 void
-Output::SetAlignAndPrefix(unsigned int align, const char16 *prefix)
+Output::SetAlignAndPrefix(unsigned int align, const char16_t *prefix)
 {
     Output::hasDoneAlignPrefixForThisLine = false;
     Output::usingCustomAlignAndPrefix = true;

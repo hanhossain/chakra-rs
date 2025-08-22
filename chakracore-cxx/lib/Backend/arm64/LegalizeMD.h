@@ -115,6 +115,6 @@ private:
     static void EmitRandomNopBefore(IR::Instr * instrMov, UINT_PTR rand, RegNum targetReg);
 
 #ifdef DBG
-    static void IllegalInstr(IR::Instr * instr, const char16 * msg, ...);
+    static void IllegalInstr(IR::Instr * instr, const char16_t * msg, ...);
 #endif
 };

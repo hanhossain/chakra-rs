@@ -27,11 +27,11 @@ namespace DateTime
     {
         UtilityPlatformData data;
     public:
-        const WCHAR *GetStandardName(size_t *nameLength,
+        const char16_t *GetStandardName(size_t *nameLength,
                                      // xplat implementation needs an actual
                                      // date for the zone abbr.
                                      const DateTime::YMD *ymd = NULL);
-        const WCHAR *GetDaylightName(size_t *nameLength,
+        const char16_t *GetDaylightName(size_t *nameLength,
                                      const DateTime::YMD *ymd = NULL);
     };
 

@@ -27,16 +27,16 @@ namespace Numbers
         }
     }
 
-    static const WCHAR number_zero        = WCHAR('0');
-    static const WCHAR number_five        = WCHAR('5');
-    static const WCHAR number_nine        = WCHAR('9');
+    static const char16_t number_zero        = char16_t('0');
+    static const char16_t number_five        = char16_t('5');
+    static const char16_t number_nine        = char16_t('9');
 
     Utility::NumbersLocale::NumbersLocale()
     {
         maxDigitsAfterDecimals = 3;
-        defaultDecimalDot = WCHAR('.');
-        defaultDecimalComma = WCHAR(',');
-        localeNegativeSign = WCHAR('-');
+        defaultDecimalDot = char16_t('.');
+        defaultDecimalComma = char16_t(',');
+        localeNegativeSign = char16_t('-');
         
         char buffer[BufSize];
         char *old_locale = setlocale(LC_NUMERIC, NULL);
@@ -52,13 +52,13 @@ namespace Numbers
         struct lconv *locale_format = localeconv();
         if (locale_format != NULL)
         {
-            localeThousands = (WCHAR) *(locale_format->thousands_sep);
-            localeDecimal = (WCHAR) *(locale_format->decimal_point);
+            localeThousands = (char16_t) *(locale_format->thousands_sep);
+            localeDecimal = (char16_t) *(locale_format->decimal_point);
         }
         else // default to en_US
         {
-            localeThousands = (WCHAR) ',';
-            localeDecimal = (WCHAR) '.';
+            localeThousands = (char16_t) ',';
+            localeDecimal = (char16_t) '.';
         }
 
         if (old_locale != NULL)
@@ -70,9 +70,9 @@ namespace Numbers
 
     Utility::NumbersLocale Utility::numbersLocale;
 
-    size_t Utility::NumberToDefaultLocaleString(const WCHAR *number_string,
+    size_t Utility::NumberToDefaultLocaleString(const char16_t *number_string,
                                                 const size_t length,
-                                                WCHAR *buffer,
+                                                char16_t *buffer,
                                                 const size_t pre_allocated_buffer_size)
     {
         if (number_string == nullptr || length == 0 || length >= INT_MAX)
@@ -87,7 +87,7 @@ namespace Numbers
         // find decimal position
         for(int pos = (int)length; pos >= minimum_pos; pos--)
         {
-            WCHAR num = number_string[pos];
+            char16_t num = number_string[pos];
 
             if(numbersLocale.IsDecimalPoint(num))
             {
@@ -106,7 +106,7 @@ namespace Numbers
             const size_t maxDigits = numbersLocale.GetMaxDigitsAfterDecimals();
             if (dec_length > maxDigits)
             {
-                WCHAR num = number_string[decimal_pos + maxDigits + 1];
+                char16_t num = number_string[decimal_pos + maxDigits + 1];
 
                 if (num >= number_five)
                 {
@@ -120,7 +120,7 @@ namespace Numbers
             AssertMsg(decimal_pos != 0, "Decimal pointer shouldn't be at index 0");
             for(size_t pos = end_pos; pos > decimal_pos; pos--)
             {
-                WCHAR num = number_string[pos];
+                char16_t num = number_string[pos];
 
                 if (rollup_last_digit && num == number_nine)
                 {
@@ -156,7 +156,7 @@ namespace Numbers
             add_extra_one = true;
             for(size_t pos = minimum_pos; pos < decimal_pos; pos++)
             {
-                WCHAR num = number_string[pos];
+                char16_t num = number_string[pos];
                 
                 if ( num != number_nine )
                 {
@@ -196,7 +196,7 @@ namespace Numbers
         {
             for(size_t pos = end_pos; pos > decimal_pos; pos--)
             {
-                WCHAR num = number_string[pos];
+                char16_t num = number_string[pos];
                 buffer[bpos] = num;
                 
                 if (rollup_last_digit)
@@ -220,7 +220,7 @@ namespace Numbers
         const bool hasLocaleThousands = numbersLocale.HasLocaleThousands();
         for (int pos = (int)decimal_pos - 1; pos >= minimum_pos; pos--)
         {
-            WCHAR num = number_string[pos];
+            char16_t num = number_string[pos];
 
             if (hasLocaleThousands)
             {
@@ -256,7 +256,7 @@ namespace Numbers
             buffer[bpos--] = number_zero + 1;
         }
 
-        buffer[expected_length] = WCHAR(0);
+        buffer[expected_length] = char16_t(0);
 
         if (is_negative)
         {

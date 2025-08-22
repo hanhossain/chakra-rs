@@ -131,7 +131,7 @@ void  PerfTrace::WritePerfMap()
 
             scriptContext->MapFunction([=] (FunctionBody* body)
             {
-              char16 const * url = body->GetSourceContextInfo()->url;
+              char16_t const * url = body->GetSourceContextInfo()->url;
               if (body->GetSourceContextInfo()->IsDynamic()) {
                 url = _u("dynamic");
               }
@@ -139,7 +139,7 @@ void  PerfTrace::WritePerfMap()
 #if DYNAMIC_INTERPRETER_THUNK
                 if(body->HasInterpreterThunkGenerated())
                 {
-                    const char16* functionName = body->GetExternalDisplayName();
+                    const char16_t* functionName = body->GetExternalDisplayName();
                     fwprintf(perfMapFile, _u("%llX %llX %s!%s[Interpreted]\n"),
                         body->GetDynamicInterpreterEntryPoint(),
                         body->GetDynamicInterpreterThunkSize(),

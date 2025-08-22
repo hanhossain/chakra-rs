@@ -86,15 +86,15 @@ namespace TTD
             ;
         }
 
-        TTAutoString::TTAutoString(const char16* str)
+        TTAutoString::TTAutoString(const char16_t* str)
             : m_allocSize(-1), m_contents(nullptr), m_optFormatBuff(nullptr)
         {
             size_t clen = wcslen(str) + 1;
 
-            this->m_contents = TT_HEAP_ALLOC_ARRAY_ZERO(char16, clen);
+            this->m_contents = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, clen);
             this->m_allocSize = (int32)clen;
 
-            js_memcpy_s(this->m_contents, clen * sizeof(char16), str, clen * sizeof(char16));
+            js_memcpy_s(this->m_contents, clen * sizeof(char16_t), str, clen * sizeof(char16_t));
         }
 
         TTAutoString::TTAutoString(const TTAutoString& str)
@@ -124,14 +124,14 @@ namespace TTD
         {
             if(this->m_contents != nullptr)
             {
-                TT_HEAP_FREE_ARRAY(char16, this->m_contents, (size_t)this->m_allocSize);
+                TT_HEAP_FREE_ARRAY(char16_t, this->m_contents, (size_t)this->m_allocSize);
                 this->m_allocSize = -1;
                 this->m_contents = nullptr;
             }
 
             if(this->m_optFormatBuff != nullptr)
             {
-                TT_HEAP_FREE_ARRAY(char16, this->m_optFormatBuff, 64);
+                TT_HEAP_FREE_ARRAY(char16_t, this->m_optFormatBuff, 64);
                 this->m_optFormatBuff = nullptr;
             }
         }
@@ -141,7 +141,7 @@ namespace TTD
             return this->m_contents == nullptr;
         }
 
-        void TTAutoString::Append(const char16* str, size_t start, size_t end)
+        void TTAutoString::Append(const char16_t* str, size_t start, size_t end)
         {
             Assert(end > start);
 
@@ -162,13 +162,13 @@ namespace TTD
             }
 
             size_t nsize = origsize + strsize + 1;
-            char16* nbuff = TT_HEAP_ALLOC_ARRAY_ZERO(char16, nsize);
+            char16_t* nbuff = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, nsize);
 
             if(this->m_contents != nullptr)
             {
-                js_memcpy_s(nbuff, nsize * sizeof(char16), this->m_contents, origsize * sizeof(char16));
+                js_memcpy_s(nbuff, nsize * sizeof(char16_t), this->m_contents, origsize * sizeof(char16_t));
 
-                TT_HEAP_FREE_ARRAY(char16, this->m_contents, origsize + 1);
+                TT_HEAP_FREE_ARRAY(char16_t, this->m_contents, origsize + 1);
                 this->m_allocSize = -1;
                 this->m_contents = nullptr;
             }
@@ -197,7 +197,7 @@ namespace TTD
         {
             if(this->m_optFormatBuff == nullptr)
             {
-                this->m_optFormatBuff = TT_HEAP_ALLOC_ARRAY_ZERO(char16, 64);
+                this->m_optFormatBuff = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, 64);
             }
 
             swprintf_s(this->m_optFormatBuff, 32, _u("%I64u"), val); //64 char16s is 32 words
@@ -208,13 +208,13 @@ namespace TTD
         void TTAutoString::Append(LPCUTF8 strBegin, LPCUTF8 strEnd)
         {
             int32 strCount = (int32)((strEnd - strBegin) + 1);
-            char16* buff = TT_HEAP_ALLOC_ARRAY_ZERO(char16, (size_t)strCount);
+            char16_t* buff = TT_HEAP_ALLOC_ARRAY_ZERO(char16_t, (size_t)strCount);
 
             LPCUTF8 curr = strBegin;
             int32 i = 0;
             while(curr != strEnd)
             {
-                buff[i] = (char16)*curr;
+                buff[i] = (char16_t)*curr;
                 i++;
                 curr++;
             }
@@ -223,7 +223,7 @@ namespace TTD
             buff[i] = _u('\0');
             this->Append(buff);
 
-            TT_HEAP_FREE_ARRAY(char16, buff, (size_t)strCount);
+            TT_HEAP_FREE_ARRAY(char16_t, buff, (size_t)strCount);
         }
 
         int32 TTAutoString::GetLength() const
@@ -233,7 +233,7 @@ namespace TTD
             return (int32)wcslen(this->m_contents);
         }
 
-        char16 TTAutoString::GetCharAt(int32 pos) const
+        char16_t TTAutoString::GetCharAt(int32 pos) const
         {
             TTDAssert(!this->IsNullString(), "That doesn't make sense.");
             TTDAssert(0 <= pos && pos < this->GetLength(), "Not in valid range.");
@@ -241,7 +241,7 @@ namespace TTD
             return this->m_contents[pos];
         }
 
-        const char16* TTAutoString::GetStrValue() const
+        const char16_t* TTAutoString::GetStrValue() const
         {
             return this->m_contents;
         }

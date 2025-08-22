@@ -453,7 +453,7 @@ namespace Js
 
 #ifdef ENABLE_JS_ETW
         void EmitStackTraceEvent(UINT64 operationID, unsigned short maxFrameCount, bool emitV2AsyncStackEvent);
-        static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const WCHAR* name);
+        static ushort ProcessNameAndGetLength(Js::StringBuilder<ArenaAllocator>* nameBuffer, const char16_t* name);
 #endif
 
         void SetPrivilegeLevel(ScriptContextPrivilegeLevel level) { this->scriptContextPrivilegeLevel = level; }
@@ -518,7 +518,7 @@ namespace Js
         OnlyWritablePropertyScriptRegistry* GetOnlyWritablePropertyRegistry() { return &this->onlyWritablePropertyRegistry; }
     private:
 
-        JavascriptFunction* GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32 grfscr, CompileScriptException * pse, const char16 *rootDisplayName);
+        JavascriptFunction* GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32 grfscr, CompileScriptException * pse, const char16_t *rootDisplayName);
 
         typedef void (*EventHandler)(ScriptContext *);
         NoSpecialPropertyScriptRegistry noSpecialPropertyRegistry;
@@ -623,9 +623,9 @@ public:
 
 
 #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        __int64 bailOutRecordBytes;
-        __int64 bailOutOffsetBytes;
-        __int64 codeSize;
+        long bailOutRecordBytes;
+        long bailOutOffsetBytes;
+        long codeSize;
 #endif
 
 #ifdef  PROFILE_OBJECT_LITERALS
@@ -777,12 +777,12 @@ private:
         DateTime::Utility dateTimeUtility;
 
 public:
-        inline const WCHAR *GetStandardName(size_t *nameLength, DateTime::YMD *ymd = NULL)
+        inline const char16_t *GetStandardName(size_t *nameLength, DateTime::YMD *ymd = NULL)
         {
             return dateTimeUtility.GetStandardName(nameLength, ymd);
         }
 
-        inline const WCHAR *GetDaylightName(size_t *nameLength, DateTime::YMD *ymd = NULL)
+        inline const char16_t *GetDaylightName(size_t *nameLength, DateTime::YMD *ymd = NULL)
         {
             return dateTimeUtility.GetDaylightName(nameLength, ymd);
         }
@@ -887,7 +887,7 @@ private:
 #ifdef RUNTIME_DATA_COLLECTION
         time_t createTime;
 #endif
-        char16 const * url;
+        char16_t const * url;
 
         void PrintStats();
 
@@ -951,7 +951,7 @@ private:
         }
 #endif
 
-        char16 const * GetUrl() const { return url; }
+        char16_t const * GetUrl() const { return url; }
         void SetUrl(BSTR bstr);
 #ifdef RUNTIME_DATA_COLLECTION
         time_t GetCreateTime() const { return createTime; }
@@ -1052,8 +1052,8 @@ private:
         SourceContextInfo * GetSourceContextInfo(DWORD_PTR hostSourceContext, SimpleDataCacheWrapper* dataCacheWrapper);
         SourceContextInfo * GetSourceContextInfo(uint hash);
         SourceContextInfo * CreateSourceContextInfo(uint hash, DWORD_PTR hostSourceContext);
-        SourceContextInfo * CreateSourceContextInfo(DWORD_PTR hostSourceContext, char16 const * url, size_t len,
-            SimpleDataCacheWrapper* dataCacheWrapper, char16 const * sourceMapUrl = nullptr, size_t sourceMapUrlLen = 0);
+        SourceContextInfo * CreateSourceContextInfo(DWORD_PTR hostSourceContext, char16_t const * url, size_t len,
+            SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl = nullptr, size_t sourceMapUrlLen = 0);
 
 #if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
         void ClearSourceContextInfoMaps()
@@ -1181,21 +1181,21 @@ private:
         void InitPropertyStringMap(int i);
         PropertyString* AddPropertyString2(const Js::PropertyRecord* propertyRecord);
         PropertyString* CachePropertyString2(const Js::PropertyRecord* propertyRecord);
-        PropertyString* GetPropertyString2(char16 ch1, char16 ch2);
+        PropertyString* GetPropertyString2(char16_t ch1, char16_t ch2);
         void FindPropertyRecord(LPCWSTR pszPropertyName, int propertyNameLength, PropertyRecord const** propertyRecord);
         JsUtil::List<const RecyclerWeakReference<Js::PropertyRecord const>*>* FindPropertyIdNoCase(LPCWSTR pszPropertyName, int propertyNameLength);
 
         void FindPropertyRecord(JavascriptString* pstName, PropertyRecord const** propertyRecord);
         PropertyRecord const * GetPropertyName(PropertyId propertyId);
         PropertyRecord const * GetPropertyNameLocked(PropertyId propertyId);
-        void GetOrAddPropertyRecord(JsUtil::CharacterBuffer<WCHAR> const& propName, PropertyRecord const** propertyRecord);
-        template <size_t N> void GetOrAddPropertyRecord(const char16(&propertyName)[N], PropertyRecord const** propertyRecord)
+        void GetOrAddPropertyRecord(JsUtil::CharacterBuffer<char16_t> const& propName, PropertyRecord const** propertyRecord);
+        template <size_t N> void GetOrAddPropertyRecord(const char16_t(&propertyName)[N], PropertyRecord const** propertyRecord)
         {
             GetOrAddPropertyRecord(propertyName, N - 1, propertyRecord);
         }
         void GetOrAddPropertyRecord(_In_ Js::JavascriptString * propertyString, _Out_ PropertyRecord const** propertyRecord);
-        PropertyId GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<WCHAR> const& propName);
-        template <size_t N> PropertyId GetOrAddPropertyIdTracked(const char16(&propertyName)[N])
+        PropertyId GetOrAddPropertyIdTracked(JsUtil::CharacterBuffer<char16_t> const& propName);
+        template <size_t N> PropertyId GetOrAddPropertyIdTracked(const char16_t(&propertyName)[N])
         {
             return GetOrAddPropertyIdTracked(propertyName, N - 1);
         }
@@ -1217,20 +1217,20 @@ private:
         ParseNodeProg * ParseScript(Parser* parser, const byte* script,
             size_t cb, SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
-            const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
+            const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
             uint* sourceIndex, Js::Var scriptSource = nullptr);
 
         JavascriptFunction* LoadScript(const byte* script, size_t cb,
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
-            const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
+            const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
             Js::Var scriptSource = nullptr);
 
         JavascriptFunction* LoadScriptInternal(Parser* parser,
             const byte* script, size_t cb,
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
-            const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
+            const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
             Js::Var scriptSource = nullptr);
 
         HRESULT TryDeserializeParserState(
@@ -1275,7 +1275,7 @@ private:
         HRESULT SerializeParserState(const byte* script, size_t cb,
             SRCINFO const * pSrcInfo,
             CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
-            const char16 *rootDisplayName, LoadScriptFlag loadScriptFlag,
+            const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag,
             byte** buffer, uint32_t* bufferSize, ArenaAllocator* alloc,
             JavascriptFunction** function = nullptr,
             Js::Var scriptSource = nullptr);
@@ -1550,7 +1550,7 @@ private:
         typedef HRESULT(*RegisterExternalLibraryType)(Js::ScriptContext *pScriptContext);
         HRESULT RegisterProfileProbe(IActiveScriptProfilerCallback *pProfileCallback, uint32_t dwEventMask, uint32_t dwContext, RegisterExternalLibraryType RegisterExternalLibrary, JavascriptMethod dispatchInvoke);
         HRESULT DeRegisterProfileProbe(HRESULT hrReason, JavascriptMethod dispatchInvoke);
-        HRESULT RegisterLibraryFunction(const char16 *pwszObjectName, const char16 *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
+        HRESULT RegisterLibraryFunction(const char16_t *pwszObjectName, const char16_t *pwszFunctionName, Js::PropertyId functionPropertyId, JavascriptMethod entryPoint);
         HRESULT RegisterBuiltinFunctions(RegisterExternalLibraryType RegisterExternalLibrary);
         HRESULT SetProfileEventMask(uint32_t dwEventMask);
 
@@ -1645,10 +1645,10 @@ private:
         BuiltinFunctionIdDictionary *m_pBuiltinFunctionIdMap;
         Js::PropertyId GetFunctionNumber(JavascriptMethod entryPoint);
 
-        static const char16* CopyString(const char16* str, size_t charCount, ArenaAllocator* alloc);
+        static const char16_t* CopyString(const char16_t* str, size_t charCount, ArenaAllocator* alloc);
 
 #ifdef ENABLE_JS_ETW
-        static charcount_t AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const WCHAR* sourceString, charcount_t sourceStringLen, WCHAR escapeChar, WCHAR charToEscape);
+        static charcount_t AppendWithEscapeCharacters(Js::StringBuilder<ArenaAllocator>* stringBuilder, const char16_t* sourceString, charcount_t sourceStringLen, char16_t escapeChar, char16_t charToEscape);
 #endif
 
     public:
@@ -1686,18 +1686,18 @@ private:
         HRESULT OnFunctionCompiled(
             PROFILER_TOKEN functionId,
             PROFILER_TOKEN scriptId,
-            const WCHAR *pwszFunctionName,
-            const WCHAR *pwszFunctionNameHint,
+            const char16_t *pwszFunctionName,
+            const char16_t *pwszFunctionNameHint,
             IUnknown *pIDebugDocumentContext);
         HRESULT OnFunctionEnter(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
         HRESULT OnFunctionExit(PROFILER_TOKEN scriptId, PROFILER_TOKEN functionId);
 
         static HRESULT FunctionExitSenderThunk(PROFILER_TOKEN functionId, PROFILER_TOKEN scriptId, ScriptContext *pScriptContext);
-        static HRESULT FunctionExitByNameSenderThunk(const char16 *pwszFunctionName, ScriptContext *pScriptContext);
+        static HRESULT FunctionExitByNameSenderThunk(const char16_t *pwszFunctionName, ScriptContext *pScriptContext);
 
         bool SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
-        HRESULT OnDispatchFunctionEnter(const WCHAR *pwszFunctionName);
-        HRESULT OnDispatchFunctionExit(const WCHAR *pwszFunctionName);
+        HRESULT OnDispatchFunctionEnter(const char16_t *pwszFunctionName);
+        HRESULT OnDispatchFunctionExit(const char16_t *pwszFunctionName);
 
 #endif // ENABLE_SCRIPT_PROFILING
 

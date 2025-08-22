@@ -10,7 +10,7 @@ namespace Js
     class OpCodeUtilAsmJs
     {
     public:
-        static char16 const * GetOpCodeName(OpCodeAsmJs op);
+        static char16_t const * GetOpCodeName(OpCodeAsmJs op);
 
         static OpLayoutTypeAsmJs GetOpCodeLayout(OpCodeAsmJs op);
         static bool IsValidByteCodeOpcode(OpCodeAsmJs op);
@@ -18,8 +18,8 @@ namespace Js
         static void ConvertOpToProfiled(OpCodeAsmJs * op);
     private:
 #if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
-        static char16 const * const OpCodeAsmJsNames[(int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1];
-        static char16 const * const ExtendedOpCodeAsmJsNames[];
+        static char16_t const * const OpCodeAsmJsNames[(int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1];
+        static char16_t const * const ExtendedOpCodeAsmJsNames[];
 #endif
         static OpLayoutTypeAsmJs const OpCodeAsmJsLayouts[];
         static OpLayoutTypeAsmJs const ExtendedOpCodeAsmJsLayouts[];

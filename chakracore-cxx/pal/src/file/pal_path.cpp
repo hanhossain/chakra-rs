@@ -741,7 +741,7 @@ FILEDosToUnixPathW(
 {
     LPWSTR p;
     LPWSTR pPointAtDot=NULL;
-    WCHAR charBeforeFirstDot='\0';
+    char16_t charBeforeFirstDot='\0';
 
     TRACE("Original DOS path = [%S]\n", lpPath);
 
@@ -771,7 +771,7 @@ FILEDosToUnixPathW(
                    pattern and will be truncated */
                 if (charBeforeFirstDot != '.' && charBeforeFirstDot != '/')
                 {
-                    memmove(pPointAtDot,p,((PAL_wcslen(p)+1)*sizeof(WCHAR)));
+                    memmove(pPointAtDot,p,((PAL_wcslen(p)+1)*sizeof(char16_t)));
                     p = pPointAtDot;
                 }
                 pPointAtDot = NULL; /* Need to reset this */
@@ -792,7 +792,7 @@ FILEDosToUnixPathW(
                         p[-1] == '.' &&
                         p[0] == '*')
                     {
-                        memmove(&(p[-2]),p,(PAL_wcslen(p)*sizeof(WCHAR)));
+                        memmove(&(p[-2]),p,(PAL_wcslen(p)*sizeof(char16_t)));
                     }
 
                     pPointAtDot  = NULL;
@@ -1361,7 +1361,7 @@ SearchPathW(
     )
 {
     uint32_t nRet = 0;
-    WCHAR * FullPath;
+    char16_t * FullPath;
     size_t FullPathLength = 0;
     PathWCharString FullPathPS;
     LPCWSTR pPathStart;
@@ -1374,7 +1374,7 @@ SearchPathW(
     PathCharString AnsiPathPS;
     size_t CanonicalPathLength;
     int canonical_size;
-    WCHAR * CanonicalPath;
+    char16_t * CanonicalPath;
     PathWCharString CanonicalPathPS;
 
     PERF_ENTRY(SearchPathW);
@@ -1508,7 +1508,7 @@ SearchPathW(
                 SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                 goto done;
             }
-            memcpy(FullPath, pPathStart, PathLength*sizeof(WCHAR));
+            memcpy(FullPath, pPathStart, PathLength*sizeof(char16_t));
             FullPath[PathLength] = '/';
             PAL_wcscpy(&FullPath[PathLength+1], lpFileName);
 

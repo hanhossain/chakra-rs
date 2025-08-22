@@ -71,8 +71,8 @@ namespace DateTime
 #define INTERVAL_FOR_TICK_BACKUP 5
     double HiResTimer::GetSystemTime()
     {
-        ULONGLONG current = GetTickCount64();
-        ULONGLONG diff = current - data.cacheTick;
+        unsigned long current = GetTickCount64();
+        unsigned long diff = current - data.cacheTick;
 
         if (diff <= data.previousDifference || diff >= INTERVAL_FOR_TICK_BACKUP) // max *ms to respond system time changes
         {
@@ -81,7 +81,7 @@ namespace DateTime
             // in case the system time wasn't updated backwards, and cache is still beyond...
             if (currentTime >= data.cacheSysTime && currentTime < data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP)
             {
-                data.previousDifference = (ULONGLONG) -1; // Make sure next request won't use cache
+                data.previousDifference = (unsigned long) -1; // Make sure next request won't use cache
                 return data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP; // wait for real time
             }
 

@@ -1433,7 +1433,7 @@ namespace JsUtil
 
 #if DBG_DUMP
     //Just for debugging purpose
-    char16 const * const  BackgroundJobProcessor::DebugThreadNames[16] = {
+    char16_t const * const  BackgroundJobProcessor::DebugThreadNames[16] = {
         _u("BackgroundJobProcessor thread 1"),
         _u("BackgroundJobProcessor thread 2"),
         _u("BackgroundJobProcessor thread 3"),

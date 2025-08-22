@@ -33,7 +33,7 @@ namespace Js
     createEscapeMap(false);
     createEscapeMap(true);
     */
-    const WCHAR LazyJSONString::escapeMap[] = {
+    const char16_t LazyJSONString::escapeMap[] = {
         _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('b'), _u('t'), _u('n'), _u('u'), _u('f'),
         _u('r'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'),
         _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('u'), _u('\0'), _u('\0'), _u('"'), _u('\0'), _u('\0'), _u('\0'),
@@ -53,7 +53,7 @@ namespace Js
     , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     , 0, 0, 0, 0, 0, 0, 0, 0 };
 
-LazyJSONString::LazyJSONString(_In_ JSONProperty* jsonContent, charcount_t length, _In_opt_ const char16* gap, charcount_t gapLength, _In_ StaticType* type) :
+LazyJSONString::LazyJSONString(_In_ JSONProperty* jsonContent, charcount_t length, _In_opt_ const char16_t* gap, charcount_t gapLength, _In_ StaticType* type) :
     JavascriptString(type),
     jsonContent(jsonContent),
     gap(gap),
@@ -173,7 +173,7 @@ LazyJSONString::TryParse() const
     return result;
 }
 
-const char16*
+const char16_t*
 LazyJSONString::GetSz()
 {
     if (this->IsFinalized())
@@ -184,7 +184,7 @@ LazyJSONString::GetSz()
     const charcount_t allocSize = this->SafeSzSize();
 
     Recycler* recycler = GetScriptContext()->GetRecycler();
-    char16* target = RecyclerNewArrayLeaf(recycler, char16, allocSize);
+    char16_t* target = RecyclerNewArrayLeaf(recycler, char16_t, allocSize);
 
     JSONStringBuilder builder(
         this->GetScriptContext(),

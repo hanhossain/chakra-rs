@@ -557,7 +557,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
         {
 #if defined(DBG_DUMP) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
 
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
             // save the byteCodeUpwardExposedUsed from deleting for the block right after the memop loop
             if (this->tag == Js::DeadStorePhase && !this->IsPrePass() && globOpt->HasMemOp(block->loop) && blockSucc->loop != block->loop)
@@ -839,7 +839,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
 #if DBG_DUMP
                 if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecWriteGuardsPhase, this->func))
                 {
-                    char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                     Output::Print(_u("ObjTypeSpec: top function %s (%s), function %s (%s), write guard symbols on edge %d => %d: "),
                         this->func->GetTopFunc()->GetJITFunctionBody()->GetDisplayName(),
                         this->func->GetTopFunc()->GetDebugNumberSet(debugStringBuffer),
@@ -888,7 +888,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
 #if DBG_DUMP
                 if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecTypeGuardsPhase, this->func))
                 {
-                    char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                     Output::Print(_u("ObjTypeSpec: top function %s (%s), function %s (%s), guarded property operations on edge %d => %d: \n"),
                         this->func->GetTopFunc()->GetJITFunctionBody()->GetDisplayName(),
                         this->func->GetTopFunc()->GetDebugNumberSet(debugStringBuffer),
@@ -995,7 +995,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
         NEXT_SUCCESSOR_BLOCK;
 
 #if DBG_DUMP
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         if (PHASE_TRACE(Js::ObjTypeSpecStorePhase, this->func))
         {
             Output::Print(_u("ObjTypeSpecStore: func %s, block %d: "),
@@ -4283,9 +4283,9 @@ BackwardPass::IsFormalParamSym(Func * func, Sym * sym) const
 struct BvToDump
 {
     const BVSparse<JitArenaAllocator>* bv;
-    const char16* tag;
+    const char16_t* tag;
     size_t tagLen;
-    BvToDump(const BVSparse<JitArenaAllocator>* bv, const char16* tag) :
+    BvToDump(const BVSparse<JitArenaAllocator>* bv, const char16_t* tag) :
         bv(bv),
         tag(tag),
         tagLen(bv ? wcslen(tag) : 0)
@@ -4339,7 +4339,7 @@ BackwardPass::TraceInstrUses(BasicBlock * block, IR::Instr* instr, bool isStart)
 {
     if ((!IsCollectionPass() || tag == Js::CaptureByteCodeRegUsePhase) && IsTraceEnabled() && Js::Configuration::Global.flags.Verbose)
     {
-        const char16* tagName = 
+        const char16_t* tagName = 
             tag == Js::CaptureByteCodeRegUsePhase ? _u("CAPTURE BYTECODE REGISTER") : (
             tag == Js::BackwardPhase ? _u("BACKWARD") : (
             tag == Js::DeadStorePhase ? _u("DEADSTORE") :
@@ -5572,7 +5572,7 @@ BackwardPass::TrackObjTypeSpecProperties(IR::PropertySymOpnd *opnd, BasicBlock *
                     (!GlobOpt::AreTypeSetsIdentical(existingFldInfo->GetEquivalentTypeSet(), opnd->GetEquivalentTypeSet()) ||
                     (existingFldInfo->GetSlotIndex() != opnd->GetSlotIndex())))
                 {
-                    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
                     Output::Print(_u("EquivObjTypeSpec: top function %s (%s): duplicate property clash on %s(#%d) on operation %u \n"),
                         this->func->GetJITFunctionBody()->GetDisplayName(), this->func->GetDebugNumberSet(debugStringBuffer),
@@ -7515,7 +7515,7 @@ BackwardPass::EndIntOverflowDoesNotMatterRange()
 #if DBG_DUMP
         if(PHASE_TRACE(Js::TrackCompoundedIntOverflowPhase, func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             Output::Print(
                 _u("TrackCompoundedIntOverflow - Top function: %s (%s), Phase: %s, Block: %u\n"),
                 func->GetJITFunctionBody()->GetDisplayName(),

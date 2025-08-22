@@ -18,10 +18,10 @@ struct Context
     ScriptContext* scriptContext;
 };
 
-char16* NarrowStringToWide(Context* ctx, const char* src, const size_t* srcSize = nullptr, charcount_t* dstSize = nullptr)
+char16_t* NarrowStringToWide(Context* ctx, const char* src, const size_t* srcSize = nullptr, charcount_t* dstSize = nullptr)
 {
-    auto allocator = [&ctx](size_t size) {return (char16*)AnewArray(ctx->allocator, char16, size); };
-    char16* dst = nullptr;
+    auto allocator = [&ctx](size_t size) {return (char16_t*)AnewArray(ctx->allocator, char16_t, size); };
+    char16_t* dst = nullptr;
     charcount_t size;
     HRESULT hr = utf8::NarrowStringToWide(allocator, src, srcSize ? *srcSize : strlen(src), &dst, &size);
     if (hr != S_OK)
@@ -88,7 +88,7 @@ Js::Var StringToVar(const char* src, uint length, void* user_data)
     Context* ctx = (Context*)user_data;
     charcount_t bufSize = 0;
     size_t slength = (size_t)length;
-    char16* buf = NarrowStringToWide(ctx, src, &slength, &bufSize);
+    char16_t* buf = NarrowStringToWide(ctx, src, &slength, &bufSize);
     Assert(bufSize < UINT32_MAX);
     return JavascriptString::NewCopyBuffer(buf, bufSize, ctx->scriptContext);
 }
@@ -136,7 +136,7 @@ Js::Var WabtInterface::EntryConvertWast2Wasm(RecyclableObject* function, CallInf
 
     ENTER_PINNED_SCOPE(JavascriptString, string);
     string = (JavascriptString*)args[1];
-    const char16* str = string->GetString();
+    const char16_t* str = string->GetString();
     context.allocator = &arena;
     context.scriptContext = scriptContext;
 

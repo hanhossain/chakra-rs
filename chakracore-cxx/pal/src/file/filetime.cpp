@@ -97,11 +97,11 @@ SET_DEFAULT_DEBUG_CHANNEL(FILE);
    This result is also confirmed in the MSDN documentation on how
    to convert a time_t value to a win32 FILETIME.
 */
-static const __int64 SECS_BETWEEN_1601_AND_1970_EPOCHS = 11644473600LL;
-static const __int64 SECS_TO_100NS = 10000000; /* 10^7 */
+static const long SECS_BETWEEN_1601_AND_1970_EPOCHS = 11644473600LL;
+static const long SECS_TO_100NS = 10000000; /* 10^7 */
 
 #ifdef __APPLE__
-static const __int64 SECS_BETWEEN_1601_AND_2001_EPOCHS = 12622780800LL;
+static const long SECS_BETWEEN_1601_AND_2001_EPOCHS = 12622780800LL;
 #endif // __APPLE__
 
 /*++
@@ -115,8 +115,8 @@ CompareFileTime(
          const FILETIME *lpFileTime1,
          const FILETIME *lpFileTime2)
 {
-    __int64 First;
-    __int64 Second;
+    long First;
+    long Second;
 
     long Ret;
 
@@ -124,9 +124,9 @@ CompareFileTime(
     ENTRY("CompareFileTime(lpFileTime1=%p lpFileTime2=%p)\n", 
           lpFileTime1, lpFileTime2);
 
-    First = ((__int64)lpFileTime1->dwHighDateTime << 32) +
+    First = ((long)lpFileTime1->dwHighDateTime << 32) +
         lpFileTime1->dwLowDateTime;
-    Second = ((__int64)lpFileTime2->dwHighDateTime << 32) +
+    Second = ((long)lpFileTime2->dwHighDateTime << 32) +
         lpFileTime2->dwLowDateTime;
 
     if ( First < Second )
@@ -538,10 +538,10 @@ in MSDN documentation. CFAbsoluteTime is the number of seconds elapsed since
 --*/
 FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec )
 {
-    __int64 Result;
+    long Result;
     FILETIME Ret;
     
-    Result = ((__int64)sec + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
+    Result = ((long)sec + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
 
     Ret.dwLowDateTime = (uint32_t)Result;
     Ret.dwHighDateTime = (uint32_t)(Result >> 32);
@@ -566,10 +566,10 @@ MSDN documentation. time_t is the number of seconds elapsed since
 --*/
 FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec )
 {
-    __int64 Result;
+    long Result;
     FILETIME Ret;
 
-    Result = ((__int64)sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
+    Result = ((long)sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
         (nsec / 100);
 
     Ret.dwLowDateTime = (uint32_t)Result;
@@ -600,10 +600,10 @@ truncated on systems with a 32-bit time_t.
 --*/
 time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec )
 {
-    __int64 UnixTime;
+    long UnixTime;
 
     /* get the full win32 value, in 100ns */
-    UnixTime = ((__int64)FileTime.dwHighDateTime << 32) + 
+    UnixTime = ((long)FileTime.dwHighDateTime << 32) + 
         FileTime.dwLowDateTime;
 
     /* convert to the Unix epoch */

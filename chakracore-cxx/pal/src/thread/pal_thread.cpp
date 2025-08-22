@@ -1194,7 +1194,7 @@ CorUnix::GetThreadTimesInternal(
      LPFILETIME lpKernelTime,
      LPFILETIME lpUserTime)
 {
-    __int64 calcTime;
+    long calcTime;
     BOOL retval = FALSE;
 
 #if HAVE_MACH_THREADS
@@ -1245,15 +1245,15 @@ CorUnix::GetThreadTimesInternal(
     }
 
     /* Get the time of user mode execution, in nanoseconds */
-    calcTime = (__int64)resUsage.user_time.seconds * SECS_TO_NS;
-    calcTime += (__int64)resUsage.user_time.microseconds * USECS_TO_NS;
+    calcTime = (long)resUsage.user_time.seconds * SECS_TO_NS;
+    calcTime += (long)resUsage.user_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpUserTime */
     lpUserTime->dwLowDateTime = (uint32_t)calcTime;
     lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
     /* Get the time of kernel mode execution, in nanoseconds */
-    calcTime = (__int64)resUsage.system_time.seconds * SECS_TO_NS;
-    calcTime += (__int64)resUsage.system_time.microseconds * USECS_TO_NS;
+    calcTime = (long)resUsage.system_time.seconds * SECS_TO_NS;
+    calcTime += (long)resUsage.system_time.microseconds * USECS_TO_NS;
     /* Assign the time into lpKernelTime */
     lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
     lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
@@ -1333,8 +1333,8 @@ CorUnix::GetThreadTimesInternal(
 
     kvm_close(kd);
 
-    calcTime = (__int64) klwp[i].l_rtime_sec * SECS_TO_NS;
-    calcTime += (__int64) klwp[i].l_rtime_usec * USECS_TO_NS;
+    calcTime = (long) klwp[i].l_rtime_sec * SECS_TO_NS;
+    calcTime += (long) klwp[i].l_rtime_usec * USECS_TO_NS;
     lpUserTime->dwLowDateTime = (uint32_t)calcTime;
     lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 
@@ -1424,8 +1424,8 @@ CorUnix::GetThreadTimesInternal(
     pTargetThread->Unlock(pThread);
 
     /* Calculate time in nanoseconds and assign to user time */
-    calcTime = (__int64) ts.tv_sec * SECS_TO_NS;
-    calcTime += (__int64) ts.tv_nsec;
+    calcTime = (long) ts.tv_sec * SECS_TO_NS;
+    calcTime += (long) ts.tv_nsec;
     lpUserTime->dwLowDateTime = (uint32_t)calcTime;
     lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
 

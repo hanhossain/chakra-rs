@@ -274,7 +274,7 @@ PAL_IsDebuggerPresent();
 #ifndef PAL_STDCPP_COMPAT
 typedef ULONG64   fpos_t;
 
-typedef __int64 time_t;
+typedef long time_t;
 #define _TIME_T_DEFINED
 #endif // !PAL_STDCPP_COMPAT
 
@@ -440,8 +440,8 @@ CharNextExA(
 extern int sprintf_s(char *_Dst, size_t _SizeInBytes, const char *_Format, ...);
 
 typedef int errno_t;
-extern errno_t _ultow_s(unsigned long inValue, WCHAR* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ui64tow_s(unsigned long long inValue, WCHAR* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
 int
 wsprintfA(
@@ -726,8 +726,8 @@ typedef struct _WIN32_FIND_DATAW {
     uint32_t nFileSizeLow;
     uint32_t dwReserved0;
     uint32_t dwReserved1;
-    WCHAR cFileName[ MAX_PATH_FNAME ];
-    WCHAR cAlternateFileName[ 14 ];
+    char16_t cFileName[ MAX_PATH_FNAME ];
+    char16_t cAlternateFileName[ 14 ];
 } WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
 #ifdef UNICODE
@@ -1761,7 +1761,7 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_FLOATING_POINT.
     //
-    ULONGLONG fsr;
+    unsigned long fsr;
     union {
         float f[COUNT_FLOATING_REGISTER];
         double d[COUNT_DOUBLE_REGISTER];
@@ -1835,7 +1835,7 @@ typedef struct _CONTEXT {
     // This section is specified/returned if the ContextFlags word contains
     // the flag CONTEXT_FLOATING_POINT.
     //
-    ULONGLONG fsr;
+    unsigned long fsr;
     union {
         float f[COUNT_FLOATING_REGISTER];
         double d[COUNT_DOUBLE_REGISTER];
@@ -1847,8 +1847,8 @@ typedef struct _CONTEXT {
 
 // copied from winnt.h
 typedef struct _FLOAT128 {
-    __int64 LowPart;
-    __int64 HighPart;
+    long LowPart;
+    long HighPart;
 } FLOAT128;
 
 typedef FLOAT128 *PFLOAT128;
@@ -1925,23 +1925,23 @@ typedef struct _CONTEXT {
     // N.B. CONTEXT_DEBUG is *not* part of CONTEXT_FULL.
     //
 
-    ULONGLONG DbI0;
-    ULONGLONG DbI1;
-    ULONGLONG DbI2;
-    ULONGLONG DbI3;
-    ULONGLONG DbI4;
-    ULONGLONG DbI5;
-    ULONGLONG DbI6;
-    ULONGLONG DbI7;
+    unsigned long DbI0;
+    unsigned long DbI1;
+    unsigned long DbI2;
+    unsigned long DbI3;
+    unsigned long DbI4;
+    unsigned long DbI5;
+    unsigned long DbI6;
+    unsigned long DbI7;
 
-    ULONGLONG DbD0;
-    ULONGLONG DbD1;
-    ULONGLONG DbD2;
-    ULONGLONG DbD3;
-    ULONGLONG DbD4;
-    ULONGLONG DbD5;
-    ULONGLONG DbD6;
-    ULONGLONG DbD7;
+    unsigned long DbD0;
+    unsigned long DbD1;
+    unsigned long DbD2;
+    unsigned long DbD3;
+    unsigned long DbD4;
+    unsigned long DbD5;
+    unsigned long DbD6;
+    unsigned long DbD7;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2096,7 +2096,7 @@ typedef struct _CONTEXT {
     // the flag CONTEXT_LOWER_FLOATING_POINT | CONTEXT_HIGHER_FLOATING_POINT | CONTEXT_CONTROL.
     //
 
-    ULONGLONG StFPSR;       //  FP status
+    unsigned long StFPSR;       //  FP status
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2105,50 +2105,50 @@ typedef struct _CONTEXT {
     // N.B. The registers gp, sp, rp are part of the control context
     //
 
-    ULONGLONG IntGp;        //  r1, volatile
-    ULONGLONG IntT0;        //  r2-r3, volatile
-    ULONGLONG IntT1;        //
-    ULONGLONG IntS0;        //  r4-r7, preserved
-    ULONGLONG IntS1;
-    ULONGLONG IntS2;
-    ULONGLONG IntS3;
-    ULONGLONG IntV0;        //  r8, volatile
-    ULONGLONG IntT2;        //  r9-r11, volatile
-    ULONGLONG IntT3;
-    ULONGLONG IntT4;
-    ULONGLONG IntSp;        //  stack pointer (r12), special
-    ULONGLONG IntTeb;       //  teb (r13), special
-    ULONGLONG IntT5;        //  r14-r31, volatile
-    ULONGLONG IntT6;
-    ULONGLONG IntT7;
-    ULONGLONG IntT8;
-    ULONGLONG IntT9;
-    ULONGLONG IntT10;
-    ULONGLONG IntT11;
-    ULONGLONG IntT12;
-    ULONGLONG IntT13;
-    ULONGLONG IntT14;
-    ULONGLONG IntT15;
-    ULONGLONG IntT16;
-    ULONGLONG IntT17;
-    ULONGLONG IntT18;
-    ULONGLONG IntT19;
-    ULONGLONG IntT20;
-    ULONGLONG IntT21;
-    ULONGLONG IntT22;
+    unsigned long IntGp;        //  r1, volatile
+    unsigned long IntT0;        //  r2-r3, volatile
+    unsigned long IntT1;        //
+    unsigned long IntS0;        //  r4-r7, preserved
+    unsigned long IntS1;
+    unsigned long IntS2;
+    unsigned long IntS3;
+    unsigned long IntV0;        //  r8, volatile
+    unsigned long IntT2;        //  r9-r11, volatile
+    unsigned long IntT3;
+    unsigned long IntT4;
+    unsigned long IntSp;        //  stack pointer (r12), special
+    unsigned long IntTeb;       //  teb (r13), special
+    unsigned long IntT5;        //  r14-r31, volatile
+    unsigned long IntT6;
+    unsigned long IntT7;
+    unsigned long IntT8;
+    unsigned long IntT9;
+    unsigned long IntT10;
+    unsigned long IntT11;
+    unsigned long IntT12;
+    unsigned long IntT13;
+    unsigned long IntT14;
+    unsigned long IntT15;
+    unsigned long IntT16;
+    unsigned long IntT17;
+    unsigned long IntT18;
+    unsigned long IntT19;
+    unsigned long IntT20;
+    unsigned long IntT21;
+    unsigned long IntT22;
 
-    ULONGLONG IntNats;      //  Nat bits for r1-r31
+    unsigned long IntNats;      //  Nat bits for r1-r31
                             //  r1-r31 in bits 1 thru 31.
-    ULONGLONG Preds;        //  predicates, preserved
+    unsigned long Preds;        //  predicates, preserved
 
-    ULONGLONG BrRp;         //  return pointer, b0, preserved
-    ULONGLONG BrS0;         //  b1-b5, preserved
-    ULONGLONG BrS1;
-    ULONGLONG BrS2;
-    ULONGLONG BrS3;
-    ULONGLONG BrS4;
-    ULONGLONG BrT0;         //  b6-b7, volatile
-    ULONGLONG BrT1;
+    unsigned long BrRp;         //  return pointer, b0, preserved
+    unsigned long BrS0;         //  b1-b5, preserved
+    unsigned long BrS1;
+    unsigned long BrS2;
+    unsigned long BrS3;
+    unsigned long BrS4;
+    unsigned long BrT0;         //  b6-b7, volatile
+    unsigned long BrT1;
 
     //
     // This section is specified/returned if the ContextFlags word contains
@@ -2156,35 +2156,35 @@ typedef struct _CONTEXT {
     //
 
     // Other application registers
-    ULONGLONG ApUNAT;       //  User Nat collection register, preserved
-    ULONGLONG ApLC;         //  Loop counter register, preserved
-    ULONGLONG ApEC;         //  Epilog counter register, preserved
-    ULONGLONG ApCCV;        //  CMPXCHG value register, volatile
-    ULONGLONG ApDCR;        //  Default control register (TBD)
+    unsigned long ApUNAT;       //  User Nat collection register, preserved
+    unsigned long ApLC;         //  Loop counter register, preserved
+    unsigned long ApEC;         //  Epilog counter register, preserved
+    unsigned long ApCCV;        //  CMPXCHG value register, volatile
+    unsigned long ApDCR;        //  Default control register (TBD)
 
     // Register stack info
-    ULONGLONG RsPFS;        //  Previous function state, preserved
-    ULONGLONG RsBSP;        //  Backing store pointer, preserved
-    ULONGLONG RsBSPSTORE;
-    ULONGLONG RsRSC;        //  RSE configuration, volatile
-    ULONGLONG RsRNAT;       //  RSE Nat collection register, preserved
+    unsigned long RsPFS;        //  Previous function state, preserved
+    unsigned long RsBSP;        //  Backing store pointer, preserved
+    unsigned long RsBSPSTORE;
+    unsigned long RsRSC;        //  RSE configuration, volatile
+    unsigned long RsRNAT;       //  RSE Nat collection register, preserved
 
     // Trap Status Information
-    ULONGLONG StIPSR;       //  Interruption Processor Status
-    ULONGLONG StIIP;        //  Interruption IP
-    ULONGLONG StIFS;        //  Interruption Function State
+    unsigned long StIPSR;       //  Interruption Processor Status
+    unsigned long StIIP;        //  Interruption IP
+    unsigned long StIFS;        //  Interruption Function State
 
     // iA32 related control registers
-    ULONGLONG StFCR;        //  copy of Ar21
-    ULONGLONG Eflag;        //  Eflag copy of Ar24
-    ULONGLONG SegCSD;       //  iA32 CSDescriptor (Ar25)
-    ULONGLONG SegSSD;       //  iA32 SSDescriptor (Ar26)
-    ULONGLONG Cflag;        //  Cr0+Cr4 copy of Ar27
-    ULONGLONG StFSR;        //  x86 FP status (copy of AR28)
-    ULONGLONG StFIR;        //  x86 FP status (copy of AR29)
-    ULONGLONG StFDR;        //  x86 FP status (copy of AR30)
+    unsigned long StFCR;        //  copy of Ar21
+    unsigned long Eflag;        //  Eflag copy of Ar24
+    unsigned long SegCSD;       //  iA32 CSDescriptor (Ar25)
+    unsigned long SegSSD;       //  iA32 SSDescriptor (Ar26)
+    unsigned long Cflag;        //  Cr0+Cr4 copy of Ar27
+    unsigned long StFSR;        //  x86 FP status (copy of AR28)
+    unsigned long StFIR;        //  x86 FP status (copy of AR29)
+    unsigned long StFDR;        //  x86 FP status (copy of AR30)
 
-      ULONGLONG UNUSEDPACK;   //  added to pack StFDR to 16-bytes
+      unsigned long UNUSEDPACK;   //  added to pack StFDR to 16-bytes
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 #elif defined(_AMD64_)
@@ -2210,8 +2210,8 @@ typedef struct _CONTEXT {
 #define CONTEXT_EXCEPTION_REPORTING 0x80000000
 
 typedef struct _M128U {
-    ULONGLONG Low;
-    LONGLONG High;
+    unsigned long Low;
+    long High;
 } M128U, *PM128U;
 
 // Same as _M128U but aligned to a 16-byte boundary
@@ -2281,12 +2281,12 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //      context record in the future.
     //
 
-    DWORD64 P1Home;
-    DWORD64 P2Home;
-    DWORD64 P3Home;
-    DWORD64 P4Home;
-    DWORD64 P5Home;
-    DWORD64 P6Home;
+    unsigned long P1Home;
+    unsigned long P2Home;
+    unsigned long P3Home;
+    unsigned long P4Home;
+    unsigned long P5Home;
+    unsigned long P6Home;
 
     //
     // Control flags.
@@ -2311,39 +2311,39 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     // Debug registers
     //
 
-    DWORD64 Dr0;
-    DWORD64 Dr1;
-    DWORD64 Dr2;
-    DWORD64 Dr3;
-    DWORD64 Dr6;
-    DWORD64 Dr7;
+    unsigned long Dr0;
+    unsigned long Dr1;
+    unsigned long Dr2;
+    unsigned long Dr3;
+    unsigned long Dr6;
+    unsigned long Dr7;
 
     //
     // Integer registers.
     //
 
-    DWORD64 Rax;
-    DWORD64 Rcx;
-    DWORD64 Rdx;
-    DWORD64 Rbx;
-    DWORD64 Rsp;
-    DWORD64 Rbp;
-    DWORD64 Rsi;
-    DWORD64 Rdi;
-    DWORD64 R8;
-    DWORD64 R9;
-    DWORD64 R10;
-    DWORD64 R11;
-    DWORD64 R12;
-    DWORD64 R13;
-    DWORD64 R14;
-    DWORD64 R15;
+    unsigned long Rax;
+    unsigned long Rcx;
+    unsigned long Rdx;
+    unsigned long Rbx;
+    unsigned long Rsp;
+    unsigned long Rbp;
+    unsigned long Rsi;
+    unsigned long Rdi;
+    unsigned long R8;
+    unsigned long R9;
+    unsigned long R10;
+    unsigned long R11;
+    unsigned long R12;
+    unsigned long R13;
+    unsigned long R14;
+    unsigned long R15;
 
     //
     // Program counter.
     //
 
-    DWORD64 Rip;
+    unsigned long Rip;
 
     //
     // Floating point state.
@@ -2378,17 +2378,17 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //
 
     M128A VectorRegister[26];
-    DWORD64 VectorControl;
+    unsigned long VectorControl;
 
     //
     // Special debug control registers.
     //
 
-    DWORD64 DebugControl;
-    DWORD64 LastBranchToRip;
-    DWORD64 LastBranchFromRip;
-    DWORD64 LastExceptionToRip;
-    DWORD64 LastExceptionFromRip;
+    unsigned long DebugControl;
+    unsigned long LastBranchToRip;
+    unsigned long LastBranchFromRip;
+    unsigned long LastExceptionToRip;
+    unsigned long LastExceptionFromRip;
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
 
 //
@@ -2419,24 +2419,24 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
     } ;
 
     union {
-        PDWORD64 IntegerContext[16];
+        unsigned long * IntegerContext[16];
         struct {
-            PDWORD64 Rax;
-            PDWORD64 Rcx;
-            PDWORD64 Rdx;
-            PDWORD64 Rbx;
-            PDWORD64 Rsp;
-            PDWORD64 Rbp;
-            PDWORD64 Rsi;
-            PDWORD64 Rdi;
-            PDWORD64 R8;
-            PDWORD64 R9;
-            PDWORD64 R10;
-            PDWORD64 R11;
-            PDWORD64 R12;
-            PDWORD64 R13;
-            PDWORD64 R14;
-            PDWORD64 R15;
+            unsigned long * Rax;
+            unsigned long * Rcx;
+            unsigned long * Rdx;
+            unsigned long * Rbx;
+            unsigned long * Rsp;
+            unsigned long * Rbp;
+            unsigned long * Rsi;
+            unsigned long * Rdi;
+            unsigned long * R8;
+            unsigned long * R9;
+            unsigned long * R10;
+            unsigned long * R11;
+            unsigned long * R12;
+            unsigned long * R13;
+            unsigned long * R14;
+            unsigned long * R15;
         } ;
     } ;
 
@@ -2481,8 +2481,8 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 #define ARM_MAX_WATCHPOINTS     1
 
 typedef struct _NEON128 {
-    ULONGLONG Low;
-    LONGLONG High;
+    unsigned long Low;
+    long High;
 } NEON128, *PNEON128;
 
 //
@@ -2559,7 +2559,7 @@ typedef struct DECLSPEC_ALIGN(8) _CONTEXT {
     uint32_t Padding;
     union {
         NEON128 Q[16];
-        ULONGLONG D[32];
+        unsigned long D[32];
         uint32_t S[32];
     };
 
@@ -2592,14 +2592,14 @@ typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
     uint32_t * R11;
     uint32_t * Lr;
 
-    PULONGLONG D8;
-    PULONGLONG D9;
-    PULONGLONG D10;
-    PULONGLONG D11;
-    PULONGLONG D12;
-    PULONGLONG D13;
-    PULONGLONG D14;
-    PULONGLONG D15;
+    unsigned long * D8;
+    unsigned long * D9;
+    unsigned long * D10;
+    unsigned long * D11;
+    unsigned long * D12;
+    unsigned long * D13;
+    unsigned long * D14;
+    unsigned long * D15;
 
 } KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
@@ -2699,8 +2699,8 @@ typedef struct _IMAGE_ARM_RUNTIME_FUNCTION_ENTRY {
 //
 
 typedef struct _NEON128 {
-    ULONGLONG Low;
-    LONGLONG High;
+    unsigned long Low;
+    long High;
 } NEON128, *PNEON128;
 
 typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
@@ -2718,42 +2718,42 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     /* +0x004 */ uint32_t Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
     /* +0x008 */ union {
                     struct {
-                        DWORD64 X0;
-                        DWORD64 X1;
-                        DWORD64 X2;
-                        DWORD64 X3;
-                        DWORD64 X4;
-                        DWORD64 X5;
-                        DWORD64 X6;
-                        DWORD64 X7;
-                        DWORD64 X8;
-                        DWORD64 X9;
-                        DWORD64 X10;
-                        DWORD64 X11;
-                        DWORD64 X12;
-                        DWORD64 X13;
-                        DWORD64 X14;
-                        DWORD64 X15;
-                        DWORD64 X16;
-                        DWORD64 X17;
-                        DWORD64 X18;
-                        DWORD64 X19;
-                        DWORD64 X20;
-                        DWORD64 X21;
-                        DWORD64 X22;
-                        DWORD64 X23;
-                        DWORD64 X24;
-                        DWORD64 X25;
-                        DWORD64 X26;
-                        DWORD64 X27;
-                        DWORD64 X28;
+                        unsigned long X0;
+                        unsigned long X1;
+                        unsigned long X2;
+                        unsigned long X3;
+                        unsigned long X4;
+                        unsigned long X5;
+                        unsigned long X6;
+                        unsigned long X7;
+                        unsigned long X8;
+                        unsigned long X9;
+                        unsigned long X10;
+                        unsigned long X11;
+                        unsigned long X12;
+                        unsigned long X13;
+                        unsigned long X14;
+                        unsigned long X15;
+                        unsigned long X16;
+                        unsigned long X17;
+                        unsigned long X18;
+                        unsigned long X19;
+                        unsigned long X20;
+                        unsigned long X21;
+                        unsigned long X22;
+                        unsigned long X23;
+                        unsigned long X24;
+                        unsigned long X25;
+                        unsigned long X26;
+                        unsigned long X27;
+                        unsigned long X28;
                     };
-                    DWORD64 X[29];
+                    unsigned long X[29];
                 };
-    /* +0x0f0 */ DWORD64 Fp;
-    /* +0x0f8 */ DWORD64 Lr;
-    /* +0x100 */ DWORD64 Sp;
-    /* +0x108 */ DWORD64 Pc;
+    /* +0x0f0 */ unsigned long Fp;
+    /* +0x0f8 */ unsigned long Lr;
+    /* +0x100 */ unsigned long Sp;
+    /* +0x108 */ unsigned long Pc;
 
     //
     // Floating Point/NEON Registers
@@ -2768,9 +2768,9 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
     //
 
     /* +0x318 */ uint32_t Bcr[ARM64_MAX_BREAKPOINTS];
-    /* +0x338 */ DWORD64 Bvr[ARM64_MAX_BREAKPOINTS];
+    /* +0x338 */ unsigned long Bvr[ARM64_MAX_BREAKPOINTS];
     /* +0x378 */ uint32_t Wcr[ARM64_MAX_WATCHPOINTS];
-    /* +0x380 */ DWORD64 Wvr[ARM64_MAX_WATCHPOINTS];
+    /* +0x380 */ unsigned long Wvr[ARM64_MAX_WATCHPOINTS];
     /* +0x390 */
 
 } CONTEXT, *PCONTEXT, *LPCONTEXT;
@@ -2781,27 +2781,27 @@ typedef struct DECLSPEC_ALIGN(16) _CONTEXT {
 
 typedef struct _KNONVOLATILE_CONTEXT_POINTERS {
 
-    PDWORD64 X19;
-    PDWORD64 X20;
-    PDWORD64 X21;
-    PDWORD64 X22;
-    PDWORD64 X23;
-    PDWORD64 X24;
-    PDWORD64 X25;
-    PDWORD64 X26;
-    PDWORD64 X27;
-    PDWORD64 X28;
-    PDWORD64 Fp;
-    PDWORD64 Lr;
+    unsigned long * X19;
+    unsigned long * X20;
+    unsigned long * X21;
+    unsigned long * X22;
+    unsigned long * X23;
+    unsigned long * X24;
+    unsigned long * X25;
+    unsigned long * X26;
+    unsigned long * X27;
+    unsigned long * X28;
+    unsigned long * Fp;
+    unsigned long * Lr;
 
-    PDWORD64 D8;
-    PDWORD64 D9;
-    PDWORD64 D10;
-    PDWORD64 D11;
-    PDWORD64 D12;
-    PDWORD64 D13;
-    PDWORD64 D14;
-    PDWORD64 D15;
+    unsigned long * D8;
+    unsigned long * D9;
+    unsigned long * D10;
+    unsigned long * D11;
+    unsigned long * D12;
+    unsigned long * D13;
+    unsigned long * D14;
+    unsigned long * D15;
 
 } KNONVOLATILE_CONTEXT_POINTERS, *PKNONVOLATILE_CONTEXT_POINTERS;
 
@@ -3228,13 +3228,13 @@ VirtualProtectEx(
 typedef struct _MEMORYSTATUSEX {
   uint32_t     dwLength;
   uint32_t     dwMemoryLoad;
-  DWORDLONG ullTotalPhys;
-  DWORDLONG ullAvailPhys;
-  DWORDLONG ullTotalPageFile;
-  DWORDLONG ullAvailPageFile;
-  DWORDLONG ullTotalVirtual;
-  DWORDLONG ullAvailVirtual;
-  DWORDLONG ullAvailExtendedVirtual;
+  unsigned long ullTotalPhys;
+  unsigned long ullAvailPhys;
+  unsigned long ullTotalPageFile;
+  unsigned long ullAvailPageFile;
+  unsigned long ullTotalVirtual;
+  unsigned long ullAvailVirtual;
+  unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
 BOOL
@@ -4054,8 +4054,8 @@ int
 PAL_LCMapCharW(
      LPCWSTR    lpLocaleName,
      uint32_t   dwMapFlags,
-     WCHAR   srcChar,
-     WCHAR  *destChar,
+     char16_t   srcChar,
+     char16_t  *destChar,
     LPNLSVERSIONINFO lpVersionInformation,
     void * lpReserved,
     LPARAM lParam );
@@ -4446,7 +4446,7 @@ uint32_t
 GetTickCount(
          void);
 
-ULONGLONG
+unsigned long
 GetTickCount64();
 
 BOOL
@@ -4462,7 +4462,7 @@ QueryPerformanceFrequency(
 BOOL
 QueryThreadCycleTime(
      HANDLE ThreadHandle,
-     PULONG64 CycleTime);
+     unsigned long * CycleTime);
 
 #ifndef FEATURE_PAL_SXS
 
@@ -4611,7 +4611,7 @@ InterlockedIncrement(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedIncrement16(
       short volatile *lpAddend)
 {
@@ -4620,11 +4620,11 @@ InterlockedIncrement16(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedIncrement64(
-      LONGLONG volatile *lpAddend)
+      long volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (LONGLONG)1);
+    return __sync_add_and_fetch(lpAddend, (long)1);
 }
 
 /*++
@@ -4657,11 +4657,11 @@ InterlockedDecrement(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedDecrement64(
-      LONGLONG volatile *lpAddend)
+      long volatile *lpAddend)
 {
-    return __sync_sub_and_fetch(lpAddend, (LONGLONG)1);
+    return __sync_sub_and_fetch(lpAddend, (long)1);
 }
 
 /*++
@@ -4717,10 +4717,10 @@ InterlockedExchange(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedExchange64(
-      LONGLONG volatile *Target,
-     LONGLONG Value)
+      long volatile *Target,
+     long Value)
 {
     return __sync_swap(Target, Value);
 }
@@ -4823,11 +4823,11 @@ InterlockedCompareExchangeRelease(
 // See the 32-bit variant in interlock2.s
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedCompareExchange64(
-      LONGLONG volatile *Destination,
-     LONGLONG Exchange,
-     LONGLONG Comperand)
+      long volatile *Destination,
+     long Exchange,
+     long Comperand)
 {
     return __sync_val_compare_and_swap(
         Destination, /* The pointer to a variable whose value is to be compared with. */
@@ -4894,10 +4894,10 @@ InterlockedAdd(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedExchangeAdd64(
-      LONGLONG volatile *Addend,
-     LONGLONG Value)
+      long volatile *Addend,
+     long Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
@@ -4934,10 +4934,10 @@ InterlockedAnd(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedAnd64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
@@ -4974,10 +4974,10 @@ InterlockedOr(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedOr64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_or(Destination, Value);
 }
@@ -5014,10 +5014,10 @@ InterlockedXor(
 
 EXTERN_C
 inline
-LONGLONG
+long
 InterlockedXor64(
-      LONGLONG volatile *Destination,
-     LONGLONG Value)
+      long volatile *Destination,
+     long Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
@@ -5085,10 +5085,10 @@ BitTestAndSet(
 }
 
 #define InterlockedExchangePointer(Target, Value) \
-    ((void *)InterlockedExchange64((PLONG64)(Target), (LONGLONG)(Value)))
+    ((void *)InterlockedExchange64((long *)(Target), (long)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((void *)InterlockedCompareExchange64((PLONG64)(Destination), (LONGLONG)(ExChange), (LONGLONG)(Comperand)))
+    ((void *)InterlockedCompareExchange64((long *)(Destination), (long)(ExChange), (long)(Comperand)))
 
 /*++
 Function:
@@ -5200,7 +5200,7 @@ typedef struct _OSVERSIONINFOW {
     uint32_t dwMinorVersion;
     uint32_t dwBuildNumber;
     uint32_t dwPlatformId;
-    WCHAR szCSDVersion[ 128 ];
+    char16_t szCSDVersion[ 128 ];
 } OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW;
 
 #ifdef UNICODE
@@ -5233,7 +5233,7 @@ typedef struct _OSVERSIONINFOEXW {
     uint32_t dwMinorVersion;
     uint32_t dwBuildNumber;
     uint32_t dwPlatformId;
-    WCHAR szCSDVersion[ 128 ];
+    char16_t szCSDVersion[ 128 ];
     uint16_t  wServicePackMajor;
     uint16_t  wServicePackMinor;
     uint16_t  wSuiteMask;
@@ -5533,61 +5533,61 @@ size_t _mbslen(const unsigned char *);
 unsigned char * _mbsinc(const unsigned char *);
 unsigned char * _mbsninc(const unsigned char *, size_t);
 unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
-int _wcsicmp(const WCHAR *, const WCHAR*);
-int _wcsnicmp(const WCHAR *, const WCHAR *, size_t);
+int _wcsicmp(const char16_t *, const char16_t*);
+int _wcsnicmp(const char16_t *, const char16_t *, size_t);
 int _vsnprintf(char *, size_t, const char *, va_list);
-int _vsnwprintf(WCHAR *, size_t, const WCHAR *, va_list);
-WCHAR * _itow(int, WCHAR *, int);
-WCHAR * _ltow(long, WCHAR *, int);
+int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
+char16_t * _itow(int, char16_t *, int);
+char16_t * _ltow(long, char16_t *, int);
 
-size_t PAL_wcslen(const WCHAR *);
-int PAL_wcscmp(const WCHAR*, const WCHAR*);
-int PAL_wmemcmp(const WCHAR *, const WCHAR *, size_t);
-int PAL_wcsncmp(const WCHAR *, const WCHAR *, size_t);
-WCHAR * PAL_wcscat(WCHAR *, const WCHAR *);
-WCHAR * PAL_wcsncat(WCHAR *, const WCHAR *, size_t);
-WCHAR * PAL_wcscpy(WCHAR *, const WCHAR *);
-WCHAR * PAL_wcsncpy(WCHAR *, const WCHAR *, size_t);
-const WCHAR * PAL_wcschr(const WCHAR *, WCHAR);
-const WCHAR * PAL_wcsrchr(const WCHAR *, WCHAR);
-WCHAR _WConst_return * PAL_wcspbrk(const WCHAR *, const WCHAR *);
-WCHAR _WConst_return * PAL_wcsstr(const WCHAR *, const WCHAR *);
-WCHAR * PAL_wcstok(WCHAR *, const WCHAR *);
-size_t PAL_wcscspn(const WCHAR *, const WCHAR *);
-int PAL_swprintf(WCHAR *, const WCHAR *, ...);
-int PAL_vswprintf(WCHAR *, const WCHAR *, va_list);
-int _snwprintf(WCHAR *, size_t, const WCHAR *, ...);
-int PAL_swscanf(const WCHAR *, const WCHAR *, ...);
-int32_t PAL_wcstol(const WCHAR *, WCHAR **, int);
-uint32_t PAL_wcstoul(const WCHAR *, WCHAR **, int);
-LONGLONG PAL_wcstoll(const WCHAR *, WCHAR **, int);
-size_t PAL_wcsspn (const WCHAR *, const WCHAR *);
-double PAL_wcstod(const WCHAR *, WCHAR **);
-int PAL_iswalpha(WCHAR);
-int PAL_iswprint(WCHAR);
-int PAL_iswupper(WCHAR);
-int PAL_iswspace(WCHAR);
-int PAL_iswdigit(WCHAR);
-int PAL_iswxdigit(WCHAR);
-WCHAR PAL_towlower(WCHAR);
-WCHAR PAL_towupper(WCHAR);
+size_t PAL_wcslen(const char16_t *);
+int PAL_wcscmp(const char16_t*, const char16_t*);
+int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
+int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
+char16_t * PAL_wcscat(char16_t *, const char16_t *);
+char16_t * PAL_wcsncat(char16_t *, const char16_t *, size_t);
+char16_t * PAL_wcscpy(char16_t *, const char16_t *);
+char16_t * PAL_wcsncpy(char16_t *, const char16_t *, size_t);
+const char16_t * PAL_wcschr(const char16_t *, char16_t);
+const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
+char16_t _WConst_return * PAL_wcspbrk(const char16_t *, const char16_t *);
+char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
+char16_t * PAL_wcstok(char16_t *, const char16_t *);
+size_t PAL_wcscspn(const char16_t *, const char16_t *);
+int PAL_swprintf(char16_t *, const char16_t *, ...);
+int PAL_vswprintf(char16_t *, const char16_t *, va_list);
+int _snwprintf(char16_t *, size_t, const char16_t *, ...);
+int PAL_swscanf(const char16_t *, const char16_t *, ...);
+int32_t PAL_wcstol(const char16_t *, char16_t **, int);
+uint32_t PAL_wcstoul(const char16_t *, char16_t **, int);
+long PAL_wcstoll(const char16_t *, char16_t **, int);
+size_t PAL_wcsspn (const char16_t *, const char16_t *);
+double PAL_wcstod(const char16_t *, char16_t **);
+int PAL_iswalpha(char16_t);
+int PAL_iswprint(char16_t);
+int PAL_iswupper(char16_t);
+int PAL_iswspace(char16_t);
+int PAL_iswdigit(char16_t);
+int PAL_iswxdigit(char16_t);
+char16_t PAL_towlower(char16_t);
+char16_t PAL_towupper(char16_t);
 
-WCHAR * _wcslwr(WCHAR *);
-ULONGLONG _wcstoui64(const WCHAR *, WCHAR **, int);
-WCHAR * _i64tow(__int64, WCHAR *, int);
-WCHAR * _ui64tow(unsigned __int64, WCHAR *, int);
-int _wtoi(const WCHAR *);
+char16_t * _wcslwr(char16_t *);
+unsigned long _wcstoui64(const char16_t *, char16_t **, int);
+char16_t * _i64tow(long, char16_t *, int);
+char16_t * _ui64tow(unsigned long, char16_t *, int);
+int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {
-inline WCHAR *PAL_wcschr(WCHAR *_S, WCHAR _C)
-        {return ((WCHAR *)PAL_wcschr((const WCHAR *)_S, _C)); }
-inline WCHAR *PAL_wcsrchr(WCHAR *_S, WCHAR _C)
-        {return ((WCHAR *)PAL_wcsrchr((const WCHAR *)_S, _C)); }
-inline WCHAR *PAL_wcspbrk(WCHAR *_S, const WCHAR *_P)
-        {return ((WCHAR *)PAL_wcspbrk((const WCHAR *)_S, _P)); }
-inline WCHAR *PAL_wcsstr(WCHAR *_S, const WCHAR *_P)
-        {return ((WCHAR *)PAL_wcsstr((const WCHAR *)_S, _P)); }
+inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
+        {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
+inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
+        {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
+inline char16_t *PAL_wcspbrk(char16_t *_S, const char16_t *_P)
+        {return ((char16_t *)PAL_wcspbrk((const char16_t *)_S, _P)); }
+inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
+        {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
 #endif
 
@@ -5685,7 +5685,7 @@ float _copysignf(float, float);
 #ifdef __cplusplus
 extern "C++" {
 
-inline __int64 abs(__int64 _X) {
+inline long abs(long _X) {
     return llabs(_X);
 }
 
@@ -5721,9 +5721,9 @@ void * bsearch(const void *, const void *, size_t, size_t,
 int (*)(const void *, const void *));
 
 void _splitpath(const char *, char *, char *, char *, char *);
-void _wsplitpath(const WCHAR *, WCHAR *, WCHAR *, WCHAR *, WCHAR *);
+void _wsplitpath(const char16_t *, char16_t *, char16_t *, char16_t *, char16_t *);
 void _makepath(char *, const char *, const char *, const char *, const char *);
-void _wmakepath(WCHAR *, const WCHAR *, const WCHAR *, const WCHAR *, const WCHAR *);
+void _wmakepath(char16_t *, const char16_t *, const char16_t *, const char16_t *, const char16_t *);
 char * _fullpath(char *, const char *, size_t);
 
 #ifndef PAL_STDCPP_COMPAT
@@ -5800,16 +5800,16 @@ int PAL_getc(PAL_FILE *stream);
 int PAL_fgetc(PAL_FILE *stream);
 int PAL_ungetc(int c, PAL_FILE *stream);
 int PAL_setvbuf(PAL_FILE *stream, char *, int, size_t);
-WCHAR * PAL_fgetws(WCHAR *, int, PAL_FILE *);
-int PAL_fwprintf(PAL_FILE *, const WCHAR *, ...);
-int PAL_vfwprintf(PAL_FILE *, const WCHAR *, va_list);
-int PAL_wprintf(const WCHAR*, ...);
+char16_t * PAL_fgetws(char16_t *, int, PAL_FILE *);
+int PAL_fwprintf(PAL_FILE *, const char16_t *, ...);
+int PAL_vfwprintf(PAL_FILE *, const char16_t *, va_list);
+int PAL_wprintf(const char16_t*, ...);
 
 int _getw(PAL_FILE *);
 int _putw(int, PAL_FILE *);
 PAL_FILE * _fdopen(int, const char *);
-PAL_FILE * _wfopen(const WCHAR *, const WCHAR *);
-PAL_FILE * _wfsopen(const WCHAR *, const WCHAR *, int);
+PAL_FILE * _wfopen(const char16_t *, const char16_t *);
+PAL_FILE * _wfsopen(const char16_t *, const char16_t *, int);
 
 /* Maximum value that can be returned by the rand function. */
 

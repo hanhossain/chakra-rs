@@ -59,7 +59,7 @@ namespace Js
         FieldNoBarrier(DynamicProfileInfoMapSavingType) dynamicProfileInfoMapSaving;
         
         void SaveDynamicProfileInfo(LocalFunctionId functionId, DynamicProfileInfo * dynamicProfileInfo);
-        void SaveToDynamicProfileStorage(char16 const * url);
+        void SaveToDynamicProfileStorage(char16_t const * url);
         void AddSavingItem(LocalFunctionId functionId, DynamicProfileInfo *info);
         template <typename T>
         static SourceDynamicProfileManager * Deserialize(T * reader, Recycler* allocator);

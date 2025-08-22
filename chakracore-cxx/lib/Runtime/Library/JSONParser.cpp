@@ -322,7 +322,7 @@ namespace JSON
                     }
 
                     // currentStrLength = length w/o null-termination
-                    WCHAR* currentStr = m_scanner.GetCurrentString();
+                    char16_t* currentStr = m_scanner.GetCurrentString();
                     uint currentStrLength = m_scanner.GetCurrentStringLen();
 
                     DynamicType* typeWithoutProperty = object->GetDynamicType();
@@ -331,10 +331,10 @@ namespace JSON
                         if(!previousCache)
                         {
                             // This is the first property in the list - see if we have an existing cache for it.
-                            currentCache = typeCacheList->LookupWithKey(Js::HashedCharacterBuffer<WCHAR>(currentStr, currentStrLength), nullptr);
+                            currentCache = typeCacheList->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(currentStr, currentStrLength), nullptr);
                         }
                         if(currentCache && currentCache->typeWithoutProperty == typeWithoutProperty &&
-                            currentCache->propertyRecord->Equals(JsUtil::CharacterBuffer<WCHAR>(currentStr, currentStrLength)))
+                            currentCache->propertyRecord->Equals(JsUtil::CharacterBuffer<char16_t>(currentStr, currentStrLength)))
                         {
                             //check and consume ":"
                             if(Scan() != tkColon )

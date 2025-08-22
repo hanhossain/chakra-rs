@@ -242,7 +242,7 @@ IdentPtr HashTbl::PidHashNameLen(CharType const * prgch, CharType const * end, u
 }
 template IdentPtr HashTbl::PidHashNameLen<utf8char_t>(utf8char_t const * prgch, utf8char_t const * end, uint32 cch);
 template IdentPtr HashTbl::PidHashNameLen<char>(char const * prgch, char const * end, uint32 cch);
-template IdentPtr HashTbl::PidHashNameLen<char16>(char16 const * prgch, char16 const * end, uint32 cch);
+template IdentPtr HashTbl::PidHashNameLen<char16_t>(char16_t const * prgch, char16_t const * end, uint32 cch);
 
 template <typename CharType>
 IdentPtr HashTbl::PidHashNameLen(CharType const * prgch, uint32 cch)
@@ -252,7 +252,7 @@ IdentPtr HashTbl::PidHashNameLen(CharType const * prgch, uint32 cch)
 };
 template IdentPtr HashTbl::PidHashNameLen<utf8char_t>(utf8char_t const * prgch, uint32 cch);
 template IdentPtr HashTbl::PidHashNameLen<char>(char const * prgch, uint32 cch);
-template IdentPtr HashTbl::PidHashNameLen<char16>(char16 const * prgch, uint32 cch);
+template IdentPtr HashTbl::PidHashNameLen<char16_t>(char16_t const * prgch, uint32 cch);
 
 template <typename CharType>
 IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch, CharType const * end, int32 cch, uint32 luHash)
@@ -399,8 +399,8 @@ template IdentPtr HashTbl::FindExistingPid<char>(
     , int& depth
 #endif
     );
-template IdentPtr HashTbl::FindExistingPid<char16>(
-    char16 const * prgch, char16 const * end, int32 cch, uint32 luHash, IdentPtr **pppInsert, int32 *pBucketCount
+template IdentPtr HashTbl::FindExistingPid<char16_t>(
+    char16_t const * prgch, char16_t const * end, int32 cch, uint32 luHash, IdentPtr **pppInsert, int32 *pBucketCount
 #if PROFILE_DICTIONARY
     , int& depth
 #endif

@@ -237,7 +237,7 @@ WasmSignature* WasmSignature::FromIDL(WasmSignatureIDL* sig)
     return reinterpret_cast<WasmSignature*>(sig);
 }
 
-uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16* out, uint32 maxlen)
+uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen)
 {
     bool hasMultiResults = GetResultCount() > 1;
     const uint32 minEnd = GetResultCount() > 1 ? 20 : 12;
@@ -305,7 +305,7 @@ uint32 WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16* out, u
 void WasmSignature::Dump(uint32 maxlen)
 {
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    char16 buf[512] = { 0 };
+    char16_t buf[512] = { 0 };
     this->WriteSignatureToString(buf, min(maxlen, 512u));
     Output::Print(buf);
 #endif

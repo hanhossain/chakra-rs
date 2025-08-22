@@ -13,7 +13,7 @@ namespace Js
 Var GetImportVariable(Wasm::WasmImport* wi, ScriptContext* ctx, Var ffi)
 {
     PropertyRecord const * modPropertyRecord = nullptr;
-    const char16* modName = wi->modName;
+    const char16_t* modName = wi->modName;
     uint32 modNameLen = wi->modNameLen;
     ctx->GetOrAddPropertyRecord(modName, modNameLen, &modPropertyRecord);
     Var modProp = JavascriptOperators::OP_GetProperty(ffi, modPropertyRecord->GetPropertyId(), ctx);
@@ -22,7 +22,7 @@ Var GetImportVariable(Wasm::WasmImport* wi, ScriptContext* ctx, Var ffi)
         JavascriptError::ThrowTypeErrorVar(ctx, WASMERR_InvalidImportModule, modName);
     }
 
-    const char16* name = wi->importName;
+    const char16_t* name = wi->importName;
     uint32 nameLen = wi->importNameLen;
     PropertyRecord const * propertyRecord = nullptr;
     ctx->GetOrAddPropertyRecord(name, nameLen, &propertyRecord);
@@ -302,10 +302,10 @@ void WebAssemblyInstance::LoadImports(
                 WasmScriptFunction* func = VarTo<WasmScriptFunction>(prop);
                 if (!wasmModule->GetWasmFunctionInfo(counter)->GetSignature()->IsEquivalent(func->GetSignature()))
                 {
-                    char16 temp[2048] = { 0 };
-                    char16 importargs[512] = { 0 };
+                    char16_t temp[2048] = { 0 };
+                    char16_t importargs[512] = { 0 };
                     wasmModule->GetWasmFunctionInfo(counter)->GetSignature()->WriteSignatureToString(importargs, 512);
-                    char16 exportargs[512] = { 0 };
+                    char16_t exportargs[512] = { 0 };
                     func->GetSignature()->WriteSignatureToString(exportargs, 512);
                     _snwprintf_s(temp, 2048, _TRUNCATE, _u("%ls%ls to %ls%ls"), func->GetDisplayName()->GetString(), exportargs, import->importName, importargs);
                     // this makes a copy of the error message buffer, so it's fine to not worry about clean-up
@@ -338,8 +338,8 @@ void WebAssemblyInstance::LoadImports(
 #ifdef ENABLE_WASM_THREADS
                 if (mem->IsSharedMemory() != wasmModule->IsSharedMemory())
                 {
-                    const char16* memType = mem->IsSharedMemory() ? _u("shared") : _u("unshared");
-                    const char16* modType = wasmModule->IsSharedMemory() ? _u("shared") : _u("unshared");
+                    const char16_t* memType = mem->IsSharedMemory() ? _u("shared") : _u("unshared");
+                    const char16_t* modType = wasmModule->IsSharedMemory() ? _u("shared") : _u("unshared");
                     JavascriptError::ThrowWebAssemblyLinkErrorVar(ctx, WASMERR_InvalidMemoryType, _u("WebAssembly.Memory"), memType, modType);
                 }
 #endif

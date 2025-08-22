@@ -270,9 +270,9 @@ namespace UnifiedRegex
         // Empty, so add nothing
     }
 
-    void CharSetFull::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const
+    void CharSetFull::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const
     {
-        this->ToEquivClass<char16>(allocator, level, base, tblidx, result);
+        this->ToEquivClass<char16_t>(allocator, level, base, tblidx, result);
     }
 
     void CharSetFull::ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const
@@ -563,7 +563,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSetInner::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const
+    void CharSetInner::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const
     {
         Assert(level > 0);
         level--;
@@ -779,12 +779,12 @@ namespace UnifiedRegex
     void CharSetLeaf::ToComplement(ArenaAllocator* allocator, uint level, uint base, CharSet<Char>& result) const
     {
         Assert(level == 0);
-        vec.ToComplement<char16>(allocator, base, result);
+        vec.ToComplement<char16_t>(allocator, base, result);
     }
 
-    void CharSetLeaf::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const
+    void CharSetLeaf::ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const
     {
-        this->ToEquivClass<char16>(allocator, level, base, tblidx, result);
+        this->ToEquivClass<char16_t>(allocator, level, base, tblidx, result);
     }
 
     void CharSetLeaf::ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const
@@ -838,7 +838,7 @@ namespace UnifiedRegex
             return false;
         }
 
-        *outLowerChar = (char16)nextSet;
+        *outLowerChar = (char16_t)nextSet;
 
         int nextClear = vec.NextClear(nextSet);
 
@@ -855,10 +855,10 @@ namespace UnifiedRegex
 #endif
 
     // ----------------------------------------------------------------------
-    // CharSet<char16>
+    // CharSet<char16_t>
     // ----------------------------------------------------------------------
 
-    void CharSet<char16>::SwitchRepresentations(ArenaAllocator* allocator)
+    void CharSet<char16_t>::SwitchRepresentations(ArenaAllocator* allocator)
     {
         Assert(IsCompact());
         uint existCount = this->GetCompactLength();
@@ -877,7 +877,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::Sort()
+    void CharSet<char16_t>::Sort()
     {
         Assert(IsCompact());
         __assume(this->GetCompactLength() <= MaxCompact);
@@ -899,7 +899,7 @@ namespace UnifiedRegex
         }
     }
 
-    CharSet<char16>::CharSet()
+    CharSet<char16_t>::CharSet()
     {
         Assert(sizeof(Node*) == sizeof(size_t));
         Assert(sizeof(CompactRep) == sizeof(FullRep));
@@ -908,7 +908,7 @@ namespace UnifiedRegex
             rep.compact.cs[i] = emptySlot;
     }
 
-    void CharSet<char16>::FreeBody(ArenaAllocator* allocator)
+    void CharSet<char16_t>::FreeBody(ArenaAllocator* allocator)
     {
         if (!IsCompact() && rep.full.root != nullptr)
         {
@@ -919,7 +919,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::Clear(ArenaAllocator* allocator)
+    void CharSet<char16_t>::Clear(ArenaAllocator* allocator)
     {
         if (!IsCompact() && rep.full.root != nullptr)
             rep.full.root->FreeSelf(allocator);
@@ -928,7 +928,7 @@ namespace UnifiedRegex
             rep.compact.cs[i] = emptySlot;
     }
 
-    void CharSet<char16>::CloneFrom(ArenaAllocator* allocator, const CharSet<Char>& other)
+    void CharSet<char16_t>::CloneFrom(ArenaAllocator* allocator, const CharSet<Char>& other)
     {
         Clear(allocator);
         Assert(IsCompact());
@@ -947,7 +947,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::CloneNonSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<Char>& other)
+    void CharSet<char16_t>::CloneNonSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<Char>& other)
     {
         if (this->IsCompact())
         {
@@ -976,7 +976,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::CloneSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<Char>& other)
+    void CharSet<char16_t>::CloneSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<Char>& other)
     {
         if (this->IsCompact())
         {
@@ -1006,7 +1006,7 @@ namespace UnifiedRegex
     }
 
 
-    void CharSet<char16>::SubtractRange(ArenaAllocator* allocator, Char lowerChar, Char higherChar)
+    void CharSet<char16_t>::SubtractRange(ArenaAllocator* allocator, Char lowerChar, Char higherChar)
     {
         uint lowerValue = CTU(lowerChar);
         uint higherValue = CTU(higherChar);
@@ -1049,7 +1049,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::SetRange(ArenaAllocator* allocator, Char lc, Char hc)
+    void CharSet<char16_t>::SetRange(ArenaAllocator* allocator, Char lc, Char hc)
     {
         uint l = CTU(lc);
         uint h = CTU(hc);
@@ -1124,7 +1124,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::SetRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs)
+    void CharSet<char16_t>::SetRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs)
     {
         for (int i = 0; i < numSortedPairs * 2; i += 2)
         {
@@ -1134,7 +1134,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::SetNotRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs)
+    void CharSet<char16_t>::SetNotRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs)
     {
         if (numSortedPairs == 0)
             SetRange(allocator, MinChar, MaxChar);
@@ -1149,7 +1149,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::UnionInPlace(ArenaAllocator* allocator, const CharSet<Char>& other)
+    void CharSet<char16_t>::UnionInPlace(ArenaAllocator* allocator, const CharSet<Char>& other)
     {
         if (other.IsCompact())
         {
@@ -1184,7 +1184,7 @@ namespace UnifiedRegex
         }
     }
     _Success_(return)
-    bool CharSet<char16>::GetNextRange(Char searchCharStart, _Out_ Char *outLowerChar, _Out_ Char *outHigherChar)
+    bool CharSet<char16_t>::GetNextRange(Char searchCharStart, _Out_ Char *outLowerChar, _Out_ Char *outHigherChar)
     {
         int count = this->Count();
         if (count == 0)
@@ -1249,7 +1249,7 @@ namespace UnifiedRegex
                 {
                     found = true;
 
-                    *outLowerChar = (char16)nextSet;
+                    *outLowerChar = (char16_t)nextSet;
 
                     int nextClear = rep.full.direct.NextClear(nextSet);
 
@@ -1292,7 +1292,7 @@ namespace UnifiedRegex
         }
     }
 
-    bool CharSet<char16>::Get_helper(uint k) const
+    bool CharSet<char16_t>::Get_helper(uint k) const
     {
         Assert(!IsCompact());
         CharSetNode* curr = rep.full.root;
@@ -1313,7 +1313,7 @@ namespace UnifiedRegex
         return leaf->vec.Get(CharSetNode::leafIdx(k));
     }
 
-    void CharSet<char16>::ToComplement(ArenaAllocator* allocator, CharSet<Char>& result)
+    void CharSet<char16_t>::ToComplement(ArenaAllocator* allocator, CharSet<Char>& result)
     {
         if (IsCompact())
         {
@@ -1338,7 +1338,7 @@ namespace UnifiedRegex
         }
         else
         {
-            rep.full.direct.ToComplement<char16>(allocator, 0, result);
+            rep.full.direct.ToComplement<char16_t>(allocator, 0, result);
             if (rep.full.root == nullptr)
                 result.SetRange(allocator, UTC(CharSetNode::directSize), MaxChar);
             else
@@ -1346,7 +1346,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::ToEquivClass(ArenaAllocator* allocator, CharSet<Char>& result)
+    void CharSet<char16_t>::ToEquivClass(ArenaAllocator* allocator, CharSet<Char>& result)
     {
         uint tblidx = 0;
         if (IsCompact())
@@ -1371,7 +1371,7 @@ namespace UnifiedRegex
         }
         else
         {
-            rep.full.direct.ToEquivClass<char16>(allocator, 0, tblidx, result);
+            rep.full.direct.ToEquivClass<char16_t>(allocator, 0, tblidx, result);
             if (rep.full.root != nullptr)
             {
                 rep.full.root->ToEquivClassW(allocator, CharSetNode::levels - 1, 0, tblidx, result);
@@ -1379,7 +1379,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<char16>::ToEquivClassCP(ArenaAllocator* allocator, CharSet<codepoint_t>& result, codepoint_t baseOffset)
+    void CharSet<char16_t>::ToEquivClassCP(ArenaAllocator* allocator, CharSet<codepoint_t>& result, codepoint_t baseOffset)
     {
         uint tblidx = 0;
         if (IsCompact())
@@ -1412,7 +1412,7 @@ namespace UnifiedRegex
         }
     }
 
-    int CharSet<char16>::GetCompactEntries(uint max, __out_ecount(max) Char* entries) const
+    int CharSet<char16_t>::GetCompactEntries(uint max, __out_ecount(max) Char* entries) const
     {
         Assert(max <= MaxCompact);
         if (!IsCompact())
@@ -1429,7 +1429,7 @@ namespace UnifiedRegex
         return static_cast<int>(rep.compact.countPlusOne - 1);
     }
 
-    bool CharSet<char16>::IsSubsetOf(const CharSet<Char>& other) const
+    bool CharSet<char16_t>::IsSubsetOf(const CharSet<Char>& other) const
     {
         if (IsCompact())
         {
@@ -1454,7 +1454,7 @@ namespace UnifiedRegex
         }
     }
 
-    bool CharSet<char16>::IsEqualTo(const CharSet<Char>& other) const
+    bool CharSet<char16_t>::IsEqualTo(const CharSet<Char>& other) const
     {
         if (IsCompact())
         {
@@ -1485,7 +1485,7 @@ namespace UnifiedRegex
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     // CAUTION: This method is very slow.
-    void CharSet<char16>::Print(DebugWriter* w) const
+    void CharSet<char16_t>::Print(DebugWriter* w) const
     {
         w->Print(_u("["));
         int start = -1;
@@ -1561,7 +1561,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<codepoint_t>::CloneSimpleCharsTo(ArenaAllocator* allocator, CharSet<char16>& other) const
+    void CharSet<codepoint_t>::CloneSimpleCharsTo(ArenaAllocator* allocator, CharSet<char16_t>& other) const
     {
         other.CloneFrom(allocator, this->characterPlanes[0]);
     }
@@ -1580,18 +1580,18 @@ namespace UnifiedRegex
         else
         {
             // Do the partial ranges
-            char16 partialLower = this->RemoveOffset(lc);
-            char16 partialHigher = this->RemoveOffset(hc);
+            char16_t partialLower = this->RemoveOffset(lc);
+            char16_t partialHigher = this->RemoveOffset(hc);
 
             if (partialLower != 0)
             {
-                this->characterPlanes[lowerIndex].SetRange(allocator, partialLower, Chars<char16>::MaxUChar);
+                this->characterPlanes[lowerIndex].SetRange(allocator, partialLower, Chars<char16_t>::MaxUChar);
                 lowerIndex++;
             }
 
             for(; lowerIndex < upperIndex; lowerIndex++)
             {
-                this->characterPlanes[lowerIndex].SetRange(allocator, 0, Chars<char16>::MaxUChar);
+                this->characterPlanes[lowerIndex].SetRange(allocator, 0, Chars<char16_t>::MaxUChar);
             }
 
             this->characterPlanes[upperIndex].SetRange(allocator, 0, partialHigher);
@@ -1613,7 +1613,7 @@ namespace UnifiedRegex
         {
             for (int i = 0; i < NumberOfPlanes; i++)
             {
-                this->characterPlanes[i].SetRange(allocator, 0, Chars<char16>::MaxUChar);
+                this->characterPlanes[i].SetRange(allocator, 0, Chars<char16_t>::MaxUChar);
             }
         }
         else
@@ -1642,7 +1642,7 @@ namespace UnifiedRegex
         }
     }
 
-    void CharSet<codepoint_t>::UnionInPlace(ArenaAllocator* allocator, const  CharSet<char16>& other)
+    void CharSet<codepoint_t>::UnionInPlace(ArenaAllocator* allocator, const  CharSet<char16_t>& other)
     {
         this->characterPlanes[0].UnionInPlace(allocator, other);
     }
@@ -1657,9 +1657,9 @@ namespace UnifiedRegex
             return false;
         }
 
-        char16 currentLowChar = 1, currentHighChar = 0;
+        char16_t currentLowChar = 1, currentHighChar = 0;
         int index = this->CharToIndex(searchCharStart);
-        char16 offsetLessSearchCharStart = this->RemoveOffset(searchCharStart);
+        char16_t offsetLessSearchCharStart = this->RemoveOffset(searchCharStart);
 
         for (; index < NumberOfPlanes; index++)
         {
@@ -1707,7 +1707,7 @@ namespace UnifiedRegex
         this->characterPlanes[0].ToComplement(allocator, result.characterPlanes[0]);
     }
 
-    void CharSet<codepoint_t>::ToSimpleComplement(ArenaAllocator* allocator, CharSet<char16>& result)
+    void CharSet<codepoint_t>::ToSimpleComplement(ArenaAllocator* allocator, CharSet<char16_t>& result)
     {
         this->characterPlanes[0].ToComplement(allocator, result);
     }
@@ -1744,16 +1744,16 @@ namespace UnifiedRegex
 #endif
 
     // ----------------------------------------------------------------------
-    // RuntimeCharSet<char16>
+    // RuntimeCharSet<char16_t>
     // ----------------------------------------------------------------------
 
-    RuntimeCharSet<char16>::RuntimeCharSet()
+    RuntimeCharSet<char16_t>::RuntimeCharSet()
     {
         root = nullptr;
         direct.Clear();
     }
 
-    void RuntimeCharSet<char16>::FreeBody(ArenaAllocator* allocator)
+    void RuntimeCharSet<char16_t>::FreeBody(ArenaAllocator* allocator)
     {
         if (root != nullptr)
         {
@@ -1764,7 +1764,7 @@ namespace UnifiedRegex
         }
     }
 
-    void RuntimeCharSet<char16>::CloneFrom(ArenaAllocator* allocator, const CharSet<Char>& other)
+    void RuntimeCharSet<char16_t>::CloneFrom(ArenaAllocator* allocator, const CharSet<Char>& other)
     {
         Assert(root == nullptr);
         Assert(direct.Count() == 0);
@@ -1798,7 +1798,7 @@ namespace UnifiedRegex
         }
     }
 
-    bool RuntimeCharSet<char16>::Get_helper(uint k) const
+    bool RuntimeCharSet<char16_t>::Get_helper(uint k) const
     {
         CharSetNode* curr = root;
         for (int level = CharSetNode::levels - 1; level > 0; level--)
@@ -1820,7 +1820,7 @@ namespace UnifiedRegex
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
     // CAUTION: This method is very slow.
-    void RuntimeCharSet<char16>::Print(DebugWriter* w) const
+    void RuntimeCharSet<char16_t>::Print(DebugWriter* w) const
     {
         w->Print(_u("["));
         int start = -1;

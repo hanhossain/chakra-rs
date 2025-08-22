@@ -8,7 +8,6 @@ add_custom_target(dbg_controller_h
 set(ch_source_files
   ch.cpp
   ChakraRtInterface.cpp
-  CodexAssert.cpp
   Debugger.cpp
   Helpers.cpp
   HostConfigFlags.cpp

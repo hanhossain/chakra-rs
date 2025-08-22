@@ -310,7 +310,7 @@ typedef union _ULARGE_INTEGER {
     u
 #endif // PAL_STDCPP_COMPAT
      ;
-    ULONGLONG QuadPart;
+    unsigned long QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
 /******************* HRESULT types ****************************************/
@@ -360,11 +360,11 @@ typedef short VARIANT_BOOL;
 #define VARIANT_TRUE ((VARIANT_BOOL)-1)
 #define VARIANT_FALSE ((VARIANT_BOOL)0)
 
-typedef WCHAR OLECHAR;
+typedef char16_t OLECHAR;
 typedef OLECHAR* LPOLESTR;
 typedef const OLECHAR* LPCOLESTR;
 
-typedef WCHAR *BSTR;
+typedef char16_t *BSTR;
 
 STDAPI_(BSTR) SysAllocString(const OLECHAR*);
 STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, uint32_t);
@@ -385,7 +385,7 @@ typedef union tagCY {
         int32_t    Hi;
 #endif
     } u;
-    LONGLONG int64;
+    long int64;
 } CY, *LPCY;
 
 typedef CY CURRENCY;
@@ -420,7 +420,7 @@ typedef struct tagDEC {
             uint32_t Lo32;
             uint32_t Mid32;
         };
-        ULONGLONG Lo64;
+        unsigned long Lo64;
     };
 } DECIMAL, *LPDECIMAL;
 
@@ -508,7 +508,7 @@ struct tagVARIANT
             uint16_t wReserved3;
             union
                 {
-                LONGLONG llVal;
+                long llVal;
                 int32_t lVal;
                 uint8_t bVal;
                 short iVal;
@@ -525,7 +525,7 @@ struct tagVARIANT
                 uint8_t *pbVal;
                 short *piVal;
                 int32_t *plVal;
-                LONGLONG *pllVal;
+                long *pllVal;
                 float *pfltVal;
                 double *pdblVal;
                 VARIANT_BOOL *pboolVal;
@@ -539,14 +539,14 @@ struct tagVARIANT
                 char cVal;
                 unsigned short uiVal;
                 uint32_t ulVal;
-                ULONGLONG ullVal;
+                unsigned long ullVal;
                 int32_t intVal;
                 uint32_t uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
                 unsigned short *puiVal;
                 uint32_t *pulVal;
-                ULONGLONG *pullVal;
+                unsigned long *pullVal;
                 int32_t *pintVal;
                 uint32_t *puintVal;
                 struct __tagBRECORD
@@ -715,7 +715,7 @@ enum tagMIMECONTF {
 #define StrCpyW                 PAL_wcscpy
 #define StrCpyNW                lstrcpynW // note: can't be wcsncpy!
 #define StrCatW                 PAL_wcscat
-#define StrChrW                 (WCHAR*)PAL_wcschr
+#define StrChrW                 (char16_t*)PAL_wcschr
 #define StrCmpW                 PAL_wcscmp
 #define StrCmpIW                _wcsicmp
 #define StrCmpNW                PAL_wcsncmp
@@ -724,7 +724,7 @@ enum tagMIMECONTF {
 STDAPI_(LPWSTR) StrNCatW(LPWSTR lpFront, LPCWSTR lpBack, int cchMax);
 STDAPI_(int) StrToIntW(LPCWSTR lpSrc);
 STDAPI_(LPWSTR) StrStrIW(LPCWSTR lpFirst, LPCWSTR lpSrch);
-STDAPI_(LPWSTR) StrRChrW(LPCWSTR lpStart, LPCWSTR lpEnd, WCHAR wMatch);
+STDAPI_(LPWSTR) StrRChrW(LPCWSTR lpStart, LPCWSTR lpEnd, char16_t wMatch);
 STDAPI_(LPWSTR) StrCatBuffW(LPWSTR pszDest, LPCWSTR pszSrc, int cchDestBuffSize);
 
 #define lstrcmpW                PAL_wcscmp
@@ -797,13 +797,13 @@ extern "C++" {
 
 #include <safemath.h>
 
-inline errno_t _wcslwr_unsafe(WCHAR *str, size_t sz)
+inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
 {
-    if (sz >= INT_MAX / sizeof(WCHAR))
+    if (sz >= INT_MAX / sizeof(char16_t))
         return 1;
 
-    size_t fullSize = sz * sizeof(WCHAR);
-    WCHAR *copy = (WCHAR *)malloc(fullSize);
+    size_t fullSize = sz * sizeof(char16_t);
+    char16_t *copy = (char16_t *)malloc(fullSize);
     if(copy == nullptr)
         return 1;
 
@@ -858,13 +858,13 @@ inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
     }
 }
 
-inline int _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
+inline int _vscwprintf_unsafe(const char16_t *_Format, va_list _ArgList)
 {
     int guess = 256;
 
     for (;;)
     {
-        WCHAR *buf = (WCHAR *)malloc(guess * sizeof(WCHAR));
+        char16_t *buf = (char16_t *)malloc(guess * sizeof(char16_t));
         if (buf == nullptr)
             return 0;
 
@@ -881,7 +881,7 @@ inline int _vscwprintf_unsafe(const WCHAR *_Format, va_list _ArgList)
     }
 }
 
-inline int _scwprintf_unsafe(const WCHAR *_Format, ...)
+inline int _scwprintf_unsafe(const char16_t *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -891,7 +891,7 @@ inline int _scwprintf_unsafe(const WCHAR *_Format, ...)
     return ret;
 }
 
-inline int _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, va_list _ArgList)
+inline int _vsnwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format, va_list _ArgList)
 {
     if (_Count == _TRUNCATE) _Count = _SizeInWords;
     int ret = _vsnwprintf(_Dst, _Count, _Format, _ArgList);
@@ -903,7 +903,7 @@ inline int _vsnwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, c
     return ret;
 }
 
-inline int _snwprintf_unsafe(WCHAR *_Dst, size_t _SizeInWords, size_t _Count, const WCHAR *_Format, ...)
+inline int _snwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format, ...)
 {
     int ret;
     va_list _ArgList;
@@ -935,7 +935,7 @@ inline int _snprintf_unsafe(char *_Dst, size_t _SizeInWords, size_t _Count, cons
     return ret;
 }
 
-inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const WCHAR *fileName, const WCHAR *mode)
+inline errno_t _wfopen_unsafe(PAL_FILE * *ff, const char16_t *fileName, const char16_t *mode)
 {
     PAL_FILE *result = _wfopen(fileName, mode);
     if(result == 0) {
@@ -959,12 +959,12 @@ inline errno_t _fopen_unsafe(PAL_FILE * *ff, const char *fileName, const char *m
 
 /* _itow_s */
 _SAFECRT__EXTERN_C
-errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _itow_s(int _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _itow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -973,7 +973,7 @@ errno_t _itow_s(int _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -986,12 +986,12 @@ errno_t _itow_s(int _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 #endif
 
 _SAFECRT__EXTERN_C
-errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _ltow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _ltow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1000,7 +1000,7 @@ errno_t _ltow_s(long _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1014,12 +1014,12 @@ errno_t _ltow_s(long _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
 
 /* _i64tow_s */
 _SAFECRT__EXTERN_C
-errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix);
+errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
-errno_t _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
+errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _i64tow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -1028,7 +1028,7 @@ errno_t _i64tow_s(__int64 _Value, WCHAR (&_Dst)[_SizeInWords], int _Radix)
 #if _SAFECRT_USE_INLINES
 
 __inline
-errno_t _i64tow_s(__int64 _Value, WCHAR *_Dst, size_t _SizeInWords, int _Radix)
+errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -1413,7 +1413,7 @@ typedef struct _DEBUG_EVENT {
 typedef
 PRUNTIME_FUNCTION
 GET_RUNTIME_FUNCTION_CALLBACK (
-    DWORD64 ControlPc,
+    unsigned long ControlPc,
     void * Context
     );
 typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
@@ -1449,7 +1449,7 @@ typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_C
 #define UNWIND_HISTORY_TABLE_SIZE 12
 
 typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
-    DWORD64 ImageBase;
+    unsigned long ImageBase;
     PRUNTIME_FUNCTION FunctionEntry;
 } UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
 
@@ -1459,8 +1459,8 @@ typedef struct _UNWIND_HISTORY_TABLE {
     uint8_t  GlobalHint;
     uint8_t  Search;
     uint8_t  Once;
-    DWORD64 LowAddress;
-    DWORD64 HighAddress;
+    unsigned long LowAddress;
+    unsigned long HighAddress;
     UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
 } UNWIND_HISTORY_TABLE, *PUNWIND_HISTORY_TABLE;
 
@@ -1573,8 +1573,8 @@ typedef struct LIST_ENTRY32 {
 typedef LIST_ENTRY32 *PLIST_ENTRY32;
 
 typedef struct LIST_ENTRY64 {
-    ULONGLONG Flink;
-    ULONGLONG Blink;
+    unsigned long Flink;
+    unsigned long Blink;
 } LIST_ENTRY64;
 typedef LIST_ENTRY64 *PLIST_ENTRY64;
 

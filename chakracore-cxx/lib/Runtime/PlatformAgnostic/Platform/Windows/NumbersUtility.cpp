@@ -11,9 +11,9 @@ namespace PlatformAgnostic
 {
 namespace Numbers
 {
-    size_t Utility::NumberToDefaultLocaleString(const WCHAR *number_string,
+    size_t Utility::NumberToDefaultLocaleString(const char16_t *number_string,
                                                 const size_t length,
-                                                WCHAR *buffer,
+                                                char16_t *buffer,
                                                 const size_t pre_allocated_buffer_size)
     {
         size_t count = GetNumberFormatEx(LOCALE_NAME_USER_DEFAULT, 0,

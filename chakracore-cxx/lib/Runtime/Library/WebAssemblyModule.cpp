@@ -168,7 +168,7 @@ Var WebAssemblyModule::EntryCustomSections(RecyclableObject* function, CallInfo 
     ENTER_PINNED_SCOPE(JavascriptString, sectionName);
     sectionName = JavascriptConversion::ToString(sectionNameVar, scriptContext);
 
-    const char16* sectionNameBuf = sectionName->GetString();
+    const char16_t* sectionNameBuf = sectionName->GetString();
     charcount_t sectionNameLength = sectionName->GetLength();
 
     customSections = JavascriptOperators::NewJavascriptArrayNoArg(scriptContext);
@@ -177,7 +177,7 @@ Var WebAssemblyModule::EntryCustomSections(RecyclableObject* function, CallInfo 
         Wasm::CustomSection customSection = module->GetCustomSection(i);
         if (sectionNameLength == customSection.nameLength &&
             // can't use string compare because null-terminator is a valid character for custom section names
-            memcmp(sectionNameBuf, customSection.name, sectionNameLength * sizeof(char16)) == 0)
+            memcmp(sectionNameBuf, customSection.name, sectionNameLength * sizeof(char16_t)) == 0)
         {
             const uint32 byteLength = customSection.payloadSize;
             ArrayBuffer* arrayBuffer = scriptContext->GetLibrary()->CreateArrayBuffer(byteLength);
@@ -204,7 +204,7 @@ WebAssemblyModule::CreateModule(
     WebAssemblyModule * webAssemblyModule = nullptr;
     Wasm::WasmReaderInfo * readerInfo = nullptr;
     Js::FunctionBody * currentBody = nullptr;
-    char16* exceptionMessage = nullptr;
+    char16_t* exceptionMessage = nullptr;
     AutoFreeExceptionMessage autoCleanExceptionMessage;
     try
     {
@@ -275,7 +275,7 @@ WebAssemblyModule::ValidateModule(
     }
     catch (Wasm::WasmCompilationException& ex)
     {
-        char16* originalMessage = ex.ReleaseErrorMessage();
+        char16_t* originalMessage = ex.ReleaseErrorMessage();
         if (PHASE_TRACE1(Js::WasmBytecodePhase) || PHASE_TRACE1(Js::WasmReaderPhase))
         {
             Output::Print(_u("WebAssembly.validate Error: %s\n"), originalMessage);
@@ -569,7 +569,7 @@ WebAssemblyModule::AllocateFunctionExports(uint32 entries)
 }
 
 void
-WebAssemblyModule::SetExport(uint32 iExport, uint32 funcIndex, const char16* exportName, uint32 nameLength, Wasm::ExternalKinds kind)
+WebAssemblyModule::SetExport(uint32 iExport, uint32 funcIndex, const char16_t* exportName, uint32 nameLength, Wasm::ExternalKinds kind)
 {
     m_exports[iExport].index = funcIndex;
     m_exports[iExport].nameLength = nameLength;
@@ -594,7 +594,7 @@ WebAssemblyModule::GetImportCount() const
 }
 
 void
-WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16* modName, uint32 modNameLen, const char16* fnName, uint32 fnNameLen)
+WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16_t* modName, uint32 modNameLen, const char16_t* fnName, uint32 fnNameLen)
 {
     if (sigId >= GetSignatureCount())
     {
@@ -640,7 +640,7 @@ WebAssemblyModule::AddFunctionImport(uint32 sigId, const char16* modName, uint32
     if (!UInt32Math::Add(modNameLen, bufferLength, &bufferLength) &&
         !UInt32Math::Add(fnNameLen, bufferLength, &bufferLength))
     {
-        char16 * autoName = RecyclerNewArrayLeafZ(GetScriptContext()->GetRecycler(), char16, bufferLength);
+        char16_t * autoName = RecyclerNewArrayLeafZ(GetScriptContext()->GetRecycler(), char16_t, bufferLength);
         uint32 nameLength = swprintf_s(autoName, bufferLength, _u("%s.%s.Thunk[%u]"), modName, fnName, funcInfo->GetNumber());
         if (nameLength != (uint32)-1)
         {
@@ -664,7 +664,7 @@ WebAssemblyModule::GetImport(uint32 i) const
 }
 
 void
-WebAssemblyModule::AddGlobalImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen)
+WebAssemblyModule::AddGlobalImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Global;
@@ -676,7 +676,7 @@ WebAssemblyModule::AddGlobalImport(const char16* modName, uint32 modNameLen, con
 }
 
 void
-WebAssemblyModule::AddMemoryImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen)
+WebAssemblyModule::AddMemoryImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Memory;
@@ -689,7 +689,7 @@ WebAssemblyModule::AddMemoryImport(const char16* modName, uint32 modNameLen, con
 }
 
 void
-WebAssemblyModule::AddTableImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen)
+WebAssemblyModule::AddTableImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen)
 {
     Wasm::WasmImport* wi = Anew(m_alloc, Wasm::WasmImport);
     wi->kind = Wasm::ExternalKinds::Table;
@@ -855,23 +855,23 @@ WebAssemblyModule::GetModuleEnvironmentSize() const
     return size;
 }
 
-char16* WebAssemblyModule::FormatExceptionMessage(Wasm::WasmCompilationException* ex, AutoFreeExceptionMessage* autoFree, WebAssemblyModule* wasmModule, FunctionBody* body)
+char16_t* WebAssemblyModule::FormatExceptionMessage(Wasm::WasmCompilationException* ex, AutoFreeExceptionMessage* autoFree, WebAssemblyModule* wasmModule, FunctionBody* body)
 {
-    char16* originalExceptionMessage = ex->GetTempErrorMessageRef();
+    char16_t* originalExceptionMessage = ex->GetTempErrorMessageRef();
     if (!wasmModule || !body)
     {
         size_t len = wcslen(originalExceptionMessage) + 1;
-        char16* buf = HeapNewArray(char16, len);
+        char16_t* buf = HeapNewArray(char16_t, len);
         autoFree->Set(buf, len);
-        js_memcpy_s(buf, len * sizeof(char16), originalExceptionMessage, len * sizeof(char16));
+        js_memcpy_s(buf, len * sizeof(char16_t), originalExceptionMessage, len * sizeof(char16_t));
         return buf;
     }
 
     Wasm::BinaryLocation location = wasmModule->GetReader()->GetCurrentLocation();
 
-    const char16* format = _u("function %s at offset %u/%u (0x%x/0x%x): %s");
-    const char16* funcName = body->GetDisplayName();
-    char16* buf = HeapNewArray(char16, 2048);
+    const char16_t* format = _u("function %s at offset %u/%u (0x%x/0x%x): %s");
+    const char16_t* funcName = body->GetDisplayName();
+    char16_t* buf = HeapNewArray(char16_t, 2048);
     autoFree->Set(buf, 2048);
 
     _snwprintf_s(buf, 2048, _TRUNCATE, format,

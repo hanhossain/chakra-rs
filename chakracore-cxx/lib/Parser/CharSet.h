@@ -249,7 +249,7 @@ namespace UnifiedRegex
     template <typename C>
     class CharSet {};
 
-    struct CharSetNode : protected Chars<char16>
+    struct CharSetNode : protected Chars<char16_t>
     {
         static const int directBits = Chars<char>::CharWidth;
         static const uint directSize = Chars<char>::NumChars;
@@ -299,7 +299,7 @@ namespace UnifiedRegex
         virtual CharSetNode* UnionInPlace(ArenaAllocator* allocator, uint level, const CharSetNode* other) = 0;
         virtual bool Get(uint level, uint k) const = 0;
         virtual void ToComplement(ArenaAllocator* allocator, uint level, uint base, CharSet<Char>& result) const = 0;
-        virtual void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const = 0;
+        virtual void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const = 0;
         virtual void ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const = 0;
         virtual bool IsSubsetOf(uint level, const CharSetNode* other) const = 0;
         virtual bool IsEqualTo(uint level, const CharSetNode* other) const = 0;
@@ -330,7 +330,7 @@ namespace UnifiedRegex
         CharSetNode* UnionInPlace(ArenaAllocator* allocator, uint level, const CharSetNode* other) override;
         bool Get(uint level, uint k) const override;
         void ToComplement(ArenaAllocator* allocator, uint level, uint base, CharSet<Char>& result) const override;
-        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const override;
+        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const override;
         void ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const override;
         bool IsSubsetOf(uint level, const CharSetNode* other) const override;
         bool IsEqualTo(uint level, const CharSetNode* other) const override;
@@ -357,7 +357,7 @@ namespace UnifiedRegex
         CharSetNode* UnionInPlace(ArenaAllocator* allocator, uint level, const CharSetNode* other) override;
         bool Get(uint level, uint k) const override;
         void ToComplement(ArenaAllocator* allocator, uint level, uint base, CharSet<Char>& result) const override;
-        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const override;
+        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const override;
         void ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const override;
         bool IsSubsetOf(uint level, const CharSetNode* other) const override;
         bool IsEqualTo(uint level, const CharSetNode* other) const override;
@@ -384,7 +384,7 @@ namespace UnifiedRegex
         CharSetNode* UnionInPlace(ArenaAllocator* allocator, uint level, const CharSetNode* other) override;
         bool Get(uint level, uint k) const override;
         void ToComplement(ArenaAllocator* allocator, uint level, uint base, CharSet<Char>& result) const override;
-        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16>& result) const override;
+        void ToEquivClassW(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<char16_t>& result) const override;
         void ToEquivClassCP(ArenaAllocator* allocator, uint level, uint base, uint& tblidx, CharSet<codepoint_t>& result, codepoint_t baseOffset) const override;
         bool IsSubsetOf(uint level, const CharSetNode* other) const override;
         bool IsEqualTo(uint level, const CharSetNode* other) const override;
@@ -396,7 +396,7 @@ namespace UnifiedRegex
     };
 
     template <>
-    class CharSet<char16> : private Chars<char16>
+    class CharSet<char16_t> : private Chars<char16_t>
     {
     public:
         static const uint MaxCompact = 4;
@@ -566,7 +566,7 @@ namespace UnifiedRegex
             rep.compact.countPlusOne -= 1;
         }
 
-        inline char16 Singleton() const
+        inline char16_t Singleton() const
         {
             Assert(IsSingleton());
             Assert(rep.compact.cs[0] <= MaxUChar);
@@ -613,26 +613,26 @@ namespace UnifiedRegex
         // Character planes are composed of 65536 characters each.
         // First plane is the Basic Multilingual Plane (characters 0 - 65535)
         // Every subsequent plane also stores characters in the form [0 - 65535]; to get the actual value, add 'index * 0x10000' to it
-        CharSet<char16> characterPlanes[NumberOfPlanes];
+        CharSet<char16_t> characterPlanes[NumberOfPlanes];
 
-        // Takes a character, and returns the index of the CharSet<char16> that holds it.
+        // Takes a character, and returns the index of the CharSet<char16_t> that holds it.
         inline int CharToIndex(Char c) const
         {
             Assert(c <= Chars<codepoint_t>::MaxUChar);
-            return (int)(CTU(c) / (Chars<char16>::MaxUChar + 1));
+            return (int)(CTU(c) / (Chars<char16_t>::MaxUChar + 1));
         }
 
         // Takes a character, and removes the offset to make it < 0x10000
-        inline char16 RemoveOffset(Char c) const
+        inline char16_t RemoveOffset(Char c) const
         {
             Assert(c <= Chars<codepoint_t>::MaxUChar);
-            return (char16)(CTU(c) % 0x10000);
+            return (char16_t)(CTU(c) % 0x10000);
         }
 
         // Takes a character, and removes the offset to make it < 0x10000
-        inline Char AddOffset(char16 c, int index) const
+        inline Char AddOffset(char16_t c, int index) const
         {
-            Assert(c <= Chars<char16>::MaxUChar);
+            Assert(c <= Chars<char16_t>::MaxUChar);
             Assert(index >= 0);
             Assert(index < NumberOfPlanes);
             return ((Char)c) + 0x10000 * index;
@@ -643,16 +643,16 @@ namespace UnifiedRegex
         void FreeBody(ArenaAllocator* allocator);
         void Clear(ArenaAllocator* allocator);
         void CloneFrom(ArenaAllocator* allocator, const CharSet<Char>& other);
-        void CloneSimpleCharsTo(ArenaAllocator* allocator, CharSet<char16>& other) const;
+        void CloneSimpleCharsTo(ArenaAllocator* allocator, CharSet<char16_t>& other) const;
 
-        inline void CloneNonSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<char16>& other)
+        inline void CloneNonSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<char16_t>& other)
         {
             Assert(this->SimpleCharCount() > 0);
             AssertMsg(this->ContainSurrogateCodeUnits(), "This doesn't contain surrogate code units, a simple clone is faster.");
             this->characterPlanes[0].CloneNonSurrogateCodeUnitsTo(allocator, other);
         }
 
-        inline void CloneSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<char16>& other)
+        inline void CloneSurrogateCodeUnitsTo(ArenaAllocator* allocator, CharSet<char16_t>& other)
         {
             Assert(this->SimpleCharCount() > 0);
             AssertMsg(this->ContainSurrogateCodeUnits(), "This doesn't contain surrogate code units, will not produce any result.");
@@ -663,7 +663,7 @@ namespace UnifiedRegex
 
         inline bool ContainSurrogateCodeUnits()
         {
-            char16 outLower = 0xFFFF, ignore = 0x0;
+            char16_t outLower = 0xFFFF, ignore = 0x0;
             return this->characterPlanes[0].GetNextRange(0xD800, &outLower, &ignore) ? outLower <= 0xDFFF : false;
         }
 
@@ -671,7 +671,7 @@ namespace UnifiedRegex
         void SetRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs);
         void SetNotRanges(ArenaAllocator* allocator, int numSortedPairs, const Char* sortedPairs);
         void UnionInPlace(ArenaAllocator* allocator, const  CharSet<Char>& other);
-        void UnionInPlace(ArenaAllocator* allocator, const  CharSet<char16>& other);
+        void UnionInPlace(ArenaAllocator* allocator, const  CharSet<char16_t>& other);
         _Success_(return) bool GetNextRange(Char searchCharStart, _Out_ Char *outLowerChar, _Out_ Char *outHigherChar);
 
         inline bool Get(Char kc) const
@@ -697,7 +697,7 @@ namespace UnifiedRegex
             return this->characterPlanes[0].IsSingleton();
         }
 
-        inline char16 SimpleCharSingleton() const
+        inline char16_t SimpleCharSingleton() const
         {
             return this->characterPlanes[0].Singleton();
         }
@@ -746,7 +746,7 @@ namespace UnifiedRegex
         // NOTE: These are not 'const' methods since they may sort the compact representation internally
         void ToComplement(ArenaAllocator* allocator, CharSet<Char>& result);
         void ToSimpleComplement(ArenaAllocator* allocator, CharSet<codepoint_t>& result);
-        void ToSimpleComplement(ArenaAllocator* allocator, CharSet<char16>& result);
+        void ToSimpleComplement(ArenaAllocator* allocator, CharSet<char16_t>& result);
         void ToEquivClass(ArenaAllocator* allocator, CharSet<Char>& result);
         void ToSurrogateEquivClass(ArenaAllocator* allocator, CharSet<Char>& result);
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -756,7 +756,7 @@ namespace UnifiedRegex
 
 
     template <>
-    class RuntimeCharSet<char16> : private Chars<char16>
+    class RuntimeCharSet<char16_t> : private Chars<char16_t>
     {
     private:
         // Trie for remaining characters. Pointer value will be 0 or >> MaxCompact.
@@ -791,6 +791,6 @@ namespace UnifiedRegex
 #endif
     };
 
-    typedef CharSet<char16> UnicodeCharSet;
-    typedef RuntimeCharSet<char16> UnicodeRuntimeCharSet;
+    typedef CharSet<char16_t> UnicodeCharSet;
+    typedef RuntimeCharSet<char16_t> UnicodeRuntimeCharSet;
 }

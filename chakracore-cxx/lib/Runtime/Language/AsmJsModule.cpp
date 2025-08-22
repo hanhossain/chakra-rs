@@ -1598,7 +1598,7 @@ namespace Js
         return mCompileTime.ToMicroseconds();
     }
 
-    static const char16* AsmPhaseNames[AsmJsCompilation::Phases_COUNT] = {
+    static const char16_t* AsmPhaseNames[AsmJsCompilation::Phases_COUNT] = {
     _u("Module"),
     _u("ByteCode"),
     _u("TemplateJIT"),

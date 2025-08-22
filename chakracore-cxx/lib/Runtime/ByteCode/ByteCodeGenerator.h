@@ -277,7 +277,7 @@ public:
 #if ENABLE_NATIVE_CODEGEN
     void MapCallSiteToCallApplyCallSiteMap(FuncInfo * funcInfo);
 #endif
-    FuncInfo *StartBindFunction(const char16 *name, uint nameLength, uint shortNameOffset, bool* pfuncExprWithName, ParseNodeFnc *pnodeFnc, Js::ParseableFunctionInfo * reuseNestedFunc);
+    FuncInfo *StartBindFunction(const char16_t *name, uint nameLength, uint shortNameOffset, bool* pfuncExprWithName, ParseNodeFnc *pnodeFnc, Js::ParseableFunctionInfo * reuseNestedFunc);
     void EndBindFunction(bool funcExprWithName);
     void StartBindCatch(ParseNode *pnode);
 
@@ -308,13 +308,13 @@ public:
     void PushBlock(ParseNodeBlock *pnode);
     void PopBlock();
 
-    void PushFuncInfo(char16 const * location, FuncInfo* funcInfo);
-    void PopFuncInfo(char16 const * location);
+    void PushFuncInfo(char16_t const * location, FuncInfo* funcInfo);
+    void PopFuncInfo(char16_t const * location);
 
     Js::RegSlot PrependLocalScopes(Js::RegSlot evalEnv, Js::RegSlot tempLoc, FuncInfo *funcInfo);
     Symbol *FindSymbol(Symbol **symRef, IdentPtr pid, bool forReference = false);
-    Symbol *AddSymbolToScope(Scope *scope, const char16 *key, int keyLength, ParseNode *varDecl, SymbolType symbolType);
-    Symbol *AddSymbolToFunctionScope(const char16 *key, int keyLength, ParseNode *varDecl, SymbolType symbolType);
+    Symbol *AddSymbolToScope(Scope *scope, const char16_t *key, int keyLength, ParseNode *varDecl, SymbolType symbolType);
+    Symbol *AddSymbolToFunctionScope(const char16_t *key, int keyLength, ParseNode *varDecl, SymbolType symbolType);
     void FuncEscapes(Scope *scope);
     void EmitTopLevelStatement(ParseNode *stmt, FuncInfo *funcInfo, BOOL fReturnValue);
     void EmitInvertedLoop(ParseNodeStmt* outerLoop,ParseNodeFor* invertedLoop,FuncInfo* funcInfo);

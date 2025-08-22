@@ -16,6 +16,7 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdio.h>
 #include "internal_securecrt.h"
 
 #include "mbusafecrt_internal.h"

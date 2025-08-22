@@ -226,7 +226,7 @@ namespace Js
             return interpreterFrame;
         }
 
-        bool GetSourcePosition(const WCHAR** sourceFileName, uint32_t* line, int32_t* column);
+        bool GetSourcePosition(const char16_t** sourceFileName, uint32_t* line, int32_t* column);
 
         static bool TryIsTopJavaScriptFrameNative(ScriptContext* scriptContext, bool* istopFrameNative, bool ignoreLibraryCode = false);
         static bool AlignAndCheckAddressOfReturnAddressMatch(void* addressOfReturnAddress, void* nativeLibraryEntryAddress);

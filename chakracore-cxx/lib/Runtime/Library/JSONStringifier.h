@@ -54,7 +54,7 @@ private:
     charcount_t totalStringLength;
     charcount_t indentLength;
     charcount_t gapLength;
-    char16* gap;
+    char16_t* gap;
 
     Var TryConvertPrimitiveObject(_In_ RecyclableObject* value);
     Var ToJSON(_In_ JavascriptString* key, _In_ RecyclableObject* valueObject);
@@ -110,7 +110,7 @@ public:
         _In_ Var value,
         _In_ JSONObjectStack* objectStack);
 
-    const char16* GetGap() const { return this->gap; };
+    const char16_t* GetGap() const { return this->gap; };
     charcount_t GetGapLength() const { return this->gapLength; }
     bool HasReplacerFunction() const { return this->replacerFunction != nullptr; }
 

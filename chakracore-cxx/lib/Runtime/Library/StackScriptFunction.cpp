@@ -10,10 +10,10 @@
 namespace Js
 {
     JavascriptFunction *
-    StackScriptFunction::EnsureBoxed(BOX_PARAM(JavascriptFunction * function, void * returnAddress, char16 const * reason))
+    StackScriptFunction::EnsureBoxed(BOX_PARAM(JavascriptFunction * function, void * returnAddress, char16_t const * reason))
     {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
         if (!ThreadContext::IsOnStack(function))
         {
@@ -167,8 +167,8 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
                 if (this->NeedBoxFrame(callerFunctionBody) || (hasInlineeToBox && !walker.IsInlineFrame()))
                 {
-                    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    char16 const * frameKind;
+                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t const * frameKind;
                     if (interpreterFrame)
                     {
                         Assert(!hasInlineeToBox);
@@ -711,7 +711,7 @@ namespace Js
 
         if (PHASE_TESTTRACE(Js::StackFuncPhase, stackFunction->GetFunctionProxy()))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
             Output::Print(_u("Boxing StackScriptFunction Object: %s (function Id: %s)"),
                 stackFunction->GetFunctionProxy()->IsDeferredDeserializeFunction()?
@@ -741,7 +741,7 @@ namespace Js
         if (stackFunction)
         {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
 
             FunctionProxy* functionProxy = (*infoRef)->GetFunctionProxy();

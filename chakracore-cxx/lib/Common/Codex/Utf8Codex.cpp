@@ -26,9 +26,9 @@ namespace utf8
         return (reinterpret_cast<size_t>(pb) & mAlignmentMask) == 0 && (reinterpret_cast<size_t>(pch) & mAlignmentMask) == 0;
     }
 
-    inline size_t EncodedBytes(char16 prefix)
+    inline size_t EncodedBytes(char16_t prefix)
     {
-         CodexAssert(0 == (prefix & 0xFF00)); // prefix must really be a byte. We use char16 for as a convenience for the API.
+         CodexAssert(0 == (prefix & 0xFF00)); // prefix must really be a byte. We use char16_t for as a convenience for the API.
 
         // The number of bytes in an UTF8 encoding is determined by the 4 high-order bits of the first byte.
         // 0xxx -> 1
@@ -56,24 +56,24 @@ namespace utf8
         return ((0x5B >> (((prefix ^ 0xF0) >> 3) & 0x1E)) & 0x03) + 1;
     }
 
-    char16 GetUnknownCharacter(DecodeOptions options = doDefault)
+    char16_t GetUnknownCharacter(DecodeOptions options = doDefault)
     {
         if ((options & doThrowOnInvalidWCHARs) != 0)
         {
             throw InvalidWideCharException();
         }
-        return char16(UNICODE_UNKNOWN_CHAR_MARK);
+        return char16_t(UNICODE_UNKNOWN_CHAR_MARK);
     }
 
-    BOOL IsValidWideChar(char16 ch)
+    BOOL IsValidWideChar(char16_t ch)
     {
         return (ch < 0xfdd0) || ((ch > 0xfdef) && (ch <= 0xffef)) || ((ch >= 0xfff9) && (ch <= 0xfffd));
     }
 
     _At_(ptr, _In_reads_(end - ptr) _Post_satisfies_(ptr >= _Old_(ptr) - 1 && ptr <= end))
-    inline char16 DecodeTail(char16 c1, LPCUTF8& ptr, LPCUTF8 end, DecodeOptions& options, bool *chunkEndsAtTruncatedSequence)
+    inline char16_t DecodeTail(char16_t c1, LPCUTF8& ptr, LPCUTF8 end, DecodeOptions& options, bool *chunkEndsAtTruncatedSequence)
     {
-        char16 ch = 0;
+        char16_t ch = 0;
         uint8_t c2, c3, c4;
 
         switch (EncodedBytes(c1))
@@ -123,8 +123,8 @@ namespace utf8
                     && InRange(c2, 0x80, 0xBF)
                 )
             {
-                ch |= WCHAR(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
-                ch |= WCHAR(c2 & 0x3f);
+                ch |= char16_t(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
+                ch |= char16_t(c2 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & doAllowInvalidWCHARs) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -189,9 +189,9 @@ namespace utf8
                     )
                 )
             {
-                ch  = WCHAR(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
-                ch |= WCHAR(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
-                ch |= WCHAR(c3 & 0x3f);
+                ch  = char16_t(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
+                ch |= char16_t(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
+                ch |= char16_t(c3 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & (doAllowThreeByteSurrogates | doAllowInvalidWCHARs)) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -266,11 +266,11 @@ LFourByte:
             if ((options & doSecondSurrogatePair) == 0)
             {
                 // Decode high 10 bits of utf-8 20 bit char
-                ch  = WCHAR(c1 & 0x07) << 2;
-                ch |= WCHAR(c2 & 0x30) >> 4;
+                ch  = char16_t(c1 & 0x07) << 2;
+                ch |= char16_t(c2 & 0x30) >> 4;
                 ch  = (ch - 1) << 6;             // ch == 0000 00ww ww00 0000
-                ch |= WCHAR(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
-                ch |= WCHAR(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
+                ch |= char16_t(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
+                ch |= char16_t(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
                 // Encode first word of utf-16 surrogate pair
                 ch += 0xD800;
                 // Remember next call must return second word
@@ -285,8 +285,8 @@ LFourByte:
             else
             {
                 // Decode low 10 bits of utf-8 20 bit char
-                ch = WCHAR(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
-                ch |= WCHAR(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
+                ch = char16_t(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
+                ch |= char16_t(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
                 // Encode second word of utf-16 surrogate pair
                 ch += 0xDC00;
                 // We're done with this char
@@ -322,7 +322,7 @@ LFourByte:
     }
     
     _Use_decl_annotations_
-    size_t DecodeUnitsInto(char16 *buffer, LPCUTF8& pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
+    size_t DecodeUnitsInto(char16_t *buffer, LPCUTF8& pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
     {
         DecodeOptions localOptions = options;
 
@@ -332,7 +332,7 @@ LFourByte:
         }
 
         LPCUTF8 p = pbUtf8;
-        char16 *dest = buffer;
+        char16_t *dest = buffer;
 
         if (!ShouldFastPath(p, dest)) goto LSlowPath;
 
@@ -341,8 +341,8 @@ LFastPath:
         {
             unsigned bytes = *(unsigned *)p;
             if ((bytes & 0x80808080) != 0) goto LSlowPath;
-            ((uint32 *)dest)[0] = (char16(bytes) & 0x00FF) | ((char16(bytes) & 0xFF00) << 8);
-            ((uint32 *)dest)[1] = (char16(bytes >> 16) & 0x00FF) | ((char16(bytes >> 16) & 0xFF00) << 8);
+            ((uint32 *)dest)[0] = (char16_t(bytes) & 0x00FF) | ((char16_t(bytes) & 0xFF00) << 8);
+            ((uint32 *)dest)[1] = (char16_t(bytes >> 16) & 0x00FF) | ((char16_t(bytes >> 16) & 0xFF00) << 8);
             p += 4;
             dest += 4;
         }
@@ -351,7 +351,7 @@ LSlowPath:
         while (p < pbEnd)
         {
             LPCUTF8 s = p;
-            char16 chDest = Decode(p, pbEnd, localOptions, chunkEndsAtTruncatedSequence);
+            char16_t chDest = Decode(p, pbEnd, localOptions, chunkEndsAtTruncatedSequence);
 
             if (s < p)
             {
@@ -373,7 +373,7 @@ LSlowPath:
     }
 
     _Use_decl_annotations_
-    size_t DecodeUnitsIntoAndNullTerminate(char16 *buffer, LPCUTF8& pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
+    size_t DecodeUnitsIntoAndNullTerminate(char16_t *buffer, LPCUTF8& pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
     {
         size_t result = DecodeUnitsInto(buffer, pbUtf8, pbEnd, options, chunkEndsAtTruncatedSequence);
         buffer[result] = 0;
@@ -381,7 +381,7 @@ LSlowPath:
     }
 
     _Use_decl_annotations_
-    size_t DecodeUnitsIntoAndNullTerminateNoAdvance(char16 *buffer, LPCUTF8 pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
+    size_t DecodeUnitsIntoAndNullTerminateNoAdvance(char16_t *buffer, LPCUTF8 pbUtf8, LPCUTF8 pbEnd, DecodeOptions options, bool *chunkEndsAtTruncatedSequence)
     {
         return DecodeUnitsIntoAndNullTerminate(buffer, pbUtf8, pbEnd, options, chunkEndsAtTruncatedSequence);
     }
@@ -404,7 +404,7 @@ LSlowPath:
     size_t EncodeIntoImpl(
         _When_(!countBytesOnly, _Out_writes_(cbDest)) utf8char_t *destBuffer,
         __range(0, cchSource * 3) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource)
     {
         charcount_t cch = cchSource; // SAL analysis gets confused by EncodeTrueUtf8's dest buffer requirement unless we alias cchSource with a local
@@ -463,7 +463,7 @@ LSlowPath:
     size_t EncodeInto(
         _Out_writes_(cbDest) utf8char_t *dest,
         __range(0, cchSource * 3) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource)
     {
         return EncodeIntoImpl<encoding>(dest, cbDest, source, cchSource);
@@ -474,7 +474,7 @@ LSlowPath:
     size_t EncodeIntoAndNullTerminate(
         _Out_writes_z_(cbDest) utf8char_t *dest,
         __range(1, cchSource * 3 + 1) size_t cbDest, // must be at least large enough to write null terminator
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource)
     {
         size_t destWriteMaxBytes = cbDest - 1; // leave room for null terminator
@@ -488,7 +488,7 @@ LSlowPath:
     size_t EncodeInto<Utf8EncodingKind::Cesu8>(
         _Out_writes_(cbDest) utf8char_t *dest,
         __range(0, cchSource * 3) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
     template
@@ -496,7 +496,7 @@ LSlowPath:
     size_t EncodeInto<Utf8EncodingKind::TrueUtf8>(
         _Out_writes_(cbDest) utf8char_t *dest,
         __range(0, cchSource * 3) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
     template
@@ -504,7 +504,7 @@ LSlowPath:
     size_t EncodeIntoAndNullTerminate<Utf8EncodingKind::Cesu8>(
         _Out_writes_z_(cbDest) utf8char_t *dest,
         __range(1, cchSource * 3 + 1) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
     template
@@ -512,12 +512,12 @@ LSlowPath:
     size_t EncodeIntoAndNullTerminate<Utf8EncodingKind::TrueUtf8>(
         _Out_writes_z_(cbDest) utf8char_t *dest,
         __range(1, cchSource * 3 + 1) size_t cbDest,
-        _In_reads_(cchSource) const char16 *source,
+        _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
     // Since we are not actually encoding, the return value is bounded on cch
     __range(0, cch * 3)
-    size_t CountTrueUtf8(__in_ecount(cch) const char16 *source, charcount_t cch)
+    size_t CountTrueUtf8(__in_ecount(cch) const char16_t *source, charcount_t cch)
     {
         return EncodeIntoImpl<Utf8EncodingKind::TrueUtf8, true /*count only*/>(nullptr, 0, source, cch);
     }

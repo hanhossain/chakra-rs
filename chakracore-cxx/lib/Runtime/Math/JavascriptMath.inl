@@ -319,7 +319,7 @@ namespace Js
 #endif
 
         // Implements platform-agnostic part of handling overflow when converting Number to int32, ES5 version.
-        inline __int64 JavascriptMath::ToInt32ES5OverflowHelper(double d)
+        inline long JavascriptMath::ToInt32ES5OverflowHelper(double d)
         {
             if (IsNanInfZero(d)) // ShortCut NaN Inf Zero
             {
@@ -331,7 +331,7 @@ namespace Js
 #pragma prefast(suppress:6031, "We don't care about the fraction part")
             modf(d, &floored);                      // take out the floating point part.
             double m2to32 = fmod(floored, k_2to32); // divide modulo 2^32.
-            __int64 result = TryToInt64(m2to32);
+            long result = TryToInt64(m2to32);
 
             AssertMsg(NumberUtilities::IsValidTryToInt64(result), "No more overflow expected");
 

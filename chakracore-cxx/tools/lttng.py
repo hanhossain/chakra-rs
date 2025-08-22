@@ -6,7 +6,7 @@ import xml.dom.minidom as DOM
 
 lttngDataTypeMapping = {
     "win:null"          :" ",
-    "win:Int64"         :"const __int64",
+    "win:Int64"         :"const long",
     "win:ULong"         :"const unsigned long",
     "win:count"         :"*",
     "win:Struct"        :"const char *",
@@ -17,7 +17,7 @@ lttngDataTypeMapping = {
     "win:Int32"         :"const signed int",
     "win:HexInt32"      :"const signed int",
     "win:Boolean"       :"const bool",
-    "win:UInt64"        :"const unsigned __int64",
+    "win:UInt64"        :"const unsigned long",
     "win:UInt32"        :"const unsigned int",
     "win:UInt16"        :"const unsigned short",
     "win:UInt8"         :"const unsigned char",
@@ -54,7 +54,7 @@ ctfDataTypeMapping = {
 
 palDataTypeMapping ={
         "win:null"          :" ",
-        "win:Int64"         :"const __int64",
+        "win:Int64"         :"const long",
         "win:ULong"         :"const unsigned long",
         "win:count"         :"*",
         "win:Struct"        :"const void",
@@ -65,7 +65,7 @@ palDataTypeMapping ={
         "win:Int32"         :"const signed int",
         "win:HexInt32"      :"const signed int",
         "win:Boolean"       :"const bool",
-        "win:UInt64"        :"const unsigned __int64",
+        "win:UInt64"        :"const unsigned long",
         "win:UInt32"        :"const unsigned int",
         "win:UInt16"        :"const unsigned short",
         "win:UInt8"         :"const unsigned char",
@@ -344,13 +344,13 @@ def generateLttngHeader(providerName, lttngEventHeaderShortName, templates, even
     headerLines = []
 
     headerLines.append("")
-    headerLines.append("#ifdef __int64")
+    headerLines.append("#ifdef long")
     headerLines.append("#if TARGET_64")
-    headerLines.append("#undef __int64")
+    headerLines.append("#undef long")
     headerLines.append("#else")
     headerLines.append("#error \"Linux and OSX builds only support 64bit platforms\"")
     headerLines.append("#endif // TARGET_64")
-    headerLines.append("#endif // __int64")
+    headerLines.append("#endif // long")
     headerLines.append("#undef TRACEPOINT_PROVIDER")
     headerLines.append("#undef TRACEPOINT_INCLUDE")
     headerLines.append("")
@@ -524,9 +524,6 @@ def generateLttngTracepointProvider(providerName, lttngHeader, templates, events
     providerLines = [];
 
     providerLines.append("#define TRACEPOINT_DEFINE")
-    providerLines.append("#ifndef CHAKRA_STATIC_LIBRARY")
-    providerLines.append("#define TRACEPOINT_PROBE_DYNAMIC_LINKAGE")
-    providerLines.append("#endif")
     providerLines.append("#include \"stdlib.h\"")
     providerLines.append("#include \"Common.h\"")
     providerLines.append("#include \"Codex/Utf8Helper.h\"")

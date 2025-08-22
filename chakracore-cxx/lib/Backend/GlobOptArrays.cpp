@@ -9,7 +9,7 @@
 #define TESTTRACE_PHASE_INSTR(phase, instr, ...) \
     if(PHASE_TESTTRACE(phase, this->func)) \
     { \
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
         Output::Print( \
             _u("Testtrace: %s function %s (%s): "), \
             Js::PhaseNames[phase], \

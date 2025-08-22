@@ -321,7 +321,7 @@ typedef struct _IMAGE_OPTIONAL_HEADER64 {
     uint32_t       SizeOfUninitializedData;
     uint32_t       AddressOfEntryPoint;
     uint32_t       BaseOfCode;
-    ULONGLONG   ImageBase;
+    unsigned long   ImageBase;
     uint32_t       SectionAlignment;
     uint32_t       FileAlignment;
     unsigned short      MajorOperatingSystemVersion;
@@ -336,10 +336,10 @@ typedef struct _IMAGE_OPTIONAL_HEADER64 {
     uint32_t       CheckSum;
     unsigned short      Subsystem;
     unsigned short      DllCharacteristics;
-    ULONGLONG   SizeOfStackReserve;
-    ULONGLONG   SizeOfStackCommit;
-    ULONGLONG   SizeOfHeapReserve;
-    ULONGLONG   SizeOfHeapCommit;
+    unsigned long   SizeOfStackReserve;
+    unsigned long   SizeOfStackCommit;
+    unsigned long   SizeOfHeapReserve;
+    unsigned long   SizeOfHeapCommit;
     uint32_t       LoaderFlags;
     uint32_t       NumberOfRvaAndSizes;
     IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
@@ -1032,11 +1032,11 @@ typedef IMAGE_RELOCATION UNALIGNED *PIMAGE_RELOCATION;
 
 
 #define EXT_IMM64(Value, Address, Size, InstPos, ValPos)  /* Intel-IA64-Filler */           \
-    Value |= (((ULONGLONG)((*(Address) >> InstPos) & (((ULONGLONG)1 << Size) - 1))) << ValPos)  // Intel-IA64-Filler
+    Value |= (((unsigned long)((*(Address) >> InstPos) & (((unsigned long)1 << Size) - 1))) << ValPos)  // Intel-IA64-Filler
 
 #define INS_IMM64(Value, Address, Size, InstPos, ValPos)  /* Intel-IA64-Filler */\
     *(uint32_t *)Address = (*(uint32_t *)Address & ~(((1 << Size) - 1) << InstPos)) | /* Intel-IA64-Filler */\
-          ((uint32_t)((((ULONGLONG)Value >> ValPos) & (((ULONGLONG)1 << Size) - 1))) << InstPos)  // Intel-IA64-Filler
+          ((uint32_t)((((unsigned long)Value >> ValPos) & (((unsigned long)1 << Size) - 1))) << InstPos)  // Intel-IA64-Filler
 
 #define EMARCH_ENC_I17_IMM7B_INST_WORD_X         3  // Intel-IA64-Filler
 #define EMARCH_ENC_I17_IMM7B_SIZE_X              7  // Intel-IA64-Filler
@@ -1197,10 +1197,10 @@ typedef struct _IMAGE_IMPORT_BY_NAME {
 
 typedef struct _IMAGE_THUNK_DATA64 {
     union {
-        ULONGLONG ForwarderString;  // PUCHAR
-        ULONGLONG Function;         // uint32_t *
-        ULONGLONG Ordinal;
-        ULONGLONG AddressOfData;    // PIMAGE_IMPORT_BY_NAME
+        unsigned long ForwarderString;  // PUCHAR
+        unsigned long Function;         // uint32_t *
+        unsigned long Ordinal;
+        unsigned long AddressOfData;    // PIMAGE_IMPORT_BY_NAME
     } u1;
 } IMAGE_THUNK_DATA64;
 typedef IMAGE_THUNK_DATA64 * PIMAGE_THUNK_DATA64;
@@ -1229,10 +1229,10 @@ typedef IMAGE_THUNK_DATA32 * PIMAGE_THUNK_DATA32;
 //
 
 typedef struct _IMAGE_TLS_DIRECTORY64 {
-    ULONGLONG   StartAddressOfRawData;
-    ULONGLONG   EndAddressOfRawData;
-    ULONGLONG   AddressOfIndex;         // uint32_t *
-    ULONGLONG   AddressOfCallBacks;     // PIMAGE_TLS_CALLBACK *;
+    unsigned long   StartAddressOfRawData;
+    unsigned long   EndAddressOfRawData;
+    unsigned long   AddressOfIndex;         // uint32_t *
+    unsigned long   AddressOfCallBacks;     // PIMAGE_TLS_CALLBACK *;
     uint32_t   SizeOfZeroFill;
     uint32_t   Characteristics;
 } IMAGE_TLS_DIRECTORY64;
@@ -1369,7 +1369,7 @@ typedef struct _IMAGE_RESOURCE_DIRECTORY_STRING {
 
 typedef struct _IMAGE_RESOURCE_DIR_STRING_U {
     unsigned short  Length;
-    WCHAR   NameString[ 1 ];
+    char16_t   NameString[ 1 ];
 } IMAGE_RESOURCE_DIR_STRING_U, *PIMAGE_RESOURCE_DIR_STRING_U;
 
 
@@ -1422,16 +1422,16 @@ typedef struct {
     uint32_t   GlobalFlagsClear;
     uint32_t   GlobalFlagsSet;
     uint32_t   CriticalSectionDefaultTimeout;
-    ULONGLONG  DeCommitFreeBlockThreshold;
-    ULONGLONG  DeCommitTotalFreeThreshold;
-    ULONGLONG  LockPrefixTable;         // VA
-    ULONGLONG  MaximumAllocationSize;
-    ULONGLONG  VirtualMemoryThreshold;
-    ULONGLONG  ProcessAffinityMask;
+    unsigned long  DeCommitFreeBlockThreshold;
+    unsigned long  DeCommitTotalFreeThreshold;
+    unsigned long  LockPrefixTable;         // VA
+    unsigned long  MaximumAllocationSize;
+    unsigned long  VirtualMemoryThreshold;
+    unsigned long  ProcessAffinityMask;
     uint32_t   ProcessHeapFlags;
     unsigned short  CSDVersion;
     unsigned short  Reserved1;
-    ULONGLONG  EditList;                // VA
+    unsigned long  EditList;                // VA
     uint32_t   Reserved[ 2 ];
 } IMAGE_LOAD_CONFIG_DIRECTORY64, *PIMAGE_LOAD_CONFIG_DIRECTORY64;
 
@@ -1456,11 +1456,11 @@ typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY {
 } IMAGE_CE_RUNTIME_FUNCTION_ENTRY, * PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
 
 typedef struct _IMAGE_ALPHA64_RUNTIME_FUNCTION_ENTRY {
-    ULONGLONG BeginAddress;
-    ULONGLONG EndAddress;
-    ULONGLONG ExceptionHandler;
-    ULONGLONG HandlerData;
-    ULONGLONG PrologEndAddress;
+    unsigned long BeginAddress;
+    unsigned long EndAddress;
+    unsigned long ExceptionHandler;
+    unsigned long HandlerData;
+    unsigned long PrologEndAddress;
 } IMAGE_ALPHA64_RUNTIME_FUNCTION_ENTRY, *PIMAGE_ALPHA64_RUNTIME_FUNCTION_ENTRY;
 
 typedef struct _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY {
@@ -1576,11 +1576,11 @@ typedef struct _IMAGE_FUNCTION_ENTRY {
 } IMAGE_FUNCTION_ENTRY, *PIMAGE_FUNCTION_ENTRY;
 
 typedef struct _IMAGE_FUNCTION_ENTRY64 {
-    ULONGLONG   StartingAddress;
-    ULONGLONG   EndingAddress;
+    unsigned long   StartingAddress;
+    unsigned long   EndingAddress;
     union {
-        ULONGLONG   EndOfPrologue;
-        ULONGLONG   UnwindInfoAddress;
+        unsigned long   EndOfPrologue;
+        unsigned long   UnwindInfoAddress;
     } u;
 } IMAGE_FUNCTION_ENTRY64, *PIMAGE_FUNCTION_ENTRY64;
 
@@ -1629,7 +1629,7 @@ typedef struct _NON_PAGED_DEBUG_INFO {
     uint32_t       TimeDateStamp;
     uint32_t       CheckSum;
     uint32_t       SizeOfImage;
-    ULONGLONG   ImageBase;
+    unsigned long   ImageBase;
     //DebugDirectorySize
     //IMAGE_DEBUG_DIRECTORY
 } NON_PAGED_DEBUG_INFO, *PNON_PAGED_DEBUG_INFO;

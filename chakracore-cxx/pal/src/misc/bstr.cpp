@@ -31,10 +31,10 @@ Abstract:
 
 #define WIN32_ALLOC_ALIGN (16 - 1)
 
-size_t PAL_wcslen(const WCHAR *);
+size_t PAL_wcslen(const char16_t *);
 
-typedef WCHAR OLECHAR;
-typedef WCHAR *BSTR;
+typedef char16_t OLECHAR;
+typedef char16_t *BSTR;
 
 inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *result)
 {
@@ -43,7 +43,7 @@ inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
 
     // +2 for the null terminator
     // + DWORD_PTR to store the byte length of the string
-    int constant = sizeof(WCHAR) + sizeof(DWORD_PTR) + WIN32_ALLOC_ALIGN;
+    int constant = sizeof(char16_t) + sizeof(DWORD_PTR) + WIN32_ALLOC_ALIGN;
 
     if (isByteLen)
     {
@@ -56,7 +56,7 @@ inline HRESULT CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
     else
     {
         uint32_t temp = 0; // should not use in-place addition in ULongAdd
-        if (SUCCEEDED(ULongMult(cchSize, sizeof(WCHAR), &temp)) &
+        if (SUCCEEDED(ULongMult(cchSize, sizeof(char16_t), &temp)) &
             SUCCEEDED(ULongAdd(temp, constant, result)))
         {
             *result = *result & ~WIN32_ALLOC_ALIGN;

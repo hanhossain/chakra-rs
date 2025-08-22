@@ -52,9 +52,9 @@ NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
             size_t len = wcslen(Js::Configuration::Global.flags.AsmDumpMode);
             if (len < _MAX_PATH - 5)
             {
-                char16 filename[_MAX_PATH];
+                char16_t filename[_MAX_PATH];
                 wcscpy_s(filename, _MAX_PATH, Js::Configuration::Global.flags.AsmDumpMode);
-                char16 * number = filename + len;
+                char16_t * number = filename + len;
                 for (int i = 0; i < 1000; i++)
                 {
                     _itow_s(i, number, 5, 10);
@@ -336,10 +336,10 @@ void DoFunctionRelocations(uint8_t *function, uint32_t functionOffset, uint32_t 
 #elif defined(TARGET_64)
                 case IMAGE_REL_BASED_DIR64:
                     {
-                        ULONGLONG *patchAddr64 = (ULONGLONG *) (function + blockOffset + offset - functionOffset);
-                        ULONGLONG patchAddr64Offset = *patchAddr64 - imageBase - textHeader->VirtualAddress;
+                        unsigned long *patchAddr64 = (unsigned long *) (function + blockOffset + offset - functionOffset);
+                        unsigned long patchAddr64Offset = *patchAddr64 - imageBase - textHeader->VirtualAddress;
                         Assert((patchAddr64Offset > functionOffset) && (patchAddr64Offset < (functionOffset + functionSize)));
-                        *patchAddr64 = patchAddr64Offset - functionOffset + (ULONGLONG)function;
+                        *patchAddr64 = patchAddr64Offset - functionOffset + (unsigned long)function;
                     }
                     break;
 #else
@@ -424,7 +424,7 @@ void NativeCodeGenerator::TransitionFromSimpleJit(Js::ScriptFunction *const func
 
             if (PHASE_TRACE(Js::SimpleJitPhase, functionBody))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 Output::Print(
                     _u("SimpleJit (TransitionFromSimpleJit): function: %s (%s)"),
                     functionBody->GetDisplayName(),
@@ -969,7 +969,7 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
 #if ENABLE_OOP_NATIVE_CODEGEN
     if (JITManager::GetJITManager()->IsOOPJITEnabled())
     {
-        workItem->GetJITData()->nativeDataAddr = (__int64)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
+        workItem->GetJITData()->nativeDataAddr = (long)workItem->GetEntryPoint()->GetOOPNativeEntryPointData()->GetNativeDataBufferRef();
     }
 #endif
 
@@ -1278,12 +1278,12 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
     {
         if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_START()))
         {
-            WCHAR displayNameBuffer[256];
-            WCHAR* displayName = displayNameBuffer;
+            char16_t displayNameBuffer[256];
+            char16_t* displayName = displayNameBuffer;
             size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
             if (sizeInChars > 256)
             {
-                displayName = HeapNewArray(WCHAR, sizeInChars);
+                displayName = HeapNewArray(char16_t, sizeInChars);
                 workItem->GetDisplayName(displayName, 256);
             }
             JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_START(
@@ -1318,7 +1318,7 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
     }
 #endif
 
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
     if (PHASE_TRACE(Js::BackEndPhase, body))
     {
@@ -1390,17 +1390,17 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
 void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEGER * start_time)
 {
     Js::FunctionBody * body = workItem->GetFunctionBody();
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
     {
         if (IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_STOP()))
         {
-            WCHAR displayNameBuffer[256];
-            WCHAR* displayName = displayNameBuffer;
+            char16_t displayNameBuffer[256];
+            char16_t* displayName = displayNameBuffer;
             size_t sizeInChars = workItem->GetDisplayName(displayName, 256);
             if (sizeInChars > 256)
             {
-                displayName = HeapNewArray(WCHAR, sizeInChars);
+                displayName = HeapNewArray(char16_t, sizeInChars);
                 workItem->GetDisplayName(displayName, 256);
             }
             void* entryPoint;
@@ -2321,7 +2321,7 @@ NativeCodeGenerator::GatherCodeGenData(
     }
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
@@ -2430,7 +2430,7 @@ NativeCodeGenerator::GatherCodeGenData(
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                     if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
                     {
-                        char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                        char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                         Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(i);
                         Js::PropertyRecord const * const propertyRecord = functionBody->GetScriptContext()->GetPropertyName(propertyId);
                         Output::Print(_u("ObTypeSpec: top function %s (%s), function %s (%s): cloning mono cache for %s (#%d) cache %d \n"),
@@ -2608,7 +2608,7 @@ NativeCodeGenerator::GatherCodeGenData(
 #if ENABLE_DEBUG_CONFIG_OPTIONS
                             if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
                             {
-                                char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                                char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
                                 Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(i);
                                 Js::PropertyRecord const * const propertyRecord = functionBody->GetScriptContext()->GetPropertyName(propertyId);
@@ -3133,8 +3133,8 @@ NativeCodeGenerator::GatherCodeGenData(Js::FunctionBody *const topFunctionBody, 
         ObjTypeSpecFldInfoList* objTypeSpecFldInfoList = JitAnew(gatherCodeGenDataAllocator, ObjTypeSpecFldInfoList, gatherCodeGenDataAllocator);
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         if (PHASE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
         {
             Output::Print(_u("ObjTypeSpec: top function %s (%s), function %s (%s): GatherCodeGenData(): \n"),
@@ -3602,8 +3602,8 @@ bool NativeCodeGenerator::TryAggressiveInlining(Js::FunctionBody *const topFunct
         uint32& inlineeCount;
         bool done;
 
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        char16 debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
     public:
         AutoTrace(Js::FunctionBody *const topFunctionBody, Js::FunctionBody *const inlineeFunctionBody, uint32& inlineeCount) : topFunc(topFunctionBody),
@@ -3638,7 +3638,7 @@ bool NativeCodeGenerator::TryAggressiveInlining(Js::FunctionBody *const topFunct
                 Assert(done == false);
             }
         }
-        void TraceFailure(const char16 *message)
+        void TraceFailure(const char16_t *message)
         {
 
             INLINE_TESTTRACE(_u("INLINING: TryAggressiveInlining failed topFunc (%s): %s (%s), inlinee: %s (%s) \n"), message, topFunc->GetDisplayName(),

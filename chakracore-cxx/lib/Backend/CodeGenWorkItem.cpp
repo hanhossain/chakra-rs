@@ -129,12 +129,12 @@ void CodeGenWorkItem::OnAddToJitQueue()
     this->entryPointInfo->SetCodeGenQueued();
     if(IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_QUEUED()))
     {
-        WCHAR displayNameBuffer[256];
-        WCHAR* displayName = displayNameBuffer;
+        char16_t displayNameBuffer[256];
+        char16_t* displayName = displayNameBuffer;
         size_t sizeInChars = this->GetDisplayName(displayName, 256);
         if(sizeInChars > 256)
         {
-            displayName = HeapNewArray(WCHAR, sizeInChars);
+            displayName = HeapNewArray(char16_t, sizeInChars);
             this->GetDisplayName(displayName, 256);
         }
         JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_QUEUED(
@@ -161,12 +161,12 @@ void CodeGenWorkItem::OnRemoveFromJitQueue(NativeCodeGenerator* generator)
 
     if(IS_JS_ETW(EventEnabledJSCRIPT_FUNCTION_JIT_DEQUEUED()))
     {
-        WCHAR displayNameBuffer[256];
-        WCHAR* displayName = displayNameBuffer;
+        char16_t displayNameBuffer[256];
+        char16_t* displayName = displayNameBuffer;
         size_t sizeInChars = this->GetDisplayName(displayName, 256);
         if(sizeInChars > 256)
         {
-            displayName = HeapNewArray(WCHAR, sizeInChars);
+            displayName = HeapNewArray(char16_t, sizeInChars);
             this->GetDisplayName(displayName, 256);
         }
         JS_ETW(EventWriteJSCRIPT_FUNCTION_JIT_DEQUEUED(

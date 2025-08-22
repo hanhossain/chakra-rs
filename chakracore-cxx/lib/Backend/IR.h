@@ -375,7 +375,7 @@ public:
     virtual void    Dump(IRDumpFlags flags);
             void    Dump();
             void    DumpSimple();
-    char16*        DumpString();
+    char16_t*        DumpString();
     void            DumpGlobOptInstrString();
     void            Dump(int window);
     void            DumpRange(Instr *instrEnd);
@@ -552,7 +552,7 @@ public:
     Instr *         m_prev;
     Func *          m_func;
 #if DBG_DUMP
-    char16 *       globOptInstrString;
+    char16_t *       globOptInstrString;
 #endif
     // These should be together to pack into a uint32
     Js::OpCode      m_opcode;
@@ -778,7 +778,7 @@ public:
     unsigned int            m_id;
     LoweredBasicBlock*      m_loweredBasicBlock;
 #if DBG
-    const char16*           m_name;
+    const char16_t*           m_name;
 #endif
 private:
     union labelLocation

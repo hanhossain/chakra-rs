@@ -51,7 +51,7 @@ namespace CorUnix
     {
     protected:
 
-        const WCHAR *m_pwsz;    // NULL terminated
+        const char16_t *m_pwsz;    // NULL terminated
 
         //
         // Length of string, not including terminating NULL
@@ -76,7 +76,7 @@ namespace CorUnix
         };
 
         CPalString(
-            const WCHAR *pwsz
+            const char16_t *pwsz
             )
         {
             SetString(pwsz);
@@ -84,7 +84,7 @@ namespace CorUnix
 
         void
         SetString(
-            const WCHAR *pwsz
+            const char16_t *pwsz
             )
         {
             SetStringWithLength(pwsz, PAL_wcslen(pwsz));
@@ -92,7 +92,7 @@ namespace CorUnix
 
         void
         SetStringWithLength(
-            const WCHAR *pwsz,
+            const char16_t *pwsz,
             uint32_t dwStringLength
             )
         {
@@ -110,7 +110,7 @@ namespace CorUnix
         void
         FreeBuffer();
 
-        const WCHAR *
+        const char16_t *
         GetString()
         {
             return m_pwsz;
@@ -562,7 +562,7 @@ namespace CorUnix
         LPSECURITY_ATTRIBUTES pSecurityAttributes;
 
         CObjectAttributes(
-            const WCHAR *pwszObjectName,
+            const char16_t *pwszObjectName,
             LPSECURITY_ATTRIBUTES pSecurityAttributes_
             )
             :

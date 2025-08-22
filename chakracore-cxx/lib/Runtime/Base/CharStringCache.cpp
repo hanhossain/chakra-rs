@@ -22,7 +22,7 @@ using namespace Js;
         if (str == nullptr)
         {
             PropertyRecord const * propertyRecord;
-            char16 wc = c;
+            char16_t wc = c;
             JavascriptLibrary * javascriptLibrary = JavascriptLibrary::FromCharStringCache(this);
             javascriptLibrary->GetScriptContext()->GetOrAddPropertyRecord(&wc, 1, &propertyRecord);
             str = javascriptLibrary->CreatePropertyString(propertyRecord);
@@ -33,7 +33,7 @@ using namespace Js;
     }
 
 
-    JavascriptString* CharStringCache::GetStringForChar(char16 c)
+    JavascriptString* CharStringCache::GetStringForChar(char16_t c)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(GetStringForChar);
 #ifdef PROFILE_STRINGS
@@ -49,7 +49,7 @@ using namespace Js;
     }
     JIT_HELPER_TEMPLATE(GetStringForChar, GetStringForCharCodePoint)
 
-    JavascriptString* CharStringCache::GetStringForCharW(char16 c)
+    JavascriptString* CharStringCache::GetStringForCharW(char16_t c)
     {
         Assert(!JavascriptString::IsASCII7BitChar(c));
         JavascriptString* str;
@@ -77,7 +77,7 @@ using namespace Js;
     JavascriptString* CharStringCache::GetStringForCharSP(codepoint_t c)
     {
         Assert(c >= 0x10000);
-        CompileAssert(sizeof(char16) * 2 == sizeof(codepoint_t));
+        CompileAssert(sizeof(char16_t) * 2 == sizeof(codepoint_t));
 
         ScriptContext* scriptContext = JavascriptLibrary::FromCharStringCache(this)->GetScriptContext();
 
@@ -87,7 +87,7 @@ using namespace Js;
             JavascriptError::ThrowRangeError(scriptContext, JSERR_InvalidCodePoint, scriptContext->GetIntegerString(c));
         }
 
-        char16 buffer[2];
+        char16_t buffer[2];
 
         Js::NumberUtilities::CodePointAsSurrogatePair(c, buffer, buffer + 1);
         JavascriptString* str = JavascriptString::NewCopyBuffer(buffer, 2, scriptContext);

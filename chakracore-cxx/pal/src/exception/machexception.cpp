@@ -350,7 +350,7 @@ PAL_ERROR CorUnix::CPalThread::DisableMachExceptions()
 // signature of PAL_DispatchException such that the corresponding arguments are considered to be on the stack
 // per GCC64 calling convention rules. Hence, the first 6 dummy arguments (corresponding to RDI, RSI, RDX,RCX, R8, R9).
 extern "C"
-void PAL_DispatchException(DWORD64 dwRDI, DWORD64 dwRSI, DWORD64 dwRDX, DWORD64 dwRCX, DWORD64 dwR8, DWORD64 dwR9, PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
+void PAL_DispatchException(unsigned long dwRDI, unsigned long dwRSI, unsigned long dwRDX, unsigned long dwRCX, unsigned long dwR8, unsigned long dwR9, PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
 #elif defined(_ARM64_)
 extern "C"
 void PAL_DispatchException(PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)

@@ -153,7 +153,7 @@ void JavascriptGenerator::Finalize(bool isShutdown)
 }
 #endif
 
-void JavascriptGenerator::ThrowIfExecuting(const char16* apiName)
+void JavascriptGenerator::ThrowIfExecuting(const char16_t* apiName)
 {
     if (this->IsExecuting())
     {
@@ -340,7 +340,7 @@ bool JavascriptGenerator::IsAsyncModule() const
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
 void JavascriptGenerator::OutputBailInTrace(JavascriptGenerator* generator)
 {
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     FunctionBody* fnBody = generator->scriptFunction->GetFunctionBody();
 
     Output::Print(

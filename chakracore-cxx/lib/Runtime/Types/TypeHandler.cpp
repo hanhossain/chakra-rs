@@ -587,7 +587,7 @@ using namespace Js;
         }
     }
 
-    void DynamicTypeHandler::SetPropertyUpdateSideEffect(DynamicObject* instance, JsUtil::CharacterBuffer<WCHAR> const& propertyName, Var value, SideEffects possibleSideEffects)
+    void DynamicTypeHandler::SetPropertyUpdateSideEffect(DynamicObject* instance, JsUtil::CharacterBuffer<char16_t> const& propertyName, Var value, SideEffects possibleSideEffects)
     {
         if (possibleSideEffects)
         {

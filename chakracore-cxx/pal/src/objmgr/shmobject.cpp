@@ -202,9 +202,9 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     if (0 == poa->sObjectName.GetStringLength()
         && 0 != psmod->dwNameLength)
     {
-        WCHAR *wsz;
+        char16_t *wsz;
 
-        wsz = SHMPTR_TO_TYPED_PTR(WCHAR, psmod->shmObjName);
+        wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
         if (NULL != wsz)
         {
             poa->sObjectName.SetStringWithLength(wsz, psmod->dwNameLength);
@@ -219,13 +219,13 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 #if _DEBUG
     else if (0 != psmod->dwNameLength)
     {
-        WCHAR *wsz;
+        char16_t *wsz;
 
         //
         // Verify that the names are consistent
         //
 
-        wsz = SHMPTR_TO_TYPED_PTR(WCHAR, psmod->shmObjName);
+        wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
         _ASSERTE(NULL != wsz);
         _ASSERTE(0 == PAL_wcscmp(wsz, poa->sObjectName.GetString()));
     }

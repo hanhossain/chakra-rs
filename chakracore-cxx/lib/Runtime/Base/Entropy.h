@@ -23,7 +23,7 @@ public:
     void Add(const char *buffer, size_t size);
     void AddIoCounters();
     void AddThreadCycleTime();
-    unsigned __int64 GetRand() const;
+    unsigned long GetRand() const;
 
 private:
     uint32_t previousValue;

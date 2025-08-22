@@ -145,7 +145,7 @@ namespace Js
         virtual JavascriptError* CreateNewErrorOfSameType(JavascriptLibrary* targetJavascriptLibrary);
         JavascriptError* CloneErrorMsgAndNumber(JavascriptLibrary* targetJavascriptLibrary);
         static void TryThrowTypeError(ScriptContext * checkScriptContext, ScriptContext * scriptContext, int32 hCode, PCWSTR varName = nullptr);
-        static JavascriptError* CreateFromCompileScriptException(ScriptContext* scriptContext, CompileScriptException* cse, const WCHAR * sourceUrl = nullptr);
+        static JavascriptError* CreateFromCompileScriptException(ScriptContext* scriptContext, CompileScriptException* cse, const char16_t * sourceUrl = nullptr);
 
         static Var NewAggregateErrorInstance(RecyclableObject* function, CallInfo callinfo, ...);
 
@@ -157,11 +157,11 @@ namespace Js
         Field(BOOL) isExternalError;
         Field(BOOL) isPrototype;
         Field(bool) isStackPropertyRedefined;
-        Field(char16 const *) originalRuntimeErrorMessage;
+        Field(char16_t const *) originalRuntimeErrorMessage;
         Field(JavascriptExceptionObject *) exceptionObject;
 
 #ifdef ERROR_TRACE
-        static void Trace(const char16 *form, ...) // const
+        static void Trace(const char16_t *form, ...) // const
         {
             if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::ErrorPhase))
             {

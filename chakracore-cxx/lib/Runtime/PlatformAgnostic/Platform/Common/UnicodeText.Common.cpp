@@ -11,12 +11,12 @@ namespace PlatformAgnostic
 {
     namespace UnicodeText
     {
-        CharacterTypeFlags GetLegacyCharacterTypeFlags(char16 ch)
+        CharacterTypeFlags GetLegacyCharacterTypeFlags(char16_t ch)
         {
             Assert(ch >= 128);
 
-            const char16 lineSeparatorChar = 0x2028;
-            const char16 paraSeparatorChar = 0x2029;
+            const char16_t lineSeparatorChar = 0x2028;
+            const char16_t paraSeparatorChar = 0x2029;
 
             if (ch == lineSeparatorChar || ch == paraSeparatorChar)
             {
@@ -97,13 +97,13 @@ namespace PlatformAgnostic
             ///  if either of the strings current character is a null character continue scanning
             /// The algorithm treats the characters in a case-insensitive manner
             ///
-            int LogicalStringCompareImpl(const char16* p1, int p1size, const char16* p2, int p2size)
+            int LogicalStringCompareImpl(const char16_t* p1, int p1size, const char16_t* p2, int p2size)
             {
                 Assert(p1 != nullptr);
                 Assert(p2 != nullptr);
 
-                const char16* str1End = p1 + p1size;
-                const char16* str2End = p2 + p2size;
+                const char16_t* str1End = p1 + p1size;
+                const char16_t* str2End = p2 + p2size;
 
                 while (p1 < str1End && p2 < str2End)
                 {
@@ -202,7 +202,7 @@ namespace PlatformAgnostic
 
 // Unnamespaced test code
 #if ENABLE_TEST_PLATFORM_AGNOSTIC
-void LogicalStringCompareTest(const WCHAR* str1, const WCHAR* str2, int expected)
+void LogicalStringCompareTest(const char16_t* str1, const char16_t* str2, int expected)
 {
     int compareStringResult = CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE | SORT_DIGITSASNUMBERS, str1, -1, str2, -1);
 

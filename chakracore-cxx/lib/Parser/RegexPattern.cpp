@@ -171,7 +171,7 @@ namespace UnifiedRegex
         {
             for (charcount_t i = 0; i < str.GetLength(); ++i)
             {
-                const char16 c = str.GetBuffer()[i];
+                const char16_t c = str.GetBuffer()[i];
                 switch(c)
                 {
                 case _u('/'):

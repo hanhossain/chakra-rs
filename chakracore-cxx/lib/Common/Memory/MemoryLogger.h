@@ -17,7 +17,7 @@ namespace Js
     private:
         uint32_t m_current;
         uint32_t m_capacity;   // The number of elements in circular buffer.
-        char16** m_log;    // Points to a circular buffer of char16*.
+        char16_t** m_log;    // Points to a circular buffer of char16_t*.
         TAllocator* m_alloc;
         CriticalSection m_criticalSection;
 
@@ -25,7 +25,7 @@ namespace Js
         static MemoryLogger* Create(TAllocator* alloc, uint32_t elementCount);
         MemoryLogger(TAllocator* alloc, uint32_t elementCount);
         ~MemoryLogger();
-        void Write(const char16* msg) override;
+        void Write(const char16_t* msg) override;
     };
 
 #ifdef STACK_BACK_TRACE

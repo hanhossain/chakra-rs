@@ -418,7 +418,7 @@ HELPERCALL(ProbeCurrentStack2, ThreadContext::ProbeCurrentStack2, AttrCanNotBeRe
 HELPERCALLCHK(AdjustSlots, Js::DynamicTypeHandler::AdjustSlots_Jit, AttrCanNotBeReentrant)
 HELPERCALLCHK(InvalidateProtoCaches, Js::JavascriptOperators::OP_InvalidateProtoCaches, AttrCanNotBeReentrant)
 
-HELPERCALLCHK(GetStringForChar, (Js::JavascriptString * (*)(Js::CharStringCache *, char16))&Js::CharStringCache::GetStringForChar, AttrCanNotBeReentrant)
+HELPERCALLCHK(GetStringForChar, (Js::JavascriptString * (*)(Js::CharStringCache *, char16_t))&Js::CharStringCache::GetStringForChar, AttrCanNotBeReentrant)
 HELPERCALLCHK(GetStringForCharCodePoint, (Js::JavascriptString * (*)(Js::CharStringCache *, codepoint_t))&Js::CharStringCache::GetStringForCharCodePoint, AttrCanNotBeReentrant)
 
 HELPERCALLCHK(ProfiledLdElem, Js::ProfilingHelpers::ProfiledLdElem, 0)

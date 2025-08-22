@@ -8,7 +8,7 @@
 
 #define _u(s) u##s
 
-typedef char16 wchar;
+typedef char16_t wchar;
 typedef unsigned int uint;
 typedef unsigned short ushort;
 
@@ -16,13 +16,13 @@ typedef signed char sbyte;
 // TODO (hanhossain): remove (u)int typedefs
 typedef int16_t int16;
 typedef int32_t int32;
-typedef __int64 int64;
+typedef long int64;
 
 typedef unsigned char byte;
 
 typedef uint16_t uint16;
 typedef uint32_t uint32;
-typedef unsigned __int64 uint64;
+typedef unsigned long uint64;
 
 // charcount_t represents a count of characters in a JavascriptString
 // It is unsigned and the maximum value is (INT_MAX-1)

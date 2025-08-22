@@ -16,14 +16,14 @@ namespace Js
             union {
                 struct st_Single
                 {
-                    char16 buffer[];
+                    char16_t buffer[];
                 } single;
 
                 struct st_Chained
                 {
                     charcount_t length;
                     Data *next;
-                    char16 buffer[];
+                    char16_t buffer[];
                 } chained;
             }u;
         };
@@ -39,7 +39,7 @@ namespace Js
         // and the list of chained chunks to a single buffer on calls to GetBuffer().
         Data *secondChunk;
         Data *lastChunk;
-        char16 * appendPtr;
+        char16_t * appendPtr;
         charcount_t length; // Total capacity (allocated number of elements - 1), in all chunks. Note that we keep one allocated element which is not accounted in length for terminating '\0'.
         charcount_t count;  // Total number of elements, in all chunks.
         charcount_t firstChunkLength;
@@ -51,10 +51,10 @@ namespace Js
         {
             CompileAssert(sizeof(charcount_t) == sizeof(uint32));
 
-            // allocation = (bufLengthRequested * sizeof(char16) + sizeof(Data)
-            charcount_t alloc32 = UInt32Math::MulAdd<sizeof(char16), sizeof(Data)>(bufLengthRequested);
+            // allocation = (bufLengthRequested * sizeof(char16_t) + sizeof(Data)
+            charcount_t alloc32 = UInt32Math::MulAdd<sizeof(char16_t), sizeof(Data)>(bufLengthRequested);
             size_t allocation = TAllocator::GetAlignedSize(alloc32);
-            size_t size_t_length = (allocation - sizeof(Data)) / sizeof(char16);
+            size_t size_t_length = (allocation - sizeof(Data)) / sizeof(char16_t);
             charcount_t bufLength = (charcount_t)size_t_length;
             Assert(bufLength == size_t_length);
 
@@ -67,7 +67,7 @@ namespace Js
 #if 0
             // Align memset to machine register size for perf
             bufLengthRequested &= ~(sizeof(size_t) - 1);
-            memset(newChunk->u.chained.buffer + bufLengthRequested, 0, (bufLength - bufLengthRequested) * sizeof(char16));
+            memset(newChunk->u.chained.buffer + bufLengthRequested, 0, (bufLength - bufLengthRequested) * sizeof(char16_t));
 #endif
             return newChunk;
         }
@@ -80,11 +80,11 @@ namespace Js
 
             CompileAssert(sizeof(charcount_t) == sizeof(uint32));
 
-            //// allocation = (bufLengthRequested+1) * sizeof(char16)
-            charcount_t alloc32 = UInt32Math::AddMul< 1, sizeof(char16) >(*pBufLengthRequested);
+            //// allocation = (bufLengthRequested+1) * sizeof(char16_t)
+            charcount_t alloc32 = UInt32Math::AddMul< 1, sizeof(char16_t) >(*pBufLengthRequested);
 
             size_t allocation = HeapInfo::GetAlignedSize(alloc32);
-            size_t size_t_newLength  = allocation / sizeof(char16) - 1;
+            size_t size_t_newLength  = allocation / sizeof(char16_t) - 1;
             charcount_t newLength = (charcount_t)size_t_newLength;
             Assert(newLength == size_t_newLength);
             Assert(newLength <= MaxLength + 1);
@@ -217,14 +217,14 @@ namespace Js
             }
         }
 
-        void UnChain(__ecount(bufLen) char16 *pBuf, charcount_t bufLen)
+        void UnChain(__ecount(bufLen) char16_t *pBuf, charcount_t bufLen)
         {
             charcount_t lastChunkCount = this->count;
 
             Assert(this->IsChained());
 
             Assert(bufLen >= this->count);
-            char16 *pSrcBuf = this->firstChunk->u.single.buffer;
+            char16_t *pSrcBuf = this->firstChunk->u.single.buffer;
             Data *next = this->secondChunk;
             charcount_t srcLength = this->firstChunkLength;
 
@@ -268,7 +268,7 @@ namespace Js
             this->appendPtr = newChunk->u.single.buffer + this->count;
         }
 
-        void Copy(__ecount(bufLen) char16 *pBuf, charcount_t bufLen)
+        void Copy(__ecount(bufLen) char16_t *pBuf, charcount_t bufLen)
         {
             if (this->IsChained())
             {
@@ -284,7 +284,7 @@ namespace Js
             }
         }
 
-        inline const char16* Buffer()
+        inline const char16_t* Buffer()
         {
             if (this->IsChained())
             {
@@ -305,7 +305,7 @@ namespace Js
 
         inline charcount_t Count() { return this->count; }
 
-        void Append(char16 c)
+        void Append(char16_t c)
         {
             if (this->count == this->length)
             {
@@ -315,7 +315,7 @@ namespace Js
             this->count++;
         }
 
-        void AppendSz(const char16 * str)
+        void AppendSz(const char16_t * str)
         {
             // WARNING!!
             // Do not use this to append JavascriptStrings.  They can have embedded
@@ -330,11 +330,11 @@ namespace Js
             }
         }
 
-        void Append(const char16 * str, charcount_t countNeeded)
+        void Append(const char16_t * str, charcount_t countNeeded)
         {
             EnsureBuffer(countNeeded);
 
-            char16 *dst = this->appendPtr;
+            char16_t *dst = this->appendPtr;
 
             JavascriptString::CopyHelper(dst, str, countNeeded);
 
@@ -343,19 +343,19 @@ namespace Js
         }
 
         template <size_t N>
-        void AppendCppLiteral(const char16(&str)[N])
+        void AppendCppLiteral(const char16_t(&str)[N])
         {
             // Need to account for the terminating null character in C++ string literals, hence N > 2 and N - 1 below
-            static_assert(N > 2, "Use Append(char16) for appending literal single characters and do not append empty string literal");
+            static_assert(N > 2, "Use Append(char16_t) for appending literal single characters and do not append empty string literal");
             Append(str, N - 1);
         }
 
         // If we expect str to be large - we should just use this version that uses memcpy directly instead of Append
-        void AppendLarge(const char16 * str, charcount_t countNeeded)
+        void AppendLarge(const char16_t * str, charcount_t countNeeded)
         {
             EnsureBuffer(countNeeded);
 
-            char16 *dst = this->appendPtr;
+            char16_t *dst = this->appendPtr;
 
             js_wmemcpy_s(dst, countNeeded, str, countNeeded);
 
@@ -364,11 +364,11 @@ namespace Js
         }
 
 
-        errno_t AppendUint64(unsigned __int64 value)
+        errno_t AppendUint64(unsigned long value)
         {
             const int max_length = 20; // maximum length of 64-bit value converted to base 10 string
             const int radix = 10;
-            WCHAR buf[max_length+1];
+            char16_t buf[max_length+1];
             errno_t result = _ui64tow_s(value, buf, max_length+1, radix);
             AssertMsg(result==0, "Failed to translate value to string");
             if (result == 0)
@@ -378,7 +378,7 @@ namespace Js
             return result;
         }
 
-        char16 *AllocBufferSpace(charcount_t countNeeded)
+        char16_t *AllocBufferSpace(charcount_t countNeeded)
         {
             EnsureBuffer(countNeeded);
 
@@ -394,7 +394,7 @@ namespace Js
             Assert(this->count < this->length);
         }
 
-        char16* Detach()
+        char16_t* Detach()
         {
             // NULL terminate the string
             Append(_u('\0'));
@@ -407,7 +407,7 @@ namespace Js
             // Now decrement the count to adjust according to number of chars
             this->count--;
 
-            char16* result = this->firstChunk->u.single.buffer;
+            char16_t* result = this->firstChunk->u.single.buffer;
             this->firstChunk = this->lastChunk = NULL;
             return result;
         }

@@ -141,4 +141,4 @@ RecyclerTrackerCounterSet::GetWeakRefPerfCounter(type_info const * typeinfo)
 };
 #endif
 
-DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER(char16);
+DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER(char16_t);

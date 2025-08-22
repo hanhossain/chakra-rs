@@ -12,18 +12,18 @@ class JSONStringBuilder
 {
 private:
     ScriptContext* scriptContext;
-    const char16* endLocation;
-    char16* currentLocation;
+    const char16_t* endLocation;
+    char16_t* currentLocation;
     JSONProperty* jsonContent;
-    const char16* gap;
+    const char16_t* gap;
     charcount_t gapLength;
     uint32 indentLevel;
 
     void AppendGap(uint32 count);
-    void AppendCharacter(char16 character);
-    void AppendBuffer(_In_ const char16* buffer, charcount_t length);
+    void AppendCharacter(char16_t character);
+    void AppendBuffer(_In_ const char16_t* buffer, charcount_t length);
     void AppendString(_In_ JavascriptString* str);
-    void AppendEscapeSequence(_In_ const char16 character);
+    void AppendEscapeSequence(_In_ const char16_t character);
     void EscapeAndAppendString(_In_ JavascriptString* str);
     void AppendObjectString(_In_ JSONObject* valueList);
     void AppendArrayString(_In_ JSONArray* valueArray);
@@ -32,9 +32,9 @@ public:
     JSONStringBuilder(
         _In_ ScriptContext* scriptContext,
         _In_ JSONProperty* jsonContent,
-        _In_ char16* buffer,
+        _In_ char16_t* buffer,
         charcount_t bufferLength,
-        _In_opt_ const char16* gap,
+        _In_opt_ const char16_t* gap,
         charcount_t gapLength);
     void Build();
 };

@@ -101,7 +101,7 @@ public:
 #if DBG
     uint32 outArgsDepth; // number of calls nested in an expression
 #endif
-    const char16 *name; // name of the function
+    const char16_t *name; // name of the function
     Js::RegSlot nullConstantRegister; // location, if any, of enregistered null constant
     Js::RegSlot undefinedConstantRegister; // location, if any, of enregistered undefined constant
     Js::RegSlot trueConstantRegister; // location, if any, of enregistered true constant
@@ -187,7 +187,7 @@ public:
     JsUtil::List<Js::RegSlot, ArenaAllocator> nonUserNonTempRegistersToInitialize;
 
     FuncInfo(
-        const char16 *name,
+        const char16_t *name,
         ArenaAllocator *alloc,
         ByteCodeGenerator *byteCodeGenerator,
         Scope *paramScope,
@@ -454,7 +454,7 @@ public:
         return hasEscapedUseNestedFunc;
     }
 
-    void SetHasMaybeEscapedNestedFunc(DebugOnly(char16 const * reason));
+    void SetHasMaybeEscapedNestedFunc(DebugOnly(char16_t const * reason));
 
     bool IsDeferred() const;
 

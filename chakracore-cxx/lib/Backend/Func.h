@@ -288,7 +288,7 @@ public:
         return m_entryPointInfo;
     }
 
-    char16* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
+    char16_t* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         return m_workItem->GetJITTimeInfo()->GetDebugNumberSet(bufferToWriteTo);
     }
@@ -345,12 +345,12 @@ public:
     // When we restore bailout values we check for this pattern, this is how we assert for non-initialized variables/garbage.
 
 static const uint32 c_debugFillPattern4 = 0xcececece;
-static const unsigned __int64 c_debugFillPattern8 = 0xcececececececece;
+static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 
 #if defined(TARGET_32)
     static const uint32 c_debugFillPattern = c_debugFillPattern4;
 #elif defined(TARGET_64)
-    static const unsigned __int64 c_debugFillPattern = c_debugFillPattern8;
+    static const unsigned long c_debugFillPattern = c_debugFillPattern8;
 #else
 #error unsupported platform
 #endif

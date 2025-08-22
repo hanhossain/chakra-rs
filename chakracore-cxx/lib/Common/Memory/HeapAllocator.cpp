@@ -402,7 +402,7 @@ HeapAllocator::~HeapAllocator()
             Output::Print(_u("-------------------------------------------------------------------------------------\n"));
             Output::Print(_u("Heap Leaked Object: %d bytes (%d objects)\n"),
                 data.outstandingBytes, data.allocCount - data.deleteCount);
-            char16 * buffer = Output::CaptureEnd();
+            char16_t * buffer = Output::CaptureEnd();
             MemoryLeakCheck::AddLeakDump(buffer, data.outstandingBytes, data.allocCount - data.deleteCount);
         }
         else
@@ -604,7 +604,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
 }
 
 void
-MemoryLeakCheck::AddLeakDump(char16 const * dump, size_t bytes, size_t count)
+MemoryLeakCheck::AddLeakDump(char16_t const * dump, size_t bytes, size_t count)
 {
     AutoCriticalSection autocs(&leakCheck.cs);
     LeakRecord * record = NoCheckHeapNewStruct(LeakRecord);

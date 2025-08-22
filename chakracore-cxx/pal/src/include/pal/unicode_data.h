@@ -33,9 +33,9 @@ extern "C"
 
 typedef struct
 {
-  WCHAR nUnicodeValue;
+  char16_t nUnicodeValue;
   uint16_t  C1_TYPE_FLAGS;
-  WCHAR nOpposingCase;             /* 0 if no opposing case. */
+  char16_t nOpposingCase;             /* 0 if no opposing case. */
   uint16_t  rangeValue;
 } UnicodeDataRec;
 

@@ -54,7 +54,7 @@ public:
     bool IsInHeap(void* address);
 
 #if DBG_DUMP
-    void DumpAndResetStats(char16 const * source);
+    void DumpAndResetStats(char16_t const * source);
 #endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS

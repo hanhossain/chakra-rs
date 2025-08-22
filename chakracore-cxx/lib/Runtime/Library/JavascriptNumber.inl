@@ -261,15 +261,15 @@ namespace Js
     inline Var JavascriptNumber::FormatDoubleToString( double value, Js::NumberUtilities::FormatType formatType, int formatDigits, ScriptContext* scriptContext )
     {
         static const int bufSize = 256;
-        char16 szBuffer[bufSize] = _u("");
-        char16 * psz = szBuffer;
-        char16 * pszToBeFreed = NULL;
+        char16_t szBuffer[bufSize] = _u("");
+        char16_t * psz = szBuffer;
+        char16_t * pszToBeFreed = NULL;
         int nOut;
 
         if ((nOut = Js::NumberUtilities::FDblToStr(value, formatType, formatDigits, szBuffer, bufSize)) > bufSize )
         {
             int nOut1;
-            pszToBeFreed = psz = (char16 *)malloc(nOut * sizeof(char16));
+            pszToBeFreed = psz = (char16_t *)malloc(nOut * sizeof(char16_t));
             if(0 == psz)
             {
                 Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);

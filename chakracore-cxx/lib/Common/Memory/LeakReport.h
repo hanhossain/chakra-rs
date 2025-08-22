@@ -17,7 +17,7 @@ public:
     public:
         void * scriptEngine;
     private:
-        char16 const * url;
+        char16_t const * url;
         time_t time;
         uint32_t tid;
         UrlRecord * next;
@@ -28,12 +28,12 @@ public:
 
     static void StartRedirectOutput();
     static void EndRedirectOutput();
-    static void StartSection(char16 const * msg, ...);
-    static void StartSection(char16 const * msg, va_list argptr);
+    static void StartSection(char16_t const * msg, ...);
+    static void StartSection(char16_t const * msg, va_list argptr);
     static void EndSection();
-    static void Print(char16 const * msg, ...);
+    static void Print(char16_t const * msg, ...);
 
-    static UrlRecord * LogUrl(char16 const * url, void * globalObject);
+    static UrlRecord * LogUrl(char16_t const * url, void * globalObject);
     static void DumpUrl(uint32_t tid);
 private:
     static CriticalSection s_cs;
@@ -51,7 +51,7 @@ private:
 class AutoLeakReportSection
 {
 public:
-    AutoLeakReportSection(Js::ConfigFlagsTable& flags, char16 const * msg, ...);
+    AutoLeakReportSection(Js::ConfigFlagsTable& flags, char16_t const * msg, ...);
     ~AutoLeakReportSection();
 
 private:

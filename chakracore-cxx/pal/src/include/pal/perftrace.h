@@ -33,7 +33,7 @@ extern "C"
 
 #if PAL_PERF
 #define PERF_ENTRY(x)  \
-	ULONGLONG pal_perf_start_tick = 0;\
+	unsigned long pal_perf_start_tick = 0;\
     PERFLogFunctionEntry( PAL_PERF_##x, &pal_perf_start_tick )
 #define PERF_EXIT(x) \
 	PERFLogFunctionExit( PAL_PERF_##x, &pal_perf_start_tick ) 
@@ -43,8 +43,8 @@ extern "C"
 BOOL PERFInitialize(LPWSTR command_line, LPWSTR exe_path) ;
 void PERFTerminate( );
 BOOL PERFAllocThreadInfo( ); 
-void PERFLogFunctionExit(unsigned int pal_api_id, ULONGLONG *pal_perf_start_tick);
-void PERFLogFunctionEntry(unsigned int pal_api_id, ULONGLONG *pal_perf_start_tick);
+void PERFLogFunctionExit(unsigned int pal_api_id, unsigned long *pal_perf_start_tick);
+void PERFLogFunctionEntry(unsigned int pal_api_id, unsigned long *pal_perf_start_tick);
 void PERFEnableThreadProfile(BOOL isInternal);
 void PERFDisableThreadProfile(BOOL isInternal);
 void PERFEnableProcessProfile( );  

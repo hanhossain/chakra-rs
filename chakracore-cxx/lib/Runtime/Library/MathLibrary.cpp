@@ -83,7 +83,7 @@ namespace Js
             if (TaggedInt::Is(arg))
             {
 #if defined(TARGET_64)
-                __int64 result = ::_abs64(TaggedInt::ToInt32(arg));
+                long result = ::_abs64(TaggedInt::ToInt32(arg));
 #else
                 int32_t result = ::abs(TaggedInt::ToInt32(arg));
 #endif

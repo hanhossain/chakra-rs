@@ -189,10 +189,10 @@ namespace Js
     typedef FinalizableICUObject<UPluralRules *, uplrules_close> FinalizableUPluralRules;
 
     template<typename TExecutor>
-    static void EnsureBuffer(_In_ TExecutor executor, _In_ Recycler *recycler, _Outptr_result_buffer_(*returnLength) char16 **ret, _Out_ int *returnLength, _In_ bool allowZeroLengthStrings = false, _In_ int firstTryLength = 8)
+    static void EnsureBuffer(_In_ TExecutor executor, _In_ Recycler *recycler, _Outptr_result_buffer_(*returnLength) char16_t **ret, _Out_ int *returnLength, _In_ bool allowZeroLengthStrings = false, _In_ int firstTryLength = 8)
     {
         UErrorCode status = U_ZERO_ERROR;
-        *ret = RecyclerNewArrayLeaf(recycler, char16, firstTryLength);
+        *ret = RecyclerNewArrayLeaf(recycler, char16_t, firstTryLength);
         *returnLength = executor(reinterpret_cast<UChar *>(*ret), firstTryLength, &status);
         AssertOrFailFast(allowZeroLengthStrings ? *returnLength >= 0 : *returnLength > 0);
         if (ICU_BUFFER_FAILURE(status))
@@ -201,7 +201,7 @@ namespace Js
             int secondTryLength = *returnLength + 1;
             INTL_TRACE("Buffer of length %d was too short, retrying with buffer of length %d", firstTryLength, secondTryLength);
             status = U_ZERO_ERROR;
-            *ret = RecyclerNewArrayLeaf(recycler, char16, secondTryLength);
+            *ret = RecyclerNewArrayLeaf(recycler, char16_t, secondTryLength);
             *returnLength = executor(reinterpret_cast<UChar *>(*ret), secondTryLength, &status);
             AssertOrFailFastMsg(*returnLength == secondTryLength - 1, "Second try of executor returned unexpected length");
         }
@@ -276,7 +276,7 @@ namespace Js
     }
 
     template <size_t N>
-    static void LangtagToLocaleID(_In_count_(langtagLength) const char16 *langtag, _In_ charcount_t langtagLength, _Out_ char(&localeID)[N])
+    static void LangtagToLocaleID(_In_count_(langtagLength) const char16_t *langtag, _In_ charcount_t langtagLength, _Out_ char(&localeID)[N])
     {
         static_assert(N >= ULOC_FULLNAME_CAPACITY, "LocaleID must be large enough to fit the largest possible ICU localeID");
 
@@ -318,7 +318,7 @@ namespace Js
             ICU_ASSERT(status, valueLength > 0);
 
             // cast valueLength now since we have verified its greater than 0
-            callback(index, reinterpret_cast<const char16 *>(value), static_cast<charcount_t>(valueLength));
+            callback(index, reinterpret_cast<const char16_t *>(value), static_cast<charcount_t>(valueLength));
         }
     }
 #endif
@@ -724,7 +724,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         ICU_ASSERT(status, toLangTagResultLength > 0);
 
         // allocate toLangTagResultLength + 1 to leave room for null terminator
-        char16 *canonicalized16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, toLangTagResultLength + 1);
+        char16_t *canonicalized16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, toLangTagResultLength + 1);
         charcount_t canonicalized16Len = 0;
         HRESULT hr = utf8::NarrowStringToWideNoAlloc(
             canonicalized,
@@ -925,7 +925,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 const size_t unicodeCollationLen = strlen(unicodeCollation);
 
                 // we only need strlen(unicodeCollation) + 1 char16s because unicodeCollation will always be ASCII (funnily enough)
-                char16 *unicodeCollation16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, unicodeCollationLen + 1);
+                char16_t *unicodeCollation16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, unicodeCollationLen + 1);
                 charcount_t unicodeCollation16Len = 0;
                 HRESULT hr = utf8::NarrowStringToWideNoAlloc(
                     unicodeCollation,
@@ -936,7 +936,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 );
                 AssertOrFailFastMsg(
                     hr == S_OK && unicodeCollation16Len == unicodeCollationLen && unicodeCollation16Len < MaxCharCount,
-                    "Unicode collation char16 conversion was unsuccessful"
+                    "Unicode collation char16_t conversion was unsuccessful"
                 );
                 // i + 1 to not overwrite leading null element
                 ret->SetItem(i + 1, JavascriptString::NewWithBuffer(
@@ -1016,7 +1016,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 const size_t unicodeCalendarLen = strlen(unicodeCalendar);
 
                 // we only need strlen(unicodeCalendar) + 1 char16s because unicodeCalendar will always be ASCII (funnily enough)
-                char16 *unicodeCalendar16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, strlen(unicodeCalendar) + 1);
+                char16_t *unicodeCalendar16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, strlen(unicodeCalendar) + 1);
                 charcount_t unicodeCalendar16Len = 0;
                 HRESULT hr = utf8::NarrowStringToWideNoAlloc(
                     unicodeCalendar,
@@ -1027,7 +1027,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 );
                 AssertOrFailFastMsg(
                     hr == S_OK && unicodeCalendar16Len == unicodeCalendarLen && unicodeCalendar16Len < MaxCharCount,
-                    "Unicode calendar char16 conversion was unsuccessful"
+                    "Unicode calendar char16_t conversion was unsuccessful"
                 );
                 ret->SetItem(i, JavascriptString::NewWithBuffer(
                     unicodeCalendar16,
@@ -1120,7 +1120,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         JavascriptString *argString = VarTo<JavascriptString>(args.Values[1]);
         PCWSTR passedLocale = argString->GetSz();
         // REVIEW should we zero the whole array for safety?
-        WCHAR resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
+        char16_t resolvedLocaleName[LOCALE_NAME_MAX_LENGTH];
         resolvedLocaleName[0] = '\0';
 
         ResolveLocaleName(passedLocale, resolvedLocaleName, _countof(resolvedLocaleName));
@@ -1186,7 +1186,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         int langtagActual = uloc_toLanguageTag(defaultLocaleID, defaultLangtag, _countof(defaultLangtag), true, &status);
         ICU_ASSERT(status, langtagActual > 0 && langtagActual < _countof(defaultLangtag));
 
-        char16 *defaultLangtag16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, langtagActual + 1);
+        char16_t *defaultLangtag16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, langtagActual + 1);
         charcount_t defaultLangtag16Actual = 0;
         utf8::NarrowStringToWideNoAlloc(defaultLangtag, static_cast<size_t>(langtagActual), defaultLangtag16, langtagActual + 1, &defaultLangtag16Actual);
         AssertOrFailFastMsg(defaultLangtag16Actual == static_cast<size_t>(langtagActual), "Language tags should always be ASCII");
@@ -1497,7 +1497,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };
             LangtagToLocaleID(langtag, localeID);
 
-            const char16 searchString[] = _u("search");
+            const char16_t searchString[] = _u("search");
             if (usage->BufferEquals(searchString, _countof(searchString) - 1)) // minus the null terminator
             {
                 uloc_setKeywordValue("collation", "search", localeID, _countof(localeID), &status);
@@ -1573,7 +1573,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // As of ES2015, String.prototype.localeCompare must compare canonically equivalent strings as equal
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("EntryIntl_LocaleCompare"));
 
-        const char16 *leftNormalized = nullptr;
+        const char16_t *leftNormalized = nullptr;
         charcount_t leftNormalizedLength = 0;
         if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, left->GetSz(), left->GetLength()))
         {
@@ -1585,7 +1585,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             leftNormalized = left->GetNormalizedString(UnicodeText::NormalizationForm::C, tempAllocator, leftNormalizedLength);
         }
 
-        const char16 *rightNormalized = nullptr;
+        const char16_t *rightNormalized = nullptr;
         charcount_t rightNormalizedLength = 0;
         if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, right->GetSz(), right->GetLength()))
         {
@@ -1620,8 +1620,8 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
         INTL_CHECK_ARGS(args.Info.Count >= 3 && VarIs<JavascriptString>(args[1]) && VarIs<JavascriptString>(args[2]));
 
-        const char16 *locale = nullptr; // args[3]
-        char16 defaultLocale[LOCALE_NAME_MAX_LENGTH] = { 0 };
+        const char16_t *locale = nullptr; // args[3]
+        char16_t defaultLocale[LOCALE_NAME_MAX_LENGTH] = { 0 };
 
         CollatorSensitivity sensitivity = CollatorSensitivity::Default; // args[4]
         bool ignorePunctuation = false; // args[5]
@@ -1687,7 +1687,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, _u("EntryIntl_CompareString"));
 
-        const char16 *left = nullptr;
+        const char16_t *left = nullptr;
         charcount_t leftLen = 0;
         if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, str1->GetSz(), str1->GetLength()))
         {
@@ -1699,7 +1699,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             left = str1->GetNormalizedString(UnicodeText::NormalizationForm::C, tempAllocator, leftLen);
         }
 
-        const char16 *right = nullptr;
+        const char16_t *right = nullptr;
         charcount_t rightLen = 0;
         if (UnicodeText::IsNormalizedString(UnicodeText::NormalizationForm::C, str2->GetSz(), str2->GetLength()))
         {
@@ -1739,7 +1739,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             VarIs<JavascriptString>(args.Values[1])
         );
 
-        const char16 *currencyCode = UnsafeVarTo<JavascriptString>(args.Values[1])->GetSz();
+        const char16_t *currencyCode = UnsafeVarTo<JavascriptString>(args.Values[1])->GetSz();
 
 #if defined(INTL_ICU)
         UErrorCode status = U_ZERO_ERROR;
@@ -1787,7 +1787,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     {
     private:
         double num;
-        Field(const char16 *) formatted;
+        Field(const char16_t *) formatted;
         const charcount_t formattedLength;
         Field(ScriptContext *) sc;
         Field(UNumberFormatFields *) fields;
@@ -1844,7 +1844,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
     public:
-        NumberFormatPartsBuilder(double num, const char16 *formatted, charcount_t formattedLength, ScriptContext *scriptContext)
+        NumberFormatPartsBuilder(double num, const char16_t *formatted, charcount_t formattedLength, ScriptContext *scriptContext)
             : num(num)
             , formatted(formatted)
             , formattedLength(formattedLength)
@@ -1956,7 +1956,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
         auto fmt = static_cast<FinalizableUNumberFormat *>(cachedUNumberFormat);
-        char16 *formatted = nullptr;
+        char16_t *formatted = nullptr;
         int formattedLen = 0;
 
         if (!toParts)
@@ -2045,7 +2045,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
     }
 
 #ifdef INTL_ICU
-    static void AddPartToPartsArray(ScriptContext *scriptContext, JavascriptArray *arr, int arrIndex, const char16 *src, int start, int end, JavascriptString *partType)
+    static void AddPartToPartsArray(ScriptContext *scriptContext, JavascriptArray *arr, int arrIndex, const char16_t *src, int start, int end, JavascriptString *partType)
     {
         JavascriptString *partValue = JavascriptString::NewCopyBuffer(
             src + start,
@@ -2161,7 +2161,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // We intentionally special-case the following two calls to EnsureBuffer to allow zero-length strings.
         // See comment in GetPatternForSkeleton.
 
-        char16 *formatted = nullptr;
+        char16_t *formatted = nullptr;
         int formattedLen = 0;
         if (!toParts)
         {
@@ -2299,7 +2299,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         ScopedUDateTimePatternGenerator dtpg(udatpg_open(baseLocaleID, &status));
         ICU_ASSERT(status, true);
 
-        char16 *formatted = nullptr;
+        char16_t *formatted = nullptr;
         int formattedLen = 0;
 
         // OS#17513493 (OSS-Fuzz 7950): It is possible for the skeleton to be a zero-length string
@@ -2363,11 +2363,11 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             }
 
             AssertOrFailFast(curLen > 0);
-            if (_wcsicmp(reinterpret_cast<const char16 *>(cur), tz->GetSz()) == 0)
+            if (_wcsicmp(reinterpret_cast<const char16_t *>(cur), tz->GetSz()) == 0)
             {
                 ucal_getCanonicalTimeZoneID(cur, curLen, match, _countof(match), nullptr, &status);
                 ICU_ASSERT(status, true);
-                size_t len = wcslen(reinterpret_cast<const char16 *>(match));
+                size_t len = wcslen(reinterpret_cast<const char16_t *>(match));
                 AssertMsg(len < MaxCharCount, "Returned canonicalized timezone is far too long");
                 matchLen = static_cast<charcount_t>(len);
                 break;
@@ -2379,7 +2379,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetUndefined();
         }
 
-        return JavascriptString::NewCopyBuffer(reinterpret_cast<const char16 *>(match), matchLen, scriptContext);
+        return JavascriptString::NewCopyBuffer(reinterpret_cast<const char16_t *>(match), matchLen, scriptContext);
     }
 
     // returns the current system time zone
@@ -2388,7 +2388,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
         int timeZoneLen = 0;
-        char16 *timeZone = nullptr;
+        char16_t *timeZone = nullptr;
         EnsureBuffer([&](UChar *buf, int bufLen, UErrorCode *status)
         {
             return ucal_getDefaultTimeZone(buf, bufLen, status);
@@ -2459,7 +2459,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         ScopedUEnumeration keywords(uplrules_getKeywords(*pr, &status));
         ICU_ASSERT(status, true);
 
-        ForEachUEnumeration16(keywords, [&](int index, const char16 *kw, charcount_t kwLength)
+        ForEachUEnumeration16(keywords, [&](int index, const char16_t *kw, charcount_t kwLength)
         {
             ret->SetItem(index, JavascriptString::NewCopyBuffer(kw, kwLength, scriptContext), PropertyOperation_None);
         });
@@ -2525,7 +2525,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             state->SetInternalProperty(InternalPropertyIds::CachedUNumberFormat, nf, PropertyOperationFlags::PropertyOperation_None, nullptr);
         }
 
-        char16 *formattedN = nullptr;
+        char16_t *formattedN = nullptr;
         int formattedNLength = 0;
         EnsureBuffer([&](UChar *buf, int bufLen, UErrorCode *status)
         {
@@ -2538,7 +2538,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             (n < 0.0 && nWithOptions >= n && nWithOptions <= 0) ||
             (n == 0.0 && nWithOptions == 0));
 
-        char16 *selected = nullptr;
+        char16_t *selected = nullptr;
         int selectedLength = 0;
         EnsureBuffer([&](UChar *buf, int bufLen, UErrorCode *status)
         {

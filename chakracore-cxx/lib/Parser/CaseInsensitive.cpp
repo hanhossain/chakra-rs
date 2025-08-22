@@ -505,7 +505,7 @@ namespace UnifiedRegex
             return false; // trivial
         }
 
-        bool RangeToEquivClass(uint & tblidx, uint l, uint h, uint & acth, __out_ecount(EquivClassSize) char16 equivl[EquivClassSize])
+        bool RangeToEquivClass(uint & tblidx, uint l, uint h, uint & acth, __out_ecount(EquivClassSize) char16_t equivl[EquivClassSize])
         {
             return RangeToEquivClass(tblidx, l, h, acth, equivl, [](MappingSource source) {
                 return source == MappingSource::UnicodeData;
@@ -519,7 +519,7 @@ namespace UnifiedRegex
             });
         }
 
-        bool RangeToEquivClassOnlyInSource(MappingSource mappingSource, uint& tblidx, uint l, uint h, uint& acth, __out_ecount(EquivClassSize) char16 equivl[EquivClassSize])
+        bool RangeToEquivClassOnlyInSource(MappingSource mappingSource, uint& tblidx, uint l, uint h, uint& acth, __out_ecount(EquivClassSize) char16_t equivl[EquivClassSize])
         {
             return RangeToEquivClass(tblidx, l, h, acth, equivl, [&](MappingSource actualSource) {
                 return mappingSource == actualSource;

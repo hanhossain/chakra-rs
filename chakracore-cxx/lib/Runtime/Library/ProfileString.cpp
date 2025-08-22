@@ -28,7 +28,7 @@ namespace Js
         return GetCurrentThreadContextId() != this->mainThreadId;
     }
 
-    void StringProfiler::RecordNewString( const char16* sz, uint length )
+    void StringProfiler::RecordNewString( const char16_t* sz, uint length )
     {
         if( IsOnWrongThread() )
         {
@@ -66,7 +66,7 @@ namespace Js
         }
     }
 
-    /*static*/ StringProfiler::RequiredEncoding StringProfiler::GetRequiredEncoding( const char16* sz, uint length )
+    /*static*/ StringProfiler::RequiredEncoding StringProfiler::GetRequiredEncoding( const char16_t* sz, uint length )
     {
         RequiredEncoding encoding = ASCII7bit;
 
@@ -87,7 +87,7 @@ namespace Js
         return encoding;
     }
 
-    /*static*/ uint StringProfiler::CountEmbeddedNULs( const char16* sz, uint length )
+    /*static*/ uint StringProfiler::CountEmbeddedNULs( const char16_t* sz, uint length )
     {
         uint result = 0;
         for( uint i = 0; i != length; ++i )
@@ -294,7 +294,7 @@ namespace Js
         }
     }
 
-    /*static*/ void StringProfiler::RecordNewString( ScriptContext* scriptContext, const char16* sz, uint length )
+    /*static*/ void StringProfiler::RecordNewString( ScriptContext* scriptContext, const char16_t* sz, uint length )
     {
         StringProfiler* stringProfiler = scriptContext->GetStringProfiler();
         if( stringProfiler )

@@ -272,7 +272,7 @@ namespace Js
             if (VarIs<JavascriptString>(args[1]))
             {
                 JavascriptString* StringObject = VarTo<JavascriptString>(args[1]);
-                const char16 * str = StringObject->GetString();
+                const char16_t * str = StringObject->GetString();
 
                 if (wcscmp(str, _u("default")) == 0 || wcscmp(str, _u("string")) == 0)
                 {

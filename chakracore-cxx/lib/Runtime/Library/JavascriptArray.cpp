@@ -5622,7 +5622,7 @@ Case0:
         T middle = length / 2;
         Var lowerValue = nullptr, upperValue = nullptr;
         T lowerExists, upperExists;
-        const char16* methodName;
+        const char16_t* methodName;
         bool isTypedArrayEntryPoint = typedArrayBase != nullptr;
 
         if (isTypedArrayEntryPoint)
@@ -8247,12 +8247,12 @@ Case0:
     }
 
 #if DEBUG
-    BOOL JavascriptArray::GetIndex(const char16* propName, uint32 *pIndex)
+    BOOL JavascriptArray::GetIndex(const char16_t* propName, uint32 *pIndex)
     {
         uint32 lu, luDig;
 
         int32 cch = (int32)wcslen(propName);
-        char16* pch = const_cast<char16 *>(propName);
+        char16_t* pch = const_cast<char16_t *>(propName);
 
         lu = *pch - '0';
         if (lu > 9)
@@ -8332,7 +8332,7 @@ Case0:
             if (length > 1)
             {
                 uint32 sepSize = 0;
-                char16 szSeparator[Arrays::SeparatorBufferSize];
+                char16_t szSeparator[Arrays::SeparatorBufferSize];
 
                 bool hasLocaleSeparator = Arrays::GetLocaleSeparator(szSeparator, &sepSize, Arrays::SeparatorBufferSize);
 
@@ -13159,7 +13159,7 @@ Case0:
     template void* Js::JavascriptArray::TemplatedIndexOfHelper<true, Js::TypedArrayBase, unsigned int>(Js::TypedArrayBase*, void*, unsigned int, unsigned int, Js::ScriptContext*);
 
     // Explicit instantiation of Sorting Algorithms for each form of typed array
-    template void Js::JavascriptArray::TypedArraySort<char16>(char16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<char16_t>(char16_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<int8_t>(int8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<uint8_t>(uint8_t*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<int16>(int16*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);

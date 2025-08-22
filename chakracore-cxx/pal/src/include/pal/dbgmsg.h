@@ -96,7 +96,7 @@ Format specifiers :
     wchar_t as a 16bit int, which is NOT guaranteed to match implementations
     on other platforms. glibc on a x86 defines wchar_t as a 32bit int.
     For this reason, %S and %C should be used in TRACE functions to output
-    Windows wide strings (of type wchar_t or WCHAR). To output wide-strings
+    Windows wide strings (of type wchar_t or char16_t). To output wide-strings
     in a platforms native format (litterals L"string" or variables of type
     wchar_native), the specifiers %ls and %lc should be used instead.
 

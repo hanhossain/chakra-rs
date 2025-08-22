@@ -12,9 +12,9 @@ bool DynamicProfileStorage::enabled = false;
 bool DynamicProfileStorage::useCacheDir = false;
 bool DynamicProfileStorage::collectInfo = false;
 HANDLE DynamicProfileStorage::mutex = nullptr;
-char16 DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
-char16 DynamicProfileStorage::cacheDir[_MAX_DIR];
-char16 DynamicProfileStorage::catalogFilename[_MAX_PATH];
+char16_t DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
+char16_t DynamicProfileStorage::cacheDir[_MAX_DIR];
+char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
 CriticalSection DynamicProfileStorage::cs;
 DynamicProfileStorage::InfoMap DynamicProfileStorage::infoMap(&NoCheckHeapAllocator::Instance);
 DynamicProfileStorage::TimeType DynamicProfileStorage::creationTime = DynamicProfileStorage::TimeType();
@@ -30,20 +30,20 @@ class DynamicProfileStorageReaderWriter
 public:
     DynamicProfileStorageReaderWriter() : filename(nullptr), file(nullptr) {}
     ~DynamicProfileStorageReaderWriter();
-    bool Init(char16 const * filename, char16 const * mode, bool deleteNonClosed, errno_t * err);
+    bool Init(char16_t const * filename, char16_t const * mode, bool deleteNonClosed, errno_t * err);
     template <typename T>
     bool Read(T * t);
     template <typename T>
     bool ReadArray(T * t, size_t len);
 
-    _Success_(return) bool ReadUtf8String(__deref_out_z char16 ** str, uint32_t * len);
+    _Success_(return) bool ReadUtf8String(__deref_out_z char16_t ** str, uint32_t * len);
 
     template <typename T>
     bool Write(T const& t);
     template <typename T>
     bool WriteArray(T * t, size_t len);
 
-    bool WriteUtf8String(char16 const * str);
+    bool WriteUtf8String(char16_t const * str);
 
     bool Seek(int32 offset);
     bool SeekToEnd();
@@ -51,7 +51,7 @@ public:
     void Close(bool deleteFile = false);
 
 private:
-    char16 const * filename;
+    char16_t const * filename;
     FILE * file;
     bool deleteNonClosed;
 };
@@ -64,7 +64,7 @@ DynamicProfileStorageReaderWriter::~DynamicProfileStorageReaderWriter()
     }
 }
 
-bool DynamicProfileStorageReaderWriter::Init(char16 const * filename, char16 const * mode, bool deleteNonClosed, errno_t * err = nullptr)
+bool DynamicProfileStorageReaderWriter::Init(char16_t const * filename, char16_t const * mode, bool deleteNonClosed, errno_t * err = nullptr)
 {
     AssertOrFailFast(file == nullptr);
     errno_t e = _wfopen_s(&file, filename, mode);
@@ -101,7 +101,7 @@ bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
     return true;
 }
 
-_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref_out_z char16 ** str, uint32_t * len)
+_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref_out_z char16_t ** str, uint32_t * len)
 {
     uint32_t urllen;
     if (!Read(&urllen))
@@ -124,7 +124,7 @@ _Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref
     }
 
     charcount_t length = utf8::ByteIndexIntoCharacterIndex(tempBuffer, urllen);
-    char16 * name = NoCheckHeapNewArray(char16, length + 1);
+    char16_t * name = NoCheckHeapNewArray(char16_t, length + 1);
     if (name == nullptr)
     {
         Output::Print(_u("ERROR: DynamicProfileStorage: Out of memory reading '%s'\n"), filename);
@@ -158,7 +158,7 @@ bool DynamicProfileStorageReaderWriter::WriteArray(T * t, size_t len)
     return true;
 }
 
-bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16 const * str)
+bool DynamicProfileStorageReaderWriter::WriteUtf8String(char16_t const * str)
 {
     charcount_t len = static_cast<charcount_t>(wcslen(str));
     const size_t cbTempBuffer = UInt32Math::Mul<3>(len);
@@ -210,9 +210,9 @@ void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
     filename = nullptr;
 }
 
-void DynamicProfileStorage::StorageInfo::GetFilename(_Out_writes_z_(_MAX_PATH) char16 filename[_MAX_PATH]) const
+void DynamicProfileStorage::StorageInfo::GetFilename(_Out_writes_z_(_MAX_PATH) char16_t filename[_MAX_PATH]) const
 {
-    char16 tempFile[_MAX_PATH];
+    char16_t tempFile[_MAX_PATH];
     wcscpy_s(tempFile, _u("jsdpcache_file"));
     _itow_s(this->fileId, tempFile + _countof(_u("jsdpcache_file")) - 1, _countof(tempFile) - _countof(_u("jsdpcache_file")) + 1, 10);
     _wmakepath_s(filename, _MAX_PATH, cacheDrive, cacheDir, tempFile, _u(".dpd"));
@@ -220,7 +220,7 @@ void DynamicProfileStorage::StorageInfo::GetFilename(_Out_writes_z_(_MAX_PATH) c
 
 char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
 {
-    char16 cacheFilename[_MAX_PATH];
+    char16_t cacheFilename[_MAX_PATH];
     this->GetFilename(cacheFilename);
     DynamicProfileStorageReaderWriter reader;
     if (!reader.Init(cacheFilename, _u("rb"), false))
@@ -254,7 +254,7 @@ char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
 
 bool DynamicProfileStorage::StorageInfo::WriteRecord(__in_ecount(sizeof(uint32_t) + *record)char const * record) const
 {
-    char16 cacheFilename[_MAX_PATH];
+    char16_t cacheFilename[_MAX_PATH];
     this->GetFilename(cacheFilename);
     DynamicProfileStorageReaderWriter writer;
     if (!writer.Init(cacheFilename, _u("wcb"), true))
@@ -279,7 +279,7 @@ bool DynamicProfileStorage::DoTrace()
 }
 #endif
 
-char16 const * DynamicProfileStorage::GetMessageType()
+char16_t const * DynamicProfileStorage::GetMessageType()
 {
     if (!DynamicProfileStorage::DoCollectInfo())
     {
@@ -362,7 +362,7 @@ bool DynamicProfileStorage::Initialize()
                 if (Js::Configuration::Global.flags.Verbose)
                 {
                     Output::Print(_u("  Retrying load of dynamic profile from '%s' (attempt %d)...\n"),
-                        (char16 const *)Js::Configuration::Global.flags.DynamicProfileInput, i + 1);
+                        (char16_t const *)Js::Configuration::Global.flags.DynamicProfileInput, i + 1);
                     Output::Flush();
                 }
             }
@@ -463,7 +463,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
     uint recordFreed = 0;
     for (uint i = 0; recordFreed < recordCount; i++)
     {
-        char16 const * name = infoMap.GetKeyAt(i);
+        char16_t const * name = infoMap.GetKeyAt(i);
         if (name == nullptr)
         {
             continue;
@@ -476,7 +476,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
             AssertOrFailFast(useCacheDir);
             if (deleteFileStorage)
             {
-                char16 filename[_MAX_PATH];
+                char16_t filename[_MAX_PATH];
                 info.GetFilename(filename);
                 _wunlink(filename);
             }
@@ -491,7 +491,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
     infoMap.Clear();
 }
 
-bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allowNonExistingFile)
+bool DynamicProfileStorage::ImportFile(__in_z char16_t const * filename, bool allowNonExistingFile)
 {
     AssertOrFailFast(enabled);
     DynamicProfileStorageReaderWriter reader;
@@ -508,7 +508,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
             {
                 Output::Print(_u("ERROR: DynamicProfileStorage: Unable to open file '%s' to import (%d)\n"), filename, e);
 
-                char16 error_string[256];
+                char16_t error_string[256];
                 _wcserror_s(error_string, e);
                 Output::Print(_u("ERROR:   For file '%s': %s (%d)\n"), filename, error_string, e);
                 Output::Flush();
@@ -549,7 +549,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
     for (uint i = 0; i < recordCount; i++)
     {
         uint32_t len;
-        char16 * name;
+        char16_t * name;
         if (!reader.ReadUtf8String(&name, &len))
         {
             AssertOrFailFast(false);
@@ -596,7 +596,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16 const * filename, bool allo
     return true;
 }
 
-bool DynamicProfileStorage::ExportFile(__in_z char16 const * filename)
+bool DynamicProfileStorage::ExportFile(__in_z char16_t const * filename)
 {
     AssertOrFailFast(enabled);
 
@@ -628,7 +628,7 @@ bool DynamicProfileStorage::ExportFile(__in_z char16 const * filename)
     }
     for (uint i = 0; i < recordCount; i++)
     {
-        char16 const * url = infoMap.GetKeyAt(i);
+        char16_t const * url = infoMap.GetKeyAt(i);
         if (url == nullptr)
         {
             AssertOrFailFast(false);
@@ -732,7 +732,7 @@ bool DynamicProfileStorage::ReleaseLock()
     return false;
 }
 
-bool DynamicProfileStorage::SetupCacheDir(__in_z char16 const * dirname)
+bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
 {
     AssertOrFailFast(enabled);
 
@@ -750,7 +750,7 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16 const * dirname)
         return false;
     }
 
-    char16 tempPath[_MAX_PATH];
+    char16_t tempPath[_MAX_PATH];
     if (dirname == nullptr)
     {
         uint32 len = GetTempPath(_MAX_PATH, tempPath);
@@ -774,8 +774,8 @@ bool DynamicProfileStorage::SetupCacheDir(__in_z char16 const * dirname)
         dirname = tempPath;
     }
 
-    char16 cacheFile[_MAX_FNAME];
-    char16 cacheExt[_MAX_EXT];
+    char16_t cacheFile[_MAX_FNAME];
+    char16_t cacheExt[_MAX_EXT];
     _wsplitpath_s(dirname, cacheDrive, cacheDir, cacheFile, cacheExt);
     wcscat_s(cacheDir, cacheFile);
     wcscat_s(cacheDir, cacheExt);
@@ -820,7 +820,7 @@ bool DynamicProfileStorage::CreateCacheCatalog()
     return true;
 }
 
-bool DynamicProfileStorage::AppendCacheCatalog(__in_z char16 const * url)
+bool DynamicProfileStorage::AppendCacheCatalog(__in_z char16_t const * url)
 {
     AssertOrFailFast(enabled);
     AssertOrFailFast(useCacheDir);
@@ -963,7 +963,7 @@ bool DynamicProfileStorage::LoadCacheCatalog()
     for (uint32_t i = start; i < count; i++)
     {
         uint32_t len;
-        char16 * url;
+        char16_t * url;
         if (!catalogFile.ReadUtf8String(&url, &len))
         {
 #if DBG_DUMP
@@ -1036,7 +1036,7 @@ void DynamicProfileStorage::ClearCacheCatalog()
     }
 }
 
-void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record)
+void DynamicProfileStorage::SaveRecord(__in_z char16_t const * filename, __in_ecount(sizeof(uint32_t) + *record) char const * record)
 {
     AssertOrFailFast(enabled);
     AutoCriticalSection autocs(&cs);
@@ -1071,7 +1071,7 @@ void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecou
         }
         AssertOrFailFast(useCacheDir);
 
-        char16 cacheFilename[_MAX_PATH];
+        char16_t cacheFilename[_MAX_PATH];
         info->GetFilename(cacheFilename);
         DynamicProfileStorageReaderWriter writer;
         if (info->WriteRecord(record))
@@ -1102,7 +1102,7 @@ void DynamicProfileStorage::SaveRecord(__in_z char16 const * filename, __in_ecou
     }
 
     size_t len = wcslen(filename) + 1;
-    char16 * newFilename = NoCheckHeapNewArray(char16, len);
+    char16_t * newFilename = NoCheckHeapNewArray(char16_t, len);
     if (newFilename == nullptr)
     {
         // out of memory, don't save anything

@@ -16,11 +16,11 @@ namespace Js
     {
     private:
         // WinRTString specific functions
-        typedef HRESULT FNCWindowsCreateString(const WCHAR *, uint32_t, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
+        typedef HRESULT FNCWindowsCreateString(const char16_t *, uint32_t, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
         typedef FNCWindowsCreateString* PFNCWindowsCreateString;
         PFNCWindowsCreateString m_pfnWindowsCreateString;
 
-        typedef HRESULT FNCWindowsCreateStringReference(const WCHAR *, uint32_t, HSTRING_HEADER *, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
+        typedef HRESULT FNCWindowsCreateStringReference(const char16_t *, uint32_t, HSTRING_HEADER *, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING *);
         typedef FNCWindowsCreateStringReference* PFNCWindowsCreateStringReference;
         PFNCWindowsCreateStringReference m_pfnWindowsCreateStringReference;
 
@@ -53,8 +53,8 @@ namespace Js
 
         LPCTSTR GetLibraryName() const { return _u("api-ms-win-core-winrt-string-l1-1-0.dll"); }
 
-        virtual HRESULT WindowsCreateString(_In_reads_opt_(length) const WCHAR * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
-        virtual HRESULT WindowsCreateStringReference(_In_reads_opt_(length + 1) const WCHAR * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
+        virtual HRESULT WindowsCreateString(_In_reads_opt_(length) const char16_t * sourceString, uint32_t length, _Outptr_result_maybenull_ _Result_nullonfailure_ HSTRING * string);
+        virtual HRESULT WindowsCreateStringReference(_In_reads_opt_(length + 1) const char16_t * sourceString, uint32_t length, _Out_ HSTRING_HEADER * header, _Outptr_result_maybenull_ _Result_nullonfailure_  HSTRING * string);
         virtual HRESULT WindowsDeleteString(_In_opt_ HSTRING string);
         virtual PCWSTR WindowsGetStringRawBuffer(_In_opt_ HSTRING string, _Out_opt_ uint32_t * length);
         virtual HRESULT WindowsCompareStringOrdinal(_In_opt_ HSTRING string1, _In_opt_ HSTRING string2, _Out_ int32_t * result);

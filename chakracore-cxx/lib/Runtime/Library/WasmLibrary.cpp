@@ -62,7 +62,7 @@ Js::JavascriptMethod Js::WasmLibrary::EnsureWasmEntrypoint(Js::ScriptFunction* f
             catch (Wasm::WasmCompilationException& ex)
             {
                 AutoFreeExceptionMessage autoCleanExceptionMessage;
-                char16* exceptionMessage = WebAssemblyModule::FormatExceptionMessage(&ex, &autoCleanExceptionMessage, readerInfo->m_module, body);
+                char16_t* exceptionMessage = WebAssemblyModule::FormatExceptionMessage(&ex, &autoCleanExceptionMessage, readerInfo->m_module, body);
 
                 JavascriptLibrary *library = scriptContext->GetLibrary();
                 JavascriptError *pError = library->CreateWebAssemblyCompileError();

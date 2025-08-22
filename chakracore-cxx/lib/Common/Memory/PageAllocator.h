@@ -706,7 +706,7 @@ public:
     }
 
 #if DBG_DUMP
-    char16 const * debugName;
+    char16_t const * debugName;
 #endif
 
 protected:

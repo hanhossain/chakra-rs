@@ -46,13 +46,13 @@ strToken        String containing token(s)
 strDelimit      Set of delimiter characters
 
 --*/
-WCHAR *
-PAL_wcstok(WCHAR *strToken, const WCHAR *strDelimit)
+char16_t *
+PAL_wcstok(char16_t *strToken, const char16_t *strDelimit)
 {
     CPalThread *pThread = NULL;
-    WCHAR *retval = NULL;
-    WCHAR *delim_ptr;
-    WCHAR *next_context;     /* string to save in TLS for future calls */
+    char16_t *retval = NULL;
+    char16_t *delim_ptr;
+    char16_t *next_context;     /* string to save in TLS for future calls */
 
     PERF_ENTRY(wcstok);
     ENTRY("PAL_wcstok (strToken=%p (%S), strDelimit=%p (%S))\n",

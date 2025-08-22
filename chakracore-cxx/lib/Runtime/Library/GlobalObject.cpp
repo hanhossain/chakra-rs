@@ -145,7 +145,7 @@ using namespace Js;
         Js::Var codeVar = args[1];  // args[0] is (this)
 
         Js::JavascriptString *codeStringVar = nullptr;
-        const char16 *source = nullptr;
+        const char16_t *source = nullptr;
         size_t sourceLength = 0;
 
         if (Js::VarIs<Js::JavascriptString>(codeVar))
@@ -179,7 +179,7 @@ using namespace Js;
     }
 
     // TODO remove when refactor
-    Js::PropertyId GlobalObject::CreateProperty(Js::ScriptContext *scriptContext, const char16 *propertyName)
+    Js::PropertyId GlobalObject::CreateProperty(Js::ScriptContext *scriptContext, const char16_t *propertyName)
     {
         Js::PropertyRecord const *propertyRecord;
         scriptContext->GetOrAddPropertyRecord(propertyName, (int) wcslen(propertyName), &propertyRecord);
@@ -189,7 +189,7 @@ using namespace Js;
     }
 
     // TODO remove when refactor
-    void GlobalObject::SetProperty(Js::DynamicObject *obj, const char16 *propertyName, Js::Var value)
+    void GlobalObject::SetProperty(Js::DynamicObject *obj, const char16_t *propertyName, Js::Var value)
     {
         const size_t len = wcslen(propertyName);
         if (!(len > 0))
@@ -212,8 +212,8 @@ using namespace Js;
         Js::JavascriptOperators::SetProperty(obj, obj, id, value, obj->GetScriptContext());
     }
 
-    Var GlobalObject::FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16 *file,
-        const char16 *function, uint32_t lineNum, uint32_t colNum,
+    Var GlobalObject::FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16_t *file,
+        const char16_t *function, uint32_t lineNum, uint32_t colNum,
         uint functionId, Js::Utf8SourceInfo *utf8SrcInfo, Js::Var source)
     {
         Js::DynamicObject *fnInfoObj = scriptContext->GetLibrary()->CreateObject();
@@ -312,8 +312,8 @@ using namespace Js;
                 //
                 // get URL of source file
                 //
-                char16 filenameBuffer[128];  // hold dynamically built filename
-                char16 const *srcFileUrl = NULL;
+                char16_t filenameBuffer[128];  // hold dynamically built filename
+                char16_t const *srcFileUrl = NULL;
                 if (!srcContextInfo->IsDynamic())
                 {
                     Assert(srcContextInfo->url != NULL);
@@ -327,7 +327,7 @@ using namespace Js;
 
                 sourceInfo->MapFunction([scriptContext, &count, functionList, srcFileUrl](Js::FunctionBody *functionBody)
                 {
-                    char16 const *functionName = functionBody->GetExternalDisplayName();
+                    char16_t const *functionName = functionBody->GetExternalDisplayName();
 
                     uint32_t lineNum = functionBody->GetLineNumber();
                     uint32_t colNum = functionBody->GetColumnNumber();
@@ -579,7 +579,7 @@ using namespace Js;
 
         ScriptFunction *pfuncScript = nullptr;
         JavascriptString *argString = VarTo<JavascriptString>(evalArg);
-        char16 const * sourceString = argString->GetSz();
+        char16_t const * sourceString = argString->GetSz();
         charcount_t sourceLen = argString->GetLength();
         FastEvalMapString key(argString, sourceString, sourceLen, moduleID, strictMode, isLibraryCode);
 
@@ -724,10 +724,10 @@ using namespace Js;
     }
 
 #ifdef ENABLE_SCRIPT_PROFILING
-    ScriptFunction* GlobalObject::ProfileModeEvalHelper(ScriptContext* scriptContext, const char16 *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
+    ScriptFunction* GlobalObject::ProfileModeEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
         ScriptFunction *pEvalFunction = DefaultEvalHelper(scriptContext, source, sourceLength, moduleID, grfscr, pszTitle, registerDocument, isIndirect, strictMode);
         Assert(pEvalFunction);
@@ -750,7 +750,7 @@ using namespace Js;
     }
 #endif
 
-    void GlobalObject::ValidateSyntax(ScriptContext* scriptContext, const char16 *source, int sourceLength, bool isGenerator, bool isAsync, void (Parser::*validateSyntax)())
+    void GlobalObject::ValidateSyntax(ScriptContext* scriptContext, const char16_t *source, int sourceLength, bool isGenerator, bool isAsync, void (Parser::*validateSyntax)())
     {
         Assert(sourceLength >= 0);
 
@@ -811,7 +811,7 @@ using namespace Js;
         }
     }
 
-    ScriptFunction* GlobalObject::DefaultEvalHelper(ScriptContext* scriptContext, const char16 *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
+    ScriptFunction* GlobalObject::DefaultEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
         Assert(sourceLength >= 0);
         AnalysisAssert(scriptContext);
@@ -972,7 +972,7 @@ using namespace Js;
     }
 
 #ifdef IR_VIEWER
-    Var GlobalObject::IRDumpEvalHelper(ScriptContext* scriptContext, const char16 *source,
+    Var GlobalObject::IRDumpEvalHelper(ScriptContext* scriptContext, const char16_t *source,
         int sourceLength, ModuleID moduleID, uint32 grfscr, LPCOLESTR pszTitle,
         BOOL registerDocument, BOOL isIndirect, BOOL strictMode)
     {
@@ -1243,7 +1243,7 @@ using namespace Js;
         }
 
         // skip preceding whitespace
-        const char16 *pch = scriptContext->GetCharClassifier()->SkipWhiteSpace(str->GetSz());
+        const char16_t *pch = scriptContext->GetCharClassifier()->SkipWhiteSpace(str->GetSz());
 
         // perform the string -> float conversion
         result = NumberUtilities::StrToDbl(pch, &pch, scriptContext);
@@ -1388,13 +1388,13 @@ using namespace Js;
         src = JavascriptConversion::ToString(args[1], scriptContext);
         bs = CompoundString::NewWithCharCapacity(src->GetLength(), scriptContext->GetLibrary());
 
-        char16 chw;
-        char16 * pchSrc;
-        char16 * pchLim;
+        char16_t chw;
+        char16_t * pchSrc;
+        char16_t * pchLim;
 
         const char _rgchHex[] = "0123456789ABCDEF";
 
-        pchSrc = const_cast<char16 *>(src->GetString());
+        pchSrc = const_cast<char16_t *>(src->GetString());
         pchLim = pchSrc + src->GetLength();
         while (pchSrc < pchLim)
         {
@@ -1403,17 +1403,17 @@ using namespace Js;
             if (0 != (chw & 0xFF00))
             {
                 bs->AppendChars(_u("%u"));
-                bs->AppendChars(static_cast<char16>(_rgchHex[(chw >> 12) & 0x0F]));
-                bs->AppendChars(static_cast<char16>(_rgchHex[(chw >> 8) & 0x0F]));
-                bs->AppendChars(static_cast<char16>(_rgchHex[(chw >> 4) & 0x0F]));
-                bs->AppendChars(static_cast<char16>(_rgchHex[chw & 0x0F]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 12) & 0x0F]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 8) & 0x0F]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[(chw >> 4) & 0x0F]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[chw & 0x0F]));
             }
             else if (_grfbitEscape[chw >> 3] & (1 << (chw & 7)))
             {
                 // Escape the byte.
                 bs->AppendChars(_u('%'));
-                bs->AppendChars(static_cast<char16>(_rgchHex[chw >> 4]));
-                bs->AppendChars(static_cast<char16>(_rgchHex[chw & 0x0F]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[chw >> 4]));
+                bs->AppendChars(static_cast<char16_t>(_rgchHex[chw & 0x0F]));
             }
             else
             {
@@ -1442,17 +1442,17 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefinedDisplayString();
         }
 
-        char16 chw;
-        char16 chT;
-        char16 * pchSrc;
-        char16 * pchLim;
-        char16 * pchMin;
+        char16_t chw;
+        char16_t chT;
+        char16_t * pchSrc;
+        char16_t * pchLim;
+        char16_t * pchMin;
 
         CompoundString * bs = nullptr;
         ENTER_PINNED_SCOPE(JavascriptString, src);
         src = JavascriptConversion::ToString(args[1], scriptContext);
         bs = CompoundString::NewWithCharCapacity(src->GetLength(), scriptContext->GetLibrary());
-        pchSrc = const_cast<char16 *>(src->GetString());
+        pchSrc = const_cast<char16_t *>(src->GetString());
         pchLim = pchSrc + src->GetLength();
         while (pchSrc < pchLim)
         {

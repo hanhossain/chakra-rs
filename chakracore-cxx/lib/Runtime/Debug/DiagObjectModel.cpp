@@ -213,7 +213,7 @@ namespace Js
     void VariableWalkerBase::GetReturnedValueResolvedObject(ReturnedValue * returnValue, DiagStackFrame* frame, ResolvedObject* pResolvedObject)
     {
         DBGPROP_ATTRIB_FLAGS defaultAttributes = DBGPROP_ATTRIB_VALUE_IS_RETURN_VALUE | DBGPROP_ATTRIB_VALUE_IS_FAKE;
-        WCHAR * finalName = AnewArray(GetArenaFromContext(pResolvedObject->scriptContext), WCHAR, RETURN_VALUE_MAX_NAME);
+        char16_t * finalName = AnewArray(GetArenaFromContext(pResolvedObject->scriptContext), char16_t, RETURN_VALUE_MAX_NAME);
         if (returnValue->isValueOfReturnStatement)
         {
             swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[Return value]"));
@@ -231,7 +231,7 @@ namespace Js
                 ENTER_PINNED_SCOPE(JavascriptString, displayName);
                 displayName = returnValue->calledFunction->GetDisplayName();
 
-                const char16 *builtInName = ParseFunctionName(displayName->GetString(), displayName->GetLength(), pResolvedObject->scriptContext);
+                const char16_t *builtInName = ParseFunctionName(displayName->GetString(), displayName->GetLength(), pResolvedObject->scriptContext);
                 swprintf_s(finalName, RETURN_VALUE_MAX_NAME, _u("[%s returned]"), builtInName);
 
                 LEAVE_PINNED_SCOPE();
@@ -252,7 +252,7 @@ namespace Js
     // The debugger uses the functionNameId field instead of the "name" property to get the name of the funtion. The functionNameId field is overloaded and may contain the display name if
     // toString() has been called on the function object. For built-in or external functions the display name can be something like "function Echo() { native code }". We will try to parse the
     // function name out of the display name so the user will see just the function name e.g. "Echo" instead of the full display name in debugger.
-    const char16 * VariableWalkerBase::ParseFunctionName(const char16 * displayNameBuffer, const charcount_t displayNameBufferLength, ScriptContext* scriptContext)
+    const char16_t * VariableWalkerBase::ParseFunctionName(const char16_t * displayNameBuffer, const charcount_t displayNameBufferLength, ScriptContext* scriptContext)
     {
         const charcount_t funcStringLength = _countof(JS_DISPLAY_STRING_FUNCTION_HEADER) - 1; // discount the ending null character in string literal
         const charcount_t templateStringLength = funcStringLength + _countof(JS_DISPLAY_STRING_FUNCTION_BODY) - 1; // discount the ending null character in string literal
@@ -263,15 +263,15 @@ namespace Js
         }
 
         // Look for the left parenthesis, if we don't find one; return the original string.
-        const char16* parenChar = wcschr(displayNameBuffer, '(');
+        const char16_t* parenChar = wcschr(displayNameBuffer, '(');
         if (parenChar == nullptr)
         {
             return displayNameBuffer;
         }
 
         charcount_t actualFunctionNameLength = displayNameBufferLength - templateStringLength;
-        uint byteLengthForCopy = sizeof(char16) * actualFunctionNameLength;
-        char16 * actualFunctionNameBuffer = AnewArray(GetArenaFromContext(scriptContext), char16, actualFunctionNameLength + 1); // The last character will be the null character.
+        uint byteLengthForCopy = sizeof(char16_t) * actualFunctionNameLength;
+        char16_t * actualFunctionNameBuffer = AnewArray(GetArenaFromContext(scriptContext), char16_t, actualFunctionNameLength + 1); // The last character will be the null character.
         if (actualFunctionNameBuffer == nullptr)
         {
             return displayNameBuffer;
@@ -1900,8 +1900,8 @@ namespace Js
         if (this->propertyId != Constants::NoProperty)
         {
             Js::PropertyRecord const * propertyRecord = this->scriptContext->GetThreadContext()->GetPropertyName(this->propertyId);
-            const WCHAR* startOfPropertyName = propertyRecord->GetBuffer();
-            const WCHAR* endOfIdentifier = this->scriptContext->GetCharClassifier()->SkipIdentifier((LPCOLESTR)propertyRecord->GetBuffer());
+            const char16_t* startOfPropertyName = propertyRecord->GetBuffer();
+            const char16_t* endOfIdentifier = this->scriptContext->GetCharClassifier()->SkipIdentifier((LPCOLESTR)propertyRecord->GetBuffer());
             return (charcount_t)(endOfIdentifier - startOfPropertyName) == propertyRecord->GetLength();
         }
         else
@@ -1959,7 +1959,7 @@ namespace Js
                     Js::ParseableFunctionInfo *pFuncBody = pfunction->GetFunctionProxy() != nullptr ? pfunction->GetFunctionProxy()->EnsureDeserialized() : nullptr;
                     if (pFuncBody)
                     {
-                        const char16* pDisplayName = pFuncBody->GetDisplayName();
+                        const char16_t* pDisplayName = pFuncBody->GetDisplayName();
                         if (pDisplayName)
                         {
                             builder->AppendCppLiteral(_u(", ("));
@@ -3487,11 +3487,11 @@ namespace Js
 
     //--------------------------
     // RecyclableCollectionObjectWalker
-    template <typename TData> const char16* RecyclableCollectionObjectWalker<TData>::Name() { static_assert(false, _u("Must use specialization")); }
-    template <> const char16* RecyclableCollectionObjectWalker<JavascriptMap>::Name() { return _u("[Map]"); }
-    template <> const char16* RecyclableCollectionObjectWalker<JavascriptSet>::Name() { return _u("[Set]"); }
-    template <> const char16* RecyclableCollectionObjectWalker<JavascriptWeakMap>::Name() { return _u("[WeakMap]"); }
-    template <> const char16* RecyclableCollectionObjectWalker<JavascriptWeakSet>::Name() { return _u("[WeakSet]"); }
+    template <typename TData> const char16_t* RecyclableCollectionObjectWalker<TData>::Name() { static_assert(false, _u("Must use specialization")); }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptMap>::Name() { return _u("[Map]"); }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptSet>::Name() { return _u("[Set]"); }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakMap>::Name() { return _u("[WeakMap]"); }
+    template <> const char16_t* RecyclableCollectionObjectWalker<JavascriptWeakSet>::Name() { return _u("[WeakSet]"); }
 
     template <typename TData>
     BOOL RecyclableCollectionObjectWalker<TData>::GetGroupObject(ResolvedObject* pResolvedObject)
@@ -3665,8 +3665,8 @@ namespace Js
 
         // Note, RecyclableObjectDisplay::Value(int) uses the shared string builder
         // so we cannot call it while building our string below.  Call both before hand.
-        const char16* keyValue = keyDisplay.Value(radix);
-        const char16* valueValue = valueDisplay.Value(radix);
+        const char16_t* keyValue = keyDisplay.Value(radix);
+        const char16_t* valueValue = valueDisplay.Value(radix);
 
         StringBuilder<ArenaAllocator>* builder = scriptContext->GetThreadContext()->GetDebugManager()->pCurrentInterpreterLocation->stringBuilder;
         builder->Reset();
@@ -4012,7 +4012,7 @@ namespace Js
 
                             if (pFuncBody)
                             {
-                                const char16* pDisplayName = pFuncBody->GetDisplayName();
+                                const char16_t* pDisplayName = pFuncBody->GetDisplayName();
                                 if (pDisplayName)
                                 {
                                     StringBuilder<ArenaAllocator>* builder = GetStringBuilder();
@@ -4161,7 +4161,7 @@ namespace Js
                 // <Property Name> [Adding] : New Value
                 // <Property Name> [Changing] : Old Value
                 // <Property Name> [Deleting] : Old Value
-                WCHAR * displayName = AnewArray(GetArenaFromContext(scriptContext), WCHAR, PENDING_MUTATION_VALUE_MAX_NAME);
+                char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
                 swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("%s [%s]"), mutationBreakpoint->GetBreakPropertyName(), Js::MutationBreakpoint::GetBreakMutationTypeName(mutationType));
                 pResolvedObject->name = displayName;
                 if (mutationType == MutationTypeUpdate || mutationType == MutationTypeDelete)
@@ -4186,7 +4186,7 @@ namespace Js
             }
             else if (((i == 1) && (mutationType != MutationTypeUpdate)) || (i == 2))
             {
-                WCHAR * displayName = AnewArray(GetArenaFromContext(scriptContext), WCHAR, PENDING_MUTATION_VALUE_MAX_NAME);
+                char16_t * displayName = AnewArray(GetArenaFromContext(scriptContext), char16_t, PENDING_MUTATION_VALUE_MAX_NAME);
                 swprintf_s(displayName, PENDING_MUTATION_VALUE_MAX_NAME, _u("[Property container %s]"), mutationBreakpoint->GetParentPropertyName());
                 pResolvedObject->name = displayName;
                 pResolvedObject->obj = mutationBreakpoint->GetMutationObjectVar();

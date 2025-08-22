@@ -326,7 +326,7 @@ bool Js::MutationBreakpoint::GetDidCauseBreak() const
     return this->didCauseBreak;
 }
 
-const char16 * Js::MutationBreakpoint::GetBreakPropertyName() const
+const char16_t * Js::MutationBreakpoint::GetBreakPropertyName() const
 {
     Assert(this->didCauseBreak);
     Assert(this->propertyRecord);
@@ -339,7 +339,7 @@ const Js::PropertyId Js::MutationBreakpoint::GetParentPropertyId() const
     return this->parentPropertyId;
 }
 
-const char16 * Js::MutationBreakpoint::GetParentPropertyName() const
+const char16_t * Js::MutationBreakpoint::GetParentPropertyName() const
 {
     Assert(this->didCauseBreak);
     const PropertyRecord *pr = nullptr;
@@ -368,7 +368,7 @@ const Js::PropertyId Js::MutationBreakpoint::GetBreakPropertyId() const
     return this->propertyRecord->GetPropertyId();
 }
 
-const char16 * Js::MutationBreakpoint::GetBreakMutationTypeName(MutationType mutationType)
+const char16_t * Js::MutationBreakpoint::GetBreakMutationTypeName(MutationType mutationType)
 {
     switch (mutationType)
     {
@@ -379,7 +379,7 @@ const char16 * Js::MutationBreakpoint::GetBreakMutationTypeName(MutationType mut
     }
 }
 
-const char16 * Js::MutationBreakpoint::GetMutationTypeForConditionalEval(MutationType mutationType)
+const char16_t * Js::MutationBreakpoint::GetMutationTypeForConditionalEval(MutationType mutationType)
 {
     switch (mutationType)
     {

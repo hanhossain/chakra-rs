@@ -20,8 +20,8 @@ LPCWSTR hostName = _u("ch");
 
 JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
 
-BOOL doTTRecord = false;
-BOOL doTTReplay = false;
+bool doTTRecord = false;
+bool doTTReplay = false;
 const size_t ttUriBufferLength = MAX_PATH * 3;
 char ttUri[ttUriBufferLength];
 size_t ttUriLength = 0;
@@ -647,7 +647,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fi
         nullptr, (void*)fileContents, &scriptSource));
 
     // What's the preferred way of doing this?
-    WCHAR fileNameWide[MAX_PATH] = { 0 };
+    char16_t fileNameWide[MAX_PATH] = { 0 };
     size_t fileNameLength = strlen(fileName);
     for (size_t i = 0; i < fileNameLength; i++)
     {
@@ -670,7 +670,7 @@ HRESULT RunBgParseSync(LPCSTR fileContents, uint32_t lengthBytes, const char* fi
         cookie,
         scriptSource,
         WScriptJsrt::GetNextSourceContext(),
-        (WCHAR*)scriptContents.fullPath,
+        (char16_t*)scriptContents.fullPath,
         JsParseScriptAttributes::JsParseScriptAttributeNone,
         nullptr,//_In_ JsValueRef parserState,
         &bgResult
@@ -865,15 +865,11 @@ unsigned int WINAPI StaticThreadProc(void *lpParam)
     return ExecuteTestWithMemoryCheck(argInfo->filename);
 }
 
-static char16** argv = nullptr;
+static char16_t** argv = nullptr;
 int main(int argc, char** c_argv)
 {
-#ifndef CHAKRA_STATIC_LIBRARY
-// xplat-todo: PAL free CH ?
-    PAL_InitializeChakraCore();
-#endif
     int origargc = argc; // store for clean-up later
-    argv = new char16*[argc];
+    argv = new char16_t*[argc];
     for (int i = 0; i < argc; i++)
     {
         NarrowStringToWideDynamic(c_argv[i], &argv[i]);
@@ -985,7 +981,7 @@ int main(int argc, char** c_argv)
     argInfo = { argc, argv, PrintUsage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
 
-#if defined(CHAKRA_STATIC_LIBRARY) && !defined(NDEBUG)
+#if !defined(NDEBUG)
     // handle command line flags
     OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
 #endif

@@ -77,7 +77,7 @@ _wsplitpath(
             char16_t *fname,
             char16_t *ext)
 {
-    WCHAR path[_MAX_PATH+1];
+    char16_t path[_MAX_PATH+1];
     LPCWSTR slash_ptr = NULL;
     LPCWSTR period_ptr = NULL;
     int32_t size = 0;
@@ -159,7 +159,7 @@ _wsplitpath(
             ON_ERROR;
         }
 
-        memcpy(dir, path, size*sizeof(WCHAR));
+        memcpy(dir, path, size*sizeof(char16_t));
         dir[size] = 0;
 
         /* only allow / separators in returned path */
@@ -183,7 +183,7 @@ _wsplitpath(
                  size+1, _MAX_FNAME);
             ON_ERROR;
         }
-        memcpy(fname, slash_ptr+1, size*sizeof(WCHAR));
+        memcpy(fname, slash_ptr+1, size*sizeof(char16_t));
         fname[size] = 0;
     }
 
@@ -196,7 +196,7 @@ _wsplitpath(
                  size, _MAX_EXT);
             ON_ERROR;
         }
-        memcpy(ext, period_ptr, size*sizeof(WCHAR));
+        memcpy(ext, period_ptr, size*sizeof(char16_t));
         ext[size-1] = 0;
     }
 
@@ -224,10 +224,10 @@ _splitpath(
            char *fname,
            char *ext)
 {
-    WCHAR w_path[_MAX_PATH];
-    WCHAR w_dir[_MAX_DIR];
-    WCHAR w_fname[_MAX_FNAME];
-    WCHAR w_ext[_MAX_EXT];
+    char16_t w_path[_MAX_PATH];
+    char16_t w_dir[_MAX_DIR];
+    char16_t w_fname[_MAX_FNAME];
+    char16_t w_ext[_MAX_EXT];
 
     PERF_ENTRY(_splitpath);
     ENTRY("_splitpath (path=%p (%s), drive=%p, dir=%p, fname=%p, ext=%p)\n",

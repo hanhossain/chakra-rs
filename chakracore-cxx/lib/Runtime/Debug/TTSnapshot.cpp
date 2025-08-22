@@ -619,14 +619,14 @@ namespace TTD
         }
 
         //reset the threadContext symbol map
-        JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* tcSymbolRegistrationMap = tCtx->GetThreadContext()->GetSymbolRegistrationMap_TTD();
+        JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* tcSymbolRegistrationMap = tCtx->GetThreadContext()->GetSymbolRegistrationMap_TTD();
         tcSymbolRegistrationMap->Clear();
 
         for(auto iter = this->m_tcSymbolRegistrationMapContents.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
             Js::PropertyId pid = *iter.Current();
             const Js::PropertyRecord* pRecord = tCtx->GetThreadContext()->GetPropertyName(pid);
-            Js::HashedCharacterBuffer<char16> * propertyName = RecyclerNew(tCtx->GetThreadContext()->GetRecycler(), Js::HashedCharacterBuffer<char16>, pRecord->GetBuffer(), pRecord->GetLength());
+            Js::HashedCharacterBuffer<char16_t> * propertyName = RecyclerNew(tCtx->GetThreadContext()->GetRecycler(), Js::HashedCharacterBuffer<char16_t>, pRecord->GetBuffer(), pRecord->GetLength());
 
             tcSymbolRegistrationMap->Add(propertyName, pRecord);
         }

@@ -871,7 +871,7 @@ private:
     };
 
     // Used to map JavaScript object member name to member type.
-    typedef JsUtil::BaseDictionary<WCHAR*, MemberType, ArenaAllocator, PrimeSizePolicy> MemberNameToTypeMap;
+    typedef JsUtil::BaseDictionary<char16_t*, MemberType, ArenaAllocator, PrimeSizePolicy> MemberNameToTypeMap;
 
     static MemberNameToTypeMap* CreateMemberNameMap(ArenaAllocator* pAllocator);
 
@@ -919,7 +919,7 @@ private:
     LPCOLESTR AppendNameHints(LPCOLESTR left, IdentPtr  right, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
     LPCOLESTR AppendNameHints(LPCOLESTR left, LPCOLESTR right, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
     LPCOLESTR AppendNameHints(LPCOLESTR leftStr, uint32 leftLen, LPCOLESTR rightStr, uint32 rightLen, uint32 *pNameLength, uint32 *pShortNameOffset, bool ignoreAddDotWithSpace = false, bool wrapInBrackets = false);
-    WCHAR * AllocateStringOfLength(uint32_t length);
+    char16_t * AllocateStringOfLength(uint32_t length);
 
     void FinishFncNode(ParseNodeFnc * pnodeFnc, bool fAllowIn = true);
 

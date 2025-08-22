@@ -988,7 +988,7 @@ namespace Js
 
         struct ProxyOwnkeysEnumerator : public JavascriptEnumerator
         {
-            typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<WCHAR>, Recycler> VisitedNamesHashSet;
+            typedef JsUtil::BaseHashSet<JsUtil::CharacterBuffer<char16_t>, Recycler> VisitedNamesHashSet;
             Field(VisitedNamesHashSet*) visited;
             Field(JavascriptArray*) trapResult;
             Field(JavascriptProxy*) proxy;
@@ -1030,7 +1030,7 @@ namespace Js
                             // let desc = Reflect.getOwnPropertyDescriptor(obj, key);
                             Js::PropertyDescriptor desc;
                             BOOL ret = JavascriptOperators::GetOwnPropertyDescriptor(proxy, propertyName, scriptContext, &desc);
-                            const JsUtil::CharacterBuffer<WCHAR> propertyString(propertyName->GetString(), propertyName->GetLength());
+                            const JsUtil::CharacterBuffer<char16_t> propertyString(propertyName->GetString(), propertyName->GetLength());
                             // if (desc && !visited.has(key)) {
                             if (ret && !visited->Contains(propertyString))
                             {
@@ -1999,7 +1999,7 @@ namespace Js
 
     void JavascriptProxy::PropertyIdFromInt(uint32 index, PropertyRecord const** propertyRecord)
     {
-        char16 buffer[22];
+        char16_t buffer[22];
         int pos = TaggedInt::ToBuffer(index, buffer, _countof(buffer));
 
         GetScriptContext()->GetOrAddPropertyRecord((LPCWSTR)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
@@ -2038,7 +2038,7 @@ namespace Js
             }
 
             threadContext->handlerPropertyId = threadContext->GetOrAddPropertyRecordBind(
-                JsUtil::CharacterBuffer<WCHAR>(autoProxyName, static_cast<charcount_t>(wcslen(autoProxyName))))->GetPropertyId();
+                JsUtil::CharacterBuffer<char16_t>(autoProxyName, static_cast<charcount_t>(wcslen(autoProxyName))))->GetPropertyId();
         }
         return threadContext->handlerPropertyId;
     }

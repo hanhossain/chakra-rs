@@ -1124,11 +1124,11 @@ void FillDebugBreak(_Out_writes_bytes_all_(byteCount) uint8_t* buffer, _In_ size
     // While it could be easier to put 0xBE (same way as 0xCC on x86), BKPT is not recommended -- it may cause unexpected side effects.
     // So, use same sequence are C++ compiler uses (0xDEFE), this is recognized by debugger as __debugbreak.
     // This is 2 bytes, and in case there is a gap of 1 byte in the end, fill it with 0 (there is no 1 byte long THUMB instruction).
-    CompileAssert(sizeof(char16) == 2);
-    char16 pattern = 0xDEFE;
+    CompileAssert(sizeof(char16_t) == 2);
+    char16_t pattern = 0xDEFE;
 
     uint8_t * writeBuffer = buffer;
-    wmemset((char16 *)writeBuffer, pattern, byteCount / 2);
+    wmemset((char16_t *)writeBuffer, pattern, byteCount / 2);
     if (byteCount % 2)
     {
         // Note: this is valid scenario: in JIT mode, we may not be 2-byte-aligned in the end of unwind info.

@@ -53,7 +53,7 @@ int32_t Silent_PAL_vsnprintf(LPSTR Buffer, int32_t Count, LPCSTR Format, va_list
     LPCSTR Fmt = Format;
     LPWSTR TempWStr;
     char TempStr[MAX_STR_LEN+1];
-    WCHAR TempWChar;
+    char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
     int32_t Precision;
@@ -332,7 +332,7 @@ int Silent_PAL_vfprintf(PAL_FILE *stream, const char *format, va_list aparg)
     LPCSTR Fmt = format;
     LPWSTR TempWStr;
     LPSTR TempStr;
-    WCHAR TempWChar;
+    char16_t TempWChar;
     int32_t Flags;
     int32_t Width;
     int32_t Precision;
@@ -750,7 +750,7 @@ BOOL Silent_ExtractFormatA(LPCSTR *Fmt, LPSTR Out, int32_t * Flags, int32_t * Wi
     {
         *Prefix = PFF_PREFIX_LONGLONG;
     }
-    /* grab prefix of 'I64' for __int64 */
+    /* grab prefix of 'I64' for long */
     if ((*Fmt)[0] == 'I' && (*Fmt)[1] == '6' && (*Fmt)[2] == '4')
     {
         /* convert to 'll' so BSD's snprintf can handle it */

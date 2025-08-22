@@ -11,24 +11,24 @@ namespace Js
     public:
         CharStringCache();
         JavascriptString* GetStringForCharA(char c);    // ASCII 7-bit
-        JavascriptString* GetStringForCharW(char16 c); // Unicode
-        JavascriptString* GetStringForChar(char16 c);  // Either
+        JavascriptString* GetStringForCharW(char16_t c); // Unicode
+        JavascriptString* GetStringForChar(char16_t c);  // Either
         JavascriptString* GetStringForCharSP(codepoint_t c); // Supplementary char
 
         // For JIT
-        static const char16 CharStringCacheSize = 0x80; /*range of ASCII 7-bit chars*/
+        static const char16_t CharStringCacheSize = 0x80; /*range of ASCII 7-bit chars*/
         static uint32_t GetCharStringCacheAOffset() { return offsetof(CharStringCache, charStringCacheA); }
 
-        static JavascriptString* GetStringForChar(CharStringCache *charStringCache, char16 c) { return charStringCache->GetStringForChar(c); }
+        static JavascriptString* GetStringForChar(CharStringCache *charStringCache, char16_t c) { return charStringCache->GetStringForChar(c); }
         static JavascriptString* GetStringForCharCodePoint(CharStringCache *charStringCache, codepoint_t c)
         {
-            return (c >= 0x10000 ? charStringCache->GetStringForCharSP(c) : charStringCache->GetStringForCharW((char16)c));
+            return (c >= 0x10000 ? charStringCache->GetStringForCharSP(c) : charStringCache->GetStringForCharW((char16_t)c));
         }
 
     private:
         Field(PropertyString *) charStringCacheA[CharStringCacheSize];
 
-        typedef JsUtil::BaseDictionary<char16, JavascriptString *, Recycler, PowerOf2SizePolicy> CharStringCacheMap;
+        typedef JsUtil::BaseDictionary<char16_t, JavascriptString *, Recycler, PowerOf2SizePolicy> CharStringCacheMap;
         Field(CharStringCacheMap *) charStringCache;
 
         friend class CharStringCacheValidator;

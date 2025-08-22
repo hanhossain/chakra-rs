@@ -84,7 +84,7 @@ class GlobOpt;
 #define TRACE_PHASE_INSTR(phase, instr, ...) \
     if(PHASE_TRACE(phase, this->func)) \
     { \
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]; \
         Output::Print( \
             _u("Function %s (%s)"), \
             this->func->GetJITFunctionBody()->GetDisplayName(), \
@@ -1054,7 +1054,7 @@ private:
     void                    MakePropertySymLiveOnBackEdges(PropertySym * propertySym, Loop * loop, Value * valueToAdd);
     void                    RemoveOverlyOptimisticInitialValues(Loop * loop);
 #if DBG_DUMP
-    void                    TraceFailedPreloadInLandingPad(const Loop *const loop, PropertySym * propSym, const char16* reason) const;
+    void                    TraceFailedPreloadInLandingPad(const Loop *const loop, PropertySym * propSym, const char16_t* reason) const;
 #endif
 
 private:

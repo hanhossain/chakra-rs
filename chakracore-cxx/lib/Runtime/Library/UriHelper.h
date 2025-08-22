@@ -72,7 +72,7 @@ namespace Js
 #else
         static inline void ValidateURIProps(void) {}
 #endif
-        static inline BOOL InURISet( char16 c, unsigned char flags )
+        static inline BOOL InURISet( char16_t c, unsigned char flags )
         {
             //static unsigned char *uriProps = GetURIProps();
             ValidateURIProps();
@@ -85,6 +85,6 @@ namespace Js
         static Var Encode(JavascriptString* strURI, unsigned char unescapedFlags, ScriptContext* scriptContext );
 
     private:
-        static bool DecodeByteFromHex(const char16 digit1, const char16 digit2, unsigned char &value);
+        static bool DecodeByteFromHex(const char16_t digit1, const char16_t digit2, unsigned char &value);
     };
 }

@@ -174,7 +174,7 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
 
 // Creates a new job to parse the provided script on a background thread
 // Note: runs on any thread
-HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16 *fullPath, uint32_t* dwBgParseCookie)
+HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie)
 {
     HRESULT hr = S_OK;
     if (cbLength > 0)
@@ -215,7 +215,7 @@ HRESULT BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
 
 // Returns the data provided when the parse was queued
 // Note: runs on any thread, but the buffer lifetimes are not guaranteed after parse results are returned
-HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl)
+HRESULT BGParseManager::GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl)
 {
     HRESULT hr = E_FAIL;
 
@@ -439,7 +439,7 @@ BGParseWorkItem::BGParseWorkItem(
     BGParseManager* manager,
     const byte* pszScript,
     size_t cbScript,
-    char16 *fullPath
+    char16_t *fullPath
     )
     : JsUtil::Job(manager),
     script(pszScript),

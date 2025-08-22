@@ -79,7 +79,7 @@ using namespace Js;
                 Assert(functionBody->GetInlineCacheCount() + functionBody->GetIsInstInlineCacheCount());
                 if (PHASE_TRACE1(Js::ScriptFunctionWithInlineCachePhase))
                 {
-                    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
                     Output::Print(_u("Function object with inline cache: function number: (%s)\tfunction name: %s\n"),
                         functionBody->GetDebugNumberSet(debugStringBuffer), functionBody->GetDisplayName());
@@ -409,7 +409,7 @@ using namespace Js;
             {
                 Recycler* recycler = scriptContext->GetRecycler();
 
-                char16* buffer = RecyclerNewArrayLeaf(recycler, char16, decodedCount + 1);
+                char16_t* buffer = RecyclerNewArrayLeaf(recycler, char16_t, decodedCount + 1);
                 wmemcpy_s(buffer, decodedCount, builder.DangerousGetWritableBuffer(), decodedCount);
                 buffer[decodedCount] = 0;
 
@@ -786,7 +786,7 @@ using namespace Js;
         }
     }
 
-    bool ScriptFunction::GetSymbolName(Var computedNameVar, const char16** symbolName, charcount_t* length)
+    bool ScriptFunction::GetSymbolName(Var computedNameVar, const char16_t** symbolName, charcount_t* length)
     {
         if (nullptr != computedNameVar && VarIs<JavascriptSymbol>(computedNameVar))
         {
@@ -804,14 +804,14 @@ using namespace Js;
     {
         Assert(this->GetFunctionProxy() != nullptr); // The caller should guarantee a proxy exists
         ParseableFunctionInfo * func = this->GetFunctionProxy()->EnsureDeserialized();
-        const char16* name = nullptr;
+        const char16_t* name = nullptr;
         charcount_t length = 0;
         JavascriptString* returnStr = nullptr;
         ENTER_PINNED_SCOPE(JavascriptString, computedName);
         Var computedNameVar = this->GetComputedNameVar();
         if (computedNameVar != nullptr)
         {
-            const char16* symbolName = nullptr;
+            const char16_t* symbolName = nullptr;
             charcount_t symbolNameLength = 0;
             if (ScriptFunction::GetSymbolName(computedNameVar, &symbolName, &symbolNameLength))
             {

@@ -218,12 +218,12 @@ namespace Js
 #endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    const char16* TMapKey_GetBuffer(const PropertyRecord* key)
+    const char16_t* TMapKey_GetBuffer(const PropertyRecord* key)
     {
         return key->GetBuffer();
     }
 
-    const char16* TMapKey_GetBuffer(JavascriptString* key)
+    const char16_t* TMapKey_GetBuffer(JavascriptString* key)
     {
         return key->GetSz();
     }
@@ -1134,7 +1134,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<WCHAR> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
         SimpleDictionaryPropertyDescriptor<TPropertyIndex>* descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
@@ -1190,7 +1190,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<WCHAR> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
         SimpleDictionaryPropertyDescriptor<TPropertyIndex>* descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
@@ -1244,7 +1244,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<WCHAR> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
         SimpleDictionaryPropertyDescriptor<TPropertyIndex>* descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
@@ -1504,7 +1504,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<WCHAR> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
         SimpleDictionaryPropertyDescriptor<TPropertyIndex>* descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
@@ -1580,7 +1580,7 @@ namespace Js
 
             ScriptContext* scriptContext = instance->GetScriptContext();
 
-            JsUtil::CharacterBuffer<WCHAR> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+            JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
             SimpleDictionaryPropertyDescriptor<TPropertyIndex>* descriptor;
             if (propertyMap->TryGetReference(propertyName, &descriptor))
             {
@@ -3235,7 +3235,7 @@ namespace Js
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
     void SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::TraceFixedFieldsBeforeTypeHandlerChange(
-        const char16* oldTypeHandlerName, const char16* newTypeHandlerName,
+        const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {

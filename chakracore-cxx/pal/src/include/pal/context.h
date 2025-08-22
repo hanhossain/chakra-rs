@@ -254,7 +254,7 @@ typedef ucontext_t native_context_t;
 
 #endif // HAVE_BSD_REGS_T
 
-inline static DWORD64 CONTEXTGetPC(LPCONTEXT pContext)
+inline static unsigned long CONTEXTGetPC(LPCONTEXT pContext)
 {
 #if defined(_AMD64_)
     return pContext->Rip;
@@ -265,7 +265,7 @@ inline static DWORD64 CONTEXTGetPC(LPCONTEXT pContext)
 #endif
 }
 
-inline static void CONTEXTSetPC(LPCONTEXT pContext, DWORD64 pc)
+inline static void CONTEXTSetPC(LPCONTEXT pContext, unsigned long pc)
 {
 #if defined(_AMD64_)
     pContext->Rip = pc;

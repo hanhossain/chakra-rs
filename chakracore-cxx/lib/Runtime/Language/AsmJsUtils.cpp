@@ -145,7 +145,7 @@ namespace Js
         *outNode = pnode;
     }
 
-    AsmJsCompilationException::AsmJsCompilationException( const char16* _msg, ... )
+    AsmJsCompilationException::AsmJsCompilationException( const char16_t* _msg, ... )
     {
         va_list arglist;
         va_start( arglist, _msg );
@@ -157,7 +157,7 @@ namespace Js
     {
         JavascriptString* str = VarTo<JavascriptString>(string);
         charcount_t length = str->GetLength();
-        const char16* buf = str->GetString();
+        const char16_t* buf = str->GetString();
         int radix = 10;
         if (length >= 2 && buf[0] == '0' && buf[1] == 'x')
         {

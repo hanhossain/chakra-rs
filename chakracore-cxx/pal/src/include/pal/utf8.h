@@ -23,7 +23,7 @@ Revision History:
 #ifndef _PAL_UTF8_H_
 #define _PAL_UTF8_H_
 
-#include <pal/palinternal.h> /* for WCHAR */
+#include <pal/palinternal.h> /* for char16_t */
 
 #ifdef __cplusplus
 extern "C"

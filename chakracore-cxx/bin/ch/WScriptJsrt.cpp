@@ -155,7 +155,7 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
                 }
                 charcount_t len;
                 LPWSTR ws = str.GetWideString(&len);
-                LPWSTR wsNoNull = new WCHAR[((size_t)len) + 1];
+                LPWSTR wsNoNull = new char16_t[((size_t)len) + 1];
                 charcount_t newIndex = 0;
                 for (charcount_t j = 0; j < len; j++)
                 {
@@ -1064,11 +1064,7 @@ bool WScriptJsrt::Initialize()
 {
     HRESULT hr = S_OK;
     char CH_BINARY_LOCATION[2048];
-#ifdef CHAKRA_STATIC_LIBRARY
     const char* LINK_TYPE = "static";
-#else
-    const char* LINK_TYPE = "shared";
-#endif
 #ifdef HAS_ICU
     int icuVersion = PlatformAgnostic::ICUHelpers::GetICUMajorVersion();
 #else
@@ -1549,7 +1545,7 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
     {
         AutoString cmd;
         IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
-        char16* argv[] = { nullptr, cmd.GetWideString() };
+        char16_t* argv[] = { nullptr, cmd.GetWideString() };
         ChakraRTInterface::SetConfigFlags(2, argv, nullptr);
     }
 #endif

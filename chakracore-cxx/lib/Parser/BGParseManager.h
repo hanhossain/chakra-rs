@@ -54,8 +54,8 @@ public:
     static uint32_t IncCompleted();
     static uint32_t IncFailed();
 
-    HRESULT QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16 *fullPath, uint32_t* dwBgParseCookie);
-    HRESULT GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl);
+    HRESULT QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie);
+    HRESULT GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, char16_t** sourceUrl);
     HRESULT GetParseResults(
         Js::ScriptContext* scriptContextUI,
         uint32_t cookie,
@@ -104,7 +104,7 @@ public:
         BGParseManager* manager,
         const byte* script,
         size_t cb,
-        char16 *fullPath
+        char16_t *fullPath
     );
     ~BGParseWorkItem();
 
@@ -130,7 +130,7 @@ public:
     uint32_t GetCookie() const { return cookie; }
     const byte* GetScriptSrc() const { return script; }
     size_t GetScriptLength() const { return cb; }
-    WCHAR* GetScriptPath() const { return path; }
+    char16_t* GetScriptPath() const { return path; }
 
 private:
     // This cookie is the public identifier for this parser work

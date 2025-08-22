@@ -13,8 +13,8 @@ namespace PlatformAgnostic
     namespace UnicodeText
     {
         static_assert(
-            sizeof(char16) == sizeof(UChar),
-            "This implementation depends on ICU char size matching char16's size"
+            sizeof(char16_t) == sizeof(UChar),
+            "This implementation depends on ICU char size matching char16_t's size"
         );
 
         // Returns a UNormalizer2 for a given NormalizationForm
@@ -129,7 +129,7 @@ namespace PlatformAgnostic
         }
 
 // Platform\Windows\UnicodeText.cpp has a more accurate version of this function for Windows
-        CharacterClassificationType GetLegacyCharacterClassificationType(char16 character)
+        CharacterClassificationType GetLegacyCharacterClassificationType(char16_t character)
         {
             auto charTypeMask = U_GET_GC_MASK(character);
 
@@ -159,7 +159,7 @@ namespace PlatformAgnostic
         }
 
         // ICU implementation of platform-agnostic Unicode interface
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16* sourceString, uint32 sourceLength, char16* destString, int32 destLength, ApiError* pErrorOut)
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
         {
             // Assert pointers
             Assert(sourceString != nullptr);
@@ -194,7 +194,7 @@ namespace PlatformAgnostic
             return required;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16* testString, int32 testStringLength)
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32 testStringLength)
         {
             Assert(testString != nullptr);
             if (testStringLength < 0)
@@ -226,7 +226,7 @@ namespace PlatformAgnostic
         }
 
         template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(const char16* sourceString, charcount_t sourceLength, char16* destString, charcount_t destLength, ApiError* pErrorOut)
+        charcount_t ChangeStringLinguisticCase(const char16_t* sourceString, charcount_t sourceLength, char16_t* destString, charcount_t destLength, ApiError* pErrorOut)
         {
             Assert(sourceString != nullptr && sourceLength > 0);
             Assert(destString != nullptr || destLength == 0);
@@ -264,7 +264,7 @@ namespace PlatformAgnostic
             return u_hasBinaryProperty(ch, UCHAR_ID_CONTINUE);
         }
 
-        int LogicalStringCompare(const char16* string1, int str1size, const char16* string2, int str2size)
+        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size)
         {
             return PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl(string1, str1size, string2, str2size);
         }

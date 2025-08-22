@@ -49,7 +49,7 @@ Files to remove:
 - any files with // TODO (hanhossain): remove file
 
 typedefs/defines to remove:
-- __int64
+- long
   - int64
   - uint64
 - __int32

@@ -8,21 +8,21 @@
 namespace Js
 {
 #if DBG_DUMP || ENABLE_DEBUG_CONFIG_OPTIONS
-    char16 const * const OpCodeUtilAsmJs::OpCodeAsmJsNames[] =
+    char16_t const * const OpCodeUtilAsmJs::OpCodeAsmJsNames[] =
     {
 #define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
 #include "OpCodeListAsmJs.h"
 #undef DEF_OP
     };
 
-    char16 const * const OpCodeUtilAsmJs::ExtendedOpCodeAsmJsNames[] =
+    char16_t const * const OpCodeUtilAsmJs::ExtendedOpCodeAsmJsNames[] =
     {
 #define DEF_OP(x, y, ...) _u("") STRINGIZEW(x) _u(""),
 #include "ExtendedOpCodeListAsmJs.h"
 #undef DEF_OP
     };
 
-    char16 const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
+    char16_t const * OpCodeUtilAsmJs::GetOpCodeName(OpCodeAsmJs op)
     {
         if (op <= Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {

@@ -934,7 +934,7 @@ namespace Js
 
     JavascriptString* JavascriptNumber::ToString(double value, ScriptContext* scriptContext)
     {
-        char16 szBuffer[bufSize];
+        char16_t szBuffer[bufSize];
         int cchWritten = swprintf_s(szBuffer, _countof(szBuffer), _u("%g"), value);
 
         return JavascriptString::NewCopyBuffer(szBuffer, cchWritten, scriptContext);
@@ -967,7 +967,7 @@ namespace Js
         string = scriptContext->GetLastNumberToStringRadix10(value);
         if (string == nullptr)
         {
-            char16 szBuffer[bufSize];
+            char16_t szBuffer[bufSize];
 
             if(!Js::NumberUtilities::FNonZeroFiniteDblToStr(value, szBuffer, bufSize))
             {
@@ -990,7 +990,7 @@ namespace Js
             return string;
         }
 
-        char16 szBuffer[bufSize];
+        char16_t szBuffer[bufSize];
 
         if (!Js::NumberUtilities::FNonZeroFiniteDblToStr(value, radix, szBuffer, _countof(szBuffer)))
         {
@@ -1074,9 +1074,9 @@ namespace Js
 
     JavascriptString* JavascriptNumber::ToLocaleString(double value, ScriptContext* scriptContext)
     {
-        WCHAR   szRes[bufSize];
-        WCHAR * pszRes = NULL;
-        WCHAR * pszToBeFreed = NULL;
+        char16_t   szRes[bufSize];
+        char16_t * pszRes = NULL;
+        char16_t * pszToBeFreed = NULL;
         size_t  count;
 
         if (!Js::NumberUtilities::IsFinite(value))
@@ -1091,7 +1091,7 @@ namespace Js
         JavascriptString *result = nullptr;
 
         JavascriptString *dblStr = VarTo<JavascriptString>(FormatDoubleToString(value, NumberUtilities::FormatFixed, -1, scriptContext));
-        const char16* szValue = dblStr->GetSz();
+        const char16_t* szValue = dblStr->GetSz();
         const size_t szLength = dblStr->GetLength();
 
         pszRes = szRes;
@@ -1105,7 +1105,7 @@ namespace Js
         {
             if( count > bufSize )
             {
-                pszRes = pszToBeFreed = HeapNewArray(char16, count);
+                pszRes = pszToBeFreed = HeapNewArray(char16_t, count);
 
                 count = Numbers::Utility::NumberToDefaultLocaleString(szValue, szLength, pszRes, count);
 

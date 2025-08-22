@@ -3931,7 +3931,7 @@ namespace Js
     };
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-    char16 const * const JavascriptLibrary::LibraryFunctionName[] = {
+    char16_t const * const JavascriptLibrary::LibraryFunctionName[] = {
 #define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) _u(".") _u(#name),
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
@@ -5449,7 +5449,7 @@ namespace Js
         return this->CreateDate(value);
     }
 
-    Js::RecyclableObject* JavascriptLibrary::CreateRegex_TTD(const char16* patternSource, uint32 patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar)
+    Js::RecyclableObject* JavascriptLibrary::CreateRegex_TTD(const char16_t* patternSource, uint32 patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar)
     {
         Js::JavascriptRegExp* re = Js::JavascriptRegExp::CreateRegEx(patternSource, patternLength, flags, this->scriptContext);
         re->SetLastIndexInfo_TTD(lastIndex, lastVar);
@@ -5801,7 +5801,7 @@ namespace Js
     }
 
 #if DBG_DUMP
-    const char16* JavascriptLibrary::GetStringTemplateCallsiteObjectKey(Var callsite)
+    const char16_t* JavascriptLibrary::GetStringTemplateCallsiteObjectKey(Var callsite)
     {
         // Calculate the key for the string template callsite object.
         // Key is combination of the raw string literals delimited by '${}' since string template literals cannot include that symbol.
@@ -5827,8 +5827,8 @@ namespace Js
         }
 
         uint32 keyLength = totalStringLength + (arrayLength - 1) * 3 + 1;
-        char16* key = RecyclerNewArray(scriptContext->GetRecycler(), char16, keyLength);
-        char16* ptr = key;
+        char16_t* key = RecyclerNewArray(scriptContext->GetRecycler(), char16_t, keyLength);
+        char16_t* ptr = key;
         charcount_t remainingSpace = keyLength;
 
         // Get first item before loop - there always must be at least one item
@@ -6234,7 +6234,7 @@ namespace Js
         return this->CreateSymbol(description->GetString(), (int)description->GetLength());
     }
 
-    JavascriptSymbol* JavascriptLibrary::CreateSymbol(const char16* description, int descriptionLength)
+    JavascriptSymbol* JavascriptLibrary::CreateSymbol(const char16_t* description, int descriptionLength)
     {
         ENTER_PINNED_SCOPE(const Js::PropertyRecord, propertyRecord);
 
@@ -6781,7 +6781,7 @@ namespace Js
         const bool useCache = prototype->GetScriptContext() == this->scriptContext;
 #if DBG
         DynamicType* oldCachedType = nullptr;
-        char16 reason[1024];
+        char16_t reason[1024];
         swprintf_s(reason, 1024, _u("Cache not populated."));
 #endif
         // Always use `TypeOfPrototypeObjectInlined` because we are creating DynamicType of TypeIds_Object
@@ -7045,7 +7045,7 @@ namespace Js
         return RecyclerNew(this->GetRecycler(), JavascriptStringObject, value, stringTypeDynamic);
     }
 
-    JavascriptStringObject* JavascriptLibrary::CreateStringObject(const char16* value, charcount_t length)
+    JavascriptStringObject* JavascriptLibrary::CreateStringObject(const char16_t* value, charcount_t length)
     {
         AssertMsg(stringTypeDynamic, "Where's stringTypeDynamic?");
         return RecyclerNew(this->GetRecycler(), JavascriptStringObject,
@@ -7379,7 +7379,7 @@ namespace Js
 
 #ifdef ENABLE_SCRIPT_PROFILING
     // Register for profiler
-#define DEFINE_OBJECT_NAME(object) const char16 *pwszObjectName = _u(#object);
+#define DEFINE_OBJECT_NAME(object) const char16_t *pwszObjectName = _u(#object);
 
 #define REGISTER_OBJECT(object)\
     if (FAILED(hr = this->ProfilerRegister##object()))\

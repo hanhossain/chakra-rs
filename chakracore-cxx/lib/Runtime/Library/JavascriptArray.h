@@ -324,7 +324,7 @@ namespace Js
         static Var EntryPopNonJavascriptArray(ScriptContext * scriptContext, Var object);
 
 #if DEBUG
-        static BOOL GetIndex(const char16* propName, uint32 *pIndex);
+        static BOOL GetIndex(const char16_t* propName, uint32 *pIndex);
 #endif
 
         uint32 GetNextIndex(uint32 index) const;

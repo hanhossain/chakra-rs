@@ -94,7 +94,7 @@ using namespace Js;
         return ch >= '0' && ch <= '9';
     }
 
-    BOOL NumberUtilities::FHexDigit(char16 ch, int *pw)
+    BOOL NumberUtilities::FHexDigit(char16_t ch, int *pw)
     {
         if ((ch -= '0') <= 9)
         {
@@ -126,7 +126,7 @@ using namespace Js;
             mov uint32_t PTR[ebx], edx
         }
 #else //!I386_ASM
-        DWORDLONG llu = UInt32x32To64(lu1, lu2);
+        unsigned long llu = UInt32x32To64(lu1, lu2);
 
         *pluHi = (uint32)(llu >> 32);
         return (uint32)llu;
@@ -186,7 +186,7 @@ using namespace Js;
         return cbit;
     }
 
-    charcount_t NumberUtilities::UInt16ToString(uint16 integer, __ecount(outBufferSize) WCHAR* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
+    charcount_t NumberUtilities::UInt16ToString(uint16 integer, __ecount(outBufferSize) char16_t* outBuffer, charcount_t outBufferSize, char widthForPaddingZerosInsteadSpaces)
     {
         // inlined here
         uint16_t digit;
@@ -288,7 +288,7 @@ using namespace Js;
         return cchWritten;
     }
 
-    BOOL NumberUtilities::TryConvertToUInt32(const char16* str, int length, uint32* intVal)
+    BOOL NumberUtilities::TryConvertToUInt32(const char16_t* str, int length, uint32* intVal)
     {
         if (length <= 0 || length > 10)
         {
@@ -753,11 +753,11 @@ LGetOctalDigit:
         return Js::NumberUtilities::StrToDbl<EncodedChar>(psz, ppchLim, likelyType);
     }
 
-    template double NumberUtilities::StrToDbl<char16>(const char16 * psz, const char16 **ppchLim, Js::ScriptContext *const scriptContext);
+    template double NumberUtilities::StrToDbl<char16_t>(const char16_t * psz, const char16_t **ppchLim, Js::ScriptContext *const scriptContext);
     template double NumberUtilities::StrToDbl<utf8char_t>(const utf8char_t * psz, const utf8char_t **ppchLim, Js::ScriptContext *const scriptContext);
-    template double NumberUtilities::DblFromHex<char16>(const char16 *psz, const char16 **ppchLim, bool isNumericSeparatorEnabled);
+    template double NumberUtilities::DblFromHex<char16_t>(const char16_t *psz, const char16_t **ppchLim, bool isNumericSeparatorEnabled);
     template double NumberUtilities::DblFromHex<utf8char_t>(const utf8char_t *psz, const utf8char_t **ppchLim, bool isNumericSeparatorEnabled);
-    template double NumberUtilities::DblFromBinary<char16>(const char16 *psz, const char16 **ppchLim, bool isNumericSeparatorEnabled);
+    template double NumberUtilities::DblFromBinary<char16_t>(const char16_t *psz, const char16_t **ppchLim, bool isNumericSeparatorEnabled);
     template double NumberUtilities::DblFromBinary<utf8char_t>(const utf8char_t *psz, const utf8char_t **ppchLim, bool isNumericSeparatorEnabled);
-    template double NumberUtilities::DblFromOctal<char16>(const char16 *psz, const char16 **ppchLim, bool isNumericSeparatorEnabled);
+    template double NumberUtilities::DblFromOctal<char16_t>(const char16_t *psz, const char16_t **ppchLim, bool isNumericSeparatorEnabled);
     template double NumberUtilities::DblFromOctal<utf8char_t>(const utf8char_t *psz, const utf8char_t **ppchLim, bool isNumericSeparatorEnabled);

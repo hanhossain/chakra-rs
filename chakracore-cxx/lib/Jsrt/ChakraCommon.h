@@ -60,7 +60,7 @@ typedef void* HANDLE;
 typedef unsigned char uint8_t;
 typedef uint8_t byte;
 typedef uint32_t uint32_t;
-typedef unsigned short WCHAR;
+typedef unsigned short char16_t;
 #endif
 
 #include <stdint.h>
@@ -626,7 +626,7 @@ typedef unsigned short WCHAR;
         JsScriptContainerType containerType;
         JsSourceContext sourceContext;
         size_t contentLengthInBytes;
-        WCHAR * fullPath;
+        char16_t * fullPath;
     } JsScriptContents;
 
     /// <summary>
@@ -2466,7 +2466,7 @@ typedef unsigned short WCHAR;
             _In_ uint32_t dwBgParseCookie,
             _In_ JsValueRef script,
             _In_ JsSourceContext sourceContext,
-            _In_ WCHAR *url,
+            _In_ char16_t *url,
             _In_ JsParseScriptAttributes parseAttributes,
             _In_ JsValueRef parserState,
             _Out_ JsValueRef *result);

@@ -34,7 +34,7 @@ C_ASSERT(JSPUBLICERR_CantExecute == _HRESULT_TYPEDEF_(0x89020001L));
 struct _ResourceStr
 {
     uint32_t id;
-    const char16* str;
+    const char16_t* str;
 };
 
 static _ResourceStr s_resourceStrs[] =
@@ -81,7 +81,7 @@ static int compare_ResourceStr(const void* a, const void* b)
 
 static bool s_resourceStrsSorted = false;
 
-const char16* LoadResourceStr(uint32_t id)
+const char16_t* LoadResourceStr(uint32_t id)
 {
     if (!s_resourceStrsSorted)
     {

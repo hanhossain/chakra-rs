@@ -17,6 +17,6 @@ namespace PlatformAgnostic
     path[str_len] = char(0)
 
         static bool GetBinaryLocation(char *path, const unsigned size);
-        static bool GetBinaryLocation(char16 *path, const unsigned size);
+        static bool GetBinaryLocation(char16_t *path, const unsigned size);
     };
 } // namespace PlatformAgnostic

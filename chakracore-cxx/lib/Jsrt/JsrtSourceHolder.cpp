@@ -13,7 +13,7 @@ namespace Js
     };
 
     template <typename TLoadCallback, typename TUnloadCallback>
-    void JsrtSourceHolder<TLoadCallback, TUnloadCallback>::EnsureSource(MapRequestFor requestedFor, const WCHAR* reasonString)
+    void JsrtSourceHolder<TLoadCallback, TUnloadCallback>::EnsureSource(MapRequestFor requestedFor, const char16_t* reasonString)
     {
         if (this->mappedSource != nullptr)
         {
@@ -101,7 +101,7 @@ namespace Js
             }
             else
             {
-                const WCHAR *script = (const WCHAR*) script_;
+                const char16_t *script = (const char16_t*) script_;
                 Assert(utf8Script != nullptr);
                 Assert(utf8Length != nullptr);
                 Assert(scriptLength != nullptr);
@@ -161,7 +161,7 @@ namespace Js
     template <>
     void JsrtSourceHolder<JsSerializedLoadScriptCallback,
         JsSerializedScriptUnloadCallback>::EnsureSource(MapRequestFor requestedFor,
-        const WCHAR* reasonString)
+        const char16_t* reasonString)
     {
         if (this->mappedSource != nullptr)
         {

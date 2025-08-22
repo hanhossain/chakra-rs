@@ -34,7 +34,7 @@ struct DefaultComparer<double>
 
     inline static hash_t GetHashCode(double d)
     {
-        __int64 i64 = *(__int64*)&d;
+        long i64 = *(long*)&d;
         return (hash_t)((i64>>32) ^ (uint)i64);
     }
 };
@@ -169,10 +169,10 @@ struct StringComparer
 };
 
 template<>
-struct DefaultComparer<WCHAR*> : public StringComparer<WCHAR*> {};
+struct DefaultComparer<char16_t*> : public StringComparer<char16_t*> {};
 
 template<>
-struct DefaultComparer<const WCHAR*> : public StringComparer<const WCHAR*> {};
+struct DefaultComparer<const char16_t*> : public StringComparer<const char16_t*> {};
 
 template <typename T, typename TComparer>
 struct SpecializedComparer

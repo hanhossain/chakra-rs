@@ -95,7 +95,7 @@ int UTF8ToUnicode(
                     SetLastError(ERROR_INSUFFICIENT_BUFFER);
                     return (0);
                 }
-                lpDestStr[cchWC] = (WCHAR)*pUTF8;
+                lpDestStr[cchWC] = (char16_t)*pUTF8;
             }
             nTB = bSurrogatePair = 0;
             cchWC++;
@@ -131,10 +131,10 @@ int UTF8ToUnicode(
                                 return (0);
                             }                                
 
-                            lpDestStr[cchWC]   = (WCHAR)
+                            lpDestStr[cchWC]   = (char16_t)
                                                  (((dwUnicodeChar - 0x10000) >> 10) + HIGH_SURROGATE_START);
 
-                            lpDestStr[cchWC+1] = (WCHAR)
+                            lpDestStr[cchWC+1] = (char16_t)
                                                  ((dwUnicodeChar - 0x10000)%0x400 + LOW_SURROGATE_START);
                         }
 
@@ -156,7 +156,7 @@ int UTF8ToUnicode(
                                 return (0);
                             }
 
-                            lpDestStr[cchWC] = (WCHAR)dwUnicodeChar;
+                            lpDestStr[cchWC] = (char16_t)dwUnicodeChar;
                         }
 
                         //
@@ -343,7 +343,7 @@ int UnicodeToUTF8(
     LPCWSTR lpWC = lpSrcStr;
     int     cchU8 = 0;                // # of UTF8 chars generated
     uint32_t   dwSurrogateChar;
-    WCHAR   wchHighSurrogate = 0;
+    char16_t   wchHighSurrogate = 0;
     BOOL    bHandled;
 
 

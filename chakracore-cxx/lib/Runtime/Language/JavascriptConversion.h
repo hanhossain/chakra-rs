@@ -47,7 +47,7 @@ namespace Js {
         static double ToInteger_Full(Var aValue, ScriptContext* scriptContext);
 
         static int32 ToInt32(Var aValue, ScriptContext* scriptContext);
-        static __int64 ToInt64(Var aValue, ScriptContext* scriptContext);
+        static long ToInt64(Var aValue, ScriptContext* scriptContext);
         static int32 ToInt32(double value);
         static int32 ToInt32_Full(Var aValue, ScriptContext* scriptContext);
 
@@ -61,7 +61,7 @@ namespace Js {
         static float ToFloat(Var aValue, ScriptContext* scriptContext);
 
         static uint32 ToUInt32(Var aValue, ScriptContext* scriptContext);
-        static unsigned __int64 ToUInt64(Var aValue, ScriptContext* scriptContext);
+        static unsigned long ToUInt64(Var aValue, ScriptContext* scriptContext);
         static uint32 ToUInt32(double value);
         static uint32 ToUInt32_Full(Var aValue, ScriptContext* scriptContext);
 
@@ -69,7 +69,7 @@ namespace Js {
         static uint16 ToUInt16(double value);
         static uint16 ToUInt16_Full(Var aValue, ScriptContext* scriptContext);
 
-        static JavascriptString *CoerseString(Var aValue, ScriptContext* scriptContext, const char16* apiNameForErrorMsg);
+        static JavascriptString *CoerseString(Var aValue, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg);
         static BOOL CheckObjectCoercible(Var aValue, ScriptContext* scriptContext);
         static bool SameValue(Var aValue, Var bValue);
         static bool SameValueZero(Var aValue, Var bValue);
@@ -85,10 +85,10 @@ namespace Js {
 
         static JavascriptBigInt * ToBigInt(Var aValue, ScriptContext * scriptContext);
 
-        static float  LongToFloat(__int64 aValue);
-        static float  ULongToFloat(unsigned __int64 aValue);
-        static double LongToDouble(__int64 aValue);
-        static double ULongToDouble(unsigned __int64 aValue);
+        static float  LongToFloat(long aValue);
+        static float  ULongToFloat(unsigned long aValue);
+        static double LongToDouble(long aValue);
+        static double ULongToDouble(unsigned long aValue);
 
         template <bool allowNegOne, bool allowLossyConversion>
         static Var TryCanonicalizeAsTaggedInt(Var value);

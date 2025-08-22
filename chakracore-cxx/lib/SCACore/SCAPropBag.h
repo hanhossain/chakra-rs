@@ -53,7 +53,7 @@ namespace Js
 
             bool MoveNext();
 
-            const char16* GetNameString() const
+            const char16_t* GetNameString() const
             {
                 return m_properties->GetKeyAt(m_curIndex).GetBuffer();
             }

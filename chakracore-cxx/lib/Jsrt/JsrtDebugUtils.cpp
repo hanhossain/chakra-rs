@@ -36,7 +36,7 @@ void JsrtDebugUtils::AddFileNameOrScriptTypeToObject(Js::DynamicObject* object, 
     else
     {
         // url can be nullptr if JsParseScript/JsRunScript didn't passed any
-        const char16* url = utf8SourceInfo->GetSourceContextInfo()->url == nullptr ? _u("") : utf8SourceInfo->GetSourceContextInfo()->url;
+        const char16_t* url = utf8SourceInfo->GetSourceContextInfo()->url == nullptr ? _u("") : utf8SourceInfo->GetSourceContextInfo()->url;
         JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::fileName, url, wcslen(url), utf8SourceInfo->GetScriptContext());
     }
 }
@@ -68,7 +68,7 @@ void JsrtDebugUtils::AddSourceLengthAndTextToObject(Js::DynamicObject* object, J
 
     JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::sourceLength, (double)cch, functionBody->GetScriptContext());
 
-    AutoArrayPtr<char16> sourceContent(HeapNewNoThrowArray(char16, cch + 1), cch + 1);
+    AutoArrayPtr<char16_t> sourceContent(HeapNewNoThrowArray(char16_t, cch + 1), cch + 1);
     if (sourceContent != nullptr)
     {
         LPCUTF8 pbStart = source + startByte;
@@ -94,7 +94,7 @@ void JsrtDebugUtils::AddLineCountToObject(Js::DynamicObject * object, Js::Utf8So
 void JsrtDebugUtils::AddSourceToObject(Js::DynamicObject * object, Js::Utf8SourceInfo * utf8SourceInfo)
 {
     int32 cchLength = utf8SourceInfo->GetCchLength();
-    AutoArrayPtr<char16> sourceContent(HeapNewNoThrowArray(char16, cchLength + 1), cchLength + 1);
+    AutoArrayPtr<char16_t> sourceContent(HeapNewNoThrowArray(char16_t, cchLength + 1), cchLength + 1);
     if (sourceContent != nullptr)
     {
         LPCUTF8 source = utf8SourceInfo->GetSource();
@@ -122,7 +122,7 @@ void JsrtDebugUtils::AddSourceMetadataToObject(Js::DynamicObject * object, Js::U
     }
 }
 
-void JsrtDebugUtils::AddVarPropertyToObject(Js::DynamicObject * object, const char16 * propertyName, Js::Var value, Js::ScriptContext * scriptContext)
+void JsrtDebugUtils::AddVarPropertyToObject(Js::DynamicObject * object, const char16_t * propertyName, Js::Var value, Js::ScriptContext * scriptContext)
 {
     const Js::PropertyRecord* propertyRecord;
 
@@ -291,7 +291,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
         {
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::type, scriptContext->GetLibrary()->GetObjectTypeDisplayString(), scriptContext);
             addDisplay = true;
-            const char16* className = JsrtDebugUtils::GetClassName(typeId);
+            const char16_t* className = JsrtDebugUtils::GetClassName(typeId);
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, wcslen(className), scriptContext);
             break;
         }
@@ -307,7 +307,7 @@ void JsrtDebugUtils::AddPropertyType(Js::DynamicObject * object, Js::IDiagObject
         {
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::type, scriptContext->GetLibrary()->GetObjectTypeDisplayString(), scriptContext);
             addDisplay = true;
-            const char16* className = JsrtDebugUtils::GetClassName(Js::TypeIds_Object);
+            const char16_t* className = JsrtDebugUtils::GetClassName(Js::TypeIds_Object);
             JsrtDebugUtils::AddPropertyToObject(object, JsrtDebugPropertyId::className, className, wcslen(className), scriptContext);
         }
         else
@@ -382,7 +382,7 @@ void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPr
     JsrtDebugUtils::AddVarPropertyToObject(object, propertyId, Js::JavascriptNumber::ToVarNoCheck(value, scriptContext), scriptContext);
 }
 
-void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, const char16 * value, size_t len, Js::ScriptContext * scriptContext)
+void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, const char16_t * value, size_t len, Js::ScriptContext * scriptContext)
 {
     charcount_t charCount = static_cast<charcount_t>(len);
 
@@ -411,7 +411,7 @@ void JsrtDebugUtils::AddPropertyToObject(Js::DynamicObject * object, JsrtDebugPr
 
 bool JsrtDebugUtils::HasProperty(Js::DynamicObject * object, JsrtDebugPropertyId propertyId, Js::ScriptContext * scriptContext)
 {
-    const char16* propertyName = GetDebugPropertyName(propertyId);
+    const char16_t* propertyName = GetDebugPropertyName(propertyId);
 
     const Js::PropertyRecord* propertyRecord;
     scriptContext->FindPropertyRecord(propertyName, static_cast<int>(wcslen(propertyName)), &propertyRecord);
@@ -425,7 +425,7 @@ bool JsrtDebugUtils::HasProperty(Js::DynamicObject * object, JsrtDebugPropertyId
     return !!Js::JavascriptOperators::HasProperty(object, propertyRecord->GetPropertyId());
 }
 
-const char16 * JsrtDebugUtils::GetClassName(Js::TypeId typeId)
+const char16_t * JsrtDebugUtils::GetClassName(Js::TypeId typeId)
 {
     switch (typeId)
     {
@@ -493,7 +493,7 @@ const char16 * JsrtDebugUtils::GetClassName(Js::TypeId typeId)
     return _u("");
 }
 
-const char16 * JsrtDebugUtils::GetDebugPropertyName(JsrtDebugPropertyId propertyId)
+const char16_t * JsrtDebugUtils::GetDebugPropertyName(JsrtDebugPropertyId propertyId)
 {
     switch (propertyId)
     {

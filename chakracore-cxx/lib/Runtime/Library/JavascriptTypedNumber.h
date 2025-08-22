@@ -56,8 +56,8 @@ namespace Js
 
     };
 
-    typedef JavascriptTypedNumber<__int64> JavascriptInt64Number;
-    typedef JavascriptTypedNumber<unsigned __int64> JavascriptUInt64Number;
+    typedef JavascriptTypedNumber<long> JavascriptInt64Number;
+    typedef JavascriptTypedNumber<unsigned long> JavascriptUInt64Number;
 
     template <> inline bool VarIsImpl<JavascriptInt64Number>(RecyclableObject* obj)
     {

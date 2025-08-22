@@ -184,7 +184,7 @@ using namespace Js;
 
         JavascriptFunction* pfuncScript;
         FunctionInfo *pfuncInfoCache = NULL;
-        char16 const * sourceString = bs->GetSz();
+        char16_t const * sourceString = bs->GetSz();
         charcount_t sourceLen = bs->GetLength();
         EvalMapString key(bs, sourceString, sourceLen, moduleID, strictMode, /* isLibraryCode = */ false);
         if (!scriptContext->IsInNewFunctionMap(key, &pfuncInfoCache))
@@ -2389,7 +2389,7 @@ LABEL1:
             Var exceptionInfoReg = exceptionInfo->ContextRecord;
             Var* exceptionInfoIntReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
             Var* exceptionInfoFloatReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
-            Assert((DWORD64)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
+            Assert((unsigned long)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
             Assert((uint64)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
 
             if (instrData.isLoad)
@@ -3068,9 +3068,9 @@ LABEL1:
         {
             // This is under DBG_DUMP so we can allow a check
             ParseableFunctionInfo* body = this->GetFunctionProxy() != nullptr ? this->GetFunctionProxy()->EnsureDeserialized() : nullptr;
-            const char16* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
+            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
 
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
             Output::Print(_u("CtorCache: before invalidating cache (0x%p) for ctor %s (%s): "), PointerValue(this->constructorCache), ctorName,
                 body ? body->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
@@ -3087,8 +3087,8 @@ LABEL1:
         {
             // This is under DBG_DUMP so we can allow a check
             ParseableFunctionInfo* body = this->GetFunctionProxy() != nullptr ? this->GetFunctionProxy()->EnsureDeserialized() : nullptr;
-            const char16* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            const char16_t* ctorName = body != nullptr ? body->GetDisplayName() : _u("<unknown>");
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
             Output::Print(_u("CtorCache: after invalidating cache (0x%p) for ctor %s (%s): "), PointerValue(this->constructorCache), ctorName,
                 body ? body->GetDebugNumberSet(debugStringBuffer) : _u("(null)"));
@@ -3172,12 +3172,12 @@ LABEL1:
         Assert(this->GetFunctionProxy() != nullptr); // The caller should guarantee a proxy exists
         ParseableFunctionInfo * func = this->GetFunctionProxy()->EnsureDeserialized();
         charcount_t length = 0;
-        const char16* name = func->GetShortDisplayName(&length);
+        const char16_t* name = func->GetShortDisplayName(&length);
 
         return DisplayNameHelper(name, length);
     }
 
-    JavascriptString* JavascriptFunction::DisplayNameHelper(const char16* name, charcount_t length) const
+    JavascriptString* JavascriptFunction::DisplayNameHelper(const char16_t* name, charcount_t length) const
     {
         ScriptContext* scriptContext = this->GetScriptContext();
         Assert(this->GetFunctionProxy() != nullptr); // The caller should guarantee a proxy exists
@@ -3189,7 +3189,7 @@ LABEL1:
         }
         else if (func->GetIsAccessor())
         {
-            const char16* accessorName = func->GetDisplayName();
+            const char16_t* accessorName = func->GetDisplayName();
             if (accessorName[0] == _u('g'))
             {
                 return JavascriptString::Concat(scriptContext->GetLibrary()->GetGetterFunctionPrefixString(), JavascriptString::NewCopyBuffer(name, length, scriptContext));

@@ -52,7 +52,7 @@ namespace PlatformAgnostic
 #endif
     }
 
-    bool SystemInfo::GetBinaryLocation(char16 *path, const unsigned size)
+    bool SystemInfo::GetBinaryLocation(char16_t *path, const unsigned size)
     {
         int tmp_size = size * 3;
         char *tmp = (char*)malloc(tmp_size);

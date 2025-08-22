@@ -55,7 +55,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateHelperCallOpnd(Js::ScriptContext 
 
     IR::HelperCallOpnd *op = opnd->AsHelperCallOpnd();
 
-    const char16 *helperText = IR::GetMethodName(op->m_fnHelper);
+    const char16_t *helperText = IR::GetMethodName(op->m_fnHelper);
     Js::JavascriptString *helperString = NULL;
     helperString = Js::JavascriptString::NewCopyBuffer(helperText, wcslen(helperText), scriptContext);
 
@@ -128,7 +128,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateAddrOpnd(Js::ScriptContext *scrip
     SetProperty(opObject, _u("addr"), addressVar);
 
     const size_t count = BUFFER_LEN;
-    char16 detail[count];
+    char16_t detail[count];
     op->GetAddrDescription(detail, count, false, false, func);
 
     Js::JavascriptString *detailString = NULL;
@@ -281,7 +281,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateOpnd(Js::ScriptContext *scriptCon
     return opObject;
 }
 
-Js::PropertyId IRtoJSObjectBuilder::CreateProperty(Js::ScriptContext *scriptContext, const char16 *propertyName)
+Js::PropertyId IRtoJSObjectBuilder::CreateProperty(Js::ScriptContext *scriptContext, const char16_t *propertyName)
 {
     Js::PropertyRecord const *propertyRecord;
     scriptContext->GetOrAddPropertyRecord(propertyName, (int) wcslen(propertyName), &propertyRecord);
@@ -290,7 +290,7 @@ Js::PropertyId IRtoJSObjectBuilder::CreateProperty(Js::ScriptContext *scriptCont
     return propertyId;
 }
 
-void IRtoJSObjectBuilder::SetProperty(Js::DynamicObject *obj, const char16 *propertyName, Js::Var value)
+void IRtoJSObjectBuilder::SetProperty(Js::DynamicObject *obj, const char16_t *propertyName, Js::Var value)
 {
     const size_t len = wcslen(propertyName);
     if (!(len > 0))
@@ -341,7 +341,7 @@ enum STATEMENT_PARSE_T {
     @param sourceEnd        A pointer to the farthest point at which the end of statement could exist.
     @param len              The size of the buffer (maximum number of characters to copy).
 */
-void IRtoJSObjectBuilder::GetStatementSourceString(__out_ecount(len) char16 *buffer, LPCUTF8 sourceBegin, LPCUTF8 sourceEnd, const size_t len)
+void IRtoJSObjectBuilder::GetStatementSourceString(__out_ecount(len) char16_t *buffer, LPCUTF8 sourceBegin, LPCUTF8 sourceEnd, const size_t len)
 {
     enum STATEMENT_PARSE_T state;
     size_t i;
@@ -496,7 +496,7 @@ void IRtoJSObjectBuilder::CreatePragmaInstruction(Js::ScriptContext *scriptConte
     // extract source string
     //
 
-    char16 buffer[BUFFER_LEN];
+    char16_t buffer[BUFFER_LEN];
     GetStatementSourceString(buffer, sourceBegin, sourceEnd, BUFFER_LEN);
 
     //
@@ -545,7 +545,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::GetMetadata(Js::ScriptContext *scriptCo
     Js::JavascriptArray *regNameArray = scriptContext->GetLibrary()->CreateArray(RegNumCount);
     for (int i = 0; i < RegNumCount; ++i)
     {
-        const char16 *regName = RegNamesW[i];
+        const char16_t *regName = RegNamesW[i];
         Js::Var detailString;
         detailString = Js::JavascriptString::NewCopyBuffer(regName, wcslen(regName), scriptContext);
         // regNameArray->SetArrayLiteralItem(i, detailString);
@@ -602,7 +602,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::DumpIRtoJSObject(Func *func, Js::Phase 
         //
 
         Js::OpCode opcode = currInst->m_opcode;
-        char16 const *const opcodeName = Js::OpCodeUtil::GetOpCodeName(opcode);
+        char16_t const *const opcodeName = Js::OpCodeUtil::GetOpCodeName(opcode);
 
         Js::JavascriptString *opcodeString = NULL;
         opcodeString = Js::JavascriptString::NewCopyBuffer(opcodeName, wcslen(opcodeName), scriptContext);

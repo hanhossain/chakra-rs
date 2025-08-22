@@ -29,7 +29,7 @@ LPWSTR
 CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) LPWSTR buffer, size_t ceBuffer, bool fTreatColonAsSeparator)
 {
 
-    char16 *out = buffer;
+    char16_t *out = buffer;
     size_t len = 0;
 
     if('"' == CurChar())
@@ -353,7 +353,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
 void
 CmdLineArgsParser::ParsePhase(Js::Phases *pPhaseList, Js::Phases *oppositePhase)
 {
-    char16 buffer[MaxTokenSize];
+    char16_t buffer[MaxTokenSize];
     ZeroMemory(buffer, sizeof(buffer));
 
     Phase phase = ConfigFlagsTable::GetPhase(ParseString(buffer));
@@ -484,7 +484,7 @@ CmdLineArgsParser::ParseBoolean()
 BSTR
 CmdLineArgsParser::GetCurrentString()
 {
-    char16 buffer[MaxTokenSize];
+    char16_t buffer[MaxTokenSize];
     ZeroMemory(buffer, sizeof(buffer));
 
     switch (CurChar())
@@ -522,7 +522,7 @@ CmdLineArgsParser::GetCurrentString()
 void
 CmdLineArgsParser::ParseFlag()
 {
-    char16 buffer[MaxTokenSize];
+    char16_t buffer[MaxTokenSize];
     ZeroMemory(buffer, sizeof(buffer));
 
     LPWSTR flagString = ParseString(buffer);
@@ -641,7 +641,7 @@ CmdLineArgsParser::Parse(int argc, __in_ecount(argc) LPWSTR argv[])
 int CmdLineArgsParser::Parse(LPWSTR oneArg) throw()
 {
     int err = 0;
-    char16 buffer[MaxTokenSize];
+    char16_t buffer[MaxTokenSize];
     ZeroMemory(buffer, sizeof(buffer));
 
     this->pszCurrentArg = oneArg;
