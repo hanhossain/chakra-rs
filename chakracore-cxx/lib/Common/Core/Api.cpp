@@ -8,11 +8,7 @@
 int AssertCount = 0;
 int AssertsToConsole = false;
 
-#if !defined(__IOS__)
- __declspec(thread) int IsInAssert = false;
-#else
-int IsInAssert = false;
-#endif
+__declspec(thread) int IsInAssert = false;
 
 void js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count)
 {

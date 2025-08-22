@@ -107,13 +107,8 @@ AutoSystemInfo::Initialize()
     }
 
     this->supportsOnlyMultiThreadedCOM = false;
-#if defined(__IOS__)
-    this->isLowMemoryDevice = true;
-    this->shouldQCMoreFrequently = true;
-#else
     this->shouldQCMoreFrequently = false;
     this->isLowMemoryDevice = false;
-#endif
 
     // 0 indicates we haven't retrieved the available commit. We get it lazily.
     this->availableCommit = 0;

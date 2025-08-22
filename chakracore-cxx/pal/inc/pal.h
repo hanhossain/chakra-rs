@@ -56,16 +56,7 @@ Abstract:
 #endif
 
 #if defined(__APPLE__)
-#ifndef __IOS__
 #include "TargetConditionals.h"
-#if TARGET_IPHONE_SIMULATOR
-#define __IOS__
-#elif TARGET_OS_IPHONE
-#define __IOS__
-#elif TARGET_OS_MAC
-// macOS
-#endif
-#endif // __IOS__ ?
 #ifndef INCLUDE_PAL_INTERNAL_
 namespace std {
     typedef decltype(nullptr) nullptr_t;
