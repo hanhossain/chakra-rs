@@ -20,8 +20,8 @@ LPCWSTR hostName = _u("ch");
 
 JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
 
-BOOL doTTRecord = false;
-BOOL doTTReplay = false;
+bool doTTRecord = false;
+bool doTTReplay = false;
 const size_t ttUriBufferLength = MAX_PATH * 3;
 char ttUri[ttUriBufferLength];
 size_t ttUriLength = 0;
@@ -868,10 +868,6 @@ unsigned int WINAPI StaticThreadProc(void *lpParam)
 static char16_t** argv = nullptr;
 int main(int argc, char** c_argv)
 {
-#ifndef CHAKRA_STATIC_LIBRARY
-// xplat-todo: PAL free CH ?
-    PAL_InitializeChakraCore();
-#endif
     int origargc = argc; // store for clean-up later
     argv = new char16_t*[argc];
     for (int i = 0; i < argc; i++)
@@ -985,7 +981,7 @@ int main(int argc, char** c_argv)
     argInfo = { argc, argv, PrintUsage, nullptr };
     success = ChakraRTInterface::LoadChakraDll(&argInfo, &chakraLibrary);
 
-#if defined(CHAKRA_STATIC_LIBRARY) && !defined(NDEBUG)
+#if !defined(NDEBUG)
     // handle command line flags
     OnChakraCoreLoaded(OnChakraCoreLoadedEntry);
 #endif

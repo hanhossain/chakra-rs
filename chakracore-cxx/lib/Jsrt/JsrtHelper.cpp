@@ -20,7 +20,6 @@
 #include "Core/ConfigParser.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 
-#ifdef CHAKRA_STATIC_LIBRARY
 bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) LPWSTR buffer, size_t cchBufferSize, LPWSTR moduleName)
 {
     return false;
@@ -34,7 +33,6 @@ LPCWSTR JsUtil::ExternalApi::GetFeatureKeyName()
 {
     return _u("");
 }
-#endif // CHAKRA_STATIC_LIBRARY
 
 JsrtCallbackState::JsrtCallbackState(ThreadContext* currentThreadContext)
 {

@@ -234,11 +234,9 @@ void RentalThreadContextManager::DestroyThreadContext(ThreadContext* threadConte
 {
     bool deleteThreadContext = true;
 
-#ifdef CHAKRA_STATIC_LIBRARY
     // xplat-todo: Cleanup staticlib shutdown. Deleting contexts / finalizers having
     // trouble with current runtime/context.
     deleteThreadContext = false;
-#endif
 
     ShutdownThreadContext(threadContext, deleteThreadContext);
 }
