@@ -19,17 +19,8 @@
 #ifndef MBUSAFECRT_INTERNAL_H
 #define MBUSAFECRT_INTERNAL_H
 
+#include <stdarg.h>
 #include "pal_mstypes.h"
-typedef __builtin_va_list va_list;
-
-// The ifdef below are to accommodate Unix build
-// that complains about them being declared in stdarg.h already.
-#ifndef va_start
-#define va_start __builtin_va_start
-#endif
-#ifndef va_end
-#define va_end __builtin_va_end
-#endif
 
 #include "mbusafecrt.h"
 
