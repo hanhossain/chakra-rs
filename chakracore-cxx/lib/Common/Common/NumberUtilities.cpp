@@ -126,7 +126,7 @@ using namespace Js;
             mov uint32_t PTR[ebx], edx
         }
 #else //!I386_ASM
-        DWORDLONG llu = UInt32x32To64(lu1, lu2);
+        unsigned long llu = UInt32x32To64(lu1, lu2);
 
         *pluHi = (uint32)(llu >> 32);
         return (uint32)llu;

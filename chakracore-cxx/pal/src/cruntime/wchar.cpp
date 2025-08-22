@@ -597,7 +597,7 @@ Notes :
     etc) are also accepted. This matches the behavior on Unix systems.
 --*/
 
-LONGLONG
+long
 PAL_wcstoll(
         const char16_t *nptr,
         char16_t **endptr,
@@ -655,9 +655,9 @@ PAL_wcstolExit:
     PAL_free(s_nptr);
     LOGEXIT("wcstoll returning long %lld\n", res);
     PERF_EXIT(wcstoll);
-    /* This explicit cast to LONGLONG is used to silence any potential warnings
-    due to implicitly casting the native long res to LONGLONG when returning. */
-    return (LONGLONG)res;
+    /* This explicit cast to long is used to silence any potential warnings
+    due to implicitly casting the native long res to long when returning. */
+    return (long)res;
 }
 
 /*++
@@ -796,7 +796,7 @@ PAL_wcstoulExit:
     return (uint32_t)res;
 }
 
-ULONGLONG
+unsigned long
 PAL__wcstoui64(
         const char16_t *nptr,
         char16_t **endptr,

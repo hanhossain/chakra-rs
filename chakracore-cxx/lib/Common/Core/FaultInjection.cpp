@@ -142,7 +142,7 @@ namespace Js
 
             if (!RuntimeFunction)
             {
-                Context.Rip = (ULONG64)(*(PULONG64)Context.Rsp);
+                Context.Rip = (ULONG64)(*(unsigned long *)Context.Rsp);
                 Context.Rsp += 8;
             }
             else
@@ -779,7 +779,7 @@ namespace Js
             return false;
         }
 
-        DWORD64 dwSymDisplacement = 0;
+        unsigned long dwSymDisplacement = 0;
         auto hProcess = GetCurrentProcess();
         static void* framesBuffer[FaultInjection::MAX_FRAME_COUNT];
         auto frameCount = CaptureStack(0, MAX_FRAME_COUNT, framesBuffer, 0);
@@ -814,7 +814,7 @@ namespace Js
             {
                 // fallback to symbol name matching
                 sip.Init();
-                if (!pfnSymFromAddrW(hProcess, (DWORD64)framesBuffer[i], &dwSymDisplacement, &sip.si))
+                if (!pfnSymFromAddrW(hProcess, (unsigned long)framesBuffer[i], &dwSymDisplacement, &sip.si))
                 {
                     continue;
                 }
@@ -1131,15 +1131,15 @@ namespace Js
         // always show stack for crash and fault injection points in console,
         // this can be used for additional stack matching repro
         HANDLE hProcess = GetCurrentProcess();
-        DWORD64 dwSymDisplacement = 0;
+        unsigned long dwSymDisplacement = 0;
         auto printFrame = [&](void * addr)
         {
             sip.Init();
-            if (pfnSymFromAddrW(hProcess, (DWORD64)addr, &dwSymDisplacement, &sip.si))
+            if (pfnSymFromAddrW(hProcess, (unsigned long)addr, &dwSymDisplacement, &sip.si))
             {
                 mi.Init();
-                pfnSymGetModuleInfoW64(hProcess, (DWORD64)addr, &mi);
-                fwprintf(stderr, _u("%s!%s+0x%llx\n"), mi.ModuleName, sip.si.Name, (ULONGLONG)dwSymDisplacement);
+                pfnSymGetModuleInfoW64(hProcess, (unsigned long)addr, &mi);
+                fwprintf(stderr, _u("%s!%s+0x%llx\n"), mi.ModuleName, sip.si.Name, (unsigned long)dwSymDisplacement);
             }
             else
             {
@@ -1148,7 +1148,7 @@ namespace Js
         };
 
         void * backTrace[MAX_FRAME_COUNT] = { 0 };
-        DWORD64 displacements[MAX_FRAME_COUNT] = { 0 };
+        unsigned long displacements[MAX_FRAME_COUNT] = { 0 };
 #if _M_IX86
         uint16_t nStackCount = StackTrace86(0, MAX_FRAME_COUNT, backTrace, 0, pContext);
 #elif _M_X64
@@ -1335,7 +1335,7 @@ namespace Js
                 _snwprintf_s(dumpName, _TRUNCATE, _u("%s_%s_M%d_T%s_C%d_%llx_%llx_%d.dmp"),
                     mainModule, jsFile,
                     globalFlags.FaultInjection, fiType, globalFlags.FaultInjectionCount,
-                    (ULONGLONG)offset, (ULONGLONG)ep->ExceptionRecord->ExceptionCode, suffix);
+                    (unsigned long)offset, (unsigned long)ep->ExceptionRecord->ExceptionCode, suffix);
                 WIN32_FIND_DATAW data;
                 HANDLE hExist = FindFirstFile(dumpName, &data);
                 if (hExist == INVALID_HANDLE_VALUE)

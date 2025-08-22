@@ -34,8 +34,8 @@ namespace DateTime
     {
     public:
         double    cacheSysTime;
-        ULONGLONG cacheTick;
-        ULONGLONG previousDifference;
+        unsigned long cacheTick;
+        unsigned long previousDifference;
 
         HiresTimerPlatformData():cacheSysTime(0), cacheTick(-1), previousDifference(0) { }
         void Reset() { /* dummy method for interface compatiblity */ }

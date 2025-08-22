@@ -310,7 +310,7 @@ typedef union _ULARGE_INTEGER {
     u
 #endif // PAL_STDCPP_COMPAT
      ;
-    ULONGLONG QuadPart;
+    unsigned long QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
 /******************* HRESULT types ****************************************/
@@ -385,7 +385,7 @@ typedef union tagCY {
         int32_t    Hi;
 #endif
     } u;
-    LONGLONG int64;
+    long int64;
 } CY, *LPCY;
 
 typedef CY CURRENCY;
@@ -420,7 +420,7 @@ typedef struct tagDEC {
             uint32_t Lo32;
             uint32_t Mid32;
         };
-        ULONGLONG Lo64;
+        unsigned long Lo64;
     };
 } DECIMAL, *LPDECIMAL;
 
@@ -508,7 +508,7 @@ struct tagVARIANT
             uint16_t wReserved3;
             union
                 {
-                LONGLONG llVal;
+                long llVal;
                 int32_t lVal;
                 uint8_t bVal;
                 short iVal;
@@ -525,7 +525,7 @@ struct tagVARIANT
                 uint8_t *pbVal;
                 short *piVal;
                 int32_t *plVal;
-                LONGLONG *pllVal;
+                long *pllVal;
                 float *pfltVal;
                 double *pdblVal;
                 VARIANT_BOOL *pboolVal;
@@ -539,14 +539,14 @@ struct tagVARIANT
                 char cVal;
                 unsigned short uiVal;
                 uint32_t ulVal;
-                ULONGLONG ullVal;
+                unsigned long ullVal;
                 int32_t intVal;
                 uint32_t uintVal;
                 DECIMAL *pdecVal;
                 char *pcVal;
                 unsigned short *puiVal;
                 uint32_t *pulVal;
-                ULONGLONG *pullVal;
+                unsigned long *pullVal;
                 int32_t *pintVal;
                 uint32_t *puintVal;
                 struct __tagBRECORD
@@ -1413,7 +1413,7 @@ typedef struct _DEBUG_EVENT {
 typedef
 PRUNTIME_FUNCTION
 GET_RUNTIME_FUNCTION_CALLBACK (
-    DWORD64 ControlPc,
+    unsigned long ControlPc,
     void * Context
     );
 typedef GET_RUNTIME_FUNCTION_CALLBACK *PGET_RUNTIME_FUNCTION_CALLBACK;
@@ -1449,7 +1449,7 @@ typedef OUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK *POUT_OF_PROCESS_FUNCTION_TABLE_C
 #define UNWIND_HISTORY_TABLE_SIZE 12
 
 typedef struct _UNWIND_HISTORY_TABLE_ENTRY {
-    DWORD64 ImageBase;
+    unsigned long ImageBase;
     PRUNTIME_FUNCTION FunctionEntry;
 } UNWIND_HISTORY_TABLE_ENTRY, *PUNWIND_HISTORY_TABLE_ENTRY;
 
@@ -1459,8 +1459,8 @@ typedef struct _UNWIND_HISTORY_TABLE {
     uint8_t  GlobalHint;
     uint8_t  Search;
     uint8_t  Once;
-    DWORD64 LowAddress;
-    DWORD64 HighAddress;
+    unsigned long LowAddress;
+    unsigned long HighAddress;
     UNWIND_HISTORY_TABLE_ENTRY Entry[UNWIND_HISTORY_TABLE_SIZE];
 } UNWIND_HISTORY_TABLE, *PUNWIND_HISTORY_TABLE;
 
@@ -1573,8 +1573,8 @@ typedef struct LIST_ENTRY32 {
 typedef LIST_ENTRY32 *PLIST_ENTRY32;
 
 typedef struct LIST_ENTRY64 {
-    ULONGLONG Flink;
-    ULONGLONG Blink;
+    unsigned long Flink;
+    unsigned long Blink;
 } LIST_ENTRY64;
 typedef LIST_ENTRY64 *PLIST_ENTRY64;
 

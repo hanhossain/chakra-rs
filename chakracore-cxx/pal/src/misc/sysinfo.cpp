@@ -248,7 +248,7 @@ GlobalMemoryStatusEx(
 
     // Get the Physical memory size
     physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
-    lpBuffer->ullTotalPhys = (DWORDLONG)physical_memory;
+    lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
     fRetVal = TRUE;
 #elif HAVE_SYSCTL
     int mib[2];
@@ -266,7 +266,7 @@ GlobalMemoryStatusEx(
     }
     else
     {
-        lpBuffer->ullTotalPhys = (DWORDLONG)physical_memory;
+        lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
         fRetVal = TRUE;
     }
 #else // HAVE_SYSINFO

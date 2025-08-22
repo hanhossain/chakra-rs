@@ -88,37 +88,6 @@ extern "C" {
 // Misc. types
 ////////////////////////////////////////////////////////////////////////
 
-// A bunch of source files (e.g. most of the ndp tree) include pal.h
-// but are written to be LLP64, not LP64.  (LP64 => long = 64 bits
-// LLP64 => longs = 32 bits, long long = 64 bits)
-//
-// To handle this difference, we #define long to be int (and thus 32 bits) when
-// compiling those files.  (See the bottom of this file or search for
-// #define long to see where we do this.)
-//
-// But this fix is more complicated than it seems, because we also use the
-// preprocessor to #define long to long for LP64 architectures (long
-// isn't a builtin in gcc).   We don't want long to be an int (by cascading
-// macro rules).  So we play this little trick below where we add
-// __cppmungestrip before "long", which is what we're really #defining long
-// to.  The preprocessor sees __cppmungestriplong as something different than
-// long, so it doesn't replace it with int.  The during the cppmunge phase, we
-// remove the __cppmungestrip part, leaving long for the compiler to see.
-//
-// Note that we can't just use a typedef to define long as long before
-// #defining long because typedefed types can't be signedness-agnostic (i.e.
-// they must be either signed or unsigned) and we want to be able to use
-// long as though it were intrinsic
-
-typedef long LONGLONG;
-typedef unsigned long ULONGLONG;
-typedef ULONGLONG DWORD64;
-typedef DWORD64 *PDWORD64;
-typedef LONGLONG *PLONG64;
-typedef ULONGLONG *PULONG64;
-typedef ULONGLONG *PULONGLONG;
-typedef ULONGLONG DWORDLONG;
-
 typedef int BOOL, *LPBOOL;
 typedef uint8_t BOOLEAN;
 
@@ -226,7 +195,7 @@ typedef union _LARGE_INTEGER {
         int32_t HighPart;
 #endif
     } u;
-    LONGLONG QuadPart;
+    long QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
 
 #ifndef GUID_DEFINED

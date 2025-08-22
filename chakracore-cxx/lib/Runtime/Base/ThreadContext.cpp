@@ -4446,7 +4446,7 @@ void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
 
     elapsed = pollTick - resetTick;
 
-    ULONGLONG statements = (ULONGLONG)elapsed * InterruptPoller::TicksToStatements;
+    unsigned long statements = (unsigned long)elapsed * InterruptPoller::TicksToStatements;
     *pluLo = (uint32_t)statements;
     *pluHi = (uint32_t)(statements >> 32);
 }
