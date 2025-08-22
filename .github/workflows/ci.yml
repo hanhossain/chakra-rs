@@ -16,8 +16,7 @@ jobs:
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
     runs-on: ${{ matrix.os-image }}
     strategy:
-      # TODO (hanhossain): do not fail fast
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - macos
@@ -62,8 +61,7 @@ jobs:
     runs-on: ${{ matrix.os-image }}
     timeout-minutes: 120
     strategy:
-      # TODO (hanhossain): do not fail fast
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - macos
