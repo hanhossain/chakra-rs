@@ -123,7 +123,7 @@ namespace TTD
         double ExtractTime;
 
         //Compute the memory used by this snapshot
-        void ComputeSnapshotMemory(uint64* usedSpace, uint64* reservedSpace) const;
+        void ComputeSnapshotMemory(unsigned long* usedSpace, unsigned long* reservedSpace) const;
 
         SnapShot(double gcTime);
         ~SnapShot();

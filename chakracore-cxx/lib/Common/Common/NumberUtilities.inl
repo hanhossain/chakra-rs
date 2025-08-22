@@ -122,7 +122,7 @@ namespace Js
 
     NUMBER_UTIL_INLINE bool NumberUtilities::IsNan(double value)
     {
-        const uint64 nCompare = ToSpecial(value);
+        const unsigned long nCompare = ToSpecial(value);
 #if defined(TARGET_64)
         // NaN is a range of values; all bits on the exponent are 1's 
         // and some nonzero significant. No distinction on signed NaN's.
@@ -139,26 +139,26 @@ namespace Js
 
     NUMBER_UTIL_INLINE bool NumberUtilities::IsNegative(double value)
     {
-        uint64 nCompare = ToSpecial(value);
+        unsigned long nCompare = ToSpecial(value);
         return nCompare & 0x8000000000000000ull;
     }
 
-    NUMBER_UTIL_INLINE bool NumberUtilities::IsSpecial(double value, uint64 nSpecial)
+    NUMBER_UTIL_INLINE bool NumberUtilities::IsSpecial(double value, unsigned long nSpecial)
     {
-        // Perform a bitwise comparison using uint64 instead of a double comparison, since that
+        // Perform a bitwise comparison using unsigned long instead of a double comparison, since that
         // would trigger FPU exceptions, etc.
-        uint64 nCompare = ToSpecial(value);
+        unsigned long nCompare = ToSpecial(value);
         return nCompare == nSpecial;
     }
 
-    NUMBER_UTIL_INLINE uint64 NumberUtilities::ToSpecial(double value)
+    NUMBER_UTIL_INLINE unsigned long NumberUtilities::ToSpecial(double value)
     {
 #if defined(_AMD64_)
         return _mm_cvtsi128_si64(_mm_castpd_si128(_mm_set_sd(value)));
 #elif defined(_M_ARM32_OR_ARM64) && defined(_CopyInt64FromDouble)
         return _CopyInt64FromDouble(value);
 #else
-        return  *(reinterpret_cast<uint64 *>(&value));
+        return  *(reinterpret_cast<unsigned long *>(&value));
 #endif
     }
 

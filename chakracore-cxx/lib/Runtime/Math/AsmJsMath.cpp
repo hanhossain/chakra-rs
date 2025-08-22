@@ -74,20 +74,20 @@ namespace Js
     template<> bool AsmJsMath::RemWouldTrap(int64 aLeft, int64 aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
 
     // Unsigned Int64
-    template<> uint64 AsmJsMath::Mul<uint64>(uint64 aLeft, uint64 aRight) { return aLeft * aRight; }
-    template<> uint64 AsmJsMath::DivUnsafe<uint64>(uint64 aLeft, uint64 aRight) { return aLeft / aRight; }
+    template<> unsigned long AsmJsMath::Mul<unsigned long>(unsigned long aLeft, unsigned long aRight) { return aLeft * aRight; }
+    template<> unsigned long AsmJsMath::DivUnsafe<unsigned long>(unsigned long aLeft, unsigned long aRight) { return aLeft / aRight; }
     template<>
-    uint64 AsmJsMath::DivChecked<uint64>(uint64 aLeft, uint64 aRight)
+    unsigned long AsmJsMath::DivChecked<unsigned long>(unsigned long aLeft, unsigned long aRight)
     {
         return aRight == 0 ? 0 : aLeft / aRight;
     }
-    template<> bool AsmJsMath::DivWouldTrap(uint64 aLeft, uint64 aRight) { return aRight == 0; }
-    template<> uint64 AsmJsMath::RemUnsafe<uint64>(uint64 aLeft, uint64 aRight) { return aLeft % aRight; }
+    template<> bool AsmJsMath::DivWouldTrap(unsigned long aLeft, unsigned long aRight) { return aRight == 0; }
+    template<> unsigned long AsmJsMath::RemUnsafe<unsigned long>(unsigned long aLeft, unsigned long aRight) { return aLeft % aRight; }
     template<>
-    uint64 AsmJsMath::RemChecked<uint64>(uint64 aLeft, uint64 aRight)
+    unsigned long AsmJsMath::RemChecked<unsigned long>(unsigned long aLeft, unsigned long aRight)
     {
         return aRight == 0 ? 0 : (aLeft == LONGLONG_MIN && aRight == -1) ? LONGLONG_MIN : aLeft % aRight;
     }
-    template<> bool AsmJsMath::RemWouldTrap(uint64 aLeft, uint64 aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
+    template<> bool AsmJsMath::RemWouldTrap(unsigned long aLeft, unsigned long aRight) { return aRight == 0 || (aLeft == LONGLONG_MIN && aRight == -1); }
 }
 #pragma prefast(pop

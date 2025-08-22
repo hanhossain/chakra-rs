@@ -10652,7 +10652,7 @@ Lowerer::LowerStrictBrOrCm(IR::Instr * instr, IR::JnHelperMethod helperMethod, b
             Lowerer::InsertMove(src1TypeIdReg, IR::IndirOpnd::New(src1TypeReg, Js::Type::GetOffsetOfTypeId(), TyInt32, this->m_func), instr);
 #endif
             // CMP src1TypeIdReg, TypeIds_HostDispatch
-            // JLE $helper (le condition covers string, int64, uint64, hostdispatch, as well as undefined, null, boolean)
+            // JLE $helper (le condition covers string, int64, unsigned long, hostdispatch, as well as undefined, null, boolean)
             IR::IntConstOpnd *hostDispatchTypeId = IR::IntConstOpnd::New(Js::TypeIds_HostDispatch, TyInt32, this->m_func, true);
             InsertCompareBranch(src1TypeIdReg, hostDispatchTypeId, Js::OpCode::BrLe_A, labelHelper, instr);
 
@@ -12190,12 +12190,12 @@ Lowerer::GenerateFastInlineBuiltInMathRandom(IR::Instr* instr)
 #if defined(_M_X64)
     if (m_func->GetScriptContextInfo()->IsPRNGSeeded())
     {
-        const uint64 mExp = 0x3FF0000000000000;
-        const uint64 mMant = 0x000FFFFFFFFFFFFF;
+        const unsigned long mExp = 0x3FF0000000000000;
+        const unsigned long mMant = 0x000FFFFFFFFFFFFF;
 
         IR::RegOpnd* r0 = IR::RegOpnd::New(TyUint64, m_func);  // s0
         IR::RegOpnd* r1 = IR::RegOpnd::New(TyUint64, m_func);  // s1
-        IR::RegOpnd* r3 = IR::RegOpnd::New(TyUint64, m_func);  // helper uint64 reg
+        IR::RegOpnd* r3 = IR::RegOpnd::New(TyUint64, m_func);  // helper unsigned long reg
         IR::RegOpnd* r4 = IR::RegOpnd::New(TyFloat64, m_func); // helper float64 reg
 
         // ===========================================================
@@ -15140,7 +15140,7 @@ const uint8_t Lowerer::IndirScales[static_cast<ValueType::TSize>(ObjectType::Cou
     /* ObjectType::Float32MixedArray        */ 2, // log2(sizeof(float))
     /* ObjectType::Float64MixedArray        */ 3, // log2(sizeof(double))
     /* ObjectType::Int64Array               */ 3, // log2(sizeof(int64))
-    /* ObjectType::Uint64Array              */ 3, // log2(sizeof(uint64))
+    /* ObjectType::Uint64Array              */ 3, // log2(sizeof(unsigned long))
     /* ObjectType::BoolArray                */ 0, // log2(sizeof(bool))
     /* ObjectType::CharArray                */ 1  // log2(sizeof(char16_t))
 };
@@ -16971,7 +16971,7 @@ Lowerer::GenerateFastElemIIntIndexCommon(
         indirType = GetArrayIndirType(baseValueType);
     }
 
-    if (checkIndexConstOverflowed && (static_cast<uint64>(value) << indirScale) > INT32_MAX &&
+    if (checkIndexConstOverflowed && (static_cast<unsigned long>(value) << indirScale) > INT32_MAX &&
         indirOpndOverflowed != nullptr)
     {
         *indirOpndOverflowed = true;

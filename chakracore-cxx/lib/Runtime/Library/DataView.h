@@ -87,7 +87,7 @@ namespace Js
         template<> void SwapRoutine(uint32* input, uint32* dest) {*dest =  RtlUlongByteSwap(*input);}
         // we don't want type conversion here, we just want to swap the bytes.
         template<> void SwapRoutine(float* input, float* dest) { *((uint32*)dest) = RtlUlongByteSwap(*((uint32*)input)); }
-        template<> void SwapRoutine(double* input, double* dest) {*((uint64*)dest) = RtlUlonglongByteSwap(*((uint64*)input)); }
+        template<> void SwapRoutine(double* input, double* dest) {*((unsigned long*)dest) = RtlUlonglongByteSwap(*((unsigned long*)input)); }
 
         template<typename TypeName>
         Var GetValue(Var offset, const char16_t* funcName, BOOL isLittleEndian = FALSE)

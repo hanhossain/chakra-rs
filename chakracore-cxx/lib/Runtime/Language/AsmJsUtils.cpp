@@ -246,8 +246,8 @@ namespace Js
                         Var low = JavascriptOperators::OP_GetProperty(object, lowPropRecord->GetPropertyId(), scriptContext);
                         Var high = JavascriptOperators::OP_GetProperty(object, highPropRecord->GetPropertyId(), scriptContext);
 
-                        uint64 lowVal = JavascriptMath::ToInt32(low, scriptContext);
-                        uint64 highVal = JavascriptMath::ToInt32(high, scriptContext);
+                        unsigned long lowVal = JavascriptMath::ToInt32(low, scriptContext);
+                        unsigned long highVal = JavascriptMath::ToInt32(high, scriptContext);
                         val = (highVal << 32) | (lowVal & 0xFFFFFFFF);
                     }
                     else
@@ -474,8 +474,8 @@ namespace Js
 #if ENABLE_DEBUG_CONFIG_OPTIONS
             if (CONFIG_FLAG(WasmI64))
             {
-                uint64 lHigh = ((uint64)iHigh) << 32;
-                uint64 lLow = (uint64)(uint32)iLow;
+                unsigned long lHigh = ((unsigned long)iHigh) << 32;
+                unsigned long lLow = (unsigned long)(uint32)iLow;
                 returnValue = CreateI64ReturnObject((int64)(lHigh | lLow), func->GetScriptContext());
                 break;
             }

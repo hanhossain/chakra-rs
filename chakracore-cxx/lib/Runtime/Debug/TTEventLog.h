@@ -370,7 +370,7 @@ namespace TTD
         void AddPropertyRecord(const Js::PropertyRecord* record);
 
         //Add top level function load info to our sets
-        const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, uint64 sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag);
+        const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag);
         const NSSnapValues::TopLevelNewFunctionBodyResolveInfo* AddNewFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen);
         const NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* AddEvalFunction(Js::FunctionBody* fb, Js::ModuleID moduleId, const char16_t* source, uint32 sourceLen, uint32 grfscr, bool registerDocument, BOOL isIndirect, BOOL strictMode);
 
@@ -413,10 +413,10 @@ namespace TTD
         void ReplayDateStringEvent(Js::ScriptContext* ctx, Js::JavascriptString** result);
 
         //Log a random seed value that is being generated using external entropy
-        void RecordExternalEntropyRandomEvent(uint64 seed0, uint64 seed1);
+        void RecordExternalEntropyRandomEvent(unsigned long seed0, unsigned long seed1);
 
         //Replay a random seed value that is being generated using external entropy
-        void ReplayExternalEntropyRandomEvent(uint64* seed0, uint64* seed1);
+        void ReplayExternalEntropyRandomEvent(unsigned long* seed0, unsigned long* seed1);
 
         //Log property enumeration step
         void RecordPropertyEnumEvent(BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attributes, Js::JavascriptString* propertyName);
@@ -601,7 +601,7 @@ namespace TTD
         void RecordJsRTConstructCall(TTDJsRTActionResultAutoRecorder& actionPopper, Js::Var funcVar, uint32 argCount, Js::Var* args);
 
         //Record code parse
-        NSLogEvents::EventLogEntry* RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, uint64 sourceContextId, const char16_t* sourceUri);
+        NSLogEvents::EventLogEntry* RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri);
 
         //Record callback of an existing function
         NSLogEvents::EventLogEntry* RecordJsRTCallFunction(TTDJsRTActionResultAutoRecorder& actionPopper, int32 rootDepth, Js::Var funcVar, uint32 argCount, Js::Var* args);

@@ -220,8 +220,8 @@ namespace TTD
         virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         void WriteInt64(NSTokens::Key key, int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
 
-        virtual void WriteNakedUInt64(uint64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
-        void WriteUInt64(NSTokens::Key key, uint64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
+        virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
+        void WriteUInt64(NSTokens::Key key, unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
 
         virtual void WriteNakedDouble(double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         void WriteDouble(NSTokens::Key key, double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
@@ -291,7 +291,7 @@ namespace TTD
         virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
-        virtual void WriteNakedUInt64(uint64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedDouble(double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedAddr(TTD_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedLogTag(TTD_LOG_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -338,7 +338,7 @@ namespace TTD
         virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
-        virtual void WriteNakedUInt64(uint64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedDouble(double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedAddr(TTD_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedLogTag(TTD_LOG_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -536,8 +536,8 @@ namespace TTD
         virtual int64 ReadNakedInt64(bool readSeparator = false) = 0;
         int64 ReadInt64(NSTokens::Key keyCheck, bool readSeparator = false);
 
-        virtual uint64 ReadNakedUInt64(bool readSeparator = false) = 0;
-        uint64 ReadUInt64(NSTokens::Key keyCheck, bool readSeparator = false);
+        virtual unsigned long ReadNakedUInt64(bool readSeparator = false) = 0;
+        unsigned long ReadUInt64(NSTokens::Key keyCheck, bool readSeparator = false);
 
         virtual double ReadNakedDouble(bool readSeparator = false) = 0;
         double ReadDouble(NSTokens::Key keyCheck, bool readSeparator = false);
@@ -613,7 +613,7 @@ namespace TTD
         NSTokens::ParseTokenKind ScanNakedString(char16_t leadChar);
 
         int64 ReadIntFromCharArray(const char16_t* buff);
-        uint64 ReadUIntFromCharArray(const char16_t* buff);
+        unsigned long ReadUIntFromCharArray(const char16_t* buff);
         double ReadDoubleFromCharArray(const char16_t* buff);
 
     public:
@@ -637,7 +637,7 @@ namespace TTD
         virtual int32 ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32 ReadNakedUInt32(bool readSeparator = false) override;
         virtual int64 ReadNakedInt64(bool readSeparator = false) override;
-        virtual uint64 ReadNakedUInt64(bool readSeparator = false) override;
+        virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
         virtual double ReadNakedDouble(bool readSeparator = false) override;
         virtual TTD_PTR_ID ReadNakedAddr(bool readSeparator = false) override;
         virtual TTD_LOG_PTR_ID ReadNakedLogTag(bool readSeparator = false) override;
@@ -679,7 +679,7 @@ namespace TTD
         virtual int32 ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32 ReadNakedUInt32(bool readSeparator = false) override;
         virtual int64 ReadNakedInt64(bool readSeparator = false) override;
-        virtual uint64 ReadNakedUInt64(bool readSeparator = false) override;
+        virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
         virtual double ReadNakedDouble(bool readSeparator = false) override;
         virtual TTD_PTR_ID ReadNakedAddr(bool readSeparator = false) override;
         virtual TTD_LOG_PTR_ID ReadNakedLogTag(bool readSeparator = false) override;
@@ -705,14 +705,14 @@ namespace TTD
     {
         int32 SourceLine;
         uint32 EventTime;
-        uint64 TimeHash;
+        unsigned long TimeHash;
     };
 
     bool IsDiagnosticOriginInformationValid(const DiagnosticOrigin& info);
 
     void InitializeDiagnosticOriginInformation(DiagnosticOrigin& info);
     void CopyDiagnosticOriginInformation(DiagnosticOrigin& infoInto, const DiagnosticOrigin& infoFrom);
-    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, uint64 eTime, uint64 fTime, uint64 lTime);
+    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, unsigned long eTime, unsigned long fTime, unsigned long lTime);
 
     void EmitDiagnosticOriginInformation(const DiagnosticOrigin& info, FileWriter* writer, NSTokens::Separator separator);
     void ParseDiagnosticOriginInformation(DiagnosticOrigin& info, bool readSeparator, FileReader* reader);
@@ -798,7 +798,7 @@ namespace TTD
         void AppendString(char* text);
         void AppendBool(bool bval);
         void AppendInteger(int64 ival);
-        void AppendUnsignedInteger(uint64 ival);
+        void AppendUnsignedInteger(unsigned long ival);
         void AppendIntegerHex(int64 ival);
         void AppendDouble(double dval);
 

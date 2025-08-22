@@ -457,7 +457,7 @@ EncoderMD::EmitConst(size_t val, int size, bool allowImm64 /* = false */)
         break;
 
     case 8:
-        *(uint64*)m_pc = (uint64)val;
+        *(unsigned long*)m_pc = (unsigned long)val;
         break;
 
     default:

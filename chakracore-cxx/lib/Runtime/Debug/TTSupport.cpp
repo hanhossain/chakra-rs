@@ -193,7 +193,7 @@ namespace TTD
             this->Append(str.GetStrValue(), start, end);
         }
 
-        void TTAutoString::Append(uint64 val)
+        void TTAutoString::Append(unsigned long val)
         {
             if(this->m_optFormatBuff == nullptr)
             {
@@ -316,7 +316,7 @@ namespace TTD
     MarkTable::MarkTable()
         : m_capcity(TTD_MARK_TABLE_INIT_SIZE), m_h2Prime(TTD_MARK_TABLE_INIT_H2PRIME), m_count(0), m_iterPos(0)
     {
-        this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(uint64, this->m_capcity);
+        this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(unsigned long, this->m_capcity);
         this->m_markArray = TT_HEAP_ALLOC_ARRAY_ZERO(MarkTableTag, this->m_capcity);
 
         memset(this->m_handlerCounts, 0, ((uint32)MarkTableTag::KindTagCount) * sizeof(uint32));
@@ -324,7 +324,7 @@ namespace TTD
 
     MarkTable::~MarkTable()
     {
-        TT_HEAP_FREE_ARRAY(uint64, this->m_addrArray, this->m_capcity);
+        TT_HEAP_FREE_ARRAY(unsigned long, this->m_addrArray, this->m_capcity);
         TT_HEAP_FREE_ARRAY(MarkTableTag, this->m_markArray, this->m_capcity);
     }
 
@@ -332,17 +332,17 @@ namespace TTD
     {
         if(this->m_capcity == TTD_MARK_TABLE_INIT_SIZE)
         {
-            memset(this->m_addrArray, 0, TTD_MARK_TABLE_INIT_SIZE * sizeof(uint64));
+            memset(this->m_addrArray, 0, TTD_MARK_TABLE_INIT_SIZE * sizeof(unsigned long));
             memset(this->m_markArray, 0, TTD_MARK_TABLE_INIT_SIZE * sizeof(MarkTableTag));
         }
         else
         {
-            TT_HEAP_FREE_ARRAY(uint64, this->m_addrArray, this->m_capcity);
+            TT_HEAP_FREE_ARRAY(unsigned long, this->m_addrArray, this->m_capcity);
             TT_HEAP_FREE_ARRAY(MarkTableTag, this->m_markArray, this->m_capcity);
 
             this->m_capcity = TTD_MARK_TABLE_INIT_SIZE;
             this->m_h2Prime = TTD_MARK_TABLE_INIT_H2PRIME;
-            this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(uint64, this->m_capcity);
+            this->m_addrArray = TT_HEAP_ALLOC_ARRAY_ZERO(unsigned long, this->m_capcity);
             this->m_markArray = TT_HEAP_ALLOC_ARRAY_ZERO(MarkTableTag, this->m_capcity);
         }
 

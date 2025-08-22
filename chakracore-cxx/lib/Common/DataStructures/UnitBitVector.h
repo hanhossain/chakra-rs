@@ -19,7 +19,7 @@
 
 // Typedef
 typedef uint32   UnitWord32;
-typedef uint64   UnitWord64;
+typedef unsigned long   UnitWord64;
 
 inline BOOLEAN
 GetFirstBitSet(uint32_t *Index, UnitWord32 Mask)
@@ -147,9 +147,9 @@ private:
         unsigned countBits = CountBit((UnitWord32)bits) + CountBit((UnitWord32)(bits >> 32));
 #endif
 
-        const uint64 _5_64 =     0x5555555555555555ui64;
-        const uint64 _3_64 =     0x3333333333333333ui64;
-        const uint64 _F1_64 =    0x0f0f0f0f0f0f0f0fui64;
+        const unsigned long _5_64 =     0x5555555555555555ui64;
+        const unsigned long _3_64 =     0x3333333333333333ui64;
+        const unsigned long _F1_64 =    0x0f0f0f0f0f0f0f0fui64;
 
         // In-place adder tree: perform 32 1-bit adds, 16 2-bit adds, 8 4-bit adds,
         // 4 8-bit adds, 2 16-bit adds, and 1 32-bit add.

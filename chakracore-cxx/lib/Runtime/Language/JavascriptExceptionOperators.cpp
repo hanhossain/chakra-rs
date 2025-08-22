@@ -103,7 +103,7 @@ namespace Js
         return Js::Configuration::Global.flags.WERExceptionSupport && !scriptContext.GetThreadContext()->HasCatchHandler();
     }
 
-    uint64 JavascriptExceptionOperators::StackCrawlLimitOnThrow(Var thrownObject, ScriptContext& scriptContext)
+    unsigned long JavascriptExceptionOperators::StackCrawlLimitOnThrow(Var thrownObject, ScriptContext& scriptContext)
     {
         return CrawlStackForWER(scriptContext) ? MaxStackTraceLimit : GetStackTraceLimit(thrownObject, &scriptContext);
     }
@@ -1048,7 +1048,7 @@ namespace Js
     }
 #endif
     void
-        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetSatck)
+        JavascriptExceptionOperators::WalkStackForExceptionContext(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetSatck)
     {
         uint32 callerBytecodeOffset;
         JavascriptFunction * jsFunc = WalkStackForExceptionContextInternal(scriptContext, exceptionContext, thrownObject, callerBytecodeOffset, stackCrawlLimit, returnAddress, isThrownException, resetSatck);
@@ -1064,7 +1064,7 @@ namespace Js
 
     JavascriptFunction *
     JavascriptExceptionOperators::WalkStackForExceptionContextInternal(ScriptContext& scriptContext, JavascriptExceptionContext& exceptionContext, Var thrownObject,
-        uint32& callerByteCodeOffset, uint64 stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
+        uint32& callerByteCodeOffset, unsigned long stackCrawlLimit, void * returnAddress, bool isThrownException, bool resetStack)
     {
         JavascriptStackWalker walker(&scriptContext, true, returnAddress);
         JavascriptFunction* jsFunc = nullptr;
@@ -1100,7 +1100,7 @@ namespace Js
 
                 // In WER scenario, we should combine the original stack with latest throw stack as the final throw might be coming form
                 // a different stack.
-                uint64 i = 1;
+                unsigned long i = 1;
                 if (crawlStackForWER && thrownObject && Js::VarIs<Js::JavascriptError>(thrownObject))
                 {
                     Js::JavascriptError* errorObject = Js::VarTo<Js::JavascriptError>(thrownObject);
@@ -1612,9 +1612,9 @@ namespace Js
         return stringMessage;
     }
 
-    uint64 JavascriptExceptionOperators::GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext)
+    unsigned long JavascriptExceptionOperators::GetStackTraceLimit(Var thrownObject, ScriptContext* scriptContext)
     {
-        uint64 limit = 0;
+        unsigned long limit = 0;
 
         if (scriptContext->GetConfig()->IsErrorStackTraceEnabled()
             && IsErrorInstance(thrownObject))

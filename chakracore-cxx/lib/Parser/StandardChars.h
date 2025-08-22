@@ -119,7 +119,7 @@ namespace UnifiedRegex
     {
     public:
         CaseMapper(ArenaAllocator *allocator, CaseInsensitive::MappingSource mappingSource, const FallbackCaseMapper *fallbackMapper) :
-            toEquivs((uint64) -1),
+            toEquivs((unsigned long) -1),
             fallbackMapper(fallbackMapper)
         {
             CompileAssert(sizeof(char16_t) == 2);
@@ -138,7 +138,7 @@ namespace UnifiedRegex
                     __assume(acth <= maxUChar); // property of algorithm: acth never greater than h
                     do
                     {
-                        uint64 r = 0;
+                        unsigned long r = 0;
                         CompileAssert(sizeof(r) >= sizeof(char16_t) * CaseInsensitive::EquivClassSize);
 
                         for (int i = CaseInsensitive::EquivClassSize - 1; i >= 0; i--)
@@ -161,14 +161,14 @@ namespace UnifiedRegex
 
         inline char16_t ToCanonical(char16_t c) const
         {
-            uint64 r = toEquivs.Get(c);
+            unsigned long r = toEquivs.Get(c);
             return r == EQUIV_MISSING ? fallbackMapper->ToCanonical(c) : Chars<char16_t>::UTC(r & 0xffff);
         }
 
         CompileAssert(CaseInsensitive::EquivClassSize == 4);
         inline bool ToEquivs(char16_t c, __out_ecount(4) char16_t* equivs) const
         {
-            uint64 r = toEquivs.Get(c);
+            unsigned long r = toEquivs.Get(c);
             if (r == EQUIV_MISSING)
             {
                 return fallbackMapper->ToEquivs(c, equivs);
@@ -198,8 +198,8 @@ namespace UnifiedRegex
         // Map character to:
         //  - -1 if trivial equivalence class
         //  - otherwise to four 16-bit fields: <equiv 4><equiv 3><equiv 2><equiv 1>
-        const static uint64 EQUIV_MISSING = static_cast<uint64>(-1);
-        CharMap<char16_t, uint64> toEquivs;
+        const static unsigned long EQUIV_MISSING = static_cast<unsigned long>(-1);
+        CharMap<char16_t, unsigned long> toEquivs;
 
         const FallbackCaseMapper *fallbackMapper;
     };

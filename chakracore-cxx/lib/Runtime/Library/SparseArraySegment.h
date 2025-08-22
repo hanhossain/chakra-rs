@@ -152,7 +152,7 @@ namespace Js
     template<>
     inline bool SparseArraySegment<double>::IsMissingItem(const double* value)
     {
-        return *(uint64*)value == FloatMissingItemPattern;
+        return *(unsigned long*)value == FloatMissingItemPattern;
     }
 
     template<typename T>

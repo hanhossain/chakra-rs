@@ -122,7 +122,7 @@ Js::DynamicObject * IRtoJSObjectBuilder::CreateAddrOpnd(Js::ScriptContext *scrip
 
     IR::AddrOpnd *op = opnd->AsAddrOpnd();
     Js::Var address = op->m_address;  // TODO (doilij) see opnd.cpp:1802 - not always m_address
-    Js::Var addressVar = Js::JavascriptNumber::ToVar((uint64)address, scriptContext);
+    Js::Var addressVar = Js::JavascriptNumber::ToVar((unsigned long)address, scriptContext);
 
     Js::DynamicObject *opObject = scriptContext->GetLibrary()->CreateObject();
     SetProperty(opObject, _u("addr"), addressVar);

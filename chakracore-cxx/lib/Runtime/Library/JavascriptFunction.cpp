@@ -2387,27 +2387,27 @@ LABEL1:
         if (instrData.isLoad)
         {
             Var exceptionInfoReg = exceptionInfo->ContextRecord;
-            Var* exceptionInfoIntReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
-            Var* exceptionInfoFloatReg = (Var*)((uint64)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
+            Var* exceptionInfoIntReg = (Var*)((unsigned long)exceptionInfoReg + offsetof(CONTEXT, Rax)); // offset in the contextRecord for RAX , the assert below checks for any change in the exceptionInfo struct
+            Var* exceptionInfoFloatReg = (Var*)((unsigned long)exceptionInfoReg + offsetof(CONTEXT, Xmm0));// offset in the contextRecord for XMM0 , the assert below checks for any change in the exceptionInfo struct
             Assert((unsigned long)*exceptionInfoIntReg == exceptionInfo->ContextRecord->Rax);
-            Assert((uint64)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
+            Assert((unsigned long)*exceptionInfoFloatReg == exceptionInfo->ContextRecord->Xmm0.Low);
 
             if (instrData.isLoad)
             {
                 double nanVal = JavascriptNumber::NaN;
                 if (instrData.isFloat64)
                 {
-                    double* destRegLocation = (double*)((uint64)exceptionInfoFloatReg + 16 * (instrData.dstReg));
+                    double* destRegLocation = (double*)((unsigned long)exceptionInfoFloatReg + 16 * (instrData.dstReg));
                     *destRegLocation = nanVal;
                 }
                 else if (instrData.isFloat32)
                 {
-                    float* destRegLocation = (float*)((uint64)exceptionInfoFloatReg + 16 * (instrData.dstReg));
+                    float* destRegLocation = (float*)((unsigned long)exceptionInfoFloatReg + 16 * (instrData.dstReg));
                     *destRegLocation = (float)nanVal;
                 }
                 else
                 {
-                    uint64* destRegLocation = (uint64*)((uint64)exceptionInfoIntReg + 8 * (instrData.dstReg));
+                    unsigned long* destRegLocation = (unsigned long*)((unsigned long)exceptionInfoIntReg + 8 * (instrData.dstReg));
                     *destRegLocation = 0;
                 }
             }

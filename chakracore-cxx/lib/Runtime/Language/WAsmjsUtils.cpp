@@ -119,10 +119,10 @@ namespace WAsmJs
         {
             return offset;
         }
-        uint64 tmp = (uint64)offset * (uint64)fromSize;
-        tmp = Math::Align<uint64>(tmp, toSize);
-        tmp /= (uint64)toSize;
-        if (tmp > (uint64)UINT32_MAX)
+        unsigned long tmp = (unsigned long)offset * (unsigned long)fromSize;
+        tmp = Math::Align<unsigned long>(tmp, toSize);
+        tmp /= (unsigned long)toSize;
+        if (tmp > (unsigned long)UINT32_MAX)
         {
             Math::DefaultOverflowPolicy();
         }

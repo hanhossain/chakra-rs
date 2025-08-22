@@ -760,7 +760,7 @@ namespace TTD
         this->m_propertyRecordPinSet->AddNew(const_cast<Js::PropertyRecord*>(record));
     }
 
-    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, uint64 sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag)
+    const NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* EventLog::AddScriptLoad(Js::FunctionBody* fb, Js::ModuleID moduleId, unsigned long sourceContextId, const byte* source, uint32 sourceLen, LoadScriptFlag loadFlag)
     {
         NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* fbInfo = this->m_loadedTopLevelScripts.NextOpenEntry();
         uint32 fCount = (this->m_loadedTopLevelScripts.Count() + this->m_newFunctionTopLevelScripts.Count() + this->m_evalTopLevelScripts.Count());
@@ -920,14 +920,14 @@ namespace TTD
         *result = Js::JavascriptString::NewCopyBuffer(str.Contents, str.Length, ctx);
     }
 
-    void EventLog::RecordExternalEntropyRandomEvent(uint64 seed0, uint64 seed1)
+    void EventLog::RecordExternalEntropyRandomEvent(unsigned long seed0, unsigned long seed1)
     {
         NSLogEvents::RandomSeedEventLogEntry* rsEvent = this->RecordGetInitializedEvent_DataOnly<NSLogEvents::RandomSeedEventLogEntry, NSLogEvents::EventKind::RandomSeedTag>();
         rsEvent->Seed0 = seed0;
         rsEvent->Seed1 = seed1;
     }
 
-    void EventLog::ReplayExternalEntropyRandomEvent(uint64* seed0, uint64* seed1)
+    void EventLog::ReplayExternalEntropyRandomEvent(unsigned long* seed0, unsigned long* seed1)
     {
         const NSLogEvents::RandomSeedEventLogEntry* rsEvent = this->ReplayGetReplayEvent_Helper<NSLogEvents::RandomSeedEventLogEntry, NSLogEvents::EventKind::RandomSeedTag>();
         *seed0 = rsEvent->Seed0;
@@ -1525,7 +1525,7 @@ namespace TTD
 
         uint32 dbgScopeCount = snap->GetDbgScopeCountNonTopLevel();
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo*> topLevelLoadScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo*> topLevelLoadScriptMap;
         topLevelLoadScriptMap.Initialize(this->m_loadedTopLevelScripts.Count());
         for(auto iter = this->m_loadedTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -1533,7 +1533,7 @@ namespace TTD
             dbgScopeCount += iter.Current()->TopLevelBase.ScopeChainInfo.ScopeCount;
         }
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelNewFunctionBodyResolveInfo*> topLevelNewScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelNewFunctionBodyResolveInfo*> topLevelNewScriptMap;
         topLevelNewScriptMap.Initialize(this->m_newFunctionTopLevelScripts.Count());
         for(auto iter = this->m_newFunctionTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -1541,7 +1541,7 @@ namespace TTD
             dbgScopeCount += iter.Current()->TopLevelBase.ScopeChainInfo.ScopeCount;
         }
 
-        TTDIdentifierDictionary<uint64, NSSnapValues::TopLevelEvalFunctionBodyResolveInfo*> topLevelEvalScriptMap;
+        TTDIdentifierDictionary<unsigned long, NSSnapValues::TopLevelEvalFunctionBodyResolveInfo*> topLevelEvalScriptMap;
         topLevelEvalScriptMap.Initialize(this->m_evalTopLevelScripts.Count());
         for(auto iter = this->m_evalTopLevelScripts.GetIterator(); iter.IsValid(); iter.MoveNext())
         {
@@ -2498,7 +2498,7 @@ namespace TTD
         actionPopper.InitializeWithEventAndEnterWResult(evt, &(ccAction->Result));
     }
 
-    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, uint64 sourceContextId, const char16_t* sourceUri)
+    NSLogEvents::EventLogEntry* EventLog::RecordJsRTCodeParse(TTDJsRTActionResultAutoRecorder& actionPopper, LoadScriptFlag loadFlag, bool isUft8, const byte* script, uint32 scriptByteLength, unsigned long sourceContextId, const char16_t* sourceUri)
     {
         NSLogEvents::JsRTCodeParseAction* cpAction = nullptr;
         NSLogEvents::EventLogEntry* evt = this->RecordGetInitializedEvent<NSLogEvents::JsRTCodeParseAction, NSLogEvents::EventKind::CodeParseActionTag>(&cpAction);
@@ -2634,8 +2634,8 @@ namespace TTD
 
         writer.WriteBool(NSTokens::Key::diagEnabled, diagEnabled, NSTokens::Separator::CommaSeparator);
 
-        uint64 usedSpace = 0;
-        uint64 reservedSpace = 0;
+        unsigned long usedSpace = 0;
+        unsigned long reservedSpace = 0;
         this->m_eventSlabAllocator.ComputeMemoryUsed(&usedSpace, &reservedSpace);
 
         writer.WriteUInt64(NSTokens::Key::usedMemory, usedSpace, NSTokens::Separator::CommaSeparator);

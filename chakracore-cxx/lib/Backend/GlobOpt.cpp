@@ -6853,10 +6853,10 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
         BRANCHSIGNED(BrLt_I4, < , int64, false, false)
         BRANCHSIGNED(BrLe_I4, <= , int64, false, false)
         BRANCHSIGNED(BrNeq_I4, != , int64, false, false)
-        BRANCHSIGNED(BrUnGe_I4, >= , uint64, true, false)
-        BRANCHSIGNED(BrUnGt_I4, > , uint64, true, false)
-        BRANCHSIGNED(BrUnLt_I4, < , uint64, true, false)
-        BRANCHSIGNED(BrUnLe_I4, <= , uint64, true, false)
+        BRANCHSIGNED(BrUnGe_I4, >= , unsigned long, true, false)
+        BRANCHSIGNED(BrUnGt_I4, > , unsigned long, true, false)
+        BRANCHSIGNED(BrUnLt_I4, < , unsigned long, true, false)
+        BRANCHSIGNED(BrUnLe_I4, <= , unsigned long, true, false)
 #undef BRANCHSIGNED
 #define BRANCH(OPCODE,CMP,VARCMPFUNC,UNDEFINEDCMP) \
     case Js::OpCode::##OPCODE: \

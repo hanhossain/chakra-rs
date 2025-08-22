@@ -8076,7 +8076,7 @@ skipThunk:
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
         }
 
-        const uint64 index = (uint64)GetRegRawInt(playout->SlotIndex) + playout->Offset;
+        const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
 
         ArrayBufferBase* arr =
 #ifdef ENABLE_WASM_SIMD
@@ -8103,7 +8103,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdLdArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8129,7 +8129,7 @@ skipThunk:
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_ArgumentOutOfRange, _u("Simd typed array access"));
         }
-        const uint64 index = (uint64)GetRegRawInt(playout->SlotIndex) + playout->Offset;
+        const unsigned long index = (unsigned long)GetRegRawInt(playout->SlotIndex) + playout->Offset;
 
         ArrayBufferBase* arr =
 #ifdef ENABLE_WASM_SIMD
@@ -8155,7 +8155,7 @@ skipThunk:
     void InterpreterStackFrame::OP_SimdStArrConstIndex(const unaligned T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = (uint32)playout->SlotIndex;
+        const unsigned long index = (uint32)playout->SlotIndex;
         JavascriptArrayBuffer* arr = GetAsmJsBuffer();
         uint8_t* buffer = arr->GetBuffer();
         uint8_t dataWidth = playout->DataWidth;
@@ -8833,7 +8833,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    void InterpreterStackFrame::WasmArrayBoundsCheck(uint64 index, uint32 byteLength)
+    void InterpreterStackFrame::WasmArrayBoundsCheck(unsigned long index, uint32 byteLength)
     {
         if (index + sizeof(MemType) > byteLength)
         {
@@ -8842,7 +8842,7 @@ skipThunk:
     }
 
     template<typename MemType>
-    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, uint64 index, uint32 byteLength)
+    MemType* InterpreterStackFrame::WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32 byteLength)
     {
         MemType* readBuffer = (MemType*)(buffer + index);
         // Do alignment check to be coherent with the order the jit does the checks
@@ -8859,7 +8859,7 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8885,7 +8885,7 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8913,7 +8913,7 @@ skipThunk:
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();
@@ -8968,7 +8968,7 @@ skipThunk:
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
-        const uint64 index = playout->Offset + (uint64)(uint32)GetRegRawInt(playout->SlotIndex);
+        const unsigned long index = playout->Offset + (unsigned long)(uint32)GetRegRawInt(playout->SlotIndex);
         ArrayBufferBase* arr = GetWebAssemblyMemory()->GetBuffer();
 
         uint32 byteLength = arr->GetByteLength();

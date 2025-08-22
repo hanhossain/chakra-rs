@@ -185,9 +185,9 @@ MACRO_WMS       ( Add_Long                   , Long3            , None          
 MACRO_WMS       ( Sub_Long                   , Long3            , None            ) // int64 Arithmetic '-' (subtract)
 MACRO_WMS       ( Mul_Long                   , Long3            , None            ) // int64 Arithmetic '*'
 MACRO_WMS       ( Div_Trap_Long              , Long3            , None            ) // int64 Arithmetic '/'
-MACRO_WMS       ( Div_Trap_ULong             , Long3            , None            ) // uint64 Arithmetic '/'
+MACRO_WMS       ( Div_Trap_ULong             , Long3            , None            ) // unsigned long Arithmetic '/'
 MACRO_WMS       ( Rem_Trap_Long              , Long3            , None            ) // int64 Arithmetic '%'
-MACRO_WMS       ( Rem_Trap_ULong             , Long3            , None            ) // uint64 Arithmetic '%'
+MACRO_WMS       ( Rem_Trap_ULong             , Long3            , None            ) // unsigned long Arithmetic '%'
 MACRO_WMS       ( And_Long                   , Long3            , None            ) // int64 Bitwise '&'
 MACRO_WMS       ( Or_Long                    , Long3            , None            ) // int64 Bitwise '|'
 MACRO_WMS       ( Xor_Long                   , Long3            , None            ) // int64 Bitwise '^'
@@ -234,12 +234,12 @@ MACRO_WMS       ( CmEq_Long                  , Int1Long2       , None           
 MACRO_WMS       ( CmNe_Long                  , Int1Long2       , None            ) // int64 Comparison !=
 MACRO_WMS       ( CmLt_Long                  , Int1Long2       , None            ) // int64 Comparison <
 MACRO_WMS       ( CmLe_Long                  , Int1Long2       , None            ) // int64 Comparison <=
-MACRO_WMS       ( CmLt_ULong                 , Int1Long2       , None            ) // uint64 Comparison <
-MACRO_WMS       ( CmLe_ULong                 , Int1Long2       , None            ) // uint64 Comparison <=
+MACRO_WMS       ( CmLt_ULong                 , Int1Long2       , None            ) // unsigned long Comparison <
+MACRO_WMS       ( CmLe_ULong                 , Int1Long2       , None            ) // unsigned long Comparison <=
 MACRO_WMS       ( CmGt_Long                  , Int1Long2       , None            ) // int64 Comparison >
 MACRO_WMS       ( CmGe_Long                  , Int1Long2       , None            ) // int64 Comparison >=
-MACRO_WMS       ( CmGt_ULong                 , Int1Long2       , None            ) // uint64 Comparison >
-MACRO_WMS       ( CmGe_ULong                 , Int1Long2       , None            ) // uint64 Comparison >=
+MACRO_WMS       ( CmGt_ULong                 , Int1Long2       , None            ) // unsigned long Comparison >
+MACRO_WMS       ( CmGe_ULong                 , Int1Long2       , None            ) // unsigned long Comparison >=
 MACRO_WMS       ( Eqz_Long                   , Int1Long1       , None            ) // int64 Comparison with 0
 
 // Double comparisons

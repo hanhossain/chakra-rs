@@ -22,8 +22,8 @@ const char16_t Constants::UnknownScriptCode[] = _u("Unknown script code");
 const char16_t Constants::StringReplace[] = _u("String.prototype.replace");
 const char16_t Constants::StringMatch[] = _u("String.prototype.match");
 
-const uint64 Constants::ExponentMask = 0x3FF0000000000000;
-const uint64 Constants::MantissaMask = 0x000FFFFFFFFFFFFF;
+const unsigned long Constants::ExponentMask = 0x3FF0000000000000;
+const unsigned long Constants::MantissaMask = 0x000FFFFFFFFFFFFF;
 
 #ifdef TARGET_64
 const size_t Constants::StackLimitForScriptInterrupt = 0x7fffffffffffffff;

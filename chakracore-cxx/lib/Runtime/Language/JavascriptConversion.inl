@@ -268,9 +268,9 @@ namespace Js {
            {
                return nullptr;
            }
-           uint64 uint64Val = UnsafeVarTo<JavascriptUInt64Number>(value)->GetValue();
+           unsigned long uint64Val = UnsafeVarTo<JavascriptUInt64Number>(value)->GetValue();
 
-           return TryCanonicalizeIntHelper<uint64, allowNegOne>(uint64Val);
+           return TryCanonicalizeIntHelper<unsigned long, allowNegOne>(uint64Val);
        }
        default:
            return nullptr;

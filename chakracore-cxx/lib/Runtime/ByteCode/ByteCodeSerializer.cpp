@@ -284,8 +284,8 @@ bool TryConvertToUInt32(size_t size, uint32 * out)
     {
         return true;
     }
-    Assert(sizeof(size_t) == sizeof(uint64));
-    if((uint64)(*out) == size)
+    Assert(sizeof(size_t) == sizeof(unsigned long));
+    if((unsigned long)(*out) == size)
     {
         return true;
     }

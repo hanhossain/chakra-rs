@@ -23,7 +23,7 @@ void ForcedMemoryConstraint::FragmentAddressSpace(size_t usableSize)
 #if !defined(TARGET_64)
     uint const allocationGranularity = 64 * 1024;     // 64 KB
     Assert(allocationGranularity == AutoSystemInfo::Data.dwAllocationGranularity);
-    uint64 const addressEnd = ((uint64)4) * 1024 * 1024 * 1024;
+    unsigned long const addressEnd = ((unsigned long)4) * 1024 * 1024 * 1024;
 
     uint const freeSpaceSize = Math::Align<size_t>(usableSize, allocationGranularity);
     void * address[addressEnd / allocationGranularity];

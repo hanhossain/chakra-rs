@@ -6,14 +6,14 @@
 #include "Common/Tick.h"
 
 namespace Js {
-    uint64      Tick::s_luFreq;
-    uint64      Tick::s_luBegin;
+    unsigned long      Tick::s_luFreq;
+    unsigned long      Tick::s_luBegin;
     bool Tick::TickStaticInitializer::s_isInitialized = false;
     Tick::TickStaticInitializer Tick::s_tickStaticInitializer;
 
 #if DBG
-    uint64      Tick::s_DEBUG_luStart   = 0;
-    uint64      Tick::s_DEBUG_luSkip    = 0;
+    unsigned long      Tick::s_DEBUG_luStart   = 0;
+    unsigned long      Tick::s_DEBUG_luSkip    = 0;
 #endif
 
     ///----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ namespace Js {
     ///----------------------------------------------------------------------------
 
     Tick::Tick(
-        uint64 luTick)                      // Tick, in internal units
+        unsigned long luTick)                      // Tick, in internal units
     {
         m_luTick = luTick;
     }
@@ -66,14 +66,14 @@ namespace Js {
 
     Tick
     Tick::FromMicroseconds(
-        uint64 luTime)                          // Time, in microseconds
+        unsigned long luTime)                          // Time, in microseconds
     {
         //
         // Ensure we can convert losslessly.
         //
 
 #if DBG
-        const uint64 luMaxTick = _UI64_MAX / s_luFreq;
+        const unsigned long luMaxTick = _UI64_MAX / s_luFreq;
         AssertMsg(luTime <= luMaxTick, "Ensure time can be converted losslessly");
 #endif // DBG
 
@@ -82,7 +82,7 @@ namespace Js {
         // Create the Tick
         //
 
-        uint64 luTick = luTime * s_luFreq / ((uint64) 1000000);
+        unsigned long luTick = luTime * s_luFreq / ((unsigned long) 1000000);
         return Tick(luTick);
     }
 
@@ -97,7 +97,7 @@ namespace Js {
 
     Tick
     Tick::FromQPC(
-        uint64 luTime)                      // Time, in QPC units
+        unsigned long luTime)                      // Time, in QPC units
     {
         return Tick(luTime - s_luBegin);
     }
@@ -111,7 +111,7 @@ namespace Js {
     ///
     ///----------------------------------------------------------------------------
 
-    uint64
+    unsigned long
     Tick::ToQPC()
     {
         return (m_luTick + s_luBegin);
@@ -796,7 +796,7 @@ namespace Js {
         // Ensure that we have a sufficient amount of time so that we can handle useful time operations.
         //
 
-        uint64 nSec = _UI64_MAX / s_luFreq;
+        unsigned long nSec = _UI64_MAX / s_luFreq;
         if (nSec < 5 * 60)
         {
 #if FIXTHIS
@@ -809,7 +809,7 @@ namespace Js {
     Tick Tick::Now()
     {
         // Determine our current time
-        uint64 luCurrent = s_luBegin;
+        unsigned long luCurrent = s_luBegin;
         /* Verify( */ QueryPerformanceCounter((LARGE_INTEGER *) &luCurrent);
 
 #if DBG
@@ -817,26 +817,26 @@ namespace Js {
 #endif
 
         // Create a Tick instance, using our delta since we started tracking time.
-        uint64 luDelta = luCurrent - s_luBegin;
+        unsigned long luDelta = luCurrent - s_luBegin;
         return Tick(luDelta);
     }
 
-    uint64 Tick::ToMicroseconds() const
+    unsigned long Tick::ToMicroseconds() const
     {
         //
         // Convert time in microseconds (1 / 1000^2).  Because of the finite precision and wrap-around,
         // this math depends on where the Tick is.
         //
 
-        const uint64 luOneSecUs = (uint64) 1000000;
-        const uint64 luSafeTick = _UI64_MAX / luOneSecUs;
+        const unsigned long luOneSecUs = (unsigned long) 1000000;
+        const unsigned long luSafeTick = _UI64_MAX / luOneSecUs;
         if (m_luTick < luSafeTick)
         {
             //
             // Small enough to convert directly into microseconds.
             //
 
-            uint64 luTick = (m_luTick * luOneSecUs) / s_luFreq;
+            unsigned long luTick = (m_luTick * luOneSecUs) / s_luFreq;
             return luTick;
         }
         else
@@ -848,9 +848,9 @@ namespace Js {
             // 3. Add the two parts together
             //
 
-            uint64 luSec    = m_luTick / s_luFreq;
-            uint64 luRemain = m_luTick - luSec * s_luFreq;
-            uint64 luTick   = (luRemain * luOneSecUs) / s_luFreq;
+            unsigned long luSec    = m_luTick / s_luFreq;
+            unsigned long luRemain = m_luTick - luSec * s_luFreq;
+            unsigned long luTick   = (luRemain * luOneSecUs) / s_luFreq;
             luTick         += luSec * luOneSecUs;
 
             return luTick;

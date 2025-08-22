@@ -151,7 +151,7 @@ namespace Js
         }
         // Right now supports up to 8 bits.
         typedef byte LoopFlags_t;
-        LoopFlags(uint64 flags)
+        LoopFlags(unsigned long flags)
         {
             Assert(flags >> LoopFlags::COUNT == 0);
             LoopFlags_t* thisFlags = (LoopFlags_t *)this;

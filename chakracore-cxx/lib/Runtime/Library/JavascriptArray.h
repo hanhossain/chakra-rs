@@ -127,7 +127,7 @@ namespace Js
         static uint32 const MaxArrayLength = InvalidIndex;
         static uint32 const MaxInitialDenseLength=1<<18;
         static ushort const MergeSegmentsLengthHeuristics = 128; // If the length is less than MergeSegmentsLengthHeuristics then try to merge the segments
-        static uint64 const FiftyThirdPowerOfTwoMinusOne = 0x1FFFFFFFFFFFFF;  // 2^53-1
+        static unsigned long const FiftyThirdPowerOfTwoMinusOne = 0x1FFFFFFFFFFFFF;  // 2^53-1
 
         static const uint8_t AllocationBucketsInfoSize = 3;
         // 0th colum in allocationBuckets
@@ -503,7 +503,7 @@ namespace Js
         template <typename T>
         static BOOL TemplatedGetItem(T *pArr, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem = true);
         template <typename T>
-        static BOOL TemplatedGetItem(T *pArr, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem = true);
+        static BOOL TemplatedGetItem(T *pArr, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem = true);
         template <typename T = uint32>
         static Var ReverseHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, T length, ScriptContext* scriptContext);
         template <typename T = uint32>
@@ -727,7 +727,7 @@ namespace Js
     public:
 
         template <bool hasSideEffect, typename Fn>
-        void ForEachItemInRange(uint64 startIndex, uint64 limitIndex, ScriptContext * scriptContext, Fn fn)
+        void ForEachItemInRange(unsigned long startIndex, unsigned long limitIndex, ScriptContext * scriptContext, Fn fn)
         {
             Assert(false);
             Throw::InternalError();
@@ -813,18 +813,18 @@ namespace Js
         {
         private:
             uint32 index;
-            uint64 bigIndex;
+            unsigned long bigIndex;
 
             typedef IndexTrace<uint32> small_index;
 
         public:
             BigIndex(uint32 initIndex = 0);
-            BigIndex(uint64 initIndex);
+            BigIndex(unsigned long initIndex);
 
             bool IsSmallIndex() const;
             bool IsUint32Max() const;
             uint32 GetSmallIndex() const;
-            uint64 GetBigIndex() const;
+            unsigned long GetBigIndex() const;
             Var ToNumber(ScriptContext* scriptContext) const;
 
             const BigIndex& operator++();
@@ -897,7 +897,7 @@ namespace Js
 
         template<typename T>
         static void TryGetArrayAndLength(Var arg, ScriptContext *scriptContext, PCWSTR methodName, JavascriptArray** array, RecyclableObject** obj, T * length);
-        static uint64 OP_GetLength(Var obj, ScriptContext *scriptContext);
+        static unsigned long OP_GetLength(Var obj, ScriptContext *scriptContext);
 
     public:
         template<typename T, typename P = uint32>

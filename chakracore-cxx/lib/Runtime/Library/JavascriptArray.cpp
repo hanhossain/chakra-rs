@@ -33,7 +33,7 @@ using namespace Js;
     const Var JavascriptArray::MissingItem = (Var)VarMissingItemPattern;
 
 #if defined(TARGET_64)
-    const Var JavascriptArray::IntMissingItemVar = (Var)(((uint64)IntMissingItemPattern << 32) | (uint32)IntMissingItemPattern);
+    const Var JavascriptArray::IntMissingItemVar = (Var)(((unsigned long)IntMissingItemPattern << 32) | (uint32)IntMissingItemPattern);
     uint JavascriptNativeIntArray::allocationBuckets[][AllocationBucketsInfoSize] =
     {
         // See comments above on how to read this
@@ -2241,7 +2241,7 @@ using namespace Js;
                     }
                     Assert(newSeg->elements[i] == (Var)JavascriptArray::MissingItem);
                 }
-                else if (*(uint64*)&(((SparseArraySegment<double>*)seg)->elements[i]) == 0ull)
+                else if (*(unsigned long*)&(((SparseArraySegment<double>*)seg)->elements[i]) == 0ull)
                 {
                     newSeg->elements[i] = TaggedInt::ToVarUnchecked(0);
                 }
@@ -3132,7 +3132,7 @@ using namespace Js;
     {
         if (!succeeded)
         {
-            uint64 i = (uint64)(index.IsSmallIndex() ? index.GetSmallIndex() : index.GetBigIndex());
+            unsigned long i = (unsigned long)(index.IsSmallIndex() ? index.GetSmallIndex() : index.GetBigIndex());
             JavascriptError::ThrowTypeError(scriptContext, JSERR_CantRedefineProp, JavascriptConversion::ToString(JavascriptNumber::ToVar(i, scriptContext), scriptContext)->GetSz());
         }
     }
@@ -3156,16 +3156,16 @@ using namespace Js;
         return pDestObj->SetItem(idxDest, aItem, Js::PropertyOperation_ThrowIfNotExtensible);
     }
 
-    uint64 JavascriptArray::OP_GetLength(Var obj, ScriptContext *scriptContext)
+    unsigned long JavascriptArray::OP_GetLength(Var obj, ScriptContext *scriptContext)
     {
         if (scriptContext->GetConfig()->IsES6ToLengthEnabled())
         {
-            // Casting to uint64 is okay as ToLength will always be >= 0.
-            return (uint64)JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext);
+            // Casting to unsigned long is okay as ToLength will always be >= 0.
+            return (unsigned long)JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext);
         }
         else
         {
-            return (uint64)JavascriptConversion::ToUInt32(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext);
+            return (unsigned long)JavascriptConversion::ToUInt32(JavascriptOperators::OP_GetLength(obj, scriptContext), scriptContext);
         }
     }
 
@@ -3937,7 +3937,7 @@ using namespace Js;
         JS_REENTRANT(jsReentLock, TryGetArrayAndLength(args[0], scriptContext, _u("Array.prototype.indexOf"), &pArr, &obj, &length));
         Var search;
         uint32 fromIndex = 0;
-        uint64 fromIndex64 = 0;
+        unsigned long fromIndex64 = 0;
 
         // The evaluation of method arguments may change the type of the array. Hence, we do that prior to the actual helper method calls.
         // The if clause of the conditional statement below applies to an JavascriptArray or TypedArray instances. The rest of the conditional
@@ -4115,7 +4115,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(RecyclableObject * obj, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(RecyclableObject * obj, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // Note: Sometime cross site array go down this path to get the marshalling
         Assert(!VirtualTableInfo<JavascriptArray>::HasVirtualTable(obj)
@@ -4141,7 +4141,7 @@ using namespace Js;
         return pArr->JavascriptArray::DirectGetItemAtFull(index, element);
     }
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptArray *pArr, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptArray *pArr, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // This should never get called.
         Assert(false);
@@ -4157,7 +4157,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeIntArray *pArr, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeIntArray *pArr, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // This should never get called.
         Assert(false);
@@ -4173,7 +4173,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeFloatArray *pArr, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(JavascriptNativeFloatArray *pArr, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // This should never get called.
         Assert(false);
@@ -4197,7 +4197,7 @@ using namespace Js;
     }
 
     template <>
-    BOOL JavascriptArray::TemplatedGetItem(TypedArrayBase * typedArrayBase, uint64 index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
+    BOOL JavascriptArray::TemplatedGetItem(TypedArrayBase * typedArrayBase, unsigned long index, Var * element, ScriptContext * scriptContext, bool checkHasItem)
     {
         // This should never get called.
         Assert(false);
@@ -5303,7 +5303,7 @@ Case0:
         BigIndex n;
         if (scriptContext->GetConfig()->IsES6ToLengthEnabled())
         {
-            n = (uint64) JavascriptConversion::ToLength(length, scriptContext);
+            n = (unsigned long) JavascriptConversion::ToLength(length, scriptContext);
         }
         else
         {
@@ -6155,7 +6155,7 @@ Case0:
                 }
             }
 
-            for (uint64 i = MaxArrayLength; length > i; i++)
+            for (unsigned long i = MaxArrayLength; length > i; i++)
             {
                 JS_REENTRANT(jsReentLock, BOOL hasItem = JavascriptOperators::HasItem(dynamicObject, i + 1));
                 if (hasItem)
@@ -7106,9 +7106,9 @@ Case0:
 
         JavascriptArray* pArr = 0;
         RecyclableObject* pObj = 0;
-        uint64 start = 0u;
-        uint64 deleteLen = 0u;
-        uint64 length = 0u;
+        unsigned long start = 0u;
+        unsigned long deleteLen = 0u;
+        unsigned long length = 0u;
 
         JS_REENTRANT(jsReentLock, TryGetArrayAndLength(args[0], scriptContext, _u("Array.prototype.splice"), &pArr, &pObj, &length));
 
@@ -7151,11 +7151,11 @@ Case0:
                 return TryArraySplice(pArr, (uint32)start, (uint32)length, (uint32)deleteLen, insertArgs, insertLen, scriptContext));
         }
 
-        uint64 newLen = (length - deleteLen) + insertLen;
+        unsigned long newLen = (length - deleteLen) + insertLen;
         if (newLen > UINT_MAX || length > UINT_MAX || (length + insertLen) > UINT_MAX)
         {
             JS_REENTRANT_UNLOCK(jsReentLock,
-                return ObjectSpliceHelper<uint64>(pObj, length, start, deleteLen, (Var*)insertArgs, insertLen, scriptContext, nullptr));
+                return ObjectSpliceHelper<unsigned long>(pObj, length, start, deleteLen, (Var*)insertArgs, insertLen, scriptContext, nullptr));
         }
         else
         {
@@ -7536,7 +7536,7 @@ Case0:
         if (newLenOverflow.HasOverflowed())
         {
             pArr = EnsureNonNativeArray(pArr);
-            JS_REENTRANT_UNLOCK(jsReentLock, return ObjectSpliceHelper<uint64>(pArr, len, start, deleteLen, insertArgs, insertLen, scriptContext, newObj));
+            JS_REENTRANT_UNLOCK(jsReentLock, return ObjectSpliceHelper<unsigned long>(pArr, len, start, deleteLen, insertArgs, insertLen, scriptContext, newObj));
         }
 
         // If we have missing values then convert to not native array for now
@@ -7992,7 +7992,7 @@ Case0:
                 }
                 else
                 {
-                    JS_REENTRANT(jsReentLock, Unshift<BigIndex, uint64>(dynamicObject, MaxArrayLength, (uint64)end.GetSmallIndex(), length.GetBigIndex(), scriptContext));
+                    JS_REENTRANT(jsReentLock, Unshift<BigIndex, unsigned long>(dynamicObject, MaxArrayLength, (unsigned long)end.GetSmallIndex(), length.GetBigIndex(), scriptContext));
                 }
             }
 
@@ -9217,7 +9217,7 @@ Case0:
         };
 
         auto fn64 = [dynamicObject, callBackFn, flags, thisArg,
-            scriptContext](uint64 k, Var element)
+            scriptContext](unsigned long k, Var element)
         {
             BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
             {
@@ -9561,7 +9561,7 @@ Case0:
         }
         else
         {
-            BigIndex dstIndex = static_cast<uint64>(k);
+            BigIndex dstIndex = static_cast<unsigned long>(k);
 
             for (int64 i = k; i < finalVal; i++)
             {
@@ -11027,9 +11027,9 @@ Case0:
     }
 
     //
-    // Construct a BigIndex initialized to a given uint64 (large or small index).
+    // Construct a BigIndex initialized to a given unsigned long (large or small index).
     //
-    JavascriptArray::BigIndex::BigIndex(uint64 initIndex)
+    JavascriptArray::BigIndex::BigIndex(unsigned long initIndex)
         : index(InvalidIndex), bigIndex(initIndex)
     {
         if (bigIndex < InvalidIndex) // if it's actually small index
@@ -11054,7 +11054,7 @@ Case0:
         return index;
     }
 
-    uint64 JavascriptArray::BigIndex::GetBigIndex() const
+    unsigned long JavascriptArray::BigIndex::GetBigIndex() const
     {
         Assert(!IsSmallIndex());
         return bigIndex;
@@ -11140,7 +11140,7 @@ Case0:
             uint32 newIndex;
             if (UInt32Math::Add(index, delta, &newIndex))
             {
-                return static_cast<uint64>(index) + static_cast<uint64>(delta);
+                return static_cast<unsigned long>(index) + static_cast<unsigned long>(delta);
             }
             else
             {
@@ -11149,7 +11149,7 @@ Case0:
         }
         else
         {
-            return bigIndex + static_cast<uint64>(delta);
+            return bigIndex + static_cast<unsigned long>(delta);
         }
     }
 
@@ -11162,12 +11162,12 @@ Case0:
         else if (rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if lhs is big promote rhs
-            return this->GetBigIndex() == (uint64) rhs.GetSmallIndex();
+            return this->GetBigIndex() == (unsigned long) rhs.GetSmallIndex();
         }
         else if (!rhs.IsSmallIndex() && this->IsSmallIndex())
         {
             // if rhs is big promote lhs
-            return ((uint64)this->GetSmallIndex()) == rhs.GetBigIndex();
+            return ((unsigned long)this->GetSmallIndex()) == rhs.GetBigIndex();
         }
         return this->GetBigIndex() == rhs.GetBigIndex();
     }
@@ -11181,12 +11181,12 @@ Case0:
         else if (rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if lhs is big promote rhs
-            return this->GetBigIndex() > (uint64)rhs.GetSmallIndex();
+            return this->GetBigIndex() > (unsigned long)rhs.GetSmallIndex();
         }
         else if (!rhs.IsSmallIndex() && this->IsSmallIndex())
         {
             // if rhs is big promote lhs
-            return ((uint64)this->GetSmallIndex()) > rhs.GetBigIndex();
+            return ((unsigned long)this->GetSmallIndex()) > rhs.GetBigIndex();
         }
         return this->GetBigIndex() > rhs.GetBigIndex();
     }
@@ -11200,12 +11200,12 @@ Case0:
         else if (rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if lhs is big promote rhs
-            return this->GetBigIndex() < (uint64)rhs.GetSmallIndex();
+            return this->GetBigIndex() < (unsigned long)rhs.GetSmallIndex();
         }
         else if (!rhs.IsSmallIndex() && this->IsSmallIndex())
         {
             // if rhs is big promote lhs
-            return ((uint64)this->GetSmallIndex()) < rhs.GetBigIndex();
+            return ((unsigned long)this->GetSmallIndex()) < rhs.GetBigIndex();
         }
         return this->GetBigIndex() < rhs.GetBigIndex();
     }
@@ -11219,12 +11219,12 @@ Case0:
         else if (rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if lhs is big promote rhs
-            return this->GetBigIndex() <= (uint64)rhs.GetSmallIndex();
+            return this->GetBigIndex() <= (unsigned long)rhs.GetSmallIndex();
         }
         else if (!rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if rhs is big promote lhs
-            return ((uint64)this->GetSmallIndex()) <= rhs.GetBigIndex();
+            return ((unsigned long)this->GetSmallIndex()) <= rhs.GetBigIndex();
         }
         return this->GetBigIndex() <= rhs.GetBigIndex();
     }
@@ -11238,12 +11238,12 @@ Case0:
         else if (rhs.IsSmallIndex() && !this->IsSmallIndex())
         {
             // if lhs is big promote rhs
-            return this->GetBigIndex() >= (uint64)rhs.GetSmallIndex();
+            return this->GetBigIndex() >= (unsigned long)rhs.GetSmallIndex();
         }
         else if (!rhs.IsSmallIndex() && this->IsSmallIndex())
         {
             // if rhs is big promote lhs
-            return ((uint64)this->GetSmallIndex()) >= rhs.GetBigIndex();
+            return ((unsigned long)this->GetSmallIndex()) >= rhs.GetBigIndex();
         }
         return this->GetBigIndex() >= rhs.GetBigIndex();
     }
@@ -12863,7 +12863,7 @@ Case0:
         {
             return FALSE;
         }
-        if (*(uint64*)&dvalue == 0ull)
+        if (*(unsigned long*)&dvalue == 0ull)
         {
             *value = TaggedInt::ToVarUnchecked(0);
         }
@@ -13060,7 +13060,7 @@ Case0:
 
     BOOL JavascriptNativeFloatArray::SetItem(uint32 index, double dValue)
     {
-        if (*(uint64*)&dValue == *(uint64*)&JavascriptNativeFloatArray::MissingItem)
+        if (*(unsigned long*)&dValue == *(unsigned long*)&JavascriptNativeFloatArray::MissingItem)
         {
             JavascriptArray *varArr = JavascriptNativeFloatArray::ToVarArray(this);
             varArr->DirectSetItemAt(index, JavascriptNumber::ToVarNoCheck(dValue, GetScriptContext()));
@@ -13169,5 +13169,5 @@ Case0:
     template void Js::JavascriptArray::TypedArraySort<float>(float*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<double>(double*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<int64>(int64*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<uint64>(uint64*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<unsigned long>(unsigned long*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<bool>(bool*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);

@@ -123,7 +123,7 @@ namespace TTD
         this->WriteNakedInt64(val);
     }
 
-    void FileWriter::WriteUInt64(NSTokens::Key key, uint64 val, NSTokens::Separator separator)
+    void FileWriter::WriteUInt64(NSTokens::Key key, unsigned long val, NSTokens::Separator separator)
     {
         this->WriteKey(key, separator);
         this->WriteNakedUInt64(val);
@@ -303,7 +303,7 @@ namespace TTD
         this->WriteFormattedCharData(_u("%I64i"), val);
     }
 
-    void TextFormatWriter::WriteNakedUInt64(uint64 val, NSTokens::Separator separator)
+    void TextFormatWriter::WriteNakedUInt64(unsigned long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
         this->WriteFormattedCharData(_u("%I64u"), val);
@@ -519,10 +519,10 @@ namespace TTD
         this->WriteRawByteBuff_Fixed<int64>(val);
     }
 
-    void BinaryFormatWriter::WriteNakedUInt64(uint64 val, NSTokens::Separator separator)
+    void BinaryFormatWriter::WriteNakedUInt64(unsigned long val, NSTokens::Separator separator)
     {
         this->WriteSeparator(separator);
-        this->WriteRawByteBuff_Fixed<uint64>(val);
+        this->WriteRawByteBuff_Fixed<unsigned long>(val);
     }
 
     void BinaryFormatWriter::WriteNakedDouble(double val, NSTokens::Separator separator)
@@ -664,7 +664,7 @@ namespace TTD
         return this->ReadNakedInt64();
     }
 
-    uint64 FileReader::ReadUInt64(NSTokens::Key keyCheck, bool readSeparator)
+    unsigned long FileReader::ReadUInt64(NSTokens::Key keyCheck, bool readSeparator)
     {
         this->ReadKey(keyCheck, readSeparator);
         return this->ReadNakedUInt64();
@@ -1132,10 +1132,10 @@ namespace TTD
         return value * sign;
     }
 
-    uint64 TextFormatReader::ReadUIntFromCharArray(const char16_t* buff)
+    unsigned long TextFormatReader::ReadUIntFromCharArray(const char16_t* buff)
     {
-        uint64 value = 0;
-        uint64 multiplier = 1;
+        unsigned long value = 0;
+        unsigned long multiplier = 1;
 
         int32 digitCount = (int32)wcslen(buff);
         for(int32 i = digitCount - 1; i >= 0; --i)
@@ -1248,7 +1248,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::Number, "Error in parse.");
 
-        uint64 uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(uval <= BYTE_MAX, "Error in parse.");
 
         return (byte)uval;
@@ -1284,7 +1284,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::Number, "Error in parse.");
 
-        uint64 uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long uval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(uval <= UINT32_MAX, "Error in parse.");
 
         return (uint32)uval;
@@ -1300,7 +1300,7 @@ namespace TTD
         return this->ReadIntFromCharArray(this->m_charListOpt.GetBuffer());
     }
 
-    uint64 TextFormatReader::ReadNakedUInt64(bool readSeparator)
+    unsigned long TextFormatReader::ReadNakedUInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
@@ -1377,7 +1377,7 @@ namespace TTD
         NSTokens::ParseTokenKind tok = this->Scan(this->m_charListOpt);
         TTDAssert(tok == NSTokens::ParseTokenKind::EnumTag, "Error in parse.");
 
-        uint64 tval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
+        unsigned long tval = this->ReadUIntFromCharArray(this->m_charListOpt.GetBuffer());
         TTDAssert(tval <= UINT32_MAX, "Error in parse.");
 
         return (uint32)tval;
@@ -1579,12 +1579,12 @@ namespace TTD
         return i;
     }
 
-    uint64 BinaryFormatReader::ReadNakedUInt64(bool readSeparator)
+    unsigned long BinaryFormatReader::ReadNakedUInt64(bool readSeparator)
     {
         this->ReadSeparator(readSeparator);
 
-        uint64 i = 0;
-        this->ReadBytesInto_Fixed<uint64>(i);
+        unsigned long i = 0;
+        this->ReadBytesInto_Fixed<unsigned long>(i);
 
         return i;
     }
@@ -1726,7 +1726,7 @@ namespace TTD
         infoInto.TimeHash = infoFrom.TimeHash;
     }
 
-    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, uint64 eTime, uint64 fTime, uint64 lTime)
+    void SetDiagnosticOriginInformation(DiagnosticOrigin& info, uint32 sourceLine, unsigned long eTime, unsigned long fTime, unsigned long lTime)
     {
         info.SourceLine = sourceLine;
         info.EventTime = (uint32)eTime;
@@ -1804,7 +1804,7 @@ namespace TTD
         this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64i", ival);
     }
 
-    void TraceLogger::AppendUnsignedInteger(uint64 ival)
+    void TraceLogger::AppendUnsignedInteger(unsigned long ival)
     {
         this->EnsureSpace(64);
         this->m_currLength += sprintf_s(this->m_buffer + this->m_currLength, 64, "%I64u", ival);

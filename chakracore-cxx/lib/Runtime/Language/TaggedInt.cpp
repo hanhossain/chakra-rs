@@ -645,7 +645,7 @@ LblDone:
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
     }
 
-    bool TaggedInt::IsOverflow(uint64 nValue)
+    bool TaggedInt::IsOverflow(unsigned long nValue)
     {
         return nValue > k_nMaxValue;
     }
@@ -673,7 +673,7 @@ LblDone:
 
     bool TaggedInt::IsPair(Var aLeft, Var aRight)
     {
-        uint32 tags = (uint32)((uint64)aLeft >> 32 | (uint64)aRight >> 48);
+        uint32 tags = (uint32)((unsigned long)aLeft >> 32 | (unsigned long)aRight >> 48);
         bool result = (tags == AtomTag_Pair);
         AssertMsg(result == (TaggedInt::Is(aLeft) && TaggedInt::Is(aRight)), "TaggedInt::IsPair() logic is incorrect");
         return result;

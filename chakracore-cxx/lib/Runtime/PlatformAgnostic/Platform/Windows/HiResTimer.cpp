@@ -13,7 +13,7 @@ namespace PlatformAgnostic
 namespace DateTime
 {
     // Quantization code adapted from the version in Edge
-    template<uint64 frequencyOfQuantization>
+    template<unsigned long frequencyOfQuantization>
     class JitterManager
     {
         double frequencyOfSampling = 1.0;
@@ -68,7 +68,7 @@ namespace DateTime
             quantizationToSelectedScaleFactor = max(quantizationToSelectedScaleFactor, 1.0);
         }
 
-        uint64 QuantizedQPC(uint64 qpc)
+        unsigned long QuantizedQPC(unsigned long qpc)
         {
             // Due to further analysis of some attacks, we're jittering on a more granular
             // frequency of as much as a full millisecond.
@@ -204,11 +204,11 @@ namespace DateTime
         }
 
 #if DBG
-        uint64 f;
+        unsigned long f;
         Assert(QueryPerformanceFrequency((LARGE_INTEGER *)&f) && f == data.freq);
 #endif
         // try better resolution time using perf counters
-        uint64 count;
+        unsigned long count;
         if( !QueryPerformanceCounter((LARGE_INTEGER *) &count))
         {
             data.fHiResAvailable = false;

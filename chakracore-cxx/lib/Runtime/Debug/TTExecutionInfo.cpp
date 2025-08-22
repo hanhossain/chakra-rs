@@ -657,7 +657,7 @@ namespace TTD
         this->m_pendingTTDMoveMode = 0;
     }
 
-    void ExecutionInfoManager::SetPendingTTDReverseContinueMove(uint64 moveflag)
+    void ExecutionInfoManager::SetPendingTTDReverseContinueMove(unsigned long moveflag)
     {
         this->m_continueBreakPoint.Clear();
         this->GetTimeAndPositionForDebugger(this->m_pendingTTDBP);
@@ -714,8 +714,8 @@ namespace TTD
         cfinfo.Function->GetSourceLineFromStartOffset_TTD(startOffset, &srcLine, &srcColumn);
 
         bool locationOk = ((uint32)srcLine == this->m_activeTTDBP.GetSourceLine()) & ((uint32)srcColumn == this->m_activeTTDBP.GetSourceColumn());
-        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((uint64)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
-        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((uint64)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
+        bool ftimeOk = (this->m_activeTTDBP.GetFunctionTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetFunctionTime() == cfinfo.FunctionTime);
+        bool ltimeOk = (this->m_activeTTDBP.GetLoopTime() == -1) | ((unsigned long)this->m_activeTTDBP.GetLoopTime() == cfinfo.CurrentStatementLoopTime);
 
         return locationOk & ftimeOk & ltimeOk;
     }
@@ -996,8 +996,8 @@ namespace TTD
         //if we are at the first statement in the function then we want the parents current
         Js::FunctionBody* fbody = nullptr;
         int32 statementIndex = -1;
-        uint64 ftime = 0;
-        uint64 ltime = 0;
+        unsigned long ftime = 0;
+        unsigned long ltime = 0;
         if(cfinfo.LastStatementIndex == -1)
         {
             SingleCallCounter cfinfoCaller = { 0 };

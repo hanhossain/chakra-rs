@@ -1593,7 +1593,7 @@ namespace Js
         return Js::Tick::Now();
     }
 
-    uint64 AsmJsModuleCompiler::GetCompileTime() const
+    unsigned long AsmJsModuleCompiler::GetCompileTime() const
     {
         return mCompileTime.ToMicroseconds();
     }
@@ -1613,8 +1613,8 @@ namespace Js
         }
         else
         {
-            uint64 us = GetCompileTime();
-            uint64 ms = us / 1000;
+            unsigned long us = GetCompileTime();
+            unsigned long ms = us / 1000;
             us = us % 1000;
             AsmJSCompiler::OutputMessage(GetScriptContext(), DEIT_ASMJS_SUCCEEDED, _u("Successfully compiled asm.js code (total compilation time %llu.%llums)"), ms, us);
         }
@@ -1623,8 +1623,8 @@ namespace Js
         {
             for (int i = 0; i < AsmJsCompilation::Phases_COUNT; i++)
             {
-                uint64 us = mPhaseCompileTime[i].ToMicroseconds();
-                uint64 ms = us / 1000;
+                unsigned long us = mPhaseCompileTime[i].ToMicroseconds();
+                unsigned long ms = us / 1000;
                 us = us % 1000;
                 Output::Print(_u("%20s : %llu.%llums\n"), AsmPhaseNames[i], ms, us);
             }

@@ -45,11 +45,11 @@ public:
     template <bool Saturate>
     static int64 F32ToI64(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
-    static uint64 F32ToU64(float src, _In_ Js::ScriptContext* scriptContext);
+    static unsigned long F32ToU64(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
     static int64 F64ToI64(double src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
-    static uint64 F64ToU64(double src, _In_ Js::ScriptContext* scriptContext);
+    static unsigned long F64ToU64(double src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
     static int32 F32ToI32(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>

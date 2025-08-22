@@ -48,7 +48,7 @@ namespace Wasm {
             }
             return 1;
         }
-        static uint64 GetMaxBrTableElems() { return CONFIG_FLAG(WasmIgnoreLimits) ? UINT32_MAX : MaxBrTableElems; }
+        static unsigned long GetMaxBrTableElems() { return CONFIG_FLAG(WasmIgnoreLimits) ? UINT32_MAX : MaxBrTableElems; }
         static uint32 GetMaxMemoryInitialPages() { return CONFIG_FLAG(WasmIgnoreLimits) ? UINT32_MAX : MaxMemoryInitialPages; }
         static uint32 GetMaxMemoryMaximumPages() { return CONFIG_FLAG(WasmIgnoreLimits) ? UINT32_MAX : MaxMemoryMaximumPages; }
         static uint32 GetMaxModuleSize() { return CONFIG_FLAG(WasmIgnoreLimits) ? UINT32_MAX : MaxModuleSize; }

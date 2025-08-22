@@ -629,7 +629,7 @@ namespace TTD
 
             //The URI the souce code was loaded from and the source context id
             TTString SourceUri;
-            uint64 SourceContextId;
+            unsigned long SourceContextId;
 
             //The flags for loading this script
             LoadScriptFlag LoadFlag;

@@ -8546,7 +8546,7 @@ LowererMD::NegZeroBranching(IR::Opnd* opnd, IR::Instr* instr, IR::LabelInstr* is
     IRType regType = is32Bits ? TyUint32 : TyUint64;
 
     // Use UInt64 comparison between the opnd to check and negative zero constant.
-    // For this we have to convert opnd which is a double to uint64.
+    // For this we have to convert opnd which is a double to unsigned long.
 
     // MOV intOpnd, src
     IR::RegOpnd *intOpnd = IR::RegOpnd::New(regType, this->m_func);

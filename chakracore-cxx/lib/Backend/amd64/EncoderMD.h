@@ -33,7 +33,7 @@ private:
     {
         IR::LabelInstr* m_labelInstr;        // ptr to Br Label
         uint8_t            m_nopCount;
-        uint64          m_InlineeOffset;
+        unsigned long          m_InlineeOffset;
     };
     bool                m_isShortBr;
 
@@ -151,12 +151,12 @@ public:
             getBrTargetLabel()->GetPC() - ((uint8_t*)m_ptr + 1) <= 127;
     }
 
-    uint64 GetInlineOffset()
+    unsigned long GetInlineOffset()
     {
         return m_InlineeOffset;
     }
 
-    void SetInlineOffset(uint64 offset)
+    void SetInlineOffset(unsigned long offset)
     {
         m_InlineeOffset = offset;
     }

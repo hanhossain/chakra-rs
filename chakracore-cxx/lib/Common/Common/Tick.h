@@ -35,14 +35,14 @@ namespace Js {
     public:
                                 Tick();
     private:
-                                Tick(uint64 luTick);
+                                Tick(unsigned long luTick);
 
     // Properties
     public:
-                uint64          ToMicroseconds() const;
+                unsigned long          ToMicroseconds() const;
                 double          ToMilliseconds() const;
-        static  Tick            FromMicroseconds(uint64 luTick);
-        static  Tick            FromQPC(uint64 luQPCTick);
+        static  Tick            FromMicroseconds(unsigned long luTick);
+        static  Tick            FromQPC(unsigned long luQPCTick);
 
         static  Tick            Now();
 
@@ -56,18 +56,18 @@ namespace Js {
                 bool            operator >(Tick timeOther) const;
                 bool            operator >=(Tick timeOther) const;
 
-                uint64          ToQPC();
+                unsigned long          ToQPC();
 
     // Data
     private:
-        static  uint64          s_luFreq;           // Frequency
-        static  uint64          s_luBegin;          // Beginning time
+        static  unsigned long          s_luFreq;           // Frequency
+        static  unsigned long          s_luBegin;          // Beginning time
     #if DBG
-        static  uint64          s_DEBUG_luStart;    // Tick start offset for debugging
-        static  uint64          s_DEBUG_luSkip;     // Tick skip offset for debugging
+        static  unsigned long          s_DEBUG_luStart;    // Tick start offset for debugging
+        static  unsigned long          s_DEBUG_luSkip;     // Tick skip offset for debugging
     #endif
 
-                uint64          m_luTick;           // Current time sample
+                unsigned long          m_luTick;           // Current time sample
 
         friend TickDelta;
     

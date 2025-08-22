@@ -250,7 +250,7 @@ namespace Js
             uint8_t bufferReg = 0;
             uint8_t dstReg = 0;
             uint instrSizeInByte = 0;
-            uint64 bufferValue = 0;
+            unsigned long bufferValue = 0;
             InstructionData() :isLoad(0), isFloat32(0), isFloat64(0), isSimd(0), isInvalidInstr(0){}
         };
         struct RexByteValue

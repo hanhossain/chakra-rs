@@ -576,7 +576,7 @@ namespace TTD
         *val2 = this->H2FunctionScopeInfoMap.Item(h2PtrId);
     }
 
-    void TTDCompareMap::GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, uint64* val1, TTD_PTR_ID h2PtrId, uint64* val2)
+    void TTDCompareMap::GetCompareValues(TTDCompareTag compareTag, TTD_PTR_ID h1PtrId, unsigned long* val1, TTD_PTR_ID h2PtrId, unsigned long* val2)
     {
         if(compareTag == TTDCompareTag::TopLevelLoadFunction)
         {

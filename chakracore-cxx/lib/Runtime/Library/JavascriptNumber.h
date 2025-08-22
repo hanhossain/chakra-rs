@@ -48,7 +48,7 @@ namespace Js
         static Var ToVarInPlace(uint32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVar(uint32 nValue, ScriptContext* scriptContext);
         static Var ToVar(int64 nValue, ScriptContext* scriptContext);
-        static Var ToVar(uint64 nValue, ScriptContext* scriptContext);
+        static Var ToVar(unsigned long nValue, ScriptContext* scriptContext);
         static double GetValue(Var aValue);
         static int32 DirectPowIntInt(bool*, int32, int32);
         static double DirectPowDoubleInt(double, int32);
@@ -133,8 +133,8 @@ namespace Js
 #endif
 #endif
 
-        inline static bool IsSpecial(double value, uint64 nSpecial) { return NumberUtilities::IsSpecial(value, nSpecial); }
-        inline static uint64 ToSpecial(double value) { return NumberUtilities::ToSpecial(value); }
+        inline static bool IsSpecial(double value, unsigned long nSpecial) { return NumberUtilities::IsSpecial(value, nSpecial); }
+        inline static unsigned long ToSpecial(double value) { return NumberUtilities::ToSpecial(value); }
 
         static JavascriptString* ToStringNan(ScriptContext* scriptContext);
         static JavascriptString* ToStringRadix10(double dValue, ScriptContext* scriptContext);
@@ -178,9 +178,9 @@ namespace Js
             return m_value;
         }
 
-        void SetSpecial(uint64 value)
+        void SetSpecial(unsigned long value)
         {
-            uint64* pnOverwrite = reinterpret_cast<uint64 *>(&this->m_value);
+            unsigned long* pnOverwrite = reinterpret_cast<unsigned long *>(&this->m_value);
             *pnOverwrite = value;
         }
 
@@ -204,14 +204,14 @@ namespace Js
     // we can only produce NaNs with top 13 bits set (see k_Nan) - this cannot happen.
     inline bool JavascriptNumber::Is_NoTaggedIntCheck(Var aValue)
     {
-        return ((uint64)aValue >> 50) != 0;
+        return ((unsigned long)aValue >> 50) != 0;
     }
 
     inline double JavascriptNumber::GetValue(Var aValue)
      {
          AssertMsg(Is(aValue), "Ensure var is actually a 'JavascriptNumber'");
          double result;
-        (*(uint64*)(&result)) = (((uint64)aValue) ^ FloatTag_Value);
+        (*(unsigned long*)(&result)) = (((unsigned long)aValue) ^ FloatTag_Value);
          return result;
      }
 #endif

@@ -305,7 +305,7 @@ BVFixed::ClearEnd()
     uint offset = BVUnit::Offset(this->Length());
     if (offset != 0)
     {
-        Assert((((uint64)1 << BVUnit::Offset(this->Length())) - 1) == BVUnit::GetTopBitsClear(this->Length()));
+        Assert((((unsigned long)1 << BVUnit::Offset(this->Length())) - 1) == BVUnit::GetTopBitsClear(this->Length()));
         this->data[this->WordCount() - 1].And(BVUnit::GetTopBitsClear(this->Length()));
     }
 }

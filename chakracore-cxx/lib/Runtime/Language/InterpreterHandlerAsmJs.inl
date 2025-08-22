@@ -149,7 +149,7 @@ EXDEF3_WMS( CUSTOM_ASMJS     , StArrAtomic  , OP_StArrAtomic               , Was
   DEF2_WMS( L2toL1Mem        , Xor_Long     , AsmJsMath::Xor<int64>)
   DEF2_WMS( L2toL1Mem        , Shl_Long     , Wasm::WasmMath::Shl<int64>)
   DEF2_WMS( L2toL1Mem        , Shr_Long     , Wasm::WasmMath::Shr<int64>)
-  DEF2_WMS( L2toL1Mem        , Shr_ULong    , Wasm::WasmMath::ShrU<uint64>)
+  DEF2_WMS( L2toL1Mem        , Shr_ULong    , Wasm::WasmMath::ShrU<unsigned long>)
   DEF2_WMS( L2toL1Mem        , Rol_Long     , Wasm::WasmMath::Rol<int64>)
   DEF2_WMS( L2toL1Mem        , Ror_Long     , Wasm::WasmMath::Ror<int64>)
   DEF2_WMS( L1toL1Mem        , Clz_Long     , Wasm::WasmMath::Clz<int64>)
@@ -157,8 +157,8 @@ EXDEF3_WMS( CUSTOM_ASMJS     , StArrAtomic  , OP_StArrAtomic               , Was
   DEF2_WMS( L1toL1Mem        , PopCnt_Long  , Wasm::WasmMath::PopCnt<int64>)
 
 // Unsigned Int64 Math
-  DEF2_WMS( L2toL1Ctx        , Div_Trap_ULong, (OP_UnsignedDivRemCheck<uint64, &AsmJsMath::DivUnsafe<uint64>>) )
-  DEF2_WMS( L2toL1Ctx        , Rem_Trap_ULong, (OP_UnsignedDivRemCheck<uint64, &AsmJsMath::RemUnsafe<uint64>>) )
+  DEF2_WMS( L2toL1Ctx        , Div_Trap_ULong, (OP_UnsignedDivRemCheck<unsigned long, &AsmJsMath::DivUnsafe<unsigned long>>) )
+  DEF2_WMS( L2toL1Ctx        , Rem_Trap_ULong, (OP_UnsignedDivRemCheck<unsigned long, &AsmJsMath::RemUnsafe<unsigned long>>) )
 
 // Double Math
   DEF2_WMS( D1toD1Mem        , Neg_Db       , AsmJsMath::Neg<double>                             )
@@ -200,10 +200,10 @@ EXDEF3_WMS( CUSTOM_ASMJS     , StArrAtomic  , OP_StArrAtomic               , Was
   DEF2_WMS( L1toI1Mem        , Eqz_Long     , Wasm::WasmMath::Eqz<int64>)
 
 // Unsigned Int64 comparisons
-  DEF2_WMS( L2toI1Mem        , CmLt_ULong   , AsmJsMath::CmpLt<uint64>)
-  DEF2_WMS( L2toI1Mem        , CmLe_ULong   , AsmJsMath::CmpLe<uint64>)
-  DEF2_WMS( L2toI1Mem        , CmGt_ULong   , AsmJsMath::CmpGt<uint64>)
-  DEF2_WMS( L2toI1Mem        , CmGe_ULong   , AsmJsMath::CmpGe<uint64>)
+  DEF2_WMS( L2toI1Mem        , CmLt_ULong   , AsmJsMath::CmpLt<unsigned long>)
+  DEF2_WMS( L2toI1Mem        , CmLe_ULong   , AsmJsMath::CmpLe<unsigned long>)
+  DEF2_WMS( L2toI1Mem        , CmGt_ULong   , AsmJsMath::CmpGt<unsigned long>)
+  DEF2_WMS( L2toI1Mem        , CmGe_ULong   , AsmJsMath::CmpGe<unsigned long>)
 
 // Double comparisons
   DEF2_WMS( D2toI1Mem        , CmLt_Db      , AsmJsMath::CmpLt<double>                           )
@@ -739,9 +739,9 @@ EXDEF2_WMS(SIMD_D2_2toD2_1, Simd128_GtEq_D2, Js::SIMDFloat64x2Operation::OpGreat
 EXDEF2_WMS(SIMD_D2_2toD2_1, Simd128_Gt_D2, Js::SIMDFloat64x2Operation::OpGreaterThan)
 EXDEF2_WMS(SIMD_D2_1toD2_1, Simd128_Sqrt_D2, SIMDFloat64x2Operation::OpSqrt)
 EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromInt64x2_D2, SIMDFloat64x2Operation::OpConv<int64>)
-EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromUint64x2_D2, SIMDFloat64x2Operation::OpConv<uint64>)
+EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromUint64x2_D2, SIMDFloat64x2Operation::OpConv<unsigned long>)
 EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromFloat64x2_I2, SIMDInt64x2Operation::OpTrunc<int64>)
-EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromFloat64x2_U2, SIMDInt64x2Operation::OpTrunc<uint64>)
+EXDEF2_WMS(SIMD_I2_1toI2_P, Simd128_FromFloat64x2_U2, SIMDInt64x2Operation::OpTrunc<unsigned long>)
 
 #if 0
 EXDEF2_WMS(SIMD_D2toD2_1, Simd128_DoublesToD2, SIMDFloat64x2Operation::OpFloat64x2)

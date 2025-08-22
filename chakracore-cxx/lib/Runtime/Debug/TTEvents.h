@@ -251,7 +251,7 @@ namespace TTD
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
             static_assert(TTD_EVENT_BASE_SIZE % 4 == 0, "This should always be word aligned.");
-            AssertMsg(((uint64)evt) % 4 == 0, "We want this word aligned for performance so who messed it up.");
+            AssertMsg(((unsigned long)evt) % 4 == 0, "We want this word aligned for performance so who messed it up.");
 
             evt->EventTimeStamp = etime;
 #endif
@@ -339,8 +339,8 @@ namespace TTD
         struct RandomSeedEventLogEntry
         {
             //The values associated with the event
-            uint64 Seed0;
-            uint64 Seed1;
+            unsigned long Seed0;
+            unsigned long Seed1;
         };
 
         void RandomSeedEventLogEntry_Emit(const EventLogEntry* evt, FileWriter* writer, ThreadContext* threadContext);

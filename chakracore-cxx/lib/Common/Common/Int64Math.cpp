@@ -47,7 +47,7 @@ bool
 Int64Math::Shl(int64 left, int64 right, int64 *pResult)
 {
     *pResult = left << (right & 63);
-    return (left != (int64)((uint64)*pResult >> right));
+    return (left != (int64)((unsigned long)*pResult >> right));
 }
 
 bool
@@ -60,7 +60,7 @@ Int64Math::Shr(int64 left, int64 right, int64 *pResult)
 bool
 Int64Math::ShrU(int64 left, int64 right, int64 *pResult)
 {
-    uint64 uResult = ((uint64)left) >> (right & 63);
+    unsigned long uResult = ((unsigned long)left) >> (right & 63);
     *pResult = uResult;
     return false;
 }

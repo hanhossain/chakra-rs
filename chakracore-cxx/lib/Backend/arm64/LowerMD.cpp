@@ -874,7 +874,7 @@ LowererMD::GenerateStackProbe(IR::Instr *insertInstr, bool afterProlog)
     else
     {
         // MOV r17, frameSize + scriptStackLimit
-        uint64 scriptStackLimit = m_func->GetThreadContextInfo()->GetScriptStackLimit();
+        unsigned long scriptStackLimit = m_func->GetThreadContextInfo()->GetScriptStackLimit();
         IR::Opnd *stackLimitOpnd = IR::IntConstOpnd::New(frameSize + scriptStackLimit, TyMachReg, this->m_func);
         Lowerer::InsertMove(scratchOpnd, stackLimitOpnd, insertInstr);
     }

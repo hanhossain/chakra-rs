@@ -38,7 +38,7 @@ namespace Js {
         static bool IsOverflow(int32 nValue);
         static bool IsOverflow(uint32 nValue);
         static bool IsOverflow(int64 nValue);
-        static bool IsOverflow(uint64 nValue);
+        static bool IsOverflow(unsigned long nValue);
 
 
         static bool Is(Var aValue);

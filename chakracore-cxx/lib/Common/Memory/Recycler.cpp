@@ -5687,9 +5687,9 @@ Recycler::FinishConcurrentCollectWrapped(CollectionFlags flags)
 
 
  /**
-  *  Compute ft1 - ft2, return result as a uint64
+  *  Compute ft1 - ft2, return result as a unsigned long
   */
-uint64 DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
+unsigned long DiffFileTimes(LPFILETIME ft1, LPFILETIME ft2)
 {
     ULARGE_INTEGER ul1;
     ULARGE_INTEGER ul2;
@@ -8806,7 +8806,7 @@ void Recycler::AppendFreeMemoryETWRecord(char *address, size_t size)
     Assert(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     __analysis_assume(bulkFreeMemoryWrittenCount < Recycler::BulkFreeMemoryCount);
     etwFreeRecords[bulkFreeMemoryWrittenCount].memoryAddress = address;
-    // TODO: change to size_t or uint64?
+    // TODO: change to size_t or unsigned long?
     etwFreeRecords[bulkFreeMemoryWrittenCount].objectSize = (uint)size;
     bulkFreeMemoryWrittenCount++;
     if (bulkFreeMemoryWrittenCount == Recycler::BulkFreeMemoryCount)

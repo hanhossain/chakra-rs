@@ -503,7 +503,7 @@ namespace Js
         RecyclableObject * obj = VarTo<RecyclableObject>(args.Values[1]);
         double index = JavascriptConversion::ToInteger(args.Values[2], scriptContext);
         AssertOrFailFast(index >= 0);
-        JavascriptArray::BigIndex bigIndex(static_cast<uint64>(index));
+        JavascriptArray::BigIndex bigIndex(static_cast<unsigned long>(index));
         Var item = args.Values[3];
 
         JavascriptArray::CreateDataPropertyOrThrow(obj, bigIndex, item, scriptContext);

@@ -189,7 +189,7 @@ namespace Js {
         void AccumulateCompileTime();
         void AccumulateCompileTime(AsmJsCompilation::Phases phase);
         // Return compile time in ms
-        uint64 GetCompileTime() const;
+        unsigned long GetCompileTime() const;
         void PrintCompileTrace() const;
 
         // A valid module may have a NULL name

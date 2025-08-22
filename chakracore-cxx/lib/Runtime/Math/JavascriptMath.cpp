@@ -1248,7 +1248,7 @@ StringCommon:
             JIT_HELPER_END(Op_MinInAnArray);
         }
 
-        void InitializeRandomSeeds(uint64 *seed0, uint64 *seed1, ScriptContext *scriptContext)
+        void InitializeRandomSeeds(unsigned long *seed0, unsigned long *seed1, ScriptContext *scriptContext)
         {
 #if DBG
             if (CONFIG_FLAG(PRNGSeed0) && CONFIG_FLAG(PRNGSeed1))
@@ -1288,24 +1288,24 @@ StringCommon:
             }
         }
 
-        double ConvertRandomSeedsToDouble(const uint64 seed0, const uint64 seed1)
+        double ConvertRandomSeedsToDouble(const unsigned long seed0, const unsigned long seed1)
         {
-            const uint64 mExp  = 0x3FF0000000000000;
-            const uint64 mMant = 0x000FFFFFFFFFFFFF;
+            const unsigned long mExp  = 0x3FF0000000000000;
+            const unsigned long mMant = 0x000FFFFFFFFFFFFF;
 
             // Take lower 52 bits of the sum of two seeds to make a double
             // Subtract 1.0 to negate the implicit integer bit of 1. Final range: [0.0, 1.0)
             // See IEEE754 Double-precision floating-point format for details
             //   https://en.wikipedia.org/wiki/Double-precision_floating-point_format
-            uint64 resplusone_ui64 = ((seed0 + seed1) & mMant) | mExp;
+            unsigned long resplusone_ui64 = ((seed0 + seed1) & mMant) | mExp;
             double res = *(reinterpret_cast<double*>(&resplusone_ui64)) - 1.0;
             return res;
         }
 
-        void Xorshift128plus(uint64 *seed0, uint64 *seed1)
+        void Xorshift128plus(unsigned long *seed0, unsigned long *seed1)
         {
-            uint64 s1 = *seed0;
-            uint64 s0 = *seed1;
+            unsigned long s1 = *seed0;
+            unsigned long s0 = *seed1;
             *seed0 = s0;
             s1 ^= s1 << 23;
             s1 ^= s1 >> 17;
@@ -1317,8 +1317,8 @@ StringCommon:
         double JavascriptMath::Random(ScriptContext *scriptContext)
         {
             JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(DirectMath_Random);
-            uint64 seed0;
-            uint64 seed1;
+            unsigned long seed0;
+            unsigned long seed1;
 
             if (!scriptContext->GetLibrary()->IsPRNGSeeded())
             {
@@ -1361,7 +1361,7 @@ StringCommon:
 
             double res = ConvertRandomSeedsToDouble(seed0, seed1);
 #if DBG_DUMP
-            OUTPUT_TRACE(Js::PRNGPhase, _u("[PRNG:%x] RAND %I64x\n"), scriptContext, *((uint64 *)&res));
+            OUTPUT_TRACE(Js::PRNGPhase, _u("[PRNG:%x] RAND %I64x\n"), scriptContext, *((unsigned long *)&res));
 #endif
             return res;
             JIT_HELPER_END(DirectMath_Random);

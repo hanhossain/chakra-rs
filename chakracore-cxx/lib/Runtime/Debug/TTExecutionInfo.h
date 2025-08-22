@@ -52,14 +52,14 @@ namespace TTD
         const char16_t* Name; //only added for debugging can get rid of later.
 #endif
 
-        uint64 FunctionTime; //The function time when the function was called
-        uint64 LoopTime; //The current loop taken time for the function
+        unsigned long FunctionTime; //The function time when the function was called
+        unsigned long LoopTime; //The current loop taken time for the function
 
         int32 LastStatementIndex; //The previously executed statement
-        uint64 LastStatementLoopTime; //The previously executed statement
+        unsigned long LastStatementLoopTime; //The previously executed statement
 
         int32 CurrentStatementIndex; //The currently executing statement
-        uint64 CurrentStatementLoopTime; //The currently executing statement
+        unsigned long CurrentStatementLoopTime; //The currently executing statement
 
         //bytecode range of the current stmt
         uint32 CurrentStatementBytecodeMin;
@@ -197,7 +197,7 @@ namespace TTD
         int64 m_topLevelCallbackEventTime;
 
         //A counter (per event dispatch) which holds the current value for the function counter
-        uint64 m_runningFunctionTimeCtr;
+        unsigned long m_runningFunctionTimeCtr;
 
         //Array of call counters (used as stack)
         JsUtil::List<SingleCallCounter, HeapAllocator> m_callStack;
@@ -281,7 +281,7 @@ namespace TTD
         void SetPendingTTDToTarget(const TTDebuggerSourceLocation& dsl);
         void SetPendingTTDStepBackMove();
         void SetPendingTTDStepBackIntoMove();
-        void SetPendingTTDReverseContinueMove(uint64 moveflag);
+        void SetPendingTTDReverseContinueMove(unsigned long moveflag);
         void SetPendingTTDUnhandledException();
 
         //Process the breakpoint info as we enter a break statement and return true if we actually want to break

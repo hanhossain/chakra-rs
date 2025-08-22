@@ -39,7 +39,7 @@ namespace Js
         return result;
     }
 
-    static bool IsInRange(double val, uint64& out)
+    static bool IsInRange(double val, unsigned long& out)
     {
         if (val != val || val <= (double)0)
         {
@@ -88,7 +88,7 @@ namespace Js
     }
 
     template void SIMDInt64x2Operation::OpTrunc<int64>(SIMDValue* dst, SIMDValue* src);
-    template void SIMDInt64x2Operation::OpTrunc<uint64>(SIMDValue* dst, SIMDValue* src);
+    template void SIMDInt64x2Operation::OpTrunc<unsigned long>(SIMDValue* dst, SIMDValue* src);
 
     void SIMDInt64x2Operation::OpShiftLeftByScalar(SIMDValue* dst, SIMDValue* src, int count)
     {
@@ -107,8 +107,8 @@ namespace Js
     void SIMDInt64x2Operation::OpShiftRightByScalarU(SIMDValue* dst, SIMDValue* src, int count)
     {
         count = count & SIMDUtils::SIMDGetShiftAmountMask(8);
-        dst->i64[0] = (uint64)src->i64[0] >> count;
-        dst->i64[1] = (uint64)src->i64[1] >> count;
+        dst->i64[0] = (unsigned long)src->i64[0] >> count;
+        dst->i64[1] = (unsigned long)src->i64[1] >> count;
     }
 
     void SIMDInt64x2Operation::OpReplaceLane(SIMDValue* dst, SIMDValue* src, int64 val, uint index)

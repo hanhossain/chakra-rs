@@ -80,7 +80,7 @@ namespace Js
                 JavascriptNumber::New((double) nValue,scriptContext);
     }
 
-    inline Var JavascriptNumber::ToVar(uint64 nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVar(unsigned long nValue, ScriptContext* scriptContext)
     {
         return !TaggedInt::IsOverflow(nValue) ?
                 TaggedInt::ToVarUnchecked((int) nValue) :
@@ -159,7 +159,7 @@ namespace Js
 
     inline Var JavascriptNumber::ToVar(double value)
     {
-        const uint64 val = ToSpecial(value);
+        const unsigned long val = ToSpecial(value);
         AssertMsg(!IsNan(value) || ToSpecial(value) == k_NegativeNan || ToSpecial(value) == 0x7FF8000000000000ull, "We should only produce a NaN with this value");
         return reinterpret_cast<Var>(val ^ FloatTag_Value);
     }

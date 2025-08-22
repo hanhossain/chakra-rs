@@ -149,7 +149,7 @@ JSONStringifier::ReadReplacer(_In_opt_ Var replacer)
                     int64 length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(replacerObj, this->scriptContext), this->scriptContext);
                     // ToLength always returns positive length
                     Assert(length >= 0);
-                    for (uint64 i = 0; i < static_cast<uint64>(length); i++)
+                    for (unsigned long i = 0; i < static_cast<unsigned long>(length); i++)
                     {
                         Var item = nullptr;
                         if (JavascriptOperators::GetItem(replacerObj, i, &item, scriptContext))
@@ -674,11 +674,11 @@ JSONStringifier::CalculateStringElementLength(_In_ JavascriptString* str)
 {
     const charcount_t strLength = str->GetLength();
 
-    // To avoid overflow checks, use uint64 for intermediate size calculation. We cannot overflow uint64,
+    // To avoid overflow checks, use unsigned long for intermediate size calculation. We cannot overflow unsigned long,
     // as stringification will be at most a 5x expansion of the original string (which has max length INT_MAX - 1)
     //
     // All JSON strings are enclosed in double quotes, so add 2 to the length to account for them
-    uint64 escapedStrLength = strLength + 2;
+    unsigned long escapedStrLength = strLength + 2;
     const char16_t* bufferStart = str->GetString();
     for (const char16_t* index = str->GetString(); index < bufferStart + strLength; ++index)
     {

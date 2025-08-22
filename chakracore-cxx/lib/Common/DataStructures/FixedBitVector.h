@@ -188,10 +188,10 @@ Container BVFixed::GetRange(BVIndex start, BVIndex len) const
     BVIndex iEnd = BVUnit::Position(end);
     BVIndex oStart = BVUnit::Offset(start);
     BVIndex oEnd = BVUnit::Offset(end);
-    // Simply using uint64 because it is much easier than to juggle with BVUnit::BVUnitTContainer's size
+    // Simply using unsigned long because it is much easier than to juggle with BVUnit::BVUnitTContainer's size
     // Special case, if oEnd == 63, 1 << 64 == 1. Therefore the result is incorrect
-    uint64 mask = oEnd < 63 ? (((uint64)1 << (oEnd + 1)) - 1) : 0xFFFFFFFFFFFFFFFF;
-    uint64 range;
+    unsigned long mask = oEnd < 63 ? (((unsigned long)1 << (oEnd + 1)) - 1) : 0xFFFFFFFFFFFFFFFF;
+    unsigned long range;
     // Trivial case
     if (iStart == iEnd)
     {
@@ -218,7 +218,7 @@ Container BVFixed::GetRange(BVIndex start, BVIndex len) const
         for (uint i = iStart + 1; i < iEnd; ++i)
         {
             // put all bits from the data in the mid-range. Use the tracked read bits to position them
-            range |= ((uint64)(this->data[i].GetWord())) << nBitsUsed;
+            range |= ((unsigned long)(this->data[i].GetWord())) << nBitsUsed;
             nBitsUsed += BVUnit::BitsPerWord;
         }
         // Read the last bits and remove those after oEnd with mask

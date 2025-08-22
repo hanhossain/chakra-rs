@@ -1056,7 +1056,7 @@ namespace Js
                 int64 length = JavascriptConversion::ToLength(
                     JavascriptOperators::GetProperty(resultObj, PropertyIds::length, scriptContext),
                     scriptContext);
-                uint64 numberOfCaptures = (uint64) max(length - 1, (int64) 0);
+                unsigned long numberOfCaptures = (unsigned long) max(length - 1, (int64) 0);
 
                 JavascriptString* matchStr = GetMatchStrFromResult(resultObj, scriptContext);
 
@@ -1068,7 +1068,7 @@ namespace Js
                     (CharCount) 0);
 
                 // Capture groups can be referenced using at most two digits.
-                const uint64 maxNumberOfCaptures = 99;
+                const unsigned long maxNumberOfCaptures = 99;
                 size_t numberOfCapturesToKeep = (size_t) min(numberOfCaptures, maxNumberOfCaptures);
                 if (captures == nullptr)
                 {
@@ -1082,7 +1082,7 @@ namespace Js
                 }
                 previousNumberOfCapturesToKeep = numberOfCapturesToKeep;
 
-                for (uint64 i = 1; i <= numberOfCaptures; ++i)
+                for (unsigned long i = 1; i <= numberOfCaptures; ++i)
                 {
                     Var nextCapture = JavascriptOperators::GetItem(resultObj, i, scriptContext);
                     if (!JavascriptOperators::IsUndefined(nextCapture))
@@ -1687,8 +1687,8 @@ namespace Js
                     int64 length = JavascriptConversion::ToLength(
                         JavascriptOperators::GetProperty(resultObject, PropertyIds::length, scriptContext),
                         scriptContext);
-                    uint64 numberOfCaptures = max(length - 1, (int64) 0);
-                    for (uint64 i = 1; i <= numberOfCaptures; ++i)
+                    unsigned long numberOfCaptures = max(length - 1, (int64) 0);
+                    for (unsigned long i = 1; i <= numberOfCaptures; ++i)
                     {
                         Var nextCapture = JavascriptOperators::GetItem(resultObject, i, scriptContext);
                         arrayResult->DirectAppendItem(nextCapture);
