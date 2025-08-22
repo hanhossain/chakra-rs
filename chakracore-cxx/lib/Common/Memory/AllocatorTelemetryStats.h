@@ -19,9 +19,9 @@ struct AllocatorDecommitStats
     Js::TickDelta maxEnterLeaveIdleDecommitCSWaitTime;
     Js::TickDelta totalEnterLeaveIdleDecommitCSWaitTime;
 
-    int64 numDecommitCalls;
-    int64 numPagesDecommitted;
-    int64 numFreePageCount;
+    long numDecommitCalls;
+    long numPagesDecommitted;
+    long numFreePageCount;
 
     AllocatorDecommitStats() :
         lastLeaveDecommitRegion(),

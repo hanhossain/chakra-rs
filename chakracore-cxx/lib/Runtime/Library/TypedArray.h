@@ -239,7 +239,7 @@ namespace Js
     typedef TypedArray<uint32>              Uint32Array;
     typedef TypedArray<float>               Float32Array;
     typedef TypedArray<double>              Float64Array;
-    typedef TypedArray<int64>               Int64Array;
+    typedef TypedArray<long>               Int64Array;
     typedef TypedArray<unsigned long>              Uint64Array;
     typedef TypedArray<bool>                BoolArray;
     typedef TypedArray<int8_t, false, true>   Int8VirtualArray;
@@ -353,7 +353,7 @@ namespace Js
             uint32 start = iDstStart;
             if (iDstStart < 0)
             {
-                if ((int64)(length) + iDstStart < 0)
+                if ((long)(length) + iDstStart < 0)
                 {
                     // nothing to do, all index are no-op
                     return true;
@@ -400,7 +400,7 @@ namespace Js
 
             if (start < 0)
             {
-                if ((int64)(length) + start < 0)
+                if ((long)(length) + start < 0)
                 {
                     // nothing to do, all index are no-op
                     return true;

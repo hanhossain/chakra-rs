@@ -146,7 +146,7 @@ JSONStringifier::ReadReplacer(_In_opt_ Var replacer)
                 }
                 else
                 {
-                    int64 length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(replacerObj, this->scriptContext), this->scriptContext);
+                    long length = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(replacerObj, this->scriptContext), this->scriptContext);
                     // ToLength always returns positive length
                     Assert(length >= 0);
                     for (unsigned long i = 0; i < static_cast<unsigned long>(length); i++)
@@ -357,7 +357,7 @@ JSONStringifier::ReadArrayLength(_In_ RecyclableObject* value)
         return arr->GetLength();
     }
 
-    int64 len = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(value, this->scriptContext), this->scriptContext);
+    long len = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(value, this->scriptContext), this->scriptContext);
     if (len >= MaxCharCount)
     {
         // If the length goes more than MaxCharCount we will eventually fail (as OOM) in ConcatStringBuilder - so failing early.

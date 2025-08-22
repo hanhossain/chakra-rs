@@ -488,7 +488,7 @@ using namespace Js;
                 JavascriptError::ThrowTypeError(scriptContext, JSERR_FunctionArgument_NeedObject, _u("Function.prototype.apply"));
             }
 
-            int64 len;
+            long len;
             JavascriptArray* arr = NULL;
             RecyclableObject* dynamicObject = VarTo<RecyclableObject>(argArray);
 
@@ -1171,7 +1171,7 @@ using namespace Js;
     {
         return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i32;
     }
-    template <> int64 JavascriptFunction::CallAsmJsFunction<int64>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
+    template <> long JavascriptFunction::CallAsmJsFunction<long>(RecyclableObject * function, JavascriptMethod entryPoint, Var * argv, uint argsSize, byte* reg)
     {
         return CallAsmJsFunctionX86Thunk(function, entryPoint, argv, argsSize, reg).i64;
     }
@@ -1192,7 +1192,7 @@ using namespace Js;
     {
         void* savedEsp;
         _declspec(align(16)) PossibleAsmJsReturnValues retVals;
-        CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(int64) + sizeof(AsmJsSIMDValue));
+        CompileAssert(sizeof(PossibleAsmJsReturnValues) == sizeof(long) + sizeof(AsmJsSIMDValue));
         CompileAssert(offsetof(PossibleAsmJsReturnValues, low) == offsetof(PossibleAsmJsReturnValues, i32));
         CompileAssert(offsetof(PossibleAsmJsReturnValues, high) == offsetof(PossibleAsmJsReturnValues, i32) + sizeof(int32));
 

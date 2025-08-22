@@ -589,12 +589,12 @@ SwitchIRBuilder::BuildOptimizedIntegerCaseInstrs(uint32 targetOffset)
         {
             //value of the case nodes are guaranteed to be 32 bits or less than 32bits at this point(if it is more, the Switch Opt will not kick in)
             Assert(nextIndex == endjmpTableIndex + 1);
-            int64 speculatedEndJmpCaseValue = m_caseNodes->Item(nextIndex)->GetUpperBoundIntConst();
-            int64 endJmpCaseValue = m_caseNodes->Item(endjmpTableIndex)->GetUpperBoundIntConst();
-            int64 startJmpCaseValue = m_caseNodes->Item(startjmpTableIndex)->GetUpperBoundIntConst();
+            long speculatedEndJmpCaseValue = m_caseNodes->Item(nextIndex)->GetUpperBoundIntConst();
+            long endJmpCaseValue = m_caseNodes->Item(endjmpTableIndex)->GetUpperBoundIntConst();
+            long startJmpCaseValue = m_caseNodes->Item(startjmpTableIndex)->GetUpperBoundIntConst();
 
-            int64 speculatedJmpTableSize = speculatedEndJmpCaseValue - startJmpCaseValue + 1;
-            int64 jmpTableSize = endJmpCaseValue - startJmpCaseValue + 1;
+            long speculatedJmpTableSize = speculatedEndJmpCaseValue - startJmpCaseValue + 1;
+            long jmpTableSize = endJmpCaseValue - startJmpCaseValue + 1;
 
             int numFilledEntries = nextIndex - startjmpTableIndex + 1;
 
@@ -626,9 +626,9 @@ SwitchIRBuilder::BuildOptimizedIntegerCaseInstrs(uint32 targetOffset)
         }
     }
 
-    int64 endJmpCaseValue = m_caseNodes->Item(endjmpTableIndex)->GetUpperBoundIntConst();
-    int64 startJmpCaseValue = m_caseNodes->Item(startjmpTableIndex)->GetUpperBoundIntConst();
-    int64 jmpTableSize = endJmpCaseValue - startJmpCaseValue + 1;
+    long endJmpCaseValue = m_caseNodes->Item(endjmpTableIndex)->GetUpperBoundIntConst();
+    long startJmpCaseValue = m_caseNodes->Item(startjmpTableIndex)->GetUpperBoundIntConst();
+    long jmpTableSize = endJmpCaseValue - startJmpCaseValue + 1;
 
     if (jmpTableSize < CONFIG_FLAG(MinSwitchJumpTableSize))
     {

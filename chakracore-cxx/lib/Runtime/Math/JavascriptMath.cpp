@@ -322,7 +322,7 @@ using namespace Js;
                             // Compute the sum using integer addition, then convert to double.
                             // That way there's only one int->float conversion.
 #if INT32VAR
-                            int64 sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
+                            long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
 #else
                             int32 sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
 #endif
@@ -392,7 +392,7 @@ using namespace Js;
                     // Compute the sum using integer addition, then convert to double.
                     // That way there's only one int->float conversion.
 #if INT32VAR
-                    int64 sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
+                    long sum = TaggedInt::ToInt64(aLeft) + TaggedInt::ToInt64(aRight);
 #else
                     int32 sum = TaggedInt::ToInt32(aLeft) + TaggedInt::ToInt32(aRight);
 #endif

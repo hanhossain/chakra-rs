@@ -16,29 +16,29 @@ namespace TTD
         const uint32 m_abortCode;
 
         //An optional target event time -- intent is interpreted based on the abort code
-        const int64 m_optEventTime;
+        const long m_optEventTime;
 
         //An optional move mode value -- should be built by host we just propagate it
-        const int64 m_optMoveMode;
+        const long m_optMoveMode;
 
         //An optional -- and static string message to include
         const char16_t* m_staticAbortMessage;
 
-        TTDebuggerAbortException(uint32 abortCode, int64 optEventTime, int64 optMoveMode, const char16_t* staticAbortMessage);
+        TTDebuggerAbortException(uint32 abortCode, long optEventTime, long optMoveMode, const char16_t* staticAbortMessage);
 
     public:
         ~TTDebuggerAbortException();
 
         static TTDebuggerAbortException CreateAbortEndOfLog(const char16_t* staticMessage);
-        static TTDebuggerAbortException CreateTopLevelAbortRequest(int64 targetEventTime, int64 moveMode, const char16_t* staticMessage);
-        static TTDebuggerAbortException CreateUncaughtExceptionAbortRequest(int64 targetEventTime, const char16_t* staticMessage);
+        static TTDebuggerAbortException CreateTopLevelAbortRequest(long targetEventTime, long moveMode, const char16_t* staticMessage);
+        static TTDebuggerAbortException CreateUncaughtExceptionAbortRequest(long targetEventTime, const char16_t* staticMessage);
 
         bool IsEndOfLog() const;
         bool IsEventTimeMove() const;
         bool IsTopLevelException() const;
 
-        int64 GetTargetEventTime() const;
-        int64 GetMoveMode() const;
+        long GetTargetEventTime() const;
+        long GetMoveMode() const;
 
         const char16_t* GetStaticAbortMessage() const;
     };
@@ -74,12 +74,12 @@ namespace TTD
         TTD_LOG_PTR_ID m_sourceScriptLogId;
 
         //The id of the breakpoint (or -1 if no id is associated)
-        int64 m_bpId;
+        long m_bpId;
 
         //The time aware parts of this location
-        int64 m_etime;  //-1 indicates an INVALID location
-        int64 m_ftime;  //-1 indicates any ftime is OK
-        int64 m_ltime;  //-1 indicates any ltime is OK
+        long m_etime;  //-1 indicates an INVALID location
+        long m_ftime;  //-1 indicates any ftime is OK
+        long m_ltime;  //-1 indicates any ltime is OK
 
         //The top-level body this source location is contained in
         uint32 m_topLevelBodyId;
@@ -113,20 +113,20 @@ namespace TTD
         void Clear();
 
         void SetLocationCopy(const TTDebuggerSourceLocation& other);
-        void SetLocationFromFrame(int64 topLevelETime, const SingleCallCounter& callFrame);
-        void SetLocationFromFunctionEntryAnyTime(int64 topLevelETime, Js::FunctionBody* body);
-        void SetLocationFull(int64 etime, int64 ftime, int64 ltime, Js::FunctionBody* body, uint32_t line, int32_t column);
-        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, int64 etime, int64 ftime, int64 ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column);
-        void SetLocationWithBP(int64 bpId, Js::FunctionBody* body, uint32_t line, int32_t column);
+        void SetLocationFromFrame(long topLevelETime, const SingleCallCounter& callFrame);
+        void SetLocationFromFunctionEntryAnyTime(long topLevelETime, Js::FunctionBody* body);
+        void SetLocationFull(long etime, long ftime, long ltime, Js::FunctionBody* body, uint32_t line, int32_t column);
+        void SetLocationFullRaw(TTD_LOG_PTR_ID sourceScriptLogId, long etime, long ftime, long ltime, uint32 topLevelBodyId, uint32 functionLine, uint32 functionColumn, uint32_t line, int32_t column);
+        void SetLocationWithBP(long bpId, Js::FunctionBody* body, uint32_t line, int32_t column);
 
-        int64 GetRootEventTime() const;
-        int64 GetFunctionTime() const;
-        int64 GetLoopTime() const;
+        long GetRootEventTime() const;
+        long GetFunctionTime() const;
+        long GetLoopTime() const;
 
         TTD_LOG_PTR_ID GetScriptLogTagId() const;
         Js::FunctionBody* LoadFunctionBodyIfPossible(Js::ScriptContext* ctx) const;
 
-        int64 GetBPId() const;
+        long GetBPId() const;
         uint32 GetTopLevelBodyId() const;
         uint32 GetFunctionSourceLine() const;
         uint32 GetFunctionSourceColumn() const;
@@ -167,9 +167,9 @@ namespace TTD
     {
     private:
         //The time aware parts of this location -- same meaning as in TTDebuggerSourceLocation
-        int64 m_eventTime;  //-1 indicates an INVALID location
-        int64 m_functionTime;
-        int64 m_loopTime;
+        long m_eventTime;  //-1 indicates an INVALID location
+        long m_functionTime;
+        long m_loopTime;
 
         //The location in the function
         uint32 m_line;
@@ -179,10 +179,10 @@ namespace TTD
         TTInnerLoopLastStatementInfo();
         TTInnerLoopLastStatementInfo(const TTInnerLoopLastStatementInfo& lsi);
 
-        void SetLastLine(int64 etime, int64 ftime, int64 ltime, uint32 line, uint32 column);
+        void SetLastLine(long etime, long ftime, long ltime, uint32 line, uint32 column);
 
         bool IsEnabled() const;
-        bool CheckLastTimeMatch(int64 etime, int64 ftime, int64 ltime) const;
+        bool CheckLastTimeMatch(long etime, long ftime, long ltime) const;
         bool CheckLineColumnMatch(uint32 line, uint32 column) const;
     };
 
@@ -194,7 +194,7 @@ namespace TTD
     {
     private:
         //Stash the current top-level event time here
-        int64 m_topLevelCallbackEventTime;
+        long m_topLevelCallbackEventTime;
 
         //A counter (per event dispatch) which holds the current value for the function counter
         unsigned long m_runningFunctionTimeCtr;
@@ -221,10 +221,10 @@ namespace TTD
 
         //A pending TTDBP we want to set and move to
         TTDebuggerSourceLocation m_pendingTTDBP;
-        int64 m_pendingTTDMoveMode;
+        long m_pendingTTDMoveMode;
 
         //The bp we are actively moving to in TT mode
-        int64 m_activeBPId;
+        long m_activeBPId;
         bool m_shouldRemoveWhenDone;
         TTDebuggerSourceLocation m_activeTTDBP;
 
@@ -294,14 +294,14 @@ namespace TTD
         bool IsLocationActiveBPAndNotExplicitBP(const TTDebuggerSourceLocation& current) const;
 
         //When scanning add the current location as a BP location
-        void AddCurrentLocationDuringScan(int64 topLevelEventTime);
+        void AddCurrentLocationDuringScan(long topLevelEventTime);
 
         //After a scan set the pending BP to the earliest breakpoint before the given current pending BP location and return true
         //If no such BP location then return false
         bool TryFindAndSetPreviousBP();
 
         //Get the target event time for the pending TTD breakpoint
-        int64 GetPendingTTDBPTargetEventTime() const;
+        long GetPendingTTDBPTargetEventTime() const;
 
         //Load and restore all the breakpoints in the manager before and after we create new script contexts  
         void LoadPreservedBPInfo(ThreadContext* threadContext);
@@ -339,7 +339,7 @@ namespace TTD
         void GetLastExceptionTimeAndPositionForDebugger(TTDebuggerSourceLocation& sourceLocation) const;
 
         //Ensure the call stack is clear and counters are zeroed appropriately
-        void ResetCallStackForTopLevelCall(int64 topLevelCallbackEventTime);
+        void ResetCallStackForTopLevelCall(long topLevelCallbackEventTime);
 
         //Setup and tear down info on the bp location in the active interval the reverse continue was invoked from
         //We don't want to find a BP after the current statement so we need to track this

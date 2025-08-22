@@ -636,13 +636,13 @@ namespace TTD
                 compareMap.CheckConsistentAndAddPtrIdMapping_Special(sobj1->OptIndexedObjectArray, sobj2->OptIndexedObjectArray, _u("indexedObjectArray"));
 
                 const NSSnapType::SnapHandler* handler1 = sobj1->SnapType->TypeHandlerInfo;
-                JsUtil::BaseDictionary<int64, int32, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
+                JsUtil::BaseDictionary<long, int32, HeapAllocator> sobj1PidMap(&HeapAllocator::Instance);
                 for(uint32 i = 0; i < handler1->MaxPropertyIndex; ++i)
                 {
                     const NSSnapType::SnapHandlerPropertyEntry spe = handler1->PropertyInfoArray[i];
                     if(spe.DataKind != NSSnapType::SnapEntryDataKindTag::Clear)
                     {
-                        int64 locationTag = ComputeLocationTagForAssertCompare(spe);
+                        long locationTag = ComputeLocationTagForAssertCompare(spe);
                         sobj1PidMap.AddNew(locationTag, (int32)i);
                     }
                 }
@@ -653,7 +653,7 @@ namespace TTD
                     const NSSnapType::SnapHandlerPropertyEntry spe = handler2->PropertyInfoArray[i];
                     if(spe.DataKind != NSSnapType::SnapEntryDataKindTag::Clear && spe.DataKind != NSSnapType::SnapEntryDataKindTag::Uninitialized)
                     {
-                        int64 locationTag = ComputeLocationTagForAssertCompare(spe);
+                        long locationTag = ComputeLocationTagForAssertCompare(spe);
 
                         int32 idx1 = sobj1PidMap.LookupWithKey(locationTag, -1);
                         compareMap.DiagnosticAssert(idx1 != -1);

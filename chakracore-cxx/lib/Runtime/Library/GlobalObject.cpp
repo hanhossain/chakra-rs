@@ -221,8 +221,8 @@ using namespace Js;
         // create javascript objects for properties
         Js::Var filenameString = Js::JavascriptString::NewCopyBuffer(file, wcslen(file), scriptContext);
         Js::Var funcnameString = Js::JavascriptString::NewCopyBuffer(function, wcslen(function), scriptContext);
-        Js::Var lineNumber = Js::JavascriptNumber::ToVar((int64) lineNum, scriptContext);
-        Js::Var colNumber = Js::JavascriptNumber::ToVar((int64) colNum, scriptContext);
+        Js::Var lineNumber = Js::JavascriptNumber::ToVar((long) lineNum, scriptContext);
+        Js::Var colNumber = Js::JavascriptNumber::ToVar((long) colNum, scriptContext);
         Js::Var functionIdNumberVar = Js::JavascriptNumber::ToVar(functionId, scriptContext);
         Js::Var utf8SourceInfoVar = Js::JavascriptNumber::ToVar((int32) utf8SrcInfo, scriptContext);
 

@@ -3966,7 +3966,7 @@ bool Instr::IsNeq()
 }
 
 template <typename T>
-bool Instr::BinaryCalculatorT(T src1Const, T src2Const, int64 *pResult, bool checkWouldTrap)
+bool Instr::BinaryCalculatorT(T src1Const, T src2Const, long *pResult, bool checkWouldTrap)
 {
     T value = 0;
     switch (this->m_opcode)
@@ -4017,8 +4017,8 @@ bool Instr::BinaryCalculatorT(T src1Const, T src2Const, int64 *pResult, bool che
     return true;
 }
 
-template bool Instr::BinaryCalculatorT<int>(int src1Const64, int src2Const64, int64 *pResult, bool checkWouldTrap);
-template bool Instr::BinaryCalculatorT<int64>(int64 src1Const64, int64 src2Const64, int64 *pResult, bool checkWouldTrap);
+template bool Instr::BinaryCalculatorT<int>(int src1Const64, int src2Const64, long *pResult, bool checkWouldTrap);
+template bool Instr::BinaryCalculatorT<long>(long src1Const64, long src2Const64, long *pResult, bool checkWouldTrap);
 
 bool Instr::BinaryCalculator(IntConstType src1Const, IntConstType src2Const, IntConstType *pResult, IRType type)
 {

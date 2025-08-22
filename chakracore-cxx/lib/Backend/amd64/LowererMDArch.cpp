@@ -1090,7 +1090,7 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     if (indexOpnd && !indexOpnd->IsIntegral32())
     {
         // We don't expect the index to be anything other than an int32 or uint32
-        // Having an int32 index guaranties that int64 index add doesn't overflow
+        // Having an int32 index guaranties that long index add doesn't overflow
         // If we're wrong, just throw index out of range
         Assert(UNREACHED);
         lowererMD->m_lowerer->GenerateThrow(IR::IntConstOpnd::New(WASMERR_ArrayIndexOutOfRange, TyInt32, m_func), instr);
@@ -1109,7 +1109,7 @@ LowererMDArch::LowerWasmArrayBoundsCheck(IR::Instr * instr, IR::Opnd *addrOpnd)
     // Find array buffer length
     uint32 offset = indirOpnd->GetOffset();
     IR::Opnd *arrayLenOpnd = instr->GetSrc2();
-    IR::Int64ConstOpnd * constOffsetOpnd = IR::Int64ConstOpnd::New((int64)addrOpnd->GetSize() + (int64)offset, TyInt64, m_func);
+    IR::Int64ConstOpnd * constOffsetOpnd = IR::Int64ConstOpnd::New((long)addrOpnd->GetSize() + (long)offset, TyInt64, m_func);
     IR::Opnd *cmpOpnd;
     if (indexOpnd != nullptr)
     {

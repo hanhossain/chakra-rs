@@ -217,8 +217,8 @@ namespace TTD
         virtual void WriteNakedUInt32(uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         void WriteUInt32(NSTokens::Key key, uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
 
-        virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
-        void WriteInt64(NSTokens::Key key, int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
+        virtual void WriteNakedInt64(long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
+        void WriteInt64(NSTokens::Key key, long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
 
         virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) = 0;
         void WriteUInt64(NSTokens::Key key, unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator);
@@ -290,7 +290,7 @@ namespace TTD
 
         virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
-        virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedInt64(long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedDouble(double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedAddr(TTD_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -337,7 +337,7 @@ namespace TTD
 
         virtual void WriteNakedInt32(int32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt32(uint32 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
-        virtual void WriteNakedInt64(int64 val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
+        virtual void WriteNakedInt64(long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedUInt64(unsigned long val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedDouble(double val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
         virtual void WriteNakedAddr(TTD_PTR_ID val, NSTokens::Separator separator = NSTokens::Separator::NoSeparator) override;
@@ -533,8 +533,8 @@ namespace TTD
         virtual uint32 ReadNakedUInt32(bool readSeparator = false) = 0;
         uint32 ReadUInt32(NSTokens::Key keyCheck, bool readSeparator = false);
 
-        virtual int64 ReadNakedInt64(bool readSeparator = false) = 0;
-        int64 ReadInt64(NSTokens::Key keyCheck, bool readSeparator = false);
+        virtual long ReadNakedInt64(bool readSeparator = false) = 0;
+        long ReadInt64(NSTokens::Key keyCheck, bool readSeparator = false);
 
         virtual unsigned long ReadNakedUInt64(bool readSeparator = false) = 0;
         unsigned long ReadUInt64(NSTokens::Key keyCheck, bool readSeparator = false);
@@ -612,7 +612,7 @@ namespace TTD
         NSTokens::ParseTokenKind ScanString(JsUtil::List<char16_t, HeapAllocator>& charList);
         NSTokens::ParseTokenKind ScanNakedString(char16_t leadChar);
 
-        int64 ReadIntFromCharArray(const char16_t* buff);
+        long ReadIntFromCharArray(const char16_t* buff);
         unsigned long ReadUIntFromCharArray(const char16_t* buff);
         double ReadDoubleFromCharArray(const char16_t* buff);
 
@@ -636,7 +636,7 @@ namespace TTD
 
         virtual int32 ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32 ReadNakedUInt32(bool readSeparator = false) override;
-        virtual int64 ReadNakedInt64(bool readSeparator = false) override;
+        virtual long ReadNakedInt64(bool readSeparator = false) override;
         virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
         virtual double ReadNakedDouble(bool readSeparator = false) override;
         virtual TTD_PTR_ID ReadNakedAddr(bool readSeparator = false) override;
@@ -678,7 +678,7 @@ namespace TTD
 
         virtual int32 ReadNakedInt32(bool readSeparator = false) override;
         virtual uint32 ReadNakedUInt32(bool readSeparator = false) override;
-        virtual int64 ReadNakedInt64(bool readSeparator = false) override;
+        virtual long ReadNakedInt64(bool readSeparator = false) override;
         virtual unsigned long ReadNakedUInt64(bool readSeparator = false) override;
         virtual double ReadNakedDouble(bool readSeparator = false) override;
         virtual TTD_PTR_ID ReadNakedAddr(bool readSeparator = false) override;
@@ -797,9 +797,9 @@ namespace TTD
         void AppendIndent();
         void AppendString(char* text);
         void AppendBool(bool bval);
-        void AppendInteger(int64 ival);
+        void AppendInteger(long ival);
         void AppendUnsignedInteger(unsigned long ival);
-        void AppendIntegerHex(int64 ival);
+        void AppendIntegerHex(long ival);
         void AppendDouble(double dval);
 
     public:
@@ -817,13 +817,13 @@ namespace TTD
             this->ForceFlush();
         }
 
-        void WriteEnumAction(int64 eTime, BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attrib, Js::JavascriptString* pname);
+        void WriteEnumAction(long eTime, BOOL returnCode, Js::PropertyId pid, Js::PropertyAttributes attrib, Js::JavascriptString* pname);
 
         void WriteVar(Js::Var var, bool skipStringContents=false);
 
-        void WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32 argc, Js::Var* argv, int64 etime);
-        void WriteReturn(Js::JavascriptFunction* function, Js::Var res, int64 etime);
-        void WriteReturnException(Js::JavascriptFunction* function, int64 etime);
+        void WriteCall(Js::JavascriptFunction* function, bool isExternal, uint32 argc, Js::Var* argv, long etime);
+        void WriteReturn(Js::JavascriptFunction* function, Js::Var res, long etime);
+        void WriteReturnException(Js::JavascriptFunction* function, long etime);
 
         void WriteStmtIndex(uint32 line, uint32 column);
 

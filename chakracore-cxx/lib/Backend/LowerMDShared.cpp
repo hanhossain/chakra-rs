@@ -920,7 +920,7 @@ LowererMD::LowerRet(IR::Instr * retInstr)
                 }
                 else if (retInstr->GetSrc1()->IsImmediateOpnd())
                 {
-                    int64 value = retInstr->GetSrc1()->GetImmediateValue(m_func);
+                    long value = retInstr->GetSrc1()->GetImmediateValue(m_func);
                     lowOpnd = IR::IntConstOpnd::New(value & UINT_MAX, regType, m_func);
                     highOpnd = IR::IntConstOpnd::New(value >> 32, regType, m_func);
                 }
@@ -3615,7 +3615,7 @@ LowererMD::GenerateFastNeg(IR::Instr * instrNeg)
         else
         {
             // negation below can overflow because max negative int32 value > max positive value by 1.
-            newOpnd = IR::AddrOpnd::NewFromNumber(-(int64)value, m_func);
+            newOpnd = IR::AddrOpnd::NewFromNumber(-(long)value, m_func);
         }
 
         instrNeg->ClearBailOutInfo();
@@ -5144,11 +5144,11 @@ LowererMD::GenerateClz(IR::Instr * instr)
         // tmp = BSR src
         // JE $label32
         // dst = SUB 31, tmp
-            // dst = SUB 63, tmp; for int64
+            // dst = SUB 63, tmp; for long
         // JMP $done
         // label32:
         // dst = mov 32;
-            // dst = mov 64; for int64
+            // dst = mov 64; for long
         // $done
         int instrSize = instr->GetSrc1()->GetSize();
         IRType type = instrSize == 8 ? TyInt64 : TyInt32;
@@ -6962,7 +6962,7 @@ void LowererMD::EmitSignExtend(IR::Instr * instr)
     }
 
 #if _M_IX86
-    // Special handling of int64 on x86
+    // Special handling of long on x86
     if (dst->IsInt64())
     {
         Int64RegPair dstPair = m_func->FindOrCreateInt64Pair(dst);
@@ -7143,7 +7143,7 @@ void LowererMD::ConvertFloatToInt32(IR::Opnd* intOpnd, IR::Opnd* floatOpnd, IR::
         Legalize(instr);
 
 #ifdef _M_X64
-        // Truncate to int32 for x64.  We still need to go to helper though if we have int64 overflow.
+        // Truncate to int32 for x64.  We still need to go to helper though if we have long overflow.
 
         // MOV_TRUNC intOpnd, tmpOpnd
         instr = IR::Instr::New(Js::OpCode::MOV_TRUNC, intOpnd, dstOpnd, this->m_func);

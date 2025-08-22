@@ -255,9 +255,9 @@ public:
     bool                IsWriteBarrierTriggerableValue();
     void                SetIsDead(const bool isDead = true)   { this->m_isDead = isDead; }
     bool                GetIsDead()   { return this->m_isDead; }
-    int64               GetImmediateValue(Func * func);
+    long               GetImmediateValue(Func * func);
 #if defined(_M_ARM)
-    // Helper for 32bits systems without int64 const operand support
+    // Helper for 32bits systems without long const operand support
     int32               GetImmediateValueAsInt32(Func * func);
 #endif
     BailoutConstantValue GetConstValue();
@@ -373,7 +373,7 @@ class IntConstOpnd sealed : public Opnd, public EncodableOpnd<IntConstType>
 {
 public:
     static IntConstOpnd *   New(IntConstType value, IRType type, Func *func, bool dontEncode = false);
-    static IR::Opnd*        NewFromType(int64 value, IRType type, Func* func);
+    static IR::Opnd*        NewFromType(long value, IRType type, Func* func);
 
 public:
     //Note: type OpndKindIntConst
@@ -404,10 +404,10 @@ public:
 /// class Int64ConstOpnd
 ///
 ///---------------------------------------------------------------------------
-class Int64ConstOpnd sealed : public Opnd, public EncodableOpnd<int64>
+class Int64ConstOpnd sealed : public Opnd, public EncodableOpnd<long>
 {
 public:
-    static Int64ConstOpnd* New(int64 value, IRType type, Func *func);
+    static Int64ConstOpnd* New(long value, IRType type, Func *func);
 
 public:
     Int64ConstOpnd* CopyInternal(Func *func);
@@ -1520,7 +1520,7 @@ public:
     static AddrOpnd *       New(Js::Var address, AddrOpndKind addrOpndKind, Func *func, bool dontEncode = false, Js::Var varLocal = nullptr);
     static AddrOpnd *       NewFromNumber(double value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewFromNumber(int32 value, Func *func, bool dontEncode = false);
-    static AddrOpnd *       NewFromNumber(int64 value, Func *func, bool dontEncode = false);
+    static AddrOpnd *       NewFromNumber(long value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewFromNumberVar(double value, Func *func, bool dontEncode = false);
     static AddrOpnd *       NewNull(Func * func);
 public:

@@ -154,7 +154,7 @@ NESTED_ENTRY _ZN2Js18JavascriptFunction17CallAsmJsFunctionIiEET_PNS_16Recyclable
 NESTED_END _ZN2Js18JavascriptFunction17CallAsmJsFunctionIiEET_PNS_16RecyclableObjectEPFPvS4_NS_8CallInfoEzEPS5_jPh, _TEXT
 
 
-// int64 CallAsmJsFunction<int64>(RecyclableObject *function, JavascriptMethod entryPoint, uint argc, Var *argv);
+// long CallAsmJsFunction<long>(RecyclableObject *function, JavascriptMethod entryPoint, uint argc, Var *argv);
 .balign 16
 LEAF_ENTRY _ZN2Js18JavascriptFunction17CallAsmJsFunctionIlEET_PNS_16RecyclableObjectEPFPvS4_NS_8CallInfoEzEPS5_jPh, _TEXT
     jmp C_FUNC(_ZN2Js18JavascriptFunction17CallAsmJsFunctionIiEET_PNS_16RecyclableObjectEPFPvS4_NS_8CallInfoEzEPS5_jPh)

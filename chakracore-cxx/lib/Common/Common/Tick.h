@@ -109,14 +109,14 @@ namespace Js {
     // Construction
     public:
                 TickDelta();
-                TickDelta(int64 lnDelta);
+                TickDelta(long lnDelta);
 
     // Properties
     public:
-                int64           ToMicroseconds() const;
+                long           ToMicroseconds() const;
                 int             ToMilliseconds() const;
         static  TickDelta       FromMicroseconds(int nTickDelta);
-        static  TickDelta       FromMicroseconds(int64 lnTickDelta);
+        static  TickDelta       FromMicroseconds(long lnTickDelta);
         static  TickDelta       FromMilliseconds(int nTickDelta);
                 bool            IsForward() const;
                 bool            IsBackward() const;
@@ -126,7 +126,7 @@ namespace Js {
                 TickDelta       operator +(TickDelta tdOther) const;
                 TickDelta       operator -(TickDelta tdOther) const;
                 TickDelta       operator %(TickDelta tdOther) const;
-                int64           operator /(TickDelta tdOther) const;
+                long           operator /(TickDelta tdOther) const;
                 TickDelta       operator *(int nScale) const;
                 TickDelta       operator *(float flScale) const;
                 TickDelta       operator /(int nScale) const;
@@ -144,7 +144,7 @@ namespace Js {
 
     // Data
     private:
-                int64           m_lnDelta;          // Tick delta
+                long           m_lnDelta;          // Tick delta
 
         friend Tick;
     };

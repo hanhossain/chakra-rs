@@ -277,9 +277,9 @@ namespace Js
         Output::Print(_u(" int:%d "), value);
     }
 
-    void ByteCodeDumper::DumpI8(int64 value)
+    void ByteCodeDumper::DumpI8(long value)
     {
-        Output::Print(_u(" int64:%lld "), value);
+        Output::Print(_u(" long:%lld "), value);
     }
 
     void ByteCodeDumper::DumpU2(ushort value)

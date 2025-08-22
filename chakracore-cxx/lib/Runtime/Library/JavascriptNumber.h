@@ -44,10 +44,10 @@ namespace Js
         static Var ToVar(intptr_t nValue, ScriptContext* scriptContext);
 #endif
         static Var ToVarInPlace(int32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
-        static Var ToVarInPlace(int64 value, ScriptContext* scriptContext, JavascriptNumber *result);
+        static Var ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVarInPlace(uint32 nValue, ScriptContext* scriptContext, JavascriptNumber *result);
         static Var ToVar(uint32 nValue, ScriptContext* scriptContext);
-        static Var ToVar(int64 nValue, ScriptContext* scriptContext);
+        static Var ToVar(long nValue, ScriptContext* scriptContext);
         static Var ToVar(unsigned long nValue, ScriptContext* scriptContext);
         static double GetValue(Var aValue);
         static int32 DirectPowIntInt(bool*, int32, int32);

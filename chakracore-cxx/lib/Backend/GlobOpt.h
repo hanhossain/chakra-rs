@@ -302,7 +302,7 @@ namespace JsUtil
 
 typedef JsUtil::BaseDictionary<IntConstType, StackSym *, JitArenaAllocator> IntConstantToStackSymMap;
 typedef JsUtil::BaseDictionary<int32, Value *, JitArenaAllocator> IntConstantToValueMap;
-typedef JsUtil::BaseDictionary<int64, Value *, JitArenaAllocator> Int64ConstantToValueMap;
+typedef JsUtil::BaseDictionary<long, Value *, JitArenaAllocator> Int64ConstantToValueMap;
 
 typedef JsUtil::BaseDictionary<Js::Var, Value *, JitArenaAllocator> AddrConstantToValueMap;
 typedef JsUtil::BaseDictionary<Js::InternalString, Value *, JitArenaAllocator> StringConstantToValueMap;
@@ -590,9 +590,9 @@ private:
     Value *                 NewGenericValue(const ValueType valueType, IR::Opnd *const opnd);
     Value *                 NewGenericValue(const ValueType valueType, Sym *const sym);
     Value *                 GetIntConstantValue(const int32 intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
-    Value *                 GetIntConstantValue(const int64 intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
+    Value *                 GetIntConstantValue(const long intConst, IR::Instr * instr, IR::Opnd *const opnd = nullptr);
     Value *                 NewIntConstantValue(const int32 intConst, IR::Instr * instr, bool isTaggable);
-    Value *                 NewInt64ConstantValue(const int64 intConst, IR::Instr * instr);
+    Value *                 NewInt64ConstantValue(const long intConst, IR::Instr * instr);
     ValueInfo *             NewIntRangeValueInfo(const int32 min, const int32 max, const bool wasNegativeZeroPreventedByBailout);
     ValueInfo *             NewIntRangeValueInfo(const ValueInfo *const originalValueInfo, const int32 min, const int32 max) const;
     Value *                 NewIntRangeValue(const int32 min, const int32 max, const bool wasNegativeZeroPreventedByBailout, IR::Opnd *const opnd = nullptr);

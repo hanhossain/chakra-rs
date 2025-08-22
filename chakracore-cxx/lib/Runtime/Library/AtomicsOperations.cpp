@@ -19,7 +19,7 @@ template<> struct ConvertType<int16> { typedef short _t; };
 template<> struct ConvertType<uint16> { typedef short _t; };
 template<> struct ConvertType<int32> { typedef int32_t _t; };
 template<> struct ConvertType<uint32> { typedef int32_t _t; };
-template<> struct ConvertType<int64> { typedef long _t; };
+template<> struct ConvertType<long> { typedef long _t; };
 
 #define MakeInterLockArgDef1(type) type value
 #define MakeInterLockArgDef2(type) type v1, type v2
@@ -51,12 +51,12 @@ template<typename T> T AtomicsOperations::Load(T* buffer)
 }
 
 #if TARGET_32
-template<> int64 AtomicsOperations::Load(int64* buffer)
+template<> long AtomicsOperations::Load(long* buffer)
 {
     CompileAssert(sizeof(size_t) == 4);
     // Implement 64bits atomic load on 32bits platform with a CompareExchange
     // It is slower, but at least it is garantied to be an atomic operation
-    return CompareExchange<int64>(buffer, 0, 0);
+    return CompareExchange<long>(buffer, 0, 0);
 }
 #endif
 
@@ -133,6 +133,6 @@ ExplicitImplementation(int16);
 ExplicitImplementation(uint16);
 ExplicitImplementation(int32);
 ExplicitImplementation(uint32);
-ExplicitImplementation(int64);
+ExplicitImplementation(long);
 
 };

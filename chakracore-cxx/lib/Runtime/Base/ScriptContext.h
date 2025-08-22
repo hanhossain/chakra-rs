@@ -213,7 +213,7 @@ public:
 
 #if ENABLE_TTD
 typedef void (CALLBACK *JsTTDOnScriptLoadCallback)(FinalizableObject* hostContext, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-typedef uint32 (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP);
+typedef uint32 (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP);
 typedef void (CALLBACK *JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32 bpID);
 typedef void (CALLBACK *JsTTDOnBPClearDocumentCallback)(void* hostRuntime);
 

@@ -323,7 +323,7 @@ namespace TTD
         class TTAutoString
         {
         private:
-            int64 m_allocSize;
+            long m_allocSize;
             char16_t* m_contents;
             char16_t* m_optFormatBuff;
 

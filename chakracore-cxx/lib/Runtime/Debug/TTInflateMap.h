@@ -158,7 +158,7 @@ namespace TTD
 
         struct PathEntry
         {
-            int64 IndexOrPID;
+            long IndexOrPID;
             const char16_t* OptName;
         };
 

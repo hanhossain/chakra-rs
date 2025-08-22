@@ -22,7 +22,7 @@ bool IntConstMath::IsValid(IntConstType val, IRType type)
         return Math::FitsInDWord(val);
     case TyInt64:
     case TyUint64:
-        CompileAssert(sizeof(IntConstType) == sizeof(int64));
+        CompileAssert(sizeof(IntConstType) == sizeof(long));
         return true;
 #endif
     default:
@@ -50,7 +50,7 @@ bool IntConstMath::Mul(IntConstType left, IntConstType right, IRType type, IntCo
     CompileAssert(sizeof(IntConstType) == sizeof(int32));
 #elif TARGET_64
     bool overflowed = Int64Math::Mul(left, right, result);
-    CompileAssert(sizeof(IntConstType) == sizeof(int64));
+    CompileAssert(sizeof(IntConstType) == sizeof(long));
 #endif
     return overflowed || !IsValid(*result, type);
 }

@@ -26,7 +26,7 @@
     Field(uint8_t)   u8[16];\
     Field(float)   f32[4];\
     Field(double)  f64[2]; \
-    Field(int64)   i64[2];
+    Field(long)   i64[2];
 #define SIMD_TEMP_SIZE 3
 struct _SIMDValue
 {
@@ -184,7 +184,7 @@ namespace Js {
             return simdVal;
         };
 
-        static inline SIMDValue SIMD128InnerReplaceLaneI2(SIMDValue simdVal, const uint32 lane, const int64 value)
+        static inline SIMDValue SIMD128InnerReplaceLaneI2(SIMDValue simdVal, const uint32 lane, const long value)
         {
             Assert(lane < 2);
             simdVal.i64[lane] = value;
@@ -232,7 +232,7 @@ namespace Js {
 
         static inline double SIMD128InnerExtractLaneD2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.f64[lane]; };
         static inline float SIMD128InnerExtractLaneF4(const SIMDValue src1, const uint32 lane) { Assert(lane < 4); return src1.f32[lane]; };
-        static inline int64 SIMD128InnerExtractLaneI2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.i64[lane]; };
+        static inline long SIMD128InnerExtractLaneI2(const SIMDValue src1, const uint32 lane) { Assert(lane < 2); return src1.i64[lane]; };
         static inline int32 SIMD128InnerExtractLaneI4(const SIMDValue src1, const uint32 lane) { Assert(lane < 4); return src1.i32[lane]; };
         static inline int16 SIMD128InnerExtractLaneI8(const SIMDValue src1, const uint32 lane) { Assert(lane < 8); return src1.i16[lane]; };
         static inline int8_t SIMD128InnerExtractLaneI16(const SIMDValue src1, const uint32 lane) { Assert(lane < 16); return src1.i8[lane];  };

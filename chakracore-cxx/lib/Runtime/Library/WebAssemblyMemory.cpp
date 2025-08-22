@@ -257,7 +257,7 @@ void WebAssemblyMemory::TraceMemWrite(WebAssemblyMemory* mem, uint32 index, uint
     case ArrayBufferView::ViewType::TYPE_UINT32: Output::Print(_u(".uint32 = %u\n"), *(uint32*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT32: Output::Print(_u(".f32 = %.4f\n"), *(float*)(buffer + bigIndex)); break;
     case ArrayBufferView::ViewType::TYPE_FLOAT64: Output::Print(_u(".f64 = %.8f\n"), *(double*)(buffer + bigIndex)); break;
-    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(_u(".int64 = %lld\n"), *(int64*)(buffer + bigIndex)); break;
+    case ArrayBufferView::ViewType::TYPE_INT64: Output::Print(_u(".long = %lld\n"), *(long*)(buffer + bigIndex)); break;
     default:
         CompileAssert(ArrayBufferView::ViewType::TYPE_COUNT == 15);
         Assert(UNREACHED);

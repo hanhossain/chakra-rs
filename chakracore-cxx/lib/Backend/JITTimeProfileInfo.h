@@ -71,7 +71,7 @@ public:
     bool IsFieldPREDisabled() const;
 
 private:
-    enum ProfileDataFlags : int64
+    enum ProfileDataFlags : long
     {
         Flags_None = 0,
         Flags_disableAggressiveIntTypeSpec = 1,

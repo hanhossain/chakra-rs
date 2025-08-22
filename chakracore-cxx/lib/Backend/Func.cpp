@@ -920,12 +920,12 @@ Int64RegPair Func::FindOrCreateInt64Pair(IR::Opnd* opnd)
         return pair;
     }
 
-    // Only indir opnd can have a type other than int64
+    // Only indir opnd can have a type other than long
     Assert(opnd->IsInt64());
 
     if (opnd->IsImmediateOpnd())
     {
-        int64 value = opnd->GetImmediateValue(this);
+        long value = opnd->GetImmediateValue(this);
         pair.low = IR::IntConstOpnd::New((int32)value, pairType, this);
         pair.high = IR::IntConstOpnd::New((int32)(value >> 32), pairType, this);
         return pair;
@@ -938,7 +938,7 @@ Int64RegPair Func::FindOrCreateInt64Pair(IR::Opnd* opnd)
         m_int64SymPairMap = Anew(m_alloc, Int64SymPairMap, m_alloc);
     }
     StackSym* stackSym = opnd->GetStackSym();
-    AssertOrFailFastMsg(stackSym, "Invalid int64 operand type");
+    AssertOrFailFastMsg(stackSym, "Invalid long operand type");
 
     SymID symId = stackSym->m_id;
     if (!m_int64SymPairMap->TryGetValue(symId, &symPair))

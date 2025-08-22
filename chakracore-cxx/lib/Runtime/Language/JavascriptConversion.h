@@ -81,7 +81,7 @@ namespace Js {
         // ToString(ToPrimitive(aValue), for convert to string on concat
         static JavascriptString * ToPrimitiveString(Var aValue, ScriptContext * scriptContext);
 
-        static int64 ToLength(Var aValue, ScriptContext* scriptContext);
+        static long ToLength(Var aValue, ScriptContext* scriptContext);
 
         static JavascriptBigInt * ToBigInt(Var aValue, ScriptContext * scriptContext);
 

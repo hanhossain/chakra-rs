@@ -24,7 +24,7 @@ namespace WAsmJs
         void PrintEndCall(int hasReturn);
         template <class T> void PrintEndCall(const unaligned T* playout) { PrintEndCall(playout->I1); }
         int PrintI32(int val);
-        int64 PrintI64(int64 val);
+        long PrintI64(long val);
         float PrintF32(float val);
         double PrintF64(double val);
     }

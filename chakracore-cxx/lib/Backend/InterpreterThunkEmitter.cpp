@@ -461,7 +461,7 @@ void InterpreterThunkEmitter::FillBuffer(
         uint32_t encodedBranch = /*opcode=*/ 0x9000F000 | encodedOffset;
         Emit(currentBuffer, JmpOffset, encodedBranch);
 #elif _M_ARM64
-        int64 offset = (epilogStart - (currentBuffer + JmpOffset));
+        long offset = (epilogStart - (currentBuffer + JmpOffset));
         Assert(offset >= 0);
         uint32_t encodedOffset = EncoderMD::BranchOffset_26(offset);
         uint32_t encodedBranch = /*opcode=*/ 0x14000000 | encodedOffset;

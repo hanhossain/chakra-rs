@@ -1464,7 +1464,7 @@ namespace Js
             int32 x = JavascriptConversion::ToInt32(args[1], scriptContext);
             int32 y = JavascriptConversion::ToInt32(args[2], scriptContext);
 
-            int64 int64Result = (int64)x * (int64)y;
+            long int64Result = (long)x * (long)y;
             int32 result = (int32)int64Result;
 
             return JavascriptNumber::ToVar(result, scriptContext);

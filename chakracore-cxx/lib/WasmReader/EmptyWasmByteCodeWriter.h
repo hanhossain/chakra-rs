@@ -21,7 +21,7 @@ namespace Js
         virtual void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1) override {}
         virtual void AsmReg1IntConst1(OpCodeAsmJs op, RegSlot R0, int C1) override {}
         virtual void AsmInt1Const1(OpCodeAsmJs op, RegSlot R0, int C1) override {}
-        virtual void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, int64 C1) override {}
+        virtual void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1) override {}
         virtual void AsmFloat1Const1(OpCodeAsmJs op, RegSlot R0, float C1) override {}
         virtual void AsmDouble1Const1(OpCodeAsmJs op, RegSlot R0, double C1) override {}
         virtual void AsmReg1(OpCodeAsmJs op, RegSlot R0) override {}

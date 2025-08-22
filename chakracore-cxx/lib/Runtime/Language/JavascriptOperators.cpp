@@ -713,9 +713,9 @@ using namespace Js;
             }
             break;
 
-        // we cannot do double conversion between 2 int64 numbers as we can get wrong result after conversion
+        // we cannot do double conversion between 2 long numbers as we can get wrong result after conversion
         // i.e., two different numbers become the same after losing precision. We'll continue dbl comparison
-        // if either number is not an int64 number.
+        // if either number is not an long number.
         case TypeIds_UInt64Number:
             {
                 switch (rightType)
@@ -846,7 +846,7 @@ using namespace Js;
             {
             case TypeIds_Integer:
                 return aLeft == aRight;
-                // we don't need to worry about int64: it cannot equal as we create
+                // we don't need to worry about long: it cannot equal as we create
                 // JavascriptInt64Number only in overflow scenarios.
             case TypeIds_Number:
                 dblLeft = TaggedInt::ToDouble(aLeft);
@@ -10369,12 +10369,12 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             }
             break;
         case JsInt64Type:
-            AnalysisAssert(elementSize == sizeof(int64));
+            AnalysisAssert(elementSize == sizeof(long));
             for (uint32_t i = 0; i < length; i++)
             {
                 element = GetElementAtIndex(arrayObject, i, scriptContext);
-                AnalysisAssert((i + 1) * sizeof(int64) <= allocSize);
-                ((int64*)buffer)[i] = Js::JavascriptConversion::ToInt64(element, scriptContext);
+                AnalysisAssert((i + 1) * sizeof(long) <= allocSize);
+                ((long*)buffer)[i] = Js::JavascriptConversion::ToInt64(element, scriptContext);
             }
             break;
         case JsUint64Type:

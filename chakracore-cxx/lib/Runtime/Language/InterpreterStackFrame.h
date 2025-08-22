@@ -90,14 +90,14 @@ namespace Js
         {
 #ifdef ASMJS_PLAT
             int32 i;
-            int64 l;
+            long l;
             float f;
             double d;
             AsmJsSIMDValue simd;
 
             template<typename T> T GetRetVal();
             template<> int32 GetRetVal<int32>() { return i; }
-            template<> int64 GetRetVal<int64>() { return l; }
+            template<> long GetRetVal<long>() { return l; }
             template<> float GetRetVal<float>() { return f; }
             template<> double GetRetVal<double>() { return d; }
             template<> X86SIMDValue GetRetVal<X86SIMDValue>() { return X86SIMDValue::ToX86SIMDValue(simd); }
@@ -170,7 +170,7 @@ namespace Js
 
         // Asm.js stack pointer
         int* m_localIntSlots;
-        int64* m_localInt64Slots;
+        long* m_localInt64Slots;
         double* m_localDoubleSlots;
         float* m_localFloatSlots;
         union
@@ -206,7 +206,7 @@ namespace Js
         void OP_I_SetOutAsmInt(RegSlot outRegisterID, int val);
         void OP_I_SetOutAsmDb(RegSlot outRegisterID, double val);
         void OP_I_SetOutAsmFlt(RegSlot outRegisterID, float val);
-        void OP_I_SetOutAsmLong(RegSlot outRegisterID, int64 val);
+        void OP_I_SetOutAsmLong(RegSlot outRegisterID, long val);
         void OP_I_SetOutAsmSimd(RegSlot outRegisterID, AsmJsSIMDValue val);
         template<int type, bool toJs> //type is int to avoid including Wasm headers
         void OP_InvalidWasmTypeConversion(...);
@@ -241,8 +241,8 @@ namespace Js
         template <typename RegSlotType> void SetRegAllowStackVar(RegSlotType localRegisterID, Var bValue);
         template <typename RegSlotType> int GetRegRawInt( RegSlotType localRegisterID ) const;
         template <typename RegSlotType> void SetRegRawInt( RegSlotType localRegisterID, int bValue );
-        template <typename RegSlotType> int64 GetRegRawInt64( RegSlotType localRegisterID ) const;
-        template <typename RegSlotType> void SetRegRawInt64( RegSlotType localRegisterID, int64 bValue );
+        template <typename RegSlotType> long GetRegRawInt64( RegSlotType localRegisterID ) const;
+        template <typename RegSlotType> void SetRegRawInt64( RegSlotType localRegisterID, long bValue );
         template <typename RegSlotType> void* GetRegRawPtr(RegSlotType localRegisterID) const;
         template <typename RegSlotType> void SetRegRawPtr(RegSlotType localRegisterID, void* val);
         template <typename RegSlotType> double VECTORCALL GetRegRawDouble(RegSlotType localRegisterID) const;

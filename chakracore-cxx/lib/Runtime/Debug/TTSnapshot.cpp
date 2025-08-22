@@ -632,7 +632,7 @@ namespace TTD
         }
     }
 
-    void SnapShot::EmitSnapshot(int64 snapId, ThreadContext* threadContext) const
+    void SnapShot::EmitSnapshot(long snapId, ThreadContext* threadContext) const
     {
         char asciiResourceName[64];
         sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);
@@ -647,7 +647,7 @@ namespace TTD
         snapwriter.FlushAndClose();
     }
 
-    SnapShot* SnapShot::Parse(int64 snapId, ThreadContext* threadContext)
+    SnapShot* SnapShot::Parse(long snapId, ThreadContext* threadContext)
     {
         char asciiResourceName[64];
         sprintf_s(asciiResourceName, 64, "snap_%I64i.snp", snapId);

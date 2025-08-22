@@ -185,7 +185,7 @@ namespace TTD
             }
 
             this->m_contents = nbuff;
-            this->m_allocSize = (int64)nsize;
+            this->m_allocSize = (long)nsize;
         }
 
         void TTAutoString::Append(const TTAutoString& str, size_t start, size_t end)

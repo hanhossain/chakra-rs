@@ -43,7 +43,7 @@ namespace Js
             }
             else if (var.isInt64())
             {
-                Output::Print(_u("int64(In%hu)"), i);
+                Output::Print(_u("long(In%hu)"), i);
             }
             else if (var.isSIMD())
             {
@@ -237,7 +237,7 @@ namespace Js
                 switch (type)
                 {
                 case WAsmJs::INT32:   PrintTypedConstants<int>(tableOffseted, type, constCount, [](int v) {Output::Print(_u("%d"), v);}); break;
-                case WAsmJs::INT64:   PrintTypedConstants<int64>(tableOffseted, type, constCount, [](int64 v) {Output::Print(_u("%lld"), v);}); break;
+                case WAsmJs::INT64:   PrintTypedConstants<long>(tableOffseted, type, constCount, [](long v) {Output::Print(_u("%lld"), v);}); break;
                 case WAsmJs::FLOAT32: PrintTypedConstants<float>(tableOffseted, type, constCount, [](float v) {Output::Print(_u("%.4f"), v);}); break;
                 case WAsmJs::FLOAT64: PrintTypedConstants<double>(tableOffseted, type, constCount, [](double v) {Output::Print(_u("%.4f"), v);}); break;
                 case WAsmJs::SIMD:    PrintTypedConstants<AsmJsSIMDValue>(tableOffseted, type, constCount, [](AsmJsSIMDValue v) {

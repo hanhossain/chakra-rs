@@ -78,7 +78,7 @@ Js::Var Int32ToVar(int32 value, void* user_data)
     Context* ctx = (Context*)user_data;
     return JavascriptNumber::ToVar(value, ctx->scriptContext);
 }
-Js::Var Int64ToVar(int64 value, void* user_data)
+Js::Var Int64ToVar(long value, void* user_data)
 {
     Context* ctx = (Context*)user_data;
     return JavascriptNumber::ToVar(value, ctx->scriptContext);

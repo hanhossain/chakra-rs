@@ -1910,10 +1910,10 @@ private:
         size_t ItemSize;
         size_t ItemCount;
         int AllocCount;
-        int64 ReqSize;
-        int64 AllocSize;
+        long ReqSize;
+        long AllocSize;
         int FreeCount;
-        int64 FreeSize;
+        long FreeSize;
 #ifdef PERF_COUNTERS
         PerfCounter::Counter& counter;
         PerfCounter::Counter& sizeCounter;

@@ -760,15 +760,15 @@ public:
         return sizeof(int32);
     }
 
-    uint32 PrependConstantInt64(BufferBuilderList & builder, LPCWSTR clue, int64 value, ConstantSizedBufferBuilderOf<int64> ** entryOut = nullptr)
+    uint32 PrependConstantInt64(BufferBuilderList & builder, LPCWSTR clue, long value, ConstantSizedBufferBuilderOf<long> ** entryOut = nullptr)
     {
-        auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<int64>, clue, value);
+        auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<long>, clue, value);
         builder.list = builder.list->Prepend(entry, alloc);
         if (entryOut)
         {
             *entryOut = entry;
         }
-        return sizeof(int64);
+        return sizeof(long);
     }
 
     uint32 PrependByte(BufferBuilderList & builder, LPCWSTR clue, byte value)
@@ -2775,14 +2775,14 @@ public:
         return ReadInt16(buffer, remainingBytes, value);
     }
 
-    static const byte * ReadConstantSizedInt64(const byte * buffer, size_t remainingBytes, int64 * value)
+    static const byte * ReadConstantSizedInt64(const byte * buffer, size_t remainingBytes, long * value)
     {
-        Assert(remainingBytes >= sizeof(int64));
-        *value = *(int64 *)buffer;
-        return buffer + sizeof(int64);
+        Assert(remainingBytes >= sizeof(long));
+        *value = *(long *)buffer;
+        return buffer + sizeof(long);
     }
 
-    const byte * ReadConstantSizedInt64(const byte * buffer, int64 * value)
+    const byte * ReadConstantSizedInt64(const byte * buffer, long * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
         return ReadConstantSizedInt64(buffer, remainingBytes, value);

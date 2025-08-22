@@ -215,8 +215,8 @@ public:
 public:
     bool HasIntConstantValue(const bool includeLikelyInt = false) const;
     bool TryGetIntConstantValue(int32 *const intValueRef, const bool includeLikelyInt = false) const;
-    bool TryGetIntConstantValue(int64 *const intValueRef, const bool isUnsigned) const;
-    bool TryGetInt64ConstantValue(int64 *const intValueRef, const bool isUnsigned) const;
+    bool TryGetIntConstantValue(long *const intValueRef, const bool isUnsigned) const;
+    bool TryGetInt64ConstantValue(long *const intValueRef, const bool isUnsigned) const;
     bool TryGetIntConstantLowerBound(int32 *const intConstantBoundRef, const bool includeLikelyInt = false) const;
     bool TryGetIntConstantUpperBound(int32 *const intConstantBoundRef, const bool includeLikelyInt = false) const;
     bool TryGetIntConstantBounds(IntConstantBounds *const intConstantBoundsRef, const bool includeLikelyInt = false) const;
@@ -371,16 +371,16 @@ private:
     friend _IntConstantValueInfo;
 };
 
-class Int64ConstantValueInfo : public _IntConstantValueInfo<int64, Int64ConstantValueInfo, ValueStructureKind::Int64Constant>
+class Int64ConstantValueInfo : public _IntConstantValueInfo<long, Int64ConstantValueInfo, ValueStructureKind::Int64Constant>
 {
 public:
-    static Int64ConstantValueInfo *New(JitArenaAllocator *const allocator, const int64 intValue)
+    static Int64ConstantValueInfo *New(JitArenaAllocator *const allocator, const long intValue)
     {
         return _IntConstantValueInfo::New(allocator, intValue);
     }
 private:
-    static bool IsTaggable(const int64 i) { return false; }
-    Int64ConstantValueInfo(int64 value) : _IntConstantValueInfo(value) {};
+    static bool IsTaggable(const long i) { return false; }
+    Int64ConstantValueInfo(long value) : _IntConstantValueInfo(value) {};
 
     friend _IntConstantValueInfo;
 };

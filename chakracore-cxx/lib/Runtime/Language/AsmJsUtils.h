@@ -32,7 +32,7 @@ namespace Js {
 #pragma warning (suppress: 25057) // Suppress unannotated buffer warning
     void * UnboxAsmJsArguments(ScriptFunction* func, Var * origArgs, char * argDst, CallInfo callInfo);
 #if _M_X64
-    Var BoxAsmJsReturnValue(ScriptFunction* func, int64 intRetVal, double doubleRetVal, float floatRetVal, __m128 simdReturn);
+    Var BoxAsmJsReturnValue(ScriptFunction* func, long intRetVal, double doubleRetVal, float floatRetVal, __m128 simdReturn);
     int GetStackSizeForAsmJsUnboxing(ScriptFunction* func);
 #endif
 

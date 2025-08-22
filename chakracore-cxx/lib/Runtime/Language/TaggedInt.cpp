@@ -119,8 +119,8 @@ namespace Js
         }
         else
         {
-            int64 left64 = nLeft;
-            int64 right64 = nRight;
+            long left64 = nLeft;
+            long right64 = nRight;
             result = (int)(left64 % right64);
         }
 #endif
@@ -295,7 +295,7 @@ LblDone:
         // checking.
         //
 
-        int64 nResult64 = ToInt64(aLeft) - ToInt64(aRight);
+        long nResult64 = ToInt64(aLeft) - ToInt64(aRight);
         if (IsOverflow(nResult64))
         {
             //
@@ -640,7 +640,7 @@ LblDone:
         return nValue > k_nMaxValue;
     }
 
-    bool TaggedInt::IsOverflow(int64 nValue)
+    bool TaggedInt::IsOverflow(long nValue)
     {
         return (nValue < k_nMinValue) || (nValue > k_nMaxValue);
     }
@@ -700,12 +700,12 @@ LblDone:
         return ::Math::PointerCastToIntegralTruncate<uint32>(aValue);
     }
 
-    int64 TaggedInt::ToInt64(Var aValue)
+    long TaggedInt::ToInt64(Var aValue)
     {
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        int64 nValue = (int64)(::Math::PointerCastToIntegralTruncate<int32>(aValue));
-        AssertMsg(nValue == (int64) ToInt32(aValue),
+        long nValue = (long)(::Math::PointerCastToIntegralTruncate<int32>(aValue));
+        AssertMsg(nValue == (long) ToInt32(aValue),
                 "Ensure 32-bit and 64-bit operations return same result");
 
         return nValue;
@@ -781,17 +781,17 @@ LblDone:
         return (uint32) ToInt32(aValue);
     }
 
-    int64 TaggedInt::ToInt64(Var aValue)
+    long TaggedInt::ToInt64(Var aValue)
     {
        //
-        // To convert from a var, must first convert to an 'int64' to properly sign-extend
+        // To convert from a var, must first convert to an 'long' to properly sign-extend
         // negative values.  Then, use shift operation to remove the tag bits.
         //
 
         AssertMsg(Is(aValue), "Ensure var is actually a 'TaggedInt'");
 
-        int64 nValue = ((int32) aValue) >> VarTag_Shift;
-        AssertMsg(nValue == (int64) ToInt32(aValue),
+        long nValue = ((int32) aValue) >> VarTag_Shift;
+        AssertMsg(nValue == (long) ToInt32(aValue),
                 "Ensure 32-bit and 64-bit operations return same result");
 
         return nValue;
@@ -891,7 +891,7 @@ LblDone:
         // checking.
         //
 
-        int64 nResult64 = ToInt64(aLeft) + ToInt64(aRight);
+        long nResult64 = ToInt64(aLeft) + ToInt64(aRight);
         if (IsOverflow(nResult64))
         {
             //

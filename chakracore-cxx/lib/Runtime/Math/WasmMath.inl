@@ -34,7 +34,7 @@ inline int WasmMath::Ctz(int value)
 }
 
 template<> 
-inline int64 WasmMath::Ctz(int64 value)
+inline long WasmMath::Ctz(long value)
 {
     uint32_t index;
 #if TARGET_64
@@ -56,7 +56,7 @@ inline int64 WasmMath::Ctz(int64 value)
 }
 
 template<> 
-inline int64 WasmMath::Clz(int64 value)
+inline long WasmMath::Clz(long value)
 {
     uint32_t index;
 #if TARGET_64
@@ -84,7 +84,7 @@ inline int WasmMath::PopCnt(int value)
 }
 
 template<> 
-inline int64 WasmMath::PopCnt(int64 value)
+inline long WasmMath::PopCnt(long value)
 {
     unsigned long v = (unsigned long)value;
     // https://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
@@ -92,7 +92,7 @@ inline int64 WasmMath::PopCnt(int64 value)
     v = (v & 0x3333333333333333LL) + ((v >> 2) & 0x3333333333333333LL);
     v = (v + (v >> 4)) & 0x0f0f0f0f0f0f0f0f;
     v = (unsigned long)(v * 0x0101010101010101LL) >> (sizeof(unsigned long) - 1) * CHAR_BIT;
-    return (int64)v;
+    return (long)v;
 }
 
 
@@ -231,7 +231,7 @@ inline int WasmMath::Rol(int aLeft, int aRight)
 }
 
 template<>
-inline int64 WasmMath::Rol(int64 aLeft, int64 aRight)
+inline long WasmMath::Rol(long aLeft, long aRight)
 {
     return _rotl64(aLeft, (int)aRight);
 }
@@ -243,7 +243,7 @@ inline int WasmMath::Ror(int aLeft, int aRight)
 }
 
 template<>
-inline int64 WasmMath::Ror(int64 aLeft, int64 aRight)
+inline long WasmMath::Ror(long aLeft, long aRight)
 {
     return _rotr64(aLeft, (int)aRight);
 }
@@ -331,11 +331,11 @@ uint32 WasmMath::F64ToU32(double src, _In_ Js::ScriptContext* scriptContext)
 }
 
 template <bool Saturate>
-int64 WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
+long WasmMath::F32ToI64(float src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         float, // SrcType
-        int64, // DstType
+        long, // DstType
         uint32, // ReinterpretType
         Js::NumberConstants::k_Float32TwoTo63,
         Js::NumberConstants::k_Float32NegZero,
@@ -369,11 +369,11 @@ unsigned long WasmMath::F32ToU64(float src, _In_ Js::ScriptContext* scriptContex
 }
 
 template <bool Saturate>
-int64 WasmMath::F64ToI64(double src, _In_ Js::ScriptContext* scriptContext)
+long WasmMath::F64ToI64(double src, _In_ Js::ScriptContext* scriptContext)
 {
     return WasmMath::ConvertFloatToInt<
         double, // SrcType
-        int64, // DstType
+        long, // DstType
         unsigned long, // ReinterpretType
         Js::NumberConstants::k_TwoTo63,
         Js::NumberConstants::k_NegZero,

@@ -157,7 +157,7 @@ DbCheckPostLower::Check()
                         instr->m_opcode == Js::OpCode::BT) && instr->GetSrc2()->GetSize() == 1) ||
                     // Is src2 is TyVar and src1 is TyInt32/TyUint32, make sure the address fits in 32 bits 
                         (instr->GetSrc2()->GetType() == TyVar && instr->GetDst()->GetSize() == 4 &&
-                         instr->GetSrc2()->IsAddrOpnd() && Math::FitsInDWord(reinterpret_cast<int64>(instr->GetSrc2()->AsAddrOpnd()->m_address))));
+                         instr->GetSrc2()->IsAddrOpnd() && Math::FitsInDWord(reinterpret_cast<long>(instr->GetSrc2()->AsAddrOpnd()->m_address))));
 #else
                 Assert(!instr->GetSrc2() || instr->GetDst()->GetSize() == instr->GetSrc2()->GetSize() ||
                     ((EncoderMD::IsSHIFT(instr) || instr->m_opcode == Js::OpCode::BTR ||

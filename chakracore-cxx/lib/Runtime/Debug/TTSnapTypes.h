@@ -101,7 +101,7 @@ namespace TTD
         void ParseSnapHandler(SnapHandler* snapHandler, bool readSeparator, FileReader* reader, SlabAllocator& alloc);
 
 #if ENABLE_SNAPSHOT_COMPARE 
-        int64 ComputeLocationTagForAssertCompare(const SnapHandlerPropertyEntry& handlerEntry);
+        long ComputeLocationTagForAssertCompare(const SnapHandlerPropertyEntry& handlerEntry);
         void AssertSnapEquiv(const SnapHandler* h1, const SnapHandler* h2, TTDCompareMap& compareMap);
 #endif
 

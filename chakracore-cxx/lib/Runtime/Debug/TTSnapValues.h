@@ -107,7 +107,7 @@ namespace TTD
             union
             {
                 BOOL u_boolValue;
-                int64 u_int64Value;
+                long u_int64Value;
                 unsigned long u_uint64Value;
                 double u_doubleValue;
                 TTString* u_stringValue;
@@ -382,10 +382,10 @@ namespace TTD
             TTD_PTR_ID OptParentBodyId;
 
             //The line number the function is def starts on
-            int64 OptLine;
+            long OptLine;
 
             //The column number the function is def starts on
-            int64 OptColumn;
+            long OptColumn;
 
             //The (possibly empty) scope chain info
             SnapFunctionBodyScopeChain ScopeChainInfo;

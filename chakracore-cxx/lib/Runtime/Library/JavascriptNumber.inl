@@ -73,7 +73,7 @@ namespace Js
             JavascriptNumber::New((double) nValue,scriptContext);
     }
 
-    inline Var JavascriptNumber::ToVar(int64 nValue, ScriptContext* scriptContext)
+    inline Var JavascriptNumber::ToVar(long nValue, ScriptContext* scriptContext)
     {
         return !TaggedInt::IsOverflow(nValue) ?
                 TaggedInt::ToVarUnchecked((int) nValue) :

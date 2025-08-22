@@ -259,7 +259,7 @@ namespace Js
 
             LPCUTF8 sourceAfterBOM = sourceStart;
             charcount_t startChar = FunctionBody::SkipByteOrderMark(sourceAfterBOM /* byref */);
-            int64 byteStartOffset = (sourceAfterBOM - sourceStart);
+            long byteStartOffset = (sourceAfterBOM - sourceStart);
 
             Recycler* recycler = this->m_scriptContext->GetRecycler();
             this->m_lineOffsetCache = RecyclerNew(recycler, LineOffsetCache, recycler, sourceAfterBOM, sourceEnd, startChar, (int)byteStartOffset);

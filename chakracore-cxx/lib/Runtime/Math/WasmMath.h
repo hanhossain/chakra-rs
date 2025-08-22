@@ -43,11 +43,11 @@ public:
     template<typename To, typename From> static To SignExtend(To value);
 
     template <bool Saturate>
-    static int64 F32ToI64(float src, _In_ Js::ScriptContext* scriptContext);
+    static long F32ToI64(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
     static unsigned long F32ToU64(float src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
-    static int64 F64ToI64(double src, _In_ Js::ScriptContext* scriptContext);
+    static long F64ToI64(double src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>
     static unsigned long F64ToU64(double src, _In_ Js::ScriptContext* scriptContext);
     template <bool Saturate>

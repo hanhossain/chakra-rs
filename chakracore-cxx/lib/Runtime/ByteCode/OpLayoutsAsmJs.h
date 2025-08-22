@@ -290,7 +290,7 @@ namespace Js
 #define FloatLayoutType typename SizePolicy::RegSlotType
 #define DoubleLayoutType typename SizePolicy::RegSlotType
 #define IntConstLayoutType int
-#define LongConstLayoutType int64
+#define LongConstLayoutType long
 #define FloatConstLayoutType float
 #define DoubleConstLayoutType double
 #define Float32x4LayoutType typename SizePolicy::RegSlotType

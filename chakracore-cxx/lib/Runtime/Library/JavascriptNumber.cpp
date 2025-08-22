@@ -34,7 +34,7 @@ namespace Js
         return InPlaceNew(value, scriptContext, result);
     }
 
-    Var JavascriptNumber::ToVarInPlace(int64 value, ScriptContext* scriptContext, JavascriptNumber *result)
+    Var JavascriptNumber::ToVarInPlace(long value, ScriptContext* scriptContext, JavascriptNumber *result)
     {
         if (!TaggedInt::IsOverflow(value))
         {

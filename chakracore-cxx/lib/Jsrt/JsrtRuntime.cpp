@@ -199,7 +199,7 @@ JsrtDebugManager * JsrtRuntime::GetJsrtDebugManager()
 }
 
 #if ENABLE_TTD
-uint32 JsrtRuntime::BPRegister_TTD(int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
+uint32 JsrtRuntime::BPRegister_TTD(long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
 {
     TTDAssert(this->jsrtDebugManager != nullptr, "This needs to be setup before registering any breakpoints.");
 

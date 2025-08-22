@@ -3609,7 +3609,7 @@ LowererMD::GenerateFastNeg(IR::Instr * instrNeg)
         else
         {
             // negation below can overflow because max negative int32 value > max positive value by 1.
-            newOpnd = IR::AddrOpnd::NewFromNumber(-(int64)value, m_func);
+            newOpnd = IR::AddrOpnd::NewFromNumber(-(long)value, m_func);
         }
 
         instrNeg->ClearBailOutInfo();
@@ -5122,7 +5122,7 @@ LowererMD::GenerateFastAbs(IR::Opnd *dst, IR::Opnd *src, IR::Instr *callInstr, I
         IR::AddrOpnd *varOpnd = src->AsAddrOpnd();
         Assert(varOpnd->IsVar() && Js::TaggedInt::Is(varOpnd->m_address));
 
-        int64 absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
+        long absValue = ::_abs64(Js::TaggedInt::ToInt32(varOpnd->m_address));
 
         if (!Js::TaggedInt::IsOverflow(absValue))
         {

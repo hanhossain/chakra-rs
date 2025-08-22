@@ -5,11 +5,11 @@
 #pragma once
 #include "Common/IntMathCommon.h"
 
-class Int64Math: public IntMathCommon<int64>
+class Int64Math: public IntMathCommon<long>
 {
 public:
-    static bool Mul(int64 left, int64 right, int64 *pResult);
-    static bool Shl(int64 left, int64 right, int64 *pResult);
-    static bool Shr(int64 left, int64 right, int64 *pResult);
-    static bool ShrU(int64 left, int64 right, int64 *pResult);
+    static bool Mul(long left, long right, long *pResult);
+    static bool Shl(long left, long right, long *pResult);
+    static bool Shr(long left, long right, long *pResult);
+    static bool ShrU(long left, long right, long *pResult);
 };

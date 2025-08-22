@@ -17,7 +17,7 @@ namespace Js
     {
     private:
         Field(Var)                         m_iterableObject;
-        Field(int64)                       m_nextIndex;
+        Field(long)                       m_nextIndex;
         Field(JavascriptArrayIteratorKind) m_kind;
 
     protected:

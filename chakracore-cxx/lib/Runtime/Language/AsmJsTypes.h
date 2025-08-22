@@ -536,8 +536,8 @@ namespace Js
     {
         inline static bool Equals(double x, double y)
         {
-            int64 i64x = *(int64*)&x;
-            int64 i64y = *(int64*)&y;
+            long i64x = *(long*)&x;
+            long i64y = *(long*)&y;
             return i64x == i64y;
         }
 

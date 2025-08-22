@@ -147,7 +147,7 @@ private:
     int m_lastPairOffset;
 
     // immediate tracking
-    int64 m_pendingImmediate;
+    long m_pendingImmediate;
     int m_pendingImmediateReg;
 
     // fixed opcodes

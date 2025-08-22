@@ -8279,10 +8279,10 @@ Recycler::PrintAllocStats()
     }
     size_t itemCount = 0;
     int allocCount = 0;
-    int64 reqSize = 0;
-    int64 allocSize = 0;
+    long reqSize = 0;
+    long allocSize = 0;
     int freeCount = 0;
-    int64 freeSize = 0;
+    long freeSize = 0;
     Output::Print(_u("=================================================================================================================\n"));
     Output::Print(_u("Recycler Allocations\n"));
     Output::Print(_u("=================================================================================================================\n"));

@@ -210,13 +210,13 @@ namespace TTD
         SlabAllocator m_miscSlabAllocator;
 
         //The global event time variable and a high res timer we can use to extract some diagnostic timing info as we go
-        int64 m_eventTimeCtr;
+        long m_eventTimeCtr;
 
         //A high res timer we can use to extract some diagnostic timing info as we go
         TTDTimer m_timer;
 
         //Top-Level callback event time (or -1 if we are not in a callback)
-        int64 m_topLevelCallbackEventTime;
+        long m_topLevelCallbackEventTime;
 
         //The list of all the events and the iterator we use during replay
         NSLogEvents::EventLogEntryVTableEntry* m_eventListVTable;
@@ -235,7 +235,7 @@ namespace TTD
         double m_elapsedExecutionTimeSinceSnapshot;
 
         //If we are inflating a snapshot multiple times we want to re-use the inflated objects when possible so keep this recent info
-        int64 m_lastInflateSnapshotTime;
+        long m_lastInflateSnapshotTime;
         InflateMap* m_lastInflateMap;
 
         //Pin set of all property records created during this logging session
@@ -254,7 +254,7 @@ namespace TTD
         //Helper methods
 
         //Get the current XTTDEventTime and advance the event time counter
-        int64 GetCurrentEventTimeAndAdvance()
+        long GetCurrentEventTimeAndAdvance()
         {
             return this->m_eventTimeCtr++;
         }
@@ -449,15 +449,15 @@ namespace TTD
         void ReplayEnqueueTaskEvent(Js::ScriptContext* ctx, Js::Var taskVar);
 
         //Get the current top-level event time 
-        int64 GetCurrentTopLevelEventTime() const;
+        long GetCurrentTopLevelEventTime() const;
 
         //Get the event time corresponding to the first/last/k-th top-level event in the log
-        int64 GetFirstEventTimeInLog() const;
-        int64 GetLastEventTimeInLog() const;
-        int64 GetKthEventTimeInLog(uint32 k) const;
+        long GetFirstEventTimeInLog() const;
+        long GetLastEventTimeInLog() const;
+        long GetKthEventTimeInLog(uint32 k) const;
 
         //Ensure the call stack is clear and counters are zeroed appropriately
-        void ResetCallStackForTopLevelCall(int64 topLevelCallbackEventTime);
+        void ResetCallStackForTopLevelCall(long topLevelCallbackEventTime);
 
         //Check if we want to take a snapshot
         bool IsTimeForSnapshot() const;
@@ -479,25 +479,25 @@ namespace TTD
 
         //Find the event time that has the snapshot we want to inflate from in order to replay to the requested target time
         //Return -1 if no such snapshot is available
-        int64 FindSnapTimeForEventTime(int64 targetTime, int64* optEndSnapTime);
+        long FindSnapTimeForEventTime(long targetTime, long* optEndSnapTime);
 
         //Find the enclosing snapshot interval for the specified event time
-        void GetSnapShotBoundInterval(int64 targetTime, int64* snapIntervalStart, int64* snapIntervalEnd) const;
+        void GetSnapShotBoundInterval(long targetTime, long* snapIntervalStart, long* snapIntervalEnd) const;
 
         //Find the snapshot start time for the previous interval return -1 if no such time exists
-        int64 GetPreviousSnapshotInterval(int64 currentSnapTime) const;
+        long GetPreviousSnapshotInterval(long currentSnapTime) const;
 
         //Do the inflation of the snapshot that is at the given event time
-        void DoSnapshotInflate(int64 etime);
+        void DoSnapshotInflate(long etime);
 
         //Run execute top level event calls until the given time is reached
-        void ReplayRootEventsToTime(int64 eventTime);
+        void ReplayRootEventsToTime(long eventTime);
 
         //For a single root level event -- snapshot, yield point, or ActionEvent
         void ReplaySingleRootEntry();
 
         //When we have an externalFunction (or promise register) we exit script context and need to play until the event time counts up to (and including) the given eventTime
-        void ReplayActionEventSequenceThroughTime(int64 eventTime);
+        void ReplayActionEventSequenceThroughTime(long eventTime);
 
         //Replay the enter/exit and any iteration need to discharge all the effects of a single ActionEvent
         void ReplaySingleActionEventEntry();
@@ -512,7 +512,7 @@ namespace TTD
         double GetCurrentWallTime();
 
         //Get the most recently assigned event time value
-        int64 GetLastEventTime() const;
+        long GetLastEventTime() const;
 
         NSLogEvents::EventLogEntry* RecordJsRTCreateScriptContext(TTDJsRTActionResultAutoRecorder& actionPopper);
         void RecordJsRTCreateScriptContextResult(NSLogEvents::EventLogEntry* evt, Js::ScriptContext* newCtx);

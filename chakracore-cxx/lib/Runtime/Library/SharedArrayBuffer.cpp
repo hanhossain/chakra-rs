@@ -140,9 +140,9 @@ namespace Js
         JavascriptLibrary* library = scriptContext->GetLibrary();
         SharedArrayBuffer* currentBuffer = VarTo<SharedArrayBuffer>(args[0]);
 
-        int64 currentLen = (int64)currentBuffer->GetByteLength();
-        int64 start = 0, end = 0;
-        int64 newLen = 0;
+        long currentLen = (long)currentBuffer->GetByteLength();
+        long start = 0, end = 0;
+        long newLen = 0;
 
         // If no start or end arguments, use the entire length
         if (args.Info.Count < 2)

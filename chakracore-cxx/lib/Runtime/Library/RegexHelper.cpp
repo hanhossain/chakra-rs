@@ -1053,14 +1053,14 @@ namespace Js
         BEGIN_TEMP_ALLOCATOR(tempAlloc, scriptContext, _u("RegexHelper"))
         {
             results->Map([&](int resultIndex, RecyclableObject* resultObj) {
-                int64 length = JavascriptConversion::ToLength(
+                long length = JavascriptConversion::ToLength(
                     JavascriptOperators::GetProperty(resultObj, PropertyIds::length, scriptContext),
                     scriptContext);
-                unsigned long numberOfCaptures = (unsigned long) max(length - 1, (int64) 0);
+                unsigned long numberOfCaptures = (unsigned long) max(length - 1, (long) 0);
 
                 JavascriptString* matchStr = GetMatchStrFromResult(resultObj, scriptContext);
 
-                int64 index = JavascriptConversion::ToLength(
+                long index = JavascriptConversion::ToLength(
                     JavascriptOperators::GetProperty(resultObj, PropertyIds::index, scriptContext),
                     scriptContext);
                 CharCount position = max(
@@ -1684,10 +1684,10 @@ namespace Js
 
                     RecyclableObject* resultObject = ExecResultToRecyclableObject(result);
 
-                    int64 length = JavascriptConversion::ToLength(
+                    long length = JavascriptConversion::ToLength(
                         JavascriptOperators::GetProperty(resultObject, PropertyIds::length, scriptContext),
                         scriptContext);
-                    unsigned long numberOfCaptures = max(length - 1, (int64) 0);
+                    unsigned long numberOfCaptures = max(length - 1, (long) 0);
                     for (unsigned long i = 1; i <= numberOfCaptures; ++i)
                     {
                         Var nextCapture = JavascriptOperators::GetItem(resultObject, i, scriptContext);

@@ -2395,9 +2395,9 @@ using namespace Js;
     // 2. if (arg < 0) { return max(0, length + arg); }
     // treat negative arg as index from the end of the array (with -1 mapping to length-1)
     // Effectively, this function will return a value between 0 and length, inclusive.
-    int64 JavascriptArray::GetIndexFromVar(Js::Var arg, int64 length, ScriptContext* scriptContext)
+    long JavascriptArray::GetIndexFromVar(Js::Var arg, long length, ScriptContext* scriptContext)
     {
-        int64 index;
+        long index;
 
         if (TaggedInt::Is(arg))
         {
@@ -2405,7 +2405,7 @@ using namespace Js;
 
             if (intValue < 0)
             {
-                index = max<int64>(0, length + intValue);
+                index = max<long>(0, length + intValue);
             }
             else
             {
@@ -2431,7 +2431,7 @@ using namespace Js;
 
             if (index < 0)
             {
-                index = max<int64>(0, index + length);
+                index = max<long>(0, index + length);
             }
         }
 
@@ -3655,7 +3655,7 @@ using namespace Js;
                         if (scriptContext->GetConfig()->IsES6ToLengthEnabled())
                         {
                             JS_REENTRANT(jsReentLock,
-                                int64 len = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(aItem, scriptContext), scriptContext));
+                                long len = JavascriptConversion::ToLength(JavascriptOperators::OP_GetLength(aItem, scriptContext), scriptContext));
                             // clipping to MaxArrayLength will overflow when added to cDestLength which we catch below
                             cDestLength = UInt32Math::Add(cDestLength, len < MaxArrayLength ? (uint32)len : MaxArrayLength, destLengthOverflow);
                         }
@@ -3874,9 +3874,9 @@ using namespace Js;
         }
     }
 
-    int64 JavascriptArray::GetFromLastIndex(Var arg, int64 length, ScriptContext *scriptContext)
+    long JavascriptArray::GetFromLastIndex(Var arg, long length, ScriptContext *scriptContext)
     {
-        int64 fromIndex;
+        long fromIndex;
 
         if (TaggedInt::Is(arg))
         {
@@ -3884,7 +3884,7 @@ using namespace Js;
 
             if (intValue >= 0)
             {
-                fromIndex = min<int64>(intValue, length - 1);
+                fromIndex = min<long>(intValue, length - 1);
             }
             else if ((uint32)-intValue > length)
             {
@@ -3901,7 +3901,7 @@ using namespace Js;
 
             if (value >= 0)
             {
-                fromIndex = (int64)min(value, (double)(length - 1));
+                fromIndex = (long)min(value, (double)(length - 1));
             }
             else if (value + length < 0)
             {
@@ -3909,7 +3909,7 @@ using namespace Js;
             }
             else
             {
-                fromIndex = (int64)(value + length);
+                fromIndex = (long)(value + length);
             }
         }
 
@@ -4725,7 +4725,7 @@ Case0:
         // Even for arrays, this is now observable via proxies.
         // If source object is not an array, we fall back to this behavior anyway.
         JS_REENTRANT(jsReentLock,
-            int64 cSrcLength = (int64)OP_GetLength(object, scriptContext));
+            long cSrcLength = (long)OP_GetLength(object, scriptContext));
 
         switch (cSrcLength)
         {
@@ -4820,14 +4820,14 @@ Case0:
 
         Assert(!(callInfo.Flags & CallFlags_New));
 
-        int64 length;
+        long length;
         JavascriptArray * pArr = nullptr;
         RecyclableObject* obj = nullptr;
 
         JS_REENTRANT(jsReentLock, TryGetArrayAndLength(args[0], scriptContext, _u("Array.prototype.lastIndexOf"), &pArr, &obj, &length));
 
         Var search;
-        int64 fromIndex;
+        long fromIndex;
         JS_REENTRANT(jsReentLock,
             BOOL gotParam = GetParamForLastIndexOf(length, args, search, fromIndex, scriptContext));
         if (!gotParam)
@@ -4870,7 +4870,7 @@ Case0:
     }
 
     // Array.prototype.lastIndexOf as described in ES6.0 (draft 22) Section 22.1.3.14
-    BOOL JavascriptArray::GetParamForLastIndexOf(int64 length, Arguments const & args, Var& search, int64& fromIndex, ScriptContext * scriptContext)
+    BOOL JavascriptArray::GetParamForLastIndexOf(long length, Arguments const & args, Var& search, long& fromIndex, ScriptContext * scriptContext)
     {
         if (length == 0)
         {
@@ -4896,7 +4896,7 @@ Case0:
     }
 
     template <typename T>
-    Var JavascriptArray::LastIndexOfHelper(T* pArr, Var search, int64 fromIndex, ScriptContext * scriptContext)
+    Var JavascriptArray::LastIndexOfHelper(T* pArr, Var search, long fromIndex, ScriptContext * scriptContext)
     {
         Var element = nullptr;
         bool isSearchTaggedInt = TaggedInt::Is(search);
@@ -8422,7 +8422,7 @@ Case0:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Array.prototype.find"));
         }
 
-        int64 length;
+        long length;
         JavascriptArray * pArr = nullptr;
         RecyclableObject* obj = nullptr;
 
@@ -8432,7 +8432,7 @@ Case0:
     }
 
     template <bool findIndex, bool reversed>
-    Var JavascriptArray::FindHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext)
+    Var JavascriptArray::FindHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pArr);
@@ -8548,7 +8548,7 @@ Case0:
     }
 
     template <bool findIndex, bool reversed>
-    Var JavascriptArray::FindObjectHelper(RecyclableObject* obj, int64 length, int64 start, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext)
+    Var JavascriptArray::FindObjectHelper(RecyclableObject* obj, long length, long start, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, obj);
@@ -8603,7 +8603,7 @@ Case0:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Array.prototype.findIndex"));
         }
 
-        int64 length;
+        long length;
         JavascriptArray * pArr = nullptr;
         RecyclableObject* obj = nullptr;
 
@@ -8632,7 +8632,7 @@ Case0:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Array.prototype.findLast"));
         }
 
-        int64 length;
+        long length;
         JavascriptArray* pArr = nullptr;
         RecyclableObject* obj = nullptr;
 
@@ -8661,7 +8661,7 @@ Case0:
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NullOrUndefined, _u("Array.prototype.findLastIndex"));
         }
 
-        int64 length;
+        long length;
         JavascriptArray* pArr = nullptr;
         RecyclableObject* obj = nullptr;
 
@@ -9260,14 +9260,14 @@ Case0:
 
         RecyclableObject* obj = nullptr;
         JavascriptArray* pArr = nullptr;
-        int64 length;
+        long length;
 
         JS_REENTRANT_UNLOCK(jsReentLock, TryGetArrayAndLength(args[0], scriptContext, _u("Array.prototype.copyWithin"), &pArr, &obj, &length));
         return JavascriptArray::CopyWithinHelper(pArr, nullptr, obj, length, args, scriptContext);
     }
 
     // Array.prototype.copyWithin as defined in ES6.0 (draft 22) Section 22.1.3.3
-    Var JavascriptArray::CopyWithinHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext)
+    Var JavascriptArray::CopyWithinHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pArr);
@@ -9276,9 +9276,9 @@ Case0:
 
         bool isTypedArrayEntryPoint = typedArrayBase != nullptr;
         JavascriptLibrary* library = scriptContext->GetLibrary();
-        int64 fromVal = 0;
-        int64 toVal = 0;
-        int64 finalVal = length;
+        long fromVal = 0;
+        long toVal = 0;
+        long finalVal = length;
 
         // If we came from Array.prototype.copyWithin and source object is not a JavascriptArray, source could be a TypedArray
         if (typedArrayBase == nullptr && pArr == nullptr && VarIs<TypedArrayBase>(obj))
@@ -9310,7 +9310,7 @@ Case0:
         // Make sure we won't underflow during the count calculation
         Assert(finalVal > fromVal && length > toVal);
 
-        int64 count = min(finalVal - fromVal, length - toVal);
+        long count = min(finalVal - fromVal, length - toVal);
 
         // We shouldn't have made it here if the count was going to be zero
         Assert(count > 0);
@@ -9459,7 +9459,7 @@ Case0:
 
         RecyclableObject* obj = nullptr;
         JavascriptArray* pArr = nullptr;
-        int64 length;
+        long length;
 
         JS_REENTRANT_UNLOCK(jsReentLock,
             TryGetArrayAndLength(args[0], scriptContext, _u("Array.prototype.fill"), &pArr, &obj, &length));
@@ -9467,7 +9467,7 @@ Case0:
     }
 
     // Array.prototype.fill as defined in ES6.0 (draft 22) Section 22.1.3.6
-    Var JavascriptArray::FillHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext)
+    Var JavascriptArray::FillHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext)
     {
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
         SETOBJECT_FOR_MUTATION(jsReentLock, pArr);
@@ -9498,8 +9498,8 @@ Case0:
             fillValue = library->GetUndefined();
         }
 
-        int64 k = 0;
-        int64 finalVal = length;
+        long k = 0;
+        long finalVal = length;
 
         if (args.Info.Count > 2)
         {
@@ -9521,7 +9521,7 @@ Case0:
 
         if (k < MaxArrayLength)
         {
-            int64 end = min<int64>(finalVal, MaxArrayLength);
+            long end = min<long>(finalVal, MaxArrayLength);
             uint32 u32k = static_cast<uint32>(k);
 
             while (u32k < end)
@@ -9545,7 +9545,7 @@ Case0:
 
             BigIndex dstIndex = MaxArrayLength;
 
-            for (int64 i = end; i < finalVal; ++i)
+            for (long i = end; i < finalVal; ++i)
             {
                 if (pArr)
                 {
@@ -9563,7 +9563,7 @@ Case0:
         {
             BigIndex dstIndex = static_cast<unsigned long>(k);
 
-            for (int64 i = k; i < finalVal; i++)
+            for (long i = k; i < finalVal; i++)
             {
                 if (pArr)
                 {
@@ -10505,7 +10505,7 @@ Case0:
         }
         else
         {
-            JS_REENTRANT(jsReentLock, int64 len = (int64)OP_GetLength(items, scriptContext));
+            JS_REENTRANT(jsReentLock, long len = (long)OP_GetLength(items, scriptContext));
 
             if (constructor)
             {
@@ -13168,6 +13168,6 @@ Case0:
     template void Js::JavascriptArray::TypedArraySort<uint32>(uint32*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<float>(float*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<double>(double*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
-    template void Js::JavascriptArray::TypedArraySort<int64>(int64*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
+    template void Js::JavascriptArray::TypedArraySort<long>(long*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<unsigned long>(unsigned long*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);
     template void Js::JavascriptArray::TypedArraySort<bool>(bool*, uint32, JavascriptArray::CompareVarsInfo*, ArenaAllocator*);

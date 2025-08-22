@@ -484,22 +484,22 @@ namespace Js
         template<typename unitType, typename classname>
         inline BOOL TryGrowHeadSegmentAndSetItem(uint32 indexInt, unitType iValue);
 
-        static int64 GetIndexFromVar(Js::Var arg, int64 length, ScriptContext* scriptContext);
+        static long GetIndexFromVar(Js::Var arg, long length, ScriptContext* scriptContext);
         template <typename T>
         static Var MapHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, T length, Arguments& args, ScriptContext* scriptContext);
         template <typename T>
         static Var MapObjectHelper(RecyclableObject* obj, T length, T start, RecyclableObject* newObj, JavascriptArray* newArr,
             bool isBuiltinArrayCtor, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext);
-        static Var FillHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext);
-        static Var CopyWithinHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext);
+        static Var FillHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext);
+        static Var CopyWithinHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext);
         template <typename T>
         static BOOL GetParamForIndexOf(T length, Arguments const & args, Var& search, T& fromIndex, ScriptContext * scriptContext);
-        static BOOL GetParamForLastIndexOf(int64 length, Arguments const & args, Var& search, int64& fromIndex, ScriptContext * scriptContext);
+        static BOOL GetParamForLastIndexOf(long length, Arguments const & args, Var& search, long& fromIndex, ScriptContext * scriptContext);
 
         template <bool includesAlgorithm, typename T, typename P = uint32>
         static Var TemplatedIndexOfHelper(T* pArr, Var search, P fromIndex, P toIndex, ScriptContext * scriptContext);
         template <typename T>
-        static Var LastIndexOfHelper(T* pArr, Var search, int64 fromIndex, ScriptContext * scriptContext);
+        static Var LastIndexOfHelper(T* pArr, Var search, long fromIndex, ScriptContext * scriptContext);
         template <typename T>
         static BOOL TemplatedGetItem(T *pArr, uint32 index, Var * element, ScriptContext * scriptContext, bool checkHasItem = true);
         template <typename T>
@@ -520,9 +520,9 @@ namespace Js
         template <typename T = uint32>
         static Var SomeObjectHelper(RecyclableObject* obj, T length, T start, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext);
         template <bool findIndex, bool reversed>
-        static Var FindHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, int64 length, Arguments& args, ScriptContext* scriptContext);
+        static Var FindHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, long length, Arguments& args, ScriptContext* scriptContext);
         template <bool findIndex, bool reversed>
-        static Var FindObjectHelper(RecyclableObject* obj, int64 length, int64 start, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext);
+        static Var FindObjectHelper(RecyclableObject* obj, long length, long start, RecyclableObject* callBackFn, Var thisArg, ScriptContext* scriptContext);
         template <typename T = uint32>
         static Var ReduceHelper(JavascriptArray* pArr, Js::TypedArrayBase* typedArrayBase, RecyclableObject* obj, T length, Arguments& args, ScriptContext* scriptContext);
         template <typename T>
@@ -547,7 +547,7 @@ namespace Js
 
             if (value < 0)
             {
-                fromIndex = addWithLength ? (T)max(0i64, (int64)(value + length)) : 0;
+                fromIndex = addWithLength ? (T)max(0i64, (long)(value + length)) : 0;
             }
             else
             {
@@ -602,7 +602,7 @@ namespace Js
         template<typename T>
         static void GrowArrayHeadHelperForUnshift(JavascriptArray* pArr, uint32 unshiftElements, ScriptContext * scriptContext);
 
-        static int64 GetFromLastIndex(Var arg, int64 length, ScriptContext *scriptContext);
+        static long GetFromLastIndex(Var arg, long length, ScriptContext *scriptContext);
         static JavascriptString* JoinToString(Var value, ScriptContext* scriptContext);
         static JavascriptString* JoinHelper(Var thisArg, JavascriptString* separatorStr, ScriptContext* scriptContext);
         template <typename T>

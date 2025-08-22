@@ -879,7 +879,7 @@ namespace Js
         template<> inline DynamicType* GetTypedArrayType<uint32,false>(uint32) { return uint32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<float,false>(float) { return float32ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<double,false>(double) { return float64ArrayType; };
-        template<> inline DynamicType* GetTypedArrayType<int64,false>(int64) { return int64ArrayType; };
+        template<> inline DynamicType* GetTypedArrayType<long,false>(long) { return int64ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<unsigned long,false>(unsigned long) { return uint64ArrayType; };
         template<> inline DynamicType* GetTypedArrayType<bool,false>(bool) { return boolArrayType; };
 

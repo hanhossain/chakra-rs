@@ -69,9 +69,9 @@ namespace Js {
         if (!walker.IsCallerGlobalFunction())
         {
             const CallInfo callInfo = walker.GetCallInfo();
-            int64 numberOfArguments = callInfo.Count;
+            long numberOfArguments = callInfo.Count;
             if (numberOfArguments > 0) numberOfArguments --; // Don't consider 'this'
-            for (int64 j = 0; j < numberOfArguments && j < MaxNumberOfDisplayedArgumentsInStack; j ++)
+            for (long j = 0; j < numberOfArguments && j < MaxNumberOfDisplayedArgumentsInStack; j ++)
             {
                 // Since the Args are only used to get the type, no need to box the Vars to
                 // move them to the heap from the stack

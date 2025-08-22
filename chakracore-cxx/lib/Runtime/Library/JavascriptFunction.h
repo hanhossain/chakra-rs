@@ -21,7 +21,7 @@ namespace Js
         union
         {
             int32 i32;
-            int64 i64;
+            long i64;
             struct
             {
                 int32 low;

@@ -183,10 +183,10 @@ namespace TTD
         void Inflate(InflateMap* inflator, ThreadContextTTD* tCtx) const;
 
         //serialize the snapshot data 
-        void EmitSnapshot(int64 snapId, ThreadContext* threadContext) const;
+        void EmitSnapshot(long snapId, ThreadContext* threadContext) const;
 
         //de-serialize the snapshot data
-        static SnapShot* Parse(int64 snapId, ThreadContext* threadContext);
+        static SnapShot* Parse(long snapId, ThreadContext* threadContext);
 
 #if ENABLE_SNAPSHOT_COMPARE
         static void InitializeForSnapshotCompare(const SnapShot* snap1, const SnapShot* snap2, TTDCompareMap& compareMap);

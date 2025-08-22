@@ -64,7 +64,7 @@ namespace Js
         // first change the FPU rounding, which is very slow...
         if (AutoSystemInfo::Data.SSE3Available())
         {
-            // FISTTP will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows int64
+            // FISTTP will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows long
             _asm {
                 FLD T1
                 FISTTP T4_64
@@ -73,11 +73,11 @@ namespace Js
         else
 #endif
 #if defined(_M_ARM32_OR_ARM64)
-        // Win8 286065: ARM: casts to int64 from double for NaNs, infinity, overflow:
+        // Win8 286065: ARM: casts to long from double for NaNs, infinity, overflow:
         // - non-infinity NaNs -> 0
         // - infinity NaNs: -1.#INF -> 0x8000000000000000, 1.#INF  -> 0x7FFFFFFFFFFFFFFF.
         // - overflow: negative     -> 0x8000000000000000, positive-> 0x7FFFFFFFFFFFFFFF.
-        // We have to take care of non-infinite NaNs to make sure the result is not a valid int64 rather than 0.
+        // We have to take care of non-infinite NaNs to make sure the result is not a valid long rather than 0.
         if (IsNan(T1))
         {
             return Pos_InvalidInt64;
@@ -86,14 +86,14 @@ namespace Js
         {
             // TODO: Remove this temp workaround.
             // This is to walk around CRT issue (Win8 404170): there is a band of values near/less than negative overflow
-            // for which cast to int64 results in positive number (bug), then going further down in negative direction it turns
+            // for which cast to long results in positive number (bug), then going further down in negative direction it turns
             // back to negative overflow value (as it should).
             return Pos_InvalidInt64;
         }
         else
 #endif
         {
-            // The cast will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows int64
+            // The cast will result in 0x8000000000000000 in T4_64 if the value is NaN Inf or Zero, or overflows long
             T4_64 = static_cast<int64_t>(T1);
         }
 
@@ -184,7 +184,7 @@ namespace Js
 #endif
     }
 
-    NUMBER_UTIL_INLINE double NumberUtilities::ReinterpretBits(int64 value)
+    NUMBER_UTIL_INLINE double NumberUtilities::ReinterpretBits(long value)
     {
 #if defined(_AMD64_)
         return _mm_cvtsd_f64(_mm_castsi128_pd(_mm_cvtsi64_si128(value)));

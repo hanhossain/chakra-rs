@@ -105,7 +105,7 @@ void CALLBACK OnScriptLoad_TTDCallback(FinalizableObject* jsrtCtx, Js::FunctionB
     ((JsrtContext*)jsrtCtx)->OnScriptLoad_TTDCallback(body, utf8SourceInfo, compileException, notify);
 }
 
-uint32 CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, int64 bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
+uint32 CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32 line, uint32 column, BOOL* isNewBP)
 {
     return ((JsrtRuntime*)runtimeRcvr)->BPRegister_TTD(bpID, scriptContext, utf8SourceInfo, line, column, isNewBP);
 }
@@ -4447,8 +4447,8 @@ CHAKRA_API JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHandle runtimeHandle,
 
 #ifdef __APPLE__
     //TODO: Explicit cast of ptr since compiler gets confused -- resolve in PAL later
-    static_assert(sizeof(int64_t) == sizeof(int64), "int64_t and int64 size mis-match");
-    *targetStartSnapTime = threadContext->TTDLog->FindSnapTimeForEventTime(*targetEventTime, (int64*)targetEndSnapTime);
+    static_assert(sizeof(int64_t) == sizeof(long), "int64_t and long size mis-match");
+    *targetStartSnapTime = threadContext->TTDLog->FindSnapTimeForEventTime(*targetEventTime, (long*)targetEndSnapTime);
 #else
     *targetStartSnapTime = threadContext->TTDLog->FindSnapTimeForEventTime(*targetEventTime, targetEndSnapTime);
 #endif
@@ -4468,8 +4468,8 @@ CHAKRA_API JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In
 
 #ifdef __APPLE__
     //TODO: Explicit cast of ptr since compiler gets confused -- resolve in PAL later
-    static_assert(sizeof(int64_t) == sizeof(int64), "int64_t and int64 size mis-match");
-    threadContext->TTDLog->GetSnapShotBoundInterval(targetEventTime, (int64*)startSnapTime, (int64*)endSnapTime);
+    static_assert(sizeof(int64_t) == sizeof(long), "int64_t and long size mis-match");
+    threadContext->TTDLog->GetSnapShotBoundInterval(targetEventTime, (long*)startSnapTime, (long*)endSnapTime);
 #else
     threadContext->TTDLog->GetSnapShotBoundInterval(targetEventTime, startSnapTime, endSnapTime);
 #endif
