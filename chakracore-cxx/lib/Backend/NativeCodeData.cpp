@@ -139,18 +139,18 @@ NativeCodeData::AddFixupEntryForPointerArray(void* startAddress, DataChunk * chu
     }
 }
 
-char16*
+char16_t*
 NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
 {
     auto chunk = GetDataChunk(data);
-    char16 buf[1024] = { 0 };
+    char16_t buf[1024] = { 0 };
 #if DBG
     swprintf_s(buf, _u("%hs, NativeCodeData: index: %x, len: %x, offset: +%x"), chunk->dataType, chunk->allocIndex, chunk->len, chunk->offset);
 #else
     swprintf_s(buf, _u("NativeCodeData: index: %x, len: %x, offset: +%x"), chunk->allocIndex, chunk->len, chunk->offset);
 #endif
     auto len = wcslen(buf) + 1;
-    auto desc = JitAnewArray(alloc, char16, len);
+    auto desc = JitAnewArray(alloc, char16_t, len);
     wcscpy_s(desc, len, buf);
     return desc;
 }

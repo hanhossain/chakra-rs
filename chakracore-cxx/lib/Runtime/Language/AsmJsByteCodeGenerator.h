@@ -67,7 +67,7 @@ namespace Js
         ArenaAllocator mAllocator;
         bool BlockHasOwnScope( ParseNode* pnodeBlock );
 
-        void PrintAsmJsCompilationError(__out_ecount(256) char16* msg);
+        void PrintAsmJsCompilationError(__out_ecount(256) char16_t* msg);
         void DefineLabels();
 
         void EmitAsmJsFunctionBody();

@@ -20,7 +20,7 @@ class ArenaHost
     ArenaAllocator m_allocator;
 
 public:
-    ArenaHost(__in_z const char16* arenaName) :
+    ArenaHost(__in_z const char16_t* arenaName) :
         m_allocationPolicyManager(/* needConcurrencySupport = */ true),
         m_pageAllocator(&m_allocationPolicyManager, Js::Configuration::Global.flags),
         m_allocator(arenaName, &m_pageAllocator, Js::Throw::OutOfMemory)
@@ -63,14 +63,14 @@ void ConfigParser::ParseRegistryKey(HKEY hk, CmdLineArgsParser &parser)
 {
 }
 
-void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16* strCustomConfigFile)
+void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
 {
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS) && CONFIG_PARSE_CONFIG_FILE
     Assert(!_hasReadConfig || strCustomConfigFile != nullptr);
     _hasReadConfig = true;
 
-    const char16* configFileName = strCustomConfigFile;
-    const char16* configFileExt = _u(""); /* in the custom config case,
+    const char16_t* configFileName = strCustomConfigFile;
+    const char16_t* configFileExt = _u(""); /* in the custom config case,
                                              ext is expected to be passed
                                              in as part of the filename */
 
@@ -81,12 +81,12 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     }
 
     int err = 0;
-    char16 modulename[_MAX_PATH];
-    char16 filename[_MAX_PATH];
+    char16_t modulename[_MAX_PATH];
+    char16_t filename[_MAX_PATH];
 
     GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
-    char16 drive[_MAX_DRIVE];
-    char16 dir[_MAX_DIR];
+    char16_t drive[_MAX_DRIVE];
+    char16_t dir[_MAX_DIR];
 
     _wsplitpath_s(modulename, drive, _MAX_DRIVE, dir, _MAX_DIR, nullptr, 0, nullptr, 0);
     _wmakepath_s(filename, drive, dir, configFileName, configFileExt);
@@ -115,7 +115,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
         }
     }
 
-    char16 configBuffer[MaxTokenSize];
+    char16_t configBuffer[MaxTokenSize];
     int index = 0;
 
 #define ReadChar(file) fgetc(file)
@@ -128,7 +128,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
     // read tokens
     // We could use _fwscanf_s here but the function
     // isn't implemented in the PAL and we'd have to deal with
-    // wchar => char16 impedance mismatch.
+    // wchar => char16_t impedance mismatch.
     while (index < MaxTokenSize)
     {
         CharType curChar = ReadChar(configFile);
@@ -169,7 +169,7 @@ void ConfigParser::ParseConfig(HANDLE hmod, CmdLineArgsParser &parser, const cha
             // The expectation is that non-ANSI characters
             // are not used in the config- otherwise it will
             // be interpreted incorrectly here
-            configBuffer[index++] = (char16) curChar;
+            configBuffer[index++] = (char16_t) curChar;
         }
     }
 
@@ -191,7 +191,7 @@ void ConfigParser::ProcessConfiguration(HANDLE hmod)
 {
 #if defined(ENABLE_DEBUG_CONFIG_OPTIONS)
     bool hasOutput = false;
-    char16 modulename[_MAX_PATH];
+    char16_t modulename[_MAX_PATH];
 
     GetModuleFileName((HMODULE)hmod, modulename, _MAX_PATH);
 
@@ -296,8 +296,8 @@ HRESULT ConfigParser::SetOutputFile(const WCHAR* outputFile, const WCHAR* openMo
         outputFile = buffer;
     }
 
-    char16 fileName[_MAX_PATH];
-    char16 moduleName[_MAX_PATH];
+    char16_t fileName[_MAX_PATH];
+    char16_t moduleName[_MAX_PATH];
     PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
     _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
     if (_wcsicmp(fileName, _u("WWAHost")) == 0 ||
@@ -311,7 +311,7 @@ HRESULT ConfigParser::SetOutputFile(const WCHAR* outputFile, const WCHAR* openMo
         if (GetEnvironmentVariable(_u("temp"), fileName, _MAX_PATH) != 0)
         {
             wcscat_s(fileName, _MAX_PATH, _u("\\"));
-            const char16 * fileNameOnly = wcsrchr(outputFile, _u('\\'));
+            const char16_t * fileNameOnly = wcsrchr(outputFile, _u('\\'));
             // if outputFile is full path we just need filename, discard the path
             wcscat_s(fileName, _MAX_PATH, fileNameOnly == nullptr ? outputFile : fileNameOnly);
         }

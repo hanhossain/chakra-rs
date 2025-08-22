@@ -76,12 +76,12 @@ private:
             void                       ParseNumberTrioSet(Js::NumberTrioSet * numberTrioSet);
             void                       PrintUsage();
 
-            char16 CurChar()
+            char16_t CurChar()
             {
                 return this->pszCurrentArg[0];
             }
 
-            char16 PeekChar()
+            char16_t PeekChar()
             {
                 return this->pszCurrentArg[1];
             }

@@ -194,7 +194,7 @@ TempTrackerBase::MergeDependencies(HashTable<BVSparse<JitArenaAllocator> *> * to
 
 #if DBG_DUMP
 void
-TempTrackerBase::Dump(char16 const * traceName)
+TempTrackerBase::Dump(char16_t const * traceName)
 {
     Output::Print(_u("%s:        Non temp syms:"), traceName);
     this->nonTempSyms.Dump();
@@ -969,7 +969,7 @@ NumberTemp::DoMarkTempNumbersOnTempObjects(BackwardPass * backwardPass) const
 
 #if DBG
 void
-NumberTemp::Dump(char16 const * traceName)
+NumberTemp::Dump(char16_t const * traceName)
 {
     if (nonTempElemLoad)
     {

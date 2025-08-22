@@ -22,7 +22,7 @@ WCHAR* DumpCallStackFull(uint frameCount, bool print)
         void * codeAddr = walker.GetCurrentCodeAddr();
         if (walker.IsJavascriptFrame())
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             StringCchPrintf(buffer, _countof(buffer), _u("0x%p  "), codeAddr);
             sb.AppendSz(buffer);
             // Found a JavascriptFunction.  Dump its name and parameters.

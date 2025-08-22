@@ -19,8 +19,8 @@ namespace Js
     public:
         bool HasSource() const { return !this->sourceHolder->IsEmpty(); }
 
-        LPCUTF8 GetSource(const char16 * reason = nullptr) const;
-        size_t GetCbLength(const char16 * reason = nullptr) const;
+        LPCUTF8 GetSource(const char16_t * reason = nullptr) const;
+        size_t GetCbLength(const char16_t * reason = nullptr) const;
 
         uint32_t GetParseFlags()
         {

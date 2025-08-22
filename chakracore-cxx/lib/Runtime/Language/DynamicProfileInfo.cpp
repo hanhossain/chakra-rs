@@ -881,7 +881,7 @@ namespace Js
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::PolymorphicInlinePhase))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
             Output::Print(_u("INLINING (Polymorphic): More than 4 functions at this call site \t callSiteId: %d\t calleeFunctionId: %d TopFunc %s (%s)\n"),
                 callSiteId,
@@ -1583,7 +1583,7 @@ namespace Js
     }
 
 #if DBG_DUMP
-    void DynamicProfileInfo::DumpProfiledValue(char16 const * name, CallSiteInfo * callSiteInfo, uint count)
+    void DynamicProfileInfo::DumpProfiledValue(char16_t const * name, CallSiteInfo * callSiteInfo, uint count)
     {
         if (count != 0)
         {
@@ -1655,7 +1655,7 @@ namespace Js
         }
     }
 
-    void DynamicProfileInfo::DumpProfiledValue(char16 const * name, ArrayCallSiteInfo * arrayCallSiteInfo, uint count)
+    void DynamicProfileInfo::DumpProfiledValue(char16_t const * name, ArrayCallSiteInfo * arrayCallSiteInfo, uint count)
     {
         if (count != 0)
         {
@@ -1673,7 +1673,7 @@ namespace Js
         }
     }
 
-    void DynamicProfileInfo::DumpProfiledValue(char16 const * name, ValueType * value, uint count)
+    void DynamicProfileInfo::DumpProfiledValue(char16_t const * name, ValueType * value, uint count)
     {
         if (count != 0)
         {
@@ -1690,7 +1690,7 @@ namespace Js
         }
     }
 
-    void DynamicProfileInfo::DumpProfiledValue(char16 const * name, uint * value, uint count)
+    void DynamicProfileInfo::DumpProfiledValue(char16_t const * name, uint * value, uint count)
     {
         if (count != 0)
         {
@@ -1704,7 +1704,7 @@ namespace Js
         }
     }
 
-    char16 const * DynamicProfileInfo::GetImplicitCallFlagsString(ImplicitCallFlags flags)
+    char16_t const * DynamicProfileInfo::GetImplicitCallFlagsString(ImplicitCallFlags flags)
     {
         // Mask out the dispose implicit call. We would bailout on reentrant dispose,
         // but it shouldn't affect optimization
@@ -1712,7 +1712,7 @@ namespace Js
         return flags == ImplicitCall_HasNoInfo ? _u("???") : flags == ImplicitCall_None ? _u("no") : _u("yes");
     }
 
-    void DynamicProfileInfo::DumpProfiledValue(char16 const * name, ImplicitCallFlags * loopImplicitCallFlags, uint count)
+    void DynamicProfileInfo::DumpProfiledValue(char16_t const * name, ImplicitCallFlags * loopImplicitCallFlags, uint count)
     {
         if (count != 0)
         {
@@ -1738,7 +1738,7 @@ namespace Js
 
     template<class TData, class FGetValueType>
     void DynamicProfileInfo::DumpProfiledValuesGroupedByValue(
-        const char16 *const name,
+        const char16_t *const name,
         const TData *const data,
         const uint count,
         const FGetValueType GetValueType,
@@ -1803,7 +1803,7 @@ namespace Js
         });
     }
 
-    void DynamicProfileInfo::DumpFldInfoFlags(char16 const * name, FldInfo * fldInfo, uint count, FldInfoFlags value, char16 const * valueName)
+    void DynamicProfileInfo::DumpFldInfoFlags(char16_t const * name, FldInfo * fldInfo, uint count, FldInfoFlags value, char16_t const * valueName)
     {
         bool header = true;
         uint lastTempFld = (uint)-1;
@@ -2532,7 +2532,7 @@ namespace Js
     }
 
     template <>
-    void DynamicProfileInfo::WriteData<char16 const *>(char16 const * const& sz, FILE * file)
+    void DynamicProfileInfo::WriteData<char16_t const *>(char16_t const * const& sz, FILE * file)
     {
         if (sz)
         {

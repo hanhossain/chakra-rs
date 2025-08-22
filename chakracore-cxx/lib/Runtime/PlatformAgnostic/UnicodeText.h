@@ -136,7 +136,7 @@ namespace PlatformAgnostic
         //   length of the normalized string in the destination buffer
         //   If the return value is less than or equal to 0, then see the value of pErrorOut to understand the error
         //
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16* sourceString, uint32 sourceLength, char16* destString, int32 destLength, ApiError* pErrorOut);
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut);
 
         //
         // This method verifies that a given UTF16 string is normalized according to the rules of Unicode 4.0 TR#15.
@@ -150,7 +150,7 @@ namespace PlatformAgnostic
         //   true if the input string is already normalized, false if it isn't
         //   No error codes are returned since they're not used by the caller.
         //
-        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16* testString, int32 testStringLength);
+        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16_t* testString, int32 testStringLength);
 
         //
         // This method lets the caller know if an external Unicode helper library is being used by the PAL
@@ -198,19 +198,19 @@ namespace PlatformAgnostic
         //   The length required to convert sourceString to the given case, even if destString was not large enough to hold it, including the null terminator
         //
         template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(_In_count_(sourceLength) const char16* sourceString, _In_ charcount_t sourceLength, _Out_writes_(destLength) char16* destString, _In_ charcount_t destLength, _Out_ ApiError* pErrorOut);
+        charcount_t ChangeStringLinguisticCase(_In_count_(sourceLength) const char16_t* sourceString, _In_ charcount_t sourceLength, _Out_writes_(destLength) char16_t* destString, _In_ charcount_t destLength, _Out_ ApiError* pErrorOut);
 
         //
         // Return the classification type of the character using Unicode 2.0 rules
         // Used for ES5 compat
         //
-        CharacterClassificationType GetLegacyCharacterClassificationType(char16 character);
+        CharacterClassificationType GetLegacyCharacterClassificationType(char16_t character);
 
         //
         // Return the flags associated with the character using Unicode 2.0 rules
         // Used for ES5 compat
         //
-        CharacterTypeFlags GetLegacyCharacterTypeFlags(char16 character);
+        CharacterTypeFlags GetLegacyCharacterTypeFlags(char16_t character);
 
         //
         // Compares two unicode strings but numbers are compared
@@ -222,6 +222,6 @@ namespace PlatformAgnostic
         //     -1 - string1 is greater than string2
         //     +1 - string1 is lesser than string2
         //
-        int LogicalStringCompare(const char16* string1, int str1size, const char16* string2, int str2size);
+        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size);
     };
 };

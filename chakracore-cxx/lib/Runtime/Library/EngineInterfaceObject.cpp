@@ -290,9 +290,9 @@ namespace Js
             // Use GetSz rather than GetString because we use wcsrchr below, which expects a null-terminated string
             // Callers can pass in a string like "get compare" or "Intl.Collator.prototype.resolvedOptions" -- only for the
             // latter do we extract a shortName.
-            const char16 *methodNameBuf = displayName->GetSz();
+            const char16_t *methodNameBuf = displayName->GetSz();
             charcount_t methodNameLength = displayName->GetLength();
-            const char16 *shortName = wcsrchr(methodNameBuf, _u('.'));
+            const char16_t *shortName = wcsrchr(methodNameBuf, _u('.'));
             charcount_t shortNameOffset = 0;
             if (shortName != nullptr)
             {

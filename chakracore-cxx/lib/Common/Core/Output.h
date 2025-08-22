@@ -53,7 +53,7 @@ namespace Js
     // decouple implementation so that in common.lib we don't have dependency on memory.lib
     struct ILogger
     {
-        virtual void Write(const char16* msg) = 0;
+        virtual void Write(const char16_t* msg) = 0;
     };
 
 #ifdef STACK_BACK_TRACE
@@ -69,17 +69,17 @@ namespace Js
 class Output
 {
 public:
-    static size_t VerboseNote(const char16 * format, ...);
+    static size_t VerboseNote(const char16_t * format, ...);
 #ifdef ENABLE_TRACE
-    static size_t Trace(Js::Phase phase, const char16 *form, ...);
-    static size_t Trace2(Js::Phase phase, const char16 *form, ...);
-    static size_t TraceWithPrefix(Js::Phase phase, const char16 prefix[], const char16 *form, ...);
-    static size_t TraceWithFlush(Js::Phase phase, const char16 *form, ...);
-    static size_t TraceWithFlush(Js::Flag flag, const char16 *form, ...);
-    static size_t TraceStats(Js::Phase phase, const char16 *form, ...);
+    static size_t Trace(Js::Phase phase, const char16_t *form, ...);
+    static size_t Trace2(Js::Phase phase, const char16_t *form, ...);
+    static size_t TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t *form, ...);
+    static size_t TraceWithFlush(Js::Phase phase, const char16_t *form, ...);
+    static size_t TraceWithFlush(Js::Flag flag, const char16_t *form, ...);
+    static size_t TraceStats(Js::Phase phase, const char16_t *form, ...);
     template<class Fn>
     static size_t
-    TraceWithCallback(Js::Phase phase, Fn callback, const char16 *form, ...)
+    TraceWithCallback(Js::Phase phase, Fn callback, const char16_t *form, ...)
     {
         size_t retValue = 0;
 
@@ -101,10 +101,10 @@ public:
 #endif
     
 #endif // ENABLE_TRACE
-    static size_t Print(const char16 *form, ...);
-    static size_t Print(int column, const char16 *form, ...);
-    static size_t PrintBuffer(const char16 * buffer, size_t size);
-    static size_t VPrint(const char16 *form, va_list argptr);
+    static size_t Print(const char16_t *form, ...);
+    static size_t Print(int column, const char16_t *form, ...);
+    static size_t PrintBuffer(const char16_t * buffer, size_t size);
+    static size_t VPrint(const char16_t *form, va_list argptr);
     static void     SkipToColumn(size_t column);
     static FILE*    SetFile(FILE *);
     static FILE*    GetFile();
@@ -115,13 +115,13 @@ public:
 
     static uint16_t     SetConsoleForeground(uint16_t color);
     static void     CaptureStart();
-    static char16*  CaptureEnd();
+    static char16_t*  CaptureEnd();
 
-    static void     SetAlignAndPrefix(unsigned int align, const char16 *prefix);
+    static void     SetAlignAndPrefix(unsigned int align, const char16_t *prefix);
     static void     ResetAlignAndPrefix();
 
 private:
-    static void     DirectPrint(const char16 * string);
+    static void     DirectPrint(const char16_t * string);
 
     static AutoFILE s_outputFile;
     static bool     s_useDebuggerWindow;
@@ -133,12 +133,12 @@ private:
 #ifdef STACK_BACK_TRACE
     static Js::IStackTraceHelper* s_stackTraceHelper; // Used for capturing stack trace.
 #endif
-    static size_t VTrace(const char16* shortPrefixFormat, const char16* prefix, const char16 *form, va_list argptr);
+    static size_t VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const char16_t *form, va_list argptr);
 #endif // ENABLE_TRACE
 
     thread_local static bool hasDoneAlignPrefixForThisLine;
     thread_local static bool usingCustomAlignAndPrefix;
-    thread_local static const char16* prefix;
+    thread_local static const char16_t* prefix;
     thread_local static size_t align;
 
     thread_local static bool s_capture;

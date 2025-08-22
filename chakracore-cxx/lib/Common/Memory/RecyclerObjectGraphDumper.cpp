@@ -27,14 +27,14 @@ RecyclerObjectGraphDumper::~RecyclerObjectGraphDumper()
     recycler->objectGraphDumper = nullptr;
 }
 
-void RecyclerObjectGraphDumper::BeginDumpObject(char16 const * name)
+void RecyclerObjectGraphDumper::BeginDumpObject(char16_t const * name)
 {
     Assert(dumpObjectName == nullptr);
     Assert(dumpObject == nullptr);
     dumpObjectName = name;
 }
 
-void RecyclerObjectGraphDumper::BeginDumpObject(char16 const * name, void * address)
+void RecyclerObjectGraphDumper::BeginDumpObject(char16_t const * name, void * address)
 {
     Assert(dumpObjectName == nullptr);
     Assert(dumpObject == nullptr);

@@ -362,8 +362,8 @@ template <typename T> struct _has_trivial_destructor<T*> : _true_value {};
 template <> struct _has_trivial_destructor<char> : _true_value {};
 template <> struct _has_trivial_destructor<const char> : _true_value {};
 template <> struct _has_trivial_destructor<unsigned char> : _true_value {};
-template <> struct _has_trivial_destructor<char16> : _true_value {};
-template <> struct _has_trivial_destructor<const char16> : _true_value {};
+template <> struct _has_trivial_destructor<char16_t> : _true_value {};
+template <> struct _has_trivial_destructor<const char16_t> : _true_value {};
 template <> struct _has_trivial_destructor<int> : _true_value {};
 
 template <bool trivial_destructor>

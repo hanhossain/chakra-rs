@@ -166,7 +166,7 @@ namespace PlatformAgnostic
             return 0;
         }
 
-        CharacterClassificationType GetLegacyCharacterClassificationType(char16 ch)
+        CharacterClassificationType GetLegacyCharacterClassificationType(char16_t ch)
         {
             uint16_t charType = 0;
             BOOL res = ::GetStringTypeW(CT_CTYPE1, &ch, 1, &charType);
@@ -208,7 +208,7 @@ namespace PlatformAgnostic
             return CharacterClassificationType::Invalid;
         }
 
-        int LogicalStringCompare(const char16* string1, int str1size, const char16* string2, int str2size)
+        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size)
         {
             // CompareStringEx called with these flags is equivalent to calling StrCmpLogicalW
             // and we have the added advantage of not having to link with shlwapi.lib just for one function
@@ -307,7 +307,7 @@ namespace PlatformAgnostic
             }
         }
 
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16* sourceString, uint32 sourceLength, char16* destString, int32 destLength, ApiError* pErrorOut)
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
         {
             // Assert pointers
             Assert(sourceString != nullptr);
@@ -341,7 +341,7 @@ namespace PlatformAgnostic
             return normalizedStringLength;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16* testString, int32 testStringLength)
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32 testStringLength)
         {
             Assert(testString != nullptr);
 
@@ -349,7 +349,7 @@ namespace PlatformAgnostic
         }
 
         template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(const char16* sourceString, charcount_t sourceLength, char16* destString, charcount_t destLength, ApiError* pErrorOut)
+        charcount_t ChangeStringLinguisticCase(const char16_t* sourceString, charcount_t sourceLength, char16_t* destString, charcount_t destLength, ApiError* pErrorOut)
         {
             Assert(sourceString != nullptr && sourceLength > 0);
             Assert(destString != nullptr || destLength == 0);

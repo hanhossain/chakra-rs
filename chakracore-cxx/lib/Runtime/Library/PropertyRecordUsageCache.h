@@ -116,7 +116,7 @@ namespace Js
 
 #if ENABLE_DEBUG_CONFIG_OPTIONS
 
-        const char16* GetString()
+        const char16_t* GetString()
         {
             return propertyRecord->GetBuffer();
         }

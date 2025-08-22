@@ -117,7 +117,7 @@ Error:
 
     HRESULT SCAPropBag::InternalAdd(LPCWSTR name, charcount_t len, Var value)
     {
-        char16* buf = nullptr;
+        char16_t* buf = nullptr;
         HRESULT hr = S_OK;
         ScriptContext* scriptContext = GetScriptContext();
         Recycler* recycler = scriptContext->GetRecycler();
@@ -128,10 +128,10 @@ Error:
         IfFailGo(UIntAdd(len, 1, &fullLen));
         
         // byte length (excluding null terminator)
-        IfFailGo(UIntMult(len, sizeof(char16), &byteLen));
+        IfFailGo(UIntMult(len, sizeof(char16_t), &byteLen));
 
         // Make a copy of name
-        buf = RecyclerNewArrayLeaf(recycler, char16, fullLen);
+        buf = RecyclerNewArrayLeaf(recycler, char16_t, fullLen);
         js_memcpy_s(buf, byteLen, name, byteLen);
         buf[len] = _u('\0');
 

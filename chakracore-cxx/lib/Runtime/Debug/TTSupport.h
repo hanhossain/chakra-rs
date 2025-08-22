@@ -121,7 +121,7 @@ typedef uint64 TTD_LOG_PTR_ID;
 #define TTD_CONVERT_OBJ_TO_LOG_PTR_ID(X) reinterpret_cast<TTD_LOG_PTR_ID>(X)
 
 //The representation of an identifier (currently access path) for a well known object/primitive/function body/etc. in the JS engine or HOST
-typedef const char16* TTD_WELLKNOWN_TOKEN;
+typedef const char16_t* TTD_WELLKNOWN_TOKEN;
 #define TTD_INVALID_WELLKNOWN_TOKEN nullptr
 #define TTD_DIAGNOSTIC_COMPARE_WELLKNOWN_TOKENS(T1, T2) ((T1 == T2) || ((T1 != TTD_INVALID_WELLKNOWN_TOKEN) && (T2 != TTD_INVALID_WELLKNOWN_TOKEN) && wcscmp(T1, T2) == 0))
 
@@ -324,12 +324,12 @@ namespace TTD
         {
         private:
             int64 m_allocSize;
-            char16* m_contents;
-            char16* m_optFormatBuff;
+            char16_t* m_contents;
+            char16_t* m_optFormatBuff;
 
         public:
             TTAutoString();
-            TTAutoString(const char16* str);
+            TTAutoString(const char16_t* str);
             TTAutoString(const TTAutoString& str);
 
             TTAutoString& operator=(const TTAutoString& str);
@@ -343,7 +343,7 @@ namespace TTD
 
             bool IsNullString() const;
 
-            void Append(const char16* str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
+            void Append(const char16_t* str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
             void Append(const TTAutoString& str, size_t start = 0, size_t end = std::numeric_limits<size_t>::max());
 
             void Append(uint64 val);
@@ -351,8 +351,8 @@ namespace TTD
             void Append(LPCUTF8 strBegin, LPCUTF8 strEnd);
 
             int32 GetLength() const;
-            char16 GetCharAt(int32 pos) const;
-            const char16* GetStrValue() const;
+            char16_t GetCharAt(int32 pos) const;
+            const char16_t* GetStrValue() const;
         };
     }
 
@@ -368,7 +368,7 @@ namespace TTD
         uint32 Length;
 
         //The char contents of the string (null terminated -- may be null if empty)
-        char16* Contents;
+        char16_t* Contents;
     };
 
     //initialize and return true if the given string should map to a nullptr char* representaiton
@@ -668,8 +668,8 @@ namespace TTD
         SlabAllocatorBase(const SlabAllocatorBase&) = delete;
         SlabAllocatorBase& operator=(SlabAllocatorBase const&) = delete;
 
-        //clone a null terminated char16* string (or nullptr) into the allocator -- currently only used for wellknown tokens
-        const char16* CopyRawNullTerminatedStringInto(const char16* str)
+        //clone a null terminated char16_t* string (or nullptr) into the allocator -- currently only used for wellknown tokens
+        const char16_t* CopyRawNullTerminatedStringInto(const char16_t* str)
         {
             if (str == nullptr)
             {
@@ -678,9 +678,9 @@ namespace TTD
             else
             {
                 size_t length = wcslen(str) + 1;
-                size_t byteLength = length * sizeof(char16);
+                size_t byteLength = length * sizeof(char16_t);
 
-                char16* res = this->SlabAllocateArray<char16>(length);
+                char16_t* res = this->SlabAllocateArray<char16_t>(length);
                 js_memcpy_s(res, byteLength, str, byteLength);
 
                 return res;
@@ -688,15 +688,15 @@ namespace TTD
         }
 
         //clone a string into the allocator of a known length
-        void CopyStringIntoWLength(const char16* str, uint32 length, TTString& into)
+        void CopyStringIntoWLength(const char16_t* str, uint32 length, TTString& into)
         {
             TTDAssert(str != nullptr, "Not allowed for string + length");
 
             into.Length = length;
-            into.Contents = this->SlabAllocateArray<char16>(into.Length + 1);
+            into.Contents = this->SlabAllocateArray<char16_t>(into.Length + 1);
 
             //don't js_memcpy if the contents length is 0
-            js_memcpy_s(into.Contents, into.Length * sizeof(char16), str, length * sizeof(char16));
+            js_memcpy_s(into.Contents, into.Length * sizeof(char16_t), str, length * sizeof(char16_t));
             into.Contents[into.Length] = '\0';
         }
 
@@ -704,12 +704,12 @@ namespace TTD
         void InitializeAndAllocateWLength(uint32 length, TTString& into)
         {
             into.Length = length;
-            into.Contents = this->SlabAllocateArray<char16>(into.Length + 1);
+            into.Contents = this->SlabAllocateArray<char16_t>(into.Length + 1);
             into.Contents[0] = '\0';
         }
 
         //clone a string into the allocator
-        void CopyNullTermStringInto(const char16* str, TTString& into)
+        void CopyNullTermStringInto(const char16_t* str, TTString& into)
         {
             if (str == nullptr)
             {

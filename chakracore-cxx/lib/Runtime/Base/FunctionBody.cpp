@@ -143,7 +143,7 @@ namespace Js
         return this->GetUtf8SourceInfo()->GetSrcInfo()->sourceContextInfo->sourceContextId;
     }
 
-    char16* FunctionProxy::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
+    char16_t* FunctionProxy::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
     {
         // (#%u.%u), #%u --> (source file Id . function Id) , function Number
         int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, _u(" (#%d.%u), #%u"),
@@ -165,19 +165,19 @@ namespace Js
     }
 
     LPCUTF8
-    ParseableFunctionInfo::GetSource(const char16* reason) const
+    ParseableFunctionInfo::GetSource(const char16_t* reason) const
     {
         return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetSource") : reason) + this->StartOffset();
     }
 
     LPCUTF8
-        ParseableFunctionInfo::GetToStringSource(const  char16* reason) const
+        ParseableFunctionInfo::GetToStringSource(const  char16_t* reason) const
     {
         return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetToStringSource") : reason) + this->PrintableStartOffset();
     }
 
     LPCUTF8
-    ParseableFunctionInfo::GetStartOfDocument(const char16* reason) const
+    ParseableFunctionInfo::GetStartOfDocument(const char16_t* reason) const
     {
         return this->GetUtf8SourceInfo()->GetSource(reason == nullptr ? _u("ParseableFunctionInfo::GetStartOfDocument") : reason);
     }
@@ -217,7 +217,7 @@ namespace Js
         return this->m_cbStartOffset;
     }
 
-    void ParseableFunctionInfo::RegisterFuncToDiag(ScriptContext * scriptContext, char16 const * pszTitle)
+    void ParseableFunctionInfo::RegisterFuncToDiag(ScriptContext * scriptContext, char16_t const * pszTitle)
     {
 #ifdef ENABLE_SCRIPT_DEBUGGING
         // Register the function to the PDM as eval code (the debugger app will show file as 'eval code')
@@ -456,7 +456,7 @@ namespace Js
         this->m_sourceInfo.m_probeBackingBlock = probeBackingBlock;
     }
 
-    FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16 * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
+    FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* sourceInfo, uint uScriptId, Js::LocalFunctionId functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
 #ifdef PERF_COUNTERS
             , bool isDeserializedFunction
@@ -471,7 +471,7 @@ namespace Js
             );
     }
 
-    FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16 * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
+    FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* sourceInfo, uint uFunctionNumber, uint uScriptId, Js::LocalFunctionId  functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
 #ifdef PERF_COUNTERS
             , bool isDeserializedFunction
@@ -505,7 +505,7 @@ namespace Js
         return functionBody;
     }
 
-    FunctionBody::FunctionBody(ScriptContext* scriptContext, const char16* displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
+    FunctionBody::FunctionBody(ScriptContext* scriptContext, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* utf8SourceInfo, uint uFunctionNumber, uint uScriptId,
         Js::LocalFunctionId  functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
 #ifdef PERF_COUNTERS
@@ -1071,7 +1071,7 @@ namespace Js
 
     // Returns a raw pointer to the display name which may not have a well-known lifetime. It's safer to use
     // GetExternalDisplayNameObject if the end goal is to create an object anyway.
-    const char16* ParseableFunctionInfo::GetExternalDisplayName() const
+    const char16_t* ParseableFunctionInfo::GetExternalDisplayName() const
     {
         return GetExternalDisplayName(this);
     }
@@ -1079,7 +1079,7 @@ namespace Js
     // Allocates a new JavascriptString object containing the display name associated with the FunctionBody.
     JavascriptString* ParseableFunctionInfo::GetExternalDisplayNameObject(ScriptContext* scriptContext) const
     {
-        const char16* name = GetExternalDisplayName();
+        const char16_t* name = GetExternalDisplayName();
 
         if (!GetDisplayNameIsRecyclerAllocated() && !IsConstantFunctionName(name))
         {
@@ -1577,7 +1577,7 @@ namespace Js
 
     // DeferDeserializeFunctionInfo methods
 
-    DeferDeserializeFunctionInfo::DeferDeserializeFunctionInfo(int nestedCount, LocalFunctionId functionId, ByteCodeCache* byteCodeCache, const byte* serializedFunction, Utf8SourceInfo* sourceInfo, ScriptContext* scriptContext, uint functionNumber, const char16* displayName, uint displayNameLength, uint displayShortNameOffset, NativeModule *nativeModule, FunctionInfo::Attributes attributes) :
+    DeferDeserializeFunctionInfo::DeferDeserializeFunctionInfo(int nestedCount, LocalFunctionId functionId, ByteCodeCache* byteCodeCache, const byte* serializedFunction, Utf8SourceInfo* sourceInfo, ScriptContext* scriptContext, uint functionNumber, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, NativeModule *nativeModule, FunctionInfo::Attributes attributes) :
         FunctionProxy(scriptContext, sourceInfo, functionNumber),
         m_cache(byteCodeCache),
         m_functionBytes(serializedFunction),
@@ -1592,7 +1592,7 @@ namespace Js
         SetDisplayName(displayName, displayNameLength, displayShortNameOffset, FunctionProxy::SetDisplayNameFlagsDontCopy);
     }
 
-    DeferDeserializeFunctionInfo* DeferDeserializeFunctionInfo::New(ScriptContext* scriptContext, int nestedCount, LocalFunctionId functionId, ByteCodeCache* byteCodeCache, const byte* serializedFunction, Utf8SourceInfo* sourceInfo, const char16* displayName, uint displayNameLength, uint displayShortNameOffset, NativeModule *nativeModule, FunctionInfo::Attributes attributes)
+    DeferDeserializeFunctionInfo* DeferDeserializeFunctionInfo::New(ScriptContext* scriptContext, int nestedCount, LocalFunctionId functionId, ByteCodeCache* byteCodeCache, const byte* serializedFunction, Utf8SourceInfo* sourceInfo, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, NativeModule *nativeModule, FunctionInfo::Attributes attributes)
     {
         return RecyclerNewFinalized(scriptContext->GetRecycler(),
             DeferDeserializeFunctionInfo,
@@ -1610,7 +1610,7 @@ namespace Js
             attributes);
     }
 
-    const char16*
+    const char16_t*
     DeferDeserializeFunctionInfo::GetDisplayName() const
     {
         return this->m_displayName;
@@ -1619,7 +1619,7 @@ namespace Js
     // ParseableFunctionInfo methods
     ParseableFunctionInfo::ParseableFunctionInfo(JavascriptMethod entryPoint, int nestedCount,
         LocalFunctionId functionId, Utf8SourceInfo* sourceInfo, ScriptContext* scriptContext, uint functionNumber,
-        const char16* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags) :
+        const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags) :
       FunctionProxy(scriptContext, sourceInfo, functionNumber),
       crossSiteDeferredFunctionType(nullptr),
       crossSiteUndeferredFunctionType(nullptr),
@@ -1730,7 +1730,7 @@ namespace Js
     }
 
     ParseableFunctionInfo* ParseableFunctionInfo::New(ScriptContext* scriptContext, int nestedCount,
-        LocalFunctionId functionId, Utf8SourceInfo* sourceInfo, const char16* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags)
+        LocalFunctionId functionId, Utf8SourceInfo* sourceInfo, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags)
     {
 #if defined(ENABLE_SCRIPT_PROFILING) || defined(ENABLE_SCRIPT_DEBUGGING)
         Assert(
@@ -1950,7 +1950,7 @@ namespace Js
         m_reportedInParamCount = 0;
     }
 
-    const char16*
+    const char16_t*
     ParseableFunctionInfo::GetDisplayName() const
     {
         return this->m_displayName;
@@ -2172,7 +2172,7 @@ namespace Js
         OUTPUT_TRACE(Js::ExpirableCollectPhase, _u("Registered type 0x%p on function body %p, count = %d\n"), functionType, this, typeList->Count());
     }
 
-    void DeferDeserializeFunctionInfo::SetDisplayName(const char16* displayName)
+    void DeferDeserializeFunctionInfo::SetDisplayName(const char16_t* displayName)
     {
         size_t len = wcslen(displayName);
         if (len > UINT_MAX)
@@ -2183,7 +2183,7 @@ namespace Js
         SetDisplayName(displayName, (uint)len, 0);
     }
 
-    void DeferDeserializeFunctionInfo::SetDisplayName(const char16* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
+    void DeferDeserializeFunctionInfo::SetDisplayName(const char16_t* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
     {
         this->m_displayNameLength = displayNameLength;
         this->m_displayShortNameOffset = displayShortNameOffset;
@@ -2370,7 +2370,7 @@ namespace Js
                 if (isDebugOrAsmJsReparse)
                 {
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-                    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
 #if DBG
                     Assert(
@@ -2714,11 +2714,11 @@ namespace Js
         return GetIsGlobalFunc() && !(flags & fscrGlobalCode);
     }
 
-    const char16* FunctionProxy::WrapWithBrackets(const char16* name, charcount_t sz, ScriptContext* scriptContext)
+    const char16_t* FunctionProxy::WrapWithBrackets(const char16_t* name, charcount_t sz, ScriptContext* scriptContext)
     {
-        char16 * wrappedName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, sz + 3); //[]\0
+        char16_t * wrappedName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, sz + 3); //[]\0
         wrappedName[0] = _u('[');
-        char16 *next = wrappedName;
+        char16_t *next = wrappedName;
         js_wmemcpy_s(++next, sz, name, sz);
         wrappedName[sz + 1] = _u(']');
         wrappedName[sz + 2] = _u('\0');
@@ -2726,9 +2726,9 @@ namespace Js
 
     }
 
-    const char16* FunctionProxy::GetShortDisplayName(charcount_t * shortNameLength)
+    const char16_t* FunctionProxy::GetShortDisplayName(charcount_t * shortNameLength)
     {
-        const char16* name = this->GetDisplayName();
+        const char16_t* name = this->GetDisplayName();
         uint nameLength = this->GetDisplayNameLength();
 
         if (name == nullptr)
@@ -2743,7 +2743,7 @@ namespace Js
             return name;
         }
         uint shortNameOffset = this->GetShortDisplayNameOffset();
-        const char16 * shortName = name + shortNameOffset;
+        const char16_t * shortName = name + shortNameOffset;
         bool isBracketCase = shortNameOffset != 0 && name[shortNameOffset-1] == '[';
         Assert(nameLength >= shortNameOffset);
         *shortNameLength = nameLength - shortNameOffset;
@@ -2754,7 +2754,7 @@ namespace Js
         }
 
         Assert(name[nameLength - 1] == ']');
-        char16 * finalshorterName = RecyclerNewArrayLeaf(this->GetScriptContext()->GetRecycler(), char16, *shortNameLength);
+        char16_t * finalshorterName = RecyclerNewArrayLeaf(this->GetScriptContext()->GetRecycler(), char16_t, *shortNameLength);
         js_wmemcpy_s(finalshorterName, *shortNameLength, shortName, *shortNameLength - 1); // we don't want the last character in shorterName
         finalshorterName[*shortNameLength - 1] = _u('\0');
         *shortNameLength = *shortNameLength - 1;
@@ -2762,7 +2762,7 @@ namespace Js
     }
 
     /*static*/
-    bool FunctionProxy::IsConstantFunctionName(const char16* srcName)
+    bool FunctionProxy::IsConstantFunctionName(const char16_t* srcName)
     {
         if (srcName == Js::Constants::GlobalFunction ||
             srcName == Js::Constants::AnonymousFunction ||
@@ -2779,7 +2779,7 @@ namespace Js
 
     /*static */
     /*Return value: Whether the target value is a recycler pointer or not*/
-    bool FunctionProxy::SetDisplayName(const char16* srcName, const char16** destName, uint displayNameLength,  ScriptContext * scriptContext, SetDisplayNameFlags flags /* default to None */)
+    bool FunctionProxy::SetDisplayName(const char16_t* srcName, const char16_t** destName, uint displayNameLength,  ScriptContext * scriptContext, SetDisplayNameFlags flags /* default to None */)
     {
         Assert(destName);
         Assert(scriptContext);
@@ -2799,17 +2799,17 @@ namespace Js
             uint  numCharacters =  displayNameLength + 1;
             Assert((flags & SetDisplayNameFlagsDontCopy) == 0);
 
-            *destName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, numCharacters);
-            js_wmemcpy_s((char16 *)*destName, numCharacters, srcName, numCharacters);
-            ((char16 *)(*destName))[numCharacters - 1] = _u('\0');
+            *destName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, numCharacters);
+            js_wmemcpy_s((char16_t *)*destName, numCharacters, srcName, numCharacters);
+            ((char16_t *)(*destName))[numCharacters - 1] = _u('\0');
 
             return true;
         }
     }
 
-    bool FunctionProxy::SetDisplayName(const char16* srcName, WriteBarrierPtr<const char16>* destName, uint displayNameLength, ScriptContext * scriptContext, SetDisplayNameFlags flags /* default to None */)
+    bool FunctionProxy::SetDisplayName(const char16_t* srcName, WriteBarrierPtr<const char16_t>* destName, uint displayNameLength, ScriptContext * scriptContext, SetDisplayNameFlags flags /* default to None */)
     {
-        const char16* dest = nullptr;
+        const char16_t* dest = nullptr;
         bool targetIsRecyclerMemory = SetDisplayName(srcName, &dest, displayNameLength, scriptContext, flags);
 
         if (targetIsRecyclerMemory)
@@ -2822,7 +2822,7 @@ namespace Js
         }
         return targetIsRecyclerMemory;
     }
-    void ParseableFunctionInfo::SetDisplayName(const char16* pszDisplayName)
+    void ParseableFunctionInfo::SetDisplayName(const char16_t* pszDisplayName)
     {
         size_t len = wcslen(pszDisplayName);
         if (len > UINT_MAX)
@@ -2832,7 +2832,7 @@ namespace Js
         }
         SetDisplayName(pszDisplayName, (uint)len, 0);
     }
-    void ParseableFunctionInfo::SetDisplayName(const char16* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
+    void ParseableFunctionInfo::SetDisplayName(const char16_t* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
     {
         this->m_displayNameLength = displayNameLength;
         this->m_displayShortNameOffset = displayShortNameOffset;
@@ -3105,7 +3105,7 @@ namespace Js
     {
         Assert(this->IsReparsed());
 #if ENABLE_DEBUG_CONFIG_OPTIONS
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
         if(!!pnodeFnc->ChildCallsEval() != this->GetChildCallsEval())
         {
@@ -4466,7 +4466,7 @@ namespace Js
     {
         if(this->GetScopeObjectChain())
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
             Output::Print(_u("%s (%s) :\n"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
             this->GetScopeObjectChain()->pScopeChain->Map( [=] (uint index, DebuggerScope* scope )
@@ -4608,7 +4608,7 @@ namespace Js
             // Need to match up cchStartOffset to appropriate cbStartOffset given function's cbStartOffset and cchStartOffset
             size_t utf8SrcStartIdx = utf8::CharacterIndexToByteIndex(source, sourceInfo->GetCbLength(), cchStartOffset, this->m_cbStartOffset, this->m_cchStartOffset);
             size_t utf8SrcEndIdx = StartOffset() + LengthInBytes();
-            char16* utf16Buf = HeapNewArray(char16, utf8SrcEndIdx - utf8SrcStartIdx + 2); 
+            char16_t* utf16Buf = HeapNewArray(char16_t, utf8SrcEndIdx - utf8SrcStartIdx + 2); 
             size_t utf16BufSz = utf8::DecodeUnitsIntoAndNullTerminateNoAdvance(utf16Buf, source + utf8SrcStartIdx, source + utf8SrcEndIdx, utf8::DecodeOptions::doDefault);
             Assert(utf16BufSz <= utf8SrcEndIdx - utf8SrcStartIdx);
             for (size_t i = 0; i < utf16BufSz && utf16Buf[i] != _u('\n') && utf16Buf[i] != _u('\r'); i++)
@@ -4977,7 +4977,7 @@ namespace Js
     {
         // Some assumptions by Logger interface.
         // to send NULL as a name in case the name is anonymous and hint is anonymous code.
-        const char16 *pwszName = GetExternalDisplayName();
+        const char16_t *pwszName = GetExternalDisplayName();
 
         IDebugDocumentContext *pDebugDocumentContext = nullptr;
         this->m_scriptContext->GetDocumentContext(this, &pDebugDocumentContext);
@@ -5297,7 +5297,7 @@ namespace Js
         this->SetAuxPtr<AuxPointerType::StackNestedFuncParent>(nullptr);
         this->SetReparsed(true);
 #if DBG
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, _u("Regenerate Due To Debug Mode: function %s (%s) from script context %p\n"),
             this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), m_scriptContext);
 
@@ -6386,7 +6386,7 @@ namespace Js
 
 #endif
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
@@ -6418,7 +6418,7 @@ namespace Js
         }
 #endif
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
@@ -7083,7 +7083,7 @@ namespace Js
         Assert(PHASE_TRACE(Phase::ExecutionModePhase, this));
         executionState.AssertIsInitialized();
 
-        char16 functionIdString[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t functionIdString[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(
             _u("ExecutionMode - ")
                 _u("function: %s (%s), ")
@@ -7918,7 +7918,7 @@ namespace Js
     void
     FunctionBody::DumpFullFunctionName()
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
         Output::Print(_u("Function %s (%s)"), this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
     }
@@ -9587,10 +9587,10 @@ namespace Js
     }
 
 
-    static const char16 LoopWStr[] = _u("Loop");
+    static const char16_t LoopWStr[] = _u("Loop");
     size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) WCHAR* displayName, _In_ size_t sizeInChars)
     {
-        const char16* functionName = this->GetExternalDisplayName();
+        const char16_t* functionName = this->GetExternalDisplayName();
         size_t length = wcslen(functionName) + /*length of largest int32*/ 10 + _countof(LoopWStr) + /*null*/ 1;
         if (sizeInChars < length || displayName == nullptr)
         {

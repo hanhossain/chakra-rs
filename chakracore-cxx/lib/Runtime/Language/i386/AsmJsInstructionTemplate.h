@@ -1673,7 +1673,7 @@ namespace Js
 #define DUMP_ASM_CODE_PADDING(size) ((DUMP_ASM_CODE_NB_BYTES-size%DUMP_ASM_CODE_NB_BYTES)%DUMP_ASM_CODE_NB_BYTES)*5+1
 
     template<typename T>
-    void DumpAsmCode( const uint8_t* buffer, const int size, const char16* instructionName, T* params )
+    void DumpAsmCode( const uint8_t* buffer, const int size, const char16_t* instructionName, T* params )
     {
 #if DBG_DUMP
         if( PHASE_TRACE( AsmjsEncoderPhase, AsmJsJitTemplate::Globals::CurrentEncodingFunction ) )
@@ -1700,17 +1700,17 @@ namespace Js
 #if DBG_DUMP
 #define InstructionMembers(name, supInstrSize, flags) \
     static const int SupportedInstrSize = supInstrSize;\
-    static const char16* InstructionName;\
+    static const char16_t* InstructionName;\
     static const int Flags = flags;\
-    static const char16* GetInstructionName() { return InstructionName; }
+    static const char16_t* GetInstructionName() { return InstructionName; }
 
 #define InstructionMemberInit(name)\
-    const char16* name::InstructionName = _u(#name);
+    const char16_t* name::InstructionName = _u(#name);
 #else
 #define InstructionMembers(name, supInstrSize, flags) \
     static const int SupportedInstrSize = supInstrSize;\
     static const int Flags = flags;\
-    static const char16* GetInstructionName() { return _u(""); }
+    static const char16_t* GetInstructionName() { return _u(""); }
 #define InstructionMemberInit(name)
 #endif
 

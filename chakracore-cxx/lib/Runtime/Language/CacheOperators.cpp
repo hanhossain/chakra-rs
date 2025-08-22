@@ -347,7 +347,7 @@ namespace Js
     }
 
 #if DBG_DUMP
-    void CacheOperators::TraceCache(InlineCache * inlineCache, const char16 * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
+    void CacheOperators::TraceCache(InlineCache * inlineCache, const char16_t * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
     {
         TraceCacheCommon(methodName, propertyId, requestContext, object);
         if(inlineCache)
@@ -359,7 +359,7 @@ namespace Js
         Output::Flush();
     }
 
-    void CacheOperators::TraceCache(PolymorphicInlineCache * polymorphicInlineCache, const char16 * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
+    void CacheOperators::TraceCache(PolymorphicInlineCache * polymorphicInlineCache, const char16_t * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
     {
         TraceCacheCommon(methodName, propertyId, requestContext, object);
         Output::Print(_u("Polymorphic Inline Cache, size = %d :\n"), polymorphicInlineCache->GetSize());
@@ -367,7 +367,7 @@ namespace Js
         Output::Flush();
     }
 
-    void CacheOperators::TraceCacheCommon(const char16 * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
+    void CacheOperators::TraceCacheCommon(const char16_t * methodName, PropertyId propertyId, ScriptContext * requestContext, RecyclableObject * object)
     {
         if(object)
         {

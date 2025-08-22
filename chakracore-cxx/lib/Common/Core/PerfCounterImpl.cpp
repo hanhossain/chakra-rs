@@ -109,11 +109,11 @@ InstanceBase::IsEnabled() const
 }
 
 static const size_t GUID_LEN = 37;   // includes null
-static const char16 s_wszObjectNamePrefix[] = _u("jscript9_perf_counter_");
+static const char16_t s_wszObjectNamePrefix[] = _u("jscript9_perf_counter_");
 static const size_t OBJECT_NAME_LEN = GUID_LEN + _countof(s_wszObjectNamePrefix) + 11;
 
 static
-void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16 wszObjectName[OBJECT_NAME_LEN], uint32_t pid, GUID const& guid)
+void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16_t wszObjectName[OBJECT_NAME_LEN], uint32_t pid, GUID const& guid)
 {
     swprintf_s(wszObjectName, OBJECT_NAME_LEN, _u("%s%d_%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x"),
         s_wszObjectNamePrefix, pid,
@@ -125,7 +125,7 @@ void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16 wszObjectN
 }
 
 bool
-InstanceBase::Initialize(char16 const * wszInstanceName, uint32_t processId)
+InstanceBase::Initialize(char16_t const * wszInstanceName, uint32_t processId)
 {
     if (provider.IsInitialized())
     {
@@ -142,7 +142,7 @@ InstanceBase::InitializeSharedMemory(uint32_t numCounter, HANDLE& handle)
     Assert(!IsEnabled());
 
     uint32_t size = numCounter * sizeof(uint32_t);
-    char16 wszObjectName[OBJECT_NAME_LEN];
+    char16_t wszObjectName[OBJECT_NAME_LEN];
     GetSharedMemoryObjectName(wszObjectName, GetCurrentProcessId(), guid);
     handle = ::CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, size, wszObjectName);
     if (handle == NULL)
@@ -159,13 +159,13 @@ InstanceBase::InitializeSharedMemory(uint32_t numCounter, HANDLE& handle)
 }
 
 uint32_t *
-InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16 const wszObjectNamePrefix[MAX_OBJECT_NAME_PREFIX],
+InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16_t const wszObjectNamePrefix[MAX_OBJECT_NAME_PREFIX],
     uint32_t pid, uint32_t numCounter, HANDLE& handle)
 {
     uint32_t size = numCounter * sizeof(uint32_t);
-    char16 wszObjectName[OBJECT_NAME_LEN];
+    char16_t wszObjectName[OBJECT_NAME_LEN];
     GetSharedMemoryObjectName(wszObjectName, pid, guid);
-    char16 wszObjectNameFull[MAX_OBJECT_NAME_PREFIX + OBJECT_NAME_LEN];
+    char16_t wszObjectNameFull[MAX_OBJECT_NAME_PREFIX + OBJECT_NAME_LEN];
     swprintf_s(wszObjectNameFull, _u("%s\\%s"), wszObjectNamePrefix, wszObjectName);
     handle = ::OpenFileMapping(FILE_MAP_READ, FALSE, wszObjectNameFull);
     if (handle == NULL)

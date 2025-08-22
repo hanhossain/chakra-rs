@@ -369,7 +369,7 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
 
             if (PHASE_TRACE(Js::ReJITPhase, &func))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 Output::Print(
                     _u("Rejit (compile-time): function: %s (%s) reason: %S\n"),
                     workItem->GetJITFunctionBody()->GetDisplayName(),
@@ -2045,7 +2045,7 @@ Func::AllocateNumber(double value)
 void
 Func::DumpFullFunctionName()
 {
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
     Output::Print(_u("Function %s (%s)"), GetJITFunctionBody()->GetDisplayName(), GetDebugNumberSet(debugStringBuffer));
 }

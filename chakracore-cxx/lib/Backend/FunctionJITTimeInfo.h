@@ -54,8 +54,8 @@ public:
     bool HasSharedPropertyGuard(Js::PropertyId id) const;
     bool IsJsBuiltInForceInline() const;
 
-    char16* GetDisplayName() const;
-    char16* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const;
+    char16_t* GetDisplayName() const;
+    char16_t* GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const;
 private:
     FunctionJITTimeDataIDL m_data;
 };

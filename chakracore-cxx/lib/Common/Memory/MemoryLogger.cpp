@@ -10,7 +10,7 @@ namespace Js
 {
     MemoryLogger::MemoryLogger(TAllocator* alloc, uint32_t count) : m_alloc(alloc), m_capacity(count), m_current(0)
     {
-        m_log = AnewArrayZ(m_alloc, char16*, m_capacity);
+        m_log = AnewArrayZ(m_alloc, char16_t*, m_capacity);
     }
 
     MemoryLogger::~MemoryLogger()
@@ -18,7 +18,7 @@ namespace Js
         Adelete(m_alloc, m_log);
     }
 
-    void MemoryLogger::Write(const char16* msg)
+    void MemoryLogger::Write(const char16_t* msg)
     {
 #ifdef EXCEPTION_CHECK
         // In most cases this will be called at runtime when we have exception check enabled.
@@ -28,7 +28,7 @@ namespace Js
 
         // Create a copy of the message.
         size_t len = wcslen(msg);
-        char16* buf = AnewArray(m_alloc, char16, len + 1);
+        char16_t* buf = AnewArray(m_alloc, char16_t, len + 1);
         js_wmemcpy_s(buf, len + 1, msg, len + 1);   // Copy with the NULL-terminator.
 
         // m_current is the next position to write to.

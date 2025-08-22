@@ -76,7 +76,7 @@ namespace Js
         this->pszValue = NULL;
     }
 
-    String::String(__in_z_opt const char16* psz)
+    String::String(__in_z_opt const char16_t* psz)
     {
         this->pszValue = NULL;
         Set(psz);
@@ -100,7 +100,7 @@ namespace Js
     ///----------------------------------------------------------------------------
 
     void
-    String::Set(__in_z_opt const char16* pszValue)
+    String::Set(__in_z_opt const char16_t* pszValue)
     {
         if(NULL != this->pszValue)
         {
@@ -110,7 +110,7 @@ namespace Js
         if(NULL != pszValue)
         {
             size_t size    = 1 + wcslen(pszValue);
-            this->pszValue  = NoCheckHeapNewArray(char16, size);
+            this->pszValue  = NoCheckHeapNewArray(char16_t, size);
             wcscpy_s(this->pszValue, size, pszValue);
         }
         else
@@ -255,7 +255,7 @@ namespace Js
     // List of names of all the flags
     //
 
-    const char16* const FlagNames[FlagCount + 1] =
+    const char16_t* const FlagNames[FlagCount + 1] =
     {
     #define FLAG(type, name, ...) _u(#name),
     #include "Interface/ConfigFlagsList.h"
@@ -268,7 +268,7 @@ namespace Js
     // List of names of all the Phases
     //
 
-    const char16* const PhaseNames[PhaseCount + 1] =
+    const char16_t* const PhaseNames[PhaseCount + 1] =
     {
     #define PHASE(name) _u(#name),
     #include "Interface/ConfigFlagsList.h"
@@ -280,7 +280,7 @@ namespace Js
     //
     // Description of flags
     //
-    const char16* const FlagDescriptions[FlagCount + 1] =
+    const char16_t* const FlagDescriptions[FlagCount + 1] =
     {
     #define FLAG(type, name, description, ...) _u(description),
     #include "Interface/ConfigFlagsList.h"

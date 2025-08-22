@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    JavascriptBigInt * JavascriptBigInt::Create(const char16 * content, charcount_t cchUseLength, bool isNegative, ScriptContext * scriptContext)
+    JavascriptBigInt * JavascriptBigInt::Create(const char16_t * content, charcount_t cchUseLength, bool isNegative, ScriptContext * scriptContext)
     {
         return RecyclerNew(scriptContext->GetRecycler(), JavascriptBigInt, content, cchUseLength, isNegative, scriptContext->GetLibrary()->GetBigIntTypeStatic());
     }

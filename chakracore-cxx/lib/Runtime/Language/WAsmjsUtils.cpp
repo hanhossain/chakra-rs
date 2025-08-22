@@ -186,7 +186,7 @@ namespace WAsmJs
     template<> Types FromPrimitiveType<AsmJsSIMDValue>() { return WAsmJs::SIMD; }
 
 #if DBG_DUMP
-    void RegisterSpace::GetTypeDebugName(Types type, char16* buf, uint bufsize, bool shortName)
+    void RegisterSpace::GetTypeDebugName(Types type, char16_t* buf, uint bufsize, bool shortName)
     {
         // Since this needs to be done manually for each type, this assert will make sure to not forget to update this if a new type is added
         CompileAssert(LIMIT == 5);
@@ -206,7 +206,7 @@ namespace WAsmJs
     {
         if (PHASE_TRACE1(Js::AsmjsTmpRegisterAllocationPhase))
         {
-            char16 buf[16];
+            char16_t buf[16];
             GetTypeDebugName(mType, buf, 16, true);
             Output::Print(_u("%s%s %d\n"), deallocation ? _u("-") : _u("+"), buf, loc);
         }
@@ -274,7 +274,7 @@ namespace WAsmJs
 #if DBG_DUMP
                 if (PHASE_TRACE(Js::AsmjsInterpreterStackPhase, body))
                 {
-                    char16 buf[16];
+                    char16_t buf[16];
                     RegisterSpace::GetTypeDebugName(type, buf, 16);
                     Output::Print(_u("%s Offset:%d  ConstCount:%d  VarCount:%d  TmpCount:%d = %d * %d = 0x%x bytes\n"),
                                   buf,
@@ -374,8 +374,8 @@ namespace WAsmJs
             Types type = (Types)i;
             if (!IsTypeExcluded(type))
             {
-                char16 typeName[16];
-                char16 shortTypeName[16];
+                char16_t typeName[16];
+                char16_t shortTypeName[16];
                 RegisterSpace::GetTypeDebugName(type, typeName, 16);
                 RegisterSpace::GetTypeDebugName(type, shortTypeName, 16, true);
                 RegisterSpace* registerSpace = GetRegisterSpace(type);

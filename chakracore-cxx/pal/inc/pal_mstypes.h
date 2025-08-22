@@ -156,7 +156,6 @@ typedef ptrdiff_t LPARAM;
 typedef unsigned short char16_t;
 #endif // __cplusplus
 
-typedef char16_t char16;
 typedef char16_t WCHAR;
 
 // TODO (hanhossain): can probably remove this

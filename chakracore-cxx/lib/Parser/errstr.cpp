@@ -9,7 +9,7 @@
 HANDLE g_hInstance;
 
 // Used as a prefix to generate the resource dll name.
-const char16 g_wszPrefix[] = _u("js");
+const char16_t g_wszPrefix[] = _u("js");
 
 static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax) WCHAR * psz, int cchMax)
 {
@@ -120,10 +120,10 @@ BSTR BstrGetResourceString(int32 isz)
 {
     // NOTE - isz is expected to be HRESULT
 
-    const char16* LoadResourceStr(uint32_t id);
+    const char16_t* LoadResourceStr(uint32_t id);
 
     uint32_t id = (uint16_t)isz;
-    const char16* szT = LoadResourceStr(id);
+    const char16_t* szT = LoadResourceStr(id);
     if (!szT || !szT[0])
     {
         return NULL;

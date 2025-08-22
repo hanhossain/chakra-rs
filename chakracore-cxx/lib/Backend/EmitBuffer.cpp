@@ -604,7 +604,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions
 #if DBG_DUMP
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 void
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char16 const * filename)
+EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::DumpAndResetStats(char16_t const * filename)
 {
     if (this->totalBytesCommitted != 0)
     {

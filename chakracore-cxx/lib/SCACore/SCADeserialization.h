@@ -23,7 +23,7 @@ namespace Js
         //AutoCOMPtr<ISCAHost> m_pSCAHost;
         //AutoCOMPtr<ISCAContext> m_pSCAContext;
         Reader* m_reader;
-        mutable char16* m_buffer;
+        mutable char16_t* m_buffer;
         mutable charcount_t m_bufferLength;
 
 
@@ -40,8 +40,8 @@ namespace Js
             m_reader->Read(value);
         }
 
-        const char16* TryReadString(charcount_t* len, bool reuseBuffer) const;
-        const char16* ReadString(charcount_t* len) const;
+        const char16_t* TryReadString(charcount_t* len, bool reuseBuffer) const;
+        const char16_t* ReadString(charcount_t* len) const;
         void Read(uint8_t* buf, uint32 len) const;
 
         //
@@ -78,7 +78,7 @@ namespace Js
             for(;;)
             {
                 charcount_t len = 0;
-                const char16* name = TryReadString(&len, /*reuseBuffer*/ true);
+                const char16_t* name = TryReadString(&len, /*reuseBuffer*/ true);
                 if (!name)
                 {
                     break;
@@ -108,7 +108,7 @@ namespace Js
             {
                 charcount_t len = 0;
                 // NOTE: we will not reuse buffer here since the propbag may retain the string.
-                const char16* name = TryReadString(&len, /*reuseBuffer*/ false);
+                const char16_t* name = TryReadString(&len, /*reuseBuffer*/ false);
                 if (!name)
                 {
                     break;

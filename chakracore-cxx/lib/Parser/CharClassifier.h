@@ -195,7 +195,7 @@ namespace Js
             return count;
         }
 
-        char16 SkipBiDirectionalChars(_In_z_ char16* &pszRef) const
+        char16_t SkipBiDirectionalChars(_In_z_ char16_t* &pszRef) const
         {
             while (*pszRef != '\0')
             {
@@ -213,7 +213,7 @@ namespace Js
         const OLECHAR* SkipWhiteSpace(LPCOLESTR psz) const
         {
             // Fast path for the case in which first character is not space
-            char16 firstChar = *psz;
+            char16_t firstChar = *psz;
             if (firstChar == 0)
             {
                 return psz;
@@ -234,7 +234,7 @@ namespace Js
             {
                 return pStr;
             }
-            char16 firstChar = *pStr;
+            char16_t firstChar = *pStr;
             if (!this->IsWhiteSpace(firstChar) &&
                 (skipWhiteSpaceStartEndFunc != &SkipWhiteSpaceSurrogateStartEnd
                 || !Js::NumberUtilities::IsSurrogateLowerPart(firstChar)))

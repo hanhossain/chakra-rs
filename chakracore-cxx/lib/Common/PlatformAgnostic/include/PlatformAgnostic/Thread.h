@@ -24,6 +24,6 @@ class Thread
                                unsigned int ( *start_address )( void * ),
                                void* arg_list,
                                ThreadInitFlag init_flag,
-                               const char16* description);
+                               const char16_t* description);
 };
 } // namespace PlatformAgnostic

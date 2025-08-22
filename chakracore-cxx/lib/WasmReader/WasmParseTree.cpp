@@ -110,7 +110,7 @@ uint32 GetTypeByteSize(WasmType type)
     }
 }
 
-const char16 * GetTypeName(WasmType type)
+const char16_t * GetTypeName(WasmType type)
 {
     switch (type) {
     case WasmTypes::WasmType::Void: return _u("void");

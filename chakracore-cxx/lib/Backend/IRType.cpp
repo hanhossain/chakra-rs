@@ -28,7 +28,7 @@ int const TyBaseType[] = {
 #undef IRTYPE
 };
 
-const char16 * const TyDumpName[] = {
+const char16_t * const TyDumpName[] = {
 #define IRTYPE(ucname, baseType, size, bitSize, enRegOk, dname) _u(#dname),
 #include "IRTypeList.h"
 #undef IRTYPE

@@ -12,7 +12,7 @@
 #define DO_MEMOP_TRACE_PHASE(phase) (PHASE_TRACE(Js::MemOpPhase, this->func) || PHASE_TRACE(Js::phase ## Phase, this->func))
 
 #define OUTPUT_MEMOP_TRACE(loop, instr, ...) {\
-    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];\
+    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];\
     Output::Print(15, _u("Function: %s%s, Loop: %u: "), this->func->GetJITFunctionBody()->GetDisplayName(), this->func->GetDebugNumberSet(debugStringBuffer), loop->GetLoopNumber());\
     Output::Print(__VA_ARGS__);\
     IR::Instr* __instr__ = instr;\
@@ -5378,7 +5378,7 @@ GlobOpt::ValueNumberLdElemDst(IR::Instr **pInstr, Value *srcVal)
             GOPT_TRACE_INSTR(instr, _u("Didn't specialize array access.\n"));
             if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
                 baseValueType.ToString(baseValueTypeStr);
                 Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, did not type specialize, because %s.\n"),
@@ -5595,7 +5595,7 @@ GlobOpt::ValueNumberLdElemDst(IR::Instr **pInstr, Value *srcVal)
     GOPT_TRACE_INSTR(instr, _u("Type specialized array access.\n"));
     if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
         baseValueType.ToString(baseValueTypeStr);
         char dstValTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
@@ -10966,7 +10966,7 @@ GlobOpt::TypeSpecializeStElem(IR::Instr ** pInstr, Value *src1Val, Value **pDstV
         GOPT_TRACE_INSTR(instr, _u("Didn't type specialize array access, because typed array type specialization is disabled, or base is not an optimized typed array.\n"));
         if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
             baseValueType.ToString(baseValueTypeStr);
             Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, did not specialize because %s.\n"),
@@ -11021,7 +11021,7 @@ GlobOpt::TypeSpecializeStElem(IR::Instr ** pInstr, Value *src1Val, Value **pDstV
             GOPT_TRACE_INSTR(instr, _u("Didn't specialize array access, because src is not type specialized.\n"));
             if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
             {
-                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                 char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
                 baseValueType.ToString(baseValueTypeStr);
                 Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, did not specialize because src is not specialized.\n"),
@@ -11059,7 +11059,7 @@ GlobOpt::TypeSpecializeStElem(IR::Instr ** pInstr, Value *src1Val, Value **pDstV
         GOPT_TRACE_INSTR(instr, _u("Didn't specialize array access, because index is negative or likely not int.\n"));
         if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
             baseValueType.ToString(baseValueTypeStr);
             Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, did not specialize because index is negative or likely not int.\n"),
@@ -11164,7 +11164,7 @@ GlobOpt::TypeSpecializeStElem(IR::Instr ** pInstr, Value *src1Val, Value **pDstV
         GOPT_TRACE_INSTR(instr, _u("Type specialized array access.\n"));
         if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
             baseValueType.ToString(baseValueTypeStr);
             Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, type specialized to %s.\n"),
@@ -11241,7 +11241,7 @@ GlobOpt::TypeSpecializeStElem(IR::Instr ** pInstr, Value *src1Val, Value **pDstV
         GOPT_TRACE_INSTR(instr, _u("Didn't specialize array access, because the source was not already specialized.\n"));
         if (PHASE_TRACE(Js::TypedArrayTypeSpecPhase, this->func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             char baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
             baseValueType.ToString(baseValueTypeStr);
             Output::Print(_u("Typed Array Optimization:  function: %s (%s): instr: %s, base value type: %S, did not type specialize, because of array type.\n"),
@@ -11696,7 +11696,7 @@ GlobOpt::ToTypeSpecUse(IR::Instr *instr, IR::Opnd *opnd, BasicBlock *block, Valu
                             Assert(DoAggressiveIntTypeSpec());
                             if(PHASE_TRACE(Js::BailOutPhase, this->func))
                             {
-                                char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                                 Output::Print(
                                     _u("BailOut (compile-time): function: %s (%s) varSym: "),
                                     this->func->GetJITFunctionBody()->GetDisplayName(),
@@ -14197,7 +14197,7 @@ GlobOpt::PrepareForIgnoringIntOverflow(IR::Instr *const instr)
 #if DBG_DUMP
                 if(PHASE_TRACE(Js::TrackCompoundedIntOverflowPhase, func) && !IsLoopPrePass())
                 {
-                    char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                     Output::Print(
                         _u("TrackCompoundedIntOverflow - Top function: %s (%s), Phase: %s, Block: %u, Disabled ignoring overflows\n"),
                         func->GetJITFunctionBody()->GetDisplayName(),
@@ -14265,7 +14265,7 @@ GlobOpt::PrepareForIgnoringIntOverflow(IR::Instr *const instr)
 #if DBG_DUMP
     if(PHASE_TRACE(Js::TrackCompoundedIntOverflowPhase, func))
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(
             _u("TrackCompoundedIntOverflow - Top function: %s (%s), Phase: %s, Block: %u\n"),
             func->GetJITFunctionBody()->GetDisplayName(),
@@ -14324,7 +14324,7 @@ GlobOpt::VerifyIntSpecForIgnoringIntOverflow(IR::Instr *const instr)
 
     if(PHASE_TRACE(Js::BailOutPhase, this->func))
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(
             _u("BailOut (compile-time): function: %s (%s) instr: "),
             func->GetJITFunctionBody()->GetDisplayName(),
@@ -16137,7 +16137,7 @@ GlobOpt::CannotAllocateArgumentsObjectOnStack(Func * curFunc)
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
     if (PHASE_TESTTRACE(Js::StackArgOptPhase, this->func))
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(_u("Stack args disabled for function %s(%s)\n"), func->GetJITFunctionBody()->GetDisplayName(), func->GetDebugNumberSet(debugStringBuffer));
         Output::Flush();
     }
@@ -17398,7 +17398,7 @@ GlobOpt::EmitMemop(Loop * loop, LoopCount *loopCount, const MemOpEmitData* emitD
         char valueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
         baseOpnd->GetValueType().ToString(valueTypeStr);
         const int loopCountBufSize = 16;
-        char16 loopCountBuf[loopCountBufSize];
+        char16_t loopCountBuf[loopCountBufSize];
         if (loopCount->LoopCountMinusOneSym())
         {
             swprintf_s(loopCountBuf, _u("s%u"), loopCount->LoopCountMinusOneSym()->m_id);
@@ -17411,7 +17411,7 @@ GlobOpt::EmitMemop(Loop * loop, LoopCount *loopCount, const MemOpEmitData* emitD
         {
             const Loop::MemSetCandidate* candidate = emitData->candidate->AsMemSet();
             const int constBufSize = 32;
-            char16 constBuf[constBufSize];
+            char16_t constBuf[constBufSize];
             if (candidate->srcSym)
             {
                 swprintf_s(constBuf, _u("s%u"), candidate->srcSym->m_id);
@@ -17554,9 +17554,9 @@ GlobOpt::InspectInstrForMemCopyCandidate(Loop* loop, IR::Instr* instr, MemCopyEm
             if (stValueType != ldValueType)
             {
 #if DBG_DUMP
-                char16 stValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
+                char16_t stValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
                 stValueType.ToString(stValueTypeStr);
-                char16 ldValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
+                char16_t ldValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
                 ldValueType.ToString(ldValueTypeStr);
                 TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, _u("for mismatch in Load(%s) and Store(%s) value type"), ldValueTypeStr, stValueTypeStr);
 #endif
@@ -17987,13 +17987,13 @@ void GlobOpt::PRE::RemoveOverlyOptimisticInitialValues(Loop * loop)
 }
 
 #if DBG_DUMP
-void GlobOpt::PRE::TraceFailedPreloadInLandingPad(const Loop *const loop, PropertySym * propertySym, const char16* reason) const
+void GlobOpt::PRE::TraceFailedPreloadInLandingPad(const Loop *const loop, PropertySym * propertySym, const char16_t* reason) const
 {
     if (PHASE_TRACE(Js::FieldPREPhase, this->globOpt->func))
     {
         int32 propertyId = propertySym->m_propertyId;
         SymID objectSymId = propertySym->m_stackSym->m_id;
-        char16 propSymStr[32];
+        char16_t propSymStr[32];
         switch (propertySym->m_fieldKind)
         {
         case PropertyKindData:

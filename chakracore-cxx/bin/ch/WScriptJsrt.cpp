@@ -1549,7 +1549,7 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
     {
         AutoString cmd;
         IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
-        char16* argv[] = { nullptr, cmd.GetWideString() };
+        char16_t* argv[] = { nullptr, cmd.GetWideString() };
         ChakraRTInterface::SetConfigFlags(2, argv, nullptr);
     }
 #endif

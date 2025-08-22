@@ -218,7 +218,7 @@ namespace Js
         bool IsPropertyValid(PropertyId propertyId, RegSlot location, bool *isPropertyInDebuggerScope, bool* isConst, bool* isInDeadZone) const;
 
     private:
-        static const char16 * ParseFunctionName(const char16* displayNameBuffer, const charcount_t displayNameBufferLength, ScriptContext* scriptContext);
+        static const char16_t * ParseFunctionName(const char16_t* displayNameBuffer, const charcount_t displayNameBufferLength, ScriptContext* scriptContext);
     };
 
 
@@ -789,7 +789,7 @@ namespace Js
 
         JsUtil::List<RecyclableCollectionObjectWalkerPropertyData<TData>, ArenaAllocator>* propertyList;
 
-        const char16* Name();
+        const char16_t* Name();
         IDiagObjectModelDisplay* CreateTDataDisplay(ResolvedObject* resolvedObject, int i);
         void GetChildren();
 
@@ -809,11 +809,11 @@ namespace Js
     class RecyclableCollectionObjectDisplay : public IDiagObjectModelDisplay
     {
         ScriptContext* scriptContext;
-        const char16* name;
+        const char16_t* name;
         RecyclableCollectionObjectWalker<TData>* walker;
 
     public:
-        RecyclableCollectionObjectDisplay(ScriptContext* scriptContext, const char16* name, RecyclableCollectionObjectWalker<TData>* walker) : scriptContext(scriptContext), name(name), walker(walker) { }
+        RecyclableCollectionObjectDisplay(ScriptContext* scriptContext, const char16_t* name, RecyclableCollectionObjectWalker<TData>* walker) : scriptContext(scriptContext), name(name), walker(walker) { }
 
         virtual LPCWSTR Name() override { return name; }
         virtual LPCWSTR Type() override { return _u(""); }
@@ -834,10 +834,10 @@ namespace Js
         ScriptContext* scriptContext;
         Var key;
         Var value;
-        const char16* name;
+        const char16_t* name;
 
     public:
-        RecyclableKeyValueDisplay(ScriptContext* scriptContext, Var key, Var value, const char16* name) : scriptContext(scriptContext), key(key), value(value), name(name) { }
+        RecyclableKeyValueDisplay(ScriptContext* scriptContext, Var key, Var value, const char16_t* name) : scriptContext(scriptContext), key(key), value(value), name(name) { }
 
         virtual LPCWSTR Name() override { return name; }
         virtual LPCWSTR Type() override { return _u(""); }

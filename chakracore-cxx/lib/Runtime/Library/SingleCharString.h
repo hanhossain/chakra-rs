@@ -13,8 +13,8 @@ namespace Js
     class SingleCharString sealed : public JavascriptString
     {
     public:
-        static SingleCharString* New(char16 ch, ScriptContext* scriptContext);
-        static SingleCharString* New(char16 ch, ScriptContext* scriptContext, ArenaAllocator* arena);
+        static SingleCharString* New(char16_t ch, ScriptContext* scriptContext);
+        static SingleCharString* New(char16_t ch, ScriptContext* scriptContext, ArenaAllocator* arena);
 
         virtual void const * GetOriginalStringReference() override;
 
@@ -22,8 +22,8 @@ namespace Js
         DEFINE_VTABLE_CTOR(SingleCharString, JavascriptString);
 
     private:
-        SingleCharString(char16 ch, StaticType * type);
-        Field(char16) m_buff[2] = { 0 }; // the 2nd is always NULL so that GetSz works
+        SingleCharString(char16_t ch, StaticType * type);
+        Field(char16_t) m_buff[2] = { 0 }; // the 2nd is always NULL so that GetSz works
     };
 
 } // namespace Js

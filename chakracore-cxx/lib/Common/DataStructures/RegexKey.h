@@ -12,7 +12,7 @@ namespace UnifiedRegex
     class RegexKey
     {
     private:
-        Field(const char16 *) source;
+        Field(const char16_t *) source;
         Field(int) length;
         Field(RegexFlags) flags;
 
@@ -21,7 +21,7 @@ namespace UnifiedRegex
         {
         }
 
-        RegexKey(const char16 *const source, const int length, const RegexFlags flags)
+        RegexKey(const char16_t *const source, const int length, const RegexFlags flags)
             : source(source), length(length), flags(flags)
         {
             Assert(source);
@@ -43,7 +43,7 @@ namespace UnifiedRegex
             return *this;
         }
 
-        const char16 *Source() const
+        const char16_t *Source() const
         {
             return source;
         }

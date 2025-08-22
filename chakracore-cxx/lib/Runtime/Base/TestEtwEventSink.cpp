@@ -12,7 +12,7 @@ TestEtwEventSink* TestEtwEventSink::Instance = NULL;
 
 bool TestEtwEventSink::Load()
 {
-    char16 const * dllname = Js::Configuration::Global.flags.TestEtwDll;
+    char16_t const * dllname = Js::Configuration::Global.flags.TestEtwDll;
     if(!dllname)
     {
         return false;

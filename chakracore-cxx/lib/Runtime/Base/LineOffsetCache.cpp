@@ -145,7 +145,7 @@ namespace Js
             LPCUTF8 previousCharacter = currentSourcePosition;
 
             // Decode from UTF8 to wide char.  Note that Decode will advance the current character by 1 at least.
-            char16 decodedCharacter = utf8::Decode(currentSourcePosition, sourceEndCharacter, options);
+            char16_t decodedCharacter = utf8::Decode(currentSourcePosition, sourceEndCharacter, options);
 
             bool wasLineEncountered = false;
             switch (decodedCharacter)

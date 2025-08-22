@@ -56,7 +56,7 @@ namespace Js
 
         void SetSpecifier(Var specifier) { this->normalizedSpecifier = specifier; }
         Var GetSpecifier() const { return normalizedSpecifier; }
-        const char16 *GetSpecifierSz() const
+        const char16_t *GetSpecifierSz() const
         {
             return this->normalizedSpecifier != nullptr ? 
                 VarTo<JavascriptString>(this->normalizedSpecifier)->GetSz() : _u("module"); 

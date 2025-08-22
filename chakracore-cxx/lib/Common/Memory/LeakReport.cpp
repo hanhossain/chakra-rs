@@ -67,7 +67,7 @@ LeakReport::EndRedirectOutput()
 }
 
 void
-LeakReport::StartSection(char16 const * msg, ...)
+LeakReport::StartSection(char16_t const * msg, ...)
 {
     va_list argptr;
     va_start(argptr, msg);
@@ -76,7 +76,7 @@ LeakReport::StartSection(char16 const * msg, ...)
 }
 
 void
-LeakReport::StartSection(char16 const * msg, va_list argptr)
+LeakReport::StartSection(char16_t const * msg, va_list argptr)
 {
     s_cs.Enter();
     if (!EnsureLeakReportFile())
@@ -104,7 +104,7 @@ LeakReport::EndSection()
 }
 
 void
-LeakReport::Print(char16 const * msg, ...)
+LeakReport::Print(char16_t const * msg, ...)
 {
     AutoCriticalSection autocs(&s_cs);
     if (!EnsureLeakReportFile())
@@ -131,9 +131,9 @@ LeakReport::EnsureLeakReportFile()
         return true;
     }
 
-    char16 const * filename = Js::Configuration::Global.flags.LeakReport;
-    char16 const * openMode = _u("w+");
-    char16 defaultFilename[_MAX_PATH];
+    char16_t const * filename = Js::Configuration::Global.flags.LeakReport;
+    char16_t const * openMode = _u("w+");
+    char16_t defaultFilename[_MAX_PATH];
     if (filename == nullptr)
     {
         // xplat-todo: Implement swprintf_s in the PAL
@@ -154,13 +154,13 @@ LeakReport::EnsureLeakReportFile()
 }
 
 LeakReport::UrlRecord *
-LeakReport::LogUrl(char16 const * url, void * globalObject)
+LeakReport::LogUrl(char16_t const * url, void * globalObject)
 {
     UrlRecord * record = NoCheckHeapNewStruct(UrlRecord);
 
     size_t length = wcslen(url) + 1; // Add 1 for the NULL.
-    char16* urlCopy = NoCheckHeapNewArray(char16, length);
-    js_memcpy_s(urlCopy, (length - 1) * sizeof(char16), url, (length - 1) * sizeof(char16));
+    char16_t* urlCopy = NoCheckHeapNewArray(char16_t, length);
+    js_memcpy_s(urlCopy, (length - 1) * sizeof(char16_t), url, (length - 1) * sizeof(char16_t));
     urlCopy[length - 1] = _u('\0');
 
     record->url = urlCopy;
@@ -202,7 +202,7 @@ LeakReport::DumpUrl(uint32_t tid)
     {
         if (curr->tid == tid)
         {
-            char16 timeStr[26] = _u("00:00");
+            char16_t timeStr[26] = _u("00:00");
 
             // xplat-todo: Need to implement _wasctime_s in the PAL
             timeStr[wcslen(timeStr) - 1] = 0;
@@ -229,7 +229,7 @@ LeakReport::DumpUrl(uint32_t tid)
     }
 }
 
-AutoLeakReportSection::AutoLeakReportSection(Js::ConfigFlagsTable& flags, char16 const * msg, ...):
+AutoLeakReportSection::AutoLeakReportSection(Js::ConfigFlagsTable& flags, char16_t const * msg, ...):
     m_flags(flags)
 {
     if (flags.IsEnabled(Js::LeakReportFlag))

@@ -27,7 +27,7 @@ namespace Wasm
         const byte* start;
         const byte* end;
         uint32 nameLength;
-        const char16* name;
+        const char16_t* name;
     };
 
     struct BinaryLocation
@@ -50,7 +50,7 @@ namespace Wasm
         virtual void SeekToFunctionBody(class WasmFunctionInfo* funcInfo) override;
         virtual bool IsCurrentFunctionCompleted() const override;
 
-        WasmOp ReadPrefixedOpCode(WasmOp prefix, bool isSupported, const char16* notSupportedMsg);
+        WasmOp ReadPrefixedOpCode(WasmOp prefix, bool isSupported, const char16_t* notSupportedMsg);
         WasmOp ReadOpCode();
         virtual WasmOp ReadExpr() override;
         virtual void FunctionEnd() override;
@@ -101,7 +101,7 @@ namespace Wasm
         template <typename T> T ReadConst();
         ExternalKinds ReadExternalKind() { return (ExternalKinds)ReadConst<uint8_t>(); }
         bool ReadMutableValue();
-        const char16* ReadInlineName(uint32& length, uint32& nameLength);
+        const char16_t* ReadInlineName(uint32& length, uint32& nameLength);
         template<typename LEBType = uint32, uint32 bits = sizeof(LEBType) * 8>
         LEBType LEB128(uint32 &length);
         template<typename LEBType = int32, uint32 bits = sizeof(LEBType) * 8>
@@ -112,12 +112,12 @@ namespace Wasm
         }
         WasmNode ReadInitExpr(bool isOffset = false);
         template<typename SectionLimitType>
-        SectionLimitType ReadSectionLimitsBase(uint32 maxInitial, uint32 maxMaximum, const char16* errorMsg);
+        SectionLimitType ReadSectionLimitsBase(uint32 maxInitial, uint32 maxMaximum, const char16_t* errorMsg);
 
         void CheckBytesLeft(uint32 bytesNeeded);
         bool EndOfFunc();
         bool EndOfModule();
-        __attribute__((noreturn)) void ThrowDecodingError(const char16* msg, ...) const;
+        __attribute__((noreturn)) void ThrowDecodingError(const char16_t* msg, ...) const;
         Wasm::WasmTypes::WasmType ReadWasmType(uint32& length);
 
         ArenaAllocator* m_alloc;

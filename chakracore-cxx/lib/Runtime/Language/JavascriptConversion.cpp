@@ -557,7 +557,7 @@ CommonNumber:
     template Var JavascriptConversion::OrdinaryToPrimitive<JavascriptHint::HintString>(RecyclableObject* value, ScriptContext* requestContext);
     template Var JavascriptConversion::OrdinaryToPrimitive<JavascriptHint::None>(RecyclableObject* value, ScriptContext* requestContext);
 
-    JavascriptString *JavascriptConversion::CoerseString(Var aValue, ScriptContext* scriptContext, const char16* apiNameForErrorMsg)
+    JavascriptString *JavascriptConversion::CoerseString(Var aValue, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_CoerseString);
         if (!JavascriptConversion::CheckObjectCoercible(aValue, scriptContext))

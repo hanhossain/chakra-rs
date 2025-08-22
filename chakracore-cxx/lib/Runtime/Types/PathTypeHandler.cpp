@@ -2778,7 +2778,7 @@ namespace Js
 
 #if DBG
         DynamicType * oldCachedType = nullptr;
-        char16 reason[1024];
+        char16_t reason[1024];
         swprintf_s(reason, 1024, _u("Cache not populated."));
 #endif
         if (oldTypeToPromotedTypeMap != nullptr)
@@ -3354,7 +3354,7 @@ namespace Js
     }
 
     void PathTypeHandlerBase::TraceFixedFieldsBeforeTypeHandlerChange(
-        const char16* conversionName, const char16* oldTypeHandlerName, const char16* newTypeHandlerName,
+        const char16_t* conversionName, const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {
@@ -3833,7 +3833,7 @@ namespace Js
         // Consider: Implement actual string hash lookup
         Assert(requestContext);
         PropertyRecord const* propertyRecord;
-        char16 const * propertyName = propertyNameString->GetString();
+        char16_t const * propertyName = propertyNameString->GetString();
         charcount_t const propertyNameLength = propertyNameString->GetLength();
 
         if (instance->HasObjectArray())

@@ -40,7 +40,7 @@ namespace Js
         JavascriptString(JavascriptString&) = delete;
 
     private:
-        Field(const char16*) m_pszValue;         // Flattened, '\0' terminated contents
+        Field(const char16_t*) m_pszValue;         // Flattened, '\0' terminated contents
         Field(charcount_t) m_charLength;          // Length in characters, not including '\0'.
 
         static const charcount_t MaxCharLength = INT_MAX - 1;  // Max number of chars not including '\0'.
@@ -52,7 +52,7 @@ namespace Js
 
         BOOL HasItemAt(charcount_t idxChar);
         BOOL GetItemAt(charcount_t idxChar, Var* value);
-        char16 GetItem(charcount_t index);
+        char16_t GetItem(charcount_t index);
 
         virtual void GetPropertyRecord(_Out_ PropertyRecord const** propertyRecord, bool dontLookupFromDictionary = false);
         virtual void CachePropertyRecord(_In_ PropertyRecord const* propertyRecord);
@@ -61,14 +61,14 @@ namespace Js
 
         // Non-finalized strings haven't allocated buffers yet, but
         // it always makes sense to talk about string's size in bytes.
-        charcount_t GetSizeInBytes() const { return GetLength() * sizeof(char16); };
+        charcount_t GetSizeInBytes() const { return GetLength() * sizeof(char16_t); };
         virtual size_t GetAllocatedByteCount() const;
 
         virtual bool IsSubstring() const;
         int GetLengthAsSignedInt() const;
-        const char16* UnsafeGetBuffer() const;
+        const char16_t* UnsafeGetBuffer() const;
         LPCWSTR GetSzCopy(ArenaAllocator* alloc);   // Copy to an Arena
-        const char16* GetString(); // Get string, may not be NULL terminated
+        const char16_t* GetString(); // Get string, may not be NULL terminated
 
         // NumberUtil::FIntRadStrToDbl and parts of GlobalObject::EntryParseInt were refactored into ToInteger
         Var ToInteger(int radix = 0);
@@ -76,8 +76,8 @@ namespace Js
         double ToDouble();
         bool ToDouble(double * result);
 
-        static const char16* GetSzHelper(JavascriptString *str) { return str->GetSz(); }
-        virtual const char16* GetSz();     // Get string, NULL terminated
+        static const char16_t* GetSzHelper(JavascriptString *str) { return str->GetSz(); }
+        virtual const char16_t* GetSz();     // Get string, NULL terminated
         virtual void const * GetOriginalStringReference();  // Get the allocated object that owns the original full string buffer
 
 #if ENABLE_TTD
@@ -87,8 +87,8 @@ namespace Js
 
     public:
         template <typename StringType>
-        void Copy(__out_ecount(bufLen) char16 *const buffer, const charcount_t bufLen);
-        void Copy(__out_xcount(m_charLength) char16 *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth)
+        void Copy(__out_ecount(bufLen) char16_t *const buffer, const charcount_t bufLen);
+        void Copy(__out_xcount(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth)
         {
             if (this->IsFinalized())
             {
@@ -101,10 +101,10 @@ namespace Js
                 CopyVirtual(buffer, nestedStringTreeCopyInfos, recursionDepth);
             }
         }
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16 *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth);
+        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth);
 
     private:
-        void FinishCopy(__inout_xcount(m_charLength) char16 *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos);
+        void FinishCopy(__inout_xcount(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos);
 
     public:
         virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const { return -1; }
@@ -132,7 +132,7 @@ namespace Js
         virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
         virtual BOOL BufferEquals(__in_ecount(otherLength) LPCWSTR otherBuffer, charcount_t otherLength);
-        char16* GetNormalizedString(PlatformAgnostic::UnicodeText::NormalizationForm, ArenaAllocator*, charcount_t&);
+        char16_t* GetNormalizedString(PlatformAgnostic::UnicodeText::NormalizationForm, ArenaAllocator*, charcount_t&);
 
         static bool Equals(JavascriptString* aLeft, JavascriptString* aRight);
         static bool LessThan(Var aLeft, Var aRight);
@@ -142,30 +142,30 @@ namespace Js
         static int strcmp(JavascriptString *string1, JavascriptString *string2);
 
     private:
-        char16* GetSzCopy();   // get a copy of the inner string without compacting the chunks
+        char16_t* GetSzCopy();   // get a copy of the inner string without compacting the chunks
 
         template<bool toUpper, bool useInvariant>
         static JavascriptString* ToCaseCore(JavascriptString* pThis);
-        static int IndexOfUsingJmpTable(JmpTable jmpTable, const char16* inputStr, charcount_t len, const char16* searchStr, int searchLen, int position);
-        static int LastIndexOfUsingJmpTable(JmpTable jmpTable, const char16* inputStr, charcount_t len, const char16* searchStr, charcount_t searchLen, charcount_t position);
+        static int IndexOfUsingJmpTable(JmpTable jmpTable, const char16_t* inputStr, charcount_t len, const char16_t* searchStr, int searchLen, int position);
+        static int LastIndexOfUsingJmpTable(JmpTable jmpTable, const char16_t* inputStr, charcount_t len, const char16_t* searchStr, charcount_t searchLen, charcount_t position);
 
-        static bool BuildLastCharForwardBoyerMooreTable(JmpTable jmpTable, const char16* searchStr, int searchLen);
-        static bool BuildFirstCharBackwardBoyerMooreTable(JmpTable jmpTable, const char16* searchStr, int searchLen);
+        static bool BuildLastCharForwardBoyerMooreTable(JmpTable jmpTable, const char16_t* searchStr, int searchLen);
+        static bool BuildFirstCharBackwardBoyerMooreTable(JmpTable jmpTable, const char16_t* searchStr, int searchLen);
         static charcount_t ConvertToIndex(Var varIndex, ScriptContext *scriptContext);
 
         template <typename T, bool copyBuffer>
-        static JavascriptString* NewWithBufferT(const char16 * content, charcount_t charLength, ScriptContext * scriptContext);
+        static JavascriptString* NewWithBufferT(const char16_t * content, charcount_t charLength, ScriptContext * scriptContext);
 
         bool GetPropertyBuiltIns(PropertyId propertyId, Var* value, ScriptContext* scriptContext);
         static const char stringToIntegerMap[128];
         static const uint8_t maxUintStringLengthTable[37];
     protected:
         JavascriptString(StaticType * type);
-        JavascriptString(StaticType * type, charcount_t charLength, const char16* szValue);
+        JavascriptString(StaticType * type, charcount_t charLength, const char16_t* szValue);
         DEFINE_VTABLE_CTOR_ABSTRACT(JavascriptString, RecyclableObject);
 
         void SetLength(charcount_t newLength);
-        void SetBuffer(const char16* buffer);
+        void SetBuffer(const char16_t* buffer);
         bool IsValidIndexValue(charcount_t idx) const;
 
         static charcount_t SafeSzSize(charcount_t length); // Throws on overflow
@@ -175,14 +175,14 @@ namespace Js
         bool IsFinalized() const { return this->UnsafeGetBuffer() != NULL; }
 
     public:
-        static JavascriptString* NewWithSz(__in_z const char16 * content, ScriptContext* scriptContext);
-        static JavascriptString* NewWithBuffer(__in_ecount(charLength) const char16 * content, charcount_t charLength, ScriptContext * scriptContext);
-        static JavascriptString* NewCopySz(__in_z const char16* content, ScriptContext* scriptContext);
-        static JavascriptString* NewCopyBuffer(__in_ecount(charLength)  const char16* content, charcount_t charLength, ScriptContext* scriptContext);
+        static JavascriptString* NewWithSz(__in_z const char16_t * content, ScriptContext* scriptContext);
+        static JavascriptString* NewWithBuffer(__in_ecount(charLength) const char16_t * content, charcount_t charLength, ScriptContext * scriptContext);
+        static JavascriptString* NewCopySz(__in_z const char16_t* content, ScriptContext* scriptContext);
+        static JavascriptString* NewCopyBuffer(__in_ecount(charLength)  const char16_t* content, charcount_t charLength, ScriptContext* scriptContext);
 
-        static __ecount(length+1) char16* AllocateLeafAndCopySz(Recycler* recycler, __in_ecount(length) const char16* content, charcount_t length);
-        static __ecount(length+1) char16* AllocateAndCopySz(ArenaAllocator* arena, __in_ecount(length) const char16* content, charcount_t length);
-        static void CopyHelper(__out_ecount(countNeeded) char16 *dst, __in_ecount(countNeeded) const char16 * str, charcount_t countNeeded);
+        static __ecount(length+1) char16_t* AllocateLeafAndCopySz(Recycler* recycler, __in_ecount(length) const char16_t* content, charcount_t length);
+        static __ecount(length+1) char16_t* AllocateAndCopySz(ArenaAllocator* arena, __in_ecount(length) const char16_t* content, charcount_t length);
+        static void CopyHelper(__out_ecount(countNeeded) char16_t *dst, __in_ecount(countNeeded) const char16_t * str, charcount_t countNeeded);
 
     public:
         JavascriptString* ConcatDestructive(JavascriptString* pstRight);
@@ -316,25 +316,25 @@ namespace Js
         static JavascriptString* RepeatCore(JavascriptString* currentString, charcount_t count, ScriptContext* scriptContext);
         static JavascriptString* PadCore(ArgumentReader& args, JavascriptString *mainString, bool isPadStart, ScriptContext* scriptContext);
         static Var SubstringCore(JavascriptString* str, int start, int span, ScriptContext* scriptContext);
-        static charcount_t GetBufferLength(const char16 *content);
-        static charcount_t GetBufferLength(const char16 *content, int charLengthOrMinusOne);
-        static bool IsASCII7BitChar(char16 ch) { return ch < 0x0080; }
-        static char ToASCII7BitChar(char16 ch) { Assert(IsASCII7BitChar(ch)); return static_cast<char>(ch); }
+        static charcount_t GetBufferLength(const char16_t *content);
+        static charcount_t GetBufferLength(const char16_t *content, int charLengthOrMinusOne);
+        static bool IsASCII7BitChar(char16_t ch) { return ch < 0x0080; }
+        static char ToASCII7BitChar(char16_t ch) { Assert(IsASCII7BitChar(ch)); return static_cast<char>(ch); }
 
     private:
-        static int IndexOf(ArgumentReader& args, ScriptContext* scriptContext, const char16* apiNameForErrorMsg, bool isRegExpAnAllowedArg);
-        static void GetThisStringArgument(ArgumentReader& args, ScriptContext* scriptContext, const char16* apiNameForErrorMsg, JavascriptString** ppThis);
-        static void GetThisAndSearchStringArguments(ArgumentReader& args, ScriptContext* scriptContext, const char16* apiNameForErrorMsg, JavascriptString** ppThis, JavascriptString** ppSearch, bool isRegExpAnAllowedArg);
+        static int IndexOf(ArgumentReader& args, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg, bool isRegExpAnAllowedArg);
+        static void GetThisStringArgument(ArgumentReader& args, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg, JavascriptString** ppThis);
+        static void GetThisAndSearchStringArguments(ArgumentReader& args, ScriptContext* scriptContext, const char16_t* apiNameForErrorMsg, JavascriptString** ppThis, JavascriptString** ppSearch, bool isRegExpAnAllowedArg);
 
         static BOOL GetThisValueVar(Var aValue, JavascriptString** pString, ScriptContext* scriptContext);
-        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, __in_ecount(cchTag) char16 const*pszTag, charcount_t cchTag,
-                                        __in_ecount_opt(cchProp) char16 const*pszProp, charcount_t cchProp);
+        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, __in_ecount(cchTag) char16_t const*pszTag, charcount_t cchTag,
+                                        __in_ecount_opt(cchProp) char16_t const*pszProp, charcount_t cchProp);
 
         template< size_t N >
-        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16 (&tag)[N]);
+        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16_t (&tag)[N]);
 
         template< size_t N1, size_t N2 >
-        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16 (&tag)[N1], const char16 (&prop)[N2]);
+        static Var StringBracketHelper(Arguments args, ScriptContext *scriptContext, const char16_t (&tag)[N1], const char16_t (&prop)[N2]);
 
         static void SearchValueHelper(ScriptContext* scriptContext, Var aValue, JavascriptRegExp ** ppSearchRegEx, JavascriptString ** ppSearchString);
         static void ReplaceValueHelper(ScriptContext* scriptContext, Var aValue, RecyclableObject** ppReplaceFn, JavascriptString ** ppReplaceString);
@@ -421,6 +421,6 @@ struct DefaultComparer<Js::JavascriptString*>
 
     inline static hash_t GetHashCode(Js::JavascriptString * pStr)
     {
-        return JsUtil::CharacterBuffer<char16>::StaticGetHashCode(pStr->GetString(), pStr->GetLength());
+        return JsUtil::CharacterBuffer<char16_t>::StaticGetHashCode(pStr->GetString(), pStr->GetLength());
     }
 };

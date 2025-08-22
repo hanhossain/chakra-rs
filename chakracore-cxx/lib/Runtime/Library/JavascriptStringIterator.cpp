@@ -50,7 +50,7 @@ namespace Js
             return library->CreateIteratorResultObjectDone();
         }
 
-        char16 chFirst = string->GetItem(index);
+        char16_t chFirst = string->GetItem(index);
         Var result;
 
         if (index + 1 == string->GetLength() ||

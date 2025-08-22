@@ -242,7 +242,7 @@ HRESULT HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            const char16 *format = (j < (*invalid)[i].wordCount - 1) ?
+            const char16_t *format = (j < (*invalid)[i].wordCount - 1) ?
 #if defined(TARGET_32)
                 _u("0x%08X, ") : _u("0x%08X")
 #elif defined(TARGET_64)
@@ -276,7 +276,7 @@ HRESULT HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
         {
             IfErrorGotoCleanup(fwprintf(file, _u("        { ")));
 
-            const char16 *format = _u("0x%04hX, 0x%04hX");
+            const char16_t *format = _u("0x%04hX, 0x%04hX");
             IfErrorGotoCleanup(fwprintf(file, format, (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount));
 #if USE_FEWER_PAGES_PER_BLOCK
             IfErrorGotoCleanup(fwprintf(file, _u(" }\n")));
@@ -345,7 +345,7 @@ HRESULT HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
 
         for (unsigned j = 0; j < (*invalid)[i].wordCount; ++j)
         {
-            const char16 *format = (j < (*invalid)[i].wordCount - 1) ?
+            const char16_t *format = (j < (*invalid)[i].wordCount - 1) ?
 #if defined(TARGET_32)
                 _u("0x%08X, ") : _u("0x%08X")
 #elif defined(TARGET_64)
@@ -379,7 +379,7 @@ HRESULT HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
         {
             IfErrorGotoCleanup(fwprintf(file, _u("        { ")));
 
-            const char16 *format = _u("0x%04hX, 0x%04hX");
+            const char16_t *format = _u("0x%04hX, 0x%04hX");
             IfErrorGotoCleanup(fwprintf(file, format, (*blockMap)[i][j].lastObjectIndexOnPage, (*blockMap)[i][j].pageObjectCount));
             IfErrorGotoCleanup(fwprintf(file, (j < MediumAllocationBlockAttributes::PageCount - 1 ? _u(" },\n") : _u(" }\n"))));
         }
@@ -404,7 +404,7 @@ HRESULT HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHe
 
     if (_wfopen_s(&file, vpmFullPath, _u("w")) == 0 && file != nullptr)
     {
-        const char16 * header =
+        const char16_t * header =
             _u("//-------------------------------------------------------------------------------------------------------\n")
             _u("// Copyright (C) Microsoft. All rights reserved.\n")
             _u("// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.\n")

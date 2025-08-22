@@ -90,7 +90,7 @@ namespace Js
         template<> void SwapRoutine(double* input, double* dest) {*((uint64*)dest) = RtlUlonglongByteSwap(*((uint64*)input)); }
 
         template<typename TypeName>
-        Var GetValue(Var offset, const char16* funcName, BOOL isLittleEndian = FALSE)
+        Var GetValue(Var offset, const char16_t* funcName, BOOL isLittleEndian = FALSE)
         {
             ScriptContext* scriptContext = GetScriptContext();
 
@@ -120,13 +120,13 @@ namespace Js
         }
 
         template<typename TypeName>
-        inline Var GetValueWithCheck(Var offset, const char16* funcName, BOOL isLittleEndian = FALSE)
+        inline Var GetValueWithCheck(Var offset, const char16_t* funcName, BOOL isLittleEndian = FALSE)
         {
             return GetValueWithCheck<TypeName, TypeName*>(offset, isLittleEndian, funcName);
         }
 
         template<typename TypeName, typename PointerAccessTypeName>
-        Var GetValueWithCheck(Var offset, BOOL isLittleEndian, const char16* funcName)
+        Var GetValueWithCheck(Var offset, BOOL isLittleEndian, const char16_t* funcName)
         {
             ScriptContext* scriptContext = GetScriptContext();
 
@@ -156,13 +156,13 @@ namespace Js
         }
 
         template<typename TypeName>
-        inline void SetValue(Var offset, TypeName value, const char16 *funcName, BOOL isLittleEndian = FALSE)
+        inline void SetValue(Var offset, TypeName value, const char16_t *funcName, BOOL isLittleEndian = FALSE)
         {
             SetValue<TypeName, TypeName*>(offset, value, isLittleEndian, funcName);
         }
 
         template<typename TypeName, typename PointerAccessTypeName>
-        void SetValue(Var offset, TypeName value, BOOL isLittleEndian, const char16 *funcName)
+        void SetValue(Var offset, TypeName value, BOOL isLittleEndian, const char16_t *funcName)
         {
             ScriptContext* scriptContext = GetScriptContext();
 
@@ -192,10 +192,10 @@ namespace Js
 #ifdef _M_ARM
         // For ARM, memory access for float/double address causes data alignment exception if the address is not aligned.
         // Provide template specialization (only) for these scenarios.
-        template<> Var GetValueWithCheck<float>(Var offset, const char16 *funcName, BOOL isLittleEndian /* = FALSE */);
-        template<> Var GetValueWithCheck<double>(Var offset, const char16 *funcName, BOOL isLittleEndian /* = FALSE */);
-        template<> void SetValue<float>(Var offset, float value, const char16 *funcName, BOOL isLittleEndian /* = FALSE */);
-        template<> void SetValue<double>(Var offset, double value, const char16 *funcName, BOOL isLittleEndian /* = FALSE */);
+        template<> Var GetValueWithCheck<float>(Var offset, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
+        template<> Var GetValueWithCheck<double>(Var offset, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
+        template<> void SetValue<float>(Var offset, float value, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
+        template<> void SetValue<double>(Var offset, double value, const char16_t *funcName, BOOL isLittleEndian /* = FALSE */);
 #endif
 
         Field(uint32) byteOffset;

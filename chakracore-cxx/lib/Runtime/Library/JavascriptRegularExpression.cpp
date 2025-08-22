@@ -342,9 +342,9 @@ using namespace Js;
         }
 
         int cBody = strBody->GetLength();
-        const char16 *szRegex = strBody->GetSz();
+        const char16_t *szRegex = strBody->GetSz();
         int cOpts = 0;
-        const char16 *szOptions = nullptr;
+        const char16_t *szOptions = nullptr;
 
         JavascriptString * strOptions = nullptr;
         if (options != nullptr && !JavascriptOperators::IsUndefinedObject(options))
@@ -367,7 +367,7 @@ using namespace Js;
         return pattern;
     }
 
-    JavascriptRegExp* JavascriptRegExp::CreateRegEx(const char16* pSource, CharCount sourceLen, UnifiedRegex::RegexFlags flags, ScriptContext *scriptContext)
+    JavascriptRegExp* JavascriptRegExp::CreateRegEx(const char16_t* pSource, CharCount sourceLen, UnifiedRegex::RegexFlags flags, ScriptContext *scriptContext)
     {
         UnifiedRegex::RegexPattern* pattern = RegexHelper::CompileDynamic(scriptContext, pSource, sourceLen, flags, false);
 
@@ -446,7 +446,7 @@ using namespace Js;
                 bool escape = false;
                 for (charcount_t i = 0; i < str.GetLength(); ++i)
                 {
-                    const char16 c = str.GetBuffer()[i];
+                    const char16_t c = str.GetBuffer()[i];
 
                     if(!escape)
                     {
@@ -585,9 +585,9 @@ using namespace Js;
             }
 
             int cBody = strBody->GetLength();
-            const char16 *szRegex = strBody->GetSz(); // must be null terminated!
+            const char16_t *szRegex = strBody->GetSz(); // must be null terminated!
             int cOpts = 0;
-            const char16 *szOptions = nullptr;
+            const char16_t *szOptions = nullptr;
 
             JavascriptString * strOptions = nullptr;
             if (callInfo.Count > 2 && !JavascriptOperators::IsUndefinedObject(args[2]))
@@ -947,7 +947,7 @@ using namespace Js;
         StringBuilder<ArenaAllocator>* builder,
         RecyclableObject* thisObj,
         PropertyId propertyId,
-        char16 flag,
+        char16_t flag,
         ScriptContext* scriptContext)
     {
         Var propertyValue = JavascriptOperators::GetProperty(thisObj, propertyId, scriptContext);

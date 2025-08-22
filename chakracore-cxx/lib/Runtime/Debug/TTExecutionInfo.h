@@ -22,16 +22,16 @@ namespace TTD
         const int64 m_optMoveMode;
 
         //An optional -- and static string message to include
-        const char16* m_staticAbortMessage;
+        const char16_t* m_staticAbortMessage;
 
-        TTDebuggerAbortException(uint32 abortCode, int64 optEventTime, int64 optMoveMode, const char16* staticAbortMessage);
+        TTDebuggerAbortException(uint32 abortCode, int64 optEventTime, int64 optMoveMode, const char16_t* staticAbortMessage);
 
     public:
         ~TTDebuggerAbortException();
 
-        static TTDebuggerAbortException CreateAbortEndOfLog(const char16* staticMessage);
-        static TTDebuggerAbortException CreateTopLevelAbortRequest(int64 targetEventTime, int64 moveMode, const char16* staticMessage);
-        static TTDebuggerAbortException CreateUncaughtExceptionAbortRequest(int64 targetEventTime, const char16* staticMessage);
+        static TTDebuggerAbortException CreateAbortEndOfLog(const char16_t* staticMessage);
+        static TTDebuggerAbortException CreateTopLevelAbortRequest(int64 targetEventTime, int64 moveMode, const char16_t* staticMessage);
+        static TTDebuggerAbortException CreateUncaughtExceptionAbortRequest(int64 targetEventTime, const char16_t* staticMessage);
 
         bool IsEndOfLog() const;
         bool IsEventTimeMove() const;
@@ -40,7 +40,7 @@ namespace TTD
         int64 GetTargetEventTime() const;
         int64 GetMoveMode() const;
 
-        const char16* GetStaticAbortMessage() const;
+        const char16_t* GetStaticAbortMessage() const;
     };
 
     //A struct for tracking time events in a single method
@@ -49,7 +49,7 @@ namespace TTD
         Js::FunctionBody* Function;
 
 #if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-        const char16* Name; //only added for debugging can get rid of later.
+        const char16_t* Name; //only added for debugging can get rid of later.
 #endif
 
         uint64 FunctionTime; //The function time when the function was called

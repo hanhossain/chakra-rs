@@ -82,7 +82,7 @@ class LazyJSONString : public JavascriptString
 private:
     Field(charcount_t) gapLength;
     Field(JSONProperty*) jsonContent;
-    Field(const char16*) gap;
+    Field(const char16_t*) gap;
 
     DynamicObject* ReconstructObject(_In_ JSONObject* valueList) const;
     JavascriptArray* ReconstructArray(_In_ JSONArray* valueArray) const;
@@ -97,13 +97,13 @@ protected:
     DEFINE_VTABLE_CTOR(LazyJSONString, JavascriptString);
 
 public:
-    LazyJSONString(_In_ JSONProperty* content, charcount_t length, _In_opt_ const char16* gap, charcount_t gapLength, _In_ StaticType* type);
+    LazyJSONString(_In_ JSONProperty* content, charcount_t length, _In_opt_ const char16_t* gap, charcount_t gapLength, _In_ StaticType* type);
     Var TryParse() const;
 
     // Tells if the string has a gap with characters that might impact JSON.parse
     bool HasComplexGap() const;
 
-    const char16* GetSz() override sealed;
+    const char16_t* GetSz() override sealed;
 
     virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
     {

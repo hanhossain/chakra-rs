@@ -72,7 +72,7 @@ namespace Wasm
 
     class WasmCompilationException
     {
-        void FormatError(const char16* _msg, va_list arglist);
+        void FormatError(const char16_t* _msg, va_list arglist);
         BSTR errorMsg;
         // We need to explicitly delete these; simply not including them makes compilers do
         // generation of simple copy-construct and copy-assign functions, which incorrectly
@@ -85,8 +85,8 @@ namespace Wasm
         WasmCompilationException(const WasmCompilationException&) = delete;
         WasmCompilationException& operator=(const WasmCompilationException& other) = delete;
     public:
-        WasmCompilationException(const char16* _msg, ...);
-        WasmCompilationException(const char16* _msg, va_list arglist);
+        WasmCompilationException(const char16_t* _msg, ...);
+        WasmCompilationException(const char16_t* _msg, va_list arglist);
         WasmCompilationException(WasmCompilationException&& other)
         {
             errorMsg = other.errorMsg;
@@ -205,7 +205,7 @@ namespace Wasm
         EmitInfo EmitSelect();
         template<typename WriteFn>
         void WriteTypeStack(WriteFn fn) const;
-        uint32 WriteTypeStackToString(_Out_writes_(maxlen) char16* out, uint32 maxlen) const;
+        uint32 WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen) const;
 #if DBG_DUMP
         uint32 opId = 0;
         uint32 lastOpId = 1;
@@ -247,9 +247,9 @@ namespace Wasm
         WasmRegisterSpace* GetRegisterSpace(WasmTypes::WasmType type);
 
         EmitInfo PopValuePolymorphic() { return PopEvalStack(); }
-        PolymorphicEmitInfo PopStackPolymorphic(PolymorphicEmitInfo expectedTypes, const char16* mismatchMessage = nullptr);
-        PolymorphicEmitInfo PopStackPolymorphic(const BlockInfo* blockInfo, const char16* mismatchMessage = nullptr);
-        EmitInfo PopEvalStack(WasmTypes::WasmType expectedType = WasmTypes::Any, const char16* mismatchMessage = nullptr);
+        PolymorphicEmitInfo PopStackPolymorphic(PolymorphicEmitInfo expectedTypes, const char16_t* mismatchMessage = nullptr);
+        PolymorphicEmitInfo PopStackPolymorphic(const BlockInfo* blockInfo, const char16_t* mismatchMessage = nullptr);
+        EmitInfo PopEvalStack(WasmTypes::WasmType expectedType = WasmTypes::Any, const char16_t* mismatchMessage = nullptr);
         void PushEvalStack(PolymorphicEmitInfo);
         PolymorphicEmitInfo EnsureYield(BlockInfo*);
         void EnterEvalStackScope(const BlockInfo*);

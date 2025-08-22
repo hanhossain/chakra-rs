@@ -1110,7 +1110,7 @@ AsmJsCompilationError:
 
     void AsmJSCompiler::VOutputMessage(ScriptContext * scriptContext, const DEBUG_EVENT_INFO_TYPE messageType, const wchar * message, va_list argptr)
     {
-        char16 buf[2048];
+        char16_t buf[2048];
         size_t size;
 
         size = _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, message, argptr);

@@ -73,7 +73,7 @@ namespace Js
         Field(bool) hasInlineCaches;
 
         static JavascriptString* GetComputedName(Var computedNameVar, ScriptContext * scriptContext);
-        static bool GetSymbolName(Var computedNameVar, const char16** symbolName, charcount_t *length);
+        static bool GetSymbolName(Var computedNameVar, const char16_t** symbolName, charcount_t *length);
     protected:
         DEFINE_VTABLE_CTOR(ScriptFunction, ScriptFunctionBase);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ScriptFunction);

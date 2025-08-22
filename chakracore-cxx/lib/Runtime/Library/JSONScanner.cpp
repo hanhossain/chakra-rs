@@ -28,7 +28,7 @@ namespace JSON
         }
     }
 
-    void JSONScanner::Init(const char16* input, uint len, Token* pOutToken, Js::ScriptContext* sc, const char16* current, ArenaAllocator* allocator)
+    void JSONScanner::Init(const char16_t* input, uint len, Token* pOutToken, Js::ScriptContext* sc, const char16_t* current, ArenaAllocator* allocator)
     {
         // Note that allocator could be nullptr from JSONParser, if we could not reuse an allocator, keep our own
         inputText = input;
@@ -79,14 +79,14 @@ namespace JSON
 
                     // we use StrToDbl() here for compat with the rest of the engine. StrToDbl() accept a larger syntax.
                     // Verify first the JSON grammar.
-                    const char16* saveCurrentChar = currentChar;
+                    const char16_t* saveCurrentChar = currentChar;
                     if(!IsJSONNumber())
                     {
                        ThrowSyntaxError(JSERR_JsonBadNumber);
                     }
                     currentChar = saveCurrentChar;
                     double val;
-                    const char16* end = nullptr;
+                    const char16_t* end = nullptr;
                     val = Js::NumberUtilities::StrToDbl(currentChar, &end, scriptContext);
                     if(currentChar == end)
                     {
@@ -193,7 +193,7 @@ namespace JSON
                     // at least one digit after '.'
                     if(currentChar < inputText + inputLen)
                     {
-                        char16 nch = ReadNextChar();
+                        char16_t nch = ReadNextChar();
                         if('0' <= nch && nch <= '9')
                         {
                             return true;
@@ -222,10 +222,10 @@ namespace JSON
 
     tokens JSONScanner::ScanString()
     {
-        char16 ch;
+        char16_t ch;
 
         this->currentIndex = 0;
-        this->currentString = const_cast<char16*>(currentChar);
+        this->currentString = const_cast<char16_t*>(currentChar);
         bool endFound = false;
         bool isStringDirectInputTextMapped = true;
         LPCWSTR bulkStart = currentChar;
@@ -328,7 +328,7 @@ namespace JSON
                         }
                         chcode += tempHex;
                         AssertMsg(chcode == (chcode & 0xFFFF), "Bad unicode code");
-                        ch = (char16)chcode;
+                        ch = (char16_t)chcode;
                     }
                     break;
 
@@ -420,13 +420,13 @@ namespace JSON
                 this->stringBuffer = nullptr;
             }
 
-            this->stringBuffer = AnewArray(this->allocator, char16, requiredSize);
+            this->stringBuffer = AnewArray(this->allocator, char16_t, requiredSize);
             this->stringBufferLength = requiredSize;
         }
 
         // Step 2: Copy the data to the buffer
         int totalCopied = 0;
-        char16* begin_copy = this->stringBuffer;
+        char16_t* begin_copy = this->stringBuffer;
         int lastCharacterIndex = this->currentRangeCharacterPairList->Count() - 1;
         for (int i = 0; i <= lastCharacterIndex; i++)
         {

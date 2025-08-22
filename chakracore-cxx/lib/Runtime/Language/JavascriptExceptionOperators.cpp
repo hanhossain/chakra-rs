@@ -1661,7 +1661,7 @@ namespace Js
         // format is equivalent to wprintf("\n   at %s (%s:%d:%d)", functionName, filename, lineNumber, characterPosition);
 
         const CharCount maxULongStringLength = 10; // excluding null terminator
-        const auto ConvertULongToString = [](const uint32_t value, char16 *const buffer, const CharCount charCapacity)
+        const auto ConvertULongToString = [](const uint32_t value, char16_t *const buffer, const CharCount charCapacity)
         {
             const errno_t err = _ultow_s(value, buffer, charCapacity, 10);
             Assert(err == 0);
@@ -1679,8 +1679,8 @@ namespace Js
 
         if (CONFIG_FLAG(ExtendedErrorStackForTestHost) && *fileName != _u('\0'))
         {
-            char16 shortfilename[_MAX_FNAME];
-            char16 ext[_MAX_EXT];
+            char16_t shortfilename[_MAX_FNAME];
+            char16_t ext[_MAX_EXT];
             errno_t err = _wsplitpath_s(fileName, NULL, 0, NULL, 0, shortfilename, _MAX_FNAME, ext, _MAX_EXT);
             if (err != 0)
             {

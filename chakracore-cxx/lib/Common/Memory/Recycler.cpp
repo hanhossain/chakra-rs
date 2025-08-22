@@ -7134,7 +7134,7 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
 
 #ifdef RECYCLER_TRACE
 void
-Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char16 const * statusMessage)
+Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char16_t const * statusMessage)
 {
     if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
     {
@@ -7145,7 +7145,7 @@ Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char1
 
 #ifdef RECYCLER_STATS
 void
-Recycler::PrintHeapBlockStats(char16 const * name, HeapBlock::HeapBlockType type)
+Recycler::PrintHeapBlockStats(char16_t const * name, HeapBlock::HeapBlockType type)
 {
     size_t liveCount = collectionStats.heapBlockCount[type] - collectionStats.heapBlockFreeCount[type];
 
@@ -7164,7 +7164,7 @@ Recycler::PrintHeapBlockStats(char16 const * name, HeapBlock::HeapBlockType type
 }
 
 void
-Recycler::PrintHeapBlockMemoryStats(char16 const * name, HeapBlock::HeapBlockType type)
+Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockType type)
 {
     size_t allocableFreeByteCount = collectionStats.heapBlockFreeByteCount[type];
 #if ENABLE_PARTIAL_GC
@@ -7758,7 +7758,7 @@ void Recycler::Verify(Js::Phase phase)
     }
 }
 
-void Recycler::VerifyCheck(BOOL cond, char16 const * msg, void * address, void * corruptedAddress)
+void Recycler::VerifyCheck(BOOL cond, char16_t const * msg, void * address, void * corruptedAddress)
 {
     if (!(cond))
     {
@@ -8507,7 +8507,7 @@ Recycler::VerifyMark(void * objectAddress, void * target)
 #endif
 
 ArenaAllocator *
-Recycler::CreateGuestArena(char16 const * name, void (*outOfMemoryFunc)())
+Recycler::CreateGuestArena(char16_t const * name, void (*outOfMemoryFunc)())
 {
     // Note, guest arenas use the large block allocator.
     return guestArenaList.PrependNode(&HeapAllocator::Instance, name, this->GetDefaultHeapInfo()->GetRecyclerLargeBlockPageAllocator(), outOfMemoryFunc);
@@ -8602,7 +8602,7 @@ Recycler::ReportLeaksOnProcessDetach()
 
 #ifdef CHECK_MEMORY_LEAK
 void
-Recycler::CheckLeaks(char16 const * header)
+Recycler::CheckLeaks(char16_t const * header)
 {
     if (GetRecyclerFlagsTable().CheckMemoryLeak && this->isPrimaryMarkContextInitialized)
     {
@@ -8644,7 +8644,7 @@ Recycler::CheckLeaks(char16 const * header)
             Output::Print(_u("Recycler Leaked Object: %d bytes (%d objects)\n"),
                 param.stats.markData.markBytes, param.stats.markData.markCount);
 
-            char16 * buffer = Output::CaptureEnd();
+            char16_t * buffer = Output::CaptureEnd();
             MemoryLeakCheck::AddLeakDump(buffer, param.stats.markData.markBytes, param.stats.markData.markCount);
 #ifdef GENERATE_DUMP
             if (GetRecyclerFlagsTable().IsEnabled(Js::DumpOnLeakFlag))
@@ -8663,7 +8663,7 @@ Recycler::CheckLeaks(char16 const * header)
 
 
 void
-Recycler::CheckLeaksOnProcessDetach(char16 const * header)
+Recycler::CheckLeaksOnProcessDetach(char16_t const * header)
 {
     if (GetRecyclerFlagsTable().CheckMemoryLeak)
     {

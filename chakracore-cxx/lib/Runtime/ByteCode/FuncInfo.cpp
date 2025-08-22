@@ -6,7 +6,7 @@
 #define IsTrueOrFalse(value)     ((value) ? _u("True") : _u("False"))
 
 FuncInfo::FuncInfo(
-    const char16 *name,
+    const char16_t *name,
     ArenaAllocator *alloc,
     ByteCodeGenerator *byteCodeGenerator,
     Scope *paramScope,
@@ -498,12 +498,12 @@ CallSiteToCallApplyCallSiteMap * FuncInfo::EnsureCallSiteToCallApplyCallSiteMap(
     return this->callSiteToCallApplyCallSiteMap;
 }
 
-void FuncInfo::SetHasMaybeEscapedNestedFunc(DebugOnly(char16 const * reason))
+void FuncInfo::SetHasMaybeEscapedNestedFunc(DebugOnly(char16_t const * reason))
 {
     if (PHASE_TESTTRACE(Js::StackFuncPhase, this->byteCodeFunction) && !hasEscapedUseNestedFunc)
     {
-        char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        char16 const * r = _u("");
+        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+        char16_t const * r = _u("");
 
         DebugOnly(r = reason);
         Output::Print(_u("HasMaybeEscapedNestedFunc (%s): %s (function %s)\n"),

@@ -475,13 +475,13 @@ FunctionJITTimeInfo::ForceJITLoopBody() const
 }
 
 
-char16*
+char16_t*
 FunctionJITTimeInfo::GetDisplayName() const
 {
     return GetBody()->GetDisplayName();
 }
 
-char16*
+char16_t*
 FunctionJITTimeInfo::GetDebugNumberSet(wchar(&bufferToWriteTo)[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE]) const
 {
     // (#%u.%u), #%u --> (source file Id . function Id) , function Number

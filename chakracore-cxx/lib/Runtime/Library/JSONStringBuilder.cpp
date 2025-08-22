@@ -9,7 +9,7 @@ namespace Js
 {
 
 void
-JSONStringBuilder::AppendCharacter(char16 character)
+JSONStringBuilder::AppendCharacter(char16_t character)
 {
     AssertOrFailFast(this->currentLocation < endLocation);
     *this->currentLocation = character;
@@ -17,7 +17,7 @@ JSONStringBuilder::AppendCharacter(char16 character)
 }
 
 void
-JSONStringBuilder::AppendBuffer(_In_ const char16* buffer, charcount_t length)
+JSONStringBuilder::AppendBuffer(_In_ const char16_t* buffer, charcount_t length)
 {
     AssertOrFailFast(this->currentLocation + length <= endLocation);
     wmemcpy_s(this->currentLocation, length, buffer, length);
@@ -31,13 +31,13 @@ JSONStringBuilder::AppendString(_In_ JavascriptString* str)
 }
 
 void
-JSONStringBuilder::AppendEscapeSequence(_In_ const char16 character)
+JSONStringBuilder::AppendEscapeSequence(_In_ const char16_t character)
 {
     // Convert character into a 4 digit hex code (e.g. \u0010)
     this->AppendCharacter(_u('\\'));
     this->AppendCharacter(_u('u'));
     {
-        char16 buf[5];
+        char16_t buf[5];
         // Get hex value
         _ltow_s(character, buf, _countof(buf), 16);
 
@@ -65,10 +65,10 @@ JSONStringBuilder::EscapeAndAppendString(_In_ JavascriptString* str)
 
     // Strings should be surrounded by double quotes
     this->AppendCharacter(_u('"'));
-    const char16* bufferStart = str->GetString();
-    for (const char16* index = bufferStart; index < bufferStart + strLength; ++index)
+    const char16_t* bufferStart = str->GetString();
+    for (const char16_t* index = bufferStart; index < bufferStart + strLength; ++index)
     {
-        char16 currentCharacter = *index;
+        char16_t currentCharacter = *index;
         switch (currentCharacter)
         {
         case _u('"'):
@@ -294,9 +294,9 @@ JSONStringBuilder::Build()
 JSONStringBuilder::JSONStringBuilder(
     _In_ ScriptContext* scriptContext,
     _In_ JSONProperty* jsonContent,
-    _In_ char16* buffer,
+    _In_ char16_t* buffer,
     charcount_t bufferLength,
-    _In_opt_ const char16* gap,
+    _In_opt_ const char16_t* gap,
     charcount_t gapLength) :
         scriptContext(scriptContext),
         endLocation(buffer + bufferLength - 1),

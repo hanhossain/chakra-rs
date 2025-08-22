@@ -124,7 +124,7 @@ namespace Js
         case SCA_StringValue: // Clone string value as object type to resolve multiple references
             {               
                 charcount_t len;
-                const char16* buf = ReadString(&len);
+                const char16_t* buf = ReadString(&len);
                 *dst = Js::JavascriptString::NewWithBuffer(buf, len, scriptContext);
                 isObject = false;
             }
@@ -157,7 +157,7 @@ namespace Js
         case SCA_StringObject:
             {
                 charcount_t len;
-                const char16* buf = ReadString(&len);
+                const char16_t* buf = ReadString(&len);
                 *dst = lib->CreateStringObject(buf, len);
             }
             break;
@@ -165,7 +165,7 @@ namespace Js
         case SCA_RegExpObject:
             {
                 charcount_t len;
-                const char16* buf = ReadString(&len);
+                const char16_t* buf = ReadString(&len);
 
                 uint32_t flags;
                 m_reader->Read(&flags);
@@ -426,7 +426,7 @@ namespace Js
     // If buffer is not null and the size is appropriate, will try reusing it
     //
     template <class Reader>
-    const char16* DeserializationCloner<Reader>::TryReadString(charcount_t* len, bool reuseBuffer) const
+    const char16_t* DeserializationCloner<Reader>::TryReadString(charcount_t* len, bool reuseBuffer) const
     {
         // m_buffer is allocated on GC heap and stored in a regular field.
         // that is ok since 'this' is always a stack instance.
@@ -446,15 +446,15 @@ namespace Js
         }
         else
         {
-            charcount_t newLen = byteLen / sizeof(char16);
-            char16* buf;
+            charcount_t newLen = byteLen / sizeof(char16_t);
+            char16_t* buf;
 
             if (reuseBuffer)
             {
                 if (this->m_bufferLength < newLen)
                 {
                     Recycler* recycler = this->GetScriptContext()->GetRecycler();
-                    this->m_buffer = RecyclerNewArrayLeaf(recycler, char16, newLen + 1);
+                    this->m_buffer = RecyclerNewArrayLeaf(recycler, char16_t, newLen + 1);
                     this->m_bufferLength = newLen;
                 }
 
@@ -463,7 +463,7 @@ namespace Js
             else
             {
                 Recycler* recycler = this->GetScriptContext()->GetRecycler();
-                buf = RecyclerNewArrayLeaf(recycler, char16, newLen + 1);
+                buf = RecyclerNewArrayLeaf(recycler, char16_t, newLen + 1);
             }
 
             m_reader->Read(buf, byteLen);
@@ -486,9 +486,9 @@ namespace Js
     // Throw if seeing SCA_PROPERTY_TERMINATOR.
     //
     template <class Reader>
-    const char16* DeserializationCloner<Reader>::ReadString(charcount_t* len) const
+    const char16_t* DeserializationCloner<Reader>::ReadString(charcount_t* len) const
     {
-        const char16* str = TryReadString(len, false);
+        const char16_t* str = TryReadString(len, false);
 
         if (str == nullptr)
         {

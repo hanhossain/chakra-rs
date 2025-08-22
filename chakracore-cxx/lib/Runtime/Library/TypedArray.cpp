@@ -3276,7 +3276,7 @@ namespace Js
     {
         CharArray* arr;
         uint32 totalLength, mappedByteLength;
-        if (UInt32Math::Mul(mappedLength, sizeof(char16), &mappedByteLength) ||
+        if (UInt32Math::Mul(mappedLength, sizeof(char16_t), &mappedByteLength) ||
             UInt32Math::Add(byteOffSet, mappedByteLength, &totalLength) ||
             (totalLength > arrayBuffer->GetByteLength()))
         {
@@ -3326,8 +3326,8 @@ namespace Js
         }
 
         AssertMsg(index < GetLength(), "Trying to set out of bound index for typed array.");
-        Assert((index + 1)* sizeof(char16) + GetByteOffset() <= GetArrayBuffer()->GetByteLength());
-        char16* typedBuffer = (char16*)buffer;
+        Assert((index + 1)* sizeof(char16_t) + GetByteOffset() <= GetArrayBuffer()->GetByteLength());
+        char16_t* typedBuffer = (char16_t*)buffer;
 
         if (asString != NULL && ::wcslen(asString) == 1)
         {
@@ -3419,8 +3419,8 @@ namespace Js
         }
         if (index < GetLength())
         {
-            Assert((index + 1)* sizeof(char16)+GetByteOffset() <= GetArrayBuffer()->GetByteLength());
-            char16* typedBuffer = (char16*)buffer;
+            Assert((index + 1)* sizeof(char16_t)+GetByteOffset() <= GetArrayBuffer()->GetByteLength());
+            char16_t* typedBuffer = (char16_t*)buffer;
             return GetLibrary()->GetCharStringCache().GetStringForChar(typedBuffer[index]);
         }
         return GetLibrary()->GetUndefined();
@@ -3436,7 +3436,7 @@ namespace Js
         AssertMsg(args.Info.Count > 0, "Should always have implicit 'this'");
 
         Assert(!(callInfo.Flags & CallFlags_New) || args[0] == nullptr);
-        Var object = TypedArrayBase::CreateNewInstance(args, scriptContext, sizeof(char16), CharArray::Create);
+        Var object = TypedArrayBase::CreateNewInstance(args, scriptContext, sizeof(char16_t), CharArray::Create);
 #if ENABLE_DEBUG_CONFIG_OPTIONS
         if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
         {

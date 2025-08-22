@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void ThrowIfExecuting(const char16* apiName);
+    void ThrowIfExecuting(const char16_t* apiName);
     Var CallGenerator(Var data, ResumeYieldKind resumeKind);
 
 private:

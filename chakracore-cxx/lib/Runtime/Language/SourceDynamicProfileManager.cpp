@@ -421,7 +421,7 @@ namespace Js
     }
 
     void
-    SourceDynamicProfileManager::SaveToDynamicProfileStorage(char16 const * url)
+    SourceDynamicProfileManager::SaveToDynamicProfileStorage(char16_t const * url)
     {
         Assert(DynamicProfileStorage::IsEnabled());
         BufferSizeCounter counter;

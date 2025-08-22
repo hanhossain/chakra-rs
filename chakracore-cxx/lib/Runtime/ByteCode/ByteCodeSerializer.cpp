@@ -153,7 +153,7 @@ struct ByteBuffer
     union
     {
         void * pv;
-        const char16 * s16;
+        const char16_t * s16;
         const char * s8;
     };
 public:
@@ -462,7 +462,7 @@ public:
           string16Count(_u("String16 Count"), 0),
           string16IndexTable(_u("String16 Indexes")),
           string16Table(_u("String16 Table")),
-          alignedString16Table(_u("Alignment for String16 Table"), &string16Table, sizeof(char16)),
+          alignedString16Table(_u("Alignment for String16 Table"), &string16Table, sizeof(char16_t)),
           lineInfoCacheCount(_u("Line Info Cache"), sourceInfo->GetLineOffsetCache()->GetLineCount()),
           lineCharacterOffsetCacheBuffer(_u("Line Info Character Cache"), lineInfoCacheCount.value * sizeof(charcount_t), (byte *)sourceInfo->GetLineOffsetCache()->GetLineCharacterOffsetBuffer()),
           lineInfoHasByteCache(_u("Line Info Has Byte Cache"), sourceInfo->GetLineOffsetCache()->GetLineByteOffsetBuffer() != nullptr),
@@ -837,7 +837,7 @@ public:
     int GetIdOfPropertyRecord(const PropertyRecord * propertyRecord)
     {
         AssertMsg(!propertyRecord->IsSymbol(), "bytecode serializer does not currently handle non-built-in symbol PropertyRecords");
-        size_t byteCount = ((size_t)propertyRecord->GetLength() + 1) * sizeof(char16);
+        size_t byteCount = ((size_t)propertyRecord->GetLength() + 1) * sizeof(char16_t);
         if (byteCount > UINT_MAX)
         {
             // We should never see property record that big
@@ -1475,7 +1475,7 @@ public:
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, _u("Start String Constant"), magicStartStringConstant);
 #endif
-        auto bb = Anew(alloc, ByteBuffer, (str->GetLength() + 1) * sizeof(char16), (void*)str->GetSz());
+        auto bb = Anew(alloc, ByteBuffer, (str->GetLength() + 1) * sizeof(char16_t), (void*)str->GetSz());
         size += PrependByteBuffer(builder, _u("String Constant 16 Value"), bb);
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
@@ -1970,7 +1970,7 @@ public:
         size += PrependByte(builder, _u("UsesHeapBuffer"), funcInfo->UsesHeapBuffer());
         for (int i = WAsmJs::LIMIT - 1; i >= 0; --i)
         {
-            const char16* clue = nullptr;
+            const char16_t* clue = nullptr;
             switch (i)
             {
             case WAsmJs::INT32:   clue = _u("Int32TypedSlots"); break;
@@ -2224,7 +2224,7 @@ public:
 
                 const auto source = literalRegex->GetSource();
                 PrependInt32(builder, _u("Literal regex source length"), source.GetLength());
-                PrependString16(builder, _u("Literal regex source"), source.GetBuffer(), (source.GetLength() + 1) * sizeof(char16));
+                PrependString16(builder, _u("Literal regex source"), source.GetBuffer(), (source.GetLength() + 1) * sizeof(char16_t));
                 PrependByte(builder, _u("Literal regex flags"), literalRegex->GetFlags());
             }
 
@@ -2309,9 +2309,9 @@ public:
 
         if (!isAnonymous)
         {
-            const char16* displayName = function->GetDisplayName();
+            const char16_t* displayName = function->GetDisplayName();
             uint displayNameLength = function->m_displayNameLength;
-            PrependString16(builder, _u("Display Name"), displayName, (displayNameLength + 1) * sizeof(char16));
+            PrependString16(builder, _u("Display Name"), displayName, (displayNameLength + 1) * sizeof(char16_t));
         }
 
         PrependInt32(builder, _u("Relative Function ID"), function->GetLocalFunctionId() - topFunctionId); // Serialized function ids are relative to the top function ID
@@ -3198,7 +3198,7 @@ public:
 
         // string16Table is aligned to 2-bytes
         uint32 string16TableOffset = (uint32)(string16Table - raw);
-        string16TableOffset = ::Math::Align(string16TableOffset, (uint32)sizeof(char16));
+        string16TableOffset = ::Math::Align(string16TableOffset, (uint32)sizeof(char16_t));
         string16Table = raw + string16TableOffset;
 
         // Consume ScopeInfo count and advance to the relative offsets
@@ -4037,7 +4037,7 @@ public:
         serialization_alignment SerializedFieldList* definedFields = (serialization_alignment SerializedFieldList*) functionBytes;
 
         FunctionProxy::SetDisplayNameFlags displayNameFlags = FunctionProxy::SetDisplayNameFlags::SetDisplayNameFlagsDontCopy;
-        const char16* displayName = nullptr;
+        const char16_t* displayName = nullptr;
         if (bitflags & ffIsAnonymous)
         {
             displayName = Constants::AnonymousFunction;
@@ -4886,7 +4886,7 @@ void ByteCodeCache::PopulateLookupPropertyId(ScriptContext * scriptContext, int 
         auto propertyNameLength = reader->GetString16LengthById(idInCache);
 
         const Js::PropertyRecord * propertyRecord = scriptContext->GetThreadContext()->GetOrAddPropertyRecordBind(
-            JsUtil::CharacterBuffer<char16>(propertyName, propertyNameLength));
+            JsUtil::CharacterBuffer<char16_t>(propertyName, propertyNameLength));
 
         propertyIds[realOffset] = propertyRecord->GetPropertyId();
     }

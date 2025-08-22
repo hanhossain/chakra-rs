@@ -343,7 +343,7 @@ bool IsAddressOnStack(size_t address);
 
 errno_t rand_s(unsigned int* randomValue);
 
-inline char16* wmemset(char16* wcs, char16 wc, size_t n)
+inline char16_t* wmemset(char16_t* wcs, char16_t wc, size_t n)
 {
     while (n)
     {
@@ -352,19 +352,19 @@ inline char16* wmemset(char16* wcs, char16 wc, size_t n)
     return wcs;
 }
 
-inline errno_t wmemcpy_s(char16* dest, size_t destSize, const char16* src, size_t count)
+inline errno_t wmemcpy_s(char16_t* dest, size_t destSize, const char16_t* src, size_t count)
 {
-    return memcpy_s(dest, sizeof(char16) * destSize, src, sizeof(char16) * count);
+    return memcpy_s(dest, sizeof(char16_t) * destSize, src, sizeof(char16_t) * count);
 }
 
-inline int _wunlink(const char16* filename)
+inline int _wunlink(const char16_t* filename)
 {
     // WARN: does not set errno when fail
     return DeleteFile(filename) ? 0 : -1;
 }
 
 template <size_t size>
-inline errno_t _wcserror_s(char16 (&buffer)[size], int errnum)
+inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 {
     const char* str = strerror(errnum);
     // WARN: does not return detail errno when fail
@@ -376,8 +376,8 @@ inline errno_t _wcserror_s(char16 (&buffer)[size], int errnum)
 #define midl_user_free(ptr) \
     if (ptr != NULL) { HeapFree(GetProcessHeap(), NULL, ptr); }
 
-uint32_t CharLowerBuffW(const char16* lpsz, uint32_t  cchLength);
-uint32_t CharUpperBuffW(const char16* lpsz, uint32_t  cchLength);
+uint32_t CharLowerBuffW(const char16_t* lpsz, uint32_t  cchLength);
+uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 
 // TODO (hanhossain): replace with std::numeric_limits<uint32_t>::max()
 #define MAXUINT32   ((uint32_t)~((uint32_t)0))

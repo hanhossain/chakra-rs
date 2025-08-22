@@ -242,7 +242,7 @@ HRESULT ChakraRTInterface::ParseConfigFlags()
         m_argInfo->filename = nullptr;
         Assert(m_testHooks.pfGetFilenameFlag != nullptr);
 
-        char16* fileNameWide = nullptr;
+        char16_t* fileNameWide = nullptr;
         hr = GetFileNameFlag(&fileNameWide);
 
         if (hr != S_OK)

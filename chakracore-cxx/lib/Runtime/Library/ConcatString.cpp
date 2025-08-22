@@ -18,7 +18,7 @@ namespace Js
     {
     }
 
-    LiteralStringWithPropertyStringPtr::LiteralStringWithPropertyStringPtr(const char16 * wString,
+    LiteralStringWithPropertyStringPtr::LiteralStringWithPropertyStringPtr(const char16_t * wString,
       const CharCount stringLength, JavascriptLibrary *const library) :
         LiteralString(library->GetStringTypeStatic(), wString, stringLength),
         propertyString(nullptr),
@@ -27,7 +27,7 @@ namespace Js
     }
 
     JavascriptString * LiteralStringWithPropertyStringPtr::
-    NewFromWideString(const char16 * wideString, const CharCount charCount, JavascriptLibrary *const library)
+    NewFromWideString(const char16_t * wideString, const CharCount charCount, JavascriptLibrary *const library)
     {
         Assert(library != nullptr && wideString != nullptr);
 
@@ -42,7 +42,7 @@ namespace Js
             }
             case 1:
             {
-                return library->GetCharStringCache().GetStringForChar((char16(*wideString)));
+                return library->GetCharStringCache().GetStringForChar((char16_t(*wideString)));
             }
             default:
                 break;
@@ -50,7 +50,7 @@ namespace Js
 
         Recycler * recycler = library->GetRecycler();
         ScriptContext * scriptContext = library->GetScriptContext();
-        char16* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
+        char16_t* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
 
         if (destString == nullptr)
         {
@@ -58,7 +58,7 @@ namespace Js
         }
 
         js_wmemcpy_s(destString, charCount, wideString, charCount);
-        destString[charCount] = char16(0);
+        destString[charCount] = char16_t(0);
 
         return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, destString, charCount, library);
     }
@@ -87,7 +87,7 @@ namespace Js
                 // If the high bit of the byte is set, it cannot be a complete utf8 codepoint, so fall back to the unicode replacement char
                 if ((*cString & 0x80) != 0x80)
                 {
-                    return library->GetCharStringCache().GetStringForChar((char16(*cString)));
+                    return library->GetCharStringCache().GetStringForChar((char16_t(*cString)));
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace Js
         }
 
         Recycler * recycler = library->GetRecycler();
-        char16* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
+        char16_t* destString = RecyclerNewArrayLeaf(recycler, WCHAR, charCount + 1);
         if (destString == nullptr)
         {
             Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
@@ -223,7 +223,7 @@ namespace Js
     }
 
     // Copy the content of items into specified buffer.
-    void ConcatStringBase::CopyImpl(_Out_writes_(m_charLength) char16 *const buffer,
+    void ConcatStringBase::CopyImpl(_Out_writes_(m_charLength) char16_t *const buffer,
             int itemCount, _In_reads_(itemCount) JavascriptString * const * items,
             StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth)
     {
@@ -354,9 +354,9 @@ namespace Js
         return RecyclerNew(scriptContext->GetRecycler(), ConcatStringBuilder, scriptContext, initialSlotCount);
     }
 
-    const char16 * ConcatStringBuilder::GetSz()
+    const char16_t * ConcatStringBuilder::GetSz()
     {
-        const char16 * sz = GetSzImpl<ConcatStringBuilder>();
+        const char16_t * sz = GetSzImpl<ConcatStringBuilder>();
 
         // Allow a/b to be garbage collected if no more refs.
         ConcatStringBuilder* current = this;
@@ -461,7 +461,7 @@ namespace Js
     }
 
     void ConcatStringBuilder::CopyVirtual(
-        _Out_writes_(m_charLength) char16 *const buffer,
+        _Out_writes_(m_charLength) char16_t *const buffer,
         StringCopyInfoStack &nestedStringTreeCopyInfos,
         const byte recursionDepth)
     {
@@ -530,11 +530,11 @@ namespace Js
         return VirtualTableInfo<ConcatStringMulti>::HasVirtualTable(obj);
     }
 
-    const char16 *
+    const char16_t *
     ConcatStringMulti::GetSz()
     {
         Assert(IsFilled());
-        const char16 * sz = GetSzImpl<ConcatStringMulti>();
+        const char16_t * sz = GetSzImpl<ConcatStringMulti>();
 
         // Allow slots to be garbage collected if no more refs.
         ClearArray(m_slots, slotCount);

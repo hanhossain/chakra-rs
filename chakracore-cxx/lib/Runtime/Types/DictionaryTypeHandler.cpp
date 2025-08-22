@@ -2712,7 +2712,7 @@ namespace Js
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsBeforeTypeHandlerChange(
-        const char16* oldTypeHandlerName, const char16* newTypeHandlerName,
+        const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {

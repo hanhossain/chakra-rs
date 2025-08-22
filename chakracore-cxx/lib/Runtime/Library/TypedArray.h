@@ -531,7 +531,7 @@ namespace Js
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF();
     };
 
-    // in windows build environment, char16 is not an intrinsic type, and we cannot do the type
+    // in windows build environment, char16_t is not an intrinsic type, and we cannot do the type
     // specialization
     class CharArray : public TypedArrayBase
     {
@@ -552,10 +552,10 @@ namespace Js
         static Var EntrySubarray(RecyclableObject* function, CallInfo callInfo, ...);
 
         CharArray(ArrayBufferBase* arrayBuffer, uint32 byteOffset, uint32 mappedLength, DynamicType* type) :
-        TypedArrayBase(arrayBuffer, byteOffset, mappedLength, sizeof(char16), type)
+        TypedArrayBase(arrayBuffer, byteOffset, mappedLength, sizeof(char16_t), type)
         {
             AssertMsg(arrayBuffer->GetByteLength() >= byteOffset, "invalid offset");
-            AssertMsg(mappedLength*sizeof(char16)+byteOffset <= GetArrayBuffer()->GetByteLength(), "invalid length");
+            AssertMsg(mappedLength*sizeof(char16_t)+byteOffset <= GetArrayBuffer()->GetByteLength(), "invalid length");
             buffer = arrayBuffer->GetBuffer() + byteOffset;
         }
 
@@ -583,12 +583,12 @@ namespace Js
     protected:
         void SortHelper(byte* listBuffer, uint32 length, RecyclableObject* compareFn, ScriptContext* scriptContext, ArenaAllocator* allocator)
         {
-            char16* list = reinterpret_cast<char16*>(listBuffer);
+            char16_t* list = reinterpret_cast<char16_t*>(listBuffer);
             JavascriptArray::CompareVarsInfo cvInfo;
             cvInfo.scriptContext = scriptContext;
             cvInfo.compFn = compareFn;
-            cvInfo.compareType = &TypedArrayCompareElementsHelper<char16>;
-            JavascriptArray::TypedArraySort<char16>(list, length, &cvInfo, allocator);
+            cvInfo.compareType = &TypedArrayCompareElementsHelper<char16_t>;
+            JavascriptArray::TypedArraySort<char16_t>(list, length, &cvInfo, allocator);
         }
 
     public:

@@ -24,7 +24,7 @@ public:
     static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], PCWSTR targetArg, size_t targetArgLen);
 
     template <class Func> static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], Func func);
-    template <int LEN> static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16(&targetArg)[LEN]);
+    template <int LEN> static int FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16_t(&targetArg)[LEN]);
 
     virtual bool ParseFlag(LPCWSTR flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
@@ -54,7 +54,7 @@ int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], Func func)
 }
 
 template <int LEN>
-int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16(&targetArg)[LEN])
+int HostConfigFlags::FindArg(int argc, _In_reads_(argc) PWSTR argv[], const char16_t(&targetArg)[LEN])
 {
     return FindArg(argc, argv, targetArg, LEN - 1); // -1 to exclude null terminator
 }

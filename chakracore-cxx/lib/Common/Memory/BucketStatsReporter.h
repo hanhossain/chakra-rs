@@ -12,21 +12,21 @@ namespace Memory
 
 #ifdef DUMP_FRAGMENTATION_STATS
 template <ObjectInfoBits TBucketType>
-struct DumpBucketTypeName { static char16 name[]; };
-template<> char16 DumpBucketTypeName<NoBit>::name[] = _u("Normal ");
-template<> char16 DumpBucketTypeName<LeafBit>::name[] = _u("Leaf   ");
-template<> char16 DumpBucketTypeName<FinalizeBit>::name[] = _u("Fin    ");
+struct DumpBucketTypeName { static char16_t name[]; };
+template<> char16_t DumpBucketTypeName<NoBit>::name[] = _u("Normal ");
+template<> char16_t DumpBucketTypeName<LeafBit>::name[] = _u("Leaf   ");
+template<> char16_t DumpBucketTypeName<FinalizeBit>::name[] = _u("Fin    ");
 #ifdef RECYCLER_WRITE_BARRIER
-template<> char16 DumpBucketTypeName<WithBarrierBit>::name[] = _u("NormWB ");
-template<> char16 DumpBucketTypeName<FinalizableWithBarrierBit>::name[] = _u("FinWB  ");
+template<> char16_t DumpBucketTypeName<WithBarrierBit>::name[] = _u("NormWB ");
+template<> char16_t DumpBucketTypeName<FinalizableWithBarrierBit>::name[] = _u("FinWB  ");
 #endif
 #ifdef RECYCLER_VISITED_HOST
-template<> char16 DumpBucketTypeName<RecyclerVisitedHostBit>::name[] = _u("Visited");
+template<> char16_t DumpBucketTypeName<RecyclerVisitedHostBit>::name[] = _u("Visited");
 #endif
 template <typename TBlockType>
-struct DumpBlockTypeName { static char16 name[]; };
-template<> char16 DumpBlockTypeName<SmallAllocationBlockAttributes>::name[] = _u("(S)");
-template<> char16 DumpBlockTypeName<MediumAllocationBlockAttributes>::name[] = _u("(M)");
+struct DumpBlockTypeName { static char16_t name[]; };
+template<> char16_t DumpBlockTypeName<SmallAllocationBlockAttributes>::name[] = _u("(S)");
+template<> char16_t DumpBlockTypeName<MediumAllocationBlockAttributes>::name[] = _u("(M)");
 #endif  // DUMP_FRAGMENTATION_STATS
 
 template <ObjectInfoBits TBucketType>

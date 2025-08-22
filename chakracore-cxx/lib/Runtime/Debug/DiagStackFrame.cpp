@@ -163,7 +163,7 @@ namespace Js
         return varThis;
     }
 
-    void DiagStackFrame::TryFetchValueAndAddress(const char16 *source, int sourceLength, Js::ResolvedObject * pOutResolvedObj)
+    void DiagStackFrame::TryFetchValueAndAddress(const char16_t *source, int sourceLength, Js::ResolvedObject * pOutResolvedObj)
     {
         Assert(source);
         Assert(pOutResolvedObj);
@@ -189,7 +189,7 @@ namespace Js
 
     }
 
-    Js::ScriptFunction* DiagStackFrame::TryGetFunctionForEval(Js::ScriptContext* scriptContext, const char16 *source, int sourceLength, BOOL isLibraryCode /* = FALSE */)
+    Js::ScriptFunction* DiagStackFrame::TryGetFunctionForEval(Js::ScriptContext* scriptContext, const char16_t *source, int sourceLength, BOOL isLibraryCode /* = FALSE */)
     {
         // TODO: pass the real length of the source code instead of wcslen
         uint32 grfscr = fscrReturnExpression | fscrEval | fscrEvalCode | fscrGlobalCode | fscrConsoleScopeEval;
@@ -204,7 +204,7 @@ namespace Js
         return scriptContext->GetGlobalObject()->EvalHelper(scriptContext, source, sourceLength, kmodGlobal, grfscr, Js::Constants::EvalCode, FALSE, FALSE, this->IsStrictMode());
     }
 
-    void DiagStackFrame::EvaluateImmediate(const char16 *source, int sourceLength, BOOL isLibraryCode, Js::ResolvedObject * resolvedObject)
+    void DiagStackFrame::EvaluateImmediate(const char16_t *source, int sourceLength, BOOL isLibraryCode, Js::ResolvedObject * resolvedObject)
     {
         this->TryFetchValueAndAddress(source, sourceLength, resolvedObject);
 

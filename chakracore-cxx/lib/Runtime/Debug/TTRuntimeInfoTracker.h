@@ -226,7 +226,7 @@ namespace TTD
         JsUtil::List<Js::DebuggerScope*, HeapAllocator> m_sortedDbgScopeList;
 
         //Build a path string based on a given name
-        void BuildPathString(UtilSupport::TTAutoString, const char16* name, const char16* optaccessortag, UtilSupport::TTAutoString& into);
+        void BuildPathString(UtilSupport::TTAutoString, const char16_t* name, const char16_t* optaccessortag, UtilSupport::TTAutoString& into);
 
         //Ensure that when we do our core visit make sure that the properties always appear in the same order
         static void LoadAndOrderPropertyNames(Js::RecyclableObject* obj, JsUtil::List<const Js::PropertyRecord*, HeapAllocator>& propertyList);
@@ -256,14 +256,14 @@ namespace TTD
         ////
 
         //Enqueue a root object in our core path walk
-        void EnqueueRootPathObject(const char16* rootName, Js::RecyclableObject* obj);
+        void EnqueueRootPathObject(const char16_t* rootName, Js::RecyclableObject* obj);
 
         //Enqueue a child object that is stored at the given property in the parent 
-        void EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const Js::PropertyRecord* prop, const char16* optacessortag = nullptr);
-        void EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const char16* propName, const char16* optacessortag = nullptr);
+        void EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const Js::PropertyRecord* prop, const char16_t* optacessortag = nullptr);
+        void EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const char16_t* propName, const char16_t* optacessortag = nullptr);
 
         //Enqueue a child object that is stored at a special named location in the parent object
-        void EnqueueNewFunctionBodyObject(Js::RecyclableObject* parent, Js::FunctionBody* fbody, const char16* name);
+        void EnqueueNewFunctionBodyObject(Js::RecyclableObject* parent, Js::FunctionBody* fbody, const char16_t* name);
 
         //Add a well known token for a debugger scope object (in a slot array)
         void AddWellKnownDebuggerScopePath(Js::RecyclableObject* parent, Js::DebuggerScope* dbgScope, uint32 index);
@@ -318,7 +318,7 @@ namespace TTD
     }
 
     template <typename T, bool mustFind>
-    int32 LookupPositionInDictNameList(const char16* key, const JsUtil::BaseDictionary<T, UtilSupport::TTAutoString*, HeapAllocator>& objToNameMap, const JsUtil::List<T, HeapAllocator>& sortedObjList, const UtilSupport::TTAutoString& nullString)
+    int32 LookupPositionInDictNameList(const char16_t* key, const JsUtil::BaseDictionary<T, UtilSupport::TTAutoString*, HeapAllocator>& objToNameMap, const JsUtil::List<T, HeapAllocator>& sortedObjList, const UtilSupport::TTAutoString& nullString)
     {
         AssertMsg(sortedObjList.Count() != 0, "We are using this for matching so obviously no match and there is a problem.");
 

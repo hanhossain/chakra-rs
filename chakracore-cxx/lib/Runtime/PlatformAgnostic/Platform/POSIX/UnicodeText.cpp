@@ -24,12 +24,12 @@ namespace PlatformAgnostic
         // We actually don't care about the legacy behavior on xplat since no one
         // has a dependency on it. So this actually is different between
         // Windows and xplat
-        CharacterClassificationType GetLegacyCharacterClassificationType(char16 character)
+        CharacterClassificationType GetLegacyCharacterClassificationType(char16_t character)
         {
             return CharacterClassificationType::Invalid;
         }
 
-        int32 NormalizeString(NormalizationForm normalizationForm, const char16* sourceString, uint32 sourceLength, char16* destString, int32 destLength, ApiError* pErrorOut)
+        int32 NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32 sourceLength, char16_t* destString, int32 destLength, ApiError* pErrorOut)
         {
             *pErrorOut = ApiError::NoError;
             if (destString == nullptr)
@@ -38,18 +38,18 @@ namespace PlatformAgnostic
             }
 
             int32 len = (int32)minm(minm(destLength, sourceLength), INT_MAX);
-            memcpy(destString, sourceString, len * sizeof(char16));
+            memcpy(destString, sourceString, len * sizeof(char16_t));
 
             return len;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16* testString, int32 testStringLength) {
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32 testStringLength) {
             // TODO: implement this
             return true;
         }
 
         template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(const char16* sourceString, charcount_t sourceLength, char16* destString, charcount_t destLength, ApiError* pErrorOut)
+        charcount_t ChangeStringLinguisticCase(const char16_t* sourceString, charcount_t sourceLength, char16_t* destString, charcount_t destLength, ApiError* pErrorOut)
         {
             typedef WCHAR(*CaseConversionFunc)(WCHAR);
             *pErrorOut = ApiError::NoError;
@@ -123,7 +123,7 @@ namespace PlatformAgnostic
             }
         }
 
-        int LogicalStringCompare(const char16* string1, int str1size, const char16* string2, int str2size)
+        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size)
         {
             return PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl(string1, str1size, string2, str2size);
         }

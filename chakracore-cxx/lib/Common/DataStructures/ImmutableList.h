@@ -1019,7 +1019,7 @@ namespace regex
         template<class TAllocator>
         LPCWSTR Get(TAllocator *allocator)
         {
-            char16 *str = AllocatorNewArray(TAllocator, allocator, char16, stringSize);
+            char16_t *str = AllocatorNewArray(TAllocator, allocator, char16_t, stringSize);
             str[0] = _u('\0');
 
             auto current = head;

@@ -78,7 +78,7 @@ JsParseModuleSource(
         SourceContextInfo* sourceContextInfo = scriptContext->GetSourceContextInfo(sourceContext, nullptr);
         if (sourceContextInfo == nullptr)
         {
-            const char16 *moduleUrlSz = nullptr;
+            const char16_t *moduleUrlSz = nullptr;
             size_t moduleUrlLen = 0;
             if (moduleRecord->GetSpecifier())
             {
@@ -917,7 +917,7 @@ CHAKRA_API JsCreateStringUtf16(
 
     if (length == static_cast<size_t>(-1))
     {
-        length = wcslen((const char16 *)content);
+        length = wcslen((const char16_t *)content);
     }
 
     if (length > static_cast<CharCount>(-1))
@@ -928,7 +928,7 @@ CHAKRA_API JsCreateStringUtf16(
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
 
         Js::JavascriptString *stringValue = Js::LiteralStringWithPropertyStringPtr::
-            NewFromWideString((const char16 *)content, (CharCount)length, scriptContext->GetLibrary());
+            NewFromWideString((const char16_t *)content, (CharCount)length, scriptContext->GetLibrary());
 
         PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateString, stringValue->GetSz(), stringValue->GetLength());
 
@@ -1497,7 +1497,7 @@ JsQueueBackgroundParse_Experimental(
         // SourceContext not needed for BGParse
         && contents->sourceContext == 0)
     {
-        hr = BGParseManager::GetBGParseManager()->QueueBackgroundParse((LPUTF8)contents->container, contents->contentLengthInBytes, (char16*)contents->fullPath, dwBgParseCookie);
+        hr = BGParseManager::GetBGParseManager()->QueueBackgroundParse((LPUTF8)contents->container, contents->contentLengthInBytes, (char16_t*)contents->fullPath, dwBgParseCookie);
     }
     else
     {

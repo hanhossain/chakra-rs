@@ -33,7 +33,7 @@ namespace Js
     template <>
     JavascriptString* JavascriptTypedNumber<__int64>::ToString(Var value, ScriptContext* scriptContext)
     {
-        char16 szBuffer[22];
+        char16_t szBuffer[22];
         __int64 val = VarTo<JavascriptTypedNumber<__int64>>(value)->GetValue();
         int pos = TaggedInt::SignedToString(val, szBuffer, 22);
         return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);
@@ -42,7 +42,7 @@ namespace Js
     template <>
     JavascriptString* JavascriptTypedNumber<unsigned __int64>::ToString(Var value, ScriptContext* scriptContext)
     {
-        char16 szBuffer[22];
+        char16_t szBuffer[22];
         unsigned __int64 val = VarTo<JavascriptUInt64Number>(value)->GetValue();
         int pos = TaggedInt::UnsignedToString(val, szBuffer, 22);
         return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);

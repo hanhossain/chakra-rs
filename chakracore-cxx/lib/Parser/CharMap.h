@@ -45,12 +45,12 @@ namespace UnifiedRegex
     static const uint MaxCharMapLinearChars = 4;
 
     template <typename V>
-    class CharMap<char16, V, CharMapScheme_Linear> : private Chars<char16>
+    class CharMap<char16_t, V, CharMapScheme_Linear> : private Chars<char16_t>
     {
         template <typename C>
         friend class TextbookBoyerMooreWithLinearMap;
-        using typename Chars<char16>::Char;
-        using Chars<char16>::CTU;
+        using typename Chars<char16_t>::Char;
+        using Chars<char16_t>::CTU;
 
 
     private:
@@ -113,12 +113,12 @@ namespace UnifiedRegex
 
 
     template <typename V, CharMapScheme scheme>
-    class CharMap<char16, V, scheme> : private Chars<char16>
+    class CharMap<char16_t, V, scheme> : private Chars<char16_t>
     {
 //    public:
-        using Chars<char16>::Char;
-        using Chars<char16>::CharWidth;
-        using Chars<char16>::CTU;
+        using Chars<char16_t>::Char;
+        using Chars<char16_t>::CharWidth;
+        using Chars<char16_t>::CTU;
     private:
         static const int directBits = Chars<char>::CharWidth;
         static const int directSize = Chars<char>::NumChars;

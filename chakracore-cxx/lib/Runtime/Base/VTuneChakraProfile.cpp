@@ -47,11 +47,11 @@ void VTuneChakraProfile::LogMethodNativeLoadEvent(Js::FunctionBody* body, Js::Fu
     {
         iJIT_Method_Load methodInfo;
         memset(&methodInfo, 0, sizeof(iJIT_Method_Load));
-        const char16* methodName = body->GetExternalDisplayName();
+        const char16_t* methodName = body->GetExternalDisplayName();
         // Append function line number info to method name so that VTune can distinguish between polymorphic methods
-        char16 methodNameBuffer[_MAX_PATH];
+        char16_t methodNameBuffer[_MAX_PATH];
         uint32_t lineNumber = body->GetLineNumber();
-        char16 numberBuffer[20];
+        char16_t numberBuffer[20];
         _ltow_s(lineNumber, numberBuffer, 10);
         wcscpy_s(methodNameBuffer, methodName);
         if (entryPoint->GetJitMode() == ExecutionMode::SimpleJit)
@@ -124,7 +124,7 @@ void VTuneChakraProfile::LogLoopBodyLoadEvent(Js::FunctionBody* body, Js::LoopEn
     {
         iJIT_Method_Load methodInfo;
         memset(&methodInfo, 0, sizeof(iJIT_Method_Load));
-        const char16* methodName = body->GetExternalDisplayName();
+        const char16_t* methodName = body->GetExternalDisplayName();
         size_t methodLength = wcslen(methodName);
         charcount_t ccMethodLength = static_cast<charcount_t>(methodLength);
         ccMethodLength = min(ccMethodLength, UINT_MAX); // Just truncate if it is too big

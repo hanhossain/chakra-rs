@@ -54,7 +54,7 @@ public:
     static uint32_t IncCompleted();
     static uint32_t IncFailed();
 
-    HRESULT QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16 *fullPath, uint32_t* dwBgParseCookie);
+    HRESULT QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, char16_t *fullPath, uint32_t* dwBgParseCookie);
     HRESULT GetInputFromCookie(uint32_t cookie, LPCUTF8* ppszSrc, size_t* pcbLength, WCHAR** sourceUrl);
     HRESULT GetParseResults(
         Js::ScriptContext* scriptContextUI,
@@ -104,7 +104,7 @@ public:
         BGParseManager* manager,
         const byte* script,
         size_t cb,
-        char16 *fullPath
+        char16_t *fullPath
     );
     ~BGParseWorkItem();
 

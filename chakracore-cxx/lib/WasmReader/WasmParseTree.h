@@ -103,11 +103,11 @@ namespace Wasm
             AssertMsg(UNREACHED, "The WasmType case should have been handled");
         }
 
-        extern const char16* const strIds[Limit];
+        extern const char16_t* const strIds[Limit];
 
         bool IsLocalType(WasmTypes::WasmType type);
         uint32 GetTypeByteSize(WasmType type);
-        const char16* GetTypeName(WasmType type);
+        const char16_t* GetTypeName(WasmType type);
     }
     typedef WasmTypes::WasmType Local;
 
@@ -259,7 +259,7 @@ namespace Wasm
     {
         uint32 index;
         uint32 nameLength;
-        const char16* name;
+        const char16_t* name;
         ExternalKinds kind;
     };
 
@@ -267,14 +267,14 @@ namespace Wasm
     {
         ExternalKinds kind;
         uint32 modNameLen;
-        const char16* modName;
+        const char16_t* modName;
         uint32 importNameLen;
-        const char16* importName;
+        const char16_t* importName;
     };
 
     struct CustomSection
     {
-        const char16* name;
+        const char16_t* name;
         charcount_t nameLength;
         const byte* payload;
         uint32 payloadSize;

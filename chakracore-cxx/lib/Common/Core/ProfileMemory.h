@@ -119,7 +119,7 @@ private:
     static MemoryProfiler * EnsureMemoryProfiler();
     static void AccumulateData(ArenaMemoryDataSummary *, ArenaMemoryData *, bool reset = false);
     void Print();
-    void PrintArenaHeader(char16 const * title);
+    void PrintArenaHeader(char16_t const * title);
     static void PrintPageMemoryData(PageMemoryData const& pageMemoryData, char const * title);
 
 private:

@@ -865,7 +865,7 @@ unsigned int WINAPI StaticThreadProc(void *lpParam)
     return ExecuteTestWithMemoryCheck(argInfo->filename);
 }
 
-static char16** argv = nullptr;
+static char16_t** argv = nullptr;
 int main(int argc, char** c_argv)
 {
 #ifndef CHAKRA_STATIC_LIBRARY
@@ -873,7 +873,7 @@ int main(int argc, char** c_argv)
     PAL_InitializeChakraCore();
 #endif
     int origargc = argc; // store for clean-up later
-    argv = new char16*[argc];
+    argv = new char16_t*[argc];
     for (int i = 0; i < argc; i++)
     {
         NarrowStringToWideDynamic(c_argv[i], &argv[i]);

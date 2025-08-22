@@ -188,7 +188,7 @@ Var JavascriptAsyncGenerator::EnqueueRequest(
     ScriptContext* scriptContext,
     Var input,
     ResumeYieldKind resumeKind,
-    const char16* apiNameForErrorMessage)
+    const char16_t* apiNameForErrorMessage)
 {
     auto* promise = JavascriptPromise::CreateEnginePromise(scriptContext);
 

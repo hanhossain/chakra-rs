@@ -51,11 +51,11 @@ void WasmBytecodeGenerator::WriteTypeStack(WriteFn writefn) const
     writefn(_u("]"));
 }
 
-uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16* out, uint32 maxlen) const
+uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16_t* out, uint32 maxlen) const
 {
     AssertOrFailFast(out != nullptr);
     uint32 numwritten = 0;
-    WriteTypeStack([&] (const char16* msg)
+    WriteTypeStack([&] (const char16_t* msg)
     {
         numwritten += _snwprintf_s(out + numwritten, maxlen - numwritten, _TRUNCATE, msg);
     });
@@ -75,7 +75,7 @@ uint32 WasmBytecodeGenerator::WriteTypeStackToString(_Out_writes_(maxlen) char16
 #if DBG_DUMP
 void WasmBytecodeGenerator::PrintTypeStack() const
 {
-    WriteTypeStack([](const char16* msg) { Output::Print(msg); });
+    WriteTypeStack([](const char16_t* msg) { Output::Print(msg); });
 }
 
 void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
@@ -331,17 +331,17 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
     if (firstThunk)
     {
         int sourceId = (int)firstThunk->GetBody()->GetSourceContextId();
-        char16 range[64];
+        char16_t range[64];
         swprintf_s(range, 64, _u("%d.%d-%d.%d"),
                    sourceId, firstThunk->GetBody()->GetLocalFunctionId(),
                    sourceId, lastThunk->GetBody()->GetLocalFunctionId());
-        char16 offFullJit[128];
+        char16_t offFullJit[128];
         swprintf_s(offFullJit, 128, _u("-off:fulljit:%s"), range);
-        char16 offSimpleJit[128];
+        char16_t offSimpleJit[128];
         swprintf_s(offSimpleJit, 128, _u("-off:simplejit:%s"), range);
-        char16 offLoopJit[128];
+        char16_t offLoopJit[128];
         swprintf_s(offLoopJit, 128, _u("-off:jitloopbody:%s"), range);
-        char16* argv[] = { nullptr, offFullJit, offSimpleJit, offLoopJit };
+        char16_t* argv[] = { nullptr, offFullJit, offSimpleJit, offLoopJit };
         CmdLineArgsParser parser(nullptr);
         parser.Parse(ARRAYSIZE(argv), argv);
     }
@@ -369,7 +369,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
         throw WasmCompilationException(_u("Invalid function index %u"), index);
     }
 
-    const char16* functionName = nullptr;
+    const char16_t* functionName = nullptr;
     int nameLength = 0;
 
     if (wasmInfo->GetNameLength() > 0)
@@ -389,7 +389,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
                 wasmExport->index == wasmInfo->GetNumber())
             {
                 nameLength = wasmExport->nameLength + 16;
-                char16 * autoName = RecyclerNewArrayLeafZ(m_recycler, char16, nameLength);
+                char16_t * autoName = RecyclerNewArrayLeafZ(m_recycler, char16_t, nameLength);
                 nameLength = swprintf_s(autoName, nameLength, _u("%s[%u]"), wasmExport->name, wasmInfo->GetNumber());
                 functionName = autoName;
                 break;
@@ -399,7 +399,7 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32 index)
 
     if (!functionName)
     {
-        char16* autoName = RecyclerNewArrayLeafZ(m_recycler, char16, 32);
+        char16_t* autoName = RecyclerNewArrayLeafZ(m_recycler, char16_t, 32);
         nameLength = swprintf_s(autoName, 32, _u("wasm-function[%u]"), wasmInfo->GetNumber());
         functionName = autoName;
     }
@@ -2041,7 +2041,7 @@ WasmRegisterSpace* WasmBytecodeGenerator::GetRegisterSpace(WasmTypes::WasmType t
     }
 }
 
-PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(PolymorphicEmitInfo expectedTypes, const char16* mismatchMessage /*= nullptr*/)
+PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(PolymorphicEmitInfo expectedTypes, const char16_t* mismatchMessage /*= nullptr*/)
 {
     PolymorphicEmitInfo info;
     uint32 count = expectedTypes.Count();
@@ -2063,12 +2063,12 @@ PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(PolymorphicEmitIn
 }
 
 
-PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(const BlockInfo* blockInfo, const char16* mismatchMessage)
+PolymorphicEmitInfo WasmBytecodeGenerator::PopStackPolymorphic(const BlockInfo* blockInfo, const char16_t* mismatchMessage)
 {
     return PopStackPolymorphic(blockInfo->yieldInfo, mismatchMessage);
 }
 
-EmitInfo WasmBytecodeGenerator::PopEvalStack(WasmTypes::WasmType expectedType, const char16* mismatchMessage)
+EmitInfo WasmBytecodeGenerator::PopEvalStack(WasmTypes::WasmType expectedType, const char16_t* mismatchMessage)
 {
     // The scope marker should at least be there
     Assert(!m_evalStack.Empty());
@@ -2124,7 +2124,7 @@ void WasmBytecodeGenerator::ExitEvalStackScope(const BlockInfo* blockInfo)
     {
         // Put info back on stack so we can write it to string
         m_evalStack.Push(info);
-        char16 buf[512] = { 0 };
+        char16_t buf[512] = { 0 };
         WriteTypeStackToString(buf, 512);
         throw WasmCompilationException(_u("Expected stack to be empty, but has %s"), buf);
     }
@@ -2172,22 +2172,22 @@ Wasm::WasmReaderBase* WasmBytecodeGenerator::GetReader() const
     return m_module->GetReader();
 }
 
-void WasmCompilationException::FormatError(const char16* _msg, va_list arglist)
+void WasmCompilationException::FormatError(const char16_t* _msg, va_list arglist)
 {
-    char16 buf[2048];
+    char16_t buf[2048];
 
     _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, _msg, arglist);
     errorMsg = SysAllocString(buf);
 }
 
-WasmCompilationException::WasmCompilationException(const char16* _msg, ...) : errorMsg(nullptr)
+WasmCompilationException::WasmCompilationException(const char16_t* _msg, ...) : errorMsg(nullptr)
 {
     va_list arglist;
     va_start(arglist, _msg);
     FormatError(_msg, arglist);
 }
 
-WasmCompilationException::WasmCompilationException(const char16* _msg, va_list arglist) : errorMsg(nullptr)
+WasmCompilationException::WasmCompilationException(const char16_t* _msg, va_list arglist) : errorMsg(nullptr)
 {
     FormatError(_msg, arglist);
 }

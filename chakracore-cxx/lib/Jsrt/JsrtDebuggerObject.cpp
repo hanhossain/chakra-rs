@@ -468,7 +468,7 @@ Js::DynamicObject * JsrtDebuggerStackFrame::GetLocalsObject(Js::ScriptContext* s
     return propertiesObject;
 }
 
-bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const char16 *source, int sourceLength, bool isLibraryCode, bool forceSetValueProp, Js::DynamicObject** evalResult)
+bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const char16_t *source, int sourceLength, bool isLibraryCode, bool forceSetValueProp, Js::DynamicObject** evalResult)
 {
     *evalResult = nullptr;
     bool success = false;

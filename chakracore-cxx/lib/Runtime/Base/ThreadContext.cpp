@@ -824,7 +824,7 @@ ThreadContext::IsNumericProperty(Js::PropertyId propertyId)
 }
 
 const Js::PropertyRecord *
-ThreadContext::FindPropertyRecord(const char16 * propertyName, int propertyNameLength)
+ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNameLength)
 {
     // IsDirectPropertyName == 1 char properties && GetEmptyStringPropertyRecord == 0 length
     if (propertyNameLength < 2)
@@ -837,12 +837,12 @@ ThreadContext::FindPropertyRecord(const char16 * propertyName, int propertyNameL
     if (IsDirectPropertyName(propertyName, propertyNameLength))
     {
             Js::PropertyRecord const * propertyRecord = propertyNamesDirect[propertyName[0]];
-        Assert(propertyRecord == propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16>(propertyName, propertyNameLength)));
+        Assert(propertyRecord == propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(propertyName, propertyNameLength)));
             return propertyRecord;
     }
     }
 
-    return propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16>(propertyName, propertyNameLength));
+    return propertyMap->LookupWithKey(Js::HashedCharacterBuffer<char16_t>(propertyName, propertyNameLength));
 }
 
 Js::PropertyRecord const *
@@ -896,7 +896,7 @@ void ThreadContext::UncheckedAddBuiltInPropertyId()
 }
 
 bool
-ThreadContext::IsDirectPropertyName(const char16 * propertyName, int propertyNameLength)
+ThreadContext::IsDirectPropertyName(const char16_t * propertyName, int propertyNameLength)
 {
     return ((propertyNameLength == 1) && ((propertyName[0] & 0xFF80) == 0));
 }
@@ -954,8 +954,8 @@ ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<WCHAR> const& prop
     // Create the PropertyRecord
 
     int length = propertyName.GetLength();
-    uint bytelength = sizeof(char16) * length;
-    size_t allocLength = bytelength + sizeof(char16) + ( (!isSymbol && length <= 10 && length > 0) ? sizeof(uint32) : 0);
+    uint bytelength = sizeof(char16_t) * length;
+    size_t allocLength = bytelength + sizeof(char16_t) + ( (!isSymbol && length <= 10 && length > 0) ? sizeof(uint32) : 0);
 
     // If it's bound, create it in the thread arena, along with a fake weak ref
     Js::PropertyRecord * propertyRecord;
@@ -993,7 +993,7 @@ ThreadContext::AddPropertyRecordInternal(const Js::PropertyRecord * propertyReco
 {
     // At this point the PropertyRecord is constructed but not added to the map.
 
-    const char16 * propertyName = propertyRecord->GetBuffer();
+    const char16_t * propertyName = propertyRecord->GetBuffer();
     int propertyNameLength = propertyRecord->GetLength();
     Js::PropertyId propertyId = propertyRecord->GetPropertyId();
 
@@ -1116,7 +1116,7 @@ void ThreadContext::GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<WCHAR> const
 }
 
 const Js::PropertyRecord *
-ThreadContext::GetOrAddPropertyRecordImpl(JsUtil::CharacterBuffer<char16> propertyName, bool bind)
+ThreadContext::GetOrAddPropertyRecordImpl(JsUtil::CharacterBuffer<char16_t> propertyName, bool bind)
 {
     // Make sure the recycler is around so that we can take weak references to the property strings
     EnsureRecycler();
@@ -4215,16 +4215,16 @@ void ThreadContext::EnsureSymbolRegistrationMap()
     }
 }
 
-const Js::PropertyRecord* ThreadContext::GetSymbolFromRegistrationMap(const char16* stringKey, charcount_t stringLength)
+const Js::PropertyRecord* ThreadContext::GetSymbolFromRegistrationMap(const char16_t* stringKey, charcount_t stringLength)
 {
     this->EnsureSymbolRegistrationMap();
 
-    Js::HashedCharacterBuffer<char16> propertyName = Js::HashedCharacterBuffer<char16>(stringKey, stringLength);
+    Js::HashedCharacterBuffer<char16_t> propertyName = Js::HashedCharacterBuffer<char16_t>(stringKey, stringLength);
 
     return this->recyclableData->symbolRegistrationMap->LookupWithKey(&propertyName, nullptr);
 }
 
-const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16* stringKey, charcount_t stringLength)
+const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16_t* stringKey, charcount_t stringLength)
 {
     this->EnsureSymbolRegistrationMap();
 
@@ -4236,14 +4236,14 @@ const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16
     // However, as the key contains a null character we need to hash the symbol name past the null character. The default implementation terminates
     // at the null character, so we use the Js::HashedCharacterBuffer as key. We allocate the key in the recycler memory as it needs to be around
     // for the lifetime of the map.
-    Js::HashedCharacterBuffer<char16> * propertyName = RecyclerNew(GetRecycler(), Js::HashedCharacterBuffer<char16>, propertyRecord->GetBuffer(), propertyRecord->GetLength());
+    Js::HashedCharacterBuffer<char16_t> * propertyName = RecyclerNew(GetRecycler(), Js::HashedCharacterBuffer<char16_t>, propertyRecord->GetBuffer(), propertyRecord->GetLength());
     this->recyclableData->symbolRegistrationMap->Add(propertyName, propertyRecord);
 
     return propertyRecord;
 }
 
 #if ENABLE_TTD
-JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* ThreadContext::GetSymbolRegistrationMap_TTD()
+JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* ThreadContext::GetSymbolRegistrationMap_TTD()
 {
     //This adds a little memory but makes simplifies other logic -- maybe revise later
     this->EnsureSymbolRegistrationMap();
@@ -4359,7 +4359,7 @@ UnifiedRegex::StandardChars<uint8_t>* ThreadContext::GetStandardChars(__inout_op
     return standardUTF8Chars;
 }
 
-UnifiedRegex::StandardChars<char16>* ThreadContext::GetStandardChars(__inout_opt char16* dummy)
+UnifiedRegex::StandardChars<char16_t>* ThreadContext::GetStandardChars(__inout_opt char16_t* dummy)
 {
     if (standardUnicodeChars == 0)
     {

@@ -1421,7 +1421,7 @@ Symbol* Parser::AddDeclForPid(ParseNodeVar * pnodeVar, IdentPtr pid, SymbolType 
 
         if (!sym)
         {
-            const char16 *name = reinterpret_cast<const char16*>(pid->Psz());
+            const char16_t *name = reinterpret_cast<const char16_t*>(pid->Psz());
             int nameLength = pid->Cch();
             SymbolName const symName(name, nameLength);
 
@@ -9957,7 +9957,7 @@ ParseNodeCatch * Parser::ParseCatch()
             ParseNodeName * pnodeParam = CreateNameNode(pidCatch);
             pnodeParam->SetSymRef(ref);
 
-            const char16 *name = reinterpret_cast<const char16*>(pidCatch->Psz());
+            const char16_t *name = reinterpret_cast<const char16_t*>(pidCatch->Psz());
             int nameLength = pidCatch->Cch();
             SymbolName const symName(name, nameLength);
             Symbol *sym = Anew(&m_nodeAllocator, Symbol, symName, pnodeParam, STVariable);

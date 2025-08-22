@@ -26,7 +26,7 @@ namespace Js
             Assert(type->GetTypeId() == TypeIds_BigInt);
         }
 
-        JavascriptBigInt(const char16 * content, charcount_t cchUseLength, bool isNegative, StaticType * type)
+        JavascriptBigInt(const char16_t * content, charcount_t cchUseLength, bool isNegative, StaticType * type)
             : JavascriptBigInt(type)
         {
             Assert(type->GetTypeId() == TypeIds_BigInt);
@@ -49,7 +49,7 @@ namespace Js
         static JavascriptBigInt * CreateZero(ScriptContext * scriptContext);
         static JavascriptBigInt * CreateZeroWithLength(digit_t length, ScriptContext * scriptContext);
         static JavascriptBigInt * CreateOne(ScriptContext * scriptContext);
-        static JavascriptBigInt * Create(const char16 * content, charcount_t cchUseLength, bool isNegative, ScriptContext * scriptContext);
+        static JavascriptBigInt * Create(const char16_t * content, charcount_t cchUseLength, bool isNegative, ScriptContext * scriptContext);
         virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
         class EntryInfo

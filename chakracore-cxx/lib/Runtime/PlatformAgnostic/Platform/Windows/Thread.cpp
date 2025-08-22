@@ -13,7 +13,7 @@ namespace PlatformAgnostic
                                         unsigned (*start_address )( void * ),
                                         void* arg_list,
                                         ThreadInitFlag init_flag,
-                                        const char16* description)
+                                        const char16_t* description)
     {
         unsigned int flag = 0;
 

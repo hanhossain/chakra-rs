@@ -603,7 +603,7 @@ namespace TTD
 
     //////////////////
 
-    void RuntimeContextInfo::BuildPathString(UtilSupport::TTAutoString rootpath, const char16* name, const char16* optaccessortag, UtilSupport::TTAutoString& into)
+    void RuntimeContextInfo::BuildPathString(UtilSupport::TTAutoString rootpath, const char16_t* name, const char16_t* optaccessortag, UtilSupport::TTAutoString& into)
     {
         into.Append(rootpath);
         into.Append(_u("."));
@@ -875,7 +875,7 @@ namespace TTD
 
     ////
 
-    void RuntimeContextInfo::EnqueueRootPathObject(const char16* rootName, Js::RecyclableObject* obj)
+    void RuntimeContextInfo::EnqueueRootPathObject(const char16_t* rootName, Js::RecyclableObject* obj)
     {
         this->m_worklist.Enqueue(obj);
 
@@ -885,12 +885,12 @@ namespace TTD
         this->m_coreObjToPathMap.AddNew(obj, rootStr);
     }
 
-    void RuntimeContextInfo::EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const Js::PropertyRecord* prop, const char16* optacessortag)
+    void RuntimeContextInfo::EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const Js::PropertyRecord* prop, const char16_t* optacessortag)
     {
         this->EnqueueNewPathVarAsNeeded(parent, val, prop->GetBuffer(), optacessortag);
     }
 
-    void RuntimeContextInfo::EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const char16* propName, const char16* optacessortag)
+    void RuntimeContextInfo::EnqueueNewPathVarAsNeeded(Js::RecyclableObject* parent, Js::Var val, const char16_t* propName, const char16_t* optacessortag)
     {
         if(JsSupport::IsVarTaggedInline(val))
         {
@@ -923,7 +923,7 @@ namespace TTD
         }
     }
 
-    void RuntimeContextInfo::EnqueueNewFunctionBodyObject(Js::RecyclableObject* parent, Js::FunctionBody* fbody, const char16* name)
+    void RuntimeContextInfo::EnqueueNewFunctionBodyObject(Js::RecyclableObject* parent, Js::FunctionBody* fbody, const char16_t* name)
     {
         if(!this->m_coreBodyToPathMap.ContainsKey(fbody))
         {

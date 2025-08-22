@@ -626,7 +626,7 @@ void LegalizeMD::LegalizeIndirOpndForVFP(IR::Instr* insertInstr, IR::IndirOpnd *
 
 #ifdef DBG
 
-void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16 * msg, ...)
+void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16_t * msg, ...)
 {
     va_list argptr;
     va_start(argptr, msg);

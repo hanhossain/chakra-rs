@@ -17,7 +17,7 @@ char const * const RegNames[RegNumCount] =
 #undef REGDAT
 };
 
-char16 const * const RegNamesW[RegNumCount] =
+char16_t const * const RegNamesW[RegNumCount] =
 {
 #define REGDAT(Name, ListName, ...) _u("") STRINGIZEW(ListName) _u(""),
 #include "RegList.h"
@@ -1999,7 +1999,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
 #if DBG_DUMP
         if(PHASE_DUMP(Js::BailOutPhase, this->func))
         {
-            char16 debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
+            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
             Output::Print(_u("Bailout function: %s [%s]\n"), funcBailOutData[i].func->GetJITFunctionBody()->GetDisplayName(), funcBailOutData[i].func->GetDebugNumberSet(debugStringBuffer), i);
             funcBailOutData[i].bailOutRecord->Dump();
         }

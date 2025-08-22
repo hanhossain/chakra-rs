@@ -225,7 +225,7 @@ namespace Js
         }
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-        const char16 *LayoutString() const
+        const char16_t *LayoutString() const
         {
             if (IsEmpty())
             {

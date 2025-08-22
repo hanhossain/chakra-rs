@@ -51,8 +51,8 @@ namespace Js {
     private:
         struct WAsmJsMemTag
         {
-            char16 valueTag;
-            const char16 * heapTag;
+            char16_t valueTag;
+            const char16_t * heapTag;
         };
         static void InitializeWAsmJsMemTag(ArrayBufferView::ViewType type, _Out_ WAsmJsMemTag * tag);
     };

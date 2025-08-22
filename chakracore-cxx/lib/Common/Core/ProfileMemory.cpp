@@ -272,7 +272,7 @@ MemoryProfiler::Print()
 }
 
 void
-MemoryProfiler::PrintArenaHeader(char16 const * title)
+MemoryProfiler::PrintArenaHeader(char16_t const * title)
 {
     Output::Print(_u("--------------------------------------------------------------------------------------------------------\n"));
 

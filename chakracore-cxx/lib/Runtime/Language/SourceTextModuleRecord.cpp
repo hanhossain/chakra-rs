@@ -118,9 +118,9 @@ namespace Js
             hr = E_FAIL;
 
             // We cannot just use the buffer in the specifier string - need to make a copy here.
-            const char16* moduleName = this->GetSpecifierSz();
+            const char16_t* moduleName = this->GetSpecifierSz();
             size_t length = wcslen(moduleName);
-            char16* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, length + 1);
+            char16_t* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, length + 1);
             wmemcpy_s(allocatedString, length + 1, moduleName, length);
             allocatedString[length] = _u('\0');
 
@@ -345,9 +345,9 @@ namespace Js
                 this->ReleaseParserResourcesForHierarchy();
 
                 // We cannot just use the buffer in the specifier string - need to make a copy here.
-                const char16* moduleName = this->GetSpecifierSz();
+                const char16_t* moduleName = this->GetSpecifierSz();
                 size_t length = wcslen(moduleName);
-                char16* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16, length + 1);
+                char16_t* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, length + 1);
                 wmemcpy_s(allocatedString, length + 1, moduleName, length);
                 allocatedString[length] = _u('\0');
 

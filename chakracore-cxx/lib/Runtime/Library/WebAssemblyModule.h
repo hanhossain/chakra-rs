@@ -25,7 +25,7 @@ namespace Wasm
 
 namespace Js
 {
-typedef HeapAllocator::AutoFreeArray<char16> AutoFreeExceptionMessage;
+typedef HeapAllocator::AutoFreeArray<char16_t> AutoFreeExceptionMessage;
 
 class WebAssemblyModule : public DynamicObject
 {
@@ -100,15 +100,15 @@ public:
 
     void AllocateFunctionExports(uint32 entries);
     uint GetExportCount() const { return m_exportCount; }
-    void SetExport(uint32 iExport, uint32 funcIndex, const char16* exportName, uint32 nameLength, Wasm::ExternalKinds kind);
+    void SetExport(uint32 iExport, uint32 funcIndex, const char16_t* exportName, uint32 nameLength, Wasm::ExternalKinds kind);
     Wasm::WasmExport* GetExport(uint32 iExport) const;
 
     uint32 GetImportCount() const;
     Wasm::WasmImport* GetImport(uint32 i) const;
-    void AddFunctionImport(uint32 sigId, const char16* modName, uint32 modNameLen, const char16* fnName, uint32 fnNameLen);
-    void AddGlobalImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen);
-    void AddMemoryImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen);
-    void AddTableImport(const char16* modName, uint32 modNameLen, const char16* importName, uint32 importNameLen);
+    void AddFunctionImport(uint32 sigId, const char16_t* modName, uint32 modNameLen, const char16_t* fnName, uint32 fnNameLen);
+    void AddGlobalImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
+    void AddMemoryImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
+    void AddTableImport(const char16_t* modName, uint32 modNameLen, const char16_t* importName, uint32 importNameLen);
     uint32 GetImportedFunctionCount() const { return m_importedFunctionCount; }
 
     uint GetOffsetFromInit(const Wasm::WasmNode& initExpr, const class WebAssemblyEnvironment* env) const;
@@ -151,7 +151,7 @@ public:
 
     Wasm::WasmBinaryReader* GetReader() const { return m_reader; }
 
-    static char16* FormatExceptionMessage(Wasm::WasmCompilationException* ex, AutoFreeExceptionMessage* autoClean, WebAssemblyModule* wasmModule = nullptr, FunctionBody* body = nullptr);
+    static char16_t* FormatExceptionMessage(Wasm::WasmCompilationException* ex, AutoFreeExceptionMessage* autoClean, WebAssemblyModule* wasmModule = nullptr, FunctionBody* body = nullptr);
 
     virtual void Finalize(bool isShutdown) override;
     virtual void Dispose(bool isShutdown) override;

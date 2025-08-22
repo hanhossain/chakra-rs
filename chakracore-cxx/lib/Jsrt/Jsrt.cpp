@@ -4746,7 +4746,7 @@ JsErrorCode WriteStringCopy(
         *written = 0;  // init to 0 for default
     }
 
-    const char16* str = nullptr;
+    const char16_t* str = nullptr;
     size_t strLength = 0;
     JsErrorCode errorCode = JsStringToPointer(value, &str, &strLength);
     if (errorCode != JsNoError)
@@ -4790,11 +4790,11 @@ CHAKRA_API JsCopyStringUtf16(
     VALIDATE_JSREF(value);
 
     return WriteStringCopy(value, start, length, written,
-        [buffer](const char16* src, size_t count, size_t *needed)
+        [buffer](const char16_t* src, size_t count, size_t *needed)
         {
             if (buffer)
             {
-                memmove(buffer, src, sizeof(char16) * count);
+                memmove(buffer, src, sizeof(char16_t) * count);
             }
             return JsNoError;
         });
@@ -4809,7 +4809,7 @@ CHAKRA_API JsCopyString(
     PARAM_NOT_NULL(value);
     VALIDATE_JSREF(value);
 
-    const char16* str = nullptr;
+    const char16_t* str = nullptr;
     size_t strLength = 0;
     JsErrorCode errorCode = JsStringToPointer(value, &str, &strLength);
     if (errorCode != JsNoError)
@@ -4872,7 +4872,7 @@ inline JsErrorCode CompileRun(
             Js::JavascriptString* jsString = Js::VarTo<Js::JavascriptString>(scriptVal);
             script = (const byte*)jsString->GetSz();
 
-            // JavascriptString is 2 bytes (WCHAR/char16)
+            // JavascriptString is 2 bytes (WCHAR/char16_t)
             cb = jsString->GetLength() * sizeof(WCHAR);
         }
 
@@ -4941,7 +4941,7 @@ CHAKRA_API JsCopyPropertyId(
 {
     PARAM_NOT_NULL(propertyId);
 
-    const char16* str = nullptr;
+    const char16_t* str = nullptr;
     JsErrorCode errorCode = JsGetPropertyNameFromId(propertyId, &str);
 
     if (errorCode != JsNoError)
@@ -5105,7 +5105,7 @@ CHAKRA_API JsCopyStringOneByte(
     PARAM_NOT_NULL(value);
     VALIDATE_JSREF(value);
     return WriteStringCopy(value, start, length, written,
-        [buffer](const char16* src, size_t count, size_t *needed)
+        [buffer](const char16_t* src, size_t count, size_t *needed)
     {
         if (buffer)
         {

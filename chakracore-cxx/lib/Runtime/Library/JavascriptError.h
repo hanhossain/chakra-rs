@@ -157,11 +157,11 @@ namespace Js
         Field(BOOL) isExternalError;
         Field(BOOL) isPrototype;
         Field(bool) isStackPropertyRedefined;
-        Field(char16 const *) originalRuntimeErrorMessage;
+        Field(char16_t const *) originalRuntimeErrorMessage;
         Field(JavascriptExceptionObject *) exceptionObject;
 
 #ifdef ERROR_TRACE
-        static void Trace(const char16 *form, ...) // const
+        static void Trace(const char16_t *form, ...) // const
         {
             if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::ErrorPhase))
             {

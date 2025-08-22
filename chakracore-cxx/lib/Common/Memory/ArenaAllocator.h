@@ -174,7 +174,7 @@ public:
     static const bool FakeZeroLengthArray = true;
     static const size_t MaxSmallObjectSize = 1024;
 
-    ArenaAllocatorBase(char16 const* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory);
+    ArenaAllocatorBase(char16_t const* name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)(), void (*recoverMemoryFunc)() = JsUtil::ExternalApi::RecoverUnusedMemory);
     ~ArenaAllocatorBase();
 
     void Reset()

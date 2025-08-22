@@ -458,7 +458,7 @@ FlowGraph::Build(void)
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16 * regMap[] = { _u("RegionTypeInvalid"),
+                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
                         _u("RegionTypeRoot"),
                         _u("RegionTypeTry"),
                         _u("RegionTypeCatch"),
@@ -611,7 +611,7 @@ FlowGraph::Build(void)
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16 * regMap[] = { _u("RegionTypeInvalid"),
+                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
                         _u("RegionTypeRoot"),
                         _u("RegionTypeTry"),
                         _u("RegionTypeCatch"),
@@ -657,7 +657,7 @@ FlowGraph::Build(void)
                 Region *region = block->GetFirstInstr()->AsLabelInstr()->GetRegion();
                 if (region)
                 {
-                    const char16 * regMap[] = { _u("RegionTypeInvalid"),
+                    const char16_t * regMap[] = { _u("RegionTypeInvalid"),
                     _u("RegionTypeRoot"),
                     _u("RegionTypeTry"),
                     _u("RegionTypeCatch"),
@@ -3980,7 +3980,7 @@ FlowGraph::VerifyLoopGraph()
 #if DBG_DUMP
 
 void
-FlowGraph::Dump(bool onlyOnVerboseMode, const char16 *form)
+FlowGraph::Dump(bool onlyOnVerboseMode, const char16_t *form)
 {
     if(PHASE_DUMP(Js::FGBuildPhase, this->GetFunc()))
     {

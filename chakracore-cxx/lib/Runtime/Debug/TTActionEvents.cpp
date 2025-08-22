@@ -949,14 +949,14 @@ namespace TTD
 
             if(sourceContextInfo == nullptr)
             {
-                const char16* srcUri = cpAction->SourceUri.Contents;
+                const char16_t* srcUri = cpAction->SourceUri.Contents;
                 uint32 srcUriLength = cpAction->SourceUri.Length;
 
                 sourceContextInfo = ctx->CreateSourceContextInfo((DWORD_PTR)cpAction->SourceContextId, srcUri, srcUriLength, nullptr);
             }
 
-            TTDAssert(cpAction->IsUtf8 || sizeof(wchar) == sizeof(char16), "Non-utf8 code only allowed on windows!!!");
-            const int chsize = (cpAction->LoadFlag & LoadScriptFlag_Utf8Source) ? sizeof(char) : sizeof(char16);
+            TTDAssert(cpAction->IsUtf8 || sizeof(wchar) == sizeof(char16_t), "Non-utf8 code only allowed on windows!!!");
+            const int chsize = (cpAction->LoadFlag & LoadScriptFlag_Utf8Source) ? sizeof(char) : sizeof(char16_t);
             SRCINFO si = {
                 /* sourceContextInfo   */ sourceContextInfo,
                 /* dlnHost             */ 0,

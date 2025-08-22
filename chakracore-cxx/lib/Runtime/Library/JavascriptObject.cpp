@@ -2071,20 +2071,20 @@ bool JavascriptObject::IsPrototypeOfStopAtProxy(RecyclableObject* proto, Recycla
 static const size_t ConstructNameGetSetLength = 5;    // 5 = 1 ( for .) + 3 (get or set) + 1 for null)
 
 /*static*/
-char16 * JavascriptObject::ConstructName(const PropertyRecord * propertyRecord, const char16 * getOrSetStr, ScriptContext* scriptContext)
+char16_t * JavascriptObject::ConstructName(const PropertyRecord * propertyRecord, const char16_t * getOrSetStr, ScriptContext* scriptContext)
 {
     Assert(propertyRecord);
     Assert(scriptContext);
-    char16 * finalName = nullptr;
+    char16_t * finalName = nullptr;
     size_t propertyLength = (size_t)propertyRecord->GetLength();
     if (propertyLength > 0)
     {
         size_t totalChars;
         if (SizeTAdd(propertyLength, ConstructNameGetSetLength, &totalChars) == S_OK)
         {
-            finalName = RecyclerNewArrayLeafZ(scriptContext->GetRecycler(), char16, totalChars);
+            finalName = RecyclerNewArrayLeafZ(scriptContext->GetRecycler(), char16_t, totalChars);
             Assert(finalName != nullptr);
-            const char16* propertyName = propertyRecord->GetBuffer();
+            const char16_t* propertyName = propertyRecord->GetBuffer();
             Assert(propertyName != nullptr);
             wcscpy_s(finalName, totalChars, propertyName);
 
@@ -2111,7 +2111,7 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
             && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetGetter())->GetFunctionProxy()->GetDisplayName(), _u("get")) == 0)
         {
             // modify to name.get
-            const char16* finalName = ConstructName(propertyRecord, _u(".get"), scriptContext);
+            const char16_t* finalName = ConstructName(propertyRecord, _u(".get"), scriptContext);
             if (finalName != nullptr)
             {
                 FunctionProxy::SetDisplayNameFlags flags = (FunctionProxy::SetDisplayNameFlags) (FunctionProxy::SetDisplayNameFlagsDontCopy | FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);
@@ -2126,7 +2126,7 @@ void JavascriptObject::ModifyGetterSetterFuncName(const PropertyRecord * propert
             && _wcsicmp(Js::VarTo<Js::ScriptFunction>(descriptor.GetSetter())->GetFunctionProxy()->GetDisplayName(), _u("set")) == 0)
         {
             // modify to name.set
-            const char16* finalName = ConstructName(propertyRecord, _u(".set"), scriptContext);
+            const char16_t* finalName = ConstructName(propertyRecord, _u(".set"), scriptContext);
             if (finalName != nullptr)
             {
                 FunctionProxy::SetDisplayNameFlags flags = (FunctionProxy::SetDisplayNameFlags) (FunctionProxy::SetDisplayNameFlagsDontCopy | FunctionProxy::SetDisplayNameFlagsRecyclerAllocated);

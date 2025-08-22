@@ -469,7 +469,7 @@ public:
     }
 
 #if DBG_DUMP
-    const char16 *GetSymbolTypeName();
+    const char16_t *GetSymbolTypeName();
 #endif
 
     const JsUtil::CharacterBuffer<WCHAR>& GetName() const

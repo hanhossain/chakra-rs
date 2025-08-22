@@ -58,7 +58,7 @@ public:                                                   \
 #undef INITIALIZE
 
 private:
-    template <bool withPropertyString, size_t N> JavascriptString* InitializeString(const char16(&value)[N]) const
+    template <bool withPropertyString, size_t N> JavascriptString* InitializeString(const char16_t(&value)[N]) const
     {
         if (withPropertyString)
         {

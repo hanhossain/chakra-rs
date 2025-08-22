@@ -12,7 +12,7 @@ namespace Arrays
 
     class ArrayLocalization
     {
-        char16 localeSeparator;
+        char16_t localeSeparator;
 
         static const uint16 BufSize = 256;
 
@@ -20,7 +20,7 @@ namespace Arrays
 
         ArrayLocalization();
 
-        inline char16 GetLocaleSeparator() { return localeSeparator; }
+        inline char16_t GetLocaleSeparator() { return localeSeparator; }
     };
 
 #endif   
@@ -28,10 +28,10 @@ namespace Arrays
     static const uint32 SeparatorBufferSize = 6;
 
     // According to MSDN the maximum number of characters for the list separator (LOCALE_SLIST) is four, including a terminating null character.
-    bool GetLocaleSeparator(char16* szSeparator, uint32* sepOutLength, uint32 sepBufferSize);
+    bool GetLocaleSeparator(char16_t* szSeparator, uint32* sepOutLength, uint32 sepBufferSize);
 
     template <uint32 sepBufferSize>
-    inline bool GetLocaleSeparator(char16(&szSeparator)[sepBufferSize], uint32 *sepOutLength)
+    inline bool GetLocaleSeparator(char16_t(&szSeparator)[sepBufferSize], uint32 *sepOutLength)
     {
         return GetLocaleSeparator(szSeparator, sepOutLength, sepBufferSize);
     }

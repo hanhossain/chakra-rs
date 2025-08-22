@@ -8,8 +8,8 @@
 
 namespace UnifiedRegex
 {
-    const char16* RegexStats::PhaseNames[RegexStats::NumPhases] = { _u("parse"), _u("compile"), _u("execute") };
-    const char16* RegexStats::UseNames[RegexStats::NumUses] = { _u("match"), _u("exec"), _u("test"), _u("replace"), _u("split"), _u("search") };
+    const char16_t* RegexStats::PhaseNames[RegexStats::NumPhases] = { _u("parse"), _u("compile"), _u("execute") };
+    const char16_t* RegexStats::UseNames[RegexStats::NumUses] = { _u("match"), _u("exec"), _u("test"), _u("replace"), _u("split"), _u("search") };
 
     RegexStats::RegexStats(RegexPattern* pattern)
         : pattern(pattern)

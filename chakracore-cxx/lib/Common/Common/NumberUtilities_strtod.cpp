@@ -24,9 +24,9 @@ static const double g_rgdblTens[] =
     1e20, 1e21, 1e22, 1e23, 1e24, 1e25, 1e26, 1e27, 1e28
 };
 
-static inline char16 ToDigit(int32 wVal)
+static inline char16_t ToDigit(int32 wVal)
 {
-    //return reinterpret_cast<char16>((wVal < 10) ? '0' + (ushort) wVal : 'a' - 10 + (ushort) wVal);
+    //return reinterpret_cast<char16_t>((wVal < 10) ? '0' + (ushort) wVal : 'a' - 10 + (ushort) wVal);
     return (ushort)((wVal < 10) ? '0' + (ushort) wVal : 'a' - 10 + (ushort) wVal);
 }
 
@@ -1336,7 +1336,7 @@ LDone:
     return dbl;
 }
 
-template double Js::NumberUtilities::StrToDbl<char16>( const char16 * psz, const char16 **ppchLim, LikelyNumberType& likelyInt, bool isBigIntEnabled, bool isNumericSeparatorEnabled );
+template double Js::NumberUtilities::StrToDbl<char16_t>( const char16_t * psz, const char16_t **ppchLim, LikelyNumberType& likelyInt, bool isBigIntEnabled, bool isNumericSeparatorEnabled );
 template double Js::NumberUtilities::StrToDbl<utf8char_t>(const utf8char_t * psz, const utf8char_t **ppchLim, LikelyNumberType& likelyInt, bool isBigIntEnabled, bool isNumericSeparatorEnabled );
 
 /***************************************************************************
@@ -2022,18 +2022,18 @@ static BOOL FormatDigits(_In_reads_(pbLim - pbSrc) byte *pbSrc, byte *pbLim, int
         Assert(wExp10 < 1000);
         if (wExp10 >= 100)
         {
-            *pchDst++ = (char16)('0' + wExp10 / 100);
+            *pchDst++ = (char16_t)('0' + wExp10 / 100);
             wExp10 %= 100;
-            *pchDst++ = (char16)('0' + wExp10 / 10);
+            *pchDst++ = (char16_t)('0' + wExp10 / 10);
             wExp10 %= 10;
         }
         else if (wExp10 >= 10)
         {
-            *pchDst++ = (char16)('0' + wExp10 / 10);
+            *pchDst++ = (char16_t)('0' + wExp10 / 10);
             wExp10 %= 10;
         }
 #pragma prefast(suppress:26014, "We have calculate the check the buffer size above already")
-        *pchDst++ = (char16)('0' + wExp10);
+        *pchDst++ = (char16_t)('0' + wExp10);
         *pchDst = 0;
     }
     else if (wExp10 <= 0)
@@ -2066,7 +2066,7 @@ static BOOL FormatDigits(_In_reads_(pbLim - pbSrc) byte *pbSrc, byte *pbLim, int
 
 __success(return <= nDstBufSize)
 #pragma prefast(suppress:6101, "when return value is > nDstBufSize, the pchDst is not initialized.  Prefast doesn't seems to pick that up in the annotation")
-static int FormatDigitsFixed(byte *pbSrc, byte *pbLim, int wExp10, int nFractionDigits, __out_ecount_part(nDstBufSize, return) char16 *pchDst, int nDstBufSize)
+static int FormatDigitsFixed(byte *pbSrc, byte *pbLim, int wExp10, int nFractionDigits, __out_ecount_part(nDstBufSize, return) char16_t *pchDst, int nDstBufSize)
 {
     AnalysisAssert(pbLim > pbSrc);
     Assert(pbSrc);
@@ -2160,7 +2160,7 @@ static int FormatDigitsExponential(
     _In_                            byte *   pbLim,
     _In_range_(0, 1000)             int      wExp10,
                                     int      nFractionDigits,
-    _Out_writes_to_(cchDst, return) char16 * pchDst,
+    _Out_writes_to_(cchDst, return) char16_t * pchDst,
                                     int      cchDst)
 {
     AnalysisAssert(pbLim > pbSrc);
@@ -2206,7 +2206,7 @@ static int FormatDigitsExponential(
     if (cchDst < n) return n;
 
 #if DBG // save pchDst to validate n
-    char16 * pchDstStart = pchDst;
+    char16_t * pchDstStart = pchDst;
 #endif
 
     // First digit
@@ -2248,17 +2248,17 @@ static int FormatDigitsExponential(
     // Exponent Digits
     if (wExp10 >= 100)
     {
-        *pchDst++ = (char16)('0' + wExp10 / 100);
+        *pchDst++ = (char16_t)('0' + wExp10 / 100);
         wExp10 %= 100;
-        *pchDst++ = (char16)('0' + wExp10 / 10);
+        *pchDst++ = (char16_t)('0' + wExp10 / 10);
         wExp10 %= 10;
     }
     else if (wExp10 >= 10)
     {
-        *pchDst++ = (char16)('0' + wExp10 / 10);
+        *pchDst++ = (char16_t)('0' + wExp10 / 10);
         wExp10 %= 10;
     }
-    *pchDst++ = (char16)('0' + wExp10);
+    *pchDst++ = (char16_t)('0' + wExp10);
 
     *pchDst = 0;
     Assert(1 + pchDst - pchDstStart == n);
@@ -2342,7 +2342,7 @@ static int RoundTo(byte *pbSrc, byte *pbLim, int nDigits, __out_bcount(nDigits+1
 * is less than this number, no data is written to the buffer 'pchDst'.
 */
 
-int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType ft, int nDigits, __out_ecount(cchDst) char16 *pchDst, int cchDst)
+int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType ft, int nDigits, __out_ecount(cchDst) char16_t *pchDst, int cchDst)
 {
     int n = 0; // the no. of chars in the result.
     int wExp10 = 0;
@@ -2463,7 +2463,7 @@ int Js::NumberUtilities::FDblToStr(double dbl, Js::NumberUtilities::FormatType f
     return n;
 }
 
-BOOL Js::NumberUtilities::FDblToStr(double dbl, __out_ecount(cchDst) char16 *pchDst, int cchDst)
+BOOL Js::NumberUtilities::FDblToStr(double dbl, __out_ecount(cchDst) char16_t *pchDst, int cchDst)
 {
     if (!Js::NumberUtilities::IsFinite(dbl))
     {
@@ -2513,7 +2513,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, __out_ecount(cchDst
 
 #if DBG
     double dblT;
-    const char16 *pch;
+    const char16_t *pch;
 
     // In Debug, always call FDblToRgbPrecise and verify that it converts back.
     if (FDblToRgbPrecise(dbl, rgb, &wExp10, &pbLim))
@@ -2521,7 +2521,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, __out_ecount(cchDst
         if (FormatDigits(rgb, pbLim, wExp10, pchDst, cchDst))
         {
             LikelyNumberType likelyInt = LikelyNumberType::Int;
-            dblT = StrToDbl<char16>(pchDst, &pch, likelyInt);
+            dblT = StrToDbl<char16_t>(pchDst, &pch, likelyInt);
             Assert(0 == *pch);
             Assert(dblT == dbl);
         }
@@ -2547,7 +2547,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, __out_ecount(cchDst
 
 #if DBG
     LikelyNumberType likelyInt = LikelyNumberType::Int;
-    dblT = StrToDbl<char16>(pchDst, &pch, likelyInt);
+    dblT = StrToDbl<char16_t>(pchDst, &pch, likelyInt);
     Assert(0 == *pch);
     Assert(dblT == dbl);
 #endif //DBG
@@ -2583,7 +2583,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
     int wDig;
     int cchSig, cch;
     int len = nDstBufSize;
-    char16 * ppsz = psz;
+    char16_t * ppsz = psz;
 
     // handle negative number
     if (0x80000000 & Js::NumberUtilities::LuHiDbl(dbl))
@@ -2762,13 +2762,13 @@ double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
     return dblRet;
 }
 
-void Js::NumberUtilities::CodePointAsSurrogatePair(codepoint_t codePointValue, char16* first, char16* second)
+void Js::NumberUtilities::CodePointAsSurrogatePair(codepoint_t codePointValue, char16_t* first, char16_t* second)
 {
     AssertMsg(first != nullptr && second != nullptr, "Null ptr's passed in for out.");
     AssertMsg(IsInSupplementaryPlane(codePointValue), "Code point is not a surrogate pair.");
     codePointValue -= 0x10000;
-    *first = (char16)(codePointValue >> 10) + 0xD800;
-    *second = (char16)(codePointValue & 0x3FF /* This is same as cpv % 0x400 */) + 0xDC00;
+    *first = (char16_t)(codePointValue >> 10) + 0xD800;
+    *second = (char16_t)(codePointValue & 0x3FF /* This is same as cpv % 0x400 */) + 0xDC00;
 }
 
 codepoint_t Js::NumberUtilities::SurrogatePairAsCodePoint(codepoint_t first, codepoint_t second)

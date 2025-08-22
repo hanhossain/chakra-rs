@@ -218,12 +218,12 @@ namespace Js
 #endif
 
 #ifdef ENABLE_DEBUG_CONFIG_OPTIONS
-    const char16* TMapKey_GetBuffer(const PropertyRecord* key)
+    const char16_t* TMapKey_GetBuffer(const PropertyRecord* key)
     {
         return key->GetBuffer();
     }
 
-    const char16* TMapKey_GetBuffer(JavascriptString* key)
+    const char16_t* TMapKey_GetBuffer(JavascriptString* key)
     {
         return key->GetSz();
     }
@@ -3235,7 +3235,7 @@ namespace Js
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
     void SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::TraceFixedFieldsBeforeTypeHandlerChange(
-        const char16* oldTypeHandlerName, const char16* newTypeHandlerName,
+        const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {

@@ -255,7 +255,7 @@ namespace Js
     }
 
 
-    void AsmJSByteCodeGenerator::PrintAsmJsCompilationError(__out_ecount(256)  char16* msg)
+    void AsmJSByteCodeGenerator::PrintAsmJsCompilationError(__out_ecount(256)  char16_t* msg)
     {
         uint offset = mWriter.GetCurrentOffset();
         uint32_t line = 0;
@@ -273,8 +273,8 @@ namespace Js
             moduleName = mCompiler->GetModuleFunctionName()->Psz();
         }
 
-        char16 filename[_MAX_FNAME];
-        char16 ext[_MAX_EXT];
+        char16_t filename[_MAX_FNAME];
+        char16_t ext[_MAX_EXT];
         bool hasURL = mFunction->GetFuncBody()->GetSourceContextInfo()->url != nullptr;
         Assert(hasURL || mFunction->GetFuncBody()->GetSourceContextInfo()->IsDynamic());
         if (hasURL)
