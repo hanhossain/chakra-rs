@@ -33,11 +33,6 @@ typedef __builtin_va_list va_list;
 
 #include "mbusafecrt.h"
 
-#ifdef EOF
-#undef EOF
-#endif
-#define EOF -1
-
 #ifdef WEOF
 #undef WEOF
 #endif
