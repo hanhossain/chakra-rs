@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 
 [build-dependencies]
-cc = { version = "1.2.33", features = ["parallel"] }
+cc = { version = "1.2.34", features = ["parallel"] }
 cmake = "0.1.54"
 
 [dev-dependencies]
