@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 
-[target.'cfg(unix)'.build-dependencies]
+[build-dependencies]
 cc = { version = "1.2.33", features = ["parallel"] }
 cmake = "0.1.54"
 
