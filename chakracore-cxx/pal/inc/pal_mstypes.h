@@ -225,8 +225,6 @@ typedef struct _FILETIME {
 #define CP_UTF7     65000   /* UTF-7 translation */
 #define CP_UTF8     65001   /* UTF-8 translation */
 
-typedef void * PSID;
-
 #ifdef  __cplusplus
 }
 #endif
