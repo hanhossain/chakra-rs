@@ -43,5 +43,8 @@ fn build_cmake(optimized: bool, debug: bool) {
             .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
     }
 
+    config.always_configure(false);
     config.build();
+
+    println!("cargo::rerun-if-changed=chakracore-cxx/");
 }
