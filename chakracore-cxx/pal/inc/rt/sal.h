@@ -242,10 +242,6 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 // <expr> indicates whether normal post conditions apply to a function
 #define _Success_(expr)                  _SAL2_Source_(_Success_, (expr), _Success_impl_(expr))
 
-// <expr> indicates whether post conditions apply to a function returning
-// the type that this annotation is applied to
-#define _Return_type_success_(expr)      _SAL2_Source_(_Return_type_success_, (expr), _Success_impl_(expr))
-
 // Establish postconditions that apply only if the function does not succeed
 #define _On_failure_(annos)              _On_failure_impl_(annos _SAL_nop_impl_)
 
