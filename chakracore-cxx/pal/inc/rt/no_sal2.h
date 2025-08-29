@@ -75,8 +75,6 @@
 #define _Notvalid_
 #undef _Success_
 #define _Success_(c)
-#undef _Return_type_success_
-#define _Return_type_success_(c)
 #undef _On_failure_
 #define _On_failure_(a)
 #undef _Always_
