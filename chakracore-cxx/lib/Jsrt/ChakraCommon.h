@@ -20,7 +20,6 @@
 #define _CHAKRACOMMON_H_
 
 // SAL compat
-#define _Return_type_success_(x)
 #define _In_
 #define _In_z_
 #define _In_opt_
@@ -68,7 +67,7 @@ typedef unsigned short char16_t;
     /// <summary>
     ///     An error code returned from a Chakra hosting API.
     /// </summary>
-    typedef _Return_type_success_(return == 0) enum _JsErrorCode
+    typedef enum _JsErrorCode
     {
         /// <summary>
         ///     Success error code.
