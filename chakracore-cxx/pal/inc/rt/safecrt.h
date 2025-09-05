@@ -79,7 +79,7 @@
 #if _SAFECRT_USE_INLINES && !defined(_SAFECRT_NO_INCLUDES)
 #include <stdlib.h>     /* for _MAX_DRIVE */
 #include <string.h>     /* for memset */
-#include <windows.h>    /* for NTSTATUS, RaiseException */
+#include <windows.h>    /* for int32_t, RaiseException */
 #if _SAFECRT_SET_ERRNO
 #include <errno.h>
 #endif
@@ -337,7 +337,7 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #if (_SAFECRT_USE_INLINES || _SAFECRT_IMPL) && !defined(_SAFECRT_DO_NOT_DEFINE_INVALID_PARAMETER)
 
 #ifndef STATUS_INVALID_PARAMETER
-#define STATUS_INVALID_PARAMETER ((NTSTATUS)0xC000000DL)
+#define STATUS_INVALID_PARAMETER ((int32_t)0xC000000DL)
 #endif
 
 _SAFECRT__INLINE

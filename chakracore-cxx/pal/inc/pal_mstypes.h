@@ -174,7 +174,6 @@ typedef HANDLE HLOCAL;
 typedef HANDLE HRSRC;
 
 typedef int32_t HRESULT;
-typedef int32_t NTSTATUS;
 
 typedef union _LARGE_INTEGER {
     struct {

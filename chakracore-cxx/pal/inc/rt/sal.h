@@ -140,7 +140,7 @@
    The annotation _Return_type_success_(expr) may be used with a typedef to
    give a default _Success_ criteria to all functions returning that type.
    This is the case for common Windows API status types, including
-   HRESULT and NTSTATUS.  This may be overridden on a per-function basis by
+   HRESULT and int32_t.  This may be overridden on a per-function basis by
    specifying a _Success_ annotation locally.
 
 ============================================================================*/

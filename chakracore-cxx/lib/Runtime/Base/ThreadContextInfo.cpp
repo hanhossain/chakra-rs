@@ -10,7 +10,7 @@
 // Originally defined in ntstatus.h, define here because including windows.h (via PCH
 // above) with ntstatus.h causes macro redefinition errors for the common errors defined
 // in both header files.
-#define STATUS_PROCESS_IS_TERMINATING    ((NTSTATUS)0xC000010AL)
+#define STATUS_PROCESS_IS_TERMINATING    ((int32_t)0xC000010AL)
 
 #if ENABLE_NATIVE_CODEGEN
 #include "CodeGenAllocators.h"
