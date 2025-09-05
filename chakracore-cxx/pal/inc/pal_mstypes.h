@@ -72,19 +72,6 @@ extern "C" {
 #endif
 
 ////////////////////////////////////////////////////////////////////////
-// Misc. type helpers
-////////////////////////////////////////////////////////////////////////
-
-// GCC's way of declaring large integer constants
-// If you define these in one step, without the _HELPER macros, you
-// get extra whitespace when composing these with other concatenating macros.
-#define I64_HELPER(x) x ## LL
-#define I64(x)        I64_HELPER(x)
-
-#define UI64_HELPER(x) x ## ULL
-#define UI64(x)        UI64_HELPER(x)
-
-////////////////////////////////////////////////////////////////////////
 // Misc. types
 ////////////////////////////////////////////////////////////////////////
 
@@ -103,10 +90,6 @@ typedef signed long LONG64;
 typedef long INT_PTR;
 typedef unsigned long UINT_PTR;
 typedef unsigned long DWORD_PTR;
-
-/* maximum signed 64 bit value */
-#define LONG_PTR_MAX      I64(9223372036854775807)
-/* maximum unsigned 64 bit value */
 
 typedef size_t SIZE_T;
 

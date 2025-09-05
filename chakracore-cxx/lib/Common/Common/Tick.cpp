@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
 #include "Common/Tick.h"
+#include <cstdint>
 
 namespace Js {
     unsigned long      Tick::s_luFreq;
@@ -73,7 +74,7 @@ namespace Js {
         //
 
 #if DBG
-        const unsigned long luMaxTick = _UI64_MAX / s_luFreq;
+        const unsigned long luMaxTick = UINT64_MAX / s_luFreq;
         AssertMsg(luTime <= luMaxTick, "Ensure time can be converted losslessly");
 #endif // DBG
 
@@ -324,15 +325,15 @@ namespace Js {
     {
         if (*this == Infinite())
         {
-            return _I64_MAX;
+            return INT64_MAX;
         }
 
         //
         // Ensure we can convert losslessly.
         //
 #if DBG
-        const long lnMinTimeDelta = _I64_MIN / ((long) 1000000);
-        const long lnMaxTimeDelta = _I64_MAX / ((long) 1000000);
+        const long lnMinTimeDelta = INT64_MIN / ((long) 1000000);
+        const long lnMaxTimeDelta = INT64_MAX / ((long) 1000000);
         AssertMsg((m_lnDelta <= lnMaxTimeDelta) && (m_lnDelta >= lnMinTimeDelta),
                 "Ensure delta can be converted to microseconds losslessly");
 #endif
@@ -360,7 +361,7 @@ namespace Js {
     TickDelta::FromMicroseconds(
         long lnTimeDelta)                  // Time delta, in 1/1000^2 sec
     {
-        AssertMsg(lnTimeDelta != _I64_MAX, "Use Infinite() to create an infinite TickDelta");
+        AssertMsg(lnTimeDelta != INT64_MAX, "Use Infinite() to create an infinite TickDelta");
 
         //
         // Ensure that we can convert losslessly.
@@ -369,8 +370,8 @@ namespace Js {
         long lnFreq = (long) Tick::s_luFreq;
 
 #if DBG
-        const long lnMinTimeDelta = _I64_MIN / lnFreq;
-        const long lnMaxTimeDelta = _I64_MAX / lnFreq;
+        const long lnMinTimeDelta = INT64_MIN / lnFreq;
+        const long lnMaxTimeDelta = INT64_MAX / lnFreq;
         AssertMsg((lnTimeDelta <= lnMaxTimeDelta) && (lnTimeDelta >= lnMinTimeDelta),
                 "Ensure delta can be converted to native format losslessly");
 #endif // DBG
@@ -437,7 +438,7 @@ namespace Js {
     TickDelta
     TickDelta::Infinite()
     {
-        return TickDelta(_I64_MAX);
+        return TickDelta(INT64_MAX);
     }
 
 
@@ -796,7 +797,7 @@ namespace Js {
         // Ensure that we have a sufficient amount of time so that we can handle useful time operations.
         //
 
-        unsigned long nSec = _UI64_MAX / s_luFreq;
+        unsigned long nSec = UINT64_MAX / s_luFreq;
         if (nSec < 5 * 60)
         {
 #if FIXTHIS
@@ -829,7 +830,7 @@ namespace Js {
         //
 
         const unsigned long luOneSecUs = (unsigned long) 1000000;
-        const unsigned long luSafeTick = _UI64_MAX / luOneSecUs;
+        const unsigned long luSafeTick = UINT64_MAX / luOneSecUs;
         if (m_luTick < luSafeTick)
         {
             //

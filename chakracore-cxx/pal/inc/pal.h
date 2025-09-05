@@ -235,13 +235,6 @@ PAL_IsDebuggerPresent();
 #define FLT_MAX 3.402823466e+38F
 #define DBL_MAX 1.7976931348623157e+308
 
-/* minimum signed 64 bit value */
-#define _I64_MIN    (I64(-9223372036854775807) - 1)
-/* maximum signed 64 bit value */
-#define _I64_MAX      I64(9223372036854775807)
-/* maximum unsigned 64 bit value */
-#define _UI64_MAX     UI64(0xffffffffffffffff)
-
 #define _I8_MAX   SCHAR_MAX
 #define _I8_MIN   SCHAR_MIN
 #define _I16_MAX  SHRT_MAX

@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <cstdint>
+
 #ifdef _M_AMD64
 extern "C" void *amd64_CallWithFakeFrame(void *target,
                                          void *frame,
@@ -26,7 +28,7 @@ namespace Js
     {
     public:
         static const unsigned long DefaultStackTraceLimit = 10;
-        static const unsigned long MaxStackTraceLimit = _UI64_MAX;
+        static const unsigned long MaxStackTraceLimit = UINT64_MAX;
 
         // AutoCatchHandlerExists tracks where an exception will be caught and not propagated out.
         // It should be included wherever an exception is caught and swallowed.
