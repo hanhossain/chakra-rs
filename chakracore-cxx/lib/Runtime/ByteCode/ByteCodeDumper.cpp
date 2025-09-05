@@ -205,7 +205,7 @@ namespace Js
 #else
                     Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::Ld_A));
 #endif
-                    Output::Print(_u(" (\"%s\")%s"), VarTo<JavascriptString>(varConst)->GetSz(), Js::VarIs<Js::PropertyString>(varConst) ? u" [prop]" : u"");
+                    Output::Print(u" (\"%s\")%s", VarTo<JavascriptString>(varConst)->GetSz(), Js::VarIs<Js::PropertyString>(varConst) ? u" [prop]" : u"");
                     break;
                 case Js::TypeIds_GlobalObject:
 #if ENABLE_NATIVE_CODEGEN
@@ -227,7 +227,7 @@ namespace Js
                     // If we later put other ES5Array objects in the constant table, we'll need another way
                     // to decide the constant type.
                     Output::Print(u"%-10s", u"LdStringTemplate");
-                    Output::Print(_u(" (\"%s\")"), dumpFunction->GetScriptContext()->GetLibrary()->GetStringTemplateCallsiteObjectKey(varConst));
+                    Output::Print(u" (\"%s\")", dumpFunction->GetScriptContext()->GetLibrary()->GetStringTemplateCallsiteObjectKey(varConst));
                     break;
                 default:
                     AssertMsg(UNREACHED, "Unexpected object type in DumpConstantTable");

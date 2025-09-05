@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 STRING(EmptyObject, u"{}")
-STRING(Quotes, _u("\"\""))
+STRING(Quotes, u"\"\"")
 STRING(Whack, u"/")
 STRING(CommaDisplay, u",")
 STRING(CommaSpaceDisplay, u", ")

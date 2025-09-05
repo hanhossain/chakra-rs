@@ -1178,7 +1178,7 @@ void WasmBinaryReader::ReadImportSection()
         const char16_t* fnName = ReadInlineName(len, fnNameLen);
 
         ExternalKinds kind = ReadExternalKind();
-        TRACE_WASM_DECODER(_u("Import #%u: \"%s\".\"%s\", kind: %d"), i, modName, fnName, kind);
+        TRACE_WASM_DECODER(u"Import #%u: \"%s\".\"%s\", kind: %d", i, modName, fnName, kind);
         switch (kind)
         {
         case ExternalKinds::Function:

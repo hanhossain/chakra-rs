@@ -246,7 +246,7 @@ namespace Js
         }
         else
         {
-            Output::Print(_u("String concatenations (Strings %u chars or longer are treated as \"Large\")\n"), k_MaxConcatLength);
+            Output::Print(u"String concatenations (Strings %u chars or longer are treated as \"Large\")\n"), k_MaxConcatLength;
             Output::Print(u"   LHS +  RHS  SB    Concat   Buf  Other  Total\n");
             Output::Print(u"------ ------ ------ ------ ------ ------ ------\n");
 

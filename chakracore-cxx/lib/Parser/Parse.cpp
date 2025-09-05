@@ -8312,7 +8312,7 @@ ParseNodePtr Parser::ParseStringTemplateDecl(ParseNodePtr pnodeTagFnc)
 
             OUTPUT_TRACE_DEBUGONLY(
                 Js::StringTemplateParsePhase,
-                _u("Parsed string constant: \n\tcooked = \"%s\" \n\traw = \"%s\" \n\tdiffer = %d\n"),
+                u"Parsed string constant: \n\tcooked = \"%s\" \n\traw = \"%s\" \n\tdiffer = %d\n",
                 stringLiteral->pid->Psz(),
                 stringLiteralRaw->pid->Psz(),
                 stringLiteral->pid->Psz() == stringLiteralRaw->pid->Psz() ? 0 : 1);
@@ -13702,7 +13702,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopStr        , "str const"    ,None    ,Pid  ,fnopLeaf|fnopConst)
     case knopStr:
         Indent(indentAmt);
-        Output::Print(_u("\"%s\"\n"), pnode->AsParseNodeStr()->pid->Psz());
+        Output::Print(u"\"%s\"\n", pnode->AsParseNodeStr()->pid->Psz());
         break;
         //PTNODE(knopRegExp     , "reg expr"    ,None    ,Pid  ,fnopLeaf|fnopConst)
     case knopRegExp:
@@ -14487,7 +14487,7 @@ void DumpCapturedNames(ParseNodeFnc* pnodeFnc, IdentPtrSet* capturedNames, Arena
     }, nullptr);
 
     sortedNames->Map([=](int index, const IdentPtr pid) -> void {
-        OUTPUT_TRACE_DEBUGONLY(Js::CreateParserStatePhase, _u(" Function %u captured name \"%s\"\n"), pnodeFnc->functionId, pid->Psz());
+        OUTPUT_TRACE_DEBUGONLY(Js::CreateParserStatePhase, u" Function %u captured name \"%s\"\n", pnodeFnc->functionId, pid->Psz());
     });
 }
 #endif

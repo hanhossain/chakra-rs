@@ -48,7 +48,7 @@ namespace UnifiedRegex
         for (const Char* p = str; p < pl; p++)
         {
             if (*p == '"')
-                Output::Print(_u("\\\""));
+                Output::Print(u"\\\"");
             else
                 PrintEscapedChar(*p);
         }
@@ -61,9 +61,9 @@ namespace UnifiedRegex
             Output::Print(u"null");
         else
         {
-            Output::Print(_u("\""));
+            Output::Print(u"\"");
             PrintEscapedString(str, len);
-            Output::Print(_u("\""));
+            Output::Print(u"\"");
         }
     }
 

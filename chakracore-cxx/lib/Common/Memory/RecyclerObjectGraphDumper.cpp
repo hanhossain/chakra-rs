@@ -82,7 +82,7 @@ void RecyclerObjectGraphDumper::DumpObjectReference(void * objectAddress, bool r
             if (!this->param->dumpReferenceFunc(this->dumpObjectName, this->dumpObject, objectAddress))
                 return;
         }
-        Output::Print(_u("\""));
+        Output::Print(u"\"");
         if (this->dumpObjectName)
         {
             Output::Print(u"%s", this->dumpObjectName);
@@ -97,10 +97,10 @@ void RecyclerObjectGraphDumper::DumpObjectReference(void * objectAddress, bool r
 #endif
         }
 
-        Output::Print(remark? _u("\" => \"") : _u("\" -> \""));
+        Output::Print(remark? u"\" => \"" : u"\" -> \"");
         recycler->DumpObjectDescription(objectAddress);
 
-        Output::Print(_u("\"\n"));
+        Output::Print(u"\"\n");
     }
 }
 #endif

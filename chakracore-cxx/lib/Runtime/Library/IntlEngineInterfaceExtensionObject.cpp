@@ -21,7 +21,7 @@
 using namespace PlatformAgnostic::ICUHelpers;
 
 #if defined(DBG) || defined(ENABLE_DEBUG_CONFIG_OPTIONS)
-#define INTL_TRACE(fmt, ...) Output::Trace(Js::IntlPhase, _u("%S(): " fmt "\n"), __func__, __VA_ARGS__)
+#define INTL_TRACE(fmt, ...) Output::Trace(Js::IntlPhase, u"%S(): " fmt "\n", __func__, __VA_ARGS__)
 #else
 #define INTL_TRACE(fmt, ...)
 #endif

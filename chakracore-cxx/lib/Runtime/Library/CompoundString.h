@@ -1014,7 +1014,7 @@ namespace Js
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("CompoundString::AppendGeneric(JavascriptString *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
+                u"CompoundString::AppendGeneric(JavascriptString *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n",
                 s->IsFinalized() ? s->GetString() : u"",
                 !s->IsFinalized() || appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
@@ -1076,7 +1076,7 @@ namespace Js
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("CompoundString::AppendGeneric(JavascriptString *s = \"%.*s%s\", startIndex = %u, appendCharLength = %u, appendChars = %s)\n"),
+                u"CompoundString::AppendGeneric(JavascriptString *s = \"%.*s%s\", startIndex = %u, appendCharLength = %u, appendChars = %s)\n",
                 min(static_cast<CharCount>(8), appendCharLength),
                 s->IsFinalized() ? &s->GetString()[startIndex] : u"",
                 !s->IsFinalized() || appendCharLength > 8 ? u"..." : u"",
@@ -1163,7 +1163,7 @@ namespace Js
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("CompoundString::AppendGeneric(C++ literal \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
+                u"CompoundString::AppendGeneric(C++ literal \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n",
                 s,
                 appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
@@ -1213,7 +1213,7 @@ namespace Js
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("CompoundString::AppendGeneric(char16_t *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n"),
+                u"CompoundString::AppendGeneric(char16_t *s = \"%.8s%s\", appendCharLength = %u, appendChars = %s)\n",
                 s,
                 appendCharLength > 8 ? u"..." : u"",
                 appendCharLength,
@@ -1275,7 +1275,7 @@ namespace Js
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("CompoundString::AppendGeneric(TValue &, appendChars = %s) - converted = \"%.8s%s\", appendCharLength = %u\n"),
+                u"CompoundString::AppendGeneric(TValue &, appendChars = %s) - converted = \"%.8s%s\", appendCharLength = %u\n",
                 appendChars ? u"true" : u"false",
                 convertBuffer,
                 appendCharLength > 8 ? u"..." : u"",

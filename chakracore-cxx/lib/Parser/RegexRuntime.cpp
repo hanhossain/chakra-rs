@@ -528,12 +528,12 @@ namespace UnifiedRegex
                 {
                     w->Print(u", ");
                 }
-                w->Print(_u("\""));
+                w->Print(u"\"");
                 for (CharCount j = 0; j < length; j++)
                 {
                     w->PrintEscapedChar(litbuf[offset + j * CaseInsensitive::EquivClassSize + i]);
                 }
-                w->Print(_u("\""));
+                w->Print(u"\"");
             }
         }
         else

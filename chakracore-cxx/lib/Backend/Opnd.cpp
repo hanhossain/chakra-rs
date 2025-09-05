@@ -3631,7 +3631,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
                         WriteToBuffer(&buffer, &n, Js::VarTo<Js::JavascriptBoolean>(address)->GetValue() ? u" (true)" : u" (false)");
                         break;
                     case Js::TypeIds_String:
-                        WriteToBuffer(&buffer, &n, _u(" (\"%s\")"), Js::VarTo<Js::JavascriptString>(address)->GetSz());
+                        WriteToBuffer(&buffer, &n, u" (\"%s\")", Js::VarTo<Js::JavascriptString>(address)->GetSz());
                         break;
                     case Js::TypeIds_Number:
                         WriteToBuffer(&buffer, &n, u" (value: %f)", Js::JavascriptNumber::GetValue(address));
@@ -3891,7 +3891,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             }
             break;
         case AddrOpndKindSz:
-            WriteToBuffer(&buffer, &n, wcslen((char16_t const *)address) > 30 ? _u("\"%.30s...\"") : _u("\"%.30s\""), address);
+            WriteToBuffer(&buffer, &n, wcslen((char16_t const *)address) > 30 ? u"\"%.30s...\"" : u"\"%.30s\"", address);
             break;
         case AddrOpndKindDynamicFloatRef:
             DumpAddress(address, printToConsole, skipMaskedAddress);

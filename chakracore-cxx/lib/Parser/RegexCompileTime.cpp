@@ -1161,10 +1161,10 @@ namespace UnifiedRegex
         {
             if (i > 0)
                 w->Print(u", ");
-            w->Print(_u("\""));
+            w->Print(u"\"");
             for (CharCount j = 0; j < length; j++)
                 w->PrintEscapedChar(litbuf[offset + j * skip + i]);
-            w->Print(_u("\""));
+            w->Print(u"\"");
         }
         w->PrintEOL(u")");
         PrintAnnotations(w);

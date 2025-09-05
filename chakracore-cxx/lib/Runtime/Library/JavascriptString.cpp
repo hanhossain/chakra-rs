@@ -432,7 +432,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - creating ConcatString\n"),
+                u"JavascriptString::ConcatDestructive(\"%.8s%s\") - creating ConcatString\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -452,7 +452,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - appending to CompoundString\n"),
+                u"JavascriptString::ConcatDestructive(\"%.8s%s\") - appending to CompoundString\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -479,7 +479,7 @@ case_2:
             if(PHASE_TRACE_StringConcat)
             {
                 Output::Print(
-                    _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - converting ConcatString to CompoundString\n"),
+                    u"JavascriptString::ConcatDestructive(\"%.8s%s\") - converting ConcatString to CompoundString\n",
                     pstRight->IsFinalized() ? pstRight->GetString() : u"",
                     !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
                 Output::Flush();
@@ -507,7 +507,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - one side empty, using other side\n"),
+                u"JavascriptString::ConcatDestructive(\"%.8s%s\") - one side empty, using other side\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -535,7 +535,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::ConcatDestructive(\"%.8s%s\") - creating CompoundString, appending chars\n"),
+                u"JavascriptString::ConcatDestructive(\"%.8s%s\") - creating CompoundString, appending chars\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -577,7 +577,7 @@ case_2:
             if(PHASE_TRACE_StringConcat)
             {
                 Output::Print(
-                    _u("JavascriptString::Concat(\"%.8s%s\") - creating ConcatString\n"),
+                    u"JavascriptString::Concat(\"%.8s%s\") - creating ConcatString\n",
                     pstRight->IsFinalized() ? pstRight->GetString() : u"",
                     !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
                 Output::Flush();
@@ -601,7 +601,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::Concat(\"%.8s%s\") - cloning CompoundString, appending to clone\n"),
+                u"JavascriptString::Concat(\"%.8s%s\") - cloning CompoundString, appending to clone\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -630,7 +630,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::Concat(\"%.8s%s\") - converting ConcatString to CompoundString\n"),
+                u"JavascriptString::Concat(\"%.8s%s\") - converting ConcatString to CompoundString\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -656,7 +656,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::Concat(\"%.8s%s\") - one side empty, using other side\n"),
+                u"JavascriptString::Concat(\"%.8s%s\") - one side empty, using other side\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -683,7 +683,7 @@ case_2:
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
-                _u("JavascriptString::Concat(\"%.8s%s\") - both sides length 1, creating BufferStringBuilder::WritableString\n"),
+                u"JavascriptString::Concat(\"%.8s%s\") - both sides length 1, creating BufferStringBuilder::WritableString\n",
                 pstRight->IsFinalized() ? pstRight->GetString() : u"",
                 !pstRight->IsFinalized() || pstRight->GetLength() > 8 ? u"..." : u"");
             Output::Flush();
@@ -3233,7 +3233,7 @@ case_2:
         // pThis = VarTo<JavascriptString>(args[0]);
         // pPropertyValue = VarTo<JavascriptString>(args[1]);
         //
-        // pResult = _u("<a href=\"[[pPropertyValue]]\">[[pThis]]</a>");
+        // pResult = u"<a href=\"[[pPropertyValue]]\">[[pThis]]</a>";
         //
         // cchTotalChars = 5                    // <></>
         //                 + cchTag * 2         // a

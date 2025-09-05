@@ -316,7 +316,7 @@ namespace Js
             regExp->GetPattern()->Print(w);
             w->Print(u", ");
             if (!CONFIG_FLAG(Verbose) && inputLength > 1024)
-                w->Print(_u("\"<string too large>\""));
+                w->Print(u"\"<string too large>\"");
             else
                 w->PrintQuotedString(input, inputLength);
             if (replace != 0)
@@ -324,7 +324,7 @@ namespace Js
                 Assert(use == UnifiedRegex::RegexStats::Replace);
                 w->Print(u", ");
                 if (!CONFIG_FLAG(Verbose) && replaceLength > 1024)
-                    w->Print(_u("\"<string too large>\""));
+                    w->Print(u"\"<string too large>\"");
                 else
                     w->PrintQuotedString(replace, replaceLength);
             }
@@ -836,7 +836,7 @@ namespace Js
                     concatenated.Append(input, 0, match.offset);
                     offset = substitutionOffset + 2;
                     break;
-                case _u('\''): // right context
+                case u'\'': // right context
                     if (match.EndOffset() < inputLength)
                     {
                         concatenated.Append(input, match.EndOffset(), inputLength - match.EndOffset());
@@ -1460,7 +1460,7 @@ namespace Js
                         i = j + 1;
                         break;
 
-                    case _u('\''): // portion of input string that follows the matched substring
+                    case u'\'': // portion of input string that follows the matched substring
                         concatenated.Append(replace, i, j - i);
                         concatenated.Append(
                             input,

@@ -1394,7 +1394,7 @@ namespace Js
                     _snwprintf_s(dbgTip, _TRUNCATE, u"\n"
                         u"************************************************************\n"
                         u"* To find the Fault Injecting points run following command: \n"
-                        _u("* !list -t %s!Js::FaultInjection::InjectionRecord.next -e -x \"dps @$extret @$extret+0x128\" poi(@@c++(&%s!Js::FaultInjection::Global.InjectionFirstRecord))\n")
+                        u"* !list -t %s!Js::FaultInjection::InjectionRecord.next -e -x \"dps @$extret @$extret+0x128\" poi(@@c++(&%s!Js::FaultInjection::Global.InjectionFirstRecord))\n"
                         u"* To rebuild the stack (locals are available):\n"
                         u"* .cxr @@C++(&%s!Js::FaultInjection::Global.InjectionFirstRecord->Context)\n"
                         u"************************************************************\n", jscript9Name, jscript9Name, jscript9Name);

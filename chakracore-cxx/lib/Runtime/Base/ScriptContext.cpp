@@ -6661,7 +6661,7 @@ ScriptContext::GetJitFuncRangeCache()
         // Adjust nameLen based on any escape characters we added to escape the '\"' in name.
         nameLen = (unsigned short)AppendWithEscapeCharacters(nameBuffer, name, nameLen, '\\', '\"');
 
-        nameBuffer->AppendCppLiteral(_u("\";"));
+        nameBuffer->AppendCppLiteral(u"\";");
 
         // Add 3 padding characters here - one for initial '\"' character, too.
         nameLen += 3;
