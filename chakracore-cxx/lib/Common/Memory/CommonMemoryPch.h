@@ -6,8 +6,7 @@
 
 #include "DataStructures/ContinuousPageStack.h"
 
-typedef int32_t NTSTATUS;
-#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
+#define NT_SUCCESS(Status) (((int32_t)(Status)) >= 0)
 #define MAKE_HR(errnum) (MAKE_HRESULT(SEVERITY_ERROR, FACILITY_CONTROL, errnum))
 
 // === C Runtime Header Files ===
